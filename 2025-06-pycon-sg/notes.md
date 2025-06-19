@@ -194,22 +194,52 @@ Run with `uv run --with fastmcp fastmcp dev server.py` and test via the inspecto
 - [Marimo](https://marimo.app/) solves 3 problems:
   - Changing a variable changes all dependent cells, like Excel
   - They're just Python scripts. So `git diff`s are cleaner
-- [htmx](https://htmx.org/) by [Ronan Berder](https://github.com/hunvreus). But the browser API will probably replace:
+- [htmx](https://htmx.org/) by [Ronan Berder](https://github.com/hunvreus). But the browser API will probably replace some of it. I do not yet see a need to use it.
   - `hx-boost` for AJAX navigation + history with [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API)
   - `hx-swap` for element transitions with [View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API)
   - `hx-sse` with [EventSource](https://developer.mozilla.org/en-US/docs/Web/API/EventSource)
 
-## ⭐ L7. Every Day is Day 1: Secure your LLM Application with Testing & Guardrails. Goh Jia Yi – GovTech. 2:30 pm, Day 2
+## Every Day is Day 1: Secure your LLM Application with Testing & Guardrails. Goh Jia Yi – GovTech. 2:30 pm, Day 2
 
-## Unlock the Lock: Mastering Python Multithreading Deadlocks Before They Master You. Han Qi – Monarch Tractor APAC. 2:30 pm, Day 2
+- SG Govt uses chatbots internally. Hallucinations can lead to problems. Users tricking chatbot into making commitments cause problems.
+- [Goh Jia](http://linkedin.com/in/gohjiayi) and team runs app-level (not model-level) evals.
+- Begin by listing risks and concerns.
+  - Research externally. Include regulations
+  - Contextualize internally. Be practical
+- Techniques:
+  - Keyword search works
+  - Custom trained classifiers. Generic classifiers don't work well
+  - LLM-as-a-judge works well can be slow and expensive
+- [SG Govt Responsible AI Playbook](https://playbooks.aip.gov.sg/responsibleai/)
 
-## ⭐ L7. Improving Cloud-Support Productivity with Textual. Piti Champeethong – MongoDB. 3:15 pm, Day 2
+## L7. Improving Cloud-Support Productivity with Textual. Piti Champeethong – MongoDB. 3:15 pm, Day 2
 
-## Boosting API Reliability: Property-Based Testing in Action. Vivek Kishore – EPAM. 3:15 pm, Day 2
+- Nicknamed [Fyi](https://github.com/ninefyi). Works at MongoDB, Thailand
+- CLI interfaces help because it's fast, low resource, includes diverse tools, works on SSH
+- Textual is similar to CSS via a [TCSS](https://textual.textualize.io/tutorial/#writing-textual-css)
+- It has powerful widgets:
+  - DataTable - like Excel
+  - Collapsible
+  - DirectoryTree
+  - Header/Footer
+  - LoadingIndicator, ProgressBar
+  - MarkdownViewer
+  - Sparkline
+- Using textual [llms.txt](https://context7.com/textualize/textual/llms.txt) it's easy to code with
 
 ## Beyond the Prompt: Navigating the GenAI World as a Python Developer. Thu Ya Kyaw – Google. 4 pm, Day 2
 
-## Day 2 Closing. – 4:45 pm, Day 2
+- Google has a [DevRel](https://www.linkedin.com/pulse/how-google-shapes-future-developer-relations-devrel-devrelsquad-betpf/) Engineer role -- helping developers solve problems
+- Dev cycle involves: Plan, Code, Build, Test, Release, Deploy, Operate, Monitor. Explore LLM tooling in each
+- AI coding has negative impact, too. [Dora Report](https://dora.dev/research/ai/)
+  - -7.2% Decline in quality
+  - -1.5% Decline in throughput to understand / bug-fix the LLM code
+  - 39% don't trust AI
+- [Gemini Code Assist](https://codeassist.google/) works in VS code with an API key. An agent mode preview is in closed beta. It integrates with Google Docs, Confluence, etc.
+- [AI Studio](https://ai.dev/) Stream tab lets you share your screen and talk to it, which makes for a really cool demo
+- Skills growing in demand:
+  - Building tools / APIs for agents
+  - Building apps that use AI
 
 ## What’s Good in Singapore? A Personalised Food Recommender with Python. Ho Wei Sin – MOE. 9 am, Day 3
 

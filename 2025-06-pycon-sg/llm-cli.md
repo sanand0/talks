@@ -40,6 +40,8 @@ https://github.com/sanand0/talks/blob/main/2025-06-pycon-sg/llm-cli.md
 https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/sanand0/talks/blob/main/2025-06-pycon-sg/llm-cli.md
 
 uvx --with pyqrcode qr2text --encode-text 'https://github.com/sanand0/talks/blob/main/2025-06-pycon-sg/llm-cli.md'
+
+Ideas via https://chatgpt.com/share/6853b092-22f4-800c-ac15-3fe24e46f1ac
 -->
 
 ## `llm` is Simon Willison's command line LLM client

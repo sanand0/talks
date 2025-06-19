@@ -24,45 +24,168 @@
   - Bytecode compilations carry over
   - JIT compilations require some VM features that don't have WASM support
 
-## ⭐ L7. Empowering the Python Community: PSF Involvement and Introducing Python Asia Organization. Iqbal Abdullah – PAO. 10:15 am, Day 1
+## L7. Lightning Talks. – 1:30 pm, Day 1
 
-- #Q: What events should Pythonistas look out for?
+- [Yocto Project](https://www.yoctoproject.org/) creates custom embedded Linux distributions.
+- [OrangeTree](https://orange3.readthedocs.io/) supports
+  [visual programming](https://orange3.readthedocs.io/projects/orange-visual-programming/en/latest/index.html) in Python. It supports xenographics like
+  [Nomogram](https://orange3.readthedocs.io/projects/orange-visual-programming/en/latest/widgets/visualize/nomogram.html),
+  [Mosaic](https://orange3.readthedocs.io/projects/orange-visual-programming/en/latest/widgets/visualize/mosaicdisplay.html),
+  [Pythogorean Tree](https://orange3.readthedocs.io/projects/orange-visual-programming/en/latest/widgets/visualize/pythagoreantree.html),
+  [FreeViz](https://orange3.readthedocs.io/projects/orange-visual-programming/en/latest/widgets/visualize/freeviz.html),
+  [RadViz](https://orange3.readthedocs.io/projects/orange-visual-programming/en/latest/widgets/visualize/radviz.html), etc.
+  (Talk by [Tze Houng Lee](https://www.linkedin.com/in/leetzehoung/), thlee018@suss.edu.sg)
+- A few people who introduced themselves.
+  - Siddharta Govindaraj, Silver Stripe Software, India
+  - Stefan, Bangkok. Perl, JSConfCN.
+  - Sridhar, Singapore. Coherent. Principal DevOps Engg.
+  - Vivek, Hyderabad. EPAM. Back-end engineering.
+  - Bloomberg has a large Python team.
+- [Reflex](https://reflex.dev/) and [Flet](https://flet.dev/) are web app builders in Python
 
-## Photo-taking. – 11:45 am, Day 1
+## Python Beats: Live Coding Music with Python. Paul Amazona. 2:30 pm, Day 1
 
-## Lunch and Networking. – 12 pm, Day 1
+[BespokeSynth](https://www.bespokesynth.com/) is a composable Python-based music synthesizer.
 
-## ⭐ L7. Lightning Talks. – 1:30 pm, Day 1
+## Beyond P values: Data Analysis with Bootstrapped ESTimation (DABEST). Mai Yishan – Duke-NUS. 3:15 pm, Day 1
 
-## ⭐ L7. Python Beats: Live Coding Music with Python. Paul Amazona. 2:30 pm, Day 1
+- p-values do not communicate numerical significance, only statistical significance. It encourages binary thinking (pass/fail).
+- [DABEST](https://acclab.github.io/DABEST-python/) is a Python data visualization library to visually communicate statistics.
 
-## Diving into LangChain, Streamlit & Claude on Amazon Bedrock to build Gen AI apps. Jiawei Lin – Gen-C. 2:30 pm, Day 1
+## Firecracker Made Easy with Python. Muhammad Yuga Nugraha – Practical DevSecOps. 4 pm, Day 1
 
-## ⭐ L7. Beyond P values: Data Analysis with Bootstrapped ESTimation (DABEST). Mai Yishan – Duke-NUS. 3:15 pm, Day 1
+- Micro VMs like FireCracker are lightweight VMs + containers. (Apple containers are Micro VMs)
+- They're fast, not as fast as docker, and provide high isolation
+- Firecracker is used by: [CodeSandbox](https://codesandbox.io/), [E2B](https://e2b.dev/), [Iximiuz](https://labs.iximiuz.com/)
+- Does not run on Windows.
+- Firecracker is controlled via REST APIs
+- Requires non-trivial network setup
+- Good for: Serverless, CI/CD, malicious code.
+- Bad: No registry, no `docker exec`, less mature
 
-- #Q: Any plans for a JS version? Or explicit WASM support?
+# CDK Development with Python for Automation, Sreedhar Bukya, 4:50 pm, Day 1
 
-## Building Cross-Platform Apps in Python with Flet. Cyrus Mante – Accenture PH. 3:15 pm, Day 1
+- CDK compiles code-based configurations into AWS CloudFormation YAML. It's an Amazon-initiated open source project.
+- Pick CDK when you live inside AWS and want infrastructure expressed in a familiar programming language with CloudFormation-grade safety nets.
+- Pick OpenTofu when you need a truly vendor-neutral, HCL-based, Terraform-compatible tool run by a community under Linux Foundation stewardship.
+- If you need both, use CDKTF (CDK for Terraform) or wrap OpenTofu modules in your language of choice.
 
-## ⭐ L7. Firecracker Made Easy with Python. Muhammad Yuga Nugraha – Practical DevSecOps. 4 pm, Day 1
+[ChatGPT](https://chatgpt.com/share/685280ab-2ae4-800c-9c97-a9fece550e3a)
 
-- #Q: What's the startup time vs Docker? Should we start 1 container and re-use it or start one for each?
+## Generative AI Monitoring with PydanticAI and Logfire. Marcelo Trylesinski – Pydantic. 9:15 am, Day 2
 
-## Build with Django: Your First Steps into Web Development. Freilla Mae Espinola – Misfit. 4 pm, Day 1
+- [Website](fastapiexpert.com) | [Dotfiles](https://github.com/kludex/dotfiles) via [chezmoi](https://www.chezmoi.io/)
+- LogFire is a freemium (10M spans/month) observability product [compatible](https://logfire.pydantic.dev/docs/how-to-guides/alternative-clients/) with [OpenTelemetry](https://opentelemetry.io/)
+- Neither in FastAPI nor in Pydantic AI do you need to use Pydantic classes. Types work just fine (and are faster). Classes are required only for complex structures.
+- Pydantic AI only supports OpenAI chat completions APIs
+- Favorite MCP servers: GitHub (requires auth, which is hard), VS Code, Playwright, Logfire
+- MCPs support sampling, where the MCP can ask the client to run an LLM call and pass the results back. Marcelo will merge the [PR](https://github.com/pydantic/pydantic-ai/pull/1884) today
+- ⭐ The agent stops the loop when there are no more tool calls to run (if `end_strategy="exhaustive"`) or the first output is received (if `end_strategy="early"`). That's simple and clever!
+- Use `output_type=another_agent_instance` lets you chain agents, but we're working on a more intuitive naming/mechanism
 
-## ⭐ L7. Day 1 Closing. – 4:30 pm, Day 1
+```python
+# /// script
+# requires-python = ">=3.13"
+# dependencies = [
+#     "logfire",
+#     "opentelemetry-instrumentation-httpx",
+#     "pydantic-ai",
+#     "tavily-python",
+# ]
+# ///
+from pydantic_ai import Agent
+import os
+import datetime
+import logfire
+import sys
+from pydantic_ai.common_tools.tavily import tavily_search_tool
+from pydantic_ai.mcp import MCPServerStdio
 
-## Registration. – 8:30 am, Day 2
+logfire.configure()
+logfire.instrument_pydantic_ai()
+logfire.instrument_httpx(capture_all=True)
 
-## Day 2 Opening. – 9 am, Day 2
+mcp_server = MCPServerStdio(
+    command="/run/user/1000/fnm_multishells/524565_1750223552456/bin/npx",
+    args=["-y", "@playwright/mcp@latest"],
+)
 
-## ⭐ L7. Generative AI Monitoring with PydanticAI and Logfire. Marcelo Trylesinski – Pydantic. 9:15 am, Day 2
+agent = Agent(
+    # "openai:gpt-4.1-nano",
+    'anthropic:claude-sonnet-4-0',
+    tools=[tavily_search_tool(api_key=os.getenv("TAVILY_API_KEY"))],
+    mcp_servers=[mcp_server],
+    instructions="Use the browser MCP rather than the search tool for browsing.",
+)
 
-## ⭐ L6. Enlightened with Python: Is it making a difference or making things worse. Yudhapratama Nugraha – ITB. 10:30 am, Day 2
+
+@agent.tool_plain
+def get_date_prior(days: int) -> str:
+    """Returns the date prior to today by a specified number of days."""
+    return (datetime.datetime.now() - datetime.timedelta(days=days)).strftime("%Y-%m-%d")
+
+
+async def main():
+    async with agent.run_mcp_servers():
+        result = await agent.run(sys.argv[1])
+        print(result.output)
+
+
+if __name__ == "__main__":
+    import asyncio
+
+    asyncio.run(main())
+```
+
+## Gentle Introduction to MCP
+
+- MCPs collate tools, resources, and prompts
+- MCPs connect via stdio, SSE, or streamable HTTP
+- [Cherry Studio](https://github.com/CherryHQ/cherry-studio) is another local LLM client that supports LLMs
+- MCPs make sense over direct tool/API use at least for
+  - discovery
+  - multiple endpoints
+  - local services (e.g. file editing)
+  - encapsulated reuse
+
+```python
+# /// script
+# requires-python = ">=3.13"
+# dependencies = [
+#     "fastmcp",
+#     "httpx",
+# ]
+# ///
+import httpx
+from fastmcp import FastMCP
+
+mcp = FastMCP(name='Pokemon abilities')
+
+@mcp.tool
+async def fetch_pokemon_abilities(pokemon_name: str) -> str:
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f'https://pokeapi.co/api/v2/pokemon/{pokemon_name}')
+        if response.status_code != 200:
+            return f"Error fetching data for Pokémon: {pokemon_name}"
+    data = response.json()
+    abilities = [ability['ability']['name'] for ability in data.get('abilities', [])]
+    return f"{pokemon_name.capitalize()} = {', '.join(abilities)}"
+```
+
+Run with `uv run --with fastmcp fastmcp dev server.py` and test via the inspector it provides.
 
 ## Vertical AI Agents. Ng Jin Pei – NUS. 11:15 am, Day 2
 
-## ⭐ L6. AI Accessibility: How to keep your users from rage quitting? Anushka Narula – Adobe. 11:15 am, Day 2
+## AI Accessibility: How to keep your users from rage quitting? Anushka Narula – Adobe. 11:15 am, Day 2
+
+- Works on Adobe Express, which incorporates AI features. Her presentation was built using Adobe Express
+- Making content accessible makes them LLM / agent friendly too!
+- Standard accessibility applies to LLM apps too
+- "Avoid overusing ARIA." Regular HTML should be enough. Prefer `<button>` over `<div aria-role="button">`
+- [Axe](https://www.deque.com/axe/) lets you automate accessibility testing. Available in Python, JS, Chrome extension
+- Playwright can help test keyboard navigation. Use LLMs to generate test cases or pass it to a computer use agent for live testing!
+- Think about it. If a chatbot pops up on a screen reader, how would it trigger for the user? How would they switch to it?
+- Make sure errors are visible, explain _what_ happened, _where_ it happened, and _what_ the user needs to do. In a way screen-readers can handle
 
 ## Lunch and Networking. – 11:45 am, Day 2
 

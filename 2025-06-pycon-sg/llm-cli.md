@@ -81,7 +81,7 @@ But where's the fun in that? 😀
 ## Let's create a function
 
 ```bash
-genie() {
+pyrun() {
   llm "$*" \
     --model gpt-4.1-mini \
     --system 'Write CONCISE Python code inside ```python...```
@@ -102,39 +102,97 @@ import pandas as pd
 ## Generate data
 
 ```bash
-genie Generate fake student data. Save as JSON and CSV
+pyrun Generate fake student data. Save as JSON and CSV
 ```
 
 ```bash
-genie Create 5 images with random shapes and colors. Save as test-1.png, ...
+pyrun Create 5 images with random shapes and colors. Save as test-1.png, ...
 ```
 
 ```bash
-genie Create cities.geojson with markers on the 10 most populated cities
+pyrun Create cities.geojson with markers on the 10 most populated cities
 ```
 
-## Convert or clean data
+## Convert data
 
 ```bash
-genie Convert all CSV files in this folder into parquet
-```
-
-```bash
-genie Randomly add a few missing cells to all CSVs
+pyrun Convert all CSV files in this folder into parquet
 ```
 
 ```bash
-genie Create _cleaned.csv versions of all CSVs dropping missing values
+pyrun Randomly add a few missing cells to all CSVs
 ```
 
-##
+## Clean data
 
-## You can get it to write Python code and run it
+```bash
+pyrun Create _cleaned.csv versions of all CSVs dropping missing values
+```
 
+```bash
+pyrun Deduplicate any '*name*' column in all CSVs with fuzzywuzzy ratio of 90+
+```
 
+## Transform data / text
+
+```bash
+pyrun Show me the Wikipedia home page as Markdown
+```
+
+```bash
+pyrun Format README.md as Markdown and print using rich
+```
+
+## Data science
+
+```bash
+pyrun Download the iris dataset, train a logistic regression classifier, and print the accuracy
+```
+
+```bash
+pyrun Download the Singapore shapefile from gadm and tell me the bounding box
+```
+
+```bash
+pyrun Find duplicate images in ./photos via perceptual hashing (imagehash) and output a CSV of dup clusters
+```
+
+## Visualize data
+
+```bash
+pyrun "From vega_datasets flights_2k data, save daily flight count as a line chart flights.png"
+```
+
+```bash
+pyrun Render cities.geojson as an interactive Folium map with circle markers sized by population as cities.html
+```
+
+## Scrape & parse
+
+```bash
+pyrun Scrape the top 20 HN front-page links with BeautifulSoup and save as hn.json
+```
+
+```bash
+pyrun Fetch all headings from https://docs.python.org/3/library/index.html and save to python_stdlib_headings.txt
+```
+
+## Automate the browser
+
+```bash
+pyrun Using Playwright, save a screenshot of https://example.com as example.png
+```
 
 ## Running this talk
 
+To initialize this slide deck:
+
 ```bash
 uv run https://raw.githubusercontent.com/sanand0/uv-mega/refs/heads/main/slide.py llm-cli.md
+```
+
+To go to the next slide:
+
+```bash
+uv run https://raw.githubusercontent.com/sanand0/uv-mega/refs/heads/main/slide.py
 ```

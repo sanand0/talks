@@ -187,9 +187,17 @@ Run with `uv run --with fastmcp fastmcp dev server.py` and test via the inspecto
 - Think about it. If a chatbot pops up on a screen reader, how would it trigger for the user? How would they switch to it?
 - Make sure errors are visible, explain _what_ happened, _where_ it happened, and _what_ the user needs to do. In a way screen-readers can handle
 
-## Lunch and Networking. – 11:45 am, Day 2
-
 ## Lightning Talks. – 1:30 pm, Day 2
+
+- [PyConSG Education Summit](https://pycon.sg/edusummit.html) is happening at SUTD on Mon 11 Aug, 2025
+- The "Mean Circuity" visualization on the [Singapore MRT/LRT in 2040](https://panda.observer/singapore-mrt-2040/) page shows the average (MRT distance / Euclidean distance) to each station. Clever!
+- [Marimo](https://marimo.app/) solves 3 problems:
+  - Changing a variable changes all dependent cells, like Excel
+  - They're just Python scripts. So `git diff`s are cleaner
+- [htmx](https://htmx.org/) by [Ronan Berder](https://github.com/hunvreus). But the browser API will probably replace:
+  - `hx-boost` for AJAX navigation + history with [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API)
+  - `hx-swap` for element transitions with [View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API)
+  - `hx-sse` with [EventSource](https://developer.mozilla.org/en-US/docs/Web/API/EventSource)
 
 ## ⭐ L7. Every Day is Day 1: Secure your LLM Application with Testing & Guardrails. Goh Jia Yi – GovTech. 2:30 pm, Day 2
 

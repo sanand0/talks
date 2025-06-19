@@ -1,6 +1,7 @@
 # Anand's Talks
 
-- 18 Jun 2025. **[Python in the Browser](2025-06-pycon-sg/ ":ignore")** at [Python Singapore](https://pycon.sg/)**
+- 19 Jun 2025. **[Cool LLM CLI Python uses](2025-06-pycon-sg/llm-cli.md)** at [PyCon Singapore](https://pycon.sg/)**
+- 18 Jun 2025. **[Python in the Browser](2025-06-pycon-sg/ ":ignore")** at [PyCon Singapore](https://pycon.sg/)**
 - 10 May 2025. **Vibe Coding** at [SETU](https://setuschool.com/) [⏯️ Video](https://youtu.be/ODXSDbY12dg) [💬 Transcript](2025-05-10-vibe-coding/)
 - 17 Feb 2011: **Python Imaging**. [🖥️ Code](python-imaging/index.html)
 - 28 Jan 2011: **Learning R** at [Datameet](http://www.datameet.org/).

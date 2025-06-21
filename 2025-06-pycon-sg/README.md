@@ -6,6 +6,7 @@ url: https://sanand0.github.io/talks/2025-06-pycon-sg
 theme: gaia
 backgroundColor: white
 paginate: true
+# Build: npx -y @marp-team/marp-cli@latest README.md -o index.html
 ---
 
 <!-- _backgroundColor: #defa9d -->
@@ -80,9 +81,3 @@ After the LLM generates code, here's how we run it.
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-06-pycon-sg/)
 
 Slides: [sanand0.github.io/talks/2025-06-pycon-sg/](https://sanand0.github.io/talks/2025-06-pycon-sg/)
-
-<!--
-
-npx -y @marp-team/marp-cli@latest README.md -o index.html
-
--->

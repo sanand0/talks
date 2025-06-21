@@ -102,6 +102,8 @@ import pandas as pd
 }
 ````
 
+<!-- llm --extract extract code, but doesn't stream output. I like seeing code & progress -->
+
 ## Generate data
 
 ```bash
@@ -184,6 +186,16 @@ pyrun Fetch all headings from https://docs.python.org/3/library/index.html and s
 
 ```bash
 pyrun Using Playwright, save a screenshot of https://example.com as example.png
+```
+
+## Real-life uses
+
+```bash
+pyrun 'Rename "Wealth Report-0786-mmm-yy.pdf" where mmm is like Jan, Feb, ... and yy is like 24, 25, ... to 20yy-mm.pdf like 2024-01.pdf, 2024-02.pdf, etc. and run it'
+```
+
+```bash
+pyrun 'Load gen-ai-messages.json with Pandas, get time from .time (yyyy-mm-ddThh:mm:ss.xxxZ format) and print the number of rows by month as a table'
 ```
 
 ## Running this talk

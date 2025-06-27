@@ -13,21 +13,27 @@ paginate: true
   blockquote {
     font-style: italic;
   }
+
+  section {
+    background-image: url('https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/');
+    background-repeat: no-repeat;
+    background-position: top 20px right 20px;
+    background-size: 80px auto;
+  }
 </style>
 
 # Data Design by Dialogue
 
-#### Visualizing Data with LLMs
+#### [Visualizing Data with LLMs](https://hasgeek.com/VizChitra/2025/schedule/data-design-by-dialogue-visualizing-data-with-llms-RM88yTfBNKrgSAJFiL2RQL) | [Slides](https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/)
 
 [VizChitra](https://vizchitra.com/) · 27 June 2025, 4:15 pm IST · [Bangalore](https://maps.app.goo.gl/fujVnPiBKaQhuZ3V9)
-[Anand S](https://s-anand.net/) · LLM Psychologist · [Straive](https://straive.com/)
-[Slides](https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/) · [Overview](https://hasgeek.com/VizChitra/2025/schedule/data-design-by-dialogue-visualizing-data-with-llms-RM88yTfBNKrgSAJFiL2RQL)
+[Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/)
 
 ---
 
-# I think LLMs can help in every step of the data to story value chain
+# LLMs can help in every step of the data to story value chain
 
 - **Data Engineering**: Scraping, Cleaning, ...
 - **Data Analysis**: Modeling, Insight generation, ..
@@ -47,6 +53,12 @@ Let's have [ChatGPT](https://chatgpt.com/) build us a scraper:
 
 ---
 
+## Tactics I learnt
+
+Anyone can code. Expertise helps, but is easier to develop.
+
+---
+
 ## [Cleaning Data](https://chatgpt.com/share/685d8b22-ad28-800c-b283-74a0757cadfe)
 
 > Here are WhatsApp messages. Any missing values?
@@ -57,6 +69,12 @@ Let's have [ChatGPT](https://chatgpt.com/) build us a scraper:
 – **Text** blank ~0.8% (likely media or deleted).
 
 > Interpolate/extrapolate **time** from nearby messages. Give me a .json.gz download.
+
+---
+
+## Tactics I learnt
+
+Practice delegating more. LLMs keep improving.
 
 ---
 
@@ -92,6 +110,12 @@ Let's use [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview)
 
 ---
 
+## Tactics I learnt
+
+Throw it away and redo. It's easier than fixing.
+
+---
+
 ## [Visualizing Stories](https://chatgpt.com/share/685d8fe5-c288-800c-9d87-0661859153f3)
 
 > These messages are from the VizChitra group.
@@ -105,6 +129,14 @@ Let's use [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview)
 
 ---
 
+## Tactics I learnt
+
+Don't ask for one. Ask for a dozen.
+
+Keep an impossibility list. Review monthly.
+
+---
+
 ## [Let's jam!](https://chatgpt.com/share/685d8fe5-c288-800c-9d87-0661859153f3)
 
 What questions would _you_ like to ask? E.g.:
@@ -115,7 +147,7 @@ What questions would _you_ like to ask? E.g.:
 
 ---
 
-# I think LLMs can help in every step of the data to story value chain
+#### [Visualizing Data with LLMs](https://hasgeek.com/VizChitra/2025/schedule/data-design-by-dialogue-visualizing-data-with-llms-RM88yTfBNKrgSAJFiL2RQL) | [Slides](https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/)
 
 - **Data Engineering**: Scraping, Cleaning, ...
 - **Data Analysis**: Modeling, Insight generation, ..
@@ -127,10 +159,9 @@ Try it! See where it works and fails.
 
 # Data Design by Dialogue
 
-#### Visualizing Data with LLMs
+#### [Visualizing Data with LLMs](https://hasgeek.com/VizChitra/2025/schedule/data-design-by-dialogue-visualizing-data-with-llms-RM88yTfBNKrgSAJFiL2RQL) | [Slides](https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/)
 
 [VizChitra](https://vizchitra.com/) · 27 June 2025, 4:15 pm IST · [Bangalore](https://maps.app.goo.gl/fujVnPiBKaQhuZ3V9)
-[Anand S](https://s-anand.net/) · LLM Psychologist · [Straive](https://straive.com/)
-[Slides](https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/) · [Overview](https://hasgeek.com/VizChitra/2025/schedule/data-design-by-dialogue-visualizing-data-with-llms-RM88yTfBNKrgSAJFiL2RQL)
+[Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/)

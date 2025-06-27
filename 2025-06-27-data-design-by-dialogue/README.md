@@ -167,7 +167,7 @@ Try it! See where it works and fails.
 
 ---
 
-## Data Design by Dialogue
+# Data Design by Dialogue
 
 #### [Visualizing Data with LLMs](https://hasgeek.com/VizChitra/2025/schedule/data-design-by-dialogue-visualizing-data-with-llms-RM88yTfBNKrgSAJFiL2RQL) | [Slides](https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/)
 

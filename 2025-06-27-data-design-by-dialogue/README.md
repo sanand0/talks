@@ -39,7 +39,7 @@ paginate: true
 - **Data Analysis**: Modeling, Insight generation, ..
 - **Data Visualization**: Charting, Narrations, ...
 
-Let me show you why.
+Best democratization of data stories since Open Data.
 
 ---
 
@@ -55,7 +55,11 @@ Let's have [ChatGPT](https://chatgpt.com/) build us a scraper:
 
 ## Tactics I learnt
 
-Anyone can code. Expertise helps, but is easier to develop.
+LLMs err. Have them write code!
+
+So, now, _anyone_ can code.
+
+Expertise helps. But it's easier to develop.
 
 ---
 
@@ -96,7 +100,7 @@ Apply a [Topic Modeling tool](https://llmfoundry.straive.com/classify)
 
 ## [Modeling Topics](claude-code.txt)
 
-Let's use [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview) to [code it](whatsapp_messages.py):
+Let's use [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview) to [code it](topics.py):
 
 > `whatsapp.json.gz` has WhatsApp msgs. Write `topics.py` to
 >
@@ -131,7 +135,9 @@ Throw it away and redo. It's easier than fixing.
 
 ## Tactics I learnt
 
-Don't ask for one. Ask for a dozen.
+Have LLMs **Write code** to analyze.
+
+Don't ask for one. Ask for a dozen analyses.
 
 Keep an impossibility list. Review monthly.
 
@@ -145,6 +151,10 @@ What questions would _you_ like to ask? E.g.:
 
 > More metrics! More quirky!
 
+> Redraw with Seaborn (not matplotlib) and make it beautiful! Award winning!!
+
+> Make an interactive D3 data viz to visualize these.
+
 ---
 
 #### [Visualizing Data with LLMs](https://hasgeek.com/VizChitra/2025/schedule/data-design-by-dialogue-visualizing-data-with-llms-RM88yTfBNKrgSAJFiL2RQL) | [Slides](https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/)
@@ -157,7 +167,7 @@ Try it! See where it works and fails.
 
 ---
 
-# Data Design by Dialogue
+## Data Design by Dialogue
 
 #### [Visualizing Data with LLMs](https://hasgeek.com/VizChitra/2025/schedule/data-design-by-dialogue-visualizing-data-with-llms-RM88yTfBNKrgSAJFiL2RQL) | [Slides](https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/)
 

@@ -86,7 +86,7 @@ Practice delegating more. LLMs keep improving.
 
 <video style="float:left; margin-right: 4rem" controls width="500" loop autoplay playsinline muted src="similarity.webm"></video>
 
-From these messages, let's see:
+LLMs also use _[embeddings](https://en.wikipedia.org/wiki/Word_embedding)_. From these messages, let's see:
 
 1. What messages are similar
 2. Cluster into groups
@@ -157,7 +157,7 @@ What questions would _you_ like to ask? E.g.:
 
 ---
 
-#### [Visualizing Data with LLMs](https://hasgeek.com/VizChitra/2025/schedule/data-design-by-dialogue-visualizing-data-with-llms-RM88yTfBNKrgSAJFiL2RQL) | [Slides](https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/)
+# LLMs can help in every step of the data to story value chain
 
 - **Data Engineering**: Scraping, Cleaning, ...
 - **Data Analysis**: Modeling, Insight generation, ..

@@ -1,6 +1,6 @@
 ---
 marp: true
-title: Prompt-to-Plot
+title: Data Design by Dialogue
 author: Anand S
 url: https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/
 theme: gaia
@@ -34,7 +34,7 @@ paginate: true
 
 ---
 
-# LLMs can help in every step of the data to story value chain
+## LLMs can help in every step of the data to story value chain
 
 - **Data Engineering**: Scraping, Cleaning, ...
 - **Data Analysis**: Modeling, Insight generation, ..
@@ -158,7 +158,7 @@ What questions would _you_ like to ask? E.g.:
 
 ---
 
-# LLMs can help in every step of the data to story value chain
+## LLMs can help in every step of the data to story value chain
 
 - **Data Engineering**: Scraping, Cleaning, ...
 - **Data Analysis**: Modeling, Insight generation, ..

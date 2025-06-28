@@ -31,8 +31,7 @@ paginate: true
 
 [VizChitra](https://vizchitra.com/) · 28 June 2025, 10:00 am IST · [Bangalore](https://maps.app.goo.gl/VsnBZmVpA6Sxmyje7)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-
-WiFi: `Samagata_Guest` / `Ret-123-Cel`
+[Video](https://youtu.be/SdDulR-1bBM)
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-06-28-prompt-to-plot/)
 
@@ -118,3 +117,65 @@ npx -y https://github.com/google-gemini/gemini-cli
 ```
 npx -y @anthropic-ai/claude-code
 ```
+
+---
+
+## Prompt to find a dataset
+
+<small>
+
+I am running a workshop as part of VizChitra. This workshop is called Prompt to Plot. I am going to be showing a very mixed audience how they can take a data set and convert it into a data visualization entirely using LLMs. So, the LLMs will be doing the analysis, the LLMs will be creating the code, the whole works. Now, I want you to suggest a bunch of data sets by A, searching online, but you know from my past conversations, my interests, so pick something nice and quirky. This will be the first iteration, so I want to pick something that is small, let us say about 100,000 rowsish or 10,000 rowsish, not too big and with a reasonable variety of columns and text, longish text, categorical text, numbers, that sort of a thing. But most importantly, at the end, it does, it should not matter what kind of analysis the LLM does or we pick. The story should be interesting for a wide variety of audiences, otherwise where is the fun? Now, give me something really cool, actually give me a whole bunch of stuff that is really cool.
+
+</small>
+
+---
+
+## Prompt for ideation
+
+These are the columns in the Goodreads 100k dataset. I would like to create interesting data stories out of it that can also be visualized nicely. Can you give me a dozen suggestions on A, what stories to write, B, who they would be interesting to and why and see how I might go about doing this by having an LLM write code to do it.
+
+---
+
+## Prompt to analyze & Visualize
+
+Run all of these analyses, do all that stuff you do with statistical hypothesis testing that will be useful as well and if something is not statistically significant, then flag those off, drop those analyses, do whatever you think is the best thing to do. I like charts. So, give me chart and give me pretty charts. You use matplotlib usually which is fine, go ahead and use it, but the thing is by default it looks ugly. So, think about all the beautiful data visualizations that people create, do something like that. I want to win an award with this visualization.
+
+---
+
+## Metaprompt to write code
+
+<small>
+
+I liked all of these stories that had scatter plots in them. The only issue is that there were outliers, so I would like those removed. Now, what I want you to do is give me a prompt that I will pass to an LLM along with the data set and it should write the code as HTML JavaScript in a way that I can publish on to GitHub pages. Remember that this means that we cannot have such a large data set being uploaded on to GitHub pages and users viewing it. You need to figure out some way in the prompt of telling the LLM to create these using HTML CSS JavaScript in a way that conveys the scatter plot, but without having to load the entire data set. I am ok with the page loading data of probably up to 1 or 2 megabytes. Keep that in mind, do analysis if you need to and write the prompt.
+
+</small>
+
+---
+
+## Prompt to improve visual
+
+This data visualization was nice, but not beautiful and not a story. So, let us do two things. Imagine you are writing a New York Times data visualization. How would you go about it? What fonts would you use? What color schemes would you use? What design choices would you make? Create a full-fledged data story, take a look at the results that have come out and write it in a way that will get me an award.
+
+---
+
+## Visualizations Created
+
+1. https://sanand0.github.io/booksviz/
+2. https://rasagy.in/books-viz/
+3. https://rishabhmakes.github.io/llm-dataviz/
+4. https://devanshikat.github.io/BooksVis/
+5. https://nchandrasekharr.github.io/booksviz/
+6. http://coffee-reviews.prayashm.com/
+7. https://story-b0f1c.web.app/
+
+---
+
+# Prompt to Plot
+
+#### [Crafting Visual Stories with LLMs](https://hasgeek.com/VizChitra/prompt-to-plot/) | [Slides](https://sanand0.github.io/talks/2025-06-28-prompt-to-plot/)
+
+[VizChitra](https://vizchitra.com/) · 28 June 2025, 10:00 am IST · [Bangalore](https://maps.app.goo.gl/VsnBZmVpA6Sxmyje7)
+[Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
+[Video](https://youtu.be/SdDulR-1bBM)
+
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-06-28-prompt-to-plot/)

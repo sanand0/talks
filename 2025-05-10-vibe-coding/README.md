@@ -12,13 +12,13 @@ This is a talk delivered to [SETU school](https://www.setuschool.com) on 10 May 
 
 00:13 AI gives you code, you run it.
 
-00:16 Now, hopefully that sounds a little *dangerous* because you have *no idea* what it is going to do, including potentially delete files on your system if you just happily run it.
+00:16 Now, hopefully that sounds a little _dangerous_ because you have _no idea_ what it is going to do, including potentially delete files on your system if you just happily run it.
 
-00:28 But that *is* what vibe coding is about.
+00:28 But that _is_ what vibe coding is about.
 
 00:32 Why are people talking so much about vibe coding?
 
-00:37 Because they're finding that it tends to work *better than people expected*, and it lets us do a few things that we couldn't otherwise do before.
+00:37 Because they're finding that it tends to work _better than people expected_, and it lets us do a few things that we couldn't otherwise do before.
 
 00:46 And what is what are some examples? One is, if you're not going to check the code, then you don't even need to know how to code, which means that non-programmers can build applications. That's obviously very powerful.
 
@@ -58,7 +58,7 @@ This is a talk delivered to [SETU school](https://www.setuschool.com) on 10 May 
 
 06:09 Oh, I'm out of free messages. Oh, that may well be why. Fine, no problem. I've been playing around with it for some time. So what we do is ask Gemini to do exactly the same thing.
 
-06:24 What a bummer. Apparently, all of these are supposed to be and Gemini is supposed to be even better. So I'm going to take the exact same prompt and copy it. Now, one of the things that you will notice that I'm doing here is giving up *very quickly*. One of the first principles of vibe coding is if something doesn't work, *move on*. The point is not to do something specific. The point is to get *anything* done.
+06:24 What a bummer. Apparently, all of these are supposed to be and Gemini is supposed to be even better. So I'm going to take the exact same prompt and copy it. Now, one of the things that you will notice that I'm doing here is giving up _very quickly_. One of the first principles of vibe coding is if something doesn't work, _move on_. The point is not to do something specific. The point is to get _anything_ done.
 
 06:51 Now let's see. It's going to do all of this, blah blah blah. It seems to build this. And side blah blah blah. What I'm going to say is, wait, I thought it had something called artifacts or canvas or something. Can you put? Oh, here. Okay, I should have probably clicked on Canvas and rendered it. Let me do that.
 

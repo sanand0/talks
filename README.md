@@ -1,5 +1,6 @@
 # Anand's Talks
 
+- 13 Jul 2025. **[Goodbye MBA, Hello AI](2025-07-13-goodbye-mba-hello-ai/ ":ignore")** at [DoMS, IITM](https://doms.iitm.ac.in/), Chennai
 - 28 Jun 2025. **[Prompt-to-Plot](2025-06-28-prompt-to-plot/ ":ignore")** at [VizChitra](https://vizchitra.com/), Bangalore
 - 27 Jun 2025. **[Data Design by Dialogue](2025-06-27-data-design-by-dialogue/ ":ignore")** at [VizChitra](https://vizchitra.com/), Bangalore
 - 19 Jun 2025. **[Cool LLM CLI Python uses](2025-06-pycon-sg/llm-cli.md)** at [PyCon Singapore](https://pycon.sg/)

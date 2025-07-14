@@ -15,6 +15,7 @@ paginate: true
 [DoMS, IITM](https://doms.iitm.ac.in/) · MBA Commencement
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 14 July 2025, 10:30 am IST
+[Video](https://youtu.be/sSyBUSuLduQ) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-07-13-goodbye-mba-hello-ai/transcript.md)
 
 [![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-07-13-goodbye-mba-hello-ai/)](https://sanand0.github.io/talks/2025-07-13-goodbye-mba-hello-ai/)
 
@@ -125,6 +126,7 @@ https://forms.gle/vha4c6fjidLzBycT8
 [DoMS, IITM](https://doms.iitm.ac.in/) · MBA Commencement
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 14 July 2025, 10:30 am IST
+[Video](https://youtu.be/sSyBUSuLduQ) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-07-13-goodbye-mba-hello-ai/transcript.md)
 
 [![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-07-13-goodbye-mba-hello-ai/)](https://sanand0.github.io/talks/2025-07-13-goodbye-mba-hello-ai/)
 

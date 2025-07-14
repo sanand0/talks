@@ -30,7 +30,7 @@ And _this_ is the time you've chosen to begin your MBA.
 
 ---
 
-## [LLMs fail in surprising ways](https://sanand0.github.io/llmmath/)
+## [LLMs can fail in surprising ways](https://sanand0.github.io/llmmath/)
 
 There's a _jagged edge_ of capability. See how they multiply integers:
 
@@ -45,7 +45,7 @@ There's a _jagged edge_ of capability. See how they multiply integers:
 
 ---
 
-## But LLM errors are a manageable problem
+## But management solves such problems
 
 [![h:500](https://sanand0.github.io/llmevals/double-checking/improvement.webp)](https://sanand0.github.io/llmevals/double-checking/)
 
@@ -118,16 +118,6 @@ https://forms.gle/vha4c6fjidLzBycT8
 
 ---
 
-## Faculty: Use LLMs to Teach
-
-- [Create course content](https://sanand0.github.io/llms-in-education/#5) and [assessments](https://exam.sanand.workers.dev/tds-2025-05-ga6)
-- [Automate personalized feedback](https://sanand0.github.io/llms-in-education/#6)
-- [Evaluate long-form responses](https://sanand0.github.io/llms-in-education/#7)
-- [Create virtual instructors](https://sanand0.github.io/llms-in-education/#10)
-- Teach use of LLMs. Use them in the classroom
-
----
-
 <!-- _class: lead -->
 
 # Goodbye MBA, Hello AI?
@@ -137,3 +127,13 @@ https://forms.gle/vha4c6fjidLzBycT8
 14 July 2025, 10:30 am IST
 
 [![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-07-13-goodbye-mba-hello-ai/)](https://sanand0.github.io/talks/2025-07-13-goodbye-mba-hello-ai/)
+
+---
+
+## Appendix: Use LLMs to Teach
+
+- [Create course content](https://sanand0.github.io/llms-in-education/#5) and [assessments](https://exam.sanand.workers.dev/tds-2025-05-ga6)
+- [Automate personalized feedback](https://sanand0.github.io/llms-in-education/#6)
+- [Evaluate long-form responses](https://sanand0.github.io/llms-in-education/#7)
+- [Create virtual instructors](https://sanand0.github.io/llms-in-education/#10)
+- Teach use of LLMs. Use them in the classroom

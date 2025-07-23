@@ -56,6 +56,18 @@ That drags overall equipment effectivens, first-pass yield, and order promise da
 
 ---
 
+## **Insight**: LLMs can write code to analyze data
+
+- LLMs are **domain experts**. They understand Manufacturing
+- LLMs are **coders**. They write reliable machine learning code
+- LLMs are **agentic**. They can introspect and self-correct
+
+<br>
+
+In fact, we could _just pass this email and data_ to an LLM agent!
+
+---
+
 <!-- _class: lead -->
 
 ## What if LLMs could _be_ your analytics team?
@@ -63,6 +75,8 @@ That drags overall equipment effectivens, first-pass yield, and order promise da
 ... and answer this in 5 minutes?
 
 ### Let's Explore!
+
+[![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-07-23-supply-chain-automl/)](https://sanand0.github.io/talks/2025-07-23-supply-chain-automl/)
 
 ---
 
@@ -110,6 +124,18 @@ That drags working capital, OTIF service levels, and Scope 3 emissions.
 
 ---
 
+## **Insight**: LLMs can write code to analyze data
+
+- LLMs are **domain experts**. They understand Supply Chain
+- LLMs are **coders**. They write reliable machine learning code
+- LLMs are **agentic**. They can introspect and self-correct
+
+<br>
+
+In fact, we could _just pass this email and data_ to an LLM agent!
+
+---
+
 <!-- _class: lead -->
 
 ## What if LLMs could _be_ your analytics team?
@@ -117,6 +143,8 @@ That drags working capital, OTIF service levels, and Scope 3 emissions.
 … and surface utilisation wins in **5 minutes**?
 
 ### Let’s Explore!
+
+[![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-07-23-supply-chain-automl/)](https://sanand0.github.io/talks/2025-07-23-supply-chain-automl/)
 
 ---
 

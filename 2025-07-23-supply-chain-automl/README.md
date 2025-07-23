@@ -12,7 +12,7 @@ paginate: true
 
 # Automating Insights from IoT Data
 
-[**AWS Innovation Day**](https://pages.awscloud.com/aws-mfg-industrial-suppy-chain-innovation-day.html)
+[**AWS Innovation Day**](https://pages.awscloud.com/aws-mfg-industrial-suppy-chain-innovation-day.html) ·  [Transcript](https://github.com/sanand0/talks/blob/main/2025-07-23-supply-chain-automl/transcript.md)
 23 July 2025 · Singapore
 <small>Manufacturing, Industrial and Supply Chain Edition</small>
 

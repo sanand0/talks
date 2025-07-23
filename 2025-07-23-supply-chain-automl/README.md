@@ -1,6 +1,6 @@
 ---
 marp: true
-title: Automating Insights from Supply Chain Data
+title: Automating Insights with Live Coding
 author: Anand S
 url: https://sanand0.github.io/talks/2025-07-23-supply-chain-automl/
 theme: gaia
@@ -56,7 +56,7 @@ That drags overall equipment effectivens, first-pass yield, and order promise da
 
 ---
 
-## **Insight**: LLMs can write code to analyze data
+## **Insight**: LLMs **live code** to analyze data
 
 - LLMs are **domain experts**. They understand Manufacturing
 - LLMs are **coders**. They write reliable machine learning code
@@ -70,9 +70,9 @@ In fact, we could _just pass this email and data_ to an LLM agent!
 
 <!-- _class: lead -->
 
-## What if LLMs could _be_ your analytics team?
+## What if LLMs solve problems with **live code**?
 
-... and answer this in 5 minutes?
+... and give you an answer in 5 minutes?
 
 ### Let's Explore!
 
@@ -124,7 +124,7 @@ That drags working capital, OTIF service levels, and Scope 3 emissions.
 
 ---
 
-## **Insight**: LLMs can write code to analyze data
+## **Insight**: LLMs **live code** to analyze data
 
 - LLMs are **domain experts**. They understand Supply Chain
 - LLMs are **coders**. They write reliable machine learning code
@@ -138,9 +138,9 @@ In fact, we could _just pass this email and data_ to an LLM agent!
 
 <!-- _class: lead -->
 
-## What if LLMs could _be_ your analytics team?
+## What if LLMs solve problems with **live code**?
 
-… and surface utilisation wins in **5 minutes**?
+... and give you an answer in 5 minutes?
 
 ### Let’s Explore!
 

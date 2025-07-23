@@ -1,6 +1,6 @@
 # Anand's Talks
 
-- 23 Jul 2025. **[Automating Insights from Supply Chain Data](2025-07-23-supply-chain-automl/ ":ignore")** at [**AWS Innovation Day**](https://pages.awscloud.com/aws-mfg-industrial-suppy-chain-innovation-day.html), Singapore
+- 23 Jul 2025. **[Solving Industrial Problems with Live Coding](2025-07-23-supply-chain-automl/ ":ignore")** at [**AWS Innovation Day**](https://pages.awscloud.com/aws-mfg-industrial-suppy-chain-innovation-day.html), Singapore
 - 13 Jul 2025. **[Goodbye MBA, Hello AI](2025-07-13-goodbye-mba-hello-ai/ ":ignore")** at [DoMS, IITM](https://doms.iitm.ac.in/), Chennai
 - 28 Jun 2025. **[Prompt-to-Plot](2025-06-28-prompt-to-plot/ ":ignore")** at [VizChitra](https://vizchitra.com/), Bangalore
 - 27 Jun 2025. **[Data Design by Dialogue](2025-06-27-data-design-by-dialogue/ ":ignore")** at [VizChitra](https://vizchitra.com/), Bangalore

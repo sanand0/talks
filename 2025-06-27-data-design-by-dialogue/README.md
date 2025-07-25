@@ -28,7 +28,7 @@ paginate: true
 
 [VizChitra](https://vizchitra.com/) · 27 June 2025, 4:15 pm IST · [Bangalore](https://maps.app.goo.gl/fujVnPiBKaQhuZ3V9)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Video](https://youtu.be/hPH5_ulHtno) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-06-27-data-design-by-dialogue/transcript.md)
+[Video](https://youtu.be/htc3LwVbPgI) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-06-27-data-design-by-dialogue/transcript.md)
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/)
 
@@ -174,6 +174,6 @@ Try it! See where it works and fails.
 
 [VizChitra](https://vizchitra.com/) · 27 June 2025, 4:15 pm IST · [Bangalore](https://maps.app.goo.gl/fujVnPiBKaQhuZ3V9)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Video](https://youtu.be/hPH5_ulHtno) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-06-27-data-design-by-dialogue/transcript.md)
+[Video](https://youtu.be/htc3LwVbPgI) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-06-27-data-design-by-dialogue/transcript.md)
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/)

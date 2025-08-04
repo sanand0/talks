@@ -211,7 +211,6 @@ Let's prompt ChatGPT to:
 
 ## This gives us reliable calculations
 
-
 ## Running this talk
 
 To initialize this slide deck:

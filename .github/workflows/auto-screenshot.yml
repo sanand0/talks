@@ -1,0 +1,32 @@
+name: Auto Screenshot
+
+on: push
+
+jobs:
+  screenshot:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Home screenshot
+        uses: krishna-gramener/github-screenshots@v1.1
+        with:
+          url: http://localhost:5000
+          output: screenshot.webp
+      - name: Supply-chain screenshot
+        uses: krishna-gramener/github-screenshots@v1.1
+        with:
+          url: http://localhost:5000/2025-07-23-supply-chain-automl/
+          output: 2025-07-23-supply-chain-automl.webp
+      - name: Commit screenshots
+        run: |
+          git config user.name 'github-actions'
+          git config user.email 'github-actions@github.com'
+          git add screenshot.webp 2025-07-23-supply-chain-automl.webp
+          git commit -m '📸 Screenshot updated' || echo 'No changes'
+          git push

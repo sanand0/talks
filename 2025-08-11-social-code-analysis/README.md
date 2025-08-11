@@ -21,13 +21,13 @@ paginate: true
 
 [PyConSG Education Summit](https://pycon.sg/edusummit.html) · 11 Aug 2025 · [SUTD, Singapore](https://maps.app.goo.gl/rfqZDgPiPkhr5C7E6)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Blog](https://www.s-anand.net/blog/category/education/) · [Slides](https://sanand0.github.io/talks/2025-08-11-social-code-analysis/) · <span style="color:red">Record audio</span>
+[Blog](https://www.s-anand.net/blog/category/education/) · [Slides](https://sanand0.github.io/talks/2025-08-11-social-code-analysis/) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-08-11-social-code-analysis/transcript.md)
 
 ![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-08-11-social-code-analysis/)
 
 ---
 
-## [I asked students to automate analysis](https://github.com/sanand0/tools-in-data-science-public/blob/tds-2024-t3/project-2-automated-analysis.md)
+## [I asked ~1,000 students to _automate_ analysis](https://github.com/sanand0/tools-in-data-science-public/blob/tds-2024-t3/project-2-automated-analysis.md)
 
 [Project 2 Tools in Data Science, BS Data Science, IIT Madras](https://github.com/sanand0/tools-in-data-science-public/blob/tds-2024-t3/project-2-automated-analysis.md)
 
@@ -35,6 +35,15 @@ paginate: true
 > 2. Convince an LLM that your script and output are of high quality.
 >
 > Running `uv run autolysis.py DATA.csv` must create a `README.md` with automated analysis as a story + data visualizations.
+
+---
+
+## Evaluation & feedback were [LLM-automated](https://github.com/sanand0/tools-in-data-science-public/blob/tds-2024-t3/project2/evaluate.py)
+
+Rubric 17/27: [Code sends _only_ carefully chosen analysis to the LLM?](<(https://sanand0.github.io/tds-2024-sep-project-2-results/#?tab=detail&test=code%3A+selective_analyses&sort=marks)>)
+
+> - 🔴 The code focuses on selective data analysis required to prepare a report but doesn't have a filtering mechanism to only present certain metrics to the AI.
+> - 🟢 The code only processes relevant analyses by summarizing key findings (missing values, statistics, etc.) before sending it to the LLM, thereby avoiding unnecessary data.
 
 ---
 
@@ -196,25 +205,31 @@ They scored the most.
 
 ---
 
-## What does social code analysis teach us?
+## Lessons for Students
 
-- **For students**
-  1. Copy late to pick best submissions
-  2. Change code only if you're sure
-  3. Let others copy from you
-- **For teachers**: _Analyze code similarity_. You can learn:
-  1. How do students learn? _When_ do they learn? From _whom_?
-  2. Who's isolated? Who're the future teachers / TAs?
-  3. What have they understood well enough to change correctly?
+1. **Copy late** to pick from the best submissions
+2. **Double check** before you change code
+3. **Let others copy** from you. Improve from their feedback
 
 ---
 
-# Lessons from Social Code Analysis
+## Lessons for Educators
+
+- **Analyze code similarity!** You can discover:
+  1. Which students are isolated? Who're the future teachers / TAs?
+  2. When do they learn? Who do they learn from?
+  3. What concepts have they understood well enough to tweak?
+  4. Which code segments have the most diversity? Least?
+- **Scale helps**! More students ⇒ more data, more experiments
+
+---
+
+# Learn from Social Code Analysis
 
 ### <q>Pythonic Grading that Rewards Sharing</q>
 
 [PyConSG Education Summit](https://pycon.sg/edusummit.html) · 11 Aug 2025 · [SUTD, Singapore](https://maps.app.goo.gl/rfqZDgPiPkhr5C7E6)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Blog](https://www.s-anand.net/blog/category/education/) · [Slides](https://sanand0.github.io/talks/2025-08-11-social-code-analysis/)
+[Blog](https://www.s-anand.net/blog/category/education/) · [Slides](https://sanand0.github.io/talks/2025-08-11-social-code-analysis/) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-08-11-social-code-analysis/transcript.md)
 
 ![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-08-11-social-code-analysis/)

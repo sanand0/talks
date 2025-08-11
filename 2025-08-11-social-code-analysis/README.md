@@ -1,35 +1,29 @@
 ---
 marp: true
-title: Python Grading that Rewards Sharing
+title: Lessons from Social Code Analysis
 author: Anand S
-url: https://sanand0.github.io/talks/2025-08-11-python-grading-that-rewards-sharing/
+url: https://sanand0.github.io/talks/2025-08-11-social-code-analysis/
 theme: gaia
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
 ---
 
 <style>
-  blockquote {
+  blockquote, q {
     font-style: italic;
   }
 
-  section {
-    background-image: url('https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-08-11-python-grading-that-rewards-sharing/');
-    background-repeat: no-repeat;
-    background-position: top 20px right 20px;
-    background-size: 80px auto;
-  }
 </style>
 
-# Python Grading that Rewards Sharing
+# Lessons from Social Code Analysis
 
-### _What I learned by encouraging students to copy_
+### <q>Pythonic Grading that Rewards Sharing</q>
 
 [PyConSG Education Summit](https://pycon.sg/edusummit.html) · 11 Aug 2025 · [SUTD, Singapore](https://maps.app.goo.gl/rfqZDgPiPkhr5C7E6)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Slides](https://sanand0.github.io/talks/2025-08-11-python-grading-that-rewards-sharing/)
+[Blog](https://www.s-anand.net/blog/category/education/) · [Slides](https://sanand0.github.io/talks/2025-08-11-social-code-analysis/) · <span style="color:red">Record audio</span>
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-08-11-python-grading-that-rewards-sharing/)
+![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-08-11-social-code-analysis/)
 
 ---
 
@@ -215,12 +209,12 @@ They scored the most.
 
 ---
 
-# Python Grading that Rewards Sharing
+# Lessons from Social Code Analysis
 
-### _What I learned by encouraging students to copy_
+### <q>Pythonic Grading that Rewards Sharing</q>
 
 [PyConSG Education Summit](https://pycon.sg/edusummit.html) · 11 Aug 2025 · [SUTD, Singapore](https://maps.app.goo.gl/rfqZDgPiPkhr5C7E6)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Slides](https://sanand0.github.io/talks/2025-08-11-python-grading-that-rewards-sharing/)
+[Blog](https://www.s-anand.net/blog/category/education/) · [Slides](https://sanand0.github.io/talks/2025-08-11-social-code-analysis/)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-08-11-python-grading-that-rewards-sharing/)
+![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-08-11-social-code-analysis/)

@@ -1,3 +1,5 @@
+# Transcript - Social Code Analysis
+
 I'm going to be talking about social code analysis. And what that means will become obvious as we go along.
 
 At IIT Madras, I teach a course called Tools in Data Science. And one of the projects that I assigned the students was, you've got to write a Python program that automates data analysis. I'm going to give it a data set. It has to use LLMs to analyze that data set and create a story all by itself. The evaluation and the feedback were also LLM-based. We had a set of 27 checks. For instance, item number 17 was, the code should only send carefully chosen analysis to the LLMs, not the whole thing. And the evaluation was done by an LLM, which in some cases told the student, "Yeah, look, you're only sending selective analysis, that's good," or "No, you're sending all of it, that's not particularly good," etc.

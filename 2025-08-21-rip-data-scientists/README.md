@@ -33,7 +33,7 @@ paginate: true
 
 ---
 
-# Why so serious?
+# _R.I.P?_ Seriously!?
 
 <div class="two-panel">
 
@@ -116,11 +116,15 @@ paginate: true
 
 </div>
 
+<div data-marpit-fragment>
+
 - Route leaderboard, growth, seasonality
 - Network exploration, weighted edges, centrality
 - Compare per-capita, fairness
 - Carrier overlay and variation, carrier entry/exit
 - Summarize insights as _poetry_
+
+</div>
 
 </div>
 
@@ -148,10 +152,10 @@ paginate: true
 
 > Perform **COMPREHENSIVE** and **ADVANCED** data quality analysis. For each dataset here, list every clear and potential data quality issue. Make sure these are non-obvious, non-trivial, and mind-blowing! Suggest approaches to automatically fix these.
 
-- Hyderabad → Hyderabad is an active route!
-- _Cumulative_ drone certificates actually _decrease_ some days.
-- Jun 7, 2023: 86K international arrivals. _Exceeds global traffic_!
-- Dec 4, 2023: 894k footfalls vs 804k people. 90K _teleported_?
+* Hyderabad → Hyderabad is an active route!
+* _Cumulative_ drone certificates actually _decrease_ some days.
+* Jun 7, 2023: 86K international arrivals. _Exceeds global traffic_!
+* Dec 4, 2023: 894k footfalls vs 804k people. 90K _teleported_?
 
 </div>
 
@@ -163,7 +167,7 @@ paginate: true
 
 - Forecast next-month passengers by route. Which model is best?
 - Also:
-  - Which routes will revive? Why? Neighbor city network effects?
+  - Which routes will revive? Why? Neighbor networks?
   - Predict carrier share. Where does route mix change most?
 - Let me download the models
 

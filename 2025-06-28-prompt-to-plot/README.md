@@ -160,13 +160,13 @@ This data visualization was nice, but not beautiful and not a story. So, let us 
 
 ## Visualizations Created
 
-1. https://sanand0.github.io/booksviz/
-2. https://rasagy.in/books-viz/
-3. https://rishabhmakes.github.io/llm-dataviz/
-4. https://devanshikat.github.io/BooksVis/
-5. https://nchandrasekharr.github.io/booksviz/
-6. http://coffee-reviews.prayashm.com/
-7. https://story-b0f1c.web.app/
+1. https://rishabhmakes.github.io/llm-dataviz/
+2. http://coffee-reviews.prayashm.com/
+3. https://nchandrasekharr.github.io/booksviz/
+4. https://story-b0f1c.web.app/
+5. https://devanshikat.github.io/BooksVis/
+6. https://rasagy.in/books-viz/
+7. https://sanand0.github.io/booksviz/
 
 ---
 

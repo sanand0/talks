@@ -39,7 +39,7 @@ Or, commit to _broad_ improvement, not specific apps.
 
 ---
 
-## **Optimize the validation loop, not the coding loop**
+## Optimize the validation loop, not the coding loop
 
 **Why:** Copilot-style tools boost raw speed (55% faster on a benchmark task), shifting value to verification. Evals/property tests and "fail-first" tests pay compounding returns.
 
@@ -47,7 +47,7 @@ Or, commit to _broad_ improvement, not specific apps.
 
 ---
 
-## **Make repos "LLM-ergonomic"**
+## Make repos "LLM-ergonomic"
 
 **Why:** Models perform better with consistent structure, fast tests, and machine-readable context (e.g., repo "manuals" for LLMs).
 
@@ -55,7 +55,7 @@ Or, commit to _broad_ improvement, not specific apps.
 
 ---
 
-## **Adopt "diff-native" workflows**
+## Adopt "diff-native" workflows
 
 **Why:** Modern coding models are trained to propose/apply file diffs; diff-first workflows reduce accidental edits and review effort.
 
@@ -63,7 +63,7 @@ Or, commit to _broad_ improvement, not specific apps.
 
 ---
 
-## **Prefer typed interfaces & DSLs over prose**
+## Prefer typed interfaces & DSLs over prose
 
 **Why:** Structured outputs (schemas/grammars) and typed APIs minimize ambiguity and regression surface; typed stacks (TS/Rust/Go or Python+typing/Pydantic) tend to vibe-code more reliably.
 
@@ -71,7 +71,7 @@ Or, commit to _broad_ improvement, not specific apps.
 
 ---
 
-## **Re-design process around _short feedback loops_**
+## Re-design process around _short feedback loops_
 
 **Why:** With AI in the loop, the classic "tighten the loop" wisdom matters more-fast, frequent checks beat elaborate prompts.
 
@@ -79,7 +79,7 @@ Or, commit to _broad_ improvement, not specific apps.
 
 ---
 
-## **Build evals-in-the-loop; let models compete**
+## Build evals-in-the-loop; let models compete
 
 **Why:** Evolutionary/iterative systems that mutate code and auto-evaluate consistently outperform single-shot prompting.
 
@@ -87,7 +87,7 @@ Or, commit to _broad_ improvement, not specific apps.
 
 ---
 
-## **Instrument the AI itself (observability/usage/cost)**
+## Instrument the AI itself (observability/usage/cost)
 
 **Why:** You can't improve what you don't measure-usage, drift, regressions, and spend must be visible like any service.
 
@@ -95,7 +95,7 @@ Or, commit to _broad_ improvement, not specific apps.
 
 ---
 
-## **Adopt defensive UX and "ask-to-ask" patterns**
+## Adopt defensive UX and "ask-to-ask" patterns
 
 **Why:** Mature human-AI guidelines reduce silent failure and overreach; agentic systems need clear opt-outs and confirmations.
 
@@ -103,7 +103,7 @@ Or, commit to _broad_ improvement, not specific apps.
 
 ---
 
-## **Expect uneven gains: seniors benefit differently than novices**
+## Expect uneven gains: seniors benefit differently than novices
 
 **Why:** Experienced devs get sizable productivity boosts, but novices can develop an _illusion of competence_ without robust verification. Plan training, not just tooling.
 
@@ -111,7 +111,7 @@ Or, commit to _broad_ improvement, not specific apps.
 
 ---
 
-## **Plan for non-determinism and drift**
+## Plan for non-determinism and drift
 
 **Why:** Agents/models change; determinism degrades over time if you don't pin specs, tools, and checks. Cursor's own guidance emphasizes tight build/test gates.
 
@@ -119,7 +119,7 @@ Or, commit to _broad_ improvement, not specific apps.
 
 ---
 
-## **Small, typed, tool-rich teams will out-ship bigger ones**
+## Small, typed, tool-rich teams will out-ship bigger ones
 
 **Why:** Market trend: tiny, principled teams can now reach millions; the leverage is in tooling/process, not headcount.
 

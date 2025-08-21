@@ -47,7 +47,7 @@ Or, commit to _broad_ improvement, not specific apps.
 
 ---
 
-## Make repos "LLM-ergonomic"
+## Make repos "LLM-friendly"
 
 **Why:** Models perform better with consistent structure, fast tests, and machine-readable context (e.g., repo "manuals" for LLMs).
 
@@ -55,15 +55,7 @@ Or, commit to _broad_ improvement, not specific apps.
 
 ---
 
-## Adopt "diff-native" workflows
-
-**Why:** Modern coding models are trained to propose/apply file diffs; diff-first workflows reduce accidental edits and review effort.
-
-**Do next:** require patch hunks in PRs; auto-reject whole-file rewrites; prefer editors/agents that apply diffs deterministically.
-
----
-
-## Prefer typed interfaces & DSLs over prose
+## Prefer typed languages & DSLs
 
 **Why:** Structured outputs (schemas/grammars) and typed APIs minimize ambiguity and regression surface; typed stacks (TS/Rust/Go or Python+typing/Pydantic) tend to vibe-code more reliably.
 
@@ -79,27 +71,11 @@ Or, commit to _broad_ improvement, not specific apps.
 
 ---
 
-## Build evals-in-the-loop; let models compete
+## Always build evals-in-the-loop
 
 **Why:** Evolutionary/iterative systems that mutate code and auto-evaluate consistently outperform single-shot prompting.
 
 **Do next:** spin N variants per change; auto-benchmark; keep a league table; merge winners only.
-
----
-
-## Instrument the AI itself (observability/usage/cost)
-
-**Why:** You can't improve what you don't measure-usage, drift, regressions, and spend must be visible like any service.
-
-**Do next:** log prompts/traces, attach test results to PRs, track latency/cost per task, alert on eval regressions.
-
----
-
-## Adopt defensive UX and "ask-to-ask" patterns
-
-**Why:** Mature human-AI guidelines reduce silent failure and overreach; agentic systems need clear opt-outs and confirmations.
-
-**Do next:** design prompts/agents with explicit "don't know" paths, confirmations for risky ops, and post-action summaries.
 
 ---
 
@@ -108,39 +84,6 @@ Or, commit to _broad_ improvement, not specific apps.
 **Why:** Experienced devs get sizable productivity boosts, but novices can develop an _illusion of competence_ without robust verification. Plan training, not just tooling.
 
 **Do next:** teach code review and failure-mode literacy; require short "how I verified" notes in PRs.
-
----
-
-## Plan for non-determinism and drift
-
-**Why:** Agents/models change; determinism degrades over time if you don't pin specs, tools, and checks. Cursor's own guidance emphasizes tight build/test gates.
-
-**Do next:** pin model versions where possible; snapshot prompts/specs; baseline tests; run periodic re-evals.
-
----
-
-## Small, typed, tool-rich teams will out-ship bigger ones
-
-**Why:** Market trend: tiny, principled teams can now reach millions; the leverage is in tooling/process, not headcount.
-
-**Do next:** invest in infra (fast CI, evals, repo ergonomics), not seats; cultivate "QC + ops + evals" as first-class roles.
-
----
-
-# Concrete practices to operationalize this
-
-- **Repository scaffolding:** `PROMPTS.md`, `SPEC.md`, `llms.txt`, `CONTRIBUTING.md` (with diff rules), `Makefile/justfile` targets: `lint`, `typecheck`, `test`, `eval`.
-- **Pipelines:** pre-commit `ruff/black/pyright` (or `eslint/biome/tsc`), unit+property tests, scenario evals, and **mandatory** PR diffs.
-- **Agent settings:** require confirm-before-dangerous-ops; parallelize safe tasks; log traces; budget limits; nightly re-evals.
-- **Stack bias:** typed where possible; push tasks into DSLs (SQL/Vega-Lite/OpenAPI) instead of free text.
-
----
-
-## Avoid path-dependence
-
-- Don't over-index on one editor/agent; **measure** your stack (METR-style tasks) quarterly.
-- Avoid "prompt maximalism": prefer **shorter, schema-bound prompts + evals** over mega-prompts.
-- Docs for humans might shrink, but **docs for models** (schemas/examples/fixtures) must grow.
 
 ---
 

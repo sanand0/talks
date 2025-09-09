@@ -27,7 +27,7 @@ paginate: true
 
 [DataHack Summit](https://www.analyticsvidhya.com/datahacksummit/) · 21 Aug 2025 · [Bangalore](https://maps.app.goo.gl/fBAcQ6VopycH8z9T8)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Slides](https://sanand0.github.io/talks/2025-08-21-rip-data-scientists/) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-08-21-rip-data-scientists/transcript.md)
+[Video](https://youtu.be/xZpdwLHW40o) · [Slides](https://sanand0.github.io/talks/2025-08-21-rip-data-scientists/) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-08-21-rip-data-scientists/transcript.md)
 
 ![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-08-21-rip-data-scientists/)
 

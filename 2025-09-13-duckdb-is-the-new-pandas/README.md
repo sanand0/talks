@@ -2,13 +2,13 @@
 
 PyCon India, Bangalore, 13 Sep 2025
 
-Anand S, LLM Psychologist @ Straive
+Anand S, LLM Psychologist @ **Straive**
 
-Slides: <https://sanand0.github.io/talks/>
+**Slides**: <https://sanand0.github.io/talks/>
 
-Ask **Questions** At: Slido.com - 2987 234
+**Questions**: Slido.com - 2987 234
 
-LICENSE: CC0 - Public Domain
+LICENSE: **CC0** - Public Domain
 
 <!--
 
@@ -19,10 +19,8 @@ Venue: [NIMHANS Convention Center](https://maps.app.goo.gl/Uon4KDWDqy65RGim8)
 
 ## Why DuckDB?
 
-DuckDB is an embedded analytical database.
-Like SQLite, but for analytics.
-It's just **SQL**: nothing new to learn
-
+DuckDB is like SQLite, but for analytics.
+Just **SQL**: nothing new to learn
 After 12 years of Pandas, I'm shifting to DuckDB because:
 
 1. It's much **faster** (with less memory)
@@ -95,9 +93,9 @@ CREATE OR REPLACE SECRET github_api (
   BEARER_TOKEN getenv('GITHUB_TOKEN')
 );
 
-FROM read_json("https://api.github.com/search/repositories?q=duckdb")
+FROM read_json("https://api.github.com/search/repositories?q=python&sort=stars&order=desc")
 SELECT unnest(items, recursive := true)
-LIMIT 1;
+LIMIT 5;
 ```
 
 ## It can query remote .parquet files directly
@@ -188,7 +186,7 @@ FROM elections LIMIT 2;
 ```
 
 | State  | Const | Party         | Candidate          | Votes  |
-| -------| ----- | ------------- | ------------------ | ------ |
+| ------ | ----- | ------------- | ------------------ | ------ |
 | Andhra | Araku | Yuvajana ...  | GUMMA THANUJA RANI | 477005 |
 | Andhra | Araku | Bharatiya ... | KOTHAPALLI GEETHA  | 426425 |
 
@@ -278,19 +276,6 @@ I run a course at IIT Madras: Tools in Data Science.
 **DuckDB WASM** evaluates student responses. Example:
 
 <https://exam.sanand.workers.dev/tds-2025-01-roe#hq-duckdb-sales-over-time>
-
-## FYI, this is the solution
-
-```sql
-SELECT
-  strftime(CAST(timestamp AS TIMESTAMP), '%H') AS hour,
-  COALESCE(SUM(CASE WHEN category = 'Electronics' THEN amount ELSE 0 END), 0) AS Electronics,
-  COALESCE(SUM(CASE WHEN category = 'Clothing' THEN amount ELSE 0 END), 0) AS Clothing,
-  COALESCE(SUM(CASE WHEN category = 'Home Goods' THEN amount ELSE 0 END), 0) AS "Home Goods"
-FROM sales
-GROUP BY hour
-ORDER BY hour ASC;
-```
 
 ## You can run DuckDB in ChatGPT
 
@@ -424,7 +409,6 @@ Slides: <https://sanand0.github.io/talks/>
 LICENSE: CC0 - Public Domain
 
 Contact me: <https://s-anand.net/>
-
 
 <!--
 

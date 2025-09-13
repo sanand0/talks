@@ -2,14 +2,13 @@
 #
 # /// script
 # requires-python = ">=3.13"
-# dependencies = [
-#     "markdown2",
-#     "rich",
-# ]
+# dependencies = ["markdown2", "rich"]
 # ///
 """
+Renders markdown files as slides in the terminal.
+
 Usage:
-  uv run slide.py script.md         # Resets state and renders the first slide from script.md
+  uv run slide.py README.md         # Resets state and renders the first slide from README.md
   uv run slide.py                   # Next slide
   uv run slide.py +n or -n          # nth slide after/before current
   uv run slide.py N                 # nth slide
@@ -173,10 +172,6 @@ def html_to_rich(html):
     return re.sub(r"\n\n\n+", "\n\n", html).strip()
 
 
-def clear_screen():
-    os.system("cls" if os.name == "nt" else "clear")
-
-
 def main():
     # Parse command-line arguments.
     filename = None
@@ -248,7 +243,7 @@ def main():
         save_state(state)
 
     # Clear screen before printing the slide.
-    clear_screen()
+    os.system("cls" if os.name == "nt" else "clear")
 
     # Convert markdown to HTML (with fenced-code-blocks extra) then to Rich markup.
     html = markdown2.markdown(sections[slide_index], extras=["fenced-code-blocks"])
@@ -261,6 +256,7 @@ def main():
     out = cap.get()
     for line in out.splitlines():
         print(line.rstrip())
+
 
 if __name__ == "__main__":
     main()

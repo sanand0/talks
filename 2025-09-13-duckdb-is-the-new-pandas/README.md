@@ -410,6 +410,71 @@ LICENSE: CC0 - Public Domain
 
 Contact me: <https://s-anand.net/>
 
+# Q&A
+
+The questons raised on Slido.com: #2987 234 are answered below.
+
+<!-- https://admin.sli.do/event/2tkf9n716waxwmzsFC5fiU/polls -->
+
+- **What's your terminal setup? (+9)**
+  - I run `fish` in VS Code. Here is my [laptop setup](https://github.com/sanand0/scripts/blob/54560718bf2f4148d9005d74ab1543de52cff6d9/setup/linux.md) and [fish config](https://github.com/sanand0/scripts/blob/54560718bf2f4148d9005d74ab1543de52cff6d9/setup.fish).
+  - I used `.shell uv run ../slide.py` to render this README.md as slides on the console. Here is the [slide.py source](https://github.com/sanand0/talks/blob/7378053fcf5ea7ca1f53168f7771884212e4b56b/slide.py).
+  - I used `.shell llm "Write DuckDB SQL: ..."` to generate SQL via GPT-5 Mini using Simon Willison's [`llm`](https://llm.datasette.io/).
+  - I used `.shell ask` to generate SQL from audio. Here is the [`ask` source](https://github.com/sanand0/scripts/blob/54560718bf2f4148d9005d74ab1543de52cff6d9/ask) and the [`ask.md`](ask.md) context.
+- **Can we use DuckDB as a vector DB? (+2)**
+  - Yes. Install the VSS extension for vector similarity search (e.g., cosine/L2) with index support directly in SQL; for scale or speed (e.g. streaming), a dedicated vector DB may still be better.
+- **Can we use DuckDB instead of relational databases? Any advantages over PostgreSQL? (+2)**
+  - For single-node analytics, DuckDB's embedded, columnar, vectorized engine can be simpler and faster than a row-store like PostgreSQL; for multi-user OLTP/services, PostgreSQL remains the better fit.
+- **Can DuckDB process a large CSV files, say more than 10GB per CSV without running into out of memory issues. Pandas usually run into memory issues read_csv (+1)**
+  - Yes. DuckDB streams CSVs and can operate out-of-core (spilling to disk) so files can exceed RAM; prefer Parquet if you'll query repeatedly.
+- **Can I query my 1 million data points in disk using DuckDB without loading it in-memory? What will be the desired data format for that?**
+  - Yes. Use Parquet files.
+- **Will running DuckDB on large datasets affect the performance while running on containers?**
+  - No inherent penalty. DuckDB is just a process; performance mainly changes if you cap container CPU/RAM or disk I/O.
+- **How much compute resource do we need for large datasets?**
+  - DuckDB uses all cores by default and spills to SSD when needed; give it as many cores as available and fast local disk for temp files.
+- **If DuckDB is described as in-memory processing but doesn't use much RAM, how does it manage query execution without heavily relying on RAM?**
+  - It executes in vectorized "data chunks" with predicate/projection pushdown. It spills intermediates to disk, keeping only small slices in memory.
+- **Why is DuckDB so fast? What is Pandas doing incorrectly?**
+  - DuckDB combines a columnar storage format, cost-based optimizer, vectorized operators, and parallelism: capabilities a dataframe library like Pandas doesn't target as a DBMS.
+- **What are the tradeoffs when switching to DuckDB from Pandas?**
+  - You trade Pythonic, row-wise APIs for SQL. For custom per-row logic/ML you'll still use Pandas/NumPy and bridge via Arrow/Pandas interop.
+- **Is it as perforant on insertions?**
+  - DuckDB isn't built for high-rate single-row OLTP inserts. Use bulk loading (COPY/Appender) for best write throughput.
+- **How to force predicate pushdown if DuckDB client is attached connection with PostgreSQL?**
+  - The Postgres scanner attempts filter/projection pushdown automatically where supported; you can't "force" unsupported cases. Verify with EXPLAIN and move filters into the scan query.
+- **Do DuckDB have auth?**
+  - DuckDB is embedded (no server/users), so you rely on OS/file permissions; use the Secrets Manager for external creds or the optional HTTP server extension if exposing over HTTP.
+- **Since DuckDB is an OLAP database, how is it different from ClickHouse? Which one do you think is faster?**
+  - DuckDB is single-node. ClickHouse is a client-server (cluster-scale). Speed depends on workload.
+- **While importing tables from a file, is it possible to specify the separator (for eg.. If I'm using a dataset with tab seperated values)**
+  - Yes. Use `read_csv('file', delim '\t')` or `COPY ... (FORMAT csv, DELIMITER '\t')`.
+- **What are the limitations DuckDB WASM regarding threads and memory?**
+  - Browser multi-threading needs `SharedArrayBuffer` with proper COOP/COEP headers. Otherwise it's single-threaded, and wasm32 memory typically tops out around 4 GB.
+- **Can we connect to cloud OLAP systems with DuckDB? Can we also use it to perform writes to target cloud systems like BigQuery?**
+  - Yes. Via community extensions (e.g., BigQuery, ClickHouse, Postgres) and httpfs for S3/GCS. The BigQuery extension supports reading _and writing_ tables.
+- **Why was it named DuckDB?**
+  - The founders named it after a pet duck ("Wilbur") and because ducks are resilient; releases even use duck species codenames.
+- **Have you tried DuckLake?**
+  - Just as an experiment. I haven't actually used it.
+- **Have you tried MotherDuck?**
+  - Just as an experiment. I haven't actually used it.
+- **Can DuckDB analyze poultry data?**
+  - Yes.
+- **Does it has any thing to do with DuckDuckGo?**
+  - No.
+- **Really enjoyed your session! Can you please some materials to get started with DuckDB? Also, please share your linkedin. Thanks!**
+  - The [DuckDB docs](https://duckdb.org/docs/) are a good start.
+  - I'm on LinkedIn at <https://www.linkedin.com/in/sanand0/>
+- **You missed mentioning Ruby and Elixir 🥲 (jk)**
+  - Oh, I'm not familiar enough with either 😔
+- **DDonald Duck: Can BJP continue to hijack elections if the ECI uses this? (+1)**
+  - I have no idea! 😕
+- **Tthecont1: Thank you for using my elections dataset. Flattered 😊 (+2)**
+  - Thanks for creating it!
+- **Extremely interesting presentation! Loved it (+1)**
+  - Thanks!
+
 <!--
 
 DuckDB vs Pandas: https://chatgpt.com/c/68bb7248-ec7c-832f-9348-3790779dbf81

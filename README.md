@@ -1,6 +1,6 @@
 # Anand's Talks
 
-- 13 Aug 2025. **[DuckDB is the new Pandas](2025-09-13-duckdb-is-the-new-pandas/ ":ignore")** at [PyCon India 2025](https://cfp.in.pycon.org/2025/talk/W8VJX3/), Bangalore
+- 13 Sep 2025. **[DuckDB is the new Pandas](2025-09-13-duckdb-is-the-new-pandas/ ":ignore")** at [PyCon India 2025](https://cfp.in.pycon.org/2025/talk/W8VJX3/), Bangalore
 - 21 Aug 2025. **[AI Coding Guide](2025-08-21-ai-coding-guide/ ":ignore")** at [DataHack Summit](https://www.analyticsvidhya.com/datahacksummit/), Bangalore
 - 21 Aug 2025. **[RIP Data Scientists](2025-08-21-rip-data-scientists/ ":ignore")** at [DataHack Summit](https://www.analyticsvidhya.com/datahacksummit/), Bangalore
 - 11 Aug 2025. **[Social Code Analysis](2025-08-11-social-code-analysis/ ":ignore")** at [PyConSG Education Summit 2025](https://pycon.sg/edusummit.html), Singapore

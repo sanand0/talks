@@ -100,6 +100,6 @@ Let's analyze some datasets with this mindset.
 [Fifth Elephant Workshop](http://has.gy/hV8U) · 16 Sep 2025, 2:00 pm IST · [Bangalore]()
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 
-Feedback:
+Please share your feedback here:
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://forms.gle/CfiZDDUGCG73vfdM7)

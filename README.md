@@ -1,10 +1,11 @@
 # Anand's Talks
 
 - 16 Sep 2025. **[Vibe Analysis](2025-09-16-vibe-analysis/ ":ignore")** at [Fifth Elephant Workshops](http://has.gy/hV8U), Bangalore
-- 13 Sep 2025. **[DuckDB is the new Pandas](2025-09-13-duckdb-is-the-new-pandas/ ":ignore")** at [PyCon India 2025](https://cfp.in.pycon.org/2025/talk/W8VJX3/), Bangalore
+- 13 Sep 2025. **[DuckDB is the new Pandas](2025-09-13-duckdb-is-the-new-pandas/)** at [PyCon India 2025](https://cfp.in.pycon.org/2025/talk/W8VJX3/), Bangalore
 - 21 Aug 2025. **[AI Coding Guide](2025-08-21-ai-coding-guide/ ":ignore")** at [DataHack Summit](https://www.analyticsvidhya.com/datahacksummit/), Bangalore
 - 21 Aug 2025. **[RIP Data Scientists](2025-08-21-rip-data-scientists/ ":ignore")** at [DataHack Summit](https://www.analyticsvidhya.com/datahacksummit/), Bangalore
 - 11 Aug 2025. **[Social Code Analysis](2025-08-11-social-code-analysis/ ":ignore")** at [PyConSG Education Summit 2025](https://pycon.sg/edusummit.html), Singapore
+- 24 Jul 2025. **[Cool LLM CLI Python uses](2025-07-24-pugs-agent-loop/)** at [Singapore Python User Group](https://www.meetup.com/singapore-python-user-group/), Singapore
 - 23 Jul 2025. **[Solving Industrial Problems with Live Coding](2025-07-23-supply-chain-automl/ ":ignore")** at [AWS Innovation Day](https://pages.awscloud.com/aws-mfg-industrial-suppy-chain-innovation-day.html), Singapore
 - 13 Jul 2025. **[Goodbye MBA, Hello AI](2025-07-13-goodbye-mba-hello-ai/ ":ignore")** at [DoMS, IITM](https://doms.iitm.ac.in/), Chennai
 - 28 Jun 2025. **[Prompt-to-Plot](2025-06-28-prompt-to-plot/ ":ignore")** at [VizChitra](https://vizchitra.com/), Bangalore

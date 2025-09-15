@@ -152,10 +152,10 @@ paginate: true
 
 > Perform **COMPREHENSIVE** and **ADVANCED** data quality analysis. For each dataset here, list every clear and potential data quality issue. Make sure these are non-obvious, non-trivial, and mind-blowing! Suggest approaches to automatically fix these.
 
-* Hyderabad → Hyderabad is an active route!
-* _Cumulative_ drone certificates actually _decrease_ some days.
-* Jun 7, 2023: 86K international arrivals. _Exceeds global traffic_!
-* Dec 4, 2023: 894k footfalls vs 804k people. 90K _teleported_?
+- Hyderabad → Hyderabad is an active route!
+- _Cumulative_ drone certificates actually _decrease_ some days.
+- Jun 7, 2023: 86K international arrivals. _Exceeds global traffic_!
+- Dec 4, 2023: 894k footfalls vs 804k people. 90K _teleported_?
 
 </div>
 

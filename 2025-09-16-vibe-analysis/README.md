@@ -84,6 +84,12 @@ Let's analyze some datasets with this mindset.
 
 ---
 
+## More examples
+
+- [CBFC Censor Board Cuts](https://github.com/diagram-chasing/censor-board-cuts/tree/master/data)
+
+---
+
 ## Now we'll use LLMs for _everything_
 
 1. Explore data

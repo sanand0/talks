@@ -19,6 +19,7 @@ paginate: true
 
 [Fifth Elephant Workshop](http://has.gy/hV8U) · 16 Sep 2025, 2:00 pm IST · [Bangalore](https://maps.app.goo.gl/fU3VHCjUGzUWVz6C6)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
+[CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-16-vibe-analysis/)
 
@@ -91,6 +92,7 @@ Let's analyze some datasets with this mindset.
 - [Bengaluru Bus Routes](https://github.com/Vonter/bmtc-gtfs)
 - [India Air Traffic](https://github.com/Vonter/india-aviation-traffic)
 - [India Census 2011](https://www.kaggle.com/datasets/danofer/india-census)
+- [India Exams Database](https://github.com/lalithaar/indian-exams-database)
 
 ---
 
@@ -124,8 +126,8 @@ Let's analyze some datasets with this mindset.
 - What **unit tests** help most? Any _invariants_?
 - What's the **minimal stack** for analysis?
 - What **schema context** helps LLMs most? (Ablation)
-- Do **on-the-fly tools** help? Where's the ROI?
-- What **sub-agent specializations** work best?
+- Do **data tools** via AGENTS.md (`dbt`, `rclone`, ...) help?
+- What **sub-agent specializations** work well?
 - Where are **pre-mortems** effective?
 
 <!-- Ideas from https://chatgpt.com/c/68c8bea3-c348-832b-a011-cc2723a47279 -->
@@ -142,6 +144,7 @@ Let's analyze some datasets with this mindset.
 
 [Fifth Elephant Workshop](http://has.gy/hV8U) · 16 Sep 2025, 2:00 pm IST · [Bangalore](https://maps.app.goo.gl/fU3VHCjUGzUWVz6C6)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
+[CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 Please share your feedback here:
 

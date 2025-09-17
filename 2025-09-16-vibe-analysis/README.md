@@ -21,6 +21,8 @@ paginate: true
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
+https://sanand0.github.io/talks/
+
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-16-vibe-analysis/)
 
 ---
@@ -149,3 +151,14 @@ Let's analyze some datasets with this mindset.
 Please share your feedback here:
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://forms.gle/CfiZDDUGCG73vfdM7)
+
+---
+
+## Feedback analysis
+
+Lessons from [vibe analysis of feedback](https://chatgpt.com/share/68ca37db-14dc-800c-8cfa-34f7dcd1538e):
+
+- Share **setup instructions** + video/asciinema to reduce setup friction.
+- Share **self-check instructions** for a default dataset with prompts.
+- Add explicit checkpoints with **self-tests**.
+- Use two-lane pacing: **Cruise** (safe, minimal path) vs **Sprint** (optional accelerators).

@@ -1,5 +1,6 @@
 # Anand's Talks
 
+- WIP: **[Redefining Work in the LLM Era](2025-09-llm-workflows/)**. Something I _want_ to talk about but haven't foud a forum.
 - 16 Sep 2025. **[Vibe Analysis](2025-09-16-vibe-analysis/ ":ignore")** at [Fifth Elephant Workshops](http://has.gy/hV8U), Bangalore
 - 13 Sep 2025. **[DuckDB is the new Pandas](2025-09-13-duckdb-is-the-new-pandas/)** at [PyCon India 2025](https://cfp.in.pycon.org/2025/talk/W8VJX3/), Bangalore
 - 21 Aug 2025. **[AI Coding Guide](2025-08-21-ai-coding-guide/ ":ignore")** at [DataHack Summit](https://www.analyticsvidhya.com/datahacksummit/), Bangalore

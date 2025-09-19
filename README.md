@@ -1,7 +1,9 @@
 # Anand's Talks
 
-- WIP: **[Redefining Work in the LLM Era](2025-09-llm-workflows/)**. Something I _want_ to talk about but haven't foud a forum.
+- WIP: **[Redefining Work in the LLM Era](2025-09-llm-workflows/ ":ignore")**. Something I _want_ to talk about but haven't foud a forum.
+- 18 Sep 2025. **[LLMs: Ask me anything](2025-09-18-llm-ama-bi-worldwide/ ":ignore")** at [BI Worldwide](https://www.biworldwide.com/), Chennai
 - 16 Sep 2025. **[Vibe Analysis](2025-09-16-vibe-analysis/ ":ignore")** at [Fifth Elephant Workshops](http://has.gy/hV8U), Bangalore
+- 15 Sep 2025. **[LLMs: Ask me anything](2025-09-15-llm-ama-gale/ ":ignore")** at [GALE Partners](https://www.gale.agency/), Bangalore
 - 13 Sep 2025. **[DuckDB is the new Pandas](2025-09-13-duckdb-is-the-new-pandas/)** at [PyCon India 2025](https://cfp.in.pycon.org/2025/talk/W8VJX3/), Bangalore
 - 21 Aug 2025. **[AI Coding Guide](2025-08-21-ai-coding-guide/ ":ignore")** at [DataHack Summit](https://www.analyticsvidhya.com/datahacksummit/), Bangalore
 - 21 Aug 2025. **[RIP Data Scientists](2025-08-21-rip-data-scientists/ ":ignore")** at [DataHack Summit](https://www.analyticsvidhya.com/datahacksummit/), Bangalore

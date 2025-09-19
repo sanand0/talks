@@ -6,6 +6,7 @@ url: https://sanand0.github.io/talks/2025-09-llm-workflows/
 theme: gaia
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
+# ChatGPT: https://chatgpt.com/g/g-p-687a5e6bd7cc81919b5cb852fe298be5/c/68cb6048-def8-8327-b158-55bd7632d1fc
 ---
 
 <style>

@@ -17,7 +17,7 @@ transcript { display: none; }
 
 [BI Worldwide](https://www.biworldwide.com/) · 18 Sep 2025, 4:00 pm IST · [Chennai](https://maps.app.goo.gl/GxW7USQhuknHL3Vs5)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Transcript](https://github.com/sanand0/talks/2025-09-18-llm-ama-bi-worldwide/blob/main/README.md)
+[Transcript](https://github.com/sanand0/talks/blob/main/2025-09-18-llm-ama-bi-worldwide/README.md)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 https://sanand0.github.io/talks/

@@ -322,17 +322,48 @@ https://sanand0.github.io/talks/
 
 ---
 
-## Fact checks and references
+## Quiz
 
-1. Early-career job impacts [Stanford/ADP][1])
-2. Pricing context (OpenAI historical/current; Gemini Flash): ([#][2])
-3. Model rankings (Chatbot Arena): ([LMArena][3])
-4. EU AI Act regulates—not a ban: ([CBS News][4])
-5. Self-hosting 60–700× cost (TCO analysis):
-6. AI Overviews & traffic (publisher reports; mixed evidence): ([WHO][5])
-7. Road deaths ≈ 1.19M/year (≈3,260/day):&#x20;
-8. Seedream image text claim (typography handling): ([Instagram][8])
-9. “LLMs topped JEE” claim (no official evidence): ([Stanford][1])
+1. Compute the _input-token_ cost ratio between the highest ELO OpenAI & Gemini models. ([LMArena][3])
+2. Cite 2 evidences for AI Overviews’ impact on click-through, and explain why their conclusions differ. ([Search Engine Roundtable][26])
+3. Given Stanford/ADP findings on early-career employment in AI-exposed roles, design a mitigation plan for graduate hiring. ([Axios][11])
+4. Outline a project workflow where _generation_ assistants help without raising defect risk. Reference a study. ([arXiv][22])
+5. List three AI practices the EU AI Act prohibits and one “high-risk” use that is regulated but permitted. ([Artificial Intelligence Act EU][27])
+
+---
+
+## Errata
+
+- **“Entry-level jobs are decreasing (US)”** — Directionally supported, but the magnitude varies by method. Stanford/ADP research finds 13–16% declines for ages 22–25 in AI-exposed roles since late-2022; not a general collapse across all entry-level work. ([Axios][11])
+- **“1000× cheaper: GPT-4 vs Gemini 1.5 Flash”** — Ballpark overstates today’s gap. OpenAI’s original GPT-4 input was \~\$30/1M tokens (Mar 2023); Gemini 1.5 Flash (Sep 2025) lists \~\$0.075/1M input tokens. That’s \~400× on inputs (not 1000×), and outputs price differently. ([OpenAI][12])
+- **“Gemini 1.5 Flash ≈ GPT-4 quality”** — Current open benchmarks place top models (e.g., Gemini 2.5 Pro) above Flash; Flash targets low-cost throughput, not state-of-the-art quality. ([LMArena][13])
+- **“Europe is banning AI”** — Inaccurate. The EU AI Act bans _specific unacceptable-risk uses_ (e.g., untargeted facial scraping, some emotion inference) and regulates high-risk systems; it does not ban AI broadly. ([European Parliament][14])
+- **“Self-hosting is 60–700× costlier than API”** — This was published as a cost study by the speaker; it’s a useful heuristic but depends on scale, utilization, and engineering maturity. Treat as scenario-specific, not universal. ([Binadox][15])
+- **“AI Overviews will squeeze distribution/attribution”** — Substantiated for many publishers (lower CTR/zero-click rise), though effects vary by query type and study design. Some datasets show severe drops; others show modest or mixed impacts. ([Digiday][16])
+- **“Cars kill \~10,000/day (analogy)”** — Overstated. WHO estimates \~1.19M road deaths/year (\~3.3k/day).
+- **“LLMs topped JEE (AIR-1)”** — No official evidence. Media references describe mock-test style results; not an authenticated exam ranking. ([The Verge][17])
+- **“SeeDream renders perfect text in images”** — Early tech reports show strong typography, but “perfect” is too strong; empirical evaluations are still emerging. ([Binary Verse AI][18])
+- **“Adding AI is like adding juniors; late projects slip”** — The analogy aligns with Brooks’ Law; the maxim is well-established in software engineering. ([WIRED][19])
+
+---
+
+## Counterpoints
+
+- **Adoption pace vs. tech pace** — While many firms pilot without enterprise-level EBIT impact yet, surveys show rapid production use and active risk mitigation; leadership and operating-model rewiring—not user hesitation alone—often constrain ROI. ([McKinsey & Company][20])
+- **“Don’t tell people you use AI”** — In regulated sectors and client work, disclosure and auditability are becoming table stakes (EU AI Act literacy and governance duties, model provenance). Silence can create compliance risk. ([Orrick][21])
+- **Validation > generation** — Strong case for validation, but controlled studies show material productivity gains from _generation_ tools (e.g., Copilot \~55% faster) with some evidence of quality improvements—when paired with reviews and guardrails. ([arXiv][22])
+- **Entry-level displacement is uniform** — Labor effects are heterogeneous; AI often _complements_ human skills, raising demand for teamwork/communication while reducing demand for some routine tasks. Reskilling shifts outcomes. ([arXiv][23])
+- **Traffic squeeze is total** — AI platforms now send some _new_ referral traffic (e.g., from chatbots), and impact varies by intent. Strategy should adapt (LLMO/GEO), not assume blanket decline. ([Digiday][24])
+
+---
+
+## Feedback
+
+- **Calibrate claims**: Replace hyperbole with numbers + source/date on-slide (e.g., “WHO 2023: 1.19M/yr (\~3.3k/day)”), and label **Observation / Estimate / Speculation** to avoid confusion.
+- **Anchor each section with 1 slide**: Audience’s **exact question** (≤6 words), **3–5 answers**, **1 action** (“Do now”)—then move on; keeps flow tight and outcomes clear.
+- **Show, don’t tell, the frontier**: Keep a live, zoomable price/quality sheet (QR link) and a static backup chart; avoid “can’t zoom” moments and make comparisons apples-to-apples (input vs. output tokens).
+- **Disclose constraints tactically**: When saying “use AI, don’t tell,” add when disclosure is required (client/regulatory contexts) and show a **minimal audit trail** template to keep trust.
+- **Use micro-demos over anecdotes**: 60–120s live runs (e.g., “validation > generation” harness, model-switch cost calc) beat stories and make takeaways replicable.
 
 [1]: https://digitaleconomy.stanford.edu/publications/canaries-in-the-coal-mine/ "Canaries in the Coal Mine? Six Facts about the Recent ..."
 [2]: https://reasoningengine.ai/p/llms-price-reduction-timeline "LLMs price reduction timeline - by Rogerio Chaves"
@@ -342,3 +373,20 @@ https://sanand0.github.io/talks/
 [6]: https://www.cdc.gov/transportation-safety/global/index.html "Global Road Safety"
 [7]: https://www.roadsafetyngos.org/wp-content/uploads/2024/01/GSRRS-2023-launch-1.pdf "Global Status Report on Road Safety 2023"
 [8]: https://www.instagram.com/reel/DOf2lB9D8Y3/ "China's AI Image Generation Tool: A Game-Changer for ..."
+[11]: https://www.axios.com/2025/08/26/ai-entry-level-jobs "AI is already taking jobs away from entry-level workers"
+[12]: https://openai.com/index/gpt-4-research/ "GPT-4"
+[13]: https://lmarena.ai/leaderboard "Leaderboard Overview"
+[14]: https://www.europarl.europa.eu/news/en/press-room/20240308IPR19015/artificial-intelligence-act-meps-adopt-landmark-law "Artificial Intelligence Act: MEPs adopt landmark law | News"
+[15]: https://www.binadox.com/blog/llm-api-pricing-comparison-2025-complete-cost-analysis-guide/ "LLM API Pricing Comparison 2025: Complete Cost ..."
+[16]: https://digiday.com/media/google-ai-overviews-linked-to-25-drop-in-publisher-referral-traffic-new-data-shows/ "Google AI Overviews linked to 25% drop in publisher ..."
+[17]: https://www.theverge.com/news/647896/openai-chatgpt-gpt-4-1-mini-nano-launch-availability "OpenAI debuts its GPT-4.1 flagship AI model"
+[18]: https://binaryverseai.com/llm-math-benchmark-performance-2025/ "LLM Math Benchmark: Stunning 2025 Results You Need To See"
+[19]: https://www.wired.com/2010/07/ff-fred-brooks "Master Planner: Fred Brooks Shows How to Design Anything"
+[20]: https://www.mckinsey.com/~/media/mckinsey/business%20functions/quantumblack/our%20insights/the%20state%20of%20ai/2025/the-state-of-ai-how-organizations-are-rewiring-to-capture-value_final.pdf "The state of AI"
+[21]: https://www.orrick.com/en/Insights/2025/04/EU-Commission-Publishes-Guidelines-on-the-Prohibited-AI-Practices-under-the-AI-Act "EU Commission Publishes Guidelines on the Prohibited AI ..."
+[22]: https://arxiv.org/abs/2302.06590 "The Impact of AI on Developer Productivity: Evidence from GitHub Copilot"
+[23]: https://arxiv.org/abs/2412.19754 "Complement or substitute? How AI increases the demand for human skills"
+[24]: https://digiday.com/media/in-graphic-detail-ai-platforms-are-driving-more-traffic-but-not-enough-to-offset-zero-click-search/ "AI is driving more traffic, but not offsetting 'zero-click' search"
+[25]: https://www.similarweb.com/blog/marketing/seo/most-used-ai/ "Top AI Tools by Web and App Usage (August 2025 Data)"
+[26]: https://www.seroundtable.com/similarweb-google-zero-click-search-growth-39706.html "Similarweb: No Clicks From Google Grew From 56% to 69 ..."
+[27]: https://artificialintelligenceact.eu/article/5/ "Article 5: Prohibited AI Practices | EU Artificial Intelligence Act"

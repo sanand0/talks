@@ -473,18 +473,76 @@ https://sanand0.github.io/talks/
 
 ---
 
-## Fact checks and references
+## Quiz
 
-- Karpathy’s “LLM psychologist” phrasing and commentary: ([X][1])
-- Chatbot Arena’s **Elo** method for quality comparisons: ([LMSYS][2])
-- Chain-of-thought / self-consistency improves reasoning: ([arXiv][3])
-- Moore’s Law framing (doubling, 2 years; not physics): ([Newsroom][4])
-- Browser/JS speedups (V8 & Chrome performance): ([v8.dev][5])
-- System-level “beyond Moore” scaling claims (industry): ([Barron's][6])
+1. **Arena vs. Accuracy:** How does **Arena Elo** differ from benchmark accuracy, and why does that matter for model selection? Cite a risk.
+2. **Self-Consistency:** When does **self-consistency** help most? When can step-by-step prompting hurt? Give one concrete failure mode.
+3. **Ensembles:** What model diversity / task types make **majority-vote ensembles** outperform single models? When should you avoid?
+4. **Scaling Constraints:** Name two **non-algorithmic** constraints that could limit AI progress and describe one mitigation each.
+5. **Prompt Safety:** Give one case where **emotion or role prompts** improved outputs, and one case where they **increased risk**.
+
+---
+
+## Errata
+
+- **“It’s a gimmick title, inspired by Karpathy’s tweet.”**
+  _Correction:_ Karpathy did write “I also like to think of this role as a kind of **LLM psychologist**,” popularizing the phrase; he did not formally “coin” or define a role. ([X (formerly Twitter)][1])
+- **“Reasoning prompts help; step-by-step is the only reliable boost.”**
+  _Correction:_ Chain-of-thought with _self-consistency_ is the evidence-backed boost on reasoning tasks; step-by-step alone can be mixed or harmful on some tasks. ([arXiv][2])
+- **“Chatbot Arena’s Elo shows quality; frontier shifts.”**
+  _Correction:_ Arena Elo measures **pairwise human preference**, not ground-truth task accuracy; it’s subject to biases and provider gaming concerns. Treat as one signal. ([LMSYS][3])
+- **“Moore’s observation: compute scales \~every two years.”**
+  _Correction:_ Moore’s Law concerns **transistor counts** (originally 1-year cadence, later \~2-years). It’s an empirical trend, not a physical law. ([Wikipedia][4])
+- **“Demand drives optimization (Chrome/V8).”**
+  _Clarification:_ V8 delivered large, measured speedups (e.g., \~20× over a decade; double-digit improvements in key periods), supporting the claim qualitatively. ([Chromium Blog][5])
+- **“AI scaleups may exceed Moore’s pace.”**
+  _Clarification:_ Industry figures (e.g., Nvidia) have claimed faster-than-Moore system-level gains; independent analyses warn of energy/data constraints tempering the pace. ([TechCrunch][6])
+- **“70% automation at \~99% quality with ensembles.”**
+  _Correction:_ This exact rate is **context-specific** (your internal experiment). Literature supports ensemble/majority-vote gains, but effects vary by task and model diversity. ([arXiv][7])
+- **“LLMs can’t count; code can.”**
+  _Correction:_ Many LLMs still struggle with arithmetic; specialized prompting/training narrows gaps on some benchmarks. Rely on **programs for guarantees**. ([arXiv][8])
+
+---
+
+## Counterpoints
+
+- **Emotional/role prompts sometimes help.**
+  Studies report gains from **EmotionPrompt** and **role-play prompting** on some tasks; effects are dataset- and model-dependent and can backfire. ([arXiv][9])
+- **Emotion prompts can worsen safety/fidelity.**
+  Emotional prompting can **amplify disinformation** or change model behavior in undesirable ways—so use sparingly and audit outputs. ([Frontiers][10])
+- **Arena as a single metric is risky.**
+  Community and academic critiques note **bias, selective disclosures, and Goodhart effects**. Combine Arena with blinded, task-grounded evals. ([Simon Willison’s Weblog][11])
+- **Progress is not unbounded.**
+  Energy, chip capacity, and data availability may **bottleneck scaling** this decade; policy and infrastructure timelines could dominate. ([Epoch AI][12])
+- **LLM-as-Judge/ensembles have biases/costs.**
+  LLM judges show **positional/verbosity/authority biases**; ensembles add latency/cost and can share correlated errors. Use calibrated disagreement routing. ([ACL Anthology][13])
+
+---
+
+## Feedback
+
+- **Pin every claim to a number.** After bold assertions (“2,000× cheaper”, “post-grad intelligence”), add a one-liner with **metric, scope, date, and source**; show a tiny table or sparkline.
+
+- **Label the stance of each statement.** Prefix key lines with **Evidence**, **Opinion**, **Analogy**, or **Anecdote** so listeners instantly know how to treat it; add one-sentence limitations.
+
+- **Tighter demo arc, pre-redacted.** Declare **goal → plan → tool use → code → verify** in 60–90 seconds; show success criteria first; use redacted/sample data to avoid privacy detours.
+
+- **Steer the room with micro-polls.** Open with a 3-option poll to pick the next segment; **re-poll mid-talk**; maintain a visible “parking lot” for deferred questions to keep flow tight.
+
+- **Operational takeaways per section.** Close each segment with a **3-bullet SOP** (“Try tomorrow”), plus **guardrails** (checks, thresholds) so attendees can reproduce results safely.
 
 [1]: https://x.com/karpathy/status/1627366426771337216 "Andrej Karpathy"
-[2]: https://lmsys.org/blog/2023-05-03-arena/ "Chatbot Arena: Benchmarking LLMs in the Wild with Elo ..."
-[3]: https://arxiv.org/abs/2203.11171 "Self-Consistency Improves Chain of Thought Reasoning in Language Models"
-[4]: https://newsroom.intel.com/press-kit/moores-law "Press Kit: Moore's Law"
-[5]: https://v8.dev/blog/10-years "Celebrating 10 years of V8"
-[6]: https://www.barrons.com/articles/nvidia-moores-law-chip-speeds-23acc5c6 "Nvidia CEO Jensen Huang Predicts 'Hyper Moore's Law' Pace for AI"
+[2]: https://arxiv.org/abs/2203.11171 "Self-Consistency Improves Chain of Thought Reasoning in Language Models"
+[3]: https://lmsys.org/blog/2023-05-03-arena/ "Chatbot Arena: Benchmarking LLMs in the Wild with Elo ..."
+[4]: https://en.wikipedia.org/wiki/Moore%27s_law "Moore's law"
+[5]: https://blog.chromium.org/2018/09/10-years-of-speed-in-chrome_11.html "10 years of Speed in Chrome"
+[6]: https://techcrunch.com/2025/01/07/nvidia-ceo-says-his-ai-chips-are-improving-faster-than-moores-law/ "Nvidia CEO says his AI chips are improving faster than ..."
+[7]: https://arxiv.org/abs/2410.16543 "Large Language Models Powered Multiagent Ensemble for ..."
+[8]: https://arxiv.org/html/2406.02356v1 "Language Models Do Hard Arithmetic Tasks Easily and ..."
+[9]: https://arxiv.org/abs/2307.11760 "Large Language Models Understand and Can be Enhanced by Emotional Stimuli"
+[10]: https://www.frontiersin.org/journals/artificial-intelligence/articles/10.3389/frai.2025.1543603/full "Emotional prompting amplifies disinformation generation in AI large ..."
+[11]: https://simonwillison.net/2025/Apr/30/criticism-of-the-chatbot-arena/ "Understanding the recent criticism of the Chatbot Arena"
+[12]: https://epoch.ai/blog/can-ai-scaling-continue-through-2030 "Can AI Scaling Continue Through 2030?"
+[13]: https://aclanthology.org/2024.emnlp-main.474.pdf "Humans or LLMs as the Judge? A Study on Judgement Bias"
+[14]: https://arxiv.org/pdf/2403.04132 "Chatbot Arena: An Open Platform for Evaluating LLMs by ..."
+[15]: https://www.reuters.com/business/energy/us-data-center-power-use-could-nearly-triple-by-2028-doe-backed-report-says-2024-12-20/ "US data-center power use could nearly triple by 2028, DOE-backed report says"

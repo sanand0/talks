@@ -1,6 +1,5 @@
 # Anand's Talks
 
-- WIP: **[Redefining Work in the LLM Era](2025-09-llm-workflows/ ":ignore")**. Something I _want_ to talk about but haven't foud a forum.
 - 18 Sep 2025. **[LLMs: Ask me anything](2025-09-18-llm-ama-bi-worldwide/ ":ignore")** at [BI Worldwide](https://www.biworldwide.com/), Chennai
 - 16 Sep 2025. **[Vibe Analysis](2025-09-16-vibe-analysis/ ":ignore")** at [Fifth Elephant Workshops](http://has.gy/hV8U), Bangalore
 - 15 Sep 2025. **[LLMs: Ask me anything](2025-09-15-llm-ama-gale/ ":ignore")** at [GALE Partners](https://www.gale.agency/), Bangalore
@@ -16,10 +15,21 @@
 - 19 Jun 2025. **[Cool LLM CLI Python uses](2025-06-pycon-sg/llm-cli.md)** at [PyCon Singapore](https://pycon.sg/)
 - 18 Jun 2025. **[Python in the Browser](2025-06-pycon-sg/ ":ignore")** at [PyCon Singapore](https://pycon.sg/)
 - 10 May 2025. **Vibe Coding** at [SETU](https://setuschool.com/) [⏯️ Video](https://youtu.be/ODXSDbY12dg) [💬 Transcript](2025-05-10-vibe-coding/)
+
+## Archives
+
+I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtube.com/playlist?list=PLHCH16htawZbR_-mIqfGmYbhE5S2UckOh) has many.
+
 - 17 Feb 2011: **Python Imaging**. [🖥️ Code](python-imaging/index.html)
 - 28 Jan 2011: **Learning R** at [Datameet](http://www.datameet.org/).
   [📋 Slides](https://github.com/sanand0/talks/releases/download/talks/2011-01-28-datameet-learning-r.pptx)
   [🎤 Audio](https://github.com/sanand0/talks/releases/download/talks/2011-01-28-datameet-learning-r.mp3)
+
+## WIP
+
+Stuff I _want_ to talk about and am hunting for a forum.
+
+- **[Redefining Work in the LLM Era](2025-09-llm-workflows/ ":ignore")**.
 
 <!--
 

@@ -34,7 +34,17 @@ https://sanand0.github.io/talks/
 
 ## LLM are getting better **and** cheaper
 
-[![h:500](../2025-07-13-goodbye-mba-hello-ai/pricing.webp)](https://sanand0.github.io/llmpricing/)
+[![h:475](../2025-07-13-goodbye-mba-hello-ai/pricing.webp)](https://sanand0.github.io/llmpricing/)
+
+<aside style="max-width:300px" data-marpit-fragment>
+
+**Plan for _future_ capability**.
+
+Quality enables **new use cases**.
+
+Cost unlocks **higher scale**.
+
+</aside>
 
 ---
 
@@ -42,7 +52,7 @@ https://sanand0.github.io/talks/
 
 [![h:500](https://cdn.prod.website-files.com/66efe12cea125ae2bb1471da/680a244002ab2f063f3a9108_llm_context_window_evolution.png)](https://www.meibel.ai/post/understanding-the-impact-of-increasing-llm-context-windows)
 
-<aside style="max-width:300px">
+<aside style="max-width:300px" data-marpit-fragment>
 
 #### Implications
 
@@ -57,7 +67,7 @@ https://sanand0.github.io/talks/
 
 [![h:500](policy-as-code.webp)](https://sanand0.github.io/policyascode/)
 
-<aside style="max-width:450px">
+<aside style="max-width:450px" data-marpit-fragment>
 
 #### Implications
 
@@ -73,7 +83,7 @@ https://sanand0.github.io/talks/
 
 [![h:500](https://images.ctfassets.net/kftzwdyauwt9/2oTJ2p3iGsEPnBrYeNhxbb/9d14d937dc6004da8a49561af01b6781/OpenAI-MRCR_accuracy_2needle_Lightmode.svg)](https://openai.com/index/gpt-4-1/)
 
-<aside style="max-width:600px">
+<aside style="max-width:600px" data-marpit-fragment>
 
 #### Implications
 
@@ -101,7 +111,7 @@ https://sanand0.github.io/talks/
 
 [![h:500](https://res.cloudinary.com/lesswrong-2-0/image/upload/f_auto,q_auto/v1/mirroredImages/deesrjitvXM4xYGZd/e6bm1rfz9dazzub1lupj)](https://www.lesswrong.com/posts/deesrjitvXM4xYGZd/metr-measuring-ai-ability-to-complete-long-tasks)
 
-<aside style="max-width:300px">
+<aside style="max-width:300px" data-marpit-fragment>
 
 #### Implications
 
@@ -116,7 +126,7 @@ https://sanand0.github.io/talks/
 
 [![h:500](ideator.webp)](https://tools.s-anand.net/ideator/)
 
-<aside style="max-width:450px">
+<aside style="max-width:450px" data-marpit-fragment>
 
 **Innovation = combination**.
 
@@ -130,7 +140,7 @@ Ideator combines 2 random ideas into new creative initiatives towards a specific
 
 [![h:500](https://miro.medium.com/v2/resize:fit:720/format:webp/1*7s9ESqBz4pJaP1_r4bahlA.png)](https://medium.com/@techsachin/replacing-judges-with-juries-llm-generation-evaluations-with-panel-of-llm-evaluators-d1e77dfb521e)
 
-<aside style="max-width:500px">
+<aside style="max-width:500px" data-marpit-fragment>
 
 #### Implications
 
@@ -154,7 +164,7 @@ Ideator combines 2 random ideas into new creative initiatives towards a specific
 
 [![h:500](https://epoch.ai/assets/images/posts/2023/how-predictable-is-language-model-benchmark-performance/egraphs/mmlu.png)](https://epoch.ai/blog/how-predictable-is-language-model-benchmark-performance)
 
-<aside style="max-width:350px">
+<aside style="max-width:350px" data-marpit-fragment>
 
 #### Input/Output Formats
 

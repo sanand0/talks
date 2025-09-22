@@ -7,6 +7,8 @@ theme: gaia
 paginate: true
 backgroundColor: #fff
 
+# Preparation: https://chatgpt.com/c/68cba2a3-d10c-832e-a9a3-897d6253f730
+# Appendix: https://chatgpt.com/c/68d140d8-4080-8331-84b4-8ee8afbb4d37
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
 ---
 

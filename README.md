@@ -26,6 +26,10 @@ I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtu
   [📋 Slides](https://github.com/sanand0/talks/releases/download/talks/2011-01-28-datameet-learning-r.pptx)
   [🎤 Audio](https://github.com/sanand0/talks/releases/download/talks/2011-01-28-datameet-learning-r.mp3)
 
+## Others' Talks
+
+- 21 Sep 2025. [Zainab Bawa](https://www.linkedin.com/in/zainabbawa/). **[Building a culture of openness](2025-09-21-zainab-building-a-culture-of-openness/ ":ignore")** at [IndiaFOSS](https://fossunited.org/c/indiafoss/2025/cfp/0ios0i6o47), Bangalore
+
 ## WIP
 
 Stuff I _want_ to talk about and am hunting for a forum.

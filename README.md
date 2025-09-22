@@ -1,5 +1,6 @@
 # Anand's Talks
 
+- 22 Sep 2025. **[LLM Trends](2025-09-22-llm-trends/ ":ignore")** at [Straive](https://straive.com/), Chennai
 - 18 Sep 2025. **[LLMs: Ask me anything](2025-09-18-llm-ama-bi-worldwide/ ":ignore")** at [BI Worldwide](https://www.biworldwide.com/), Chennai
 - 16 Sep 2025. **[Vibe Analysis](2025-09-16-vibe-analysis/ ":ignore")** at [Fifth Elephant Workshops](http://has.gy/hV8U), Bangalore
 - 15 Sep 2025. **[LLMs: Ask me anything](2025-09-15-llm-ama-gale/ ":ignore")** at [GALE Partners](https://www.gale.agency/), Bangalore

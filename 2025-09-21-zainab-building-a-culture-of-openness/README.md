@@ -279,6 +279,16 @@ And finally, **success is really proportional to the investment of all the actor
 
 ---
 
+# Building a culture of openness
+
+[IndiaFOSS](https://fossunited.org/c/indiafoss/2025/cfp/0ios0i6o47) · 22 Sep 2025, 5:15 pm IST · [Bangalore](https://maps.app.goo.gl/Uon4KDWDqy65RGim8)
+[Zainab Bawa](https://www.linkedin.com/in/zainabbawa/) · COO [Hasgeek](http://hasgeek.com/)
+[Transcript](https://github.com/sanand0/talks/blob/main/2025-09-21-zainab-building-a-culture-of-openness/README.md)
+
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-21-zainab-building-a-culture-of-openness/)
+
+---
+
 ## Quiz
 
 - What concrete changes turn a consumption-only conference into a participatory one?
@@ -321,16 +331,6 @@ And finally, **success is really proportional to the investment of all the actor
 - Quantify outcomes: acceptance rate, reviewer participation, comment depth, and speaker success metrics over time.
 - Outline a minimal reviewer playbook (5 prompts, timebox, conflict-check) to lower volunteer friction.
 - Close with a “reuse the 80%” roadmap: monthly salons, issue trackers, and public backlog owners.
-
----
-
-# Building a culture of openness
-
-[IndiaFOSS](https://fossunited.org/c/indiafoss/2025/cfp/0ios0i6o47) · 22 Sep 2025, 5:15 pm IST · [Bangalore](https://maps.app.goo.gl/Uon4KDWDqy65RGim8)
-[Zainab Bawa](https://www.linkedin.com/in/zainabbawa/) · COO [Hasgeek](http://hasgeek.com/)
-[Transcript](https://github.com/sanand0/talks/blob/main/2025-09-21-zainab-building-a-culture-of-openness/README.md)
-
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-21-zainab-building-a-culture-of-openness/)
 
 [1]: https://authorservices.wiley.com/Reviewers/journal-reviewers/what-is-peer-review/types-of-peer-review.html?utm_source=chatgpt.com "Types of Peer Review"
 [2]: https://journals.plos.org/plosone/s/editorial-and-peer-review-process?utm_source=chatgpt.com "Editorial and Peer Review Process | PLOS One"

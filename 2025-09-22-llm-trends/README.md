@@ -24,6 +24,7 @@ backgroundColor: #fff
 
 22 Sep 2025, 5:00 pm IST · Chennai
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
+[Transcript](https://github.com/sanand0/talks/blob/main/2025-09-22-llm-trends/transcript.md)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 https://sanand0.github.io/talks/
@@ -199,6 +200,7 @@ Additional demos
 
 22 Sep 2025, 5:00 pm IST · Chennai
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
+[Transcript](https://github.com/sanand0/talks/blob/main/2025-09-22-llm-trends/transcript.md)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 https://sanand0.github.io/talks/

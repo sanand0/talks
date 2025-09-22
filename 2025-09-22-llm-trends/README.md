@@ -22,7 +22,7 @@ backgroundColor: #fff
 
 # LLM Trends
 
-22 Sep 2025, 4:30 pm IST · Chennai
+22 Sep 2025, 5:00 pm IST · Chennai
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
@@ -87,16 +87,17 @@ Cost unlocks **higher scale**.
 
 #### Implications
 
-- **Better code**. Fewer errors, longer output.
-- **More structure**. JSON, XML follow schema.
+- **Better code**. Fewer errors,
+  longer output.
+- **More structure**. JSON, XML follow schema diligently.
 - **Self-correction**. Better at spotting own errors.
-- **More reasoning**. Chain-of-thought.
+- **More reasoning**. Chain-of-thought, tree-of-thought.
 
 </aside>
 
 ---
 
-## So **code generation** is robust and reliable
+## **Dynamic code** is a new modality
 
 **Demos**:
 
@@ -126,11 +127,11 @@ Cost unlocks **higher scale**.
 
 [![h:500](ideator.webp)](https://tools.s-anand.net/ideator/)
 
-<aside style="max-width:450px" data-marpit-fragment>
+<aside style="max-width:475px" data-marpit-fragment>
 
-**Innovation = combination**.
+**Innovation = combinatorics**
 
-Ideator combines 2 random ideas into new creative initiatives towards a specific purpose.
+Combine 2 random ideas into new creative initiatives towards a specific purpose.
 
 </aside>
 
@@ -196,7 +197,7 @@ Additional demos
 
 # LLM Trends
 
-22 Sep 2025, 4:30 pm IST · Chennai
+22 Sep 2025, 5:00 pm IST · Chennai
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 

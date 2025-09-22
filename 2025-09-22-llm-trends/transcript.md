@@ -18,7 +18,7 @@ There are two levels here. One is the documents serve as a base for rules. The r
 
 I promised to pause periodically. Let me pause here. That's one of the trends that we're seeing. Any comments, thoughts, any directions you want to move in?
 
-***
+---
 
 **Question**: Is this the approach that's happening with the QA framework? It looks very... it sounds very consistent with what we're trying to do there.
 
@@ -26,13 +26,13 @@ I promised to pause periodically. Let me pause here. That's one of the trends th
 
 **Answer**: I think with this, what you can do is probably take that guideline, the prompts would auto-generate. Right, so that's the next level of it. Or let's say you have a style sheet for copyediting, you could take that, load it in, you've got your set of copyediting guidelines which are already done.
 
-***
+---
 
 **Question**: Follow up question. This seems like it's probably computationally expensive. Is that true or not true?
 
 **Answer**: How does it matter?
 
-***
+---
 
 **Question**: It's a one-time thing, but if we were to run it at scale and apply it across multiple different use cases, is it viable from a business operations perspective to utilize this approach more broadly? Because there are many things that we do.
 
@@ -40,7 +40,7 @@ I promised to pause periodically. Let me pause here. That's one of the trends th
 
 **Answer**: If you're looking at running that through at scale, you could consider doing that for lightweight checks across the board at submission upstream. If you're looking at revisiting your guideline to a probably a lighter weight guideline type for submission, you could run it at scale across the board without any expense.
 
-***
+---
 
 Okay, let's move on. And if anything else strikes you as we go along, please, we can change course at any point. But the next trend that I see is **the amount of attention LLMs are paying to the document is increasing.** That completely unreadable chart was the GPT 4.1 evaluation of a needle in a haystack. That is, given a document of one million tokens long, can it identify something from somewhere tiny in the middle that was just obscurely mentioned? And earlier models failed at that. Starting from GPT 4.1, they are much, much better at it.
 
@@ -60,13 +60,13 @@ Second hypothesis, and it finds that there's no evidence that more bitterness is
 
 Now, this is... I have no idea what this means, by the way. So I'll look to the experts to comment on it. But **the crux of it is, a data scientist is now at the stage where their current tasks are automatable** because we're finding that code generation is automatable, because among other things, the ability to write code robustly is proving better. Let me pause before I go on to my next theme. Any comments, thoughts, questions?
 
-***
+---
 
 **Question**: So data science as a career is dead?
 
 **Answer**: That was... my last talk was titled, "Rest in Peace, Data Scientists." It didn't go too well. But I think **it's the tasks that are dying, not the role.** You need to evolve to higher level roles. Exactly.
 
-***
+---
 
 **Question**: ...a reliable, I think that type of conclusions, I think is, maybe, I wouldn't say arbitrary, but may not be a true reflection of what's working, what's not working in terms of marketing right now.
 
@@ -92,7 +92,7 @@ Now, if we are able to therefore apply these kinds—and some of the problems th
 
 I could go on, but let me pause here. Any comments, questions around LLM evaluations or dynamic code generation?
 
-***
+---
 
 Okay, that's a clear signal that I'm going to skip the last bit.
 

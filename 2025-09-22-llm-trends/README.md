@@ -24,8 +24,7 @@ backgroundColor: #fff
 
 22 Sep 2025, 5:00 pm IST · Chennai
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Transcript](https://github.com/sanand0/talks/blob/main/2025-09-22-llm-trends/transcript.md)
-[CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
+[Transcript](https://github.com/sanand0/talks/blob/main/2025-09-22-llm-trends/transcript.md) · [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 https://sanand0.github.io/talks/
 
@@ -200,9 +199,77 @@ Additional demos
 
 22 Sep 2025, 5:00 pm IST · Chennai
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Transcript](https://github.com/sanand0/talks/blob/main/2025-09-22-llm-trends/transcript.md)
-[CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
+[Transcript](https://github.com/sanand0/talks/blob/main/2025-09-22-llm-trends/transcript.md) · [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 https://sanand0.github.io/talks/
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-22-llm-trends/)
+
+---
+
+## Quiz
+
+1. What’s the _key_ difference between prompt caching and normal caching in LLM APIs?
+2. Why can long context windows still miss relevant info (“lost in the middle”) and how would you mitigate it?
+3. In this workflow, where should analysis run on _full_ data and where is sampling OK?
+4. When is “LLM-as-judge” reliable, and what biases should you watch for?
+5. Name two reasons code sandboxes avoid direct internet access and how to work around it.
+
+---
+
+## Errata
+
+<small>
+
+- **Prompt caching ≠ a “tiny copy of the model.”** It stores/charges cached _prompt segments_ to speed/cheaply reuse, without changing the model. ([Medium][1])
+- **Advanced Data Analysis (code interpreter) has no open internet.** Browsing is a _separate_ tool; the sandbox itself blocks external calls. ([OpenAI][2])
+- **“LLMs evaluate LLMs as well as humans” — nuanced.** LLM judges correlate with humans but show biases; human calibration still needed. ([16x Prompt][3])
+- **Context window ≠ long-term memory.** Bigger windows allow longer _inputs_, but retrieval can _drop_ for middle content. App “memory” is separate. ([ar5iv][4])
+- **“Gemini is free & good at photos/video/audio.”** There is a free web app; advanced multimodal features are via Gemini 1.5/API tiers. ([OpenAI][5])
+- **“Whisper is behind ChatGPT voice.”** OpenAI documents Whisper as its speech-to-text used in ChatGPT voice features. ([OpenAI][6])
+- **“LLMs are getting cheaper” — evidence.** Example prices (per 1M tokens): GPT-4o \$5 in/\$15 out (May 2024); vendors have introduced price cuts/cheaper tiers. ([arXiv][7])
+- **Model capabilities & windows.** Current public windows: Gemini 1.5 up to 1M; Claude 3.7 Sonnet 200k; OpenAI o-series context sizes are model-specific. ([Claude Docs][8])
+
+</small>
+
+---
+
+## Counterpoints
+
+<small>
+
+- **“LLM context windows are increasing” → But…** Longer windows can _hurt_ recall; retrieval/RAG or windowing often beats naive full-context dumps. Consider chunk-and-vote or salient-first prompts. ([ar5iv][4])
+- **“LLM-as-judge scales quality” → But…** Judges show systematic biases (position, verbosity, self-enhancement). Use blinded, shuffled, multi-judge panels + human spot-checks and gold standards. ([16x Prompt][3])
+- **“More structure (JSON/XML) now” → But…** Plain “JSON mode” is not bullet-proof. Prefer _structured outputs/function calling_ with schemas for reliability. ([OpenAI][9])
+- **“Far more multimodal” → But…** Vision-language models still hallucinate objects and captions. Keep human-in-the-loop for safety-critical use. ([ACL Anthology][10])
+- **“Policy docs can be the code/rules” → But…** Governance needs documented controls. Follow NIST AI RMF (Govern/Map/Measure/Manage) when automating compliance. ([NIST AI Resource Center][11])
+- **“LLMs think for longer without errors” → But…** Long-horizon agency is far from solved; MAUD/METR find persistent failures on multi-step tasks. Use decomposition & verifiable subgoals. ([Vals AI][12])
+
+</small>
+
+---
+
+## Feedback
+
+<small>
+
+1. **Label claims vs. opinions.** Add “Claim/Why/Limitations” badges on slides with bold assertions (e.g., LLM-as-judge, policy-as-code).
+2. **Show the _why_ behind choices.** One slide comparing _ChatGPT/Claude/Gemini/Jules/Codex_ by task (EDA, front-end, agents, cost), with 1-line rationale each.
+3. **Make failure modes visible.** Add a “Bugs I expect” checklist (net-blocked sandbox, path issues, file limits) and the quickest CLI/browser fixes.
+4. **Quantify effects.** When stating “longer books rate higher,” show effect sizes + CI, then the same chart _after_ outlier clipping.
+5. **Tighten the demo loop.** Pre-bake a tiny dataset and a repo branch that always builds; live-switch to bigger data only if time permits.
+
+</small>
+
+[1]: https://medium.com/data-science/4-ways-you-cant-use-the-chatgpt-code-interpreter-that-will-disrupt-your-analytics-c31d29034b69?utm_source=chatgpt.com "4 Ways You Can't Use the ChatGPT Code Interpreter That ..."
+[2]: https://openai.com/index/chatgpt-plugins/?utm_source=chatgpt.com "ChatGPT plugins"
+[3]: https://prompt.16x.engineer/blog/claude-sonnet-gpt4-context-window-token-limit?utm_source=chatgpt.com "Claude 3.5 Sonnet vs GPT-4o: Context Window and Token Limit"
+[4]: https://ar5iv.labs.arxiv.org/html/2307.03172?utm_source=chatgpt.com "Lost in the Middle: How Language Models Use Long Contexts"
+[5]: https://openai.com/index/hello-gpt-4o/?utm_source=chatgpt.com "Hello GPT-4o"
+[6]: https://openai.com/chatgpt/pricing/?utm_source=chatgpt.com "Pricing - ChatGPT - OpenAI"
+[7]: https://arxiv.org/html/2406.18403v3?utm_source=chatgpt.com "LLMs instead of Human Judges? A Large Scale Empirical ..."
+[8]: https://docs.anthropic.com/en/docs/build-with-claude/context-windows?utm_source=chatgpt.com "Context windows - Anthropic API"
+[9]: https://openai.com/index/introducing-structured-outputs-in-the-api/?utm_source=chatgpt.com "Introducing Structured Outputs in the API"
+[10]: https://aclanthology.org/2024.findings-acl.414.pdf?utm_source=chatgpt.com "Logical Closed Loop: Uncovering Object Hallucinations in ..."
+[11]: https://airc.nist.gov/airmf-resources/playbook/?utm_source=chatgpt.com "Playbook - AIRC - NIST AI Resource Center"
+[12]: https://www.vals.ai/models/anthropic_claude-3-5-sonnet-20241022?utm_source=chatgpt.com "Claude 3.5 Sonnet Latest"

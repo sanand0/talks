@@ -1,0 +1,39 @@
+name: Deploy Talks
+
+on:
+  # Run when pushed. Use { branches: [main, master] } to run only on specific branches
+  push:
+  # Allow manual triggering of the workflow
+  workflow_dispatch:
+
+permissions:
+  # To deploy to GitHub Pages
+  pages: write
+  # To verify that deployment originated from the right source
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    # Specify the deployment environment. Displays the URL in the GitHub Actions UI
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # Run on the latest Ubuntu LTS
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - uses: actions/checkout@v4
+
+      # Build pages
+      - run: npm run build
+
+      # Upload a specific page to GitHub Pages. Defaults to _site
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      # Deploy the built site to GitHub Pages. The `id:` is required to show the URL in the GitHub Actions UI
+      - id: deployment
+        uses: actions/deploy-pages@v4

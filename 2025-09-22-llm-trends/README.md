@@ -187,13 +187,33 @@ Combine 2 random ideas into new creative initiatives towards a specific purpose.
 - [Podcast generation](https://tools.s-anand.net/podcast/). Repurpose content in audio formats.
 - [Storybook generation](https://tools.s-anand.net/picbook/). Repurpose content in visual formats.
 
-<!--
+---
 
-Additional demos
+## Additional trends
 
-  - Personagen: Synthetic customer persona creation + surveying.
+<small>
 
--->
+- **On-device AI surges**: NPUs in phones/laptops (Apple Intelligence PCC; Copilot+ PCs) make private, low-latency inference mainstream. ([arXiv][x1])
+- **Open-weight models** are catching closed models on key benchmarks; costs per task are falling fast (AI Index 2025). ([Stanford HAI][x2])
+- **Inference throughput jumps via open stacks (vLLM, TensorRT-LLM/SGLang)**: paged-KV caching, continuous batching, and quantization. ([VLLM][x3])
+- **Data licensing + provenance mature**: major publisher deals (e.g., News Corp) and C2PA Content Credentials rollout. ([OpenAI][x4])
+- **Regulation + power reshape roadmaps**: EU AI Act GPAI duties from 2 Aug 2025; data-centre electricity demand set to \~double by 2030. ([Digital Strategy][x5])
+
+</small>
+
+---
+
+## Potential trends
+
+<small>
+
+- “OpenAI-compatible” APIs become a de-facto portability layer across clouds/runtimes; tooling lock-in still varies. ([SemiAnalysis][x6])
+- Synthetic data’s share in training rises; benefits vs. model-collapse risks remain debated. ([WIRED][x7])
+- Graph-RAG/hybrid retrieval outperforms naive vector search; early wins, but long-context advances may narrow the gap. ([Google Research][x8])
+- Browser-native LLMs via WebGPU (WebLLM/Transformers.js) enable private/offline features; fragmented support and bugs slow scale-up. ([blog.mlc.ai][x9])
+- Non-NVIDIA accelerators (AMD MI300, Gaudi 3) gain inference share; CUDA ecosystem advantage clouds outlook.
+
+</small>
 
 ---
 
@@ -263,15 +283,24 @@ https://sanand0.github.io/talks/
 
 </small>
 
-[1]: https://medium.com/data-science/4-ways-you-cant-use-the-chatgpt-code-interpreter-that-will-disrupt-your-analytics-c31d29034b69?utm_source=chatgpt.com "4 Ways You Can't Use the ChatGPT Code Interpreter That ..."
-[2]: https://openai.com/index/chatgpt-plugins/?utm_source=chatgpt.com "ChatGPT plugins"
-[3]: https://prompt.16x.engineer/blog/claude-sonnet-gpt4-context-window-token-limit?utm_source=chatgpt.com "Claude 3.5 Sonnet vs GPT-4o: Context Window and Token Limit"
-[4]: https://ar5iv.labs.arxiv.org/html/2307.03172?utm_source=chatgpt.com "Lost in the Middle: How Language Models Use Long Contexts"
-[5]: https://openai.com/index/hello-gpt-4o/?utm_source=chatgpt.com "Hello GPT-4o"
-[6]: https://openai.com/chatgpt/pricing/?utm_source=chatgpt.com "Pricing - ChatGPT - OpenAI"
-[7]: https://arxiv.org/html/2406.18403v3?utm_source=chatgpt.com "LLMs instead of Human Judges? A Large Scale Empirical ..."
-[8]: https://docs.anthropic.com/en/docs/build-with-claude/context-windows?utm_source=chatgpt.com "Context windows - Anthropic API"
-[9]: https://openai.com/index/introducing-structured-outputs-in-the-api/?utm_source=chatgpt.com "Introducing Structured Outputs in the API"
-[10]: https://aclanthology.org/2024.findings-acl.414.pdf?utm_source=chatgpt.com "Logical Closed Loop: Uncovering Object Hallucinations in ..."
-[11]: https://airc.nist.gov/airmf-resources/playbook/?utm_source=chatgpt.com "Playbook - AIRC - NIST AI Resource Center"
-[12]: https://www.vals.ai/models/anthropic_claude-3-5-sonnet-20241022?utm_source=chatgpt.com "Claude 3.5 Sonnet Latest"
+[1]: https://medium.com/data-science/4-ways-you-cant-use-the-chatgpt-code-interpreter-that-will-disrupt-your-analytics-c31d29034b69 "4 Ways You Can't Use the ChatGPT Code Interpreter That ..."
+[2]: https://openai.com/index/chatgpt-plugins/ "ChatGPT plugins"
+[3]: https://prompt.16x.engineer/blog/claude-sonnet-gpt4-context-window-token-limit "Claude 3.5 Sonnet vs GPT-4o: Context Window and Token Limit"
+[4]: https://ar5iv.labs.arxiv.org/html/2307.03172 "Lost in the Middle: How Language Models Use Long Contexts"
+[5]: https://openai.com/index/hello-gpt-4o/ "Hello GPT-4o"
+[6]: https://openai.com/chatgpt/pricing/ "Pricing - ChatGPT - OpenAI"
+[7]: https://arxiv.org/html/2406.18403v3 "LLMs instead of Human Judges? A Large Scale Empirical ..."
+[8]: https://docs.anthropic.com/en/docs/build-with-claude/context-windows "Context windows - Anthropic API"
+[9]: https://openai.com/index/introducing-structured-outputs-in-the-api/ "Introducing Structured Outputs in the API"
+[10]: https://aclanthology.org/2024.findings-acl.414.pdf "Logical Closed Loop: Uncovering Object Hallucinations in ..."
+[11]: https://airc.nist.gov/airmf-resources/playbook/ "Playbook - AIRC - NIST AI Resource Center"
+[12]: https://www.vals.ai/models/anthropic_claude-3-5-sonnet-20241022 "Claude 3.5 Sonnet Latest"
+[x1]: https://arxiv.org/abs/2307.03172 "Lost in the Middle: How Language Models Use Long Contexts"
+[x2]: https://hai.stanford.edu/assets/files/hai_ai_index_report_2025.pdf "Artificial Intelligence Index Report 2025 | Stanford HAI"
+[x3]: https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html "OpenAI-Compatible Server - vLLM"
+[x4]: https://openai.com/index/understanding-the-source-of-what-we-see-and-hear-online/ "Understanding the source of what we see and hear online"
+[x5]: https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai "AI Act | Shaping Europe's digital future - European Union"
+[x6]: https://semianalysis.com/2025/09/03/amazons-ai-resurgence-aws-anthropics-multi-gigawatt-trainium-expansion/ "Amazon's AI Resurgence: AWS & Anthropic's Multi ..."
+[x7]: https://www.wired.com/story/stanford-study-global-artificial-intelligence-index "The AI Race Has Gotten Crowded-and China Is Closing In on the US"
+[x8]: https://research.google/blog/looking-back-at-speculative-decoding/ "Looking back at speculative decoding"
+[x9]: https://blog.mlc.ai/2024/06/13/webllm-a-high-performance-in-browser-llm-inference-engine "WebLLM: A High-Performance In-Browser LLM Inference ..."

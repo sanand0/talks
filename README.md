@@ -38,15 +38,13 @@ Stuff I _want_ to talk about and am hunting for a forum.
 
 <!--
 
-Some talks are slides, audio, etc.
-These are at https://github.com/sanand0/talks/releases/tag/talks
+Build process: `npm run build` (Used by.github/workflows/deploy.yml)
 
-Created via: `gh release create talks --title "Talks"`
-
-To add content:
+PPTX / Audio / ... are at https://github.com/sanand0/talks/releases/tag/talks
 
 ```bash
-gh release upload talks --clobber $FILENAME
+gh release create talks --title "Talks"
+gh release upload talks $FILENAME
 ```
 
 -->

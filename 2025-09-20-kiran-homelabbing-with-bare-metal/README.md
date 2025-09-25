@@ -291,7 +291,7 @@ So that's available if you feel like it, but that's completely optional because 
 
 [IndiaFOSS](https://fossunited.org/c/indiafoss/2025/cfp/4v6f8ek2n0) · 20 Sep 2025, 3:00 pm IST · [Bangalore](https://maps.app.goo.gl/Uon4KDWDqy65RGim8)
 [Kiran Jonnalagadda](https://www.linkedin.com/in/kiranjonna/) · Co-founder [Hasgeek](http://hasgeek.com/)
-[Transcript](https://github.com/sanand0/talks/blob/main/2025-09-20-kiran-homelabbing-with-bare-metal/README.md)
+[Transcript](https://github.com/sanand0/talks/blob/main/2025-09-20-kiran-homelabbing-with-bare-metal/README.md) · [Video](https://www.youtube.com/live/FtF-I0-wJGo?t=3460s)
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-20-kiran-homelabbing-with-bare-metal/)
 

@@ -21,10 +21,43 @@
 
 I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtube.com/playlist?list=PLHCH16htawZbR_-mIqfGmYbhE5S2UckOh) has many.
 
-- 17 Feb 2011: **Python Imaging**. [🖥️ Code](python-imaging/index.html)
-- 28 Jan 2011: **Learning R** at [Datameet](http://www.datameet.org/).
-  [📋 Slides](https://github.com/sanand0/talks/releases/download/talks/2011-01-28-datameet-learning-r.pptx)
-  [🎤 Audio](https://github.com/sanand0/talks/releases/download/talks/2011-01-28-datameet-learning-r.mp3)
+- 21 Sep 2024: **Finding Actor Look-alikes** at [PyCon India, 2024](https://in.pycon.org/cfp/2024/proposals/finding-actor-look-alikes-with-multi-modal-llms~azpn8/)
+  · [Video](https://youtu.be/FHa8Xgssrz4)
+  · [Slides](https://llmfoundry.straive.com/apps/actor-lookalikes.html)
+  · [Code](https://github.com/sanand0/actor-lookalikes)
+- 10 Aug 2024: **LLM Psychology** at [TEDx MDI Gurgaon, 2024](https://www.ted.com/tedx/events/58040)
+  · [Video](https://youtu.be/rA__c6CosVI)
+  · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/TEDx-MDI-Gurgaon-LLM-Psychology.pptx)
+  · [Slides](https://github.com/sanand0/talks/releases/download/talks/TEDx-MDI-Gurgaon-LLM-Psychology.pptx)
+- 8 Aug 2024: **Finding Actor Look-alikes** at [DataHack Summit 2024](https://www.analyticsvidhya.com/datahacksummit-2024/speakers/anand-s)
+  · [Video](https://youtu.be/a6_tygjxxUc)
+  · [Chat](https://chatgpt.com/share/68d8b27a-5eb8-800c-b8d9-f403bb55b9b5)
+  · [Code](https://github.com/sanand0/actor-lookalikes)
+- 19 Sep 2019: **Automating Comics** at [TDS KGInstitutions, 2019](https://www.ted.com/tedx/events/35806)
+  · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/TEDx-KGI-Anand-Automating-Comics.pptx)
+  · [Slides](https://github.com/sanand0/talks/releases/download/talks/TEDx-KGI-Anand-Automating-Comics.pptx)
+- 19 Nov 2017: **Prisoners of Birth** at [TEDx Whitefield, 2017](https://www.ted.com/tedx/events/24163)
+  · [Video](https://youtu.be/ew5_-7cwSm0)
+  · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/TEDx-Whitefield-Prisoners-of-Birth.pptx)
+  · [Slides](https://github.com/sanand0/talks/releases/download/talks/TEDx-Whitefield-Prisoners-of-Birth.pptx)
+- 20 Feb 2015: **Visualizing Data Anomalies** at [TEDx IIM Bangalore, 2015](https://www.ted.com/tedx/events/14548)
+  · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/TEDx-IIM-Bangalore-Visualizing-Data-Anomalies.pptx)
+  · [Slides](https://github.com/sanand0/talks/releases/download/talks/TEDx-IIM-Bangalore-Visualizing-Data-Anomalies.pptx)
+- 28 Feb 2015: **Visualizing Politics** at [TEDx NMIMS Bangalore, 2015](https://www.ted.com/tedx/events/13132)
+  · [Video](https://youtu.be/XuawdPb2F5A)
+  · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/TEDx-NMIMS-Bangalore-Visualizing-Politics.pptx)
+  · [Slides](https://github.com/sanand0/talks/releases/download/talks/TEDx-NMIMS-Bangalore-Visualizing-Politics.pptx)
+- 15 May 2014: **NCERT NRG Workshop**
+  · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/NCERT-NRG-Workshop.pptx)
+    [Slides](https://github.com/sanand0/talks/releases/download/talks/NCERT-NRG-Workshop.pptx)
+  · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/2014-05-15-NCERT-NRG-Workshop-small.pptx)
+    [Compressed](https://github.com/sanand0/talks/releases/download/talks/2014-05-15-NCERT-NRG-Workshop-small.pptx)
+- 17 Feb 2011: **Python Imaging**
+  · [🖥️ Code](python-imaging/index.html)
+- 28 Jan 2011: **Learning R** at [Datameet](http://www.datameet.org/)
+  · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/2011-01-28-datameet-learning-r.pptx)
+  · [Slides](https://github.com/sanand0/talks/releases/download/talks/2011-01-28-datameet-learning-r.pptx)
+  · [🎤 Audio](https://github.com/sanand0/talks/releases/download/talks/2011-01-28-datameet-learning-r.mp3)
 
 ## Others' Talks
 

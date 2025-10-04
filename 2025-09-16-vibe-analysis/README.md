@@ -162,3 +162,15 @@ Lessons from [vibe analysis of feedback](https://chatgpt.com/share/68ca37db-14dc
 - Share **self-check instructions** for a default dataset with prompts.
 - Add explicit checkpoints with **self-tests**.
 - Use two-lane pacing: **Cruise** (safe, minimal path) vs **Sprint** (optional accelerators).
+
+[Participant feedback](https://hasgeek.com/fifthelephant/data-analytics-using-ai-workshop/updates/llms-in-action-what-participants-learned-at-the-vi-KAAiTUtoJNrmJ61Gxrdxgf)
+
+---
+
+## Participant feedback: Ambarish
+
+> Before the workshop, I was curious about the name and content, but trusted the organizer (Hasgeek) & Anand. Anand’s deep knowledge and lucid explanations guided us through using LLMs for data analysis, testing hypotheses, and running parallel tasks with tools like Claude and Codex. I learned how BI and data analysis are evolving in the AI age, and how using multiple models reduces hallucinations and errors. Even as a remote participant, the pace was comfortable. Thanks again, Anand, for a wonderful session!
+
+## Participant feedback: Anindo Chakraborty
+
+> Yesterday’s workshop cut through the hype around ‘vibe coding’ and showed how it applies to analytics and data science. Anand walked us through the full lifecycle — from raw data to hypotheses, AI-driven testing, and refining results into business-ready insights. Advanced topics included building Agents, sub-agents, and using AGENTS.md files for task automation. The hands-on ‘flow state’ approach made learning incredibly practical. My biggest takeaway: start small, get your hands dirty, and practical experience will follow. Outstanding workshop — thank you, Anand!

@@ -1,5 +1,6 @@
 # Anand's Talks
 
+- 16 Oct 2025. **[Vibe Analysis](2025-10-16-vibe-analysis/ ":ignore")** at [Landmark Group](https://landmarkgroup.com/), UAE (Remote)
 - 22 Sep 2025. **[LLM Trends](2025-09-22-llm-trends/ ":ignore")** at [Straive](https://straive.com/), Chennai
 - 18 Sep 2025. **[LLMs: Ask me anything](2025-09-18-llm-ama-bi-worldwide/ ":ignore")** at [BI Worldwide](https://www.biworldwide.com/), Chennai
 - 16 Sep 2025. **[Vibe Analysis](2025-09-16-vibe-analysis/ ":ignore")** at [Fifth Elephant Workshops](http://has.gy/hV8U), Bangalore
@@ -49,9 +50,9 @@ I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtu
   · [Slides](https://github.com/sanand0/talks/releases/download/talks/TEDx-NMIMS-Bangalore-Visualizing-Politics.pptx)
 - 15 May 2014: **NCERT NRG Workshop**
   · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/NCERT-NRG-Workshop.pptx)
-    [Slides](https://github.com/sanand0/talks/releases/download/talks/NCERT-NRG-Workshop.pptx)
+  [Slides](https://github.com/sanand0/talks/releases/download/talks/NCERT-NRG-Workshop.pptx)
   · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/2014-05-15-NCERT-NRG-Workshop-small.pptx)
-    [Compressed](https://github.com/sanand0/talks/releases/download/talks/2014-05-15-NCERT-NRG-Workshop-small.pptx)
+  [Compressed](https://github.com/sanand0/talks/releases/download/talks/2014-05-15-NCERT-NRG-Workshop-small.pptx)
 - 17 Feb 2011: **Python Imaging**
   · [🖥️ Code](python-imaging/index.html)
 - 28 Jan 2011: **Learning R** at [Datameet](http://www.datameet.org/)

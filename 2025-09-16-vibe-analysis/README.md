@@ -154,6 +154,65 @@ Please share your feedback here:
 
 ---
 
+## Insights from IMDb rating histogram
+
+- **Dense cluster around 7–7.5**. [Vote-weighted mean][imdb-weight] is ~7.21.
+- **Scarcity of low-end titles (<4)** despite millions of records. [Self-selection bias][self-selection]
+- **Sharp drop beyond ~8.5**. IMDb emphasizes “regular” voters. High averages require consistently enthusiastic voters. [IMDb’s Top 1,000 voters][top-reviewers] rate critically (lower than typical users 98% of the time)
+- **Spike at perfect 10.0**: [coordinated fan campaigns and vote brigading][ringer]
+
+[imdb-weight]: https://help.imdb.com/article/imdb/track-movies-tv/ratings-faq/G67Y87TFYYP6TWAV "“Ratings FAQ,” IMDb Help Center. Weighted rating formula: \(\text{WR} = \frac{v}{v+m}R + \frac{m}{v+m}C\), where \(C\) is the overall mean and \(m\) the minimum votes for chart eligibility."
+[self-selection]: https://link.springer.com/chapter/10.1007/978-0-387-73655-6_17 "Kramer, M. A. “Self-Selection Bias in Reputation Systems.” *Trust Management*, IFIP, 2007."
+[top-reviewers]: https://hbr.org/2025/01/research-how-top-reviewers-skew-online-ratings "Bondi, T., Rossi, M., & Stevens, R. L. “Research: How Top Reviewers Skew Online Ratings.” *Harvard Business Review*, Jan. 9, 2025."
+[ringer]: https://www.theringer.com/2019/6/12/tv/imdb-rating-system-problems-chernobyl "Bereznak, A. “The Problem With IMDb’s Rating System.” *The Ringer*, June 12, 2019."
+
+---
+
+# Lockdown-era genre peaks
+
+<small>
+
+Reality-TV reached its highest output during lockdown with 78 feature releases in 2020, a 2.07× surge versus the 2017–2019 baseline of 37.7 films per year and 3.12× the 2022–2024 recovery average of 25 releases.
+
+Talk-Show titles also peaked in 2020, delivering 26 releases—double the pre-lockdown average of 13 per year and 2.23× the immediate post-lockdown average of 11.7 releases.
+
+Both genres cleared the study’s thresholds (at least 25 lockdown-year films and ≥20% growth over the pre-lockdown window), marking them as the only categories with statistically meaningful release spikes tied to the COVID-19 lockdown period
+
+</small>
+
+---
+
+<small>
+
+| Director           | Movies | Preferred Letter |
+| ------------------ | -----: | ---------------: |
+| Rakesh Roshan      |      6 |                K |
+| Haruo Sotozaki     |      5 |                D |
+| Keishi Otomo       |      5 |                R |
+| Frank Darabont     |      4 |                T |
+| Chad Stahelski     |      4 |                J |
+| Alan Mak           |      4 |                I |
+| Kunihiko Yuyama    |      4 |                P |
+| Michael Chaves     |      4 |                T |
+| John R. Cherry III |      4 |                E |
+| Saeed Roustayi     |      3 |                L |
+
+</small>
+
+---
+
+## Any genres that rate 1950-60s films too high?
+
+<small>
+
+- **Film-noir** ratings cluster in the classic period: about 13.3 % of all noir ratings come from 1950s–1960s releases and another 25 % from the 1930s–1940s. The median genre sees only ~4.5 % of its ratings tied to 1950s–1960s titles, so noir is roughly 3× as concentrated there. Those mid-century titles are strong performers (e.g., 1950s average 3.997, 1960s 4.053), but later decades (1970s neo-noir at 4.12) keep the overall average high too.
+- **War films** also skew earlier: 1950s–1960s releases account for 11.3 % of war-movie ratings versus that same ~4.5 % median elsewhere. Their 1950s/1960s averages (3.963 and 4.004) are among the genre’s best, yet pre/post-1960 decades remain relatively strong (e.g., 1930s at 3.86, 1990s at 3.85).
+- **It isn’t solely a volume imbalance** though; even later entries hold up reasonably well, suggesting a combination of historical canon effects and comparatively consistent quality.
+
+</small>
+
+---
+
 ## Feedback analysis
 
 Lessons from [vibe analysis of feedback](https://chatgpt.com/share/68ca37db-14dc-800c-8cfa-34f7dcd1538e):

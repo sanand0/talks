@@ -40,7 +40,7 @@ paginate: true
 
 ## Evaluation & feedback were [LLM-automated](https://github.com/sanand0/tools-in-data-science-public/blob/tds-2024-t3/project2/evaluate.py)
 
-Rubric 17/27: [Code sends _only_ carefully chosen analysis to the LLM?](<(https://sanand0.github.io/tds-2024-sep-project-2-results/#?tab=detail&test=code%3A+selective_analyses&sort=marks)>)
+Rubric 17/27: [Code sends _only_ carefully chosen analysis to the LLM?]((https://sanand0.github.io/tds-2024-sep-project-2-results/#?tab=detail&test=code%3A+selective_analyses&sort=marks))
 
 > - 🔴 The code focuses on selective data analysis required to prepare a report but doesn't have a filtering mechanism to only present certain metrics to the AI.
 > - 🟢 The code only processes relevant analyses by summarizing key findings (missing values, statistics, etc.) before sending it to the LLM, thereby avoiding unnecessary data.

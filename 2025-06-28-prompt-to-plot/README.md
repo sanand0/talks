@@ -80,16 +80,16 @@ Skip anything marked 💻 if you wish.
 
 ## Set up GitHub
 
-1.  Sign up at [github.com](https://github.com)
-2.  Create a public repo, e.g. `prompt-to-plot-workshop` with a README
-3.  💻 Clone the repository to your local machine.
-    ```bash
-    git clone https://github.com/<username>/<repository-name>.git
-    ```
-4.  💻 Navigate into your project directory.
-    ```bash
-    cd <repository-name>
-    ```
+1. Sign up at [github.com](https://github.com)
+2. Create a public repo, e.g. `prompt-to-plot-workshop` with a README
+3. 💻 Clone the repository to your local machine.
+   ```bash
+   git clone https://github.com/<username>/<repository-name>.git
+   ```
+4. 💻 Navigate into your project directory.
+   ```bash
+   cd <repository-name>
+   ```
 
 ---
 

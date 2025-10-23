@@ -25,7 +25,7 @@ paginate: true
 
 [Landmark Group](https://www.landmarkgroup.com/) · 16 Sep 2025, 11:00 am UAE · Remote
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Transcript](https://github.com/sanand0/talks/tree/main/2025-10-16-vibe-analysis)
+[Transcript](https://github.com/sanand0/talks/tree/main/2025-10-16-vibe-analysis) · [Spreadsheet][sheet]
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 https://sanand0.github.io/talks/

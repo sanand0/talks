@@ -161,7 +161,7 @@ Please share your feedback here:
 - **Sharp drop beyond ~8.5**. IMDb emphasizes “regular” voters. High averages require consistently enthusiastic voters. [IMDb’s Top 1,000 voters][top-reviewers] rate critically (lower than typical users 98% of the time)
 - **Spike at perfect 10.0**: [coordinated fan campaigns and vote brigading][ringer]
 
-[imdb-weight]: https://help.imdb.com/article/imdb/track-movies-tv/ratings-faq/G67Y87TFYYP6TWAV "“Ratings FAQ,” IMDb Help Center. Weighted rating formula: \(\text{WR} = \frac{v}{v+m}R + \frac{m}{v+m}C\), where \(C\) is the overall mean and \(m\) the minimum votes for chart eligibility."
+[imdb-weight]: https://help.imdb.com/article/imdb/track-movies-tv/ratings-faq/G67Y87TFYYP6TWAV "“Ratings FAQ,” IMDb Help Center. Weighted rating formula: (\\text{WR} = \\frac{v}{v+m}R + \\frac{m}{v+m}C), where (C) is the overall mean and (m) the minimum votes for chart eligibility."
 [self-selection]: https://link.springer.com/chapter/10.1007/978-0-387-73655-6_17 "Kramer, M. A. “Self-Selection Bias in Reputation Systems.” *Trust Management*, IFIP, 2007."
 [top-reviewers]: https://hbr.org/2025/01/research-how-top-reviewers-skew-online-ratings "Bondi, T., Rossi, M., & Stevens, R. L. “Research: How Top Reviewers Skew Online Ratings.” *Harvard Business Review*, Jan. 9, 2025."
 [ringer]: https://www.theringer.com/2019/6/12/tv/imdb-rating-system-problems-chernobyl "Bereznak, A. “The Problem With IMDb’s Rating System.” *The Ringer*, June 12, 2019."

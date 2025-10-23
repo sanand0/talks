@@ -35,14 +35,14 @@ And _this_ is the time you've chosen to begin your MBA.
 
 There's a _jagged edge_ of capability. See how they multiply integers:
 
-| Model            |   % | 2d  | 3d  | 4d  | 5d  | 6d  | 7d  | 9d  |
-| ---------------- | --: | --- | --- | --- | --- | --- | --- | --- |
-| OpenAI O3        | 86% | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ❌  |
-| Deepseek v3      | 71% | ✅  | ✅  | ✅  | ✅  | ✅  | ❌  | ❌  |
-| Gemini 2.0 Flash | 57% | ✅  | ✅  | ✅  | ✅  | ❌  | ❌  | ❌  |
-| Llama 3.3 70b    | 43% | ✅  | ✅  | ❌  | ✅  | ❌  | ❌  | ❌  |
-| GPT 3.5 Turbo    | 29% | ✅  | ✅  | ❌  | ❌  | ❌  | ❌  | ❌  |
-| Llama 3 70b      | 14% | ✅  | ❌  | ❌  | ❌  | ❌  | ❌  | ❌  |
+| Model            |   % | 2d | 3d | 4d | 5d | 6d | 7d | 9d |
+| ---------------- | --: | -- | -- | -- | -- | -- | -- | -- |
+| OpenAI O3        | 86% | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
+| Deepseek v3      | 71% | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| Gemini 2.0 Flash | 57% | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Llama 3.3 70b    | 43% | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ |
+| GPT 3.5 Turbo    | 29% | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Llama 3 70b      | 14% | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 ---
 

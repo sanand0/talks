@@ -25,7 +25,7 @@ paginate: true
 
 [Straive](https://straive.com/) · 23 Sep 2025, 4:00 pm SGT · Remote
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Transcript](https://github.com/sanand0/talks/tree/main/2025-10-23-vibe-coding) · [Spreadsheet](https://docs.google.com/spreadsheets/d/1a4xBlO1snYLT5Bzi71SG5Wqel2j6yoAM3CAw0UNWCRg/edit?gid=0#gid=0)
+[Video](https://drive.google.com/file/d/1NmuSHWAotDHo5uDvi8s5V8sUJHWRDhvo/view?usp=sharing) · [Transcript](https://github.com/sanand0/talks/tree/main/2025-10-23-vibe-coding) · [Spreadsheet](https://docs.google.com/spreadsheets/d/1a4xBlO1snYLT5Bzi71SG5Wqel2j6yoAM3CAw0UNWCRg/edit?gid=0#gid=0)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 https://sanand0.github.io/talks/
@@ -830,7 +830,7 @@ All the best. Thanks for attending. Have a good day, everyone. Bye.
 
 [Straive](https://straive.com/) · 23 Sep 2025, 4:00 pm SGT · Remote
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Transcript](https://github.com/sanand0/talks/tree/main/2025-10-23-vibe-coding)
+[Video](https://drive.google.com/file/d/1NmuSHWAotDHo5uDvi8s5V8sUJHWRDhvo/view?usp=sharing) · [Transcript](https://github.com/sanand0/talks/tree/main/2025-10-23-vibe-coding) · [Spreadsheet](https://docs.google.com/spreadsheets/d/1a4xBlO1snYLT5Bzi71SG5Wqel2j6yoAM3CAw0UNWCRg/edit?gid=0#gid=0)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 https://sanand0.github.io/talks/

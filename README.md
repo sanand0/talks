@@ -1,5 +1,6 @@
 # Anand's Talks
 
+- 29 Oct 2025. **[LLM Data Visualization](2025-10-29-llm-data-visualization/ ":ignore")** at [IITM](https://www.iitm.ac.in/), Chennai
 - 23 Oct 2025. **[Vibe Coding](2025-10-23-vibe-coding/ ":ignore")** at [Straive](https://straive.com/), SG/IN/PH/... (Remote)
 - 16 Oct 2025. **[Vibe Analysis](2025-10-16-vibe-analysis/ ":ignore")** at [Landmark Group](https://landmarkgroup.com/), UAE (Remote)
 - 22 Sep 2025. **[LLM Trends](2025-09-22-llm-trends/ ":ignore")** at [Straive](https://straive.com/), Chennai

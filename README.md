@@ -64,6 +64,7 @@ I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtu
 
 ## Others' Talks
 
+- 21 Sep 2025. []
 - 21 Sep 2025. [Zainab Bawa](https://www.linkedin.com/in/zainabbawa/). **[Building a culture of openness](2025-09-21-zainab-building-a-culture-of-openness/ ":ignore")** at [IndiaFOSS](https://fossunited.org/c/indiafoss/2025/cfp/0ios0i6o47), Bangalore
 - 20 Sep 2025. [Kiran Jonnalagadda](https://www.linkedin.com/in/kiranjonna/). **[Homelabbing with Bare Metal](2025-09-20-kiran-homelabbing-with-bare-metal/ ":ignore")** at [IndiaFOSS](https://fossunited.org/c/indiafoss/2025/cfp/4v6f8ek2n0)
 

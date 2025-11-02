@@ -1,14 +1,15 @@
 ---
 marp: true
-title: Vibe Coding
-author: Anand S
+title: Making Open Data Useful: Lessons from Diagram Chasing
+author: Vivek Matthew and Aman Bhargava
 url: https://sanand0.github.io/talks/2025-09-21-making-open-data-useful/
 theme: marpessa
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
+# https://chatgpt.com/c/69073893-1090-8322-8cf9-aa71bc3c4e84
 ---
 
-# Homelabbing with Bare Metal
+# Making Open Data Useful: Lessons from Diagram Chasing
 
 [IndiaFOSS](https://fossunited.org/c/indiafoss/2025/cfp/1hutna15uj) · 21 Sep 2025, 4:15 pm IST · [Bangalore](https://maps.app.goo.gl/Uon4KDWDqy65RGim8)
 [Vivek Matthew](https://github.com/Vonter) · [Aman Bhargava](https://aman.bh/) · [Diagram Chasing](https://diagramchasing.fun/)
@@ -464,3 +465,19 @@ Master of ceremonies says two questions. Anybody? No, no, it needs to go into th
 **Answer**: Okay. I think it's like a, it's an acquired taste kind of a situation where, I think it's also frustration. Like, because I would, like I think there's, I hear a lot of people complain about there's no data, there's no data, right? I think there is data. I think like we as sometimes like people who are knowledgeable about it fail to communicate it, right? So sometimes he brings up a thing and we have an argument and I want to prove him wrong or he wants to prove me wrong, right? So it, the craft then is generated out of spite. So it's about like, can I, can I have an argument over this thing? Can I have a conversation about it? If it's, if it's as interesting as that, maybe it's interesting to someone else as well. So maybe that's a short answer. Yeah, thank you.
 
 </transcript>
+
+---
+
+# Making Open Data Useful: Lessons from Diagram Chasing
+
+[IndiaFOSS](https://fossunited.org/c/indiafoss/2025/cfp/1hutna15uj) · 21 Sep 2025, 4:15 pm IST · [Bangalore](https://maps.app.goo.gl/Uon4KDWDqy65RGim8)
+[Vivek Matthew](https://github.com/Vonter) · [Aman Bhargava](https://aman.bh/) · [Diagram Chasing](https://diagramchasing.fun/)
+[Video](https://www.youtube.com/watch?v=7NCUE02l1DE) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-09-21-making-open-data-useful/README.md)
+
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-21-making-open-data-useful/)
+
+[1]: https://diagramchasing.fun/?utm_source=chatgpt.com "Diagram Chasing"
+[2]: https://blr-rains.netlify.app/?utm_source=chatgpt.com "BLR Water Log"
+[3]: https://india-time-use-explorer.netlify.app/?utm_source=chatgpt.com "India Time Use Survey Explorer | Diagram Chasing"
+[4]: https://cbfc.watch/?utm_source=chatgpt.com "CBFC Watch: Home"
+[5]: https://diagramchasing.fun/authors/aman?utm_source=chatgpt.com "Aman Bhargava"

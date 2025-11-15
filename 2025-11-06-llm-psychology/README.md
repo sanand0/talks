@@ -9,7 +9,7 @@ style: |
   transcript { display: none; }
 
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
-# ChatGPT: https://chatgpt.com/c/69022cb0-f664-8321-846d-c398709e497d
+# ChatGPT: https://chatgpt.com/c/690f49ee-b9e8-8320-9583-a0739df2f0d2
 ---
 
 <!-- _class: title -->

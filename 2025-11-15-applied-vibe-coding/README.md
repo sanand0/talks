@@ -128,7 +128,7 @@ Commit your prompts (e.g. `SPEC.md`, `PROMPTS.md`).
 ## **Optimize for review**, not coding
 
 AI coding agents tools boost development speed speed, shifting effort to verification.
-LLM-f
+
 Ask agents to write readable code.
 
 Ask it to write test cases, **run them**, and ensure they pass.
@@ -179,6 +179,7 @@ Plan to learn along with the agents, not just delegate.
 
 [IIT Madras](https://www.iitm.ac.in/) · 15 Nov 2025, 3:30 pm IST · Remote
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
+[Spreadsheet](https://docs.google.com/spreadsheets/d/1qX8TRuWl5pbhj6K34eqxHPUYb9qd9g-P1joWkasosC4/edit?usp=sharing)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-11-15-applied-vibe-coding/)

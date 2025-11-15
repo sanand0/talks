@@ -18,6 +18,7 @@ style: |
 
 [IIT Madras](https://www.iitm.ac.in/) · 15 Nov 2025, 3:30 pm IST · Remote
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
+[Spreadsheet](https://docs.google.com/spreadsheets/d/1qX8TRuWl5pbhj6K34eqxHPUYb9qd9g-P1joWkasosC4/edit?usp=sharing)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-11-15-applied-vibe-coding/)
@@ -33,6 +34,9 @@ style: |
 3. Click on the "LICENSE" button and add a license, e.g., MIT
 
 Now you have a GitHub repo to store your code!
+
+[Fill up your profile in this spreadsheet](https://docs.google.com/spreadsheets/d/1qX8TRuWl5pbhj6K34eqxHPUYb9qd9g-P1joWkasosC4/edit?usp=sharing).
+It will look like `https://github.com/your-username/`
 
 ---
 

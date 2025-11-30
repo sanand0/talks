@@ -1,12 +1,12 @@
 ---
 marp: true
 title: Making Open Data Useful: Lessons from Diagram Chasing
-author: Vivek Matthew and Aman Bhargava
-url: https://sanand0.github.io/talks/2025-09-21-making-open-data-useful/
-theme: marpessa
-paginate: true
-# Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
-# https://chatgpt.com/c/69073893-1090-8322-8cf9-aa71bc3c4e84
+  author: Vivek Matthew and Aman Bhargava
+  url: https://sanand0.github.io/talks/2025-09-21-making-open-data-useful/
+  theme: marpessa
+  paginate: true
+  # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
+  # https://chatgpt.com/c/69073893-1090-8322-8cf9-aa71bc3c4e84
 ---
 
 # Making Open Data Useful: Lessons from Diagram Chasing

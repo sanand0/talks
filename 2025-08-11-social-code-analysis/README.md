@@ -136,21 +136,23 @@ _Who_ you copy from matters! Copy late for more options.
 ```python
 import os
 import sys
+
 ...
 from sklearn.cluster import KMeans
 from sklearn.impute import SimpleImputer
 
-AIPROXY_TOKEN = os.getenv('AIPROXY_TOKEN')
+AIPROXY_TOKEN = os.getenv("AIPROXY_TOKEN")
 ```
 
 ```python
 import os
 import sys
+
 ...
 from sklearn.cluster import KMeans
 from sklearn.impute import SimpleImputer
 
-AIPROXY_TOKEN = os.getenv('eyJhbGciOi...')
+AIPROXY_TOKEN = os.getenv("eyJhbGciOi...")
 ```
 
 </div>

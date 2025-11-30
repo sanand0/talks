@@ -2,7 +2,7 @@
 marp: true
 title: LLM Psychology
 author: Anand S
-url: https://sanand0.github.io/talks/2025-11-07-llm-psychology/
+url: https://sanand0.github.io/talks/2025-11-06-llm-psychology/
 theme: marpessa
 paginate: true
 style: |
@@ -18,19 +18,19 @@ style: |
 
 [Madhu Decodes](https://www.youtube.com/channel/UCZLuqdSatDu-solUJzxRh6g) · 06 Nov 2025, 4:00 pm IST · Remote
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Transcript](https://github.com/sanand0/talks/tree/main/2025-11-07-llm-psychology)
+[Transcript](https://github.com/sanand0/talks/tree/main/2025-11-06-llm-psychology)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-11-07-llm-psychology)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-11-06-llm-psychology)
 
 ---
 
 # LLM psychology treats models like people to learn faster
 
-* Treat language models as **minds we can probe** rather than black boxes.
-* Ask clear questions, frame hypotheses, and collect evidence like a good study.
-* Share findings in simple language so busy teams can act on them.
-* The goal is practical insight that **makes it easy** to build better systems.
+- Treat language models as **minds we can probe** rather than black boxes.
+- Ask clear questions, frame hypotheses, and collect evidence like a good study.
+- Share findings in simple language so busy teams can act on them.
+- The goal is practical insight that **makes it easy** to build better systems.
 
 <transcript>
 **Madhu**: Hello, and welcome all to another episode of Madhu Decodes, the podcast where we try to decode complex minds and technologies and job titles that are shaping our future in the world of AI. I am Madhu Satyaselan, your host today, and we have a guest in this show who demands to be decoded, and his work demands to be decoded. Our guest here is S. Anand. Officially, he is the Head of Innovation at Straive and the co-founder of a massively successful data storytelling company, Gramener. He has been named one of India's top 10 data scientists. He's a regular on TEDx and PyCon stages. His background spans from IIT Madras to IIM Bangalore.
@@ -51,10 +51,10 @@ So I wanted to hear from you. My first question is, why that specific word? **Ar
 
 # LLMs show distinct personalities on human trait tests
 
-* Models often display **very varied personalities** when you apply OCEAN-style tests.
-* Some trend high on **openness and agreeableness**; others feel quieter or more cautious.
-* Personality shifts with prompts and training, so measure, do not assume.
-* See demo ideas: [OCEAN testing of LLMs](https://github.com/sanand0/talks/releases/download/talks/2024-08-10-TEDx-MDI-Gurgaon-LLM-Psychology.pptx).
+- Models often display **very varied personalities** when you apply OCEAN-style tests.
+- Some trend high on **openness and agreeableness**; others feel quieter or more cautious.
+- Personality shifts with prompts and training, so measure, do not assume.
+- See demo ideas: [OCEAN testing of LLMs](https://github.com/sanand0/talks/releases/download/talks/2024-08-10-TEDx-MDI-Gurgaon-LLM-Psychology.pptx).
 
 <transcript>
 
@@ -70,9 +70,9 @@ In contrast, let's say a model like Gemini Flash is a very introverted model. If
 
 # We study the model’s mindset, not the human
 
-* Focus on the model’s tendencies, not the user’s traits.
-* Map how prompts, format, and context steer the model’s choices.
-* Use this map to pick the right model and prompt for the job.
+- Focus on the model’s tendencies, not the user’s traits.
+- Map how prompts, format, and context steer the model’s choices.
+- Use this map to pick the right model and prompt for the job.
 
 <transcript>
 
@@ -86,10 +86,10 @@ In contrast, let's say a model like Gemini Flash is a very introverted model. If
 
 # Benchmarks and price show value that keeps rising
 
-* Track accuracy, speed, context, and **steady quality gains at lower cost**.
-* Compare scores with what you pay to find the sweet spot.
-* Watch market shifts often; pricing and tiers change fast.
-* Reference: [LLM Pricing](https://sanand0.github.io/llmpricing/).
+- Track accuracy, speed, context, and **steady quality gains at lower cost**.
+- Compare scores with what you pay to find the sweet spot.
+- Watch market shifts often; pricing and tiers change fast.
+- Reference: [LLM Pricing](https://sanand0.github.io/llmpricing/).
 
 <transcript>
 
@@ -111,10 +111,10 @@ So **part of what I do is research the economic value of different models and ho
 
 # Small wins convert skepticism into sustained practice
 
-* Early tests may feel underwhelming. Keep asking better questions.
-* Simple tasks like chart advice can match expert checklists.
-* **All around intelligence across tasks** shows up in classification and synthesis.
-* Those moments build trust and trigger deeper experiments.
+- Early tests may feel underwhelming. Keep asking better questions.
+- Simple tasks like chart advice can match expert checklists.
+- **All around intelligence across tasks** shows up in classification and synthesis.
+- Those moments build trust and trigger deeper experiments.
 
 <transcript>
 
@@ -136,9 +136,9 @@ Now, given the volume of input, this is something that would have taken me at le
 
 # Different models fill gaps across tasks and media
 
-* Try multiple models because each has strong and weak spots.
-* Some shine at images or long context; others focus on speed.
-* Switch models when a task needs a skill your default lacks.
+- Try multiple models because each has strong and weak spots.
+- Some shine at images or long context; others focus on speed.
+- Switch models when a task needs a skill your default lacks.
 
 <transcript>
 
@@ -152,10 +152,10 @@ Now, given the volume of input, this is something that would have taken me at le
 
 # Leverage your strengths and practice every single day
 
-* Build on your domain strength so the model’s answers land better.
-* Set a high daily reps target; **practice is really all that counts**.
-* “Think step by step” often helps; emotional pleading often hurts.
-* Evidence: [Emotion prompting tests](https://sanand0.github.io/llmevals/emotion-prompts/), Zero-shot CoT research.
+- Build on your domain strength so the model’s answers land better.
+- Set a high daily reps target; **practice is really all that counts**.
+- “Think step by step” often helps; emotional pleading often hurts.
+- Evidence: [Emotion prompting tests](https://sanand0.github.io/llmevals/emotion-prompts/), Zero-shot CoT research.
 
 <transcript>
 
@@ -175,9 +175,9 @@ On the other hand, a statement like, "Think step by step," that actually tends t
 
 # Publish logs, stories, and prototypes to compound learning
 
-* Keep a “Things I Learned” log to capture patterns fast.
-* Turn bigger experiments into data stories others can read.
-* Ship small prototypes so teams can try ideas immediately.
+- Keep a “Things I Learned” log to capture patterns fast.
+- Turn bigger experiments into data stories others can read.
+- Ship small prototypes so teams can try ideas immediately.
 
 <transcript>
 
@@ -191,10 +191,10 @@ On the other hand, a statement like, "Think step by step," that actually tends t
 
 # Cross-checking models cuts errors and boosts trust
 
-* Start with a single pass to gauge baseline quality.
-* Add double or triple checks; **error rates fall sharply with more checks**.
-* Send disagreements to humans; total manual work drops a lot.
-* See: [Double-checking impact](https://sanand0.github.io/llmevals/double-checking/).
+- Start with a single pass to gauge baseline quality.
+- Add double or triple checks; **error rates fall sharply with more checks**.
+- Send disagreements to humans; total manual work drops a lot.
+- See: [Double-checking impact](https://sanand0.github.io/llmevals/double-checking/).
 
 <transcript>
 
@@ -212,10 +212,10 @@ Now, the models are so cheap that quintuple checking is barely any incremental c
 
 # Limit risky powers to keep agent systems safer
 
-* Risk spikes when a system holds private data, reads untrusted input, and talks out.
-* Pick only two at once to stay safer, and monitor activity.
-* Use strict prompts, scoped permissions, and clean data sources.
-* See: [System prompt overrides](https://sanand0.github.io/llmevals/system-override/).
+- Risk spikes when a system holds private data, reads untrusted input, and talks out.
+- Pick only two at once to stay safer, and monitor activity.
+- Use strict prompts, scoped permissions, and clean data sources.
+- See: [System prompt overrides](https://sanand0.github.io/llmevals/system-override/).
 
 <transcript>
 
@@ -229,7 +229,7 @@ So, in short, it is possible to engineer systems that can only that can access p
 
 **Madhu**: So you've given the answers for therapies basically. So you've said prompt therapy and maybe the choice of model as a therapy. Pretty much. And then of course, re-evaluating elements as another therapy. So very interesting take, very, very interesting take. This is the beauty and complexity of the new world we are stepping into.
 
-###
+### 
 
 **Madhu**: I've coined this kind of a rapid-fire round. I'm going to throw you names or personalities in different fields, and you can probably prescribe an AI or an LLM that they would be better off using or that would enhance their work in their current working model. If you could think about that and let me know. Shall I start giving you names?
 
@@ -241,9 +241,9 @@ So, in short, it is possible to engineer systems that can only that can access p
 
 # AI can expand a composer’s creative palette
 
-* For cinematic orchestration, try **AIVA** to sketch themes and export MIDI.
-* For quick song ideas, **Suno** lets you draft, iterate, and share.
-* Use AI for exploration; keep the final taste human.
+- For cinematic orchestration, try **AIVA** to sketch themes and export MIDI.
+- For quick song ideas, **Suno** lets you draft, iterate, and share.
+- Use AI for exploration; keep the final taste human.
 
 <transcript>
 
@@ -257,9 +257,9 @@ So, in short, it is possible to engineer systems that can only that can access p
 
 # AI can guide athletes and investors with data
 
-* For court analytics, **SwingVision** tracks shots and flags patterns.
-* For venture research, **AlphaSense** summarizes filings and transcripts quickly.
-* General models can still draft memos and review pitch decks well.
+- For court analytics, **SwingVision** tracks shots and flags patterns.
+- For venture research, **AlphaSense** summarizes filings and transcripts quickly.
+- General models can still draft memos and review pitch decks well.
 
 <transcript>
 
@@ -273,9 +273,9 @@ So, in short, it is possible to engineer systems that can only that can access p
 
 # AI helps authors speak to every language and reader
 
-* **IndicTrans2** and **Sarvam AI** support many Indian languages with strong fidelity.
-* **NotebookLM** can turn sources into overviews and ideas you can explore.
-* Together they help stories travel to new audiences.
+- **IndicTrans2** and **Sarvam AI** support many Indian languages with strong fidelity.
+- **NotebookLM** can turn sources into overviews and ideas you can explore.
+- Together they help stories travel to new audiences.
 
 <transcript>
 
@@ -289,9 +289,9 @@ So, in short, it is possible to engineer systems that can only that can access p
 
 # AI can scale advocacy and defend trust in media
 
-* **Quorum Grassroots** and **VoterVoice** personalize outreach at scale.
-* **C2PA** content credentials help audiences verify source and edits.
-* Use these to grow reach while protecting credibility.
+- **Quorum Grassroots** and **VoterVoice** personalize outreach at scale.
+- **C2PA** content credentials help audiences verify source and edits.
+- Use these to grow reach while protecting credibility.
 
 <transcript>
 
@@ -305,9 +305,9 @@ So, in short, it is possible to engineer systems that can only that can access p
 
 # AI turns practice sessions into measurable coaching
 
-* **CricViz Centurion** helps plan match strategy from deep cricket data.
-* **StanceBeam** quantifies bat mechanics during nets for feedback.
-* **Full Track AI** adds phone-based ball tracking and biomechanics.
+- **CricViz Centurion** helps plan match strategy from deep cricket data.
+- **StanceBeam** quantifies bat mechanics during nets for feedback.
+- **Full Track AI** adds phone-based ball tracking and biomechanics.
 
 <transcript>
 
@@ -321,9 +321,9 @@ So, in short, it is possible to engineer systems that can only that can access p
 
 # AI tutoring can lift learning where teachers are scarce
 
-* **Khanmigo** offers guided help rather than direct answers.
-* Students get patient tutoring; teachers gain planning support.
-* At scale, this can narrow learning gaps in many regions.
+- **Khanmigo** offers guided help rather than direct answers.
+- Students get patient tutoring; teachers gain planning support.
+- At scale, this can narrow learning gaps in many regions.
 
 <transcript>
 
@@ -337,9 +337,9 @@ So, in short, it is possible to engineer systems that can only that can access p
 
 # Curiosity and clear experiments keep you ahead
 
-* Keep asking “What changed, by how much, and at what cost?”
-* Share simple dashboards and narratives teams can absorb quickly.
-* Build reusable prompts and templates so progress compounds.
+- Keep asking “What changed, by how much, and at what cost?”
+- Share simple dashboards and narratives teams can absorb quickly.
+- Build reusable prompts and templates so progress compounds.
 
 <transcript>
 
@@ -357,10 +357,10 @@ So, in short, it is possible to engineer systems that can only that can access p
 
 [Madhu Decodes](https://www.youtube.com/channel/UCZLuqdSatDu-solUJzxRh6g) · 06 Nov 2025, 4:00 pm IST · Remote
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Transcript](https://github.com/sanand0/talks/tree/main/2025-11-07-llm-psychology)
+[Transcript](https://github.com/sanand0/talks/tree/main/2025-11-06-llm-psychology)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-11-07-llm-psychology)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-11-06-llm-psychology)
 
 ---
 

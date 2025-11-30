@@ -3,6 +3,7 @@
 import numpy as np
 import pandas as pd
 from pathlib import Path
+
 rng = np.random.default_rng(42)
 
 out_dir = Path(".")
@@ -14,8 +15,8 @@ out_dir = Path(".")
 # -----------------------------
 
 N_SEG = 4
-N_PER = 100   # 4*100 = 400 core points
-N_ANOM = 24   # small set of "edge cases"
+N_PER = 100  # 4*100 = 400 core points
+N_ANOM = 24  # small set of "edge cases"
 TOTAL = N_SEG * N_PER + N_ANOM  # 424
 
 segments = [
@@ -57,17 +58,29 @@ feature_names = [
     "reading_wpm",
 ]
 
+
 def sample_segment(name, means, stds, n):
     X = rng.normal(loc=np.array(means), scale=np.array(stds), size=(n, len(means)))
     bounds = [
-        (0,300),(0,20),(0,100),(0,40),(0,70),
-        (0,1),(0,12),(0,1),(0,120),(0,1),(0,50),(100,320)
+        (0, 300),
+        (0, 20),
+        (0, 100),
+        (0, 40),
+        (0, 70),
+        (0, 1),
+        (0, 12),
+        (0, 1),
+        (0, 120),
+        (0, 1),
+        (0, 50),
+        (100, 320),
     ]
-    for j,(lo,hi) in enumerate(bounds):
-        X[:,j] = np.clip(X[:,j], lo, hi)
+    for j, (lo, hi) in enumerate(bounds):
+        X[:, j] = np.clip(X[:, j], lo, hi)
     df = pd.DataFrame(X, columns=feature_names)
     df["segment"] = name
     return df
+
 
 dfs = []
 for name, means, stds in segments:
@@ -77,37 +90,37 @@ core = pd.concat(dfs, ignore_index=True)
 
 # Derived features
 core["engagement_index"] = (
-    0.35 * (core["study_minutes_per_day"]/300)
-    + 0.25 * (1-core["procrastination_ratio"])
-    + 0.20 * (core["forum_posts_per_week"]/40)
-    + 0.20 * (core["coding_minutes_per_week"]/120)
+    0.35 * (core["study_minutes_per_day"] / 300)
+    + 0.25 * (1 - core["procrastination_ratio"])
+    + 0.20 * (core["forum_posts_per_week"] / 40)
+    + 0.20 * (core["coding_minutes_per_week"] / 120)
 )
 
 z = (
-    0.6 * (core["quiz_accuracy_pct"]/100)
-    + 0.15 * (core["videos_watched_per_week"]/70)
+    0.6 * (core["quiz_accuracy_pct"] / 100)
+    + 0.15 * (core["videos_watched_per_week"] / 70)
     + 0.20 * core["assignment_timeliness"]
     - 0.25 * core["procrastination_ratio"]
 )
-core["learning_gain"] = 1/(1+np.exp(-4*(z-0.5)))
+core["learning_gain"] = 1 / (1 + np.exp(-4 * (z - 0.5)))
 
 # Categorical vars with light biases by segment
-countries = ["IN","SG","PH"]
-devices = ["mobile","desktop"]
-programs = ["BSc","MSc"]
+countries = ["IN", "SG", "PH"]
+devices = ["mobile", "desktop"]
+programs = ["BSc", "MSc"]
 
 prob_by_seg_country = {
-    "Grinders": [0.55,0.25,0.20],
-    "Crammers": [0.65,0.15,0.20],
-    "Social Learners": [0.50,0.30,0.20],
-    "Naturals": [0.40,0.40,0.20],
+    "Grinders": [0.55, 0.25, 0.20],
+    "Crammers": [0.65, 0.15, 0.20],
+    "Social Learners": [0.50, 0.30, 0.20],
+    "Naturals": [0.40, 0.40, 0.20],
 }
 
 prob_by_seg_device = {
-    "Grinders": [0.50,0.50],
-    "Crammers": [0.65,0.35],
-    "Social Learners": [0.45,0.55],
-    "Naturals": [0.35,0.65],
+    "Grinders": [0.50, 0.50],
+    "Crammers": [0.65, 0.35],
+    "Social Learners": [0.45, 0.55],
+    "Naturals": [0.35, 0.65],
 }
 
 country_col = []
@@ -115,8 +128,8 @@ device_col = []
 program_col = []
 for s in core["segment"].values:
     country_col.append(rng.choice(countries, p=prob_by_seg_country[s]))
-    device_col.append(rng.choice(devices,  p=prob_by_seg_device[s]))
-    program_col.append(rng.choice(programs, p=[0.72,0.28]))
+    device_col.append(rng.choice(devices, p=prob_by_seg_device[s]))
+    program_col.append(rng.choice(programs, p=[0.72, 0.28]))
 
 core["country"] = country_col
 core["device"] = device_col
@@ -125,18 +138,57 @@ core["anomaly"] = 0
 
 # Anomalies
 anom_types = [
-    ("Silent Aces", dict(study_minutes_per_day=35, sessions_per_week=2, quiz_accuracy_pct=96,
-                         forum_posts_per_week=0, videos_watched_per_week=5, procrastination_ratio=0.12,
-                         help_requests_per_week=0, assignment_timeliness=0.95, coding_minutes_per_week=10,
-                         rewatch_ratio=0.05, projects_completed=20, reading_wpm=300)),
-    ("Binge Lurkers", dict(study_minutes_per_day=80, sessions_per_week=3, quiz_accuracy_pct=62,
-                           forum_posts_per_week=0, videos_watched_per_week=65, procrastination_ratio=0.28,
-                           help_requests_per_week=1, assignment_timeliness=0.55, coding_minutes_per_week=12,
-                           rewatch_ratio=0.78, projects_completed=8, reading_wpm=190)),
-    ("Nocturnal Sprinters", dict(study_minutes_per_day=105, sessions_per_week=6, quiz_accuracy_pct=70,
-                                 forum_posts_per_week=1, videos_watched_per_week=38, procrastination_ratio=0.85,
-                                 help_requests_per_week=3, assignment_timeliness=0.35, coding_minutes_per_week=20,
-                                 rewatch_ratio=0.62, projects_completed=10, reading_wpm=210)),
+    (
+        "Silent Aces",
+        dict(
+            study_minutes_per_day=35,
+            sessions_per_week=2,
+            quiz_accuracy_pct=96,
+            forum_posts_per_week=0,
+            videos_watched_per_week=5,
+            procrastination_ratio=0.12,
+            help_requests_per_week=0,
+            assignment_timeliness=0.95,
+            coding_minutes_per_week=10,
+            rewatch_ratio=0.05,
+            projects_completed=20,
+            reading_wpm=300,
+        ),
+    ),
+    (
+        "Binge Lurkers",
+        dict(
+            study_minutes_per_day=80,
+            sessions_per_week=3,
+            quiz_accuracy_pct=62,
+            forum_posts_per_week=0,
+            videos_watched_per_week=65,
+            procrastination_ratio=0.28,
+            help_requests_per_week=1,
+            assignment_timeliness=0.55,
+            coding_minutes_per_week=12,
+            rewatch_ratio=0.78,
+            projects_completed=8,
+            reading_wpm=190,
+        ),
+    ),
+    (
+        "Nocturnal Sprinters",
+        dict(
+            study_minutes_per_day=105,
+            sessions_per_week=6,
+            quiz_accuracy_pct=70,
+            forum_posts_per_week=1,
+            videos_watched_per_week=38,
+            procrastination_ratio=0.85,
+            help_requests_per_week=3,
+            assignment_timeliness=0.35,
+            coding_minutes_per_week=20,
+            rewatch_ratio=0.62,
+            projects_completed=10,
+            reading_wpm=210,
+        ),
+    ),
 ]
 
 anom_rows = []
@@ -145,9 +197,9 @@ for k in range(N_ANOM):
     row = {f: base[f] for f in feature_names}
     for f in feature_names:
         v = row[f]
-        if f in ["procrastination_ratio","assignment_timeliness","rewatch_ratio"]:
+        if f in ["procrastination_ratio", "assignment_timeliness", "rewatch_ratio"]:
             v = float(np.clip(v + rng.normal(0, 0.03), 0, 1))
-        elif f=="quiz_accuracy_pct":
+        elif f == "quiz_accuracy_pct":
             v = float(np.clip(v + rng.normal(0, 2.5), 0, 100))
         else:
             v = float(max(0, v + rng.normal(0, 4)))
@@ -157,25 +209,33 @@ for k in range(N_ANOM):
 
 anom_df = pd.DataFrame(anom_rows)
 anom_df["engagement_index"] = (
-    0.35 * (anom_df["study_minutes_per_day"]/300)
-    + 0.25 * (1-anom_df["procrastination_ratio"])
-    + 0.20 * (anom_df["forum_posts_per_week"]/40)
-    + 0.20 * (anom_df["coding_minutes_per_week"]/120)
+    0.35 * (anom_df["study_minutes_per_day"] / 300)
+    + 0.25 * (1 - anom_df["procrastination_ratio"])
+    + 0.20 * (anom_df["forum_posts_per_week"] / 40)
+    + 0.20 * (anom_df["coding_minutes_per_week"] / 120)
 )
 z = (
-    0.6 * (anom_df["quiz_accuracy_pct"]/100)
-    + 0.15 * (anom_df["videos_watched_per_week"]/70)
+    0.6 * (anom_df["quiz_accuracy_pct"] / 100)
+    + 0.15 * (anom_df["videos_watched_per_week"] / 70)
     + 0.20 * anom_df["assignment_timeliness"]
     - 0.25 * anom_df["procrastination_ratio"]
 )
-anom_df["learning_gain"] = 1/(1+np.exp(-4*(z-0.5)))
-anom_df["country"] = rng.choice(countries, size=len(anom_df), p=[0.6,0.25,0.15])
-anom_df["device"]  = rng.choice(devices,  size=len(anom_df), p=[0.5,0.5])
-anom_df["program"] = rng.choice(programs, size=len(anom_df), p=[0.75,0.25])
+anom_df["learning_gain"] = 1 / (1 + np.exp(-4 * (z - 0.5)))
+anom_df["country"] = rng.choice(countries, size=len(anom_df), p=[0.6, 0.25, 0.15])
+anom_df["device"] = rng.choice(devices, size=len(anom_df), p=[0.5, 0.5])
+anom_df["program"] = rng.choice(programs, size=len(anom_df), p=[0.75, 0.25])
 anom_df["anomaly"] = 1
 
 df = pd.concat([core, anom_df], ignore_index=True)
-cols = feature_names + ["engagement_index","learning_gain","country","device","program","segment","anomaly"]
+cols = feature_names + [
+    "engagement_index",
+    "learning_gain",
+    "country",
+    "device",
+    "program",
+    "segment",
+    "anomaly",
+]
 df = df[cols]
 
 csv_path = out_dir / "som_edtech_dataset.csv"

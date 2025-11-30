@@ -19,7 +19,7 @@ style: |
 
 [Madhu Decodes](https://www.youtube.com/channel/UCZLuqdSatDu-solUJzxRh6g) · 06 Nov 2025, 4:00 pm IST · Remote
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Video](https://youtu.be/grXvLwWQBAw) · [Transcript](https://github.com/sanand0/talks/tree/main/2025-11-06-llm-psychology) · [Article](https://github.com/sanand0/talks/blob/main/2025-11-06-llm-psychology/mind-readers.docx)
+[Video](https://youtu.be/grXvLwWQBAw) · [Transcript](https://github.com/sanand0/talks/tree/main/2025-11-06-llm-psychology) · [Article](https://github.com/sanand0/talks/raw/refs/heads/main/2025-11-06-llm-psychology/mind-readers.docx)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-11-06-llm-psychology)
@@ -358,7 +358,7 @@ So, in short, it is possible to engineer systems that can only that can access p
 
 [Madhu Decodes](https://www.youtube.com/channel/UCZLuqdSatDu-solUJzxRh6g) · 06 Nov 2025, 4:00 pm IST · Remote
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Video](https://youtu.be/grXvLwWQBAw) · [Transcript](https://github.com/sanand0/talks/tree/main/2025-11-06-llm-psychology) · [Article](https://github.com/sanand0/talks/blob/main/2025-11-06-llm-psychology/mind-readers.docx)
+[Video](https://youtu.be/grXvLwWQBAw) · [Transcript](https://github.com/sanand0/talks/tree/main/2025-11-06-llm-psychology) · [Article](https://github.com/sanand0/talks/raw/refs/heads/main/2025-11-06-llm-psychology/mind-readers.docx)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-11-06-llm-psychology)

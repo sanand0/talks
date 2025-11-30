@@ -10,6 +10,7 @@ style: |
 
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
 # ChatGPT: https://chatgpt.com/c/690f49ee-b9e8-8320-9583-a0739df2f0d2
+# Mind Readers Article: https://claude.ai/share/bdaaf00e-b593-484c-96e6-93d344819a64
 ---
 
 <!-- _class: title -->
@@ -18,7 +19,7 @@ style: |
 
 [Madhu Decodes](https://www.youtube.com/channel/UCZLuqdSatDu-solUJzxRh6g) · 06 Nov 2025, 4:00 pm IST · Remote
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Transcript](https://github.com/sanand0/talks/tree/main/2025-11-06-llm-psychology)
+[Video](https://youtu.be/grXvLwWQBAw) · [Transcript](https://github.com/sanand0/talks/tree/main/2025-11-06-llm-psychology) · [Article](https://github.com/sanand0/talks/blob/main/2025-11-06-llm-psychology/mind-readers.docx)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-11-06-llm-psychology)
@@ -229,7 +230,7 @@ So, in short, it is possible to engineer systems that can only that can access p
 
 **Madhu**: So you've given the answers for therapies basically. So you've said prompt therapy and maybe the choice of model as a therapy. Pretty much. And then of course, re-evaluating elements as another therapy. So very interesting take, very, very interesting take. This is the beauty and complexity of the new world we are stepping into.
 
-### 
+###
 
 **Madhu**: I've coined this kind of a rapid-fire round. I'm going to throw you names or personalities in different fields, and you can probably prescribe an AI or an LLM that they would be better off using or that would enhance their work in their current working model. If you could think about that and let me know. Shall I start giving you names?
 
@@ -357,7 +358,7 @@ So, in short, it is possible to engineer systems that can only that can access p
 
 [Madhu Decodes](https://www.youtube.com/channel/UCZLuqdSatDu-solUJzxRh6g) · 06 Nov 2025, 4:00 pm IST · Remote
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Transcript](https://github.com/sanand0/talks/tree/main/2025-11-06-llm-psychology)
+[Video](https://youtu.be/grXvLwWQBAw) · [Transcript](https://github.com/sanand0/talks/tree/main/2025-11-06-llm-psychology) · [Article](https://github.com/sanand0/talks/blob/main/2025-11-06-llm-psychology/mind-readers.docx)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-11-06-llm-psychology)
@@ -402,12 +403,12 @@ So, in short, it is possible to engineer systems that can only that can access p
 4. Show one failure case where cross-checks still miss an error.
 5. Leave listeners with a one-page “start here” checklist of tools and habits.
 
-[1]: https://en.wikipedia.org/wiki/GPT-4?utm_source=chatgpt.com "GPT-4"
-[2]: https://openai.com/index/chatgpt/?utm_source=chatgpt.com "Introducing ChatGPT"
-[3]: https://ai.google.dev/gemini-api/docs/pricing?utm_source=chatgpt.com "Gemini Developer API Pricing - Google AI for Developers"
-[4]: https://arxiv.org/abs/2205.11916?utm_source=chatgpt.com "Large Language Models are Zero-Shot Reasoners"
-[5]: https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/?utm_source=chatgpt.com "The lethal trifecta for AI agents: private data, untrusted ..."
-[6]: https://aclanthology.org/2025.findings-naacl.469.pdf?utm_source=chatgpt.com "Do LLMs Have Distinct and Consistent Personality? TRAIT"
-[7]: https://arxiv.org/abs/2506.07962?utm_source=chatgpt.com "[2506.07962] Correlated Errors in Large Language Models"
-[8]: https://en.wikipedia.org/wiki/Elo_rating_system?utm_source=chatgpt.com "Elo rating system"
-[9]: https://simonwillison.net/2025/Nov/2/new-prompt-injection-papers/?utm_source=chatgpt.com "New prompt injection papers: Agents Rule of Two and The ..."
+[1]: https://en.wikipedia.org/wiki/GPT-4 "GPT-4"
+[2]: https://openai.com/index/chatgpt/ "Introducing ChatGPT"
+[3]: https://ai.google.dev/gemini-api/docs/pricing "Gemini Developer API Pricing - Google AI for Developers"
+[4]: https://arxiv.org/abs/2205.11916 "Large Language Models are Zero-Shot Reasoners"
+[5]: https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/ "The lethal trifecta for AI agents: private data, untrusted ..."
+[6]: https://aclanthology.org/2025.findings-naacl.469.pdf "Do LLMs Have Distinct and Consistent Personality? TRAIT"
+[7]: https://arxiv.org/abs/2506.07962 "[2506.07962] Correlated Errors in Large Language Models"
+[8]: https://en.wikipedia.org/wiki/Elo_rating_system "Elo rating system"
+[9]: https://simonwillison.net/2025/Nov/2/new-prompt-injection-papers/ "New prompt injection papers: Agents Rule of Two and The ..."

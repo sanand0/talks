@@ -44,6 +44,8 @@ For the braver souls, _time permitting_:
 
 ![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://chat.whatsapp.com/DUxeM59JBNH47Wmm1i5qRa)
 
+**Post your questions on WhatsApp at any time**
+
 ---
 
 ## Vibe Coding: code like code doesn't exist
@@ -75,7 +77,7 @@ Let's analyze some datasets with this mindset.
 - **Not corporate data**. You need NDAs, approvals, etc. for that.
 - We'll start with **personal data**. Download any of these:
   - Your Google, WhatsApp, Fitbit, Strava, etc. data.
-  - Your bank statements, utility bills, shopping history, etc.
+  - Your bank statements, medical reports, utility bills, etc.
   - Your Netflix, Spotify, YouTube, Kindle, etc. usage data.
   - Your contracts, resumes, reports, emails, chat logs, etc.
   - ... and lots more!
@@ -115,6 +117,8 @@ Share your choices on WhatsApp.
 
 ![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://chat.whatsapp.com/DUxeM59JBNH47Wmm1i5qRa)
 
+**Post your questions on WhatsApp at any time**
+
 ---
 
 ## There are several analysis approaches
@@ -126,7 +130,20 @@ Share your choices on WhatsApp.
 - [Visual](https://github.com/sanand0/scripts/blob/main/agents/custom-prompts/analyze-insights.md): "... like a NYT data story".
 - Podcast via [NotebookLM](https://notebooklm.google.com/)
 - Sketchnote / Infographic via [Nano Banana Pro](https://gemini.google.com/)
-- ... dashboards, reports, comic books, and many many more!
+- ... slide decks, dashboards, reports, simulations, and more!
+
+---
+
+## There are several more analysis approaches
+
+- **Grounded**: Search online, fact-check, cite sources
+- **Interactive**: Conversational Q&A, drill-down
+- **What if**: What-if this happens? What if that _had_ happened?
+- **Tutorial**: Teach me what you did.
+- **Systems thinking**: What are the causal loops? Leverage points?
+- **Sensitivity**: Which inputs affect outputs the most?
+- **Anomaly detection**: What are the outliers? Why?
+- ... and more!
 
 ---
 
@@ -137,6 +154,21 @@ Keep sharing your discoveries on WhatsApp.
 [WhatsApp Invite](https://chat.whatsapp.com/DUxeM59JBNH47Wmm1i5qRa)
 
 ![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://chat.whatsapp.com/DUxeM59JBNH47Wmm1i5qRa)
+
+**Post your questions on WhatsApp at any time**
+
+---
+
+## Analysis is just the starting point
+
+- **Verification**. Any errors? Biases? Incompleteness? Fallacies?
+- **Post-mortem**. What could we do differently to improve?
+- **Feedback**: Share / apply results, get feedback, iterate.
+- **Audit / Red Team**: Reproducible? Transparent? Ethical?
+- **Automate**: Write a program to do this repeatedly.
+- **Metrics**: What should we monitor? Calculate them.
+- **Diversification**: What else can we try that's different?
+- **Analogy**: What similar problems can we solve this way?
 
 ---
 
@@ -173,13 +205,13 @@ STEP 4. Test each hypothesis and show the results.
 
 ## Where can this be helpful for you?
 
-Sharing reinforces learning & builds commitment.
-
-Share ideas / plans WhatsApp:
+Sharing reinforces learning, builds commitment. Share ideas / plans:
 
 [WhatsApp Invite](https://chat.whatsapp.com/DUxeM59JBNH47Wmm1i5qRa)
 
 ![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://chat.whatsapp.com/DUxeM59JBNH47Wmm1i5qRa)
+
+**Post your questions on WhatsApp at any time**
 
 ---
 

@@ -20,7 +20,7 @@ npx -y @marp-team/marp-cli@latest --theme-set ~/code/marpessa/marpessa.css --htm
 -->
 <!-- _class: theme-butter title -->
 
-# Data to Decisions
+# Data to Decisions with AI
 
 #### Shaping the future of clinical trials
 
@@ -39,11 +39,11 @@ npx -y @marp-team/marp-cli@latest --theme-set ~/code/marpessa/marpessa.css --htm
 | **How we instruct them**  | understand specialized languages (FORTRAN, Python) | **understand natural language** - anyone can use it           |
 
 > This isn't just "easier AI".
-> It fundamentally changes _what_ AI can do and _who_ can do AI.
+> It fundamentally changes **what** AI can do and **who** can do AI.
 
 ---
 
-## Validating documents alone is a _huge_ cost
+## Validating ICFs is a $500K-$2M annual cost
 
 Let's take a pharma firm that runs:
 
@@ -102,16 +102,6 @@ We have protocols for that.
 
 ---
 
-## Gen AI is a Generality Breakthrough
-
-Previous AI needed training for each task.
-
-> LLMs are "few-shot learners." They learn from just a few examples.
-
-Just upload a document, or share a few examples, and the **same** model can generalize across a variety of domains.
-
----
-
 ## Use AI to run peer reviews. Validation is harmless
 
 [![h:550px](https://sanand0.github.io/llmevals/double-checking/improvement.webp)](https://sanand0.github.io/llmevals/double-checking/)
@@ -131,7 +121,7 @@ Just upload a document, or share a few examples, and the **same** model can gene
 1. Extract Schedule of Assessments from a protocol PDF
 2. Find anomalies in lab data results
 3. Filter patient list for eligible candidates
-4. Find patterns predict enrollment failures
+4. Find patterns predict enrollment failures (if time permits)
 
 ---
 
@@ -188,11 +178,11 @@ _"Let me check if Mrs. Johnson's HbA1c is 7.5-10.5%... and her creatinine... and
 
 ---
 
-## Find patterns predict enrollment failures
+## Find patterns predict enrollment failures <small>[TIME CHECK]</small>
 
 Based on [enrollment history](https://docs.google.com/spreadsheets/d/1O0j20bjYK6rIn8QzuuHFpLYc-6FxG6cE71_6llXYEys/edit?usp=sharing):
 
-> Analyze which inclusion/exclusion criteria predict enrollment failure. Quantify impact of each criterion
+> [Analyze which inclusion/exclusion criteria predict enrollment failure. Quantify impact of each criterion](https://chatgpt.com/share/69325c46-2160-800c-9489-7cc71ed8859f)
 
 Instead of a therapeutic lead saying _"I think we should use 7.5-9.5% HbA1c range"_ and clinical ops saying _"That seems reasonable"_, LLM says _"Historical data shows HbA1c ranges <2.0% have 23% higher screen failure rates"_
 
@@ -208,7 +198,7 @@ Data-driven decision lead to better site selection.
 
 <!-- _class: title big-list -->
 
-## We need to learn. Use it more. And better
+## We may as well learn. Use it more. And better
 
 1. **Practice**. Have 50 conversations a day
 2. **Prompt for Prompts**. Ask it what to ask for and how
@@ -218,11 +208,11 @@ Data-driven decision lead to better site selection.
 
 <!-- _class: theme-burgundy title -->
 
-# Data to Decisions
+# Data to Decisions with AI
 
 #### Shaping the future of clinical trials
 
 [SCDM Keynote]() · 05 Dec 2025, 9:30 am IST · Hyderabad
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 
-![h:240px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-12-05-scdm-keynote)
+## ![h:240px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-12-05-scdm-keynote) Slides + My contact details

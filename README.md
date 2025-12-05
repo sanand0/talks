@@ -1,5 +1,6 @@
 # Anand's Talks
 
+- 05 Dec 2025. **[Data to Decisions](2025-12-05-scdm-keynote/)** at [SCDM Keynote](https://scdm.org/) , Hyderabad
 - 03 Dec 2025. **[Vibe Analytics](2025-12-03-vibe-analytics-iim-alumni-sg/)** at [IIM Alumni SG](https://iimalumni.sg/) (Remote)
 - 15 Nov 2025. **[Applied Vibe Coding](2025-11-15-applied-vibe-coding/ ":ignore")** at [IIT Madras](https://www.iitm.ac.in/) (Remote)
 - 06 Nov 2025. **[LLM Psychology](2025-11-06-llm-psychology/ ":ignore")** on [Madhu Decodes](https://www.youtube.com/channel/UCZLuqdSatDu-solUJzxRh6g) (Remote)

@@ -9,14 +9,14 @@ style: |
   transcript { display: none; }
 
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
-# ChatGPT: https://chatgpt.com/c/69022cb0-f664-8321-846d-c398709e497d
+# ChatGPT:
 ---
 
 <!-- _class: title -->
 
 # Vibe Analytics
 
-[IIM Alumni SG](https://iimalumni.sg/) · 3 Dec 2025, 3:00 pm SGT · Remote
+[IIM Alumni SG](https://iimalumni.sg/) · 3 Dec 2025, 6:00 pm SGT · Remote
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 [WhatsApp Group](https://chat.whatsapp.com/DUxeM59JBNH47Wmm1i5qRa)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
@@ -217,7 +217,7 @@ Sharing reinforces learning, builds commitment. Share ideas / plans:
 
 # Vibe Analytics
 
-[IIM Alumni SG](https://iimalumni.sg/) · 3 Dec 2025, 3:00 pm SGT · Remote
+[IIM Alumni SG](https://iimalumni.sg/) · 3 Dec 2025, 6:00 pm SGT · Remote
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 [WhatsApp Group](https://chat.whatsapp.com/DUxeM59JBNH47Wmm1i5qRa)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)

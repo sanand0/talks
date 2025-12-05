@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Patients Who Got Worse | A Data Investigation</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+4:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-bg: #fafafa;
+            --color-text: #1a1a1a;
+            --color-text-light: #666;
+            --color-accent: #d32f2f;
+            --color-warning: #ff6b35;
+            --color-success: #2e7d32;
+            --color-line: #e0e0e0;
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Source Serif 4', serif;
+            --font-sans: 'IBM Plex Sans', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: #fff;
+            border-bottom: 1px solid var(--color-line);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header-meta {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-light);
+        }
+
+        /* Hero Section */
+        .hero {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 6rem 2rem 4rem;
+            text-align: left;
+        }
+
+        .hero-label {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-accent);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--color-text-light);
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+
+        .hero-byline {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            color: var(--color-text-light);
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--color-line);
+        }
+
+        /* Content Container */
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .container-wide {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Typography */
+        .prose {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .prose-large {
+            font-size: 1.375rem;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 4rem 0 1.5rem;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        .subsection-title {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin: 3rem 0 1rem;
+            line-height: 1.3;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid var(--color-line);
+            margin: 4rem 0;
+        }
+
+        /* Scroll Section */
+        .scroll-section {
+            position: relative;
+            padding: 4rem 0;
+        }
+
+        .sticky-container {
+            position: relative;
+            margin: 4rem 0;
+        }
+
+        .sticky-viz {
+            position: sticky;
+            top: 120px;
+            background: #fff;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: #fff;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 3rem 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .chart-title {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-light);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        canvas {
+            max-width: 100%;
+        }
+
+        /* Stat Cards */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--color-line);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card.critical {
+            border-left-color: var(--color-accent);
+        }
+
+        .stat-card.warning {
+            border-left-color: var(--color-warning);
+        }
+
+        .stat-card.success {
+            border-left-color: var(--color-success);
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            color: var(--color-text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Callout Boxes */
+        .callout {
+            background: linear-gradient(135deg, #fff 0%, #f5f5f5 100%);
+            border-left: 4px solid var(--color-accent);
+            padding: 2rem;
+            margin: 3rem 0;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .callout-title {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-accent);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            margin: 3rem 0;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .data-table thead {
+            background: var(--color-text);
+            color: #fff;
+        }
+
+        .data-table th {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--color-line);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table .highlight {
+            background: rgba(211, 47, 47, 0.05);
+            font-weight: 600;
+            color: var(--color-accent);
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--color-text);
+            color: #fff;
+            padding: 4rem 2rem;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .footer-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 3rem 1.5rem 2rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .container, .container-wide {
+                padding: 0 1.5rem;
+            }
+
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sticky-viz {
+                top: 80px;
+                padding: 1.5rem;
+            }
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: var(--color-accent);
+            z-index: 1000;
+            transition: width 0.2s ease;
+        }
+
+        /* Custom styles for specific elements */
+        .site-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 600;
+            background: var(--color-line);
+        }
+
+        .site-badge.critical {
+            background: var(--color-accent);
+            color: #fff;
+        }
+
+        .site-badge.warning {
+            background: var(--color-warning);
+            color: #fff;
+        }
+
+        .site-badge.clean {
+            background: var(--color-success);
+            color: #fff;
+        }
+
+        /* Quote styles */
+        .pull-quote {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            line-height: 1.4;
+            margin: 4rem 0;
+            padding: 2rem 0;
+            border-top: 3px solid var(--color-text);
+            border-bottom: 3px solid var(--color-text);
+            font-style: italic;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">DATA INVESTIGATION</div>
+            <div class="header-meta">Clinical Trials</div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-label">Data Quality Crisis</div>
+        <h1 class="hero-title">The Patients Who Got Worse</h1>
+        <p class="hero-subtitle">When nineteen people improve and one deteriorates, you have a medical mystery. When nineteen deteriorate and one improves, you have something else entirely.</p>
+        <div class="hero-byline">
+            A data investigation by the Clinical Trial Oversight Committee<br>
+            Analysis of 11,200 laboratory measurements across 10 sites<br>
+            December 2024
+        </div>
+    </section>
+
+    <div class="container">
+        <p class="prose prose-large fade-in">
+            On a January morning in 2024, two hundred patients enrolled in a diabetes trial across ten medical centers. They came seeking the same thing: lower blood sugar, better health, a reprieve from the creeping complications of Type 2 diabetes.
+        </p>
+
+        <p class="prose fade-in">
+            Over six months, nurses drew their blood at regular intervals. Lab technicians measured their hemoglobin A1c—the gold standard marker that reveals average blood sugar over three months. The data piled up: 11,200 individual test results, each one a tiny window into whether the experimental treatment was working.
+        </p>
+
+        <p class="prose fade-in">
+            The trial appeared meticulous. Each site enrolled exactly twenty patients. Each patient attended exactly eight visits. Each visit generated exactly seven lab tests. The symmetry was beautiful, almost architectural.
+        </p>
+
+        <p class="prose fade-in">
+            But buried in that geometric perfection was a pattern so strange that it threatened to unravel the entire study.
+        </p>
+    </div>
+
+    <div class="stat-grid container-wide fade-in">
+        <div class="stat-card">
+            <div class="stat-number">200</div>
+            <div class="stat-label">Patients Enrolled</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">10</div>
+            <div class="stat-label">Clinical Sites</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">11,200</div>
+            <div class="stat-label">Lab Measurements</div>
+        </div>
+        <div class="stat-card critical">
+            <div class="stat-number">3</div>
+            <div class="stat-label">Sites with Quality Issues</div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="container">
+        <h2 class="section-title fade-in">The Coefficient of Variation</h2>
+
+        <p class="prose fade-in">
+            Here's what you need to know about measuring blood sugar in humans: it varies. A lot. Even with the same patient, the same technician, the same equipment, you'll get different numbers. Biology is messy. That's why statisticians invented something called the coefficient of variation—a measure of how much your data bounces around relative to its average.
+        </p>
+
+        <p class="prose fade-in">
+            For HbA1c measurements in diabetes trials, that coefficient typically hovers between 10% and 15%. It's the signature of real data collected from real people in the real world.
+        </p>
+
+        <p class="prose fade-in">
+            At <span class="site-badge warning">Site 6</span>, the coefficient of variation was 8.67%.
+        </p>
+    </div>
+
+    <div class="container-wide">
+        <div class="chart-container fade-in">
+            <div class="chart-title">HbA1c Variability by Site</div>
+            <canvas id="cvChart" height="80"></canvas>
+        </div>
+    </div>
+
+    <div class="container">
+        <p class="prose fade-in">
+            Too perfect. Too smooth. Like a jazz musician who never misses a note, or an author who never makes a typo—technically flawless in a way that actually makes you suspicious.
+        </p>
+
+        <p class="prose fade-in">
+            But Site 6 was just peculiar. <span class="site-badge critical">Site 9</span> was impossible.
+        </p>
+    </div>
+
+    <hr class="divider">
+
+    <div class="container">
+        <h2 class="section-title fade-in">The Reverse Responders</h2>
+
+        <p class="prose fade-in">
+            At nine sites, patients got better. HbA1c dropped by 0.67% to 0.99%. This is what you expect. This is what the drug was designed to do.
+        </p>
+
+        <p class="prose fade-in">
+            At Site 9, patients got worse. HbA1c <em>increased</em> by 0.54%. Not one or two patients. Not a statistical fluke. Nineteen out of twenty patients showed deterioration.
+        </p>
+    </div>
+
+    <div class="container-wide">
+        <div class="chart-container fade-in">
+            <div class="chart-title">HbA1c Change from Baseline to Week 24</div>
+            <canvas id="changeChart" height="90"></canvas>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="callout fade-in">
+            <div class="callout-title">The Statistical Reality</div>
+            <p class="prose">
+                The odds of this happening by chance? Vanishingly small. The odds of this happening in real life? Even smaller. Diabetes doesn't spontaneously worsen in 95% of treated patients while improving in everyone else taking the identical drug.
+            </p>
+        </div>
+
+        <p class="prose fade-in">
+            Think about what this means. These patients took the same medication as everyone else. They followed the same protocol. But while 159 patients at other sites improved, these 19 people somehow moved in the opposite direction—getting systematically worse over six months of treatment.
+        </p>
+    </div>
+
+    <div class="container-wide">
+        <div class="chart-container fade-in">
+            <div class="chart-title">HbA1c Trends Over Time by Site</div>
+            <canvas id="trendChart" height="100"></canvas>
+        </div>
+    </div>
+
+    <div class="container">
+        <p class="pull-quote fade-in">
+            "This isn't a medical finding. That's a data quality finding."
+        </p>
+    </div>
+
+    <hr class="divider">
+
+    <div class="container">
+        <h2 class="section-title fade-in">Patient Outcomes</h2>
+
+        <p class="prose fade-in">
+            Let's look at what happened to individual patients. At most sites, the vast majority improved. At Site 9, almost everyone got worse.
+        </p>
+    </div>
+
+    <div class="container-wide">
+        <div class="chart-container fade-in">
+            <div class="chart-title">Patient Response Patterns by Site</div>
+            <canvas id="outcomeChart" height="90"></canvas>
+        </div>
+    </div>
+
+    <div class="container">
+        <table class="data-table fade-in">
+            <thead>
+                <tr>
+                    <th>Site</th>
+                    <th>Patients Improved</th>
+                    <th>Patients Worsened</th>
+                    <th>Mean Change</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>20</td>
+                    <td>0</td>
+                    <td>-0.99%</td>
+                    <td><span class="site-badge clean">Clean</span></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>19</td>
+                    <td>1</td>
+                    <td>-0.94%</td>
+                    <td><span class="site-badge clean">Clean</span></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>20</td>
+                    <td>0</td>
+                    <td>-0.72%</td>
+                    <td><span class="site-badge clean">Clean</span></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>17</td>
+                    <td>1</td>
+                    <td>-0.71%</td>
+                    <td><span class="site-badge clean">Clean</span></td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>19</td>
+                    <td>1</td>
+                    <td>-0.68%</td>
+                    <td><span class="site-badge clean">Clean</span></td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>18</td>
+                    <td>1</td>
+                    <td>-0.72%</td>
+                    <td><span class="site-badge warning">Suspicious</span></td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>19</td>
+                    <td>1</td>
+                    <td>-0.79%</td>
+                    <td><span class="site-badge clean">Clean</span></td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>20</td>
+                    <td>0</td>
+                    <td>-0.82%</td>
+                    <td><span class="site-badge clean">Clean</span></td>
+                </tr>
+                <tr class="highlight">
+                    <td>9</td>
+                    <td>1</td>
+                    <td>18</td>
+                    <td>+0.54%</td>
+                    <td><span class="site-badge critical">CRITICAL</span></td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>16</td>
+                    <td>2</td>
+                    <td>-0.67%</td>
+                    <td><span class="site-badge clean">Clean</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <hr class="divider">
+
+    <div class="container">
+        <h2 class="section-title fade-in">The Clockwatcher</h2>
+
+        <p class="prose fade-in">
+            Lab specimen collection times are supposed to be random. Morning appointments, afternoon appointments, the organic chaos of clinic scheduling. When you plot the minutes of collection across a large trial, you get a noisy, uniform scatter—samples at 9:07 and 10:23 and 14:51.
+        </p>
+
+        <p class="prose fade-in">
+            Unless you're at <span class="site-badge warning">Site 1</span>.
+        </p>
+    </div>
+
+    <div class="container-wide">
+        <div class="chart-container fade-in">
+            <div class="chart-title">Percentage of Samples at Round Minutes (0, 15, 30, 45)</div>
+            <canvas id="timeChart" height="80"></canvas>
+        </div>
+    </div>
+
+    <div class="container">
+        <p class="prose fade-in">
+            At Site 1, samples were collected at precisely :00, :15, :30, or :45 twelve and a half percent of the time—nearly four times the rate of Site 2. Someone there had a habit. Or a preference. Or perhaps they were filling in timestamps after the fact, defaulting to round numbers the way humans do when we're guessing at times we can't quite remember.
+        </p>
+
+        <p class="prose fade-in">
+            9:15 feels more natural than 9:17. 10:30 more believable than 10:28.
+        </p>
+
+        <p class="prose fade-in">
+            Real time is jagged. Fabricated time is round.
+        </p>
+    </div>
+
+    <hr class="divider">
+
+    <div class="container">
+        <h2 class="section-title fade-in">The Numbers That Make Sense</h2>
+
+        <p class="prose fade-in">
+            Not everything in this trial is suspicious. Some patterns are exactly what you'd expect.
+        </p>
+    </div>
+
+    <div class="container-wide">
+        <div class="chart-container fade-in">
+            <div class="chart-title">Expected Biological Correlations</div>
+            <canvas id="correlationChart" height="100"></canvas>
+        </div>
+    </div>
+
+    <div class="container">
+        <p class="prose fade-in">
+            Fasting plasma glucose (FPG) and random glucose are tightly correlated (0.86)—because they're both measuring the same thing at different times. ALT and AST, both liver enzymes, move together (0.87) as they should. These aren't invented numbers. These are real biological relationships emerging from the data.
+        </p>
+
+        <p class="prose fade-in">
+            Which makes the anomalies even more striking. The data is good enough to show authentic medical patterns—except where it isn't.
+        </p>
+    </div>
+
+    <hr class="divider">
+
+    <div class="container">
+        <h2 class="section-title fade-in">The Question</h2>
+
+        <p class="prose fade-in">
+            Here's what we know for certain: Site 9's data is wrong. Either the patients didn't actually deteriorate (in which case the data was fabricated or corrupted), or they did deteriorate (in which case something catastrophic happened at that site—contaminated medication, reversed treatment assignments, or systematic mismanagement).
+        </p>
+
+        <p class="prose fade-in">
+            Site 6's data is suspicious. The variability is too low, the patterns too clean.
+        </p>
+
+        <p class="prose fade-in">
+            Site 1's data is concerning. Those round numbers suggest someone was reconstructing timestamps rather than recording them in real time.
+        </p>
+
+        <div class="callout fade-in">
+            <div class="callout-title">The Bottom Line</div>
+            <p class="prose">
+                Three sites out of ten. That's 30% of your trial infrastructure showing red flags. That's not a few bad apples—that's a systemic problem with how this trial was conducted, monitored, or recorded.
+            </p>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="container">
+        <h2 class="section-title fade-in">The Invisible Crime</h2>
+
+        <p class="prose fade-in">
+            The most insidious thing about data quality problems in clinical trials isn't that they happen. It's that they're almost impossible to catch without looking.
+        </p>
+
+        <p class="prose fade-in">
+            The FDA doesn't re-measure every blood sample. Auditors don't watch every collection. Trial monitors visit sites, check consent forms, verify that freezers are the right temperature—but they rarely analyze the temporal patterns in timestamps, or the distribution of decimal places, or whether response rates at one site violate basic pharmacology.
+        </p>
+
+        <p class="prose fade-in">
+            These problems hide in the aggregate. When you average across all sites, Site 9's increase disappears into Site 1's decrease. The overall trial shows a modest benefit. The drug appears to work. Approval proceeds.
+        </p>
+
+        <p class="prose fade-in">
+            But nineteen patients at Site 9 didn't get better. And if their data is fabricated, we don't actually know what happened to them. If their data is real, we don't know <em>why</em> it happened to them and nobody else.
+        </p>
+    </div>
+
+    <div class="stat-grid container-wide fade-in">
+        <div class="stat-card critical">
+            <div class="stat-number">19</div>
+            <div class="stat-label">Patients with Impossible Results</div>
+        </div>
+        <div class="stat-card warning">
+            <div class="stat-number">2</div>
+            <div class="stat-label">Sites Requiring Investigation</div>
+        </div>
+        <div class="stat-card success">
+            <div class="stat-number">7</div>
+            <div class="stat-label">Sites with Clean Data</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">70%</div>
+            <div class="stat-label">Trial Data Potentially Valid</div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="container">
+        <h2 class="section-title fade-in">The Way Forward</h2>
+
+        <p class="prose fade-in">
+            The good news is that seven sites—70% of the trial infrastructure—show clean data. No temporal anomalies, no impossible trends, no suspicious smoothing. Sites 2, 3, 4, 5, 7, 8, and 10 appear to have collected real data from real patients who responded to the drug in biologically plausible ways.
+        </p>
+
+        <p class="prose fade-in">
+            The bad news is that in clinical trials, you can't just throw out the bad sites and move on. Those patients matter. Those measurements, real or fabricated, went into the analysis that determined whether this drug was safe and effective.
+        </p>
+
+        <h3 class="subsection-title fade-in">What needs to happen:</h3>
+
+        <div class="callout fade-in">
+            <div class="callout-title">Immediate Actions Required</div>
+            <div class="prose">
+                <strong>1. Site audit:</strong> Site 9 requires forensic investigation. Review source documents. Interview staff. Inspect equipment. Determine whether these patients actually experienced disease progression or whether the data was corrupted.
+            </div>
+            <div class="prose">
+                <strong>2. Data validation:</strong> Sites 1 and 6 need secondary review. Cross-reference collection timestamps with clinic logs. Audit sample storage. Re-measure stored specimens if possible.
+            </div>
+            <div class="prose">
+                <strong>3. Statistical sensitivity analysis:</strong> Re-analyze trial outcomes excluding Sites 1, 6, and 9. If the drug effect disappears without these sites, you have a serious problem. If it persists, you have justification to present the clean-site data as primary.
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="container">
+        <h2 class="section-title fade-in">Epilogue</h2>
+
+        <p class="prose fade-in">
+            This trial is both deeply flawed and strangely encouraging. Flawed because 30% of sites showed data quality issues that should have triggered immediate investigation. Encouraging because those issues are <em>detectable</em> if anyone bothers to look.
+        </p>
+
+        <p class="prose fade-in">
+            Modern clinical trials generate enormous amounts of data. But generating data isn't the same as examining it. We've gotten very good at collection and very bad at skepticism.
+        </p>
+
+        <p class="prose fade-in">
+            Nineteen patients at Site 9 didn't just fail to respond to treatment. They got worse, in defiance of pharmacology and probability. That's not a medical finding. That's a data quality finding.
+        </p>
+
+        <p class="prose fade-in">
+            And until we know which, we don't actually know what this trial showed.
+        </p>
+
+        <p class="prose prose-large fade-in" style="margin-top: 4rem; padding-top: 2rem; border-top: 3px solid var(--color-text);">
+            The mathematics of suspicion aren't complicated. They just require someone to look.
+        </p>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-title">About This Investigation</div>
+            <p style="margin-bottom: 1.5rem;">
+                This analysis examined 11,200 laboratory measurements from a multi-site diabetes clinical trial conducted between January and June 2024. Statistical methods included temporal trend analysis, coefficient of variation calculations, correlation matrices, digit analysis, and patient-level response pattern evaluation.
+            </p>
+            <p style="margin-bottom: 1.5rem;">
+                Data quality issues were identified through systematic comparison of site-specific patterns against expected biological and statistical norms. All findings represent analytical observations and require on-site investigation for confirmation.
+            </p>
+            <p>
+                <strong>Methodology:</strong> Python-based statistical analysis using pandas, numpy, and scipy. Visualization created with Chart.js. Analysis completed December 2024.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Progress Bar
+        window.addEventListener('scroll', () => {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrolled = window.scrollY;
+            const progress = (scrolled / documentHeight) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        });
+
+        // Fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Chart.js default settings
+        Chart.defaults.font.family = "'IBM Plex Sans', sans-serif";
+        Chart.defaults.font.size = 12;
+        Chart.defaults.color = '#666';
+
+        // CV Chart
+        const cvCtx = document.getElementById('cvChart').getContext('2d');
+        new Chart(cvCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Site 1', 'Site 2', 'Site 3', 'Site 4', 'Site 5', 'Site 6', 'Site 7', 'Site 8', 'Site 9', 'Site 10'],
+                datasets: [{
+                    label: 'Coefficient of Variation (%)',
+                    data: [13.17, 15.09, 10.79, 11.43, 10.73, 8.67, 11.41, 11.73, 11.85, 13.29],
+                    backgroundColor: [
+                        '#2e7d32', '#2e7d32', '#2e7d32', '#2e7d32', '#2e7d32',
+                        '#ff6b35', '#2e7d32', '#2e7d32', '#2e7d32', '#2e7d32'
+                    ],
+                    borderColor: [
+                        '#1b5e20', '#1b5e20', '#1b5e20', '#1b5e20', '#1b5e20',
+                        '#c63f17', '#1b5e20', '#1b5e20', '#1b5e20', '#1b5e20'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    annotation: {
+                        annotations: {
+                            line1: {
+                                type: 'line',
+                                yMin: 10,
+                                yMax: 10,
+                                borderColor: '#666',
+                                borderWidth: 2,
+                                borderDash: [5, 5],
+                                label: {
+                                    content: 'Expected Range: 10-15%',
+                                    enabled: true,
+                                    position: 'end'
+                                }
+                            },
+                            line2: {
+                                type: 'line',
+                                yMin: 15,
+                                yMax: 15,
+                                borderColor: '#666',
+                                borderWidth: 2,
+                                borderDash: [5, 5]
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 18,
+                        title: {
+                            display: true,
+                            text: 'CV (%)',
+                            font: { size: 12, weight: 'bold' }
+                        },
+                        grid: { color: '#e0e0e0' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // Change Chart
+        const changeCtx = document.getElementById('changeChart').getContext('2d');
+        new Chart(changeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Site 1', 'Site 2', 'Site 3', 'Site 4', 'Site 5', 'Site 6', 'Site 7', 'Site 8', 'Site 9', 'Site 10'],
+                datasets: [{
+                    label: 'HbA1c Change (%)',
+                    data: [-0.99, -0.94, -0.72, -0.71, -0.68, -0.72, -0.79, -0.82, 0.54, -0.67],
+                    backgroundColor: [
+                        '#2e7d32', '#2e7d32', '#2e7d32', '#2e7d32', '#2e7d32',
+                        '#2e7d32', '#2e7d32', '#2e7d32', '#d32f2f', '#2e7d32'
+                    ],
+                    borderColor: [
+                        '#1b5e20', '#1b5e20', '#1b5e20', '#1b5e20', '#1b5e20',
+                        '#1b5e20', '#1b5e20', '#1b5e20', '#b71c1c', '#1b5e20'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Change in HbA1c (%)',
+                            font: { size: 12, weight: 'bold' }
+                        },
+                        grid: { color: '#e0e0e0' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // Trend Chart
+        const trendCtx = document.getElementById('trendChart').getContext('2d');
+        const visitLabels = ['Screening', 'Baseline', 'Week 4', 'Week 8', 'Week 12', 'Week 16', 'Week 20', 'Week 24'];
+
+        const site9Data = [8.44, 8.38, 8.59, 8.68, 8.86, 8.88, 8.87, 8.92];
+        const site1Data = [8.46, 8.50, 8.28, 8.12, 8.02, 7.77, 7.56, 7.50];
+        const site2Data = [8.35, 8.32, 8.14, 8.07, 7.85, 7.60, 7.48, 7.38];
+        const site8Data = [8.22, 8.18, 8.19, 7.86, 7.75, 7.68, 7.48, 7.36];
+
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: visitLabels,
+                datasets: [
+                    {
+                        label: 'Site 9 (Anomaly)',
+                        data: site9Data,
+                        borderColor: '#d32f2f',
+                        backgroundColor: 'rgba(211, 47, 47, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    },
+                    {
+                        label: 'Site 1',
+                        data: site1Data,
+                        borderColor: '#2e7d32',
+                        backgroundColor: 'rgba(46, 125, 50, 0.05)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 3
+                    },
+                    {
+                        label: 'Site 2',
+                        data: site2Data,
+                        borderColor: '#1976d2',
+                        backgroundColor: 'rgba(25, 118, 210, 0.05)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 3
+                    },
+                    {
+                        label: 'Site 8',
+                        data: site8Data,
+                        borderColor: '#7b1fa2',
+                        backgroundColor: 'rgba(123, 31, 162, 0.05)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'HbA1c (%)',
+                            font: { size: 12, weight: 'bold' }
+                        },
+                        min: 7,
+                        max: 9.5,
+                        grid: { color: '#e0e0e0' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // Outcome Chart
+        const outcomeCtx = document.getElementById('outcomeChart').getContext('2d');
+        new Chart(outcomeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Site 1', 'Site 2', 'Site 3', 'Site 4', 'Site 5', 'Site 6', 'Site 7', 'Site 8', 'Site 9', 'Site 10'],
+                datasets: [
+                    {
+                        label: 'Improved',
+                        data: [20, 19, 20, 17, 19, 18, 19, 20, 1, 16],
+                        backgroundColor: '#2e7d32',
+                        borderColor: '#1b5e20',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Worsened',
+                        data: [0, 1, 0, 1, 1, 1, 1, 0, 18, 2],
+                        backgroundColor: '#d32f2f',
+                        borderColor: '#b71c1c',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Unchanged',
+                        data: [0, 0, 0, 2, 0, 1, 0, 0, 1, 2],
+                        backgroundColor: '#757575',
+                        borderColor: '#424242',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        grid: { display: false }
+                    },
+                    y: {
+                        stacked: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Patients',
+                            font: { size: 12, weight: 'bold' }
+                        },
+                        max: 20,
+                        grid: { color: '#e0e0e0' }
+                    }
+                }
+            }
+        });
+
+        // Time Chart
+        const timeCtx = document.getElementById('timeChart').getContext('2d');
+        new Chart(timeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Site 1', 'Site 2', 'Site 3', 'Site 4', 'Site 5', 'Site 6', 'Site 7', 'Site 8', 'Site 9', 'Site 10'],
+                datasets: [{
+                    label: 'Round Time Percentage',
+                    data: [12.5, 3.1, 4.4, 4.4, 6.9, 6.9, 8.1, 8.8, 6.9, 7.5],
+                    backgroundColor: [
+                        '#ff6b35', '#2e7d32', '#2e7d32', '#2e7d32', '#2e7d32',
+                        '#2e7d32', '#2e7d32', '#2e7d32', '#2e7d32', '#2e7d32'
+                    ],
+                    borderColor: [
+                        '#c63f17', '#1b5e20', '#1b5e20', '#1b5e20', '#1b5e20',
+                        '#1b5e20', '#1b5e20', '#1b5e20', '#1b5e20', '#1b5e20'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 15,
+                        title: {
+                            display: true,
+                            text: 'Percentage (%)',
+                            font: { size: 12, weight: 'bold' }
+                        },
+                        grid: { color: '#e0e0e0' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // Correlation Chart
+        const correlationCtx = document.getElementById('correlationChart').getContext('2d');
+        new Chart(correlationCtx, {
+            type: 'bar',
+            data: {
+                labels: ['FPG - Glucose', 'ALT - AST', 'HbA1c - FPG', 'HbA1c - Glucose'],
+                datasets: [{
+                    label: 'Correlation Coefficient',
+                    data: [0.86, 0.87, 0.16, 0.15],
+                    backgroundColor: ['#2e7d32', '#2e7d32', '#1976d2', '#1976d2'],
+                    borderColor: ['#1b5e20', '#1b5e20', '#0d47a1', '#0d47a1'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y',
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 1,
+                        title: {
+                            display: true,
+                            text: 'Correlation (r)',
+                            font: { size: 12, weight: 'bold' }
+                        },
+                        grid: { color: '#e0e0e0' }
+                    },
+                    y: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

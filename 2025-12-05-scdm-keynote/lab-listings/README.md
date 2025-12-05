@@ -1,6 +1,9 @@
 # Diabetes trial lab listings (synthetic)
 
-https://chatgpt.com/share/6931a3d1-d914-800c-8bb2-e34982c91bf8
+- https://chatgpt.com/share/6931a3d1-d914-800c-8bb2-e34982c91bf8
+- https://claude.ai/share/0d5d789d-4c43-4e3f-8bdf-eeff9455871e
+
+Stats
 
 - Rows: 11,200
 - Sites: 10 (001..010), Patients: 200 (20/site)

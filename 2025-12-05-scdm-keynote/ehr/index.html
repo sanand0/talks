@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Hidden Mathematics of Clinical Trials | A Data Story</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Sans+3:wght@300;400;600;700&family=Source+Serif+4:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-text: #1a1a1a;
+            --secondary-text: #4a4a4a;
+            --accent-color: #d84315;
+            --light-accent: #ff6f42;
+            --background: #fefefe;
+            --section-bg: #f9f9f9;
+            --border-color: #e0e0e0;
+            --success-color: #2e7d32;
+            --warning-color: #f57c00;
+            --serif: 'Playfair Display', serif;
+            --sans: 'Source Sans 3', sans-serif;
+            --body-serif: 'Source Serif 4', serif;
+        }
+
+        body {
+            font-family: var(--body-serif);
+            line-height: 1.7;
+            color: var(--primary-text);
+            background: var(--background);
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .hero-content {
+            max-width: 900px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-family: var(--serif);
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-family: var(--sans);
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            font-weight: 300;
+            opacity: 0.95;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.3s backwards;
+        }
+
+        .hero-byline {
+            font-family: var(--sans);
+            font-size: 0.9rem;
+            font-weight: 400;
+            opacity: 0.85;
+            letter-spacing: 0.05em;
+            animation: fadeInUp 1s ease-out 0.6s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        /* Content Container */
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .wide-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Article Sections */
+        .article-section {
+            padding: 4rem 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .article-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-family: var(--serif);
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 2rem;
+            color: var(--primary-text);
+        }
+
+        .lead-paragraph {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: var(--secondary-text);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .body-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--primary-text);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Big Number Display */
+        .big-stat {
+            text-align: center;
+            padding: 4rem 0;
+            background: var(--section-bg);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-family: var(--serif);
+            font-size: clamp(4rem, 12vw, 8rem);
+            font-weight: 900;
+            color: var(--accent-color);
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+
+        .stat-label {
+            font-family: var(--sans);
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Funnel Visualization */
+        .funnel-container {
+            padding: 4rem 0;
+            background: var(--section-bg);
+        }
+
+        .funnel {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .funnel-stage {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+
+        .funnel-stage:last-child {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .funnel-stage.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .funnel-stage:hover {
+            background: #fafafa;
+            transform: translateX(10px);
+            box-shadow: -4px 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .funnel-bar {
+            flex: 1;
+            height: 60px;
+            background: linear-gradient(90deg, var(--accent-color), var(--light-accent));
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: var(--sans);
+            font-weight: 600;
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .funnel-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .funnel-label {
+            min-width: 200px;
+            font-family: var(--sans);
+            font-size: 0.95rem;
+            color: var(--secondary-text);
+        }
+
+        /* Exclusion Reasons Grid */
+        .exclusion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 3rem 0;
+        }
+
+        .exclusion-card {
+            background: white;
+            padding: 2rem;
+            border-left: 4px solid var(--accent-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .exclusion-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .exclusion-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .exclusion-number {
+            font-family: var(--serif);
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            line-height: 1;
+        }
+
+        .exclusion-label {
+            font-family: var(--sans);
+            font-size: 0.9rem;
+            color: var(--secondary-text);
+            margin-top: 0.5rem;
+        }
+
+        .exclusion-description {
+            font-family: var(--body-serif);
+            font-size: 1rem;
+            color: var(--primary-text);
+            margin-top: 1rem;
+            line-height: 1.6;
+        }
+
+        /* Patient Cards */
+        .patient-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 3rem 0;
+        }
+
+        .patient-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        .patient-card.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .patient-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            transform: scale(1.02);
+        }
+
+        .patient-id {
+            font-family: var(--sans);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .patient-rank {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            font-family: var(--sans);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .patient-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .metric {
+            font-family: var(--sans);
+            font-size: 0.85rem;
+        }
+
+        .metric-label {
+            color: var(--secondary-text);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-value {
+            color: var(--primary-text);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Flow Diagram */
+        .flow-diagram {
+            padding: 4rem 0;
+            background: white;
+        }
+
+        .flow-path {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.6s ease;
+        }
+
+        .flow-path.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .flow-box {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            font-family: var(--sans);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .flow-box.success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .flow-box.warning {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .flow-arrow {
+            font-size: 2rem;
+            color: var(--secondary-text);
+        }
+
+        .flow-count {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .flow-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Quote Callout */
+        .quote-callout {
+            background: var(--section-bg);
+            border-left: 6px solid var(--accent-color);
+            padding: 3rem 2rem;
+            margin: 4rem 0;
+            font-family: var(--serif);
+            font-size: 1.5rem;
+            font-style: italic;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        /* Interactive Data Point */
+        .data-point {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-family: var(--sans);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .data-point:hover {
+            background: var(--primary-text);
+            transform: scale(1.05);
+        }
+
+        /* Progress Bar */
+        .progress-section {
+            padding: 4rem 0;
+        }
+
+        .progress-bar-container {
+            background: #e0e0e0;
+            height: 60px;
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success-color), #66bb6a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: var(--sans);
+            font-weight: 700;
+            font-size: 1.2rem;
+            transition: width 2s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0;
+        }
+
+        .progress-bar.animated {
+            width: 33.3%;
+        }
+
+        /* Key Insight Box */
+        .insight-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 3rem;
+            border-radius: 8px;
+            margin: 3rem 0;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .insight-title {
+            font-family: var(--serif);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-text);
+            margin-bottom: 1rem;
+        }
+
+        .insight-text {
+            font-family: var(--body-serif);
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--primary-text);
+        }
+
+        /* Conclusion Section */
+        .conclusion {
+            background: var(--primary-text);
+            color: white;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .conclusion-title {
+            font-family: var(--serif);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .conclusion-text {
+            font-family: var(--body-serif);
+            font-size: 1.2rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--section-bg);
+            padding: 3rem 2rem;
+            text-align: center;
+            font-family: var(--sans);
+            font-size: 0.9rem;
+            color: var(--secondary-text);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .funnel-stage {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .funnel-label {
+                min-width: auto;
+            }
+
+            .patient-metrics {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-path {
+                flex-direction: column;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .slide-up {
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">The Hidden Mathematics of Clinical Trials</h1>
+            <p class="hero-subtitle">What 1,000 patient records reveal about the delicate art of trial enrollment</p>
+            <p class="hero-byline">A DATA STORY ABOUT THE GLUCOFIX PHASE 3 TRIAL</p>
+        </div>
+        <div class="scroll-indicator">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 5L20 30M20 30L10 20M20 30L30 20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Introduction -->
+    <section class="article-section">
+        <div class="container">
+            <p class="lead-paragraph">
+                Consider patient P0003. A 53-year-old from Maharashtra, diagnosed with Type 2 diabetes eight years ago.
+                BMI: 29.2. HbA1c: 9.0%. On stable metformin for fourteen months. No recent cardiovascular events.
+                No insulin. No SGLT2 inhibitors. <strong>Perfect.</strong>
+            </p>
+            <p class="body-text">
+                Or rather, almost perfect. The one missing piece? Blood pressure measurements. A simple oversight
+                that transforms P0003 from the #1 enrollment candidate into someone who needs one more clinic visit
+                before randomization.
+            </p>
+            <p class="body-text">
+                This is the fundamental tension at the heart of clinical trial recruitment: the gap between
+                theoretical eligibility and practical enrollment.
+            </p>
+        </div>
+    </section>
+
+    <!-- Big Stat: Eligibility Rate -->
+    <section class="big-stat">
+        <div class="container">
+            <div class="stat-number" data-target="33.3">0</div>
+            <div class="stat-label">Eligibility Rate</div>
+        </div>
+    </section>
+
+    <!-- The Funnel Explanation -->
+    <section class="article-section">
+        <div class="container">
+            <h2 class="section-title">The Funnel</h2>
+            <p class="body-text">
+                Out of 1,000 patients screened from the database, exactly 333 met all inclusion criteria for the
+                Glucofix Phase 3 trial. But that number—stark as it is—conceals a more complex narrative about the
+                architecture of modern drug development.
+            </p>
+        </div>
+    </section>
+
+    <!-- Funnel Visualization -->
+    <section class="funnel-container">
+        <div class="container">
+            <div class="funnel">
+                <div class="funnel-stage" style="transition-delay: 0.1s">
+                    <div class="funnel-label">Total Patients Screened</div>
+                    <div class="funnel-bar" style="width: 100%">
+                        <span>1,000 patients</span>
+                    </div>
+                </div>
+                <div class="funnel-stage" style="transition-delay: 0.2s">
+                    <div class="funnel-label">Have T2DM Diagnosis</div>
+                    <div class="funnel-bar" style="width: 87.3%">
+                        <span>873 patients</span>
+                    </div>
+                </div>
+                <div class="funnel-stage" style="transition-delay: 0.3s">
+                    <div class="funnel-label">On Metformin Therapy</div>
+                    <div class="funnel-bar" style="width: 71.8%">
+                        <span>718 patients</span>
+                    </div>
+                </div>
+                <div class="funnel-stage" style="transition-delay: 0.4s">
+                    <div class="funnel-label">Appropriate HbA1c Range</div>
+                    <div class="funnel-bar" style="width: 59.5%">
+                        <span>595 patients</span>
+                    </div>
+                </div>
+                <div class="funnel-stage" style="transition-delay: 0.5s">
+                    <div class="funnel-label">No Major Exclusions</div>
+                    <div class="funnel-bar" style="width: 45.2%">
+                        <span>452 patients</span>
+                    </div>
+                </div>
+                <div class="funnel-stage" style="transition-delay: 0.6s">
+                    <div class="funnel-label">Meet All Criteria</div>
+                    <div class="funnel-bar" style="width: 33.3%; background: linear-gradient(90deg, #2e7d32, #66bb6a);">
+                        <span>333 patients</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exclusion Reasons -->
+    <section class="article-section">
+        <div class="wide-container">
+            <h2 class="section-title">Five Barriers to Enrollment</h2>
+            <div class="exclusion-grid">
+                <div class="exclusion-card" style="transition-delay: 0.1s">
+                    <div class="exclusion-number">155</div>
+                    <div class="exclusion-label">patients excluded</div>
+                    <div class="exclusion-description">
+                        <strong>The Metformin Paradox</strong><br>
+                        No metformin prescription found. A trial testing a drug <em>in addition to</em> metformin
+                        can only enroll patients who've successfully stayed on metformin for months.
+                    </div>
+                </div>
+                <div class="exclusion-card" style="transition-delay: 0.2s">
+                    <div class="exclusion-number">127</div>
+                    <div class="exclusion-label">patients excluded</div>
+                    <div class="exclusion-description">
+                        <strong>The Diagnosis Gap</strong><br>
+                        No Type 2 diabetes diagnosis documented. Trial eligibility isn't just about biology—it's
+                        about documentation.
+                    </div>
+                </div>
+                <div class="exclusion-card" style="transition-delay: 0.3s">
+                    <div class="exclusion-number">75</div>
+                    <div class="exclusion-label">patients excluded</div>
+                    <div class="exclusion-description">
+                        <strong>The Cardiovascular Shadow</strong><br>
+                        Recent major cardiovascular events. These are precisely the patients who might benefit most,
+                        yet proving it is too complex for Phase 3.
+                    </div>
+                </div>
+                <div class="exclusion-card" style="transition-delay: 0.4s">
+                    <div class="exclusion-number">63</div>
+                    <div class="exclusion-label">patients excluded</div>
+                    <div class="exclusion-description">
+                        <strong>The Type 1 Mimics</strong><br>
+                        Type 1 diabetes diagnosis found. The protocol can't risk the complexity of fundamentally
+                        different biology.
+                    </div>
+                </div>
+                <div class="exclusion-card" style="transition-delay: 0.5s">
+                    <div class="exclusion-number">55</div>
+                    <div class="exclusion-label">patients excluded</div>
+                    <div class="exclusion-description">
+                        <strong>The Missing Tests</strong><br>
+                        No renal function tests found. Data gaps are indistinguishable from exclusion criteria
+                        failures.
+                    </div>
+                </div>
+                <div class="exclusion-card" style="transition-delay: 0.6s">
+                    <div class="exclusion-number">35</div>
+                    <div class="exclusion-label">patients excluded</div>
+                    <div class="exclusion-description">
+                        <strong>The Medication Minefield</strong><br>
+                        Using newer diabetes drugs (SGLT2i, GLP-1). Often receiving the best current care, yet
+                        disqualified for having too many confounding variables.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quote Callout -->
+    <section class="article-section">
+        <div class="container">
+            <blockquote class="quote-callout">
+                "Clinical trials study simplified patients to draw clean conclusions. The 333 eligible patients
+                represent perhaps 10-15% of the actual diabetes population."
+            </blockquote>
+        </div>
+    </section>
+
+    <!-- Flow Diagram -->
+    <section class="flow-diagram">
+        <div class="container">
+            <h2 class="section-title">Patient Flow: From Database to Trial</h2>
+            <div class="flow-path" style="transition-delay: 0.1s">
+                <div class="flow-box">
+                    <div class="flow-count">1,000</div>
+                    <div class="flow-label">Patients Screened</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-box success">
+                    <div class="flow-count">333</div>
+                    <div class="flow-label">Eligible</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-box success">
+                    <div class="flow-count">~200</div>
+                    <div class="flow-label">Expected Enrolled</div>
+                </div>
+            </div>
+            <div class="flow-path" style="transition-delay: 0.3s">
+                <div class="flow-box warning">
+                    <div class="flow-count">667</div>
+                    <div class="flow-label">Ineligible Patients</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Insight -->
+    <section class="article-section">
+        <div class="container">
+            <div class="insight-box">
+                <h3 class="insight-title">The Critical Insight</h3>
+                <p class="insight-text">
+                    Trial eligibility isn't random. It's the deliberate architecture of modern pharmaceutical research.
+                    The protocol needs homogeneity to detect signals, simplicity to draw conclusions, and selection to
+                    ensure safety. But it means the eventual results will come with an invisible asterisk:
+                    <strong><em>effective in patients who meet these precise criteria.</em></strong>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Candidates -->
+    <section class="article-section">
+        <div class="wide-container">
+            <h2 class="section-title">The Perfect Candidates</h2>
+            <p class="body-text" style="max-width: 720px; margin: 0 auto 3rem;">
+                The top-ranked candidates share a compelling profile: ages 45-60, HbA1c perfectly positioned
+                at 8.5-9.5%, excellent kidney function, on stable metformin monotherapy, and no recent complications.
+                Here are the top 6:
+            </p>
+            <div class="patient-grid">
+                <div class="patient-card" style="transition-delay: 0.1s">
+                    <span class="patient-rank">RANK #1</span>
+                    <div class="patient-id">Patient P0003</div>
+                    <div class="patient-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Age</span>
+                            <span class="metric-value">53 years</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">HbA1c</span>
+                            <span class="metric-value">9.0%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">BMI</span>
+                            <span class="metric-value">29.2</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">eGFR</span>
+                            <span class="metric-value">103.1</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="patient-card" style="transition-delay: 0.2s">
+                    <span class="patient-rank">RANK #2</span>
+                    <div class="patient-id">Patient P0894</div>
+                    <div class="patient-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Age</span>
+                            <span class="metric-value">52 years</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">HbA1c</span>
+                            <span class="metric-value">9.5%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">BMI</span>
+                            <span class="metric-value">27.2</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">eGFR</span>
+                            <span class="metric-value">83.0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="patient-card" style="transition-delay: 0.3s">
+                    <span class="patient-rank">RANK #3</span>
+                    <div class="patient-id">Patient P0825</div>
+                    <div class="patient-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Age</span>
+                            <span class="metric-value">43 years</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">HbA1c</span>
+                            <span class="metric-value">9.4%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">BMI</span>
+                            <span class="metric-value">25.3</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">eGFR</span>
+                            <span class="metric-value">103.1</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="patient-card" style="transition-delay: 0.4s">
+                    <span class="patient-rank">RANK #4</span>
+                    <div class="patient-id">Patient P0828</div>
+                    <div class="patient-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Age</span>
+                            <span class="metric-value">41 years</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">HbA1c</span>
+                            <span class="metric-value">9.3%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">BMI</span>
+                            <span class="metric-value">31.2</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">eGFR</span>
+                            <span class="metric-value">98.0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="patient-card" style="transition-delay: 0.5s">
+                    <span class="patient-rank">RANK #5</span>
+                    <div class="patient-id">Patient P0830</div>
+                    <div class="patient-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Age</span>
+                            <span class="metric-value">57 years</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">HbA1c</span>
+                            <span class="metric-value">8.9%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">BMI</span>
+                            <span class="metric-value">28.8</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">eGFR</span>
+                            <span class="metric-value">85.7</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="patient-card" style="transition-delay: 0.6s">
+                    <span class="patient-rank">RANK #6</span>
+                    <div class="patient-id">Patient P0228</div>
+                    <div class="patient-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Age</span>
+                            <span class="metric-value">48 years</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">HbA1c</span>
+                            <span class="metric-value">8.5%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">BMI</span>
+                            <span class="metric-value">26.8</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">eGFR</span>
+                            <span class="metric-value">97.8</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Progress Visualization -->
+    <section class="progress-section">
+        <div class="container">
+            <h2 class="section-title">Eligibility Rate Visualization</h2>
+            <p class="body-text">
+                Only one-third of screened patients qualify for enrollment—a reflection of the stringent
+                requirements necessary for rigorous clinical science.
+            </p>
+            <div class="progress-bar-container">
+                <div class="progress-bar">
+                    <span>333 / 1,000 Eligible (33.3%)</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusion -->
+    <section class="conclusion">
+        <div class="container">
+            <h2 class="conclusion-title">The Bottom Line</h2>
+            <p class="conclusion-text">
+                Clinical trial recruitment is not a simple search for sick patients. It's an elaborate filtering
+                process that balances scientific rigor with practical realities. The Glucofix data reveals this
+                architecture clearly: 333 eligible patients from 1,000 screened, representing a highly selected
+                subset optimized for homogeneity, safety, and statistical power.
+            </p>
+            <p class="conclusion-text" style="margin-top: 2rem;">
+                These patients aren't the sickest. They're not the healthiest. They're not the most representative.
+            </p>
+            <p class="conclusion-text" style="margin-top: 2rem;">
+                <strong>They're the most enrollable.</strong>
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Analysis based on Glucofix Phase 3 Trial screening database, December 2024</p>
+        <p style="margin-top: 0.5rem;">De-identified patient records | No protected health information disclosed</p>
+    </footer>
+
+    <script>
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('.article-section, .funnel-stage, .exclusion-card, .patient-card, .flow-path').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Animated number counter
+        function animateNumber(element, target, duration = 2000) {
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = current.toFixed(1) + '%';
+            }, 16);
+        }
+
+        // Observe big stat
+        const statObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = parseFloat(entry.target.dataset.target);
+                    animateNumber(entry.target, target);
+                    statObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const statNumber = document.querySelector('.stat-number');
+        if (statNumber) {
+            statObserver.observe(statNumber);
+        }
+
+        // Animate progress bar
+        const progressObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+                    progressObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const progressBar = document.querySelector('.progress-bar');
+        if (progressBar) {
+            progressObserver.observe(progressBar);
+        }
+
+        // Smooth scroll for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

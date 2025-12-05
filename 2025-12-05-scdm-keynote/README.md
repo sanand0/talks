@@ -18,25 +18,27 @@ style: |
 npx -y @marp-team/marp-cli@latest --theme-set ~/code/marpessa/marpessa.css --html README.md -o index.html
 
 -->
-<!-- _class: theme-butter title -->
 
-# Data to Decisions with AI
+<!-- _class: theme-burgundy title -->
+
+# Data to Decisions (with AI)
 
 #### Shaping the future of clinical trials
 
 [SCDM Keynote]() · 05 Dec 2025, 9:30 am IST · Hyderabad
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
+[Q&A](https://github.com/sanand0/talks/blob/main/2025-12-05-scdm-keynote/qa.md) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-12-05-scdm-keynote/transcript.md) · [Audio](https://github.com/sanand0/talks/releases/download/talks/2025-12-05-SCDM-Talk.opus) · [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-## ![h:240px](slido.webp) Q&A at slido.com 1734926
+## ![h:180px](slido.webp) Q&A at slido.com 1734926. [Answers](qa.md)
 
 ---
 
 # Gen AI is fundamental shift
 
-| It's a shift in:          | So far, computers could only:                      | But now, with Gen AI, they can:                               |
-| ------------------------- | -------------------------------------------------- | ------------------------------------------------------------- |
-| **What they can process** | process structured data (like Excel, SQL)          | **process anything** (protocols, physician notes, lab images) |
-| **How we instruct them**  | understand specialized languages (FORTRAN, Python) | **understand natural language** - anyone can use it           |
+| It's a shift in:          | So far, computers could only:                          | But now, with Gen AI, they can:                               |
+| ------------------------- | ------------------------------------------------------ | ------------------------------------------------------------- |
+| **What they can process** | process **structured** data (like Excel, SQL)          | process **anything** (protocols, physician notes, lab images) |
+| **How we instruct them**  | understand **specialized** languages (FORTRAN, Python) | understand **natural language** - anyone can use it           |
 
 > This isn't just "easier AI".
 > It fundamentally changes **what** AI can do and **who** can do AI.
@@ -78,6 +80,12 @@ Below are the places your ICF **does not meet ICH E6(R2) Addendum** expectations
 - **4.8.10(e) – Subject responsibilities not described.** Beyond contraception and “training,” it doesn’t clearly list what the participant must do (e.g., dosing compliance, visit attendance expectations, AE reporting expectations, glucose diary requirements, restrictions).
 - **4.8.10(f) – Experimental aspects not explained.** It doesn’t clearly state what is investigational/experimental.
 - ... and a dozen more.
+
+---
+
+# It's like a genie. Free wishes (but careful)
+
+![h:500px](genie.webp)
 
 ---
 
@@ -144,6 +152,8 @@ Error rate: ~5% manual → ~0.5% with LLM + human QC. **Cost: $50**
 ## Find anomalies in lab data results
 
 <!-- Generation: https://chatgpt.com/share/6931a3d1-d914-800c-8bb2-e34982c91bf8 -->
+<!-- Analysis: https://chatgpt.com/share/693248fe-8c98-800c-8832-8e171175bf3d -->
+<!-- Data story: https://claude.ai/chat/961c1591-4693-4e3c-8e8f-51b04c5da535 -->
 
 You have 50 pages of [lab listings data for a diabetes clinical trial](https://docs.google.com/spreadsheets/d/1If1GHnmhXA_l26qAC3VNOlEdkeIKUUNFTvKnmR-h1kc/edit?usp=sharing).
 200 patients × 8 visits × 8 lab tests = **~12K data points**
@@ -152,13 +162,16 @@ You have 50 pages of [lab listings data for a diabetes clinical trial](https://d
 - **Listings review**, on pages of numbers, humans miss subtle patterns
 - **Statistical outlier detection**: "2 SD", misses systematic bias
 
-> [Analyze this clinical trial lab data. Find data quality issues. Look for: temporal patterns, site-specific anomalies, impossible correlations, gradual drift, etc.](https://chatgpt.com/share/693248fe-8c98-800c-8832-8e171175bf3d)
+> [Analyze this clinical trial lab data. Find data quality issues. Look for: temporal patterns, site-specific anomalies, impossible correlations, gradual drift, etc.](lab-listings/index.html)
 
 10,000 patients in 5 minutes. Daily surveillance. Flag within 24 hours.
 
 ---
 
 ## Filter patient list for eligible candidates
+
+<!-- Analysis: https://chatgpt.com/share/69324855-280c-800c-9c6d-0e76dca417f0 -->
+<!-- Data story: https://claude.ai/chat/4cfc2741-a9d6-4c36-a0e5-4e883d7f135a -->
 
 A day's delay in [clinical trial enrollment](https://docs.google.com/document/d/1yMHVq-41Xe9PXtSbrzaSjoz3ImD6fK8djN02iWyl76Q/edit) from [patient data](https://docs.google.com/spreadsheets/d/1_PVrcLn0_H5DVck9phfr5PfT529oTE5b/edit) costs $40K-$8M.
 Not enough matching patients, high screen failure rate (40% average), ...
@@ -167,7 +180,7 @@ _"Let me check if Mrs. Johnson's HbA1c is 7.5-10.5%... and her creatinine... and
 
 <small>
 
-> [Given these inclusion/exclusion criteria and this patient database](https://chatgpt.com/share/69324855-280c-800c-9c6d-0e76dca417f0):
+> [Given these inclusion/exclusion criteria and this patient database](ehr/index.html):
 >
 > 1. Identify which patients meet ALL inclusion criteria
 > 2. For patients who don't qualify, state which criteria they fail
@@ -208,11 +221,22 @@ Data-driven decision lead to better site selection.
 
 <!-- _class: theme-burgundy title -->
 
-# Data to Decisions with AI
+# Data to Decisions (with AI)
 
 #### Shaping the future of clinical trials
 
 [SCDM Keynote]() · 05 Dec 2025, 9:30 am IST · Hyderabad
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
+[Q&A](https://github.com/sanand0/talks/blob/main/2025-12-05-scdm-keynote/qa.md) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-12-05-scdm-keynote/transcript.md) · [Audio](https://github.com/sanand0/talks/releases/download/talks/2025-12-05-SCDM-Talk.opus) · [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-## ![h:240px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-12-05-scdm-keynote) Slides + My contact details
+## ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-12-05-scdm-keynote) Slides + My contact details
+
+---
+
+<!-- _class: theme-bootstrap title -->
+
+# Panel Discussion
+
+[Transcript](https://github.com/sanand0/talks/blob/main/2025-12-05-scdm-keynote/panel.md)· [Audio](https://github.com/sanand0/talks/releases/download/talks/2025-12-05-SCDM-Panel.opus)
+
+[CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)

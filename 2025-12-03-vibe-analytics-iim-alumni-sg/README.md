@@ -9,7 +9,12 @@ style: |
   transcript { display: none; }
 
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
-# ChatGPT:
+
+# Sketchnote: https://gemini.google.com/app/6a32a18a75d69f00
+# NotebookLM: https://notebooklm.google.com/notebook/5b9b7eaa-301f-48bb-9787-2bc1c6a95652
+# Story: https://gemini.google.com/u/2/app/0c0845755c0046c4
+# Story: https://claude.ai/chat/74950064-05b0-4693-ab98-782488e6bf94
+# Visualization: https://claude.ai/chat/980eb732-4bbd-4515-a513-e8008343b0bd
 ---
 
 <!-- _class: title -->
@@ -18,7 +23,7 @@ style: |
 
 [IIM Alumni SG](https://iimalumni.sg/) · 3 Dec 2025, 6:00 pm SGT · Remote
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[WhatsApp Group](https://chat.whatsapp.com/DUxeM59JBNH47Wmm1i5qRa)
+[Transcript](https://github.com/sanand0/talks/blob/main/2025-12-03-vibe-analytics-iim-alumni-sg/transcript.md) · [Audio](https://github.com/sanand0/talks/releases/download/talks/2025-12-03-Vibe-Analytics.opus) · [WhatsApp Group](https://chat.whatsapp.com/DUxeM59JBNH47Wmm1i5qRa)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-12-03-vibe-analytics-iim-alumni-sg/)
@@ -127,10 +132,14 @@ Share your choices on WhatsApp.
 - Conversational (voice prompt): "Analyze (... share lots of details ...)"
 - [Narrative](https://github.com/sanand0/prompts/blob/main/styles.md#non-fiction-authors): "... style of a Malcolm Gladwell New Yorker Article."
 - [Analytical](https://github.com/sanand0/scripts/blob/main/agents/custom-prompts/analyze-insights.md): "Analyze data like an investigative journalist ..."
-- [Visual](https://github.com/sanand0/scripts/blob/main/agents/custom-prompts/analyze-insights.md): "... like a NYT data story".
+- [Visual](https://github.com/sanand0/scripts/blob/main/agents/custom-prompts/analyze-insights.md): "... like a NYT data story". [Visual Story example](story.html)
 - Podcast via [NotebookLM](https://notebooklm.google.com/)
 - Sketchnote / Infographic via [Nano Banana Pro](https://gemini.google.com/)
 - ... slide decks, dashboards, reports, simulations, and more!
+
+---
+
+![h:600px](sketchnote.webp)
 
 ---
 
@@ -219,7 +228,7 @@ Sharing reinforces learning, builds commitment. Share ideas / plans:
 
 [IIM Alumni SG](https://iimalumni.sg/) · 3 Dec 2025, 6:00 pm SGT · Remote
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[WhatsApp Group](https://chat.whatsapp.com/DUxeM59JBNH47Wmm1i5qRa)
+[Transcript](https://github.com/sanand0/talks/blob/main/2025-12-03-vibe-analytics-iim-alumni-sg/transcript.md) · [Audio](https://github.com/sanand0/talks/releases/download/talks/2025-12-03-Vibe-Analytics.opus) · [WhatsApp Group](https://chat.whatsapp.com/DUxeM59JBNH47Wmm1i5qRa)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-12-03-vibe-analytics-iim-alumni-sg/)

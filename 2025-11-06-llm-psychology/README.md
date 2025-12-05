@@ -230,7 +230,7 @@ So, in short, it is possible to engineer systems that can only that can access p
 
 **Madhu**: So you've given the answers for therapies basically. So you've said prompt therapy and maybe the choice of model as a therapy. Pretty much. And then of course, re-evaluating elements as another therapy. So very interesting take, very, very interesting take. This is the beauty and complexity of the new world we are stepping into.
 
-###
+### 
 
 **Madhu**: I've coined this kind of a rapid-fire round. I'm going to throw you names or personalities in different fields, and you can probably prescribe an AI or an LLM that they would be better off using or that would enhance their work in their current working model. If you could think about that and let me know. Shall I start giving you names?
 

@@ -1,14 +1,14 @@
 ## Debi
 
-Now let’s move to Session 2: Prompt Craft and Vibe Analytics. It is my extreme pleasure to introduce the two hosts that we have for this workshop, Anand and Nirmal. As somebody told us, he is S. Anand, and Anand might say that 'S' stands for a lot of things, but at IIM Bangalore, he was called "Stud Anand."
+Now let's move to Session 2: Prompt Craft and Vibe Analytics. It is my extreme pleasure to introduce the two hosts that we have for this workshop, Anand and Nirmal. As somebody told us, he is S. Anand, and Anand might say that 'S' stands for a lot of things, but at IIM Bangalore, he was called "Stud Anand."
 
 A few things about Anand. Just like a lot of MBAs, I think he first dabbled in finance. He interned with Lehman when Lehman was still standing. Then after that, he dabbled in consulting. He joined BCG straight from IIM Bangalore, where he was a gold medalist. But unlike a lot of MBAs, he left consulting and moved back to his first love, which is technology. He joined Infosys Consulting in London—a city he chose, he told me, because he wanted to experience the city for a while—and then he started a company called Gramener. Gramener is now a part of Straive, an Asian company.
 
-Just to say this doesn't speak much about Anand; he is a multifaceted individual. He has hand-transcribed every Calvin and Hobbes comic strip. He is a musician of sorts—I don’t know what all he plays, but I heard mridangam, keyboards... we’ll have to confirm what else he does. He loves movies and he said that he is going to watch every movie in the IMDb 250 list. I don't know where he’s got to.
+Just to say this doesn't speak much about Anand; he is a multifaceted individual. He has hand-transcribed every Calvin and Hobbes comic strip. He is a musician of sorts—I don't know what all he plays, but I heard mridangam, keyboards... we'll have to confirm what else he does. He loves movies and he said that he is going to watch every movie in the IMDb 250 list. I don't know where he's got to.
 
 The reason why Anand set up Gramener was because it combined the three loves that he has: statistics, computing, and design. What he did in Gramener was he wanted to tell visual stories using data. That was the objective that the company has and that is one of the reasons why Straive bought the company. **Today, he is doing exactly that but building bigger stories using a lot more data, but also using LLMs.** That is why I think he is one of the best people to host this workshop.
 
-Turning to Nirmal. Nirmal was a co-founder of Fractal in 2000. And then he co-founded Mobius Innovations in 2012, which was a company that used contextual information to be combined with AI workflows. That was the business of the company. The reason I am mentioning these two dates is that **I think Nirmal is way ahead of his time.** Fractal was set up in 2000 during the dot-com crisis, and over time they were the first few people who got into analytics from India; I would say they were the first early movers. When he set up Mobius Innovations, again, what he is talking about is what we see today. We heard the sessions before this where people are saying that you need to understand context, you’ve got to look at AI workflows, put it together, etc., except that he did it a lot earlier.
+Turning to Nirmal. Nirmal was a co-founder of Fractal in 2000. And then he co-founded Mobius Innovations in 2012, which was a company that used contextual information to be combined with AI workflows. That was the business of the company. The reason I am mentioning these two dates is that **I think Nirmal is way ahead of his time.** Fractal was set up in 2000 during the dot-com crisis, and over time they were the first few people who got into analytics from India; I would say they were the first early movers. When he set up Mobius Innovations, again, what he is talking about is what we see today. We heard the sessions before this where people are saying that you need to understand context, you've got to look at AI workflows, put it together, etc., except that he did it a lot earlier.
 
 I think he definitely is a visionary; he looks into the future. The other feature set which Nirmal has—which is a common term that you use in data science—is that he is also a storyteller. He was the first person who talked about writing challenges. If anybody in this room ever wants to be a writer, I think you should talk to him. He can tell you how do you get a beginning to it, how can you join one of these challenges so that you can develop the discipline of writing every day, writing every month, and then how do you discover a community of similar amateur writers across [the world]. He is writing his first science fiction story.
 
@@ -18,51 +18,55 @@ So as I said, I think we have very, very interesting personalities over here. Al
 
 Thank you so much, Debi. So we are going to use Anand as an example. I call him Bhalla. We are going to use Bhalla as an example of how he has his own system. We will talk about that system later. He is constantly with his plod, which is one of the things that was mentioned. He is constantly recording everywhere. **He is an avid collector of ideas. And he collects ideas and cross-pollinates them.** His point is that two ideas that are cross-pollinated result in interesting ideas. We will show you that prompt in a bit.
 
-But before that, what I wanted to do was let’s keep this completely informal. Let’s keep this conversation going. Let’s begin with an understanding of what’s going on in the room right now. My sense, as I was speaking to a few people, is: **A) There is a lot of FOMO. There is a whole bunch of AI stuff that's happening. It’s an avalanche of jargon. I have no clue what’s happening.** And I am part of that as well.
+But before that, what I wanted to do was let's keep this completely informal. Let's keep this conversation going. Let's begin with an understanding of what's going on in the room right now. My sense, as I was speaking to a few people, is: **A) There is a lot of FOMO. There is a whole bunch of AI stuff that's happening. It's an avalanche of jargon. I have no clue what's happening.** And I am part of that as well.
 
-So much so that this is what I was doing: The three presentations that were coming in were a flurry of information that I couldn't keep track of. So here is what I did—you can do the same. I took a picture, a snapshot of every single slide. I uploaded it into Perplexity. Perplexity is the best AI ever because both of us are alums of IIT Madras, so that’s not up for debate. I uploaded every one of those slides into Perplexity and said: **"ELI5." ELI5 is "Explain Like I Am a 5-year-old."**
+So much so that this is what I was doing: The three presentations that were coming in were a flurry of information that I couldn't keep track of. So here is what I did—you can do the same. I took a picture, a snapshot of every single slide. I uploaded it into Perplexity. Perplexity is the best AI ever because both of us are alums of IIT Madras, so that's not up for debate. I uploaded every one of those slides into Perplexity and said: **"ELI5." ELI5 is "Explain Like I Am a 5-year-old."**
 
 Immediately, whatever was going on on stage, I could understand from the perspective of a five-year-old. I could gather all this information. So the point here is that you need to have your own system which works for you. And so we will see if we can develop a system for you by the end of today.
 
-Let’s begin with understanding what are the fears in the room. Let’s be honest about this. I run a few workshops with senior leaders, and that probably sums up and describes this group. With all due respect, senior leaders are embarrassed to learn. With all due respect, senior leaders do not open up their laptop; they probably get other people to open up their laptop. Let’s get honest and candid out here. What are the fears in the room around this whole monster that’s gathering momentum in terms of AI?
+Let's begin with understanding what are the fears in the room. Let's be honest about this. I run a few workshops with senior leaders, and that probably sums up and describes this group. With all due respect, senior leaders are embarrassed to learn. With all due respect, senior leaders do not open up their laptop; they probably get other people to open up their laptop. Let's get honest and candid out here. What are the fears in the room around this whole monster that's gathering momentum in terms of AI?
 
-(Audience comments inaudible)
+**Audience Member:** (Comments about fears - senior citizens being swept aside, foundational models, multiple models)
 
-Okay, we don't understand what’s going on...
+So I heard things like: How do senior citizens... are they going to be completely swept aside? What is this whole foundational model about? Why are they talking about multiple models and what is this multiple models business? So let's go to the basics and understand what are the basics. Let's hear from the crowd. What are the kind of things going on in your mind?
+
+**Audience Member:** We don't understand what's going on.
+
+**Audience Member:** (Comments about tools and getting desired output) Even if the tech is advanced, as users we want it, but the stuff is still not very easy to use. I'm also making some other tools but I don't really get the output I want. I'm not able to replicate what's on screen.
 
 **Question:** (Audience member speaks about fear of relevance and keeping up).
 
 How do you keep up with all this? Will humans be completely replaced? Answer is no. How do you keep up with all this? Everything that is going on every day. You have to start moving your mouse faster, is what I was told yesterday. I kid you not. I went to the NAS.IO summit—this was the last ever NAS.IO summit. Nas is this Harvard guy who did one-minute videos. He is a pioneer of one-minute videos. My son is a fan, 10-year-old; my daughter is a fan, 22-year-old. He did one-minute videos every day for a thousand days consistently and he became famous.
 
-This guy had this seminar that he was running—I paid $250 for the ticket. There, they were talking about a huge amount of stuff. How do you keep track with all of that stuff that's coming in? What’s happening? The pace at which things are happening is just not funny at all.
+This guy had this seminar that he was running—I paid $250 for the ticket. There, they were talking about a huge amount of stuff. How do you keep track with all of that stuff that's coming in? What's happening? The pace at which things are happening is just not funny at all.
 
 One of the guys came on stage, he was wearing this Zen tie-dye t-shirt, and he said, "Slow it down." But, **increase the speed of your note-taking.** He said, **"Change the speed of your mouse to 5x."** So that you can quickly capture things. Create a system of capture, create your keyboard shortcuts, figure out all your capture devices so that you can quickly capture every single thing. **Analyze later. Don't analyze right away.**
 
-So then your fear of "Am I losing out on the glut? Am I missing out on something?" is taken care of. You are capturing all of that. What’s your capture device? That’s one question I leave you with.
+So then your fear of "Am I losing out on the glut? Am I missing out on something?" is taken care of. You are capturing all of that. What's your capture device? That's one question I leave you with.
 
 I hear a few things. One: Jargon. I hear there is a whole lot of hype. I understand there is hype. What is real? What is not? I heard somebody who said, _"Sir mein aaj kal real estate chod ke AI chalu kar diya maine"_ (Sir, these days I left real estate and started AI). I am like, yes, I understand you know AI. So everybody, you've got "AI tomato chutney" or whatever. How do you know you are not getting scammed? Absolutely. **How do you separate the hype from reality?**
 
-What is it that we have as our strength? Let’s be clear about that. We are all MBAs. We are fast learners of any topic under the sun. How do we learn fast? Let’s figure that out. So speed, hype, and jargon are three things.
+What is it that we have as our strength? Let's be clear about that. We are all MBAs. We are fast learners of any topic under the sun. How do we learn fast? Let's figure that out. So speed, hype, and jargon are three things.
 
-First up, I want to start off with a disclaimer. I am a student of AI. I’ve been in the analytics space for 25 years, can claim a little bit of understanding of that space, but I don't claim to understand AI at all. I am a student of AI. And so should all of us be. Because the pace at which things are going is crazy. Every day you've got new models coming up. When things are going super fast, what do we do? We slow down. Let’s take a step back and let’s look at the basic fundamentals as to what is going on. If we can understand the fundamentals, if we can get the essence of what's going on, then we probably can get to this animal and figure out what this animal is about.
+First up, I want to start off with a disclaimer. I am a student of AI. I've been in the analytics space for 25 years, can claim a little bit of understanding of that space, but I don't claim to understand AI at all. I am a student of AI. And so should all of us be. Because the pace at which things are going is crazy. Every day you've got new models coming up. When things are going super fast, what do we do? We slow down. Let's take a step back and let's look at the basic fundamentals as to what is going on. If we can understand the fundamentals, if we can get the essence of what's going on, then we probably can get to this animal and figure out what this animal is about.
 
 I wrote a number there. This number is my approximation of 70 factorial. 69 factorial is what a calculator can do, otherwise the digits don't come in. 70 is the rough number of people in this room, which means that's the number of ways in which each of you would have sat differently in another chair. Which means if I say that your experience of this session is a function of who you're sitting with and what side conversations you're having, that's the number of different types of ways in which we can have this same experience of this session. And that's a mind-boggling number. And we are just talking about 70 people.
 
-I equate that to the number of parameters in a large language model (LLM), and that's not 70; that’s a few billion. So we are talking about some ginormous numbers here. What is that doing really? What is this LLM fundamentally about?
+I equate that to the number of parameters in a large language model (LLM), and that's not 70; that's a few billion. So we are talking about some ginormous numbers here. What is that doing really? What is this LLM fundamentally about?
 
 The way I understand LLM is: You've seen autocomplete? You know what an autocomplete is on your WhatsApp? Your autocomplete will give you the next letter, the next word, the next two-three words. Imagine I can extend it to the next sentence. The next paragraph. The next page. The next 450-page novel. And the next four such novels. That's the context window that today the models are giving you.
 
-**It’s an autocomplete model which predicts the next four novels from your prompt.** That's all it is. It is not claiming any accuracy. It is not claiming anything else but: "What could be the next four novels if this was the starting sentences or prompt that you're giving?" That's all it is.
+**It's an autocomplete model which predicts the next four novels from your prompt.** That's all it is. It is not claiming any accuracy. It is not claiming anything else but: "What could be the next four novels if this was the starting sentences or prompt that you're giving?" That's all it is.
 
-Why is it such a big deal? It’s such a big deal because it’s fundamentally a neural network which has learned the mathematics of English. English is a funny language. English grammar sucks. English grammar is non-deterministic. The best two languages are Sanskrit and German—they are very deterministic. So what it has done is it’s taken a large amount of data and understood the mathematics of English. Which means **it’s understood the mathematics of grammar.** And beyond that, it’s understood the semantics of different words. The fact that an "orange" means a certain color or a certain fruit depending on the sentence that it is in, and hence you have an autocomplete connection there. That's all it is.
+Why is it such a big deal? It's such a big deal because it's fundamentally a neural network which has learned the mathematics of English. English is a funny language. English grammar sucks. English grammar is non-deterministic. The best two languages are Sanskrit and German—they are very deterministic. So what it has done is it's taken a large amount of data and understood the mathematics of English. Which means **it's understood the mathematics of grammar.** And beyond that, it's understood the semantics of different words. The fact that an "orange" means a certain color or a certain fruit depending on the sentence that it is in, and hence you have an autocomplete connection there. That's all it is.
 
-So what's important is for your prompt to start giving the _context_ around it. What you need to do is to ensure that the orange that you talk about is a color and not a fruit. You need to be able to say, "Bank of America did five times the profit last year." You know you're talking about a bank which has money, and not a river bank, and not a plane banking. So the context in which you provide that sentence is very important in inferring the meaning as well. So it’s understood not just grammar, but it’s also understood the semantic meaning of the surroundings. There is a meaning element to it.
+So what's important is for your prompt to start giving the _context_ around it. What you need to do is to ensure that the orange that you talk about is a color and not a fruit. You need to be able to say, "Bank of America did five times the profit last year." You know you're talking about a bank which has money, and not a river bank, and not a plane banking. So the context in which you provide that sentence is very important in inferring the meaning as well. So it's understood not just grammar, but it's also understood the semantic meaning of the surroundings. There is a meaning element to it.
 
-There are quite a number of things and it’s gone beyond that. And we'll talk about that one by one. But the first thing that I want to talk about is: **India is going to lose its advantage—labor arbitrage of programmers—because code is going to be replaced by well-written word documents.**
+There are quite a number of things and it's gone beyond that. And we'll talk about that one by one. But the first thing that I want to talk about is: **India is going to lose its advantage—labor arbitrage of programmers—because code is going to be replaced by well-written word documents.**
 
 And we are all masters in that. We've done back runs. We've written well-structured documents. If you can do good specs, that's all it takes to write code. And which is what Bhalla is going to help you with. We going to build some code.
 
-Now, how do you start building this code? You can go to a few... you've got your Windsurfs, you've got your Cursor, you've got your Replit, Lovable... there’s quite a number of them. The best way I would do is I'll just ask Perplexity: "Hey Perplexity, give me some options which are the ones that..."
+Now, how do you start building this code? You can go to a few... you've got your Windsurfs, you've got your Cursor, you've got your Replit, Lovable... there's quite a number of them. The best way I would do is I'll just ask Perplexity: "Hey Perplexity, give me some options which are the ones that..."
 
 **Anand**: Talk to it, _yar_, don't type.
 
@@ -72,35 +76,35 @@ Now, how do you start building this code? You can go to a few... you've got your
 
 (Pause for processing)
 
-Okay, so what’s happening is I've already finished my free account, so I am overloading the thing. Which is what Bhalla is going to say. Bhalla wants you to take on... So over to you Bhalla, what do you want them to start downloading so that they can be well prepared for your session?
+Okay, so what's happening is I've already finished my free account, so I am overloading the thing. Which is what Bhalla is going to say. Bhalla wants you to take on... So over to you Bhalla, what do you want them to start downloading so that they can be well prepared for your session?
 
-**Anand:** Get a $20 paid account on any of ChatGPT, Gemini, or Claude. It doesn't matter which one; they are all marginally better or worse than one another in trivial ways. Second, download any personal data to start with. We’ll play around with your data. You could go to [takeout.google.com](https://takeout.google.com/) and download your activity from there. Or be ready to export from your phone or WhatsApp chat. Or if you have your medical reports, bank statements that you want to analyze, utility bills that you want to analyze—any of these, just have them ready and we'll use that as a starting point. **But a paid account is going to make a huge difference.**
+**Anand:** Get a $20 paid account on any of ChatGPT, Gemini, or Claude. It doesn't matter which one; they are all marginally better or worse than one another in trivial ways. Second, download any personal data to start with. We'll play around with your data. You could go to [takeout.google.com](https://takeout.google.com/) and download your activity from there. Or be ready to export from your phone or WhatsApp chat. Or if you have your medical reports, bank statements that you want to analyze, utility bills that you want to analyze—any of these, just have them ready and we'll use that as a starting point. **But a paid account is going to make a huge difference.**
 
 Okay, so while you get into your paid account... we are already running behind schedule so I am trying to interweave these things in.
 
-Specs is greater than code. The context window we spoke about. The other fascinating thing that's happening if you notice is this concept of **Multimodal**. Okay, what does multimodal mean? That my capture need not be text. It can be voice, images, video, gestures, movement, pose. There’s quite a number of different modes in which I can capture input. And the minute I have multimodal capture, then suddenly my data capture system gets a total overhaul. So multimodal is an interesting thing to watch out for.
+Specs is greater than code. The context window we spoke about. The other fascinating thing that's happening if you notice is this concept of **Multimodal**. Okay, what does multimodal mean? That my capture need not be text. It can be voice, images, video, gestures, movement, pose. There's quite a number of different modes in which I can capture input. And the minute I have multimodal capture, then suddenly my data capture system gets a total overhaul. So multimodal is an interesting thing to watch out for.
 
 For example, I did not read any of those slides. I requested Pragati, my colleague, to take a picture of every one of those slides. I am going to put in a loop and just run them through ELI5 and I am going to get a sense of what happened there. So I have not missed out a single point there. And then I am going to write a summary on top of that and say "Give me the top three points that I should be [aware of] and fact check them."
 
 Look at what I am doing. **I am doing iterative prompting. I am not happy with one thing. I am going to break it down into substeps and start iterating on what are the kind of things that need to be done one by one.**
 
-So whenever you want to do some prompting, what you want to do is... fundamentally let’s be clear about one thing: **If you are looking at AI as a replacement to Google, you're doing it the wrong way.** It’s not like Google; it’s not about finding the right answer. Don't think of it like Google. You need to be patient and you need to keep iterating. If you don't like the result first, you say, "Hey, hang on. I don't like the result." You can scold AI. Scold AI, "I don't like the result. AI doesn't mind." And then keep repeating that and iterating that.
+So whenever you want to do some prompting, what you want to do is... fundamentally let's be clear about one thing: **If you are looking at AI as a replacement to Google, you're doing it the wrong way.** It's not like Google; it's not about finding the right answer. Don't think of it like Google. You need to be patient and you need to keep iterating. If you don't like the result first, you say, "Hey, hang on. I don't like the result." You can scold AI. Scold AI, "I don't like the result. AI doesn't mind." And then keep repeating that and iterating that.
 
 Now the next thing that I want to talk about is... with the "Picks and Shovels" were the ones who made money. And that was what they were saying in the early days of the internet was the way you were going to make money. Which is basically you build tools so that you can make websites, website agencies, and so on. And that was the whole meme at that point in time. That's the wrong metaphor in the age of AI.
 
 The right metaphor in the age of AI is: **If you want to find the treasure, you need a map.** And so **Maps trump Shovels.** What does that mean? That means that you need to know the metadata, the template, the recipe, the structure of the lay of the land. So what you want to do is you want to figure out what is the way...
 
-I was speaking to a few investment folks. I don't understand investment, I’ve never invested anything, but I am an MBA. So how do I figure out the lay of the land in investment? Oh, there’s something called options. There’s something called futures. There’s something called short. There’s something called long. What does that mean? And I need to know that because "Short" and "Long"—hang on, English is a funny language—mean different things [in finance]. I need to be clear about what do these terms mean, I need to be clear about what is the context that I am working in. Which means that if you need to know from the context, what you need is **Domain Understanding.**
+I was speaking to a few investment folks. I don't understand investment, I've never invested anything, but I am an MBA. So how do I figure out the lay of the land in investment? Oh, there's something called options. There's something called futures. There's something called short. There's something called long. What does that mean? And I need to know that because "Short" and "Long"—hang on, English is a funny language—mean different things [in finance]. I need to be clear about what do these terms mean, I need to be clear about what is the context that I am working in. Which means that if you need to know from the context, what you need is **Domain Understanding.**
 
-You need to figure out how domain makes a difference. And that is what, ladies and gentlemen, is going to make you folks stand out from the rest of the world. **Your competitive advantage is not Deep Tech.** Let’s be clear about that. Let’s call a spade a spade. Your competitive advantage—Alok is an expert at healthcare. There’s nobody like him in Singapore, and the world I'm sure. And so that expertise... Debi used to consult for CFOs; she can teach any CFO. And so you take that expertise, that Deep Domain Expertise, and build the map around that. That's what you're good at. And how do you do that? **Ask AI.**
+You need to figure out how domain makes a difference. And that is what, ladies and gentlemen, is going to make you folks stand out from the rest of the world. **Your competitive advantage is not Deep Tech.** Let's be clear about that. Let's call a spade a spade. Your competitive advantage—Alok is an expert at healthcare. There's nobody like him in Singapore, and the world I'm sure. And so that expertise... Debi used to consult for CFOs; she can teach any CFO. And so you take that expertise, that Deep Domain Expertise, and build the map around that. That's what you're good at. And how do you do that? **Ask AI.**
 
 "Perplexity, I want to build a map for this domain. You ask me questions so that I can start building that map." And have a conversation.
 
 So I'd requested—we actually ran out of chairs—one of the things I'd requested was one empty chair at every table and call it AI. And say AI has a seat at the table. AI is a first-class citizen, think about that. Ask AI.
 
-And so ladies and gentlemen, I want to come back to that trust thing. This whole FOMO, this whole concept of us fearing AI... [fear of missing out] is just mindset. Let’s be clear what is our core strength. Paddy is good at humor. So Paddy is going to take on humor and build a deep domain expertise and the map and the landscape of humor. And he is going to be the person who is going to talk about what in humor can be brought about. And that any day trumps shovels.
+And so ladies and gentlemen, I want to come back to that trust thing. This whole FOMO, this whole concept of us fearing AI... [fear of missing out] is just mindset. Let's be clear what is our core strength. Paddy is good at humor. So Paddy is going to take on humor and build a deep domain expertise and the map and the landscape of humor. And he is going to be the person who is going to talk about what in humor can be brought about. And that any day trumps shovels.
 
-Okay. Now I want to talk about a few examples. AlphaFold. It’s decoded the genome... once you get deep domain you can start doing various things. Fold.it is one company which decoded the protein folding structure and it was a video game that did that. And that ended up decoding the HIV virus. So AIDS no longer is such a big deal.
+Okay. Now I want to talk about a few examples. AlphaFold. It's decoded the genome... once you get deep domain you can start doing various things. Fold.it is one company which decoded the protein folding structure and it was a video game that did that. And that ended up decoding the HIV virus. So AIDS no longer is such a big deal.
 
 So now I want to move this to another level and say that the next thing is...
 
@@ -110,7 +114,7 @@ So now I want to move this to another level and say that the next thing is...
 
 So your maps have to be expanded. And so if you have to expand maps... hold on to that, put a pin on that, we'll come back to _how_ to expand maps.
 
-But I’m now going back to another point which is: It’s not enough to look at maps. **You want to start looking at directions.** It’s not enough to look at answers. **You want to look at questions.** When you're talking about Google, Google is actually a convergent concept. It’s a large tree which goes into multiple places but it’s still deterministic. But what you want to talk about when you're talking about Generative AI is the power of creativity. So don't look for answers. **Look for what is the best question I can ask.** And which is the best question that will give me the maximum bang for my buck?
+But I'm now going back to another point which is: It's not enough to look at maps. **You want to start looking at directions.** It's not enough to look at answers. **You want to look at questions.** When you're talking about Google, Google is actually a convergent concept. It's a large tree which goes into multiple places but it's still deterministic. But what you want to talk about when you're talking about Generative AI is the power of creativity. So don't look for answers. **Look for what is the best question I can ask.** And which is the best question that will give me the maximum bang for my buck?
 
 And if you think there are no questions, there _are_ questions all over the place. So start increasing the kind of questions you can ask and up the game. So how do you up the game?
 
@@ -122,13 +126,13 @@ Now, the way to go from maps to directions is surprisingly very simple: **Proble
 
 And then you'll say, okay, there is so much pessimism and we've solved every problem that needs to be solved and we need to go to Mars and that's the next frontier and that's what we need to do. Excuse me. Three years ago there was this small virus. I lost an uncle. Three years the whole world was held to ransom and we couldn't do jack shit about it. There _are_ problems to be solved. There are problems to be solved. Even if it is a tiny problem.
 
-Yesterday I was looking at an interesting problem that Apple TV solved. I was watching _Plurals_—you must watch _Plurals_. I did a 10-second rewind because I thought I missed out what Carol was saying. And immediately it recognized that I needed the subtitles, and so it came with subtitles on its own. So I was like, okay, so it understood that. That's a big enough thing for me. Now what is big and what is small, who is to say? It’s a philosophical question. So you figure out what is big enough for you. You figure out what is your _Raison d'être_. You figure out what is the purpose that you want to go and move that towards direction.
+Yesterday I was looking at an interesting problem that Apple TV solved. I was watching _Plurals_—you must watch _Plurals_. I did a 10-second rewind because I thought I missed out what Carol was saying. And immediately it recognized that I needed the subtitles, and so it came with subtitles on its own. So I was like, okay, so it understood that. That's a big enough thing for me. Now what is big and what is small, who is to say? It's a philosophical question. So you figure out what is big enough for you. You figure out what is your _Raison d'être_. You figure out what is the purpose that you want to go and move that towards direction.
 
 Okay. On that note, Bhalla, you want to weigh in on anything on these?
 
 **Anand:** _Nahi yar_ (No man), my AI is taking notes. So I will wait.
 
-Okay, one of the questions that we were asked was: "There’s so much data and how do you start looking at this glut of data?" So I posed that question to Bhalla. So the questions that I was getting from the audience was, "Okay, so I've got PDF files, I've got Excel files, I've got massive amount of data. How do I start getting all that data into one place? How should I think of my data capture device?"
+Okay, one of the questions that we were asked was: "There's so much data and how do you start looking at this glut of data?" So I posed that question to Bhalla. So the questions that I was getting from the audience was, "Okay, so I've got PDF files, I've got Excel files, I've got massive amount of data. How do I start getting all that data into one place? How should I think of my data capture device?"
 
 So ladies and gentlemen, I present to you this gentleman who takes notes. And I want him to show one particular thing that he's built called **Ideator**. Okay, so I was blown away [by] what he did. What he did was... religiously he keeps taking notes on any interesting idea that he comes across.
 
@@ -142,13 +146,7 @@ So I have all of these notes and these notes are all over the place. Stuff from 
 
 Now what this does is creates a prompt in ChatGPT. And I'll walk you through this. It says: **"You are a radical concept synthesizer, hired to astound even experts. Generate a big, useful, non-obvious idea that's aligned with 'Life Hack'—now that's what I had prompted it to—fusing the provided concepts with the Oblique Strategy."**
 
----
-
-Here is the transcript of the talk on **Vibe Analytics**.
-
----
-
-**Anand**: The prompt continues to say, "Do it in the following way." First, generate five candidate ideas. Here are ways in which you can generate those ideas: use [Charlie Munger's inversion](https://fs.blog/inversion/), use the idea of mechanism transplant, and use constraint violation. These are all ways of helping the LLM think in a diverse way.
+The prompt continues to say, "Do it in the following way." First, generate five candidate ideas. Here are ways in which you can generate those ideas: use [Charlie Munger's inversion](https://fs.blog/inversion/), use the idea of mechanism transplant, and use constraint violation. These are all ways of helping the LLM think in a diverse way.
 
 Score each of these on novelty and utility. Pick the top score. For whichever idea you come up with that has the top score, tell me the insight. Tell me how to go about building or doing this. How do I test it? What is so surprising about this? And critique yourself. Write it in plain English.
 
@@ -160,21 +158,21 @@ However, it picked "Wickedness Dial" as its top pick. What is the insight? Home 
 
 It goes on to suggest that the mode has four pillars: Clean, Separate, Cook, or Chill. I'm not a food safety person, but these are the kinds of things that we can have an LLM come up with as a new idea in arbitrary contexts.
 
-**Nirmal**: I’ll jump in a bit here. What he is showing you is his [Ideator system](https://tools.s-anand.net/ideator/), and some of those ideas are good, some are bad. You can have wacky ideas that you can pick from, and people like us will have a blast over that.
+**Nirmal**: I'll jump in a bit here. What he is showing you is his [Ideator system](https://tools.s-anand.net/ideator/), and some of those ideas are good, some are bad. You can have wacky ideas that you can pick from, and people like us will have a blast over that.
 
 Now, let's come back to the question of **how do we start making this a process?** I've been trying to write my science fiction novel for the past seven years. I wake up at 4:30 in the morning, meditate, and then write for an hour. I still haven't finished because that's one project I'm a perfectionist at.
 
 I've read a whole bunch of books, and I've understood that the map of writing boils down to **Robert McKee's five points**:
 
-1.  Inciting Incident
-2.  Three Progressive Complications (it has to be three always)
-3.  Crisis
-4.  Climax
-5.  Resolution
+1. Inciting Incident
+2. Three Progressive Complications (it has to be three always)
+3. Crisis
+4. Climax
+5. Resolution
 
 I heard something very similar in the [Nas Daily](https://nasdaily.com/) one-minute videos. His formula is: **Hook, Problem, Solution, Call to Action.**
 
-So their prompts, just like Anand’s, have that structure. Now you take that further and start getting into **insights**. How do you get insights? Insights are things that you understand intuitively. You need to start curating that.
+So their prompts, just like Anand's, have that structure. Now you take that further and start getting into **insights**. How do you get insights? Insights are things that you understand intuitively. You need to start curating that.
 
 Every time I meet Devi [Shetty], I am amazed at the clarity he has on finance. He says, "This is the way you've got to turn around a system in terms of collections." I tell her, "You need to be put into a box and have that run the system."
 
@@ -213,9 +211,9 @@ Put another way: You want to get somewhere. Coding happens to help you get there
 
 Vibe Analysis works in exactly the same way. You are ignoring the code. You are getting the analysis done. The mindset that you are adopting is:
 
-1.  **Pragmatic**: You want the output—the insights—not how they are coded.
-2.  **Skeptical**: If someone gave you an analysis, you would want to verify and cross-check, even if you don't understand the code.
-3.  **Playful**: You say, "Look, I don't know what can and cannot be done. Let's try and see what breaks."
+1. **Pragmatic**: You want the output—the insights—not how they are coded.
+2. **Skeptical**: If someone gave you an analysis, you would want to verify and cross-check, even if you don't understand the code.
+3. **Playful**: You say, "Look, I don't know what can and cannot be done. Let's try and see what breaks."
 
 With this in mind, we are going to analyze a few datasets. Let's pick some personal and synthetic datasets—not corporate data, because that requires too much permission. There is a ton of personal data that you can use: Google, your phone, utility bills, bank statements, medical reports, Netflix usage, Spotify, YouTube, Kindle, document collections.
 
@@ -324,7 +322,7 @@ So I'm going to take all of this as part of the prompt and maybe pass it to Chat
 
 [Technical issue with ChatGPT]
 
-This keeps happening and I don't know why, so I'm going to take the same prompt and give it to Claude instead, which is also pretty good at writing code. Once I upload it and have it run, I’ll mention one aspect which may not be very obvious.
+This keeps happening and I don't know why, so I'm going to take the same prompt and give it to Claude instead, which is also pretty good at writing code. Once I upload it and have it run, I'll mention one aspect which may not be very obvious.
 
 The interesting thing here is: **not only can it write code, it can run code. And that is an ultra-powerful capability.**
 
@@ -340,7 +338,7 @@ But the good part is crafting your prompt is very easy. For my style transfer pr
 
 Let's see how far this has got. It's still writing the program. Okay, now it's digging deeper into the most intriguing patterns. This prompt will go on for a long time because I've given it such detailed instructions that it will run for a good—hopefully more than 200-odd seconds.
 
-But we will continue. These are not the only formats. We can just put it into [NotebookLM](https://notebooklm.google.com/)—I'm sure many of you have tried NotebookLM. It's fabulous. What I'm going to do is create a new notebook and upload the file that I had. I’m going to give it a title, which is the "IIMB 2001 Alumni WhatsApp Group" and add it as a source. NotebookLM will take that data. It will play around with it, do some introspection, whatever. And once it does—I've completely forgotten what the interface looks like now, but there is a way for me to create a podcast.
+But we will continue. These are not the only formats. We can just put it into [NotebookLM](https://notebooklm.google.com/)—I'm sure many of you have tried NotebookLM. It's fabulous. What I'm going to do is create a new notebook and upload the file that I had. I'm going to give it a title, which is the "IIMB 2001 Alumni WhatsApp Group" and add it as a source. NotebookLM will take that data. It will play around with it, do some introspection, whatever. And once it does—I've completely forgotten what the interface looks like now, but there is a way for me to create a podcast.
 
 [Clicking Audio Overview]
 
@@ -378,9 +376,9 @@ Do share whatever you find. I saw a few more... Ah, okay. You got a monthly sent
 
 **Answer:** (Anand) Vinod, your question on privacy of giving chat history to an LLM is an important one. How do you prevent LLMs from using this data? So there are three parts to this:
 
-1.  Am I allowed to have the data?
-2.  Is the LLM owner allowed to have that data?
-3.  Are they allowed to train on it so that future people can access it?
+1. Am I allowed to have the data?
+2. Is the LLM owner allowed to have that data?
+3. Are they allowed to train on it so that future people can access it?
 
 Let's assume that I have access to the data and I'm allowed to use it. Now, if I'm running it on a local model, then concerns number two and three vanish. I am obviously allowed to have it, so my machine is allowed to have it. And local models are with us. The open source models are becoming more and more powerful, but it requires a certain amount of technical expertise to run them. Not too much. If you're able to run Excel, we can run a local model these days.
 
@@ -420,7 +418,7 @@ Let's be clear, what are we charging AI with? Why are we charging AI with accura
 
 **Answer:** (Nirmal) And there are prompt libraries on the internet for free. You can go and download prompt libraries. There's enough and more people sharing prompts. So I copied one such prompt library which I use. As an amateur life coach—I don't claim to be anywhere good at it—so what I do is with my client's permission I record the conversation, I put the transcript, then I run a prompt which looks for cognitive biases in that transcript. And then I cross-check that human and then go back to my clients.
 
-**Answer:** (Anand) [PromptHub.com]. **The largest investment that I've ever made in my life, I made a couple of months ago. It was solely based on ChatGPT's recommendation.** The model was GPT-5 thinking [likely referring to o1/latest model], which was the second smartest model in the ChatGPT suite at that time. The prompt that I gave it was a very long and detailed one which roughly summarized: what is my risk preference, investment, some constraints in terms of tax and things like that. And I said, "Look, I'm going to put my money into mutual funds. What I want you to do is first conduct an analysis. Tell me should I be going in for equity, debt, blah blah blah... figure out what all the categories are that I can invest, if I'm investing in India. Figure all of those out and tell me given the macroeconomic situation of the next five years, what are the various scenarios that are possible? In each of these scenarios which ones are likely to do better, which ones are likely to do worse? Do a certain amount of sensitivity analysis and based on my risk profile tell me which category I should invest in."
+**Answer:** (Anand) **The largest investment that I've ever made in my life, I made a couple of months ago. It was solely based on ChatGPT's recommendation.** The model was GPT-5 thinking [likely referring to o1/latest model], which was the second smartest model in the ChatGPT suite at that time. The prompt that I gave it was a very long and detailed one which roughly summarized: what is my risk preference, investment, some constraints in terms of tax and things like that. And I said, "Look, I'm going to put my money into mutual funds. What I want you to do is first conduct an analysis. Tell me should I be going in for equity, debt, blah blah blah... figure out what all the categories are that I can invest, if I'm investing in India. Figure all of those out and tell me given the macroeconomic situation of the next five years, what are the various scenarios that are possible? In each of these scenarios which ones are likely to do better, which ones are likely to do worse? Do a certain amount of sensitivity analysis and based on my risk profile tell me which category I should invest in."
 
 And for that particular prompt, it agreed with my prior assessment which is that I should be putting my money into debt funds. Then I said, "Now go through all of these—I'm interested in a slightly lower cost ratio, I want [usual parameters you would tell a financial investor]." It did extensive research. I cross-checked it—I mean it is a lot of money—and it looked so sound that I just straight away took its recommendation and put my money in.
 
@@ -439,6 +437,8 @@ And if you really want something, but as a professional—meaning if you want to
 **If this is your job in financial services, 3 years from now, bye-bye.** Or maybe, I don't know. Maybe it's deepens. But I'm just saying that is the kind of stuff that it is good at. I don't know whether it's very good at Math. Math is a separate field.
 
 **Nirmal:** There again you've got to break it down into small processes and build a workflow for that. **Don't outsource your domain expertise to the AI. You bring in your domain expertise and then you start using [AI]. That's the thing.**
+
+So, different kinds of domain expertise. So my daughter is learning short-form content versus long-form content. And that's a one-minute video, apparently three seconds hook. Three seconds hook? What are you even talking about? No, that's what I'm saying. So this particular thing of one-minute videos, which my daughter is doing about a million views right now, she learned a lot from understanding how to prompt better. So there is a deep domain expertise in building one-minute videos. And so the expert of one-minute videos needs to be the person, and that person using AI is far better than my daughter. So the domain expertise is not going to die. That's the thing that you have to say again. And that's an interesting article that again, I'll find and put it in that room. Expert combined with an AI model, yes, beats so far. Keep the domain expert with AI model.
 
 So, ladies and gentlemen, we've got another minus 6 minutes to go. And so what we'll do is we'll continue this conversation over WhatsApp and be happy to come back as well.
 

@@ -25,11 +25,15 @@ npx -y @marp-team/marp-cli@latest --theme-set ~/code/marpessa/marpessa.css --htm
 
 #### Shaping the future of clinical trials
 
-[SCDM Keynote]() · 05 Dec 2025, 9:30 am IST · Hyderabad
+[SCDM Keynote](https://scdmlive.org/india-conference-2025/) · 05 Dec 2025, 9:30 am IST · Hyderabad
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Q&A](https://github.com/sanand0/talks/blob/main/2025-12-05-scdm-keynote/qa.md) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-12-05-scdm-keynote/transcript.md) · [Audio](https://github.com/sanand0/talks/releases/download/talks/2025-12-05-SCDM-Talk.opus) · [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
+[Q&A](https://github.com/sanand0/talks/blob/main/2025-12-05-scdm-keynote/qa.md) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-12-05-scdm-keynote/transcript.md) · [Audio](https://github.com/sanand0/talks/releases/download/talks/2025-12-05-SCDM-Talk.opus) · [Story](story.html) · [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 ## ![h:180px](slido.webp) Q&A at slido.com 1734926. [Answers](qa.md)
+
+---
+
+![h:600px](sketchnote.webp)
 
 ---
 
@@ -225,9 +229,9 @@ Data-driven decision lead to better site selection.
 
 #### Shaping the future of clinical trials
 
-[SCDM Keynote]() · 05 Dec 2025, 9:30 am IST · Hyderabad
+[SCDM Keynote](https://scdmlive.org/india-conference-2025/) · 05 Dec 2025, 9:30 am IST · Hyderabad
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Q&A](https://github.com/sanand0/talks/blob/main/2025-12-05-scdm-keynote/qa.md) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-12-05-scdm-keynote/transcript.md) · [Audio](https://github.com/sanand0/talks/releases/download/talks/2025-12-05-SCDM-Talk.opus) · [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
+[Q&A](https://github.com/sanand0/talks/blob/main/2025-12-05-scdm-keynote/qa.md) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-12-05-scdm-keynote/transcript.md) · [Audio](https://github.com/sanand0/talks/releases/download/talks/2025-12-05-SCDM-Talk.opus) · [Story](story.html) · [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 ## ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-12-05-scdm-keynote) Slides + My contact details
 

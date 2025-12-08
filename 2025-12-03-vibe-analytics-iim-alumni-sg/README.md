@@ -23,10 +23,14 @@ style: |
 
 [IIM Alumni SG](https://iimalumni.sg/) · 3 Dec 2025, 6:00 pm SGT · Remote
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Transcript](https://github.com/sanand0/talks/blob/main/2025-12-03-vibe-analytics-iim-alumni-sg/transcript.md) · [Audio](https://github.com/sanand0/talks/releases/download/talks/2025-12-03-Vibe-Analytics.opus) · [WhatsApp Group](https://chat.whatsapp.com/DUxeM59JBNH47Wmm1i5qRa)
+[Transcript](https://github.com/sanand0/talks/blob/main/2025-12-03-vibe-analytics-iim-alumni-sg/transcript.md) · [Audio](https://github.com/sanand0/talks/releases/download/talks/2025-12-03-Vibe-Analytics.opus) · [Story](https://github.com/sanand0/talks/blob/main/2025-12-03-vibe-analytics-iim-alumni-sg/article.md) · [WhatsApp Group](https://chat.whatsapp.com/DUxeM59JBNH47Wmm1i5qRa)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-12-03-vibe-analytics-iim-alumni-sg/)
+
+---
+
+![h:600px](infographic.webp)
 
 ---
 
@@ -228,7 +232,7 @@ Sharing reinforces learning, builds commitment. Share ideas / plans:
 
 [IIM Alumni SG](https://iimalumni.sg/) · 3 Dec 2025, 6:00 pm SGT · Remote
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Transcript](https://github.com/sanand0/talks/blob/main/2025-12-03-vibe-analytics-iim-alumni-sg/transcript.md) · [Audio](https://github.com/sanand0/talks/releases/download/talks/2025-12-03-Vibe-Analytics.opus) · [WhatsApp Group](https://chat.whatsapp.com/DUxeM59JBNH47Wmm1i5qRa)
+[Transcript](https://github.com/sanand0/talks/blob/main/2025-12-03-vibe-analytics-iim-alumni-sg/transcript.md) · [Audio](https://github.com/sanand0/talks/releases/download/talks/2025-12-03-Vibe-Analytics.opus) · [Story](https://github.com/sanand0/talks/blob/main/2025-12-03-vibe-analytics-iim-alumni-sg/article.md) · [WhatsApp Group](https://chat.whatsapp.com/DUxeM59JBNH47Wmm1i5qRa)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
 ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-12-03-vibe-analytics-iim-alumni-sg/)

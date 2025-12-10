@@ -69,6 +69,7 @@ I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtu
 
 ## Others' Talks
 
+- 13 Nov 2025. [Nirmal Palaparthi](https://www.linkedin.com/in/aprilsystems). **[AI First Thinking for HR Professionals](2025-11-13-nirmal-impress-ai-hr/ ":ignore")** at [Impress AI](https://www.linkedin.com/posts/impress.ai_hiringblueprint2026-savos-aiinhr-activity-7397135743879413760-QCDt/), Singapore
 - 21 Sep 2025. [Vivek Matthew](https://github.com/Vonter) and [Aman Bhargava](https://aman.bh/). [Making Open Data Useful: Lessons from Diagram Chasing](2025-09-21-making-open-data-useful/ ":ignore") at [IndiaFOSS](https://fossunited.org/c/indiafoss/2025/cfp/1hutna15uj), Bangalore
 - 21 Sep 2025. [Zainab Bawa](https://www.linkedin.com/in/zainabbawa/). **[Building a culture of openness](2025-09-21-zainab-building-a-culture-of-openness/ ":ignore")** at [IndiaFOSS](https://fossunited.org/c/indiafoss/2025/cfp/0ios0i6o47), Bangalore
 - 20 Sep 2025. [Kiran Jonnalagadda](https://www.linkedin.com/in/kiranjonna/). **[Homelabbing with Bare Metal](2025-09-20-kiran-homelabbing-with-bare-metal/ ":ignore")** at [IndiaFOSS](https://fossunited.org/c/indiafoss/2025/cfp/4v6f8ek2n0), Bangalore

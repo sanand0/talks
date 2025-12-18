@@ -50,6 +50,7 @@
   - Yes, this is the "New Norm." The Data Manager's role is evolving from **"Data Cleaner"** (fixing typos) to **"Data Investigator"** (finding patterns); you will use AI to do the grunt work of scanning the data so you have the time to investigate the complex anomalies it finds.
 - **Anonymous (10:46 AM): Is the use of AI justified given the environmental impact of electricity and water consumption in data centers?**
   - It is a serious trade-off, but the industry is mitigating it by moving to **"Small Language Models" (SLMs)** which use 1% of the energy of a GPT-4, and practicing **"Carbon-Aware Computing"**—training models only in regions (like the Nordics) powered by renewable hydro/geothermal energy.
+  - Comparisons help. One prompt is ~4 seconds of Netflix. Showering 30 seconds less saves more water than ~1,000 prompts. Going vegan saves more carbon than ~1,000 prompts.
 - **Kirubavathi (10:46 AM): So we all believe program/coding language is always accurate, have you ever experienced any programming language made a mistake?**
   - Computers never make **Syntax Errors** (grammar mistakes), but they frequently make **Logic Errors** (doing the wrong thing perfectly). If you ask AI to "calculate the average" but give it the wrong column, it will calculate the wrong answer with 100% accuracy—that is why the human must audit the _logic_, not the math.
 - **Naresh (10:47 AM): How do we systematically detect errors related to date, time, or visit mismatch for same subject when comparing external lab file with data captured in the EDC?**

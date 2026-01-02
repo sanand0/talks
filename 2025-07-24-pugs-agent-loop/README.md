@@ -213,14 +213,14 @@ Let's prompt ChatGPT to:
 
 ## Running this talk
 
-To initialize this slide deck:
+To initialize this slide deck, use [slide.py](https://github.com/sanand0/scripts/blob/e2fc9c1b66c0954586357dee9c22daccf05d972a/slide.py)
 
 ```bash
-uv run https://raw.githubusercontent.com/sanand0/uv-mega/refs/heads/main/slide.py llm-cli.md
+uv run slide.py llm-cli.md
 ```
 
 To go to the next slide:
 
 ```bash
-uv run https://raw.githubusercontent.com/sanand0/uv-mega/refs/heads/main/slide.py
+uv run slide.py
 ```

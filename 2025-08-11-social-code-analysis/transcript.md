@@ -33,3 +33,44 @@ But the people that scored the highest were the originals, meaning people who pu
 So from my perspective, I see this as a win in two ways. At the very least, if you're really tired, if you've got a hundred other things to do and my course is just one among a dozen, it's all right. Copy. It's better than nothing. On the other hand, if you are putting in some good work, then you can get a bigger boost by letting others copy from you and learning from each other.
 
 So, those were the lessons for students. But as an educator, there were a few other things that I learned. First is that there's a lot of stuff that I can learn by analyzing similarity of code. I can figure out who are the students who are isolated, and therefore I probably need to connect them together. Who are the students who are future teaching assistants? And I do need a bunch of teaching assistants, and this is a pool that I can pick from. When do they learn? Or how close to the assignment deadline do different people learn? The curve helps. And as you said, scale is a nightmare, right? I love scale. Because what that allows me to do is run large-scale experiments like this, and we get a beautiful curve of the distribution. We get to see what are the concepts that they're tweaking and messing up. What are the concepts that they are copying and doing it right? So a slightly better understanding of where the learning was effective and where the learning was not so effective.
+
+**Question**: My question is why choose that particular method?
+
+Why choose that particular method? Similarity? I tried three techniques.
+
+In fact, the first, which I announced in the project, was I would use embedding similarity. It did not work well because chunks of code that were... so if somebody had taken roughly the same kinds of words but put them around in very different ways, the sequencing information was lost, which Jaccard similarity preserved.
+
+Jaccard similarity is also more explainable. I'm just saying I'm taking phrases of five words and overlapping. Explainability becomes important with difficult students who come back and say, "No, no, no, you should have given me more marks, I didn't really copy from this student." That sort of thing.
+
+So, in short: sequencing preservation and explainability.
+
+**Question**: Could you explain Jaccard similarity a bit more?
+
+Sure, it's looking at... so you will be able to see the code, but this is what I did.
+
+I took the code without any of the comments or docstrings, and then tokenized it, meaning converted the Python code into words. If it had an open bracket, open quotes, if you have a function call, all of that gets converted to words. So now it's roughly English.
+
+And then I took all phrases which are five words. Take the first five words, the next overlapping five words, next five words, and so on. And these are chunks.
+
+Then I take all of the chunks in Program A, all of the chunks in Program B, and see roughly what percentage of overlap there is. That's the Jaccard similarity.
+
+**Question**: Are students allowed to see each other's code and modify it?
+
+Yes, so students can do whatever they want until the deadline. Actually they can do whatever they want even after the deadline.
+I just take a frozen copy of it.
+
+**Question**: So they can also use Generative AI tools?
+
+Yeah. So in this course it's allowed.
+
+They can also pay sombeody to take the course on their behalf. If they're able to cheat well here, then maybe they're able to do that when they join the workforce. So, that I don't mind. I don't mind at all.
+
+**Question**: The ones who allowed others to copy from them, are they allowed to make changes?
+
+Yes, so they are allowed to make changes right up to the point where I'm taking a copy, which is the assignment deadline.
+
+So if any of them had submitted, so to speak, three or four days before the deadline, and had possibly even shared amongst each other well before that and yes, there were commits after they had put in the initial submission. They just put it into their Git repository. All I want is the link to the Git repository,
+
+**Question**: Could you share the link to the repository?
+
+It's the Tools in Data Science cource. The link is <https://tds.s-anand.net/>.

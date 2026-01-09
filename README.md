@@ -25,36 +25,40 @@
 - 18 Jun 2025. **[Python in the Browser](2025-06-pycon-sg/ ":ignore")** at [PyCon Singapore](https://pycon.sg/)
 - 10 May 2025. **Vibe Coding** at [SETU](https://setuschool.com/) [⏯️ Video (65m)](https://youtu.be/ODXSDbY12dg) [💬 Transcript](2025-05-10-vibe-coding/)
 - 18 Jan 2025. **[How to use AI to generate code?](2025-01-18-how-to-use-ai-to-generate-code/)** at [The Hindu](https://www.thehindu.com/sci-tech/technology/the-hindu-to-host-webinar-on-the-use-of-artificial-intelligence-in-education/article68769905.ece) (Remote). [⏯️ Video (64m)](https://youtu.be/pbRFDUGby3o)
-- 19 Oct 2025. **[AI as a learning tool: What students, teachers, and parents need to know](2024-10-19-ai-in-education-webinar/)** at [The Hindu](https://www.thehindu.com/sci-tech/technology/the-hindu-to-host-webinar-on-the-use-of-artificial-intelligence-in-education/article68769905.ece) (Remote). [⏯️ Video (65m)](https://youtu.be/fPvhDOyUPc8)
+- 19 Oct 2025. **[AI as a learning tool: What students, teachers, and parents need to know](2024-10-19-ai-in-education-webinar/)** at [The Hindu](https://www.thehindu.com/sci-tech/technology/the-hindu-to-host-webinar-on-the-use-of-artificial-intelligence-in-education/article68769905.ece) (Remote).
+  · [⏯️ Video (65m)](https://youtu.be/fPvhDOyUPc8) [📂](https://youtu.be/mU8ZPPrDnrY)
+  · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/2024-08-10-TEDx-MDI-Gurgaon-LLM-Psychology.pptx)
+  · [Slides](https://github.com/sanand0/talks/releases/download/talks/2024-08-10-TEDx-MDI-Gurgaon-LLM-Psychology.pptx)
 
 ## Archives
 
 I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtube.com/playlist?list=PLHCH16htawZbR_-mIqfGmYbhE5S2UckOh) has many.
 
 - 21 Sep 2024: **Finding Actor Look-alikes** at [PyCon India, 2024](https://in.pycon.org/cfp/2024/proposals/finding-actor-look-alikes-with-multi-modal-llms~azpn8/)
-  · [Video](https://youtu.be/FHa8Xgssrz4)
+  · [⏯️ Video](https://youtu.be/FHa8Xgssrz4)
   · [Slides](https://llmfoundry.straive.com/apps/actor-lookalikes.html)
   · [Code](https://github.com/sanand0/actor-lookalikes)
 - 10 Aug 2024: **LLM Psychology** at [TEDx MDI Gurgaon, 2024](https://www.ted.com/tedx/events/58040)
-  · [Video](https://youtu.be/rA__c6CosVI)
+  · [⏯️ Video](https://youtu.be/rA__c6CosVI)
   · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/2024-08-10-TEDx-MDI-Gurgaon-LLM-Psychology.pptx)
   · [Slides](https://github.com/sanand0/talks/releases/download/talks/2024-08-10-TEDx-MDI-Gurgaon-LLM-Psychology.pptx)
 - 8 Aug 2024: **Finding Actor Look-alikes** at [DataHack Summit 2024](https://www.analyticsvidhya.com/datahacksummit-2024/speakers/anand-s)
-  · [Video](https://youtu.be/a6_tygjxxUc)
+  · [⏯️ Video](https://youtu.be/a6_tygjxxUc)
   · [Chat](https://chatgpt.com/share/68d8b27a-5eb8-800c-b8d9-f403bb55b9b5)
   · [Code](https://github.com/sanand0/actor-lookalikes)
 - 19 Sep 2019: **Automating Comics** at [TDS KGInstitutions, 2019](https://www.ted.com/tedx/events/35806)
   · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/2019-09-19-TEDx-KGI-Anand-Automating-Comics.pptx)
   · [Slides](https://github.com/sanand0/talks/releases/download/talks/2019-09-19-TEDx-KGI-Anand-Automating-Comics.pptx)
 - 19 Nov 2017: **Prisoners of Birth** at [TEDx Whitefield, 2017](https://www.ted.com/tedx/events/24163)
-  · [Video](https://youtu.be/ew5_-7cwSm0)
+  · [⏯️ Video](https://youtu.be/ew5_-7cwSm0)
   · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/2017-11-19-TEDx-Whitefield-Prisoners-of-Birth.pptx)
   · [Slides](https://github.com/sanand0/talks/releases/download/talks/2017-11-19-TEDx-Whitefield-Prisoners-of-Birth.pptx)
+  · [📂](https://youtu.be/UwV9WPDY6u8)
 - 20 Feb 2015: **Visualizing Data Anomalies** at [TEDx IIM Bangalore, 2015](https://www.ted.com/tedx/events/14548)
   · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/2015-02-20-TEDx-IIM-Bangalore-Visualizing-Data-Anomalies.pptx)
   · [Slides](https://github.com/sanand0/talks/releases/download/talks/2015-02-20-TEDx-IIM-Bangalore-Visualizing-Data-Anomalies.pptx)
 - 28 Feb 2015: **Visualizing Politics** at [TEDx NMIMS Bangalore, 2015](https://www.ted.com/tedx/events/13132)
-  · [Video](https://youtu.be/XuawdPb2F5A)
+  · [⏯️ Video](https://youtu.be/XuawdPb2F5A)
   · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/2015-02-28-TEDx-NMIMS-Bangalore-Visualizing-Politics.pptx)
   · [Slides](https://github.com/sanand0/talks/releases/download/talks/2015-02-28-TEDx-NMIMS-Bangalore-Visualizing-Politics.pptx)
 - 15 May 2014: **NCERT NRG Workshop**
@@ -108,6 +112,7 @@ I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtu
 - 22 Sep 2023: [How Far Can I Trust A Language Model? With Anand S](https://youtu.be/IfcBpoBet8o) (25m)
 - 15 Sep 2023: [Leading With Data Ep 01 - The Art of Storytelling with Anand S](https://youtu.be/c8UGrMbaRpQ) (48m)
 - 13 Sep 2023: [Why does Anand S. prefers Purpose Driven Learning? | Leading With Data 01](https://youtu.be/C3pGkXIwkEw) (2m)
+- 01 Jul 2022: [Exploring Network Clusters - Convergence 2022 Keynote at Flipkart](https://youtu.be/QDcSN3M5qVQ) (58m)
 - 20 May 2022: [Employee Journey - In conversation with Anand S](https://youtu.be/jDn5LinYaSI) (2m)
 - 16 Feb 2022: [Exploring the Movie Actor Network in Python](https://youtu.be/6hzLw80qxto) (44m)
 - 13 Feb 2022: [Programming Minecraft with WebSockets in Python](https://youtu.be/o-NgvtJZDcY) (25m)
@@ -120,7 +125,7 @@ I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtu
 - 22 Jan 2021: [Programming Minecraft with WebSockets in JavaScript](https://youtu.be/bjanNXXwQbo) (34m)
 - 23 Jul 2020: [Data as Kingmaker - Kotak: Chasing Growth](https://youtu.be/C4Weh0HYWCg58m)
 - 01 May 2020: [CIR Interview with CEO- Mr Anand S, CEO, Gramener](https://youtu.be/Dns-yPuKp9U) (36m)
-- 28 Mar 2020: [Visualizing Machine Learning | Anand S](https://youtu.be/sORnCj52COw) (43m)
+- 28 Mar 2020: [Visualizing Machine Learning | Anand S](https://youtu.be/sORnCj52COw) (43m) [📂](https://youtu.be/khJZHHJLs88)
 - 06 Mar 2020: [Engaging your audience with interactive PowerPoint decks](https://youtu.be/9tJ4882mGQ0) (43m)
 - 03 Mar 2020: [[WEBINAR] How to make interactive data driven PPTs | S Anand](https://youtu.be/DbgxPc5wY6M) (1m)
 - 28 Nov 2019: [Anand S's 18min talk at UXINDIA 2019 (https://www.ux-india.org/uxindia2019)](https://youtu.be/2eamSW7i9lg) (19m)
@@ -134,7 +139,7 @@ I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtu
 - 26 Jun 2019: [Mapping India | Strata NY 2019 | Anand S](https://youtu.be/kVxINLg5WE8) (30m)
 - 10 Jun 2019: [How to Build Data Science Teams that Deliver Business Value (Data Summit, Boston)](https://youtu.be/OG9pnft7310) (29m)
 - 08 May 2019: [S. Anand & Michael Allen | Ujima Radio show | Save Species with A.I.](https://youtu.be/97KNMGLOThw) (10m)
-- 11 Apr 2019: [\"What is Emotion Analytics?\" Anand and Ganes discuss how AI can drive Data stories](https://youtu.be/IfFjaur-Q5U) (7m)
+- 11 Apr 2019: ["What is Emotion Analytics?" Anand and Ganes discuss how AI can drive Data stories](https://youtu.be/IfFjaur-Q5U) (7m)
 - 27 Mar 2019: [Natural Language Generation by Anand S](https://youtu.be/kIQKbOLDYc4) (20m)
 - 27 Mar 2019: [Visualizing Machine Learning by Anand S](https://youtu.be/G0AaF5N4lrc) (30m)
 - 08 Feb 2019: [Krupanidhi Group of Institutions | Krupanidhi School of Management - Mr Anand S (CEO Gramener)](https://youtu.be/vDYPP-zYa48) (1m)
@@ -145,8 +150,9 @@ I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtu
 - 11 Jun 2018: [Visualizing Machine Learning Models By Anand S (Gramener) at DataHack Summit 2017](https://youtu.be/5-KSAyfB3JE) (7m)
 - 10 Jun 2018: [S Anand & Ganes Kesari Visualising Text](https://youtu.be/NOUk68_UiWY) (45m)
 - 21 Mar 2018: [Primetime Debate: 21 March 2018](https://youtu.be/Yi5U3ZyhK9M) (24m)
+- 06 Mar 2018: [Employee Attrition Analytics at IIM Bangalore](https://youtu.be/PyXqqGcZ3S4) (51m)
 - 24 Feb 2018: [Masterclass on Data Visualization](https://youtu.be/5N10tVaNuD4) (45m)
-- 14 Feb 2018: [How your birth shapes your life | S Anand | TEDxWhitefield](https://youtu.be/ew5_-7cwSm0) (18m)
+- 03 Feb 2028: [Geo-demographic Segmentation IIM Bangalore](https://youtu.be/74Vevg7luNM) (93m)
 - 22 Dec 2017: [Visualizing machine learning algorithms in Python](https://youtu.be/s_Qfy0QFoOY) (41m)
 - 02 Nov 2017: [Visualising Big Data- Module 6](https://youtu.be/ISLiKRAxQNQ) (24m)
 - 02 Oct 2017: [ANAND S of Gramener talks about Automating Analysis @#Cypher2017](https://youtu.be/vl3bE2pCrdE) (44m)
@@ -207,6 +213,14 @@ I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtu
 Stuff I _want_ to talk about and am hunting for a forum.
 
 - **[Redefining Work in the LLM Era](2025-09-llm-workflows/ ":ignore")**.
+
+## Legend
+
+- ⏯️ = Video
+- 📂 = My video copy
+- 🪧 = Online slides
+- 💻 = Screencast
+- 💬 = Transcript
 
 <!--
 

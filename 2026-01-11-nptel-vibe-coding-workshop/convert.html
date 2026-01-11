@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unicode to ASCII Transliteration Tool</title>
+    <style>
+        /* CSS Styles: This makes the app look clean and modern */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        h1 { margin-bottom: 10px; color: #2c3e50; }
+        p { margin-bottom: 20px; color: #666; }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+            flex: 1; /* Takes up remaining height */
+        }
+
+        .box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #444;
+        }
+
+        textarea {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Courier New', monospace; /* Monospaced for code/text alignment */
+            font-size: 14px;
+            resize: none; /* User can't mess up layout */
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        textarea:focus { outline: 2px solid #0078D7; border-color: transparent; }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+
+        .btn-primary { background-color: #0078D7; color: white; }
+        .btn-primary:hover { background-color: #005a9e; }
+        
+        .btn-secondary { background-color: #e2e6ea; color: #333; }
+        .btn-secondary:hover { background-color: #dbe0e5; }
+
+        .status {
+            margin-top: 10px;
+            font-size: 14px;
+            height: 20px;
+            color: green;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Unicode to ASCII Converter</h1>
+    <p>Converts smart quotes, accents, dashes, and symbols into their closest keyboard equivalents.</p>
+
+    <div class="container">
+        <div class="box">
+            <label for="input">Input (Unicode/Rich Text)</label>
+            <textarea id="input" placeholder="Paste your text with smart quotes, accents (é), or dashes (—) here..."></textarea>
+        </div>
+
+        <div class="controls">
+            <button class="btn-primary" onclick="convert()">Convert &rarr;</button>
+            <button class="btn-secondary" onclick="copyOutput()">Copy Result</button>
+            <button class="btn-secondary" onclick="clearAll()">Clear</button>
+        </div>
+
+        <div class="box">
+            <label for="output">Output (Clean ASCII)</label>
+            <textarea id="output" readonly placeholder="Result will appear here..."></textarea>
+        </div>
+    </div>
+
+    <div id="statusMsg" class="status"></div>
+
+    <script>
+        // JAVASCRIPT LOGIC
+        
+        function convert() {
+            let text = document.getElementById('input').value;
+
+            // STEP 1: Manual Replacements for Punctuation
+            // These don't have "accents", so we map them manually.
+            const map = {
+                // Quotes
+                '\u2018': "'", // Left single quote
+                '\u2019': "'", // Right single quote
+                '\u201A': "'", // Single low-9 quotation mark
+                '\u201B': "'", // Single high-reversed-9 quotation mark
+                '\u201C': '"', // Left double quote
+                '\u201D': '"', // Right double quote
+                '\u201E': '"', // Double low-9 quotation mark
+                '\u201F': '"', // Double high-reversed-9 quotation mark
+                
+                // Dashes and Hyphens
+                '\u2013': '-', // En-dash
+                '\u2014': '-', // Em-dash
+                '\u2010': '-', // Hyphen
+                '\u2011': '-', // Non-breaking hyphen
+                '\u2012': '-', // Figure dash
+
+                // Spaces
+                '\u00A0': ' ', // Non-breaking space
+                '\u2009': ' ', // Thin space
+
+                // General Symbols
+                '\u2026': '...', // Ellipsis
+                '\u2022': '*',   // Bullet point
+                '\u00A9': '(c)', // Copyright
+                '\u00AE': '(r)', // Registered
+                '\u2122': 'TM',  // Trademark
+                '\u20AC': 'EUR', // Euro
+                '\u00A3': 'GBP', // Pound
+            };
+
+            // Apply the map
+            text = text.replace(/[\u2018-\u201F\u2010-\u2014\u00A0\u2009\u2026\u2022\u00A9\u00AE\u2122\u20AC\u00A3]/g, function(match) {
+                return map[match] || match; 
+            });
+
+
+            // STEP 2: Handle Accents (The Magic Method)
+            // "NFD" splits a character like 'é' into 'e' + 'accent mark'
+            // We then use Regex to remove the accent marks range (u0300-u036f)
+            text = text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+
+            // STEP 3: Final Safety Net
+            // This strips anything that STILL isn't basic ASCII (0-127)
+            // This catches weird emojis or unrecognized symbols.
+            // We keep characters 0-127.
+            text = text.replace(/[^\x00-\x7F]/g, "");
+
+            document.getElementById('output').value = text;
+            showStatus("Converted successfully!");
+        }
+
+        function copyOutput() {
+            var outputText = document.getElementById('output');
+            outputText.select();
+            document.execCommand('copy'); 
+            showStatus("Copied to clipboard!");
+        }
+
+        function clearAll() {
+            document.getElementById('input').value = "";
+            document.getElementById('output').value = "";
+            showStatus("");
+        }
+
+        function showStatus(msg) {
+            const statusEl = document.getElementById('statusMsg');
+            statusEl.innerText = msg;
+            // Clear message after 3 seconds
+            setTimeout(() => { statusEl.innerText = ""; }, 3000);
+        }
+    </script>
+
+</body>
+</html>

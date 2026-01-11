@@ -1,5 +1,6 @@
 # Anand's Talks
 
+- 11 Jan 2026. **[Applied Vibe Coding](2026-01-11-nptel-vibe-coding-workshop/ ":ignore")** at [NPTEL](https://elearn.nptel.ac.in/shop/iit-workshops/ongoing/computer-science/applied-vibe-coding-workshop/), Remote. [💻 Screencast (121m)](https://youtu.be/m9mIe4baN-k)
 - 06 Dec 2025. **[Mining Digital Exhaust](2025-12-06-mining-digital-exhaust/ ":ignore")** at [Fifth Elephant](https://hasgeek.com/fifthelephant/mining-digital-exhaust-workshop/), Bangalore. [💻 Screencast (158m)](https://youtu.be/rVACVezdDxc) [⏯️ Video (173m)](https://youtu.be/I4MQVA1b4BE)
 - 05 Dec 2025. **[Data to Decisions with AI](2025-12-05-scdm-keynote/ ":ignore")** at [SCDM Keynote](https://scdm.org/), Hyderabad
 - 03 Dec 2025. **[Vibe Analytics](2025-12-03-vibe-analytics-iim-alumni-sg/ ":ignore")** at [IIM Alumni SG](https://iimalumni.sg/) (Remote)

@@ -14,7 +14,7 @@ Create a single-page HTML narrative story (like in The New York Times) written i
 
 Ensure that you include these prominently:
 
-- the embedded YouTube video (https://youtu.be/m9mIe4baN-k)
+- the embedded YouTube video (https://youtu.be/9tyU5mC0SyQ)
 - link to the transcript (https://github.com/sanand0/talks/blob/main/2026-01-11-nptel-vibe-coding-workshop/transcript.md)
 - a sketchnote (use a dummy image link for now)
 - content / chat generated during the workshop (read the content if required)

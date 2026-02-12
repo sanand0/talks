@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Machine That Learned to Heal Itself</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #fafaf7;
+    --text: #1a1a1a;
+    --text-light: #555;
+    --accent: #e03e36;
+    --accent2: #2563eb;
+    --accent3: #059669;
+    --accent4: #d97706;
+    --border: #e5e5e0;
+    --card-bg: #ffffff;
+    --highlight: #fffbeb;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Sans 3', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 18px;
+    font-weight: 300;
+  }
+
+  .hero {
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 20px;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    color: #fff;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(37,99,235,0.15) 0%, transparent 70%),
+                radial-gradient(ellipse at 70% 50%, rgba(224,62,54,0.1) 0%, transparent 70%);
+  }
+
+  .hero-content { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero .subtitle {
+    font-size: 1.3rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.75);
+    max-width: 700px;
+    margin: 0 auto 40px;
+  }
+
+  .hero .stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+  }
+
+  .hero .stat-item {
+    text-align: center;
+  }
+
+  .hero .stat-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #60a5fa;
+  }
+
+  .hero .stat-label {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .wide-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  section {
+    padding: 80px 0;
+  }
+
+  section + section {
+    border-top: 1px solid var(--border);
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+
+  h3 {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  p { margin-bottom: 20px; }
+
+  .lead {
+    font-size: 1.25rem;
+    color: var(--text-light);
+    margin-bottom: 32px;
+  }
+
+  .pullquote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-style: italic;
+    color: var(--accent);
+    border-left: 4px solid var(--accent);
+    padding: 16px 0 16px 28px;
+    margin: 40px 0;
+    line-height: 1.4;
+  }
+
+  .chart-container {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px 24px 16px;
+    margin: 32px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .chart-title {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-light);
+    margin-bottom: 4px;
+  }
+
+  .chart-subtitle {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 16px;
+  }
+
+  svg { overflow: visible; }
+  svg text { font-family: 'Source Sans 3', sans-serif; }
+
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 32px 0;
+  }
+
+  .metric-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .metric-card .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .metric-card .label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-light);
+    margin-top: 4px;
+  }
+
+  .metric-card .context {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 2px;
+  }
+
+  .color-red { color: var(--accent); }
+  .color-blue { color: var(--accent2); }
+  .color-green { color: var(--accent3); }
+  .color-amber { color: var(--accent4); }
+
+  .callout {
+    background: var(--highlight);
+    border: 1px solid #fde68a;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 32px 0;
+    font-size: 0.95rem;
+  }
+
+  .callout strong { color: var(--accent4); }
+
+  .tooltip {
+    position: absolute;
+    background: #1a1a1a;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    pointer-events: none;
+    z-index: 100;
+    line-height: 1.4;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+
+  .legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-bottom: 12px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .legend-swatch {
+    width: 14px;
+    height: 3px;
+    border-radius: 2px;
+  }
+
+  .section-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--accent2);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .caveats {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    margin: 40px 0;
+    font-size: 0.9rem;
+    color: var(--text-light);
+  }
+
+  .caveats h4 {
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    font-size: 0.85rem;
+    color: #999;
+    border-top: 1px solid var(--border);
+  }
+
+  .exec-summary {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 60px 0 64px;
+  }
+
+  .exec-summary h2 {
+    text-align: center;
+    margin-bottom: 4px;
+  }
+
+  .exec-summary .lead {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 40px;
+  }
+
+  .finding-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .finding-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    position: relative;
+    transition: box-shadow 0.2s;
+  }
+
+  .finding-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  }
+
+  .finding-card .finding-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #fff;
+    background: var(--accent2);
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+
+  .finding-card .finding-num.red { background: var(--accent); }
+  .finding-card .finding-num.green { background: var(--accent3); }
+  .finding-card .finding-num.amber { background: var(--accent4); }
+  .finding-card .finding-num.blue { background: var(--accent2); }
+
+  .finding-card h4 {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .finding-card p {
+    font-size: 0.92rem;
+    color: var(--text-light);
+    margin-bottom: 10px;
+    line-height: 1.55;
+  }
+
+  .finding-card .finding-stat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+    background: #f1f5f9;
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-top: 2px;
+  }
+
+  .exec-actions {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 32px;
+  }
+
+  .exec-actions h3 {
+    color: var(--text);
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+  }
+
+  .exec-actions ol {
+    padding-left: 20px;
+    margin: 0;
+  }
+
+  .exec-actions li {
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .exec-actions li strong {
+    color: var(--text);
+  }
+
+  .toc-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 32px;
+  }
+
+  .toc-link {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--accent2);
+    border: 1px solid var(--accent2);
+    padding: 5px 14px;
+    border-radius: 20px;
+    transition: all 0.2s;
+  }
+
+  .toc-link:hover {
+    background: var(--accent2);
+    color: #fff;
+  }
+
+  @media (max-width: 640px) {
+    body { font-size: 16px; }
+    h2 { font-size: 1.7rem; }
+    .hero .stats-row { gap: 24px; }
+    .metric-grid { grid-template-columns: 1fr 1fr; }
+    .finding-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-content">
+    <h1>The Machine That Learned to Heal Itself</h1>
+    <p class="subtitle">How AI adoption, a contaminated vendor batch, and one stubborn monolith tell the story of a semiconductor operation at a crossroads</p>
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-number">557K+</div>
+        <div class="stat-label">Records analyzed</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">26</div>
+        <div class="stat-label">Weeks of data</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">5</div>
+        <div class="stat-label">Hidden patterns</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<div class="exec-summary">
+  <div class="wide-container">
+    <h2>Executive Summary</h2>
+    <p class="lead">Five hidden patterns in 557K records across 26 weeks. Each one is actionable this quarter.</p>
+
+    <div class="finding-grid">
+      <div class="finding-card">
+        <span class="finding-num green">Finding 1</span>
+        <h4>AI adoption creates a 4x speed divide</h4>
+        <p>Teams with high AI adoption (score >= 0.5) deploy in a median of 13.6 hours. The one team that hasn't adopted deploys in 54.5 hours. Success rates are identical -- the advantage is pure velocity. The gap is widening: high-AI teams improved from 15h to 11h over the period while the laggard stagnated.</p>
+        <span class="finding-stat">13.6h vs 54.5h median lead time</span>
+      </div>
+
+      <div class="finding-card">
+        <span class="finding-num blue">Finding 2</span>
+        <h4>Pipeline v2 delivered a measurable step-change</h4>
+        <p>Build success jumped 3.2 percentage points (92.8% to 95.9%). Boot success jumped 5.2pp. Boot errors fell 65%. Build duration dropped 9%. The gains appeared immediately at week 12 and held. Two teams -- Customer Solutions and Legacy Monolith -- are still on the old pipeline, losing reliability every week they wait.</p>
+        <span class="finding-stat">+3.2pp builds, +5.2pp boots, -65% errors</span>
+      </div>
+
+      <div class="finding-card">
+        <span class="finding-num red">Finding 3</span>
+        <h4>A contaminated vendor batch struck twice</h4>
+        <p>Vendor batch VB-7734 hit 10 E700 tools across all 5 global sites in two spikes (weeks 8-10, 20-21), producing 5,291 defects. These defects escaped to customers at 3.3x the normal rate, drove a 58.8% SLA breach rate (vs 35.6% baseline), and cratered satisfaction below 3.0/5. The recurrence suggests containment failed.</p>
+        <span class="finding-stat">58.8% SLA breach rate, 5.3pp yield drop</span>
+      </div>
+
+      <div class="finding-card">
+        <span class="finding-num amber">Finding 4</span>
+        <h4>Incident risk explodes above 3,000 LOC</h4>
+        <p>Changes under 500 lines have a 0.8% incident rate. Above 3,000 lines, it's 10-16% -- a 19x increase. This affects 14% of all deployments. AI code review reduces the incident rate on large changes by 24% (14.5% to 11.0%), providing a meaningful safety net for the changes that can't be made smaller.</p>
+        <span class="finding-stat">0.8% vs 15.6% incident rate by LOC</span>
+      </div>
+
+      <div class="finding-card">
+        <span class="finding-num red">Finding 5</span>
+        <h4>The monolith is a compounding drag</h4>
+        <p>monolith-core deploys at 1/7th the frequency of microservices, with 4x longer lead times (54.5h vs 13.6h) and a 13.6% incident rate (vs ~4%). Its rollback rate is actually <em>lower</em> -- the team isn't careless, they're trapped in a system where infrequent, large changes are inherently riskier. Last to adopt Pipeline v2 (week 31).</p>
+        <span class="finding-stat">13.6% incident rate, 4x lead time</span>
+      </div>
+
+      <div class="finding-card">
+        <span class="finding-num amber">Finding 6</span>
+        <h4>The cascade: manufacturing to customers to portfolio</h4>
+        <p>The VB-7734 spikes cascaded across every dataset: yield dipped 0.7pp, customer cases surged 50-80%, SLA breaches hit 52-57%, and portfolio on-track ratio -- already declining -- now sits at 20%. Four of five projects are behind schedule, and teams T06 and T07 carry the worst slip at 6+ days per week.</p>
+        <span class="finding-stat">Portfolio on-track: 100% to 20% in 26 weeks</span>
+      </div>
+    </div>
+
+    <div class="exec-actions">
+      <h3>RECOMMENDED ACTIONS</h3>
+      <ol>
+        <li><strong>Accelerate Pipeline v2 for holdouts.</strong> Customer Solutions (week 26) and Legacy Monolith (week 31) are losing 3-5pp of reliability daily. Move them up.</li>
+        <li><strong>Enforce 3,000-LOC soft limit + mandatory AI code review above it.</strong> Affects 14% of deploys, prevents ~24% of large-change incidents.</li>
+        <li><strong>Begin monolith decomposition.</strong> 13.6% incident rate and 54.5h lead time are compounding organizational drag. Start with highest-traffic modules.</li>
+        <li><strong>Quarantine VB-7734 and upgrade E700 inline detection.</strong> The recurrence means containment failed. 20% of these defects reach customers vs 6% baseline.</li>
+        <li><strong>Rebalance project portfolios.</strong> T01 and T04 carry 6 projects each. T06 has 0.64 velocity on 2 projects -- investigate staffing gaps, not just workload.</li>
+      </ol>
+    </div>
+
+    <div class="toc-row">
+      <a href="#ch1" class="toc-link">Ch 1: AI Speed Divide</a>
+      <a href="#ch2" class="toc-link">Ch 2: Pipeline v2</a>
+      <a href="#ch3" class="toc-link">Ch 3: Vendor Batch</a>
+      <a href="#ch4" class="toc-link">Ch 4: LOC Tipping Point</a>
+      <a href="#ch5" class="toc-link">Ch 5: Monolith Drag</a>
+      <a href="#ch6" class="toc-link">Ch 6: The Cascade</a>
+    </div>
+  </div>
+</div>
+
+<!-- CHAPTER 1: THE AI SPEED DIVIDE -->
+<section id="ch1">
+  <div class="container">
+    <span class="section-number">Chapter 1</span>
+    <h2>The Four-X Gap Nobody Talks About</h2>
+    <p class="lead">Two teams ship the same kind of code to the same kind of production environment. One takes half a day. The other takes more than two.</p>
+
+    <p>Across 11,264 deployments over six months, one number keeps surfacing: <strong>4x</strong>. That's the gap in deployment lead time between teams that have embraced AI tooling and the one team that hasn't. Not a marginal improvement. Not a rounding error. A chasm.</p>
+  </div>
+
+  <div class="wide-container">
+    <div class="metric-grid">
+      <div class="metric-card">
+        <div class="value color-green">13.6 hrs</div>
+        <div class="label">High-AI Teams</div>
+        <div class="context">Median lead time</div>
+      </div>
+      <div class="metric-card">
+        <div class="value color-red">54.5 hrs</div>
+        <div class="label">Low-AI Team</div>
+        <div class="context">Median lead time</div>
+      </div>
+      <div class="metric-card">
+        <div class="value color-blue">4x</div>
+        <div class="label">The Gap</div>
+        <div class="context">Faster to production</div>
+      </div>
+      <div class="metric-card">
+        <div class="value color-amber">98.6%</div>
+        <div class="label">Deployments</div>
+        <div class="context">From high-AI teams</div>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Lead time by team, ranked by AI adoption</div>
+      <div class="chart-subtitle">Each bar shows median deployment lead time (hours). Color intensity = AI adoption score.</div>
+      <div id="chart-team-leadtime"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <p>The outlier is unmistakable. The <strong>Legacy Monolith</strong> team, with an AI adoption score of 0.48 compared to 0.62-0.88 for everyone else, ships code at a pace that belongs to a different decade. Their median deployment takes 54.5 hours. Platform DevOps, the top performer at 0.88 adoption, ships in 12.3 hours.</p>
+
+    <div class="pullquote">The highest-performing team doesn't just move faster. It moves in a fundamentally different gear.</div>
+
+    <p>But here's the twist: success rates are virtually identical across the divide. High-AI teams succeed 96.9% of the time; the low-AI team succeeds 97.4%. The AI advantage isn't about quality per deployment. It's about <strong>velocity</strong> -- shipping smaller, faster, more frequent changes that compound into radically different throughput.</p>
+  </div>
+
+  <div class="wide-container">
+    <div class="chart-container">
+      <div class="chart-title">Weekly lead time trend: high-AI vs low-AI teams</div>
+      <div class="chart-subtitle">Median deployment lead time (hours) per week. The gap persists across every single week.</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-swatch" style="background:#2563eb"></div>High-AI teams (score >= 0.5)</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#e03e36"></div>Low-AI team (score < 0.5)</div>
+      </div>
+      <div id="chart-weekly-leadtime"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="callout">
+      <strong>Caveat:</strong> The "low-AI" group is a single team (Legacy Monolith, n=154 deploys) vs. 7 teams (n=11,110). The AI adoption score may be a proxy for architectural complexity rather than a direct cause. The monolith's coupling likely constrains deployment speed independent of tooling.
+    </div>
+  </div>
+</section>
+
+<!-- CHAPTER 2: THE PIPELINE UPGRADE -->
+<section id="ch2">
+  <div class="container">
+    <span class="section-number">Chapter 2</span>
+    <h2>The Week Everything Got Better</h2>
+    <p class="lead">Sometime around week 12, somebody flipped a switch. The data noticed.</p>
+
+    <p>Pipeline Automation v2 didn't arrive with a press release. It rolled out team by team, starting with QA Automation in week 12, followed by DevOps and core engineering in weeks 13-14. But the impact was immediate and unmistakable.</p>
+  </div>
+
+  <div class="wide-container">
+    <div class="metric-grid">
+      <div class="metric-card">
+        <div class="value color-green">+3.2pp</div>
+        <div class="label">Build Success</div>
+        <div class="context">92.8% to 95.9%</div>
+      </div>
+      <div class="metric-card">
+        <div class="value color-green">+5.2pp</div>
+        <div class="label">Boot Success</div>
+        <div class="context">90.3% to 95.5%</div>
+      </div>
+      <div class="metric-card">
+        <div class="value color-blue">-9%</div>
+        <div class="label">Build Duration</div>
+        <div class="context">14.2 min to 12.9 min</div>
+      </div>
+      <div class="metric-card">
+        <div class="value color-blue">-65%</div>
+        <div class="label">Boot Errors</div>
+        <div class="context">762 to 265 total</div>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Build success rate: before and after Pipeline v2</div>
+      <div class="chart-subtitle">Weekly build success rate (%). Vertical line marks week 12, when Pipeline v2 first appears.</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-swatch" style="background:#94a3b8"></div>Legacy pipeline</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#2563eb"></div>Pipeline v2</div>
+      </div>
+      <div id="chart-build-success"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <p>The step-change is clearest in test environment reliability. Before v2, boot success hovered around 90%, with periodic dips into the mid-80s. After v2, it locked in at 95-97%. The legacy environments, still running on the old pipeline, actually <em>degraded</em> over time -- drifting down to 79-83% in later weeks. The old infrastructure was rotting in place.</p>
+
+    <p>Perhaps most telling: <strong>CFG_MISMATCH</strong>, the #1 boot error on the legacy pipeline, dropped from first to second place on v2. The new pipeline simply handles configuration validation better. What remains -- network timeouts -- points to infrastructure issues the pipeline can't solve alone.</p>
+
+    <div class="callout">
+      <strong>Two holdouts remain.</strong> Customer Solutions (T05) won't adopt until week 26. Legacy Monolith (T08) is scheduled for week 31 -- beyond the current data window. These are the same teams that are slowest in Chapter 1. The pattern isn't coincidence: the teams that need modernization most are the last to get it.
+    </div>
+  </div>
+</section>
+
+<!-- CHAPTER 3: THE CONTAMINATED BATCH -->
+<section id="ch3">
+  <div class="container">
+    <span class="section-number">Chapter 3</span>
+    <h2>The Ghost in the Machine</h2>
+    <p class="lead">Twice in six months, a contaminated vendor batch infiltrated the production line. The damage went far beyond defects.</p>
+
+    <p>The story begins with ten tools. They're all the same model -- E700 -- spread across five global sites from Austin to Hsinchu. They share one thing the rest of the fleet doesn't: sensitivity to vendor batch VB-7734.</p>
+
+    <p>When that batch entered the supply chain, it didn't announce itself. It showed up in the yield data.</p>
+  </div>
+
+  <div class="wide-container">
+    <div class="chart-container">
+      <div class="chart-title">Weekly defect count: VB-7734 vs baseline</div>
+      <div class="chart-subtitle">The contaminated batch appears in two sharp spikes. Background defect levels stay flat.</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-swatch" style="background:#e03e36;height:8px"></div>VB-7734 defects</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#cbd5e1;height:8px"></div>Other defects</div>
+      </div>
+      <div id="chart-defect-spikes"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <p>Two spike windows -- weeks 8-10 and weeks 20-21 -- produced 5,291 defects. During those windows, the defect rate jumped 60%, from 0.011 to 0.018 per wafer. Mean yield dropped from 91.8% to 91.1%. And the damage cascaded.</p>
+
+    <div class="pullquote">VB-7734 defects were 3.3 times more likely to reach the customer than normal defects. Only 48% were caught inline, versus 74% for everything else.</div>
+  </div>
+
+  <div class="wide-container">
+    <div class="metric-grid">
+      <div class="metric-card">
+        <div class="value color-red">58.8%</div>
+        <div class="label">SLA Breach Rate</div>
+        <div class="context">vs 35.6% baseline</div>
+      </div>
+      <div class="metric-card">
+        <div class="value color-red">2.3x</div>
+        <div class="label">Resolution Time</div>
+        <div class="context">27 days vs 11.5 days</div>
+      </div>
+      <div class="metric-card">
+        <div class="value color-red">-5.3pp</div>
+        <div class="label">Yield Impact</div>
+        <div class="context">86.5% vs 91.8%</div>
+      </div>
+      <div class="metric-card">
+        <div class="value color-amber">2.97</div>
+        <div class="label">Satisfaction</div>
+        <div class="context">vs 4.11 baseline (of 5)</div>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Detection stage: where defects are caught</div>
+      <div class="chart-subtitle">VB-7734 defects escape standard inline detection at alarming rates.</div>
+      <div id="chart-detection-stage"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <p>The severity profile was worse too. VB-7734 defects had <strong>double the Critical rate</strong> (8.1% vs 4.0%) and nearly double the High rate (24.4% vs 13.2%). These weren't minor cosmetic issues. They were the kind that stop production lines and trigger executive escalations.</p>
+
+    <p>But the most alarming finding is the <strong>recurrence</strong>. The second spike at weeks 20-21, ten weeks after the first, suggests either the contaminated batch re-entered the supply chain or the initial containment was incomplete. A problem you think you've solved that comes back is worse than one you never fixed at all.</p>
+
+    <div class="callout">
+      <strong>The customer impact was concentrated.</strong> 30% of all customer cases in the dataset involved VB-7734. Foundry customers bore the heaviest burden, with a 46% SLA breach rate. The satisfaction score for vendor-batch cases dropped below 3.0 -- the threshold most organizations consider "at risk" for churn.
+    </div>
+  </div>
+</section>
+
+<!-- CHAPTER 4: THE TIPPING POINT -->
+<section id="ch4">
+  <div class="container">
+    <span class="section-number">Chapter 4</span>
+    <h2>The 3,000-Line Cliff</h2>
+    <p class="lead">There's a number in software where risk stops growing linearly and starts growing exponentially. Here, it's around 3,000 lines of code.</p>
+
+    <p>Every developer has an intuition that bigger changes are riskier. But intuition doesn't quantify the cliff. The data does.</p>
+  </div>
+
+  <div class="wide-container">
+    <div class="chart-container">
+      <div class="chart-title">Incident rate by change size</div>
+      <div class="chart-subtitle">Percentage of deployments that trigger an incident, by lines of code changed. The rate rises nearly 20x from smallest to largest bucket.</div>
+      <div id="chart-loc-risk"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <p>Below 500 lines, the incident rate is a comfortable 0.8%. By 2,000-3,000 lines, it's 7.4%. Above 5,000? <strong>15.6%</strong>. One in six large deployments triggers an incident. That's not risk management. That's a coin flip with extra steps.</p>
+
+    <p>Here's where it gets interesting. AI code review provides a meaningful safety net for large changes:</p>
+  </div>
+
+  <div class="wide-container">
+    <div class="chart-container">
+      <div class="chart-title">AI code review effect on large changes (>3,000 LOC)</div>
+      <div class="chart-subtitle">Incident rate with and without AI code review for high-risk deployments.</div>
+      <div id="chart-ai-review"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <p>For changes above 3,000 lines, AI code review reduces the incident rate from 14.5% to 11.0% -- a <strong>24% relative reduction</strong>. That's 3.5 percentage points, which translates to roughly 22 prevented incidents across the 983 large, AI-reviewed deployments in this dataset.</p>
+
+    <p>The practical implication is clear: if you can't make the change smaller, at least make it reviewed by a machine that never gets tired, never skims, and never assumes "this part is probably fine."</p>
+
+    <div class="callout">
+      <strong>The distribution matters:</strong> 50% of all changes are under 1,200 LOC (safe zone). But 10% exceed 3,600 LOC (danger zone), and the top 1% reach nearly 9,000 LOC. A hard limit at 3,000 LOC would affect roughly 14% of deployments but prevent a disproportionate share of incidents.
+    </div>
+  </div>
+</section>
+
+<!-- CHAPTER 5: THE MONOLITH -->
+<section id="ch5">
+  <div class="container">
+    <span class="section-number">Chapter 5</span>
+    <h2>The Thousand-Pound Anchor</h2>
+    <p class="lead">Among twelve services, one does everything differently. Slower, less often, and with three times the incident rate.</p>
+
+    <p>The monolith -- formally named <code>monolith-core</code>, service S12 -- is the organizational artifact everyone knows about but nobody has fixed. The data makes the case for modernization more clearly than any architecture review could.</p>
+  </div>
+
+  <div class="wide-container">
+    <div class="chart-container">
+      <div class="chart-title">Deployments and incident rates by service</div>
+      <div class="chart-subtitle">Bubble size = deployment count. Color = incident rate. The monolith is the small, dark outlier.</div>
+      <div id="chart-service-scatter"></div>
+    </div>
+
+    <div class="metric-grid">
+      <div class="metric-card">
+        <div class="value color-red">154</div>
+        <div class="label">Monolith Deploys</div>
+        <div class="context">vs 694-1,314 for others</div>
+      </div>
+      <div class="metric-card">
+        <div class="value color-red">13.6%</div>
+        <div class="label">Incident Rate</div>
+        <div class="context">vs ~4% for microservices</div>
+      </div>
+      <div class="metric-card">
+        <div class="value color-red">54.5 hrs</div>
+        <div class="label">Median Lead Time</div>
+        <div class="context">vs 13.6 hrs for others</div>
+      </div>
+      <div class="metric-card">
+        <div class="value color-amber">Week 31</div>
+        <div class="label">Pipeline v2 Adoption</div>
+        <div class="context">Latest of all teams</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <p>The monolith deploys at <strong>one-seventh the frequency</strong> of a typical microservice. Its median lead time of 54.5 hours is 4x longer. And despite -- or perhaps because of -- its infrequent, carefully-reviewed deployments, it has a 13.6% incident rate compared to ~4% across microservices.</p>
+
+    <p>This is the classic monolith trap: infrequent deploys mean each change is larger, each change is riskier, each incident is harder to diagnose, which makes the team even more cautious, which makes deploys even less frequent. It's a death spiral that looks like prudence.</p>
+
+    <div class="pullquote">The monolith's rollback rate is actually lower than microservices (1.3% vs 1.8%). The team isn't careless. They're trapped in a system that punishes them for trying to move fast.</div>
+  </div>
+</section>
+
+<!-- CHAPTER 6: THE CONVERGENCE -->
+<section id="ch6">
+  <div class="container">
+    <span class="section-number">Chapter 6</span>
+    <h2>Where the Threads Converge</h2>
+    <p class="lead">Manufacturing disruptions, customer escalations, and project delays aren't separate problems. They're the same problem, seen from different angles.</p>
+
+    <p>Map the weekly rhythms across datasets, and the correlation is striking. Weeks 8-10 and 20-21 don't just show defect spikes. They show <strong>everything getting worse at once</strong>: customer case volume surges 50-80%, SLA breach rates hit 52-57%, satisfaction craters, and project velocity drops.</p>
+  </div>
+
+  <div class="wide-container">
+    <div class="chart-container">
+      <div class="chart-title">The cascade: manufacturing, customers, and portfolio health</div>
+      <div class="chart-subtitle">Three signals, one story. Shaded regions mark VB-7734 spike windows.</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-swatch" style="background:#e03e36"></div>Defect rate (per wafer)</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#d97706"></div>Customer cases (count)</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#2563eb"></div>Portfolio on-track ratio</div>
+      </div>
+      <div id="chart-convergence"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <p>The portfolio health trend tells its own story. The on-track ratio started at 100% with a small set of projects and has declined steadily to just <strong>20%</strong> by week 25. Four out of five projects are now behind schedule. The lowest-velocity teams -- Firmware & Embedded (0.64 ratio) and UI & Workflows (0.72) -- carry the heaviest schedule slip, averaging 6+ days per week.</p>
+
+    <p>Configuration errors remain the #1 incident root cause at 28.5%, a category that's largely preventable through better validation -- exactly what Pipeline v2 addresses. The pieces of the puzzle connect: <strong>the same investments that improve software delivery also protect against the cascading effects of manufacturing disruptions</strong>.</p>
+  </div>
+</section>
+
+<!-- CONCLUSION -->
+<section id="conclusion">
+  <div class="container">
+    <span class="section-number">The Bottom Line</span>
+    <h2>Five Actions, One Quarter</h2>
+    <p class="lead">The data points to a clear set of high-leverage interventions.</p>
+
+    <div class="chart-container" style="border-left: 4px solid var(--accent2);">
+      <p style="margin-bottom:12px"><strong>1. Accelerate Pipeline v2 adoption for holdout teams.</strong> Customer Solutions (week 26) and Legacy Monolith (week 31) are losing 3-5 percentage points of build and boot reliability every day they wait. Move them up.</p>
+
+      <p style="margin-bottom:12px"><strong>2. Impose a soft 3,000-LOC limit with mandatory AI code review above it.</strong> This affects only 14% of deployments but targets the zone where incident risk triples. The data shows AI review cuts incident rates by 24% on large changes.</p>
+
+      <p style="margin-bottom:12px"><strong>3. Begin monolith decomposition.</strong> monolith-core's 13.6% incident rate and 54.5-hour lead time are organizational drag. Start with the highest-traffic modules. The cost of delay is compounding.</p>
+
+      <p style="margin-bottom:12px"><strong>4. Quarantine and trace VB-7734.</strong> The recurrence at week 20 means containment failed. Implement batch-level traceability for E700 tools globally. Upgrade inline detection for the defect types that escape to customers at 3.3x the normal rate.</p>
+
+      <p><strong>5. Rebalance project portfolios.</strong> Teams T01 and T04 carry 6 projects each and are sustaining 0.78-0.79 velocity ratios. T06 (Firmware) has the lowest velocity (0.64) with the highest slip (6.2 days). Reduce concurrent work to improve throughput.</p>
+    </div>
+
+    <div class="caveats">
+      <h4>Honest limitations</h4>
+      <p style="margin-bottom:8px">This is synthetic data designed to illustrate specific patterns. In production, the effects would be noisier, the confounders more numerous, and the causal claims harder to defend. Specifically:</p>
+      <p style="margin-bottom:8px">The AI adoption effect (Chapter 1) is confounded with team architecture: the low-AI team owns a monolith, which inherently has longer lead times. Separating AI-tooling effects from architectural effects would require a controlled experiment.</p>
+      <p style="margin-bottom:8px">The LOC tipping point (Chapter 4) shows correlation, not causation. Large changes may be riskier because they touch more systems, not because of their size per se. A change-complexity metric might be more predictive than raw LOC.</p>
+      <p>SLA breach rates during vendor-batch windows (Chapter 3) include cases that may have been caused by other factors coinciding with the spike windows. The causal attribution relies on the <code>includes_vendor_batch_issue</code> flag, which is a labeling decision, not an independent verification.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    Analysis of synthetic operational data (26 weeks, ~557K records across 15 tables). Visualizations built with D3.js.
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -90,9 +90,9 @@ Part of why I call myself an LLM Psychologist is because I am poking around LLMs
 
 We’ve learned a few things about prompt engineering that seem to work across models:
 
-1.  **Chain of Thought:** Ask an LLM to "think step-by-step." Write whatever you want, and at the end say "Think step-by-step." It does better.
-2.  **Persona:** "You are an expert Python programmer" or "You are an expert psychologist." It tends to do better.
-3.  **Few-Shot Prompting:** Giving examples makes a huge difference. Instead of asking it to categorize something as high/medium/low, split it into a series of Yes/No questions.
+1. **Chain of Thought:** Ask an LLM to "think step-by-step." Write whatever you want, and at the end say "Think step-by-step." It does better.
+2. **Persona:** "You are an expert Python programmer" or "You are an expert psychologist." It tends to do better.
+3. **Few-Shot Prompting:** Giving examples makes a huge difference. Instead of asking it to categorize something as high/medium/low, split it into a series of Yes/No questions.
 
 ### Live Demo by Anand S
 
@@ -140,8 +140,8 @@ Does that mean we need to learn better English? Maybe. But here is the thing: we
 
 So we made it a two-step process:
 
-1.  **Step 1:** One LLM takes the user's rough prompt and creates a **full-fledged specification** that is enough for a software developer.
-2.  **Step 2:** Pass that specification to the model to generate the code. The quality dramatically increases.
+1. **Step 1:** One LLM takes the user's rough prompt and creates a **full-fledged specification** that is enough for a software developer.
+2. **Step 2:** Pass that specification to the model to generate the code. The quality dramatically increases.
 
 **Srini:** A question from Dr. Gerald Inico: _"Integration of AI tools disrupted learners' creativity. What are the strategies to overcome challenges, and since AI relies on past data, how can it drive true innovation?"_
 
@@ -172,9 +172,9 @@ Are new skills coming in? Not _yet_. We are still at the stage where we don't kn
 
 **Anand:** Three kinds of applications:
 
-1.  **Existing applications:** e.g., a publishing system where AI helps identify alignment.
-2.  **LLM-only applications:** The _sole purpose_ is to do something not possible earlier. E.g., analyzing customer survey topics automatically.
-3.  **Agentic Applications:** Starting to do things in the real world. E.g., calling a restaurant to make a reservation (like OpenAI showed).
+1. **Existing applications:** e.g., a publishing system where AI helps identify alignment.
+2. **LLM-only applications:** The _sole purpose_ is to do something not possible earlier. E.g., analyzing customer survey topics automatically.
+3. **Agentic Applications:** Starting to do things in the real world. E.g., calling a restaurant to make a reservation (like OpenAI showed).
 
 **Dr. Arun:** I think we will end here. Thank you very much.
 

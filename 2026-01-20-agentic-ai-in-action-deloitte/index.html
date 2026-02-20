@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Laziness Doctrine | Agentic AI in Action — Deloitte TXA Academy</title>
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A//www.w3.org/2000/svg'%20viewBox%3D'0%200%2064%2064'%3E%3Crect%20fill%3D'%23162447'%20width%3D'64'%20height%3D'64'%20rx%3D'10'/%3E%3Ctext%20x%3D'32'%20y%3D'38'%20text-anchor%3D'middle'%20dominant-baseline%3D'middle'%20font-size%3D'36'%3E%F0%9F%A7%A0%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --ink: #111827;
+      --paper: #faf8f4;
+      --accent: #b91c1c;
+      --accent-light: #fef2f2;
+      --gold: #b45309;
+      --muted: #6b7280;
+      --faint: #9ca3af;
+      --border: #e5e2dc;
+      --dark: #162447;
+      --dark-accent: #1f4068;
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-body: 'Lora', Georgia, serif;
+      --font-mono: 'Space Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.78;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      z-index: 1000;
+      transition: width 0.1s linear;
+    }
+
+    /* Header */
+    .masthead {
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      background: rgba(250, 248, 244, 0.92);
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .masthead-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .masthead-brand {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .masthead-date {
+      font-size: 0.8rem;
+      color: var(--faint);
+      font-family: var(--font-mono);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 5rem 2rem 3rem;
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .hero-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.6rem, 6.5vw, 4.2rem);
+      font-weight: 400;
+      line-height: 1.12;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--muted);
+      max-width: 700px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.45;
+    }
+
+    .hero-meta {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+
+    .hero-meta a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .hero-meta a:hover { text-decoration: underline; }
+
+    /* Video section */
+    .video-section {
+      max-width: 100vw;
+      margin: 2rem auto 0;
+      padding: 0 2rem;
+    }
+
+    .video-section iframe {
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      height: 80vh;
+      min-height: 480px;
+    }
+
+    .video-caption {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--faint);
+      text-align: center;
+      margin-top: 0.75rem;
+    }
+
+    .video-caption a {
+      color: var(--faint);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .video-caption a:hover { color: var(--accent); }
+
+    /* Sketchnote */
+    .sketchnote {
+      max-width: 920px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    .sketchnote a {
+      display: block;
+      border: none;
+    }
+
+    .sketchnote img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .sketchnote img:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .sketchnote-caption {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--faint);
+      text-align: center;
+      margin-top: 0.75rem;
+    }
+
+    /* Article */
+    .article {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+    }
+
+    .article p { margin-bottom: 1.5rem; }
+
+    .article a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(185, 28, 28, 0.3);
+      transition: border-color 0.2s;
+    }
+
+    .article a:hover { border-bottom-color: var(--accent); }
+
+    .dropcap::first-letter {
+      font-family: var(--font-display);
+      font-size: 5rem;
+      float: left;
+      line-height: 0.76;
+      padding-right: 0.6rem;
+      padding-top: 0.12rem;
+      font-weight: 400;
+      color: var(--accent);
+    }
+
+    .article h2 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 400;
+      margin: 3.5rem 0 1.5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+      line-height: 1.2;
+    }
+
+    .article h3 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 400;
+      margin: 2.5rem 0 1rem;
+      color: var(--accent);
+    }
+
+    /* Pull quote */
+    .pullquote {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-style: italic;
+      font-weight: 400;
+      line-height: 1.35;
+      color: var(--accent);
+      border-left: 4px solid var(--gold);
+      padding: 1.5rem 0 1.5rem 2rem;
+      margin: 2.5rem 0 2.5rem -1rem;
+    }
+
+    .pullquote-attribution {
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      font-style: normal;
+      color: var(--faint);
+      margin-top: 0.75rem;
+      display: block;
+    }
+
+    /* Insight box */
+    .insight-box {
+      background: var(--accent-light);
+      border-left: 4px solid var(--gold);
+      padding: 1.5rem;
+      margin: 2.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    .insight-box-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+    }
+
+    /* Slide embed */
+    .slide-embed {
+      margin: 2.5rem 0;
+      margin-left: calc(-50vw + 50%);
+      margin-right: calc(-50vw + 50%);
+      width: 100vw;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .slide-embed iframe {
+      width: 100%;
+      height: 85vh;
+      min-height: 500px;
+      border: none;
+      display: block;
+    }
+
+    .slide-embed-caption {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--faint);
+      padding: 0.6rem 1rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .slide-embed-caption a {
+      color: var(--faint);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .slide-embed-caption a:hover { color: var(--accent); }
+
+    /* Link card — for non-iframeable URLs */
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin: 2.5rem 0;
+      padding: 1.75rem 2rem;
+      background: linear-gradient(135deg, var(--dark) 0%, var(--dark-accent) 100%);
+      color: #fff;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .link-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    }
+
+    .link-card-icon {
+      font-size: 2.2rem;
+      flex-shrink: 0;
+    }
+
+    .link-card-body { flex: 1; }
+
+    .link-card-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .link-card-desc {
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1.4;
+    }
+
+    .link-card-arrow {
+      font-size: 1.5rem;
+      opacity: 0.4;
+      transition: opacity 0.2s;
+      flex-shrink: 0;
+    }
+
+    .link-card:hover .link-card-arrow { opacity: 1; }
+
+    @media (max-width: 800px) {
+      .slide-embed {
+        margin-left: -2rem;
+        margin-right: -2rem;
+        width: calc(100% + 4rem);
+      }
+    }
+
+    /* Transcript link */
+    .transcript-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--ink);
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      transition: all 0.3s ease;
+      margin: 1rem 0;
+      border: none;
+    }
+
+    .transcript-link:hover {
+      background: var(--accent);
+      transform: translateX(4px);
+      border: none;
+    }
+
+    /* Takeaways section */
+    .takeaways {
+      background: linear-gradient(135deg, var(--dark) 0%, var(--dark-accent) 100%);
+      color: #fff;
+      padding: 4rem 2rem;
+      margin: 4rem 0 0;
+    }
+
+    .takeaways-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .takeaways h2 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      text-align: center;
+      border: none;
+      padding: 0;
+      margin: 0 0 3rem;
+      color: #fff;
+    }
+
+    .takeaway-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .takeaway-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .takeaway-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-4px);
+    }
+
+    .takeaway-number {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 400;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .takeaway-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .takeaway-text {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1.5;
+    }
+
+    /* Resources grid */
+    .resources-section {
+      background: #f0ede7;
+      padding: 3rem 2rem;
+    }
+
+    .resources-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .resources-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      color: var(--ink);
+    }
+
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .resource-card {
+      display: block;
+      padding: 1rem 1.25rem;
+      background: #fff;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--ink);
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .resource-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .resource-card-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+
+    .resource-card-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .footer-author {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--gold));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      color: #fff;
+    }
+
+    .footer-info { text-align: left; }
+
+    .footer-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+    }
+
+    .footer-title {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--accent); }
+
+    /* Lists */
+    .article ul, .article ol {
+      margin: 1.5rem 0;
+      padding-left: 1.5rem;
+    }
+
+    .article li { margin-bottom: 0.75rem; }
+
+    strong { font-weight: 700; }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.82em;
+      background: rgba(0, 0, 0, 0.05);
+      padding: 0.1em 0.35em;
+      border-radius: 3px;
+    }
+
+    /* Color legend */
+    .color-legend {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+
+    .color-swatch {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      margin-right: 0.3rem;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="progress-bar" id="progress"></div>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <div class="masthead-brand">The Laziness Doctrine</div>
+      <div class="masthead-date">20 Jan 2026</div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-kicker">Agentic AI &amp; The Future of Consulting</div>
+    <h1 class="hero-title">The Gospel of <em>Laziness</em></h1>
+    <p class="hero-subtitle">How an LLM Psychologist walked into Deloitte, told a room full of consultants to copy, cheat, and stop understanding things—and why they gave him a standing ovation</p>
+    <div class="hero-meta">
+      <span>By <a href="https://www.s-anand.net/" target="_blank">S Anand</a></span>
+      <span>18 min read</span>
+      <span><a href="transcript.md" target="_blank">Full Transcript</a></span>
+    </div>
+  </section>
+
+  <section class="video-section">
+    <iframe src="https://www.youtube.com/embed/kihmwxFLSf8" title="Agentic AI in Action — Deloitte TXA Academy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+    <p class="video-caption"><a href="https://www.youtube.com/watch?v=kihmwxFLSf8" target="_blank">Full talk recording: Agentic AI in Action — Deloitte TXA Academy, 20 Jan 2026 →</a></p>
+  </section>
+
+  <div class="sketchnote">
+    <a href="sketchnote.avif" target="_blank">
+      <img src="sketchnote.avif" width="100%" alt="Visual sketchnote summary of the Agentic AI in Action talk at Deloitte TXA Academy — covering copying, meta-prompting, cross-validation, LLM pricing, prompt engineering, and the Knowledge Trap" loading="lazy">
+    </a>
+    <div class="sketchnote-caption">Visual sketchnote summary of the talk (click to enlarge)</div>
+  </div>
+
+  <article class="article">
+
+    <p class="dropcap">Here is a fact that will confuse you: at <a href="https://www.iitm.ac.in/" target="_blank">IIT Madras</a>, one of India's most prestigious engineering institutions, a professor recently told his students they were allowed to cheat. Not just tolerated. Explicitly, enthusiastically encouraged. "You can copy. Feel free," <a href="https://www.s-anand.net/" target="_blank">Anand</a> told them. "Cheating is allowed." And then he did something no one expected—he measured what happened next.</p>
+
+    <p>This is the story Anand, LLM Psychologist at <a href="https://www.straive.com/" target="_blank">Straive</a>, opened with when he stood before a room of senior consultants at <a href="https://www2.deloitte.com/in/en.html" target="_blank">Deloitte</a>'s TXA Academy on January 20, 2026. It wasn't the opening anyone expected for a session titled "Agentic AI in Action." But then, nothing about this talk went the way anyone expected.</p>
+
+    <p>The introduction alone set a tone of controlled absurdity. The host described Anand as one of India's top 10 data scientists, an alumnus of IIM Bangalore, IIT Madras, London Business School, IBM, <a href="https://www.bcg.com/" target="_blank">BCG</a>, and Lehman Brothers—an institution that no longer exists, which is its own kind of credential. But the detail that drew the most reaction was personal: <strong>Anand has hand-transcribed every <a href="https://en.wikipedia.org/wiki/Calvin_and_Hobbes" target="_blank">Calvin and Hobbes</a> strip ever published.</strong> This also earned him a <a href="https://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act" target="_blank">Digital Millennium Copyright Act</a> takedown notice, which he delivered with the nonchalance of someone who considers being sued a résumé enhancement.</p>
+
+    <p>And then there was <a href="https://en.wikipedia.org/wiki/The_Shining_(film)" target="_blank"><em>The Shining</em></a>. He watches every film on <a href="https://www.imdb.com/chart/top/" target="_blank">IMDb's top 250</a>—except that one. "I read the book, and I've seen Jack Nicholson and Stanley Kubrick separately," he explained. "I can't combine them."</p>
+
+    <p>The room laughed. And then Anand did what Malcolm Gladwell does with airplane disasters and ketchup—he took something seemingly trivial and turned it into a lens for understanding everything else.</p>
+
+    <h2>The Taxonomy of Cheaters</h2>
+
+    <p>The coding assignment at IIT Madras wasn't an accident. It was an experiment in the economics of collaboration. Anand could mathematically determine how similar any two submissions were—character-to-character matching, adjusted for various thresholds. Even at a generous 40–50% similarity threshold, only about 40% of students were copying. Which raised the first surprising question: when cheating is explicitly permitted, why don't more people do it?</p>
+
+    <p>But the more interesting question was about the taxonomy. Anand divided students into four groups:</p>
+
+    <div class="color-legend">
+      <span><span class="color-swatch" style="background: #22c55e;"></span> <strong>Greens</strong> — originals whose work got copied</span>
+      <span><span class="color-swatch" style="background: #9ca3af;"></span> <strong>Greys</strong> — independents, neither copiers nor copied</span>
+      <span><span class="color-swatch" style="background: #eab308;"></span> <strong>Yellows</strong> — early copiers</span>
+      <span><span class="color-swatch" style="background: #ef4444;"></span> <strong>Reds</strong> — late copiers</span>
+    </div>
+
+    <p>"What's your guess?" he asked the Deloitte room. "Who scores the highest?"</p>
+
+    <p>The audience voted overwhelmingly for the Reds. The rational thieves. The patient plagiarists who waited until the best work was published and then cherry-picked. It's the answer any consultant would give—arbitrage through late-mover advantage.</p>
+
+    <p>They were wrong.</p>
+
+    <div class="pullquote">
+      "I belong to the Green bucket, according to Ajit. And yes, they do score the highest. By a solid margin."
+      <span class="pullquote-attribution">— Anand, on the paradox of sharing</span>
+    </div>
+
+    <div class="slide-embed">
+      <iframe src="https://sanand0.github.io/tds-2024-sep-project-2-results/similar.html#?similarity=0.5" loading="lazy"></iframe>
+      <div class="slide-embed-caption"><a href="https://sanand0.github.io/tds-2024-sep-project-2-results/similar.html#?similarity=0.5" target="_blank">Interactive: IIT Madras assignment similarity analysis →</a></div>
+    </div>
+
+    <p>The Greens—the people who created original work <em>and let others copy it</em>—outperformed everyone. The logic, once Anand explained it, was devastating. When you share your work, two things happen. First, you receive feedback. Early feedback. Your work improves. Second, you learn from how others adapt what you shared. "Part of what gets copied becomes yours."</p>
+
+    <p>The Reds came second. The Yellows—who copied early, from a smaller pool—did poorly. And the independents? The Greys, sitting in their own silo, developing solutions in isolation, neither sharing nor borrowing?</p>
+
+    <p>Dead last.</p>
+
+    <div class="pullquote">
+      "So don't copy early. If you're copying, copy late."
+      <span class="pullquote-attribution">— Anand, to audience laughter</span>
+    </div>
+
+    <p>The audience laughed. But the deeper lesson was aimed squarely at a consulting firm built on proprietary knowledge: <strong>intellectual property through propriety is one strategy. Learning through collaboration is another. In this experiment, collaboration won.</strong></p>
+
+    <h2>The Confession of Laziness</h2>
+
+    <p>Having established that copying is virtuous, Anand pivoted seamlessly to the topic at hand. But he did it through a confession.</p>
+
+    <p>"See, I'm lazy," he said. "I absolutely cannot do work."</p>
+
+    <p>This is the kind of statement that, from most speakers, would be self-deprecating charm. From Anand, it was a manifesto. When his contact at Deloitte, Ramya, called to brief him on the session, he didn't take notes. He took a transcript of the call and fed it into <a href="https://claude.ai/" target="_blank">Claude</a> and asked, "What am I supposed to do for this?"</p>
+
+    <a href="https://claude.ai/share/ee4927b5-5c77-4f9f-b176-b232b626c610" target="_blank" class="link-card">
+      <div class="link-card-icon">🤖</div>
+      <div class="link-card-body">
+        <div class="link-card-title">Claude Session: Planning the Deloitte Talk</div>
+        <div class="link-card-desc">The entire talk prep — dictated during a walk and fed into Claude. See how laziness becomes strategy.</div>
+      </div>
+      <div class="link-card-arrow">→</div>
+    </a>
+
+    <p>The entire pre-work—questions, survey design, quiz creation—was dictated during a walk. "I didn't bother typing all of this stuff," he said. "All of this is dictated while on a walk. Why waste time when walking?"</p>
+
+    <div class="pullquote">
+      "I am lazy. And I'm going to repeat this many times because this is an invitation for you to be lazy. For you to copy. It's very high ROI, by the way. You should try it sometime."
+    </div>
+
+    <p>This was not humility. It was pedagogy. Laziness, in Anand's formulation, is not the absence of effort. It is the <em>redirection</em> of effort. Every minute spent not doing something an AI can do is a minute available for something only a human can do—like building trust, or asking the right question, or being the person the client calls first.</p>
+
+    <h2>The Hype-or-Reality Quiz</h2>
+
+    <a href="quiz.xlsx" target="_blank" class="link-card">
+      <div class="link-card-icon">📋</div>
+      <div class="link-card-body">
+        <div class="link-card-title">Download the Quiz: AI Hype vs. Reality</div>
+        <div class="link-card-desc">The full set of questions — AI-generated, cross-validated by Claude, Gemini, and ChatGPT — with correct answers and reasoning.</div>
+      </div>
+      <div class="link-card-arrow">↓</div>
+    </a>
+
+    <p>Before the session, attendees had filled out a survey. The questions were themselves produced by AI—Claude generated them based on Anand's dictated brief, then cross-validated the answers through deep research.</p>
+
+    <p>One question: <em>"AI agents can now autonomously negotiate and close binding procurement deals for tail spend categories without human intervention."</em> Hype or reality?</p>
+
+    <p>In the room, almost nobody believed it was real. They were wrong—or at least, not as right as they assumed.</p>
+
+    <div class="pullquote">
+      "Claude thinks it's partially true. Gemini thinks it is in fact reality. ChatGPT says it's mostly hype, but still gives it a three out of five. This is a lot closer to reality than we as a room might have assumed."
+      <span class="pullquote-attribution">— Anand, on cross-validating with multiple models</span>
+    </div>
+
+    <p>The technique was already the lesson. Don't rely on one model. Don't rely on your own knowledge. Cross-validate. And more importantly: don't assume you know the landscape of what's possible. <strong>"This thing changes so quickly that knowledge is not worth hoarding. Yet another reason to share what you know, because it's anyway out of date. You're selling old stock."</strong></p>
+
+    <h2>The Intern Principle</h2>
+
+    <p>And then came the audience exercises—the part of the talk that turned theory into visceral experience.</p>
+
+    <p>The scenario: a client has conducted a survey of their senior leaders about which AI capabilities are reality and which are hype. They have an executive meeting tomorrow. They want Deloitte to come in and present an advisory. How do you approach this?</p>
+
+    <p>The first volunteer reached for the familiar playbook: use Deloitte's internal tools, understand the data, build a baseline, layer on the firm's expertise. Solid, methodical consulting. Anand praised it warmly.</p>
+
+    <p>A second volunteer offered something more sophisticated. Two techniques: <strong>meta-prompting</strong>—using ChatGPT to generate a better prompt—and <strong>cross-validation</strong>—feeding the output to <a href="https://gemini.google.com/" target="_blank">Gemini</a> or <a href="https://deepseek.com/" target="_blank">DeepSeek</a> for a second opinion. Anand's eyes lit up.</p>
+
+    <div class="pullquote">
+      "That covers two techniques: Meta-prompting and Cross-validation. Meta-prompting meaning prompt for a prompt. Cross-validation meaning double-check somewhere else. Both effective in almost any situation."
+    </div>
+
+    <p>"Which is a great starting point in 2025," Anand said thoughtfully. "In 2026, we would do it slightly differently."</p>
+
+    <p>And here is where the talk shifted. The 2025 approach is: <em>I will learn, then I will deliver.</em> The 2026 approach is: <em>I will not learn. The AI will learn. The AI will deliver. I will review.</em></p>
+
+    <p>Anand described his Innovation Team at Straive—two to four freshers who produce two to four prototypes <em>daily</em>. "These people don't understand the domain. Some of them don't know how to code. I mean that. They actually are not coders either. What skill do they have? Nothing."</p>
+
+    <div class="pullquote">
+      "Ignorance is probably their biggest skill. They come in and say, 'I don't need to understand the stuff; AI can understand the stuff. I don't need to deliver the solution; AI will deliver the solution. I don't need to know how to prompt; I can meta-prompt.'"
+      <span class="pullquote-attribution">— Anand, on his Innovation Team</span>
+    </div>
+
+    <p>A third volunteer came forward and dictated a prompt: <em>"Please analyze the data that has been recorded from the survey. Give me top three trends out of it. Summarize the survey in a manner which is presentable."</em></p>
+
+    <p>Anand treated this like the raw material it was. He pasted the prompt into Gemini—not Claude, not ChatGPT, Gemini. Why? Practical arbitrage. "ChatGPT has fantastic voice recognition. Gemini is much faster than ChatGPT. If I sit and run ChatGPT, it will give a perfect answer 30 minutes after the end of the presentation."</p>
+
+    <p>And then, a devastatingly casual admission: <strong>"I ran out of Claude credits because I was sitting and coding there."</strong></p>
+
+    <p>The audience laughed. But the deeper point was already in motion. Anand was demonstrating <em>live</em> the principle he was teaching: treat AI like an intern. Give it the whole job. <strong>"Why are we standing in the middle trying to interpret it almost like a man in the middle?"</strong></p>
+
+    <h2>The Art of Not Reading</h2>
+
+    <p>This was the moment the talk became genuinely subversive. Most AI demonstrations show you how to <em>use</em> AI more effectively. Anand was showing something different: how to use AI without even looking at what it produces.</p>
+
+    <p>"Now, there are two ways in which we normally approach this," he said. "One: read it, understand it, share it. Second approach: <strong>don't read it, don't understand it, just share it.</strong> Both are valid."</p>
+
+    <p>The room stirred. This is not advice you hear at consulting firms. Consultants are trained to understand everything before they present it. Anand was proposing something that felt reckless—until he unpacked it.</p>
+
+    <p>"You have a lot of practice in the reading/understanding side," he continued. <strong>"Practice the not reading, not understanding side also. Copy. Cheat."</strong></p>
+
+    <p>The logic was paradoxically rigorous. If the AI can produce an analysis that is 70-80% as good as what you'd produce after hours of study, and you can produce it in minutes instead of days, the remaining 20-30% gap can be closed by <em>meta-prompting</em>—having the AI improve its own output. Why would you put yourself in the middle of a process that can run without you?</p>
+
+    <div class="insight-box">
+      <div class="insight-box-label">Key Insight</div>
+      <strong>The consultant's job is shifting from "producing the answer" to "asking the right question and validating the result."</strong> An answer that arrives same-day at 80% quality beats a perfect answer that arrives next week.
+    </div>
+
+    <h2>The Presentation That Built Itself</h2>
+
+    <p>While the audience watched, Anand composed a meta-prompt on the fly—dictating to <a href="https://chatgpt.com/" target="_blank">ChatGPT</a>, then feeding the improved prompt to Gemini with the survey data. The meta-prompt itself was a masterclass in delegation:</p>
+
+    <div class="pullquote">
+      "Look, I got a data set. It's a survey of some kind and the client wants me to present it. Honestly, I'm not really sure what to do, but I'm not too fussed about it. Keep in mind that this is a very important sale for me to make. I want to wow them. Come up with a fantastic prompt. And tell me how you improved the prompt and what I should learn from the process."
+    </div>
+
+    <p>And then, pivoting to create a slide deck, he pulled up a prompt fragment from his <a href="https://www.s-anand.net/blog/prompts/fragments/" target="_blank">personal prompt library</a>: <strong>"Convert this into a beautiful slide deck—McKinsey style. Make the slides content-rich, self-explanatory with enough detail so that it can explain without a narrator, and write it as a single-page HTML application."</strong></p>
+
+    <a href="https://claude.ai/public/artifacts/ef6b2fd8-6a69-49af-b5a0-a68c1db5886c" target="_blank" class="link-card">
+      <div class="link-card-icon">📊</div>
+      <div class="link-card-body">
+        <div class="link-card-title">AI-Generated Analysis: Hype vs. Reality</div>
+        <div class="link-card-desc">Claude's McKinsey-style survey analysis — 70% group accuracy, supplier onboarding as the most contested question.</div>
+      </div>
+      <div class="link-card-arrow">→</div>
+    </a>
+
+    <p>The results appeared while the audience watched. Your overall accuracy as a group: about 70%. The most contested question: AI supplier onboarding—a near 50/50 split. Almost everyone correctly identified <a href="https://en.wikipedia.org/wiki/Deepfake" target="_blank">deepfakes</a> as a threat. "One person did not identify deep fakes as a threat," Anand noted. "You know who you are."</p>
+
+    <p>But the most potent insight emerged from the pattern across all responses: <strong>security threats and regulatory landscapes—areas consultants know well—were easy. Emerging capabilities were where the group stumbled.</strong> "If it's a new area, don't trust your gut. Check. Verify. It is more likely that AI will have a better point of view than you."</p>
+
+    <h2>The Falling Price of Intelligence</h2>
+
+    <p>Nearly 45% of the room believed that inference costs remained a barrier to AI adoption. Anand demolished this assumption with a visualization that told one of the most dramatic price-collapse stories in the history of technology.</p>
+
+    <div class="slide-embed">
+      <iframe src="https://sanand0.github.io/llmpricing/" loading="lazy"></iframe>
+      <div class="slide-embed-caption"><a href="https://sanand0.github.io/llmpricing/" target="_blank">Interactive: LLM pricing evolution over time →</a></div>
+    </div>
+
+    <p>In December 2023, <a href="https://openai.com/index/gpt-4/" target="_blank">GPT-4</a> was the best model available. It cost about $10 per million tokens—roughly the price of summarizing the entire King James Bible. By August 2024, <a href="https://deepmind.google/technologies/gemini/flash/" target="_blank">Gemini 1.5 Flash</a> delivered the same quality for 7.5 cents. <strong>"Not $10. Not $1. Not 10 cents. 7.5 cents for the same. That's less than one-hundredth."</strong></p>
+
+    <p>The implication landed like a quiet bomb: "The difference between a $1 million budget and a $10,000 budget. Same work."</p>
+
+    <p>The cost trajectory was so extreme that Anand made a claim that sounded absurd until you did the math: <strong>"I tell our clients: I will personally fund your entire inference bill. As long as I can build the solution."</strong> Not a hypothetical. A literal offer. Out of his own pocket. Because at current prices—and with costs falling 50 to 100x annually—the cost of intelligence has become negligible.</p>
+
+    <div class="pullquote">
+      "Inference costs? Doesn't even matter. By the time we think of a use case and it goes into production, the cost numbers are meaningless."
+    </div>
+
+    <h2>The Prompt Gap</h2>
+
+    <p>Anand had asked the attendees to submit prompts as part of the pre-work. Then he fed the prompts themselves to AI and asked it to evaluate them.</p>
+
+    <a href="https://claude.ai/public/artifacts/510e005e-f2ac-499a-ad4f-44dd2c59808c" target="_blank" class="link-card">
+      <div class="link-card-icon">📝</div>
+      <div class="link-card-body">
+        <div class="link-card-title">Prompt Quality Assessment</div>
+        <div class="link-card-desc">"A significant skill gap exists in AI prompting." Only 18% crafted high-quality prompts — see the full breakdown.</div>
+      </div>
+      <div class="link-card-arrow">→</div>
+    </a>
+
+    <p>The headline was blunt in a way that only <a href="https://www.mckinsey.com/" target="_blank">McKinsey</a>-formatted AI can be: <strong>"A significant skill gap exists in AI prompting."</strong> Anand's aside: "You can't put a McKinsey slide without the word <em>significant</em> in the title."</p>
+
+    <p>Only 18% crafted high-quality prompts. The biggest gap? <strong>Context and Persona</strong>—failing to tell the AI <em>who it is</em> and <em>who the audience is</em>. "Which is," Anand observed, "a classic management mistake that we all make. I tell my team members: look, just get this done. Not 'I have a meeting with this particular person, this is what I'm trying to achieve, therefore get this done.' It's two more sentences, but it's easy to forget."</p>
+
+    <p>The second gap was structural clarity—specifying the exact output format. The good news: the group was strong on defining KPIs and requesting actionable insights. The meta-lesson: <strong>you don't need to learn prompt engineering. You just need to meta-prompt.</strong> Have the AI improve your prompt.</p>
+
+    <h2>The Death of "Think Step-by-Step"</h2>
+
+    <p>And then Anand detonated a small bomb under the entire prompt engineering industry.</p>
+
+    <div class="slide-embed">
+      <iframe src="https://sanand0.github.io/llmevals/emotion-prompts/" loading="lazy"></iframe>
+      <div class="slide-embed-caption"><a href="https://sanand0.github.io/llmevals/emotion-prompts/" target="_blank">Interactive: Emotion prompting effectiveness across models →</a></div>
+    </div>
+
+    <p>He'd tested various prompting strategies across dozens of models. Emotion prompting—"My life depends on it!"—made 21 models <em>worse</em>. Politeness hurt 20 models. Fear hurt 19. <strong>Only one strategy consistently outperformed: reasoning—the simple phrase "Think step-by-step."</strong></p>
+
+    <p>That was a year ago.</p>
+
+    <p><strong>"Today, 'think step-by-step' hurts more than it helps."</strong> The room went quiet. Why? Because the AI providers read the same research, incorporated it into their models and inference harnesses, and now applying it externally is redundant at best, counterproductive at worst.</p>
+
+    <p>This was the lesson behind the lesson: <strong>prompt engineering is a moving target. What worked six months ago may actively hurt today.</strong> The only durable strategy is testing, not knowledge.</p>
+
+    <h2>The Hallucination Solution</h2>
+
+    <p>The inevitable question arrived, dressed in the language of enterprise risk management: AI results are probabilistic, not deterministic. In a client production environment, that could be fatal. So how do you deal with it?</p>
+
+    <p>Anand answered with data. A client in research paper tagging complained that AI accuracy didn't match expert accuracy. Anand asked the obvious question nobody thinks to ask: <strong>how well do your experts agree with each other?</strong></p>
+
+    <p>"The answer was about 73%. AI was matching them at about 80%."</p>
+
+    <div class="slide-embed">
+      <iframe src="https://sanand0.github.io/llmevals/double-checking/" loading="lazy"></iframe>
+      <div class="slide-embed-caption"><a href="https://sanand0.github.io/llmevals/double-checking/" target="_blank">Interactive: Multi-model verification reduces errors dramatically →</a></div>
+    </div>
+
+    <p>The target shifts once you set the benchmark correctly. It moves from <em>"machines need to be perfect"</em> to <em>"machines need to be better than status quo."</em> And then: how do you make them better?</p>
+
+    <p>The answer is embarrassingly simple: use more models. One random model on a classification task: 14% error. Two models that must agree: 3.7%. Five models: less than 1% error. The catch? When models disagree, a human reviews. But with five models, disagreement occurs only 28% of the time.</p>
+
+    <div class="pullquote">
+      "72% effort reduction with 99% quality. Most people will take that."
+    </div>
+
+    <p>The profound reframe: <strong>"The strategies for dealing with hallucinations are not very different from the strategies of management processes."</strong> Maker-checker. Peer review. Debate until consensus. Break the task into parts and assign each to the best-suited agent. These are not new ideas. They're ancient management techniques, applied to infinitely cheap labour.</p>
+
+    <h2>The Question That Haunted the Room</h2>
+
+    <p>Then a question arrived that cut through the technical demonstrations straight to the existential anxiety underneath. A senior consultant stood up and asked, essentially: <em>If AI can do everything we just saw, why does the client need Deloitte?</em></p>
+
+    <p>"Good question," Anand said. "Something that I struggle with every day."</p>
+
+    <p>He didn't answer from expertise. He asked <a href="https://gemini.google.com/" target="_blank">Gemini</a>—live, in front of the audience. He paraphrased the question, added context, specified the output format, and ran it. Because of course he did. He was practicing what he preached.</p>
+
+    <p>But then he offered his own view, and it was unexpectedly specific:</p>
+
+    <div class="pullquote">
+      "Sustainable differentiation lies not in the artifact itself, but accountability for the outcome and the trusted relationship that allows you to navigate the nuance."
+      <span class="pullquote-attribution">— Gemini, validated by Anand</span>
+    </div>
+
+    <p>Making friends with your clients. That's the moat. "Arguably, what was I doing as a consultant at BCG? I was taking some junk which anyone else could have done and sharing it. The reason the clients were buying it was because the partner was friends with the client."</p>
+
+    <p>Two more: <strong>proprietary data integration</strong>—owning unique training data, prompt libraries, validation datasets—and <strong>assumption of liability</strong>. "If we go wrong, we will stand by you. We will fight your cases for you. We will guarantee success monetarily, legally, however we want."</p>
+
+    <p>Knowledge is not a moat. Relationships, data, and accountability are.</p>
+
+    <h2>The Calculator Analogy</h2>
+
+    <p>Another senior consultant pressed further: won't skills atrophy? In the early days, she said, figuring out undocumented Oracle functionality by trial and error produced knowledge that lasted decades. Junior practitioners today skip that process entirely. How do you strike a balance?</p>
+
+    <p>Anand's answer echoed something he'd clearly thought about deeply:</p>
+
+    <div class="pullquote">
+      "Are they losing learning in an area that is likely to become more important as a skill, or less important as a skill?"
+    </div>
+
+    <p>If it's becoming less important—and coding, domain knowledge, and routine analysis are all declining in value—let it go. The way we let go of mental arithmetic when calculators arrived. The way we let go of navigation skills when GPS arrived. The skill loss was real. The trade-off was worth it.</p>
+
+    <p>But if the skill is <em>growing</em> in importance—and relationships are, because AI is absorbing the intellectual labor—then invest there. "Which was actually my intent in that copying exercise," Anand said, closing the loop beautifully. "Not only do you learn to copy, you learn to make friends. <strong>Do you have any one person even whom you can reach out to and say, 'Let me copy your assignment'?</strong> And if you don't have even one person and don't know how to build that skill, in the AI era you have a problem."</p>
+
+    <div class="insight-box">
+      <div class="insight-box-label">The Reframe</div>
+      <strong>The copying exercise was never about copying. It was about relationships.</strong> In an era where AI handles the intellectual work, the human work is building the trust that makes people let you copy in the first place.
+    </div>
+
+    <h2>The GDPVal Wake-Up Call</h2>
+
+    <p>Toward the end, Anand pulled up the visualization that had reshaped his own financial decisions: <a href="https://openai.com/index/gdpval/" target="_blank">OpenAI's GDPVal study</a>, where experts designed tasks, both experts and AI attempted them, and experts judged.</p>
+
+    <div class="slide-embed">
+      <iframe src="https://sanand0.github.io/datastories/gdpval/" loading="lazy"></iframe>
+      <div class="slide-embed-caption"><a href="https://sanand0.github.io/datastories/gdpval/" target="_blank">Interactive: GDPVal — AI vs. Expert Performance by Profession →</a></div>
+    </div>
+
+    <p>Green meant AI outperformed experts. The treemap was overwhelmingly green. Software developers. General managers. Customer service. Personal financial advisors.</p>
+
+    <p>Anand's response to the personal financial advisors result was characteristically pragmatic: "Personal financial advisors seem to be doing worse than humans. Very good. I had some money." He went to ChatGPT. Got advice. Followed it. <strong>"My largest investments have been after I saw this."</strong></p>
+
+    <p>The broader point: for free, you now have a software developer, a customer service rep, a financial advisor, a medical manager. "Earlier we would be constrained. 'Oh, I don't know a person with this kind of skill.' Now you do. 'Oh, but they cost money.' Now they don't. 'Oh, but I don't have the time.' Yes, you do."</p>
+
+    <h2>The Knowledge Trap</h2>
+
+    <p>Anand landed his closing argument with the precision of someone who has delivered hundreds of talks and knows exactly which line will echo longest.</p>
+
+    <p>There was a time when what you could <em>lift</em> was your asset—the industrial age. Then came the knowledge era, where what you <em>knew</em> was your edge. Then the internet eroded knowledge, but intelligence—the ability to solve novel problems—retained value.</p>
+
+    <p><strong>"But now we have something that is solving the problem. I don't know what's going to replace it."</strong></p>
+
+    <p>His prescription was deliberately paradoxical:</p>
+
+    <ul>
+      <li>If you know how to figure out the answer, <strong>don't figure out the answer.</strong> Have an AI figure out the answer.</li>
+      <li>If you know the answer, <strong>don't say the answer.</strong> Have the AI find the answer.</li>
+    </ul>
+
+    <p>Why the second? "Because your knowledge is probably outdated. You may be biased. And you have an intelligence that can cross-question."</p>
+
+    <p>Why the first? "You're wasting time applying a skill that could instead be spent on learning a new skill, which is delegating to AI agents."</p>
+
+    <div class="pullquote">
+      "Assemble your internal team of experts. The team is largely your prompts. Just knowing what to ask, because the same model can be made to play different roles."
+    </div>
+
+    <p>And then the final line, delivered with the conviction of someone who has bet his career on it:</p>
+
+    <div class="pullquote">
+      "Fact check every single thing that I said. This may be true today. This will not be true tomorrow. Skepticism is definitely right on top of the list of skills."
+    </div>
+
+    <p>He paused. The room was silent. And then, the ask:</p>
+
+    <p><strong>"I have only one ask of you: Prompt 50 times a day."</strong></p>
+
+    <h2>The Standing Ovation</h2>
+
+    <p>What made this talk unusual wasn't the technology—every consultant in that room had heard of ChatGPT. It wasn't even the techniques, though meta-prompting and cross-validation were new to many. It was the <em>posture</em>. Anand had walked into one of the world's largest consulting firms and told them that their most valuable skill wasn't expertise—it was the willingness to <em>not know</em>. That ignorance, properly leveraged, was a superpower. That laziness, properly directed, was strategy.</p>
+
+    <p>He had started with a story about cheating and ended with a story about relationships. He had told them to stop reading and start delegating. He had demonstrated, live, that a survey could be analyzed, visualized, and presented in the time it takes to have a conversation about how to approach the problem.</p>
+
+    <p>And hovering beneath all of it was a question that nobody asked aloud but everyone heard: <em>If a team of freshers with no domain knowledge and no coding skills can produce four prototypes a day, what exactly am I being paid for?</em></p>
+
+    <p>The answer, Anand suggested, is the one thing AI can't do: be the person the client trusts. Be the person who takes accountability. Be the Green in a world of Greys—the one who creates, shares, receives feedback, and comes out ahead.</p>
+
+    <p>Be lazy about everything else.</p>
+
+    <div style="margin-top: 2rem;">
+      <a href="https://github.com/sanand0/talks/blob/main/2026-01-20-agentic-ai-in-action-deloitte/transcript.md" target="_blank" class="transcript-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        READ FULL TRANSCRIPT →
+      </a>
+    </div>
+
+  </article>
+
+  <section class="takeaways">
+    <div class="takeaways-inner">
+      <h2>Five Principles from the Talk</h2>
+      <div class="takeaway-grid">
+        <div class="takeaway-card">
+          <div class="takeaway-number">1</div>
+          <div class="takeaway-title">Share, Don't Hoard</div>
+          <div class="takeaway-text">The Greens scored highest. Original work + sharing produces feedback, collaboration, and better results than isolation.</div>
+        </div>
+        <div class="takeaway-card">
+          <div class="takeaway-number">2</div>
+          <div class="takeaway-title">Meta-Prompt Everything</div>
+          <div class="takeaway-text">Don't write prompts. Write prompts that ask AI to write better prompts. Then cross-validate across models.</div>
+        </div>
+        <div class="takeaway-card">
+          <div class="takeaway-number">3</div>
+          <div class="takeaway-title">Delegate the Whole Job</div>
+          <div class="takeaway-text">Treat AI like an intern with the entire task. Stop standing in the middle as an interpreter.</div>
+        </div>
+        <div class="takeaway-card">
+          <div class="takeaway-number">4</div>
+          <div class="takeaway-title">Costs Are Irrelevant</div>
+          <div class="takeaway-text">LLM pricing falls 50–100x annually. By the time a use case reaches production, inference costs are negligible.</div>
+        </div>
+        <div class="takeaway-card">
+          <div class="takeaway-number">5</div>
+          <div class="takeaway-title">Relationships Are the Moat</div>
+          <div class="takeaway-text">Knowledge decays. Artifacts are commoditized. Trust, accountability, and proprietary data are what remain defensible.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="resources-section">
+    <div class="resources-inner">
+      <h2>Links &amp; Resources from the Talk</h2>
+      <div class="resources-grid">
+        <a href="https://sanand0.github.io/tds-2024-sep-project-2-results/similar.html#?similarity=0.5" class="resource-card" target="_blank">
+          <div class="resource-card-title">Copying Experiment</div>
+          <div class="resource-card-desc">Interactive visualization of IIT Madras assignment similarity — see who copies, who shares, and who scores highest.</div>
+        </a>
+        <a href="https://claude.ai/share/ee4927b5-5c77-4f9f-b176-b232b626c610" class="resource-card" target="_blank">
+          <div class="resource-card-title">Claude Planning Session</div>
+          <div class="resource-card-desc">The lazy prep: Anand's dictated walk transcript fed into Claude to plan the entire Deloitte talk.</div>
+        </a>
+        <a href="https://sanand0.github.io/llmpricing/" class="resource-card" target="_blank">
+          <div class="resource-card-title">LLM Pricing Tracker</div>
+          <div class="resource-card-desc">Interactive chart showing how LLM costs have fallen 100x in two years — from $10 to 7.5 cents per million tokens.</div>
+        </a>
+        <a href="https://sanand0.github.io/llmevals/emotion-prompts/" class="resource-card" target="_blank">
+          <div class="resource-card-title">Emotion Prompting Study</div>
+          <div class="resource-card-desc">Which prompting techniques actually work? Testing politeness, fear, reasoning, and more across dozens of models.</div>
+        </a>
+        <a href="https://sanand0.github.io/llmevals/double-checking/" class="resource-card" target="_blank">
+          <div class="resource-card-title">Multi-Model Verification</div>
+          <div class="resource-card-desc">How double-checking with multiple models reduces error from 14% to under 1% — the hallucination solution.</div>
+        </a>
+        <a href="https://sanand0.github.io/datastories/gdpval/" class="resource-card" target="_blank">
+          <div class="resource-card-title">GDPVal Treemap</div>
+          <div class="resource-card-desc">Which professions is AI already beating? Interactive visualization from OpenAI's expert-vs-AI study.</div>
+        </a>
+        <a href="https://www.s-anand.net/blog/prompts/fragments/" class="resource-card" target="_blank">
+          <div class="resource-card-title">Prompt Fragment Library</div>
+          <div class="resource-card-desc">Anand's reusable prompt collection for slide decks, analysis, presentations, and more.</div>
+        </a>
+        <a href="https://gemini.google.com/share/904b785bf8f5" class="resource-card" target="_blank">
+          <div class="resource-card-title">Gemini Slide Deck</div>
+          <div class="resource-card-desc">The AI-generated executive deck built live during the session from survey data and meta-prompted instructions.</div>
+        </a>
+        <a href="https://gemini.google.com/share/31ad13627c1c" class="resource-card" target="_blank">
+          <div class="resource-card-title">Gemini Dashboard</div>
+          <div class="resource-card-desc">Interactive data visualization of per-person survey responses, generated on the spot during the talk.</div>
+        </a>
+        <a href="https://claude.ai/public/artifacts/ef6b2fd8-6a69-49af-b5a0-a68c1db5886c" class="resource-card" target="_blank">
+          <div class="resource-card-title">Claude AI Analysis</div>
+          <div class="resource-card-desc">The survey analysis artifact — accuracy scores, contested questions, and group blind spots visualized.</div>
+        </a>
+        <a href="https://claude.ai/public/artifacts/510e005e-f2ac-499a-ad4f-44dd2c59808c" class="resource-card" target="_blank">
+          <div class="resource-card-title">Prompt Quality Assessment</div>
+          <div class="resource-card-desc">AI evaluation of the audience's own prompts — revealing gaps in context, persona, and structural clarity.</div>
+        </a>
+        <a href="https://openai.com/index/gdpval/" class="resource-card" target="_blank">
+          <div class="resource-card-title">OpenAI GDPVal Study</div>
+          <div class="resource-card-desc">The original research paper comparing AI and expert performance across professions.</div>
+        </a>
+        <a href="quiz.xlsx" class="resource-card" download>
+          <div class="resource-card-title">Hype-or-Reality Quiz (XLSX)</div>
+          <div class="resource-card-desc">Download the 15-question quiz used to test the audience — and see how you compare.</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-author">
+      <div class="footer-avatar">SA</div>
+      <div class="footer-info">
+        <div class="footer-name">S Anand</div>
+        <div class="footer-title">LLM Psychologist at Straive · IIT Madras Faculty</div>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="https://www.s-anand.net/" target="_blank">Blog</a>
+      <a href="https://www.linkedin.com/in/sanand0/" target="_blank">LinkedIn</a>
+      <a href="https://github.com/sanand0/" target="_blank">GitHub</a>
+      <a href="https://sanand0.github.io/talks/#/" target="_blank">More Talks</a>
+    </div>
+  </footer>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      document.getElementById('progress').style.width = (winScroll / height) * 100 + '%';
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.takeaway-card, .resource-card, .slide-embed').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+  </script>
+</body>
+
+</html>

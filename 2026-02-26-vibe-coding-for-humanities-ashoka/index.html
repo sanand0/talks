@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nobody Volunteers to Be the Bakra | Vibe Coding for Humanities</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --paper: #faf9f7;
+      --accent: #2d6a4f;
+      --accent-light: #f0f7f4;
+      --muted: #6b6b6b;
+      --highlight: #e8f5e9;
+      --border: #e0ddd8;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'Source Serif 4', Georgia, serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.75;
+      font-size: 19px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), #74c69d);
+      z-index: 1000;
+      transition: width 0.1s linear;
+    }
+
+    /* Header */
+    .masthead {
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      background: var(--paper);
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+
+    .masthead-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .masthead-brand {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .masthead-date {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-family: var(--font-mono);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 4rem 2rem 2rem;
+      max-width: 860px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .hero-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--muted);
+      max-width: 640px;
+      margin: 0 auto 2rem;
+      line-height: 1.45;
+    }
+
+    .hero-meta {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+
+    .hero-meta a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(45, 106, 79, 0.3);
+      transition: border-color 0.2s;
+    }
+
+    .hero-meta a:hover { border-bottom-color: var(--accent); }
+
+    /* Video */
+    .video-section {
+      max-width: 1100px;
+      margin: 2.5rem auto;
+      padding: 0 2rem;
+    }
+
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .video-caption {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 0.75rem;
+    }
+
+    /* Sketchnote */
+    .sketchnote-section {
+      max-width: 860px;
+      margin: 2.5rem auto;
+      padding: 0 2rem;
+    }
+
+    .sketchnote-section a {
+      display: block;
+      border: none;
+    }
+
+    .sketchnote-section img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      cursor: zoom-in;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .sketchnote-section img:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+    }
+
+    .sketchnote-caption {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 0.75rem;
+    }
+
+    /* Article */
+    .article {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 1rem 2rem 4rem;
+    }
+
+    .article p { margin-bottom: 1.5rem; }
+
+    .article a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(45, 106, 79, 0.35);
+      transition: border-color 0.2s;
+    }
+
+    .article a:hover { border-bottom-color: var(--accent); }
+
+    .dropcap::first-letter {
+      font-family: var(--font-display);
+      font-size: 5rem;
+      float: left;
+      line-height: 0.78;
+      padding-right: 0.6rem;
+      padding-top: 0.12rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .article h2 {
+      font-family: var(--font-display);
+      font-size: 1.85rem;
+      font-weight: 700;
+      margin: 3.5rem 0 1.25rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+      line-height: 1.2;
+    }
+
+    .article h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin: 2.5rem 0 1rem;
+      color: var(--accent);
+    }
+
+    /* Pull quote */
+    .pullquote {
+      font-family: var(--font-display);
+      font-size: 1.9rem;
+      font-style: italic;
+      font-weight: 500;
+      line-height: 1.38;
+      color: var(--accent);
+      text-align: center;
+      background: #eaf6ef;
+      border-top: 2px solid var(--accent);
+      border-bottom: 2px solid var(--accent);
+      padding: 2.5rem 3rem;
+      margin: 3.5rem -8rem;
+      position: relative;
+    }
+
+    .pullquote::before {
+      content: '\201C';
+      font-size: 6rem;
+      line-height: 0;
+      position: absolute;
+      top: 2.5rem;
+      left: 1.5rem;
+      color: #74c69d;
+      opacity: 0.5;
+      font-style: normal;
+    }
+
+    .pullquote-attribution {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-style: normal;
+      color: var(--muted);
+      margin-top: 1rem;
+      display: block;
+      text-align: center;
+    }
+
+    .pullquote-attribution a {
+      border-bottom-color: rgba(107, 107, 107, 0.3);
+    }
+
+    /* Insight box */
+    .insight-box {
+      background: var(--highlight);
+      border-left: 4px solid var(--accent);
+      padding: 1.25rem 1.5rem;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+    }
+
+    .insight-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    /* App card outer (full-bleed container) */
+    .app-grid-outer {
+      background: #1b3a28;
+      margin: 3rem -12rem;
+      padding: 2.5rem 3rem;
+    }
+
+    .app-grid-outer-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #74c69d;
+      margin-bottom: 1.25rem;
+    }
+
+    /* App cards */
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 1.25rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .app-card {
+      border: 1px solid var(--border);
+      background: #fff;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.09);
+      border-color: var(--accent);
+    }
+
+    .app-card-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .app-card-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .app-card-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--accent);
+    }
+
+    .app-card-body {
+      padding: 1rem 1.25rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    .app-card-links {
+      padding: 0.75rem 1.25rem 1rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--border);
+    }
+
+    .app-card-links a {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      text-decoration: none;
+      border: none;
+    }
+
+    .app-card-links a:hover { text-decoration: underline; }
+
+    /* Resources section */
+    .resources-section {
+      background: #ebf6f0;
+      border-top: 1px solid #c0e4cf;
+      border-bottom: 1px solid #c0e4cf;
+      margin: 3rem -12rem;
+      padding: 2.5rem 3rem;
+    }
+
+    .resources-section-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .resources-section h3 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      margin-bottom: 1.5rem;
+      color: var(--accent);
+    }
+
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .resource-link {
+      display: block;
+      padding: 0.75rem 1rem;
+      background: #fff;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--ink);
+      font-size: 0.88rem;
+      transition: border-color 0.2s;
+    }
+
+    .resource-link:hover { border-color: var(--accent); }
+
+    .resource-link span {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Transcript link */
+    .transcript-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--ink);
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      transition: all 0.3s ease;
+      margin: 1rem 0;
+      border: none;
+    }
+
+    .transcript-link:hover {
+      background: var(--accent);
+      transform: translateX(4px);
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .footer-author {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-avatar {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #74c69d);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .footer-info { text-align: left; }
+
+    .footer-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .footer-title {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--accent); }
+
+    strong { font-weight: 700; }
+
+    em { font-style: italic; }
+
+    .article ul, .article ol {
+      margin: 1.25rem 0;
+      padding-left: 1.5rem;
+    }
+
+    .article li { margin-bottom: 0.6rem; }
+
+    @media (max-width: 960px) {
+      .pullquote { margin: 3rem -3rem; padding: 2rem 2.5rem; font-size: 1.6rem; }
+      .app-grid-outer { margin: 2.5rem -3rem; padding: 2rem 2rem; }
+      .resources-section { margin: 2.5rem -3rem; padding: 2rem 2rem; }
+    }
+
+    @media (max-width: 600px) {
+      .pullquote { margin: 2.5rem -1.5rem; padding: 1.75rem 1.75rem; font-size: 1.35rem; }
+      .pullquote::before { font-size: 4rem; top: 1.5rem; left: 0.75rem; }
+      .app-grid-outer { margin: 2rem -1.5rem; padding: 1.5rem 1rem; }
+      .resources-section { margin: 2rem -1.5rem; padding: 1.5rem 1rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="progress-bar" id="progress"></div>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <div class="masthead-brand">Vibe Coding for Humanities</div>
+      <div class="masthead-date">February 26, 2026</div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-kicker">Ashoka University · Sonepat, India</div>
+    <h1 class="hero-title">Nobody Volunteers to Be the Bakra</h1>
+    <p class="hero-subtitle">What a reluctant volunteer at Ashoka University discovered about AI, imagination, and the strange new art of knowing what to ask for</p>
+    <div class="hero-meta">
+      <span>By <a href="https://www.s-anand.net/" target="_blank">S Anand</a>, LLM Psychologist at <a href="https://straive.com/" target="_blank">Straive</a></span>
+      <span>15 min read</span>
+      <span><a href="transcript.md" target="_blank">Full Transcript</a></span>
+    </div>
+  </section>
+
+  <!-- YouTube Video -->
+  <div class="video-section">
+    <div class="video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/mCJLNML7FrE"
+        title="Vibe Coding for Humanities — Ashoka University, Feb 26 2026"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <div class="video-caption">Full session recording · Ashoka University · 26 February 2026</div>
+  </div>
+
+  <!-- Sketchnote -->
+  <div class="sketchnote-section">
+    <a href="sketchnote.avif" target="_blank" title="Open full-size sketchnote">
+      <img src="sketchnote.avif" alt="Sketchnote of the Vibe Coding for Humanities talk at Ashoka University" loading="lazy">
+    </a>
+    <div class="sketchnote-caption">Sketchnote — click to open full size</div>
+  </div>
+
+  <article class="article">
+
+    <p class="dropcap">Nobody volunteers to be the bakra.</p>
+
+    <p>That's the Hindi word for a sacrificial goat—the person who gets picked when a call for volunteers produces only the sound of crickets. At Ashoka University on a Thursday morning in late February 2026, with final exams still underway and students stretched thin across essays and tutorials, Anand had asked for someone to share their screen and lead a live vibe-coding exercise. The response was what it always is in these situations: a careful, collective stillness.</p>
+
+    <p>So Ashish, the faculty host, promoted Nikhil to panelist. <a href="https://youtu.be/mCJLNML7FrE?t=394" target="_blank">"You're the <em>bakra</em>,"</a> Anand told him cheerfully. Shivani pointed out that calling it "volunteering" was perhaps too generous a word. Nikhil, a lab manager and former student, took it with good humor. He unmuted himself, shared his screen—Gemini Pro open in the browser—and looked at the chat window expectantly.</p>
+
+    <p>"Currently what are some of the topics that the students are studying?" Anand asked.</p>
+
+    <p>Nikhil listed them: humanities, political science, arts, STEM. A wide university, wide curriculum. Anand picked the one that seemed furthest from anything digital: Indian Civilizations, a foundational course that every undergraduate at Ashoka must take.</p>
+
+    <p>"How about if we built an application," Anand suggested, "that will do a better job than any textbook of teaching us Indian Civilization?"</p>
+
+    <p>What Nikhil typed, in the Canvas mode of Gemini Pro, was this: <em>Build an interactive scrollable timeline of the Mughal period.</em></p>
+
+    <p>And then, in about ninety seconds, a fully functional interactive history application appeared on screen. Babur. Humayun. Akbar. A scrolling timeline with dates, events, portraits. It wasn't just information—it was structured, navigable, beautiful in its own way. The kind of thing that would have taken a professional web developer days to build, and a textbook committee months to commission.</p>
+
+    <blockquote class="pullquote">
+      "I personally think there is no big deal. The point is simply that we haven't gotten used to it."
+      <span class="pullquote-attribution">— <a href="https://youtu.be/mCJLNML7FrE?t=733" target="_blank">Anand, at 12:13</a></span>
+    </blockquote>
+
+    <div class="insight-box">
+      <div class="insight-label">💡 The Key Insight</div>
+      <p><strong>"All it takes is an idea if we want to build something."</strong> Once we build it, it may not work. All it takes is for us to tell it how to change, and it makes the change.</p>
+    </div>
+
+    <p>"This is interesting," Anand said, "but what change would you suggest to make it actually useful?" Nikhil, getting into it now, proposed adding a map—showing how the Mughal empire expanded and contracted across centuries. He typed the prompt and submitted it. Then, while the AI churned away rebuilding the app, Anand showed him something unexpected.</p>
+
+    <p><a href="https://youtu.be/mCJLNML7FrE?t=912" target="_blank">He opened ChatGPT.</a> Not to build anything—just to dictate.</p>
+
+    <h2>The Art of Rambling to Machines</h2>
+
+    <p>There is a widespread assumption among people new to AI that the secret to a good result is a perfectly crafted prompt. You must be precise. You must be structured. You must use the right keywords in the right order. This assumption, Anand has come to believe, is almost entirely wrong—and it costs people enormous amounts of creative energy they don't need to spend.</p>
+
+    <blockquote class="pullquote">
+      "When we are talking, we can ramble. When we ramble, it doesn't hurt the prompt any. These things are smart enough to figure out what we want."
+      <span class="pullquote-attribution">— <a href="https://youtu.be/mCJLNML7FrE?t=1005" target="_blank">Anand, at 16:45</a></span>
+    </blockquote>
+
+    <p>ChatGPT, he'd discovered, has one of the best free transcription engines available. So his technique is to click the microphone button, ramble out whatever is on his mind—the half-formed idea, the tangent, the "and also I was thinking maybe..."—and let the system turn it into text. That text, verbatim and rambling as it is, becomes the prompt. Paste it into whatever tool you want to build with. Hit run.</p>
+
+    <p>Nikhil tried it. He dictated a vision for a website about Albert Einstein—his publications, his research, the places he visited and lectured and taught, a complete portrait of a life in science. The words tumbled out naturally, without the stiffness of typing. Then he pasted them into a fresh Gemini Canvas tab and watched the AI begin to build.</p>
+
+    <p>Meanwhile, back in the first tab, the Mughal map was done. It was, as Anand put it diplomatically, "a pathetic map of India." But that is the point, and Anand let Nikhil feel it rather than announce it: the pathetic map is not failure. The pathetic map is <em>iteration one</em>. You tell it what's wrong, and it fixes it. You tell it the map disappears when you scroll, and it pins it. You tell it the colors are wrong, and it repaints them. The skill isn't in getting it perfect first time. The skill is knowing how to look at the result and say what's missing.</p>
+
+    <p>"These things happen slowly," Anand observed, in the way of someone who has made peace with this fact. "Rather than just run one thing at a time, we may as well multitask. I usually watch a movie while my coding agent runs, and then I come back and check. It helps to watch movies you've already watched—that way you don't have to pay attention to either."</p>
+
+    <blockquote class="pullquote">
+      "I usually watch a movie while my coding agent runs. It helps to watch movies you've already watched—that way you don't have to pay attention to either."
+      <span class="pullquote-attribution">— <a href="https://youtu.be/mCJLNML7FrE?t=1496" target="_blank">Anand, at 24:56</a></span>
+    </blockquote>
+
+    <h2>Einstein, Three Ways</h2>
+
+    <p>Now it was Anand's turn to share his screen. He had an idea: not just a timeline of Einstein's life, but a <em>visual biography on a map</em>. Einstein born in Ulm. Einstein in Bern, dreaming up special relativity. Einstein in Berlin, developing the general theory. Einstein fleeing Europe, landing in Princeton. A life charted geographically, the way migrations and ideas actually move—through space, not just through time.</p>
+
+    <p>He dictated the prompt into ChatGPT—rambling, mid-thought additions and all. He included a twist: he asked the AI to introduce something novel, something the world hadn't widely seen before, and to name it. <em>"I may not even recognize it when I see it,"</em> he said. <a href="https://youtu.be/mCJLNML7FrE?t=1474" target="_blank">Then he submitted the same prompt to three different tools simultaneously.</a></p>
+
+    <blockquote class="pullquote">
+      "What's the harm in having a dozen of these run in parallel? If I like one, that's good enough."
+      <span class="pullquote-attribution">— <a href="https://youtu.be/mCJLNML7FrE?t=1687" target="_blank">Anand, at 28:07</a></span>
+    </blockquote>
+
+    <p>ChatGPT, given the standard model rather than a canvas build, produced: nothing useful. It failed. "Big deal," Anand shrugged, with the equanimity of someone who expects this. He'd asked three tools precisely because he expected some to fail.</p>
+
+    <p>Gemini produced something first. The map loaded, and as it moved between locations—Munich, Aarau, Bern, Berlin, Princeton—the screen rippled. Not metaphorically: it physically rippled, the whole image warping in a liquid wave before resolving into the next location. A flashback effect. The kind of thing you'd see in a film when a character is remembering something. Anand had never seen this used in an interactive geography application before. He didn't know it could be done this way. "This is nice," he said, genuinely surprised.</p>
+
+    <p>Then came Claude's version. <a href="https://youtu.be/mCJLNML7FrE?t=2353" target="_blank">It zoomed in on each location</a>, beautiful typography filling the panels. And between each location—here is the thing that stopped the room—there were animated particles. Lines of light flowing across the map, not randomly, but tracing arcs from one place to the next, as if showing the direction of thought itself moving through geography.</p>
+
+    <p>Claude had named them: <strong>Cognitive Field Lines</strong>. "Animated particle-based idea flow between locations, showing how Einstein's thinking evolved spatially." The name came from physics—electromagnetic field lines—which fit Einstein's biography with an almost uncanny precision. The concept was real. The visual was new. And Anand, who hadn't known it existed thirty minutes earlier, now knew exactly what to ask for the next time he needed to visualize how ideas move between places.</p>
+
+    <div class="insight-box">
+      <div class="insight-label">✨ Discovery of the Session</div>
+      <p>By asking an AI to do something <em>novel</em> and <em>name it</em>, you expand your vocabulary of what's possible. Anand discovered "Cognitive Field Lines"—a visual concept he now carries forward into every future project that involves showing the flow of ideas through space.</p>
+    </div>
+
+    <p>"I asked it to code," Anand said, "but I also asked it to do something interesting. And now I've learned something new." He paused. "And I know what it's called. That's powerful."</p>
+
+    <div class="app-grid-outer">
+      <div class="app-grid-outer-label">Built live during the session</div>
+      <div class="app-grid">
+        <div class="app-card">
+          <div class="app-card-header">
+            <div class="app-card-icon">🗺️</div>
+            <div class="app-card-title">Einstein Map Timeline — Gemini</div>
+          </div>
+          <div class="app-card-body">
+            An interactive map-based biography of Einstein, with a cinematic warp transition effect between locations—an effect Gemini introduced unprompted.
+          </div>
+          <div class="app-card-links">
+            <a href="https://gemini.google.com/share/775bb5ee12dd" target="_blank">Chat →</a>
+            <a href="https://gemini.google.com/share/8d8f6f4bc184" target="_blank">Live App →</a>
+          </div>
+        </div>
+        <div class="app-card">
+          <div class="app-card-header">
+            <div class="app-card-icon">✨</div>
+            <div class="app-card-title">Einstein Map Timeline — Claude</div>
+          </div>
+          <div class="app-card-body">
+            The same prompt, but Claude introduced <em>Cognitive Field Lines</em>—animated particles tracing the flow of Einstein's ideas spatially across the map.
+          </div>
+          <div class="app-card-links">
+            <a href="https://claude.ai/share/8dfd2a48-8e23-4e4b-b588-232a809f8d9f" target="_blank">Chat →</a>
+            <a href="https://claude.ai/public/artifacts/f2202606-da5c-4114-845c-29c1a0171824" target="_blank">Live App →</a>
+          </div>
+        </div>
+        <div class="app-card">
+          <div class="app-card-header">
+            <div class="app-card-icon">🎓</div>
+            <div class="app-card-title">Gamified Behavioral Science Course</div>
+          </div>
+          <div class="app-card-body">
+            A student in the chat asked if you could vibe code an online course. Minutes later: a self-paced module on behavioral science, complete with XP points, Kahneman, and confirmation bias quizzes.
+          </div>
+          <div class="app-card-links">
+            <a href="https://claude.ai/share/9c9b90b8-50ec-4098-8a15-06d67224691f" target="_blank">Chat →</a>
+            <a href="https://claude.ai/public/artifacts/49463ac8-0b47-4d12-ab0b-50c511b525af" target="_blank">Live App →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2>The Moment Sycophancy Became a Lesson</h2>
+
+    <p>The gamified course was, by any measure, delightful. Anand found himself answering questions in the middle of running a workshop—module one, "Bias Lab," asking him about availability heuristics and confirmation bias. He kept getting the answers right, and the system kept praising him. "You're a speed learner! Awesome."</p>
+
+    <p>"Sycophancy is a problem, by the way," he noted, without slowing down. "These models will happily praise you to death, and you'll have to explicitly ask for critique." But he'd earned 100-odd XP and was genuinely hooked enough to want to keep going. The gamification, he admitted, was obviously working—on him.</p>
+
+    <blockquote class="pullquote">
+      "The very fact that I'm sitting and solving these problems in the middle of a vibe coding workshop indicates that I'm hooked. I want to get more XP and the gamification is obviously working."
+      <span class="pullquote-attribution">— <a href="https://youtu.be/mCJLNML7FrE?t=2536" target="_blank">Anand, at 42:16</a></span>
+    </blockquote>
+
+    <p>What the session was revealing, piece by piece, was something that most coding workshops don't dwell on. The building is not the hard part. The building is almost embarrassingly easy—you describe what you want, the machine writes the code, the code runs, something appears on screen. The hard part is everything else. <em>What</em> do you build? <em>Why</em> does the result look like that, and what would make it better? <em>How</em> do you feed it data it can actually use?</p>
+
+    <p>To illustrate the last point, Anand uploaded his own bank statement to Claude and asked it to find prices that had changed over time—a personal inflation tracker, built in minutes. The system found thirty items with repeated purchases. Twenty-five had apparently gone up in price. But when he looked closely, the "price increases" were mostly the system confusing individual meals with group orders, monthly subscriptions with annual ones. The data was real; the interpretation was confused.</p>
+
+    <p>"This didn't work the way I expected," he said, "because the data that I fed it is wrong." But he pivoted immediately to what <em>had</em> worked: the system had pulled a dashboard together, organized the information visually, made it easy to review. "That's another example of the kind of thing you should learn to ask for." Not just results—results you can evaluate quickly.</p>
+
+    <h2>The Real Skill Is Knowing What to Call Things</h2>
+
+    <p>Toward the end of the session, Anand pulled up something he'd built in advance: a gallery of visual art styles, organized so that you could browse image generation terms with examples of what each one produces. <a href="https://youtu.be/mCJLNML7FrE?t=2795" target="_blank">Two-dimensional animation. Diorama. Balloon art. Xerox photocopy aesthetic</a>—that last one, he explained, produces images with a gritty, degraded quality, as though a photograph has been photocopied, then photocopied again, then again. He'd discovered it the same way he'd discovered Cognitive Field Lines: by asking an AI to show him something he didn't know existed, and then remembering what it was called.</p>
+
+    <blockquote class="pullquote">
+      "Building the vocabulary is arguably one of the more useful things in the AI era. Most skills are declining—coding, because the system can do it. But <em>knowing what to ask for</em> is a bit on the increase."
+      <span class="pullquote-attribution">— <a href="https://youtu.be/mCJLNML7FrE?t=2795" target="_blank">Anand, at 46:35</a></span>
+    </blockquote>
+
+    <p>This is, if you sit with it, a quietly radical claim. For decades, the value in software has been held by people who know how to build—who can write functions, debug stack traces, architect systems. That skill is being automated. But naming things—knowing the vocabulary of what's possible, being able to look at a result and say "this needs cognitive field lines, not a static diagram"—that skill is not being automated. That skill belongs to people who have spent time building vocabulary in any domain. Including the humanities.</p>
+
+    <p>A student of history knows how to look at a map and see what's missing. A student of philosophy knows how to identify when an argument is circular. A student of literature knows when a story has the wrong emotional register. These are precisely the capacities that make the difference between a vibe coder who produces functional mediocrity and one who produces something genuinely surprising.</p>
+
+    <p>The session ended with <a href="https://youtu.be/mCJLNML7FrE?t=2941" target="_blank">a simple invitation</a>:</p>
+
+    <blockquote class="pullquote">
+      "Practice more vibe coding. It's easy enough, and therefore everyone will find it easy. What is it that <em>you</em> can push it to do that is probably a little tougher than someone else may know? And for this, leverage what is unique about you."
+      <span class="pullquote-attribution">— <a href="https://youtu.be/mCJLNML7FrE?t=2981" target="_blank">Anand, at 49:01</a></span>
+    </blockquote>
+
+    <p>Nikhil, the reluctant bakra, had built a Mughal empire map. A student named Abhishek had prompted the creation of a gamified behavioral science course. A student named Diya, on her phone because she was away from her laptop, had suggested an app that would track your screen time and gently shame you when you drifted past your study window. She was told: go try that yourself. You'll be surprised.</p>
+
+    <p>In a room full of people who spend their days reading Plato and writing essays on the Partition and analyzing Shakespeare's late romances, something small had shifted. The barrier between <em>idea</em> and <em>running software</em> was revealed as essentially zero. What remained was the older, harder problem: the problem of knowing what you want, and why it matters, and what to call it when you see it.</p>
+
+    <p>That problem, it turns out, is exactly what a humanities education is designed to solve.</p>
+
+    <h2>How This Session Was Prepared</h2>
+
+    <p>Anand is a self-designated "LLM psychologist"—someone who studies how large language models think rather than how to build them. Preparing for a talk to humanities students at Ashoka meant, in his case, asking the machines what they thought he should cover.</p>
+
+    <p>He fed his own blog posts to Gemini Pro and asked it to identify which articles had the clearest applications to a humanities audience—requesting single-sentence ELI15 use cases, each scoped to a specific persona with a specific problem. He then asked Gemini to <a href="https://gemini.google.com/share/0b2d62b06c54" target="_blank">research Ashoka's actual curriculum</a> and revise the list around it.</p>
+
+    <p>Separately, he gave Claude a detailed summary of Ashoka's humanities programs—its four pillars, its foundation courses, its interdisciplinary majors—and asked it to suggest <a href="https://claude.ai/share/aba8a66b-aa63-446a-a099-7c2ed0bbac8f" target="_blank">creative, non-obvious vibe coding ideas</a> specific to that audience. The result became the rough shape of the session.</p>
+
+    <p>The examples Claude and Gemini suggested during the session itself—what to build for Ashoka students—were also generated live by AI, on request:</p>
+
+    <blockquote class="pullquote">
+      "Whenever we are asked a question, it is best to deflect that to an agent and ask <em>it</em> the question."
+      <span class="pullquote-attribution">— <a href="https://youtu.be/mCJLNML7FrE?t=1864" target="_blank">Anand, at 31:04</a></span>
+    </blockquote>
+
+    <div class="app-grid-outer">
+      <div class="app-grid-outer-label">Generated live — AI suggesting what to build</div>
+      <div class="app-grid">
+        <div class="app-card">
+          <div class="app-card-header">
+            <div class="app-card-icon">🤖</div>
+            <div class="app-card-title">Vibe Coding Ideas — Claude</div>
+          </div>
+          <div class="app-card-body">
+            Anand asked Claude, live in the session, for non-obvious things to vibe code for Ashoka students. Results included a campus mood map, a debate-mirror that reveals what two people's arguments have in common, and a personal inflation tracker.
+          </div>
+          <div class="app-card-links">
+            <a href="https://claude.ai/share/f407b306-3d79-43b0-acf6-4a62f5fa1339" target="_blank">See the chat →</a>
+          </div>
+        </div>
+        <div class="app-card">
+          <div class="app-card-header">
+            <div class="app-card-icon">💡</div>
+            <div class="app-card-title">Vibe Coding Ideas — Gemini</div>
+          </div>
+          <div class="app-card-body">
+            The same question posed to Gemini produced a different set of creative directions—a reminder that asking multiple models in parallel surfaces a broader possibility space.
+          </div>
+          <div class="app-card-links">
+            <a href="https://gemini.google.com/share/d437be274e5f" target="_blank">See the chat →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p>This is itself a kind of method statement. When Anand doesn't know what to say, he asks an AI to interview him and find out what's unique about him. When he doesn't know what to build, he asks an AI for examples. When he doesn't know how to prepare for an audience, he feeds the AI everything he knows about that audience and asks for recommendations. <em>The hard part</em>—knowing what to ask for—is a skill he sharpens by practice, and by building vocabulary, and by asking AI to show him things he doesn't know exist.</p>
+
+    <div class="resources-section">
+      <div class="resources-section-inner">
+        <h3>Links from the Session</h3>
+        <div class="resources-grid">
+        <a href="https://youtu.be/mCJLNML7FrE" target="_blank" class="resource-link">
+          Full Session Recording
+          <span>YouTube · 52 minutes</span>
+        </a>
+        <a href="transcript.md" target="_blank" class="resource-link">
+          Session Transcript
+          <span>Full transcript with timestamps</span>
+        </a>
+        <a href="https://gemini.google.com/share/8d8f6f4bc184" target="_blank" class="resource-link">
+          Einstein Map — Gemini Canvas
+          <span>With warp transition effect</span>
+        </a>
+        <a href="https://claude.ai/public/artifacts/f2202606-da5c-4114-845c-29c1a0171824" target="_blank" class="resource-link">
+          Einstein Map — Claude Artifact
+          <span>With Cognitive Field Lines</span>
+        </a>
+        <a href="https://claude.ai/public/artifacts/49463ac8-0b47-4d12-ab0b-50c511b525af" target="_blank" class="resource-link">
+          Gamified Behavioral Science Course
+          <span>XP, quizzes, Kahneman-powered</span>
+        </a>
+        <a href="https://gemini.google.com/share/775bb5ee12dd" target="_blank" class="resource-link">
+          Einstein Map — Gemini Chat
+          <span>Full conversation</span>
+        </a>
+        <a href="https://claude.ai/share/8dfd2a48-8e23-4e4b-b588-232a809f8d9f" target="_blank" class="resource-link">
+          Einstein Map — Claude Chat
+          <span>Full conversation</span>
+        </a>
+        <a href="https://chatgpt.com/share/69a81fc9-960c-8003-8733-8d97f6b37f6b" target="_blank" class="resource-link">
+          Einstein Map — ChatGPT Chat
+          <span>The one that failed (instructive)</span>
+        </a>
+        <a href="https://claude.ai/share/9c9b90b8-50ec-4098-8a15-06d67224691f" target="_blank" class="resource-link">
+          Behavioral Science Course — Chat
+          <span>Claude conversation</span>
+        </a>
+        <a href="https://claude.ai/share/f407b306-3d79-43b0-acf6-4a62f5fa1339" target="_blank" class="resource-link">
+          Vibe Coding Ideas for Ashoka — Claude
+          <span>Creative suggestions generated live</span>
+        </a>
+        <a href="https://gemini.google.com/share/d437be274e5f" target="_blank" class="resource-link">
+          Vibe Coding Ideas for Ashoka — Gemini
+          <span>A different angle on the same question</span>
+        </a>
+        <a href="https://gemini.google.com/share/0b2d62b06c54" target="_blank" class="resource-link">
+          Preparation: Topic Selection
+          <span>Gemini picking relevant blog posts for Ashoka</span>
+        </a>
+        <a href="https://claude.ai/share/aba8a66b-aa63-446a-a099-7c2ed0bbac8f" target="_blank" class="resource-link">
+          Preparation: Example Ideas
+          <span>Claude suggesting curriculum-aligned demos</span>
+        </a>
+        <a href="https://www.ashoka.edu.in/" target="_blank" class="resource-link">
+          Ashoka University
+          <span>Sonepat, Haryana</span>
+        </a>
+        <a href="https://straive.com/" target="_blank" class="resource-link">
+          Straive
+          <span>Anand's employer</span>
+        </a>
+      </div>
+      </div>
+    </div>
+
+    <p>After the questions wrapped up—someone asked whether it was safe to upload bank statements to an LLM, someone else asked how to make data more secure, and Anand gave honest, un-hand-wavy answers to both.</p>
+
+    <blockquote class="pullquote">
+      "It is <em>not</em> safe to upload bank statements to an LLM if you are worried about companies like OpenAI or Anthropic having access. My bank statements are already saved on Dropbox, Google Drive, Microsoft OneDrive… they're already with Google. So at some level I have decided that I'm going to trust some companies. I've just added Anthropic and OpenAI to that list."
+      <span class="pullquote-attribution">— <a href="https://youtu.be/mCJLNML7FrE?t=3026" target="_blank">Anand, at 50:26</a></span>
+    </blockquote>
+
+    <p>He closed with the same thought he'd been building toward all session.</p>
+
+    <p>Exams were still on. The students had essays to finish. The bakra had already logged off. But one thing had been demonstrated that is hard to unsee once you've seen it: the distance between having an idea and having a working piece of software is now approximately the time it takes to ramble into a microphone.</p>
+
+    <p>What you do with that is still entirely up to you.</p>
+
+    <div style="margin-top: 2rem;">
+      <a href="transcript.md" target="_blank" class="transcript-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        READ FULL TRANSCRIPT →
+      </a>
+    </div>
+
+  </article>
+
+  <footer class="footer">
+    <div class="footer-author">
+      <div class="footer-avatar">SA</div>
+      <div class="footer-info">
+        <div class="footer-name">S Anand</div>
+        <div class="footer-title">LLM Psychologist at <a href="https://straive.com/" target="_blank" style="color: inherit;">Straive</a></div>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="https://www.s-anand.net/" target="_blank">Blog</a>
+      <a href="https://www.linkedin.com/in/sanand0/" target="_blank">LinkedIn</a>
+      <a href="https://github.com/sanand0/" target="_blank">GitHub</a>
+      <a href="https://sanand0.github.io/talks/#/" target="_blank">More Talks</a>
+    </div>
+  </footer>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      document.getElementById('progress').style.width = (winScroll / height) * 100 + '%';
+    });
+  </script>
+
+</body>
+</html>

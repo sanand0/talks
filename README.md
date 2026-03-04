@@ -1,5 +1,6 @@
 # Anand's Talks
 
+- 26 Feb 2026. **[Vibe Coding for Humanities](2026-02-26-vibe-coding-for-humanities-ashoka/ ":ignore")** at [Ashoka University](https://www.ashoka.edu.in/), Sonepat. [⏯️ Video (52m)](https://youtu.be/mCJLNML7FrE) [💬 Transcript](2026-02-26-vibe-coding-for-humanities-ashoka/transcript.md)
 - 11 Feb 2026. **[Your Chotu Is Smarter Than You Think](2026-02-11-amat-dt-day/ ":ignore")** at [Applied Materials](https://en.wikipedia.org/wiki/Applied_Materials), Bangalore. [💬 Transcript](2026-02-11-amat-dt-day/transcript.md)
 - 20 Jan 2026. **[Agentic AI in Action](2026-01-20-agentic-ai-in-action-deloitte/ ":ignore")** at [Deloitte](https://www.deloitte.com/) TXA Academy, Hyderabad. [⏯️ Video (67m)](https://youtu.be/kihmwxFLSf8) [💬 Transcript](2026-01-20-agentic-ai-in-action-deloitte/transcript.md)
 - 11 Jan 2026. **[Applied Vibe Coding](2026-01-11-nptel-vibe-coding-workshop/ ":ignore")** at [NPTEL](https://elearn.nptel.ac.in/shop/iit-workshops/ongoing/computer-science/applied-vibe-coding-workshop/), Remote. [💻 Screencast (121m)](https://youtu.be/m9mIe4baN-k) [⏯️ Video (121m)](https://youtu.be/9tyU5mC0SyQ)

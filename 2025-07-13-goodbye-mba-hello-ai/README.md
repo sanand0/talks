@@ -152,8 +152,8 @@ https://forms.gle/vha4c6fjidLzBycT8
 
 ## 2026 update: economics are moving faster than org charts
 
-- [LLM prices keep falling ~10x/year](/blog/when-llm-prices-fall-10x-every-year/)
-- [LLM billing rates vs wages](/blog/wage-rates-of-nations-and-llms/): AI is already cheaper than many knowledge workers in many markets
+- [LLM prices keep falling ~10x/year](https://www.s-anand.net/blog/when-llm-prices-fall-10x-every-year/)
+- [LLM billing rates vs wages](https://www.s-anand.net/blog/wage-rates-of-nations-and-llms/): AI is already cheaper than many knowledge workers in many markets
 - The "cheap labor" moat weakens when AI becomes the cheapest analyst everywhere
 - MBA edge shifts to context, trust, distribution, regulation, and relationships
 
@@ -161,31 +161,73 @@ https://forms.gle/vha4c6fjidLzBycT8
 
 ## Managers will "hire" AI roles, not just buy software
 
-- [AI agents to hire](/blog/ai-agents-to-hire/): editor, investigator, scenario planner, rhetorician, diplomat...
-- [AI for work news](/blog/using-ai-for-work-news/): your "internal reporter" can now be an automated workflow
-- [Agents will replace SaaS apps](/blog/agents-will-replace-saas-apps/): more value moves to prompts, APIs, and evals
+- [AI agents to hire](https://www.s-anand.net/blog/ai-agents-to-hire/): editor, investigator, scenario planner, rhetorician, diplomat...
+- [AI for work news](https://www.s-anand.net/blog/using-ai-for-work-news/): your "internal reporter" can now be an automated workflow
+- [Agents will replace SaaS apps](https://www.s-anand.net/blog/agents-will-replace-saas-apps/): more value moves to prompts, APIs, and evals
 - Your job: define goals, guardrails, and handoffs across humans + agents
 
 ---
 
 ## AI doesn't remove management. It makes management the product.
 
-- [AI reviewers disagree wildly](/blog/can-ai-replace-human-paper-reviewers/) and can be confidently wrong
+- [AI reviewers disagree wildly](https://www.s-anand.net/blog/can-ai-replace-human-paper-reviewers/) and can be confidently wrong
 - "Average the models" can hide bias. Disagreement is a triage signal.
-- [LLMs inherit human flaws](/blog/humans-have-taught-llms-well/): sycophancy, framing effects, overconfidence...
+- [LLMs inherit human flaws](https://www.s-anand.net/blog/humans-have-taught-llms-well/): sycophancy, framing effects, overconfidence...
 - Winning teams build evals, escalation paths, and accountability
 
 ---
 
 ## Double-down on taste, judgment, and personal AI systems
 
-- [Develop taste](/blog/how-to-develop-taste/) in wicked domains: track predictions with reasoning, audit later
-- Build memory systems: [browser history as memory](/blog/using-browser-history-as-memory/)
-- Build ambient intelligence: [AI-generated work-news digests](/blog/using-ai-for-work-news/)
-- Ask models what they can do (and surprise you): [self-discover capabilities](/blog/self-discover-llm-capabilities/)
+- [Develop taste](https://www.s-anand.net/blog/how-to-develop-taste/) in wicked domains: track predictions with reasoning, audit later
+- Build memory systems: [browser history as memory](https://www.s-anand.net/blog/using-browser-history-as-memory/)
+- Build ambient intelligence: [AI-generated work-news digests](https://www.s-anand.net/blog/using-ai-for-work-news/)
+- Ask models what they can do (and surprise you): [self-discover capabilities](https://www.s-anand.net/blog/self-discover-llm-capabilities/)
 
 ---
 
 <!-- _class: lead -->
 
 # What will your CV look like in 2028?
+
+---
+
+# Postscript
+
+## Added in Feb 2026 (after 14 July 2025)
+
+---
+
+## 2026 update: economics are moving faster than org charts
+
+- [LLM prices keep falling ~10x/year](https://www.s-anand.net/blog/when-llm-prices-fall-10x-every-year/)
+- [LLM billing rates vs wages](https://www.s-anand.net/blog/wage-rates-of-nations-and-llms/): AI is already cheaper than many knowledge workers in many markets
+- The "cheap labor" moat weakens when AI becomes the cheapest analyst everywhere
+- MBA edge shifts to context, trust, distribution, regulation, and relationships
+
+---
+
+## Managers will "hire" AI roles, not just buy software
+
+- [AI agents to hire](https://www.s-anand.net/blog/ai-agents-to-hire/): editor, investigator, scenario planner, rhetorician, diplomat...
+- [AI for work news](https://www.s-anand.net/blog/using-ai-for-work-news/): your "internal reporter" can now be an automated workflow
+- [Agents will replace SaaS apps](https://www.s-anand.net/blog/agents-will-replace-saas-apps/): more value moves to prompts, APIs, and evals
+- Your job: define goals, guardrails, and handoffs across humans + agents
+
+---
+
+## AI doesn't remove management. It makes management the product.
+
+- [AI reviewers disagree wildly](https://www.s-anand.net/blog/can-ai-replace-human-paper-reviewers/) and can be confidently wrong
+- "Average the models" can hide bias. Disagreement is a triage signal.
+- [LLMs inherit human flaws](https://www.s-anand.net/blog/humans-have-taught-llms-well/): sycophancy, framing effects, overconfidence...
+- Winning teams build evals, escalation paths, and accountability
+
+---
+
+## Double-down on taste, judgment, and personal AI systems
+
+- [Develop taste](https://www.s-anand.net/blog/how-to-develop-taste/) in wicked domains: track predictions with reasoning, audit later
+- Build memory systems: [browser history as memory](https://www.s-anand.net/blog/using-browser-history-as-memory/)
+- Build ambient intelligence: [AI-generated work-news digests](https://www.s-anand.net/blog/using-ai-for-work-news/)
+- Ask models what they can do (and surprise you): [self-discover capabilities](https://www.s-anand.net/blog/self-discover-llm-capabilities/)

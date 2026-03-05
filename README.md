@@ -211,6 +211,8 @@ I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtu
 - 21 Sep 2025. [Vivek Matthew](https://github.com/Vonter) and [Aman Bhargava](https://aman.bh/). [Making Open Data Useful: Lessons from Diagram Chasing](2025-09-21-making-open-data-useful/ ":ignore") at [IndiaFOSS](https://fossunited.org/c/indiafoss/2025/cfp/1hutna15uj), Bangalore
 - 21 Sep 2025. [Zainab Bawa](https://www.linkedin.com/in/zainabbawa/). **[Building a culture of openness](2025-09-21-zainab-building-a-culture-of-openness/ ":ignore")** at [IndiaFOSS](https://fossunited.org/c/indiafoss/2025/cfp/0ios0i6o47), Bangalore
 - 20 Sep 2025. [Kiran Jonnalagadda](https://www.linkedin.com/in/kiranjonna/). **[Homelabbing with Bare Metal](2025-09-20-kiran-homelabbing-with-bare-metal/ ":ignore")** at [IndiaFOSS](https://fossunited.org/c/indiafoss/2025/cfp/4v6f8ek2n0), Bangalore
+- 07 Mar 2022. [Rajen Makhijani](https://www.linkedin.com/in/rajen-makhijani-7b28572). **[The Accomplished Beginner](2022-03-07-career-principles-with-rajen-makhijani/ ":ignore")** on [Network Capital](https://youtu.be/DOaZX0wouJw). [⏯️ Video (36m)](https://youtu.be/DOaZX0wouJw) [💬 Transcript](2022-03-07-career-principles-with-rajen-makhijani/transcript.md)
+- 20 Feb 2022. [Rajen Makhijani](https://www.linkedin.com/in/rajen-makhijani-7b28572). **[The Glass Wall of Class](2022-02-20-it-doesnt-have-to-be-us-and-them-rajen-makhijani/ ":ignore")** on [The Mindful Wealth Podcast](https://youtu.be/_XzHn-B62Rs). [⏯️ Video (36m)](https://youtu.be/_XzHn-B62Rs) [💬 Transcript](2022-02-20-it-doesnt-have-to-be-us-and-them-rajen-makhijani/transcript.md)
 
 ## WIP
 

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Glass Wall of Class | Rajen Makhijani & Mindful Wealth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0f0f0f;
+      --paper: #f8f6f1;
+      --accent: #1a4d2e;
+      --gold: #c49b2a;
+      --muted: #5e5e5e;
+      --faint: #9a9a9a;
+      --border: #d9d5cc;
+      --highlight-bg: #fdf5e6;
+      --dark: #1a2e1a;
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'Libre Baskerville', Georgia, serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.78;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      z-index: 1000;
+      transition: width 0.1s linear;
+    }
+
+    /* Header */
+    .masthead {
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      background: var(--paper);
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+
+    .masthead-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .masthead-brand {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .masthead-date {
+      font-size: 0.85rem;
+      color: var(--faint);
+      font-family: var(--font-mono);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 5rem 2rem 3rem;
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .hero-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 7vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.08;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--muted);
+      max-width: 680px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.4;
+    }
+
+    .hero-meta {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+
+    .hero-meta a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .hero-meta a:hover {
+      text-decoration: underline;
+    }
+
+    /* Video Section */
+    .video-section {
+      max-width: 1000px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+      height: 0;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* Sketchnote */
+    .sketchnote {
+      max-width: 920px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    .sketchnote a {
+      display: block;
+      border: none;
+    }
+
+    .sketchnote img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .sketchnote img:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    }
+
+    .sketchnote-caption {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--faint);
+      text-align: center;
+      margin-top: 0.75rem;
+    }
+
+    /* Article */
+    .article {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+    }
+
+    .article p {
+      margin-bottom: 1.5rem;
+    }
+
+    .article a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(26, 77, 46, 0.3);
+      transition: border-color 0.2s;
+    }
+
+    .article a:hover {
+      border-bottom-color: var(--accent);
+    }
+
+    .dropcap::first-letter {
+      font-family: var(--font-display);
+      font-size: 5rem;
+      float: left;
+      line-height: 0.78;
+      padding-right: 0.6rem;
+      padding-top: 0.12rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .article h2 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 3.5rem 0 1.5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+      line-height: 1.2;
+    }
+
+    .article h3 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin: 2.5rem 0 1rem;
+      color: var(--accent);
+    }
+
+    /* Pull quote */
+    .pullquote {
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      font-style: italic;
+      font-weight: 500;
+      line-height: 1.35;
+      color: var(--accent);
+      border-left: 4px solid var(--gold);
+      padding: 1.5rem 0 1.5rem 2rem;
+      margin: 2.5rem 0 2.5rem -1rem;
+    }
+
+    .pullquote-attribution {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-style: normal;
+      color: var(--faint);
+      margin-top: 0.75rem;
+      display: block;
+    }
+
+    /* Insight box */
+    .insight-box {
+      background: var(--highlight-bg);
+      border-left: 4px solid var(--gold);
+      padding: 1.5rem;
+      margin: 2.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    .insight-box-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #8a6d00;
+      margin-bottom: 0.6rem;
+    }
+
+    /* Transcript link */
+    .transcript-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--ink);
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      transition: all 0.3s ease;
+      margin: 1rem 0;
+      border: none;
+    }
+
+    .transcript-link:hover {
+      background: var(--accent);
+      transform: translateX(4px);
+      border: none;
+    }
+
+    /* Takeaways section */
+    .takeaways {
+      background: linear-gradient(135deg, var(--dark) 0%, #1f3d24 100%);
+      color: #fff;
+      padding: 4rem 2rem;
+      margin: 4rem 0 0;
+    }
+
+    .takeaways-inner {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .takeaways h2 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      text-align: center;
+      border: none;
+      padding: 0;
+      margin: 0 0 3rem;
+      color: #fff;
+    }
+
+    .takeaway-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+    }
+
+    .takeaway-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .takeaway-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-4px);
+    }
+
+    .takeaway-number {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .takeaway-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .takeaway-text {
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.5;
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="progress-bar" id="progress"></div>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <div class="masthead-brand">The Class Chronicles</div>
+      <div class="masthead-date">20 Feb 2022</div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-kicker">Mindful Wealth &amp; Social Impact</div>
+    <h1 class="hero-title">The Glass Wall of Class</h1>
+    <p class="hero-subtitle">What happens when a global consultant spent a 9,000 km train journey trying to find the "other you"</p>
+    <div class="hero-meta">
+      <span>A narrative based on Rajen Makhijani's interview</span>
+      <span>12 min read</span>
+      <span><a href="transcript.md" target="_blank">Full Transcript</a></span>
+    </div>
+  </section>
+
+  <div class="video-section">
+    <div class="video-container">
+      <iframe src="https://www.youtube.com/embed/_XzHn-B62Rs" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <article class="article">
+
+    <p class="dropcap">In a small ashram, deep in the heart of India, a spiritual teacher once wrote a sentence that would change the way <a href="https://www.linkedin.com/in/rajen-makhijani-7b28572" target="_blank">Rajen Makhijani</a> viewed the world. The sentence was disarmingly simple, yet it carried the weight of a fundamental truth: <strong>"An experience is to life what a brick is to a wall."</strong></p>
+
+    <p>We often think of our lives as a single, coherent narrative—a monolith of identity and achievement. But if you look closer, as Makhijani did, you realize that the wall is only as good as its individual bricks. If you want a life of well-being, you don't look at the wall; you look at the bricks. You look at the net happiness of each individual experience.</p>
+
+    <p>Rajen Makhijani is not your typical spiritual seeker. He is a Client Partner at <a href="https://www.kornferry.com/" target="_blank">Korn Ferry</a>, a man who navigates the upper echelons of corporate leadership and organizational strategy. But he has spent much of his career—and his life—trying to traverse what he calls the "glass wall of class." It is a divide that most of us never even realize exists until we press our noses against it.</p>
+
+    <div class="sketchnote">
+      <a href="sketchnote.avif" target="_blank">
+        <img src="sketchnote.avif" width="100%" alt="Sketchnote of Rajen Makhijani's interview - visual summary of us and them, the brick and the wall, and social impact">
+      </a>
+      <div class="sketchnote-caption">Visual sketchnote summary (click to enlarge)</div>
+    </div>
+
+    <h2>The "Other You"</h2>
+
+    <p>In his <a href="https://youtu.be/_XzHn-B62Rs?t=191" target="_blank">TEDx talk</a>, Makhijani introduces a concept that is both uncomfortable and profound: the idea that there is an "other you" on the other side of that glass wall. We look at the poor, the uneducated, or the marginalized as if they were a different subspecies. We judge their choices. We wonder why they do what they do. We say, "If only they made different choices."</p>
+
+    <div class="pullquote">
+      "The other is actually just another me... they're trying to solve for the same things that I'm trying to solve for. Their choices seem different and weird to me because I don't quite understand their context."
+      <span class="pullquote-attribution">— Rajen Makhijani, 04:09</span>
+    </div>
+
+    <p>To understand this context, Makhijani didn't just read about it. He immersed himself in it. He took a 9,000-kilometer train journey across India, living among people whose lives were fundamentally different from his own. He became a screenwriter to learn how to see life from characters' points of view. He volunteered for an Obama-like political campaign to understand the grassroots reality of the masses.</p>
+
+    <p>What he found was a staggering rationality hidden behind what looks like irrationality. Take, for instance, the concept of bribes. To a Western investor or a real estate developer, a bribe is a moral failing, a sign of corruption. But for those on the other side of the glass wall, Makhijani argues, a bribe is often just a <a href="https://youtu.be/_XzHn-B62Rs?t=394" target="_blank">tax by another name</a>. They are paying for the same goods and services we are, but they are paying a much higher price—and their payments aren't even accounted for.</p>
+
+    <div class="insight-box">
+      <div class="insight-box-label">The Rationality of Poverty</div>
+      What looks like "bad" financial choices—spending on a festival or a cup of tea instead of insurance—is often a logical response to a life with high risk and low stability. When the future is uncertain, the only reliable "return" is the present experience.
+    </div>
+
+    <h2>The Corporate Conscience</h2>
+
+    <p>This empathy isn't just a personal philosophy for Makhijani; it's a business imperative. As the APAC Co-Leader for ESG (Environment, Social, and Governance) at Korn Ferry, he is at the forefront of a revolution that is flipping the script on corporate responsibility.</p>
+
+    <p>For decades, the <a href="https://en.wikipedia.org/wiki/Friedman_doctrine" target="_blank">Milton Friedman doctrine</a> ruled: the business of business is profit. But as Makhijani points out, that doctrine relied on the myth of "perfect markets." In reality, the market doesn't price in "externalities" like climate change or social inequality. Today, $30 trillion in institutional investment money has signed up to the pledge that they won't invest unless ESG considerations are met.</p>
+
+    <p>"Investors are now saying to management, 'What are you doing about this?'" Makhijani notes. It's no longer just about heart and compassion; it's about risk. If your business model relies on sweatshops or polluting the environment, you are a risky bet.</p>
+
+    <h3>Leadership by Results</h3>
+
+    <p>Makhijani advocates for a framework he calls <strong>Leadership by Results</strong>. It's a way of moving leadership away from "tourism"—sending people on courses to meet new people—and toward actual impact. It involves three steps:</p>
+
+    <ul>
+      <li><strong>Contextualization:</strong> Aligning leadership to a top-three board-level goal (revenue, successor pipeline, digitizing, or social impact).</li>
+      <li><strong>Team Alignment:</strong> Seeing leadership not as an individual sport, but as an intact team working toward a "big, hairy, audacious goal."</li>
+      <li><strong>Accountability:</strong> Staying accountable to the actual results, not just the activity.</li>
+    </ul>
+
+    <div class="pullquote">
+      "Leadership would not be a one-time event; it would be a journey."
+      <span class="pullquote-attribution">— Rajen Makhijani, 15:27</span>
+    </div>
+
+    <h2>The Cost of Progress</h2>
+
+    <p>Perhaps the most sobering part of Makhijani's narrative is the human cost of our "development." He cites a <a href="https://youtu.be/_XzHn-B62Rs?t=1701" target="_blank">shocking statistic</a> from Booker Prize winner <a href="https://en.wikipedia.org/wiki/Arundhati_Roy" target="_blank">Arundhati Roy</a>: <strong>seven out of ten beggars at traffic lights in Indian cities are displaced by man-made disasters</strong>—dams, deforestation, and "climatic disasters" perpetrated by the very progress we celebrate.</p>
+
+    <p>When a consultant proposes a hydropower project to generate electricity for factories, they are creating economic prosperity for some. But their "frame" often fails to account for the people they are turning into beggars. The " nuisance" knocking at your car window might be the direct result of the presentation on your laptop.</p>
+
+    <p>"It's a privilege and a responsibility," Makhijani says. "Because the 'other' doesn't have that privilege, I have to make sure that the systems that I and my forefathers have perpetrated... I need to be thinking on their behalf as well."</p>
+
+    <h2>Economics as Sociology</h2>
+
+    <p>In the end, Makhijani's message is a call to redefine our metrics of success. If the only currency we understand is market cap and GDP, we are "shooting slightly right of the goalpost." We should be measuring the <strong>experience of life</strong> we are generating for humanity.</p>
+
+    <p>He recommends a fascinating book by World Bank economist Shrayana Bhattacharya, <a href="https://www.goodreads.com/book/show/59616782-desperately-seeking-shah-rukh" target="_blank"><em>Desperately Seeking Shah Rukh</em></a>. It's an investigation of the economy through the eyes of Indian women and their love for movie star <a href="https://en.wikipedia.org/wiki/Shah_Rukh_Khan" target="_blank">Shah Rukh Khan</a>. It shows that growth isn't just about higher income—it's about whether that income leads to better education, health, and freedom for the family. Growth that results in an alcoholic husband is not growth.</p>
+
+    <p>Rajen Makhijani reminds us that the glass wall is fragile. It can be bridged by empathy, by perspective-taking, and by a refusal to see the world as "us and them." Because once you look through the glass, you realize that the person on the other side isn't a subspecies. They are just another you, building their wall, one brick at a time.</p>
+
+    <div style="margin-top: 2rem;">
+      <a href="transcript.md" target="_blank" class="transcript-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        READ FULL TRANSCRIPT →
+      </a>
+    </div>
+
+  </article>
+
+  <section class="takeaways">
+    <div class="takeaways-inner">
+      <h2>Key Takeaways</h2>
+      <div class="takeaway-grid">
+        <div class="takeaway-card">
+          <div class="takeaway-number">1</div>
+          <div class="takeaway-title">The "Other You"</div>
+          <div class="takeaway-text">The people we label as "them" are just versions of us living in different contexts. Empathy starts with understanding their constraints.</div>
+        </div>
+        <div class="takeaway-card">
+          <div class="takeaway-number">2</div>
+          <div class="takeaway-title">Experience is the Brick</div>
+          <div class="takeaway-text">True wealth is the net happiness of individual experiences. Focus on the quality of the "bricks" to build a better life.</div>
+        </div>
+        <div class="takeaway-card">
+          <div class="takeaway-number">3</div>
+          <div class="takeaway-title">ESG is Strategic Risk</div>
+          <div class="takeaway-text">Environmental and social responsibility isn't just "heart"—it's a rational response to the demands of institutional investors and global supply chains.</div>
+        </div>
+        <div class="takeaway-card">
+          <div class="takeaway-number">4</div>
+          <div class="takeaway-title">Leadership by Results</div>
+          <div class="takeaway-text">Move away from "leadership tourism." Connect leadership development to specific, high-stakes board agendas and team accountability.</div>
+        </div>
+        <div class="takeaway-card">
+          <div class="takeaway-number">5</div>
+          <div class="takeaway-title">The Privilege of Perspective</div>
+          <div class="takeaway-text">If you have the privilege of thinking about the long term, you have the responsibility to think on behalf of those trapped in short-term survival.</div>
+        </div>
+        <div class="takeaway-card">
+          <div class="takeaway-number">6</div>
+          <div class="takeaway-title">Redefine Growth</div>
+          <div class="takeaway-text">Economics must be a subset of sociology. Measure the experience of life and societal well-being, not just market capital or GDP.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/rajen-makhijani-7b28572" target="_blank">Rajen Makhijani LinkedIn</a>
+      <a href="https://www.kornferry.com/about-us/our-experts/rajen-makhijani" target="_blank">Korn Ferry Profile</a>
+      <a href="https://youtu.be/_XzHn-B62Rs" target="_blank">Mindful Wealth Podcast</a>
+      <a href="https://sanand0.github.io/talks/#/" target="_blank">More Talks</a>
+    </div>
+  </footer>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      document.getElementById('progress').style.width = (winScroll / height) * 100 + '%';
+    });
+  </script>
+</body>
+
+</html>

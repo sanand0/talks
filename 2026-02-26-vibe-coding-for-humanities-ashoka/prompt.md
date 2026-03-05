@@ -62,6 +62,10 @@ The design is a bit bland. Make these changes:
 - Allow the .app-grid elements to take up more horizontal space - maybe as much as around 1000px - against a contrasting background color, and center them on the page.
 - Similarly for the .resources-section
 
+---
+
+Add the top takeways from the Ashoka talk at the end - after the "Read full transcript"
+
 ## Sketchnote
 
 <!-- Gemini Pro - https://gemini.google.com/u/2/app/115fe2fdc3f20c03 -->

@@ -1,5 +1,6 @@
 # Anand's Talks
 
+- 12 Mar 2026. **[AI Roadmap for Engineering Education](2026-03-12-nie-ai-roadmap/ ":ignore")** at [NIE, Mysore](https://nie.ac.in/), with [Srikanth Nadhamuni](https://www.linkedin.com/in/srikanthnadhamuni/). Guest: [N.R. Narayana Murthy](https://en.wikipedia.org/wiki/N._R._Narayana_Murthy). [💬 Transcript](2026-03-12-nie-ai-roadmap/transcript.md)
 - 26 Feb 2026. **[Vibe Coding for Humanities](2026-02-26-vibe-coding-for-humanities-ashoka/ ":ignore")** at [Ashoka University](https://www.ashoka.edu.in/), Sonepat. [⏯️ Video (52m)](https://youtu.be/mCJLNML7FrE) [💬 Transcript](2026-02-26-vibe-coding-for-humanities-ashoka/transcript.md)
 - 11 Feb 2026. **[Your Chotu Is Smarter Than You Think](2026-02-11-amat-dt-day/ ":ignore")** at [Applied Materials](https://en.wikipedia.org/wiki/Applied_Materials), Bangalore. [💬 Transcript](2026-02-11-amat-dt-day/transcript.md)
 - 20 Jan 2026. **[Agentic AI in Action](2026-01-20-agentic-ai-in-action-deloitte/ ":ignore")** at [Deloitte](https://www.deloitte.com/) TXA Academy, Hyderabad. [⏯️ Video (67m)](https://youtu.be/kihmwxFLSf8) [💬 Transcript](2026-01-20-agentic-ai-in-action-deloitte/transcript.md)

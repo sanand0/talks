@@ -1,5 +1,13 @@
 # IITM Academic Council Prompts
 
+<!--
+dev.sh -v /home/sanand/code/blog/:/home/sanand/code/blog/:ro \
+       -v /home/sanand/code/exam/:/home/sanand/code/exam/:ro \
+       -v /home/sanand/code/tools-in-data-science-public/:/home/sanand/code/tools-in-data-science-public/:ro \
+       -v /home/sanand/Dropbox/notes/transcripts:/home/sanand/Dropbox/notes/transcripts:ro \
+       -v /home/sanand/code/til:/home/sanand/code/til:ro
+-->
+
 ## Discover ideas (Copilot Yolo - gpt-5.x xhigh)
 
 I'm speaking to the IIT Madras Academic Council on the innovations in education I've been experimenting with using AI.
@@ -62,6 +70,9 @@ Document this in 2026-03-18-iitm-academic-council/education-pain-points.md. Incl
 
 Create a beautiful single-page 2026-03-18-iitm-academic-council/ideas/index.html ideas gallery that lists all the ideas in ideas.md as filterable, sortable, searchable cards. Include all information on the cards that would be relevant for the council to pick an idea to explore. Clicking on the card should beautifully open a popup with full details of the idea include (and especially) one or more links where they can explore it further, e.g. on my GitHub (see the repos for deployment), my blog (https://www.s-anand.net/blog/... - see the blog repo for URL structure). Feel free to also include any relevant material from proven research or respected experts for context.
 
+
+<!-- copilot --resume=a6ed9c59-6a61-4aef-82f3-4e0aaad83366 -->
+
 ## Alternate storyline (Copilot Yolo - Claude Sonnet 4.6)
 
 I'm speaking to the IIT Madras Academic Council on the innovations in education I've been experimenting with using AI.
@@ -105,10 +116,4 @@ Create this as a single page in 2026-03-18-iitm-academic-council/v2/index.html.
 
 IMPORTANT: Because Claude will almost certainly stall when generating such a large file at one shot, you MUST break this into parts, generating the .html as a scaffolding first, then adding layered edits (keeping each chunk small, max 100KB of edits) and saving it, checking it, then updating it with the next iteration, and so on.
 
-<!--
-dev.sh -v /home/sanand/code/blog/:/home/sanand/code/blog/:ro \
-       -v /home/sanand/code/exam/:/home/sanand/code/exam/:ro \
-       -v /home/sanand/code/tools-in-data-science-public/:/home/sanand/code/tools-in-data-science-public/:ro \
-       -v /home/sanand/Dropbox/notes/transcripts:/home/sanand/Dropbox/notes/transcripts:ro \
-       -v /home/sanand/code/til:/home/sanand/code/til:ro
--->
+<!-- copilot --resume=9dd3cdbd-af56-4b72-86ba-2e7d8a99ab80 -->

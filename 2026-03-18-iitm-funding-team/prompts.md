@@ -1,6 +1,14 @@
 # IITM
 
-## Discover
+<!--
+
+dev.sh -v /home/sanand/code/blog/:/home/sanand/code/blog/:ro \
+       -v /home/sanand/Dropbox/notes/transcripts:/home/sanand/Dropbox/notes/transcripts:ro \
+       -v /home/sanand/code/til:/home/sanand/code/til:ro
+
+-->
+
+## Discover (Codex - gpt-5.4 xhigh)
 
 I'm speaking to the IIT Madras Office of Institutional Advancement on how they can use AI better in their daily activities.
 
@@ -15,11 +23,3 @@ Be comprehensive. Use sub-agents as required. See 2026-03-18-iitm-academic-counc
 Suggest what tips and tricks I could share with them that will have the most impact and they're not likely to know about.
 
 Document these in 2026-03-18-iitm-funding-team/ideas.md. Include the source of each tip (e.g. which blog post, transcript, or TIL - as a publiclink to where the content is deployed), a description, and why you think it would be impactful for them.
-
-<!--
-
-dev.sh -v /home/sanand/code/blog/:/home/sanand/code/blog/:ro \
-       -v /home/sanand/Dropbox/notes/transcripts:/home/sanand/Dropbox/notes/transcripts:ro \
-       -v /home/sanand/code/til:/home/sanand/code/til:ro
-
--->

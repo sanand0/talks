@@ -1,5 +1,7 @@
 # Anand's Talks
 
+- 18 Mar 2026. **[AI for IITM Funding Team](2026-03-18-iitm-funding-team/index.html ":ignore")** at [IIT Madras](https://www.iitm.ac.in/), Chennai. [🧠 Ideas memo](2026-03-18-iitm-funding-team/ideas.md)
+- 18 Mar 2026. **[AI for IITM Academic Council](2026-03-18-iitm-academic-council/ideas/index.html ":ignore")** at [IIT Madras](https://www.iitm.ac.in/), Chennai. [🧠 Ideas list](2026-03-18-iitm-academic-council/ideas/index.html) [📖 Story page](2026-03-18-iitm-academic-council/v2/index.html)
 - 15 Mar 2026. **[How Students Learn Python](2026-03-15-how-students-learn-python/ ":ignore")** at [PyConf Hyderabad](https://in.pycon.org/), Hyderabad.
 - 12 Mar 2026. **[AI Roadmap for Engineering Education](2026-03-12-nie-ai-roadmap/ ":ignore")** at [NIE, Mysore](https://nie.ac.in/), with [Srikanth Nadhamuni](https://www.linkedin.com/in/srikanthnadhamuni/). Guest: [N.R. Narayana Murthy](https://en.wikipedia.org/wiki/N._R._Narayana_Murthy). [💬 Transcript](2026-03-12-nie-ai-roadmap/transcript.md)
 - 26 Feb 2026. **[Vibe Coding for Humanities](2026-02-26-vibe-coding-for-humanities-ashoka/ ":ignore")** at [Ashoka University](https://www.ashoka.edu.in/), Sonepat. [⏯️ Video (52m)](https://youtu.be/mCJLNML7FrE) [💬 Transcript](2026-02-26-vibe-coding-for-humanities-ashoka/transcript.md)

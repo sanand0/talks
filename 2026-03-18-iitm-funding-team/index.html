@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IITM Funding Team · AI Opportunity Atlas</title>
+  <meta name="description" content="AI ideas for IIT Madras Office of Institutional Advancement: practical workflows for fundraising, donor intelligence, and stewardship at scale." />
+  <style>
+    :root {
+      --bg: #0b1220;
+      --surface: rgba(16, 24, 40, 0.9);
+      --surface-soft: rgba(19, 30, 50, 0.72);
+      --line: rgba(255, 255, 255, 0.12);
+      --ink: #f8fafc;
+      --muted: #cbd5e1;
+      --gold: #f59e0b;
+      --teal: #2dd4bf;
+      --rose: #fb7185;
+      --violet: #a78bfa;
+      --font: "Inter", "Segoe UI", system-ui, sans-serif;
+      --display: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(45, 212, 191, 0.18), transparent 35%),
+        radial-gradient(circle at 90% 0%, rgba(245, 158, 11, 0.16), transparent 35%),
+        linear-gradient(180deg, #0a0f1a, #0b1220 50%, #0d1728 100%);
+      min-height: 100vh;
+    }
+
+    .shell {
+      width: min(1200px, calc(100vw - 24px));
+      margin: 0 auto;
+      padding: 16px 0 56px;
+    }
+
+    .hero,
+    .toolbar,
+    .card,
+    dialog {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--surface);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+    }
+
+    .hero { padding: 22px; margin-bottom: 14px; }
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+    h1 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(1.7rem, 5.2vw, 3rem);
+      line-height: 1.05;
+      max-width: 18ch;
+    }
+    .lead { color: var(--muted); line-height: 1.6; max-width: 72ch; margin: 12px 0 0; }
+    .hero-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 8px;
+      z-index: 20;
+      margin-bottom: 14px;
+      padding: 12px;
+      backdrop-filter: blur(10px);
+      background: rgba(13, 22, 38, 0.88);
+    }
+
+    .toolbar-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: minmax(220px, 1.4fr) repeat(3, minmax(140px, 0.5fr));
+      align-items: end;
+    }
+
+    .field { display: grid; gap: 6px; }
+    label {
+      color: var(--muted);
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.11em;
+      font-weight: 700;
+    }
+
+    input[type='search'],
+    select,
+    input[type='range'] {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--ink);
+      padding: 10px 12px;
+      font: inherit;
+    }
+
+    input[type='range'] { padding: 0; accent-color: var(--gold); }
+    output { color: var(--muted); font-size: 0.86rem; margin-top: 2px; }
+
+    .results {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 6px 0 12px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .metric-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .metric {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.84rem;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .card {
+      padding: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      cursor: pointer;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 4px 8px;
+      font-size: 0.75rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .card h3 { margin: 0; font-size: 1.08rem; line-height: 1.3; }
+    .card p { margin: 8px 0 0; color: var(--muted); line-height: 1.55; font-size: 0.94rem; }
+    .meta { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+    .tag { font-size: 0.76rem; padding: 4px 8px; border-radius: 999px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); }
+
+    dialog {
+      width: min(860px, calc(100vw - 12px));
+      max-height: calc(100vh - 12px);
+      padding: 0;
+      color: var(--ink);
+      background: #0e1628;
+      overflow: auto;
+    }
+    dialog::backdrop { background: rgba(0, 0, 0, 0.7); }
+    .dialog-shell { padding: 18px; }
+    .close { float: right; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,0.06); color: var(--ink); width: 36px; height: 36px; cursor: pointer; }
+
+    @media (max-width: 880px) {
+      .toolbar-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .shell { width: min(100vw - 12px, 1200px); }
+      .hero { padding: 14px; border-radius: 18px; }
+      .toolbar { padding: 10px; border-radius: 18px; }
+      .card { border-radius: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <p class="eyebrow">2026 · IIT Madras · Office of Institutional Advancement</p>
+      <h1>AI opportunity index for fundraising, partnerships, and stewardship.</h1>
+      <p class="lead">A practical working index from <code>ideas.md</code> to help the OIA team move from broad AI awareness to deployable workflows. This mirrors the academic council gallery style, but is tuned to lead generation, conversion, donor intelligence, and high-touch communication work.</p>
+      <div class="hero-links">
+        <a class="pill" href="./ideas.md">Read full memo</a>
+        <a class="pill" href="./prompts.md">See prompt pack</a>
+      </div>
+    </section>
+
+    <section class="toolbar">
+      <div class="toolbar-grid">
+        <div class="field">
+          <label for="q">Search</label>
+          <input id="q" type="search" placeholder="Search by title, workflow, outcome, or tag" />
+        </div>
+        <div class="field">
+          <label for="category">Category</label>
+          <select id="category"></select>
+        </div>
+        <div class="field">
+          <label for="impact">Min impact</label>
+          <input id="impact" type="range" min="0" max="100" value="0" step="1" />
+          <output id="impact-out">0+</output>
+        </div>
+        <div class="field">
+          <label for="novelty">Min novelty</label>
+          <input id="novelty" type="range" min="0" max="100" value="0" step="1" />
+          <output id="novelty-out">0+</output>
+        </div>
+      </div>
+    </section>
+
+    <section class="results" aria-live="polite">
+      <div id="summary"></div>
+      <div class="metric-row" id="metrics"></div>
+    </section>
+
+    <section class="grid" id="grid"></section>
+  </main>
+
+  <dialog id="dialog"><div class="dialog-shell" id="dialog-shell"></div></dialog>
+
+  <script>
+    const tips = [
+      { id: 1, title: 'Call → transcript → insight asset', category: 'Lead conversion', impact: 96, novelty: 84, tags: ['calls', 'profiling'], summary: 'Turn every donor or partner call into reusable intelligence: personas, objections, hidden cues, and next experiments.', why: 'Improves conversion quality with structured reflection instead of generic notes.', links: [{ label: 'Idea detail in memo', href: './ideas.md' }, { label: 'Transcribe call prompt', href: 'https://www.s-anand.net/blog/prompts/transcribe-call-recording/' }] },
+      { id: 2, title: 'Workspace-grounded briefing deck generation', category: 'Lead generation', impact: 94, novelty: 86, tags: ['drive', 'ppt'], summary: 'Search Drive, mail, and attachments with web context and auto-create first-pass donor/partner briefs.', why: 'Cuts prep time for meetings and improves personalization quality.', links: [{ label: 'Idea detail in memo', href: './ideas.md' }, { label: 'Create slides workflow', href: 'https://www.s-anand.net/blog/using-gemini-to-create-slides/' }] },
+      { id: 3, title: 'Meeting-to-CRM structured loop', category: 'Operations', impact: 92, novelty: 82, tags: ['crm', 'workflow'], summary: 'Capture standardized fields after each interaction (ask type, intent, confidence, next action).', why: 'Turns conversation data into searchable institutional memory.', links: [{ label: 'Idea detail in memo', href: './ideas.md' }] },
+      { id: 4, title: 'Mine digital exhaust for relationship signals', category: 'Lead generation', impact: 91, novelty: 88, tags: ['whatsapp', 'communities'], summary: 'Analyze chats, transcripts, and event logs to identify topics, connectors, and drop-off patterns.', why: 'Reveals hidden demand and engagement pathways.', links: [{ label: 'Idea detail in memo', href: './ideas.md' }, { label: 'Digital exhaust workshop', href: 'https://www.s-anand.net/blog/mining-digital-exhaust-workshop-2025/' }] },
+      { id: 5, title: 'Event-to-artifact content pipeline', category: 'Stewardship', impact: 89, novelty: 80, tags: ['events', 'recaps'], summary: 'After each event, auto-produce FAQ decks, donor recaps, action logs, and searchable archives.', why: 'Multiplies content yield per event with minimal incremental work.', links: [{ label: 'Idea detail in memo', href: './ideas.md' }] },
+      { id: 6, title: 'Workflow-as-API for recurring advancement tasks', category: 'Operations', impact: 90, novelty: 89, tags: ['specs', 'governance'], summary: 'Define inputs, outputs, completion tests, and risk tiers for routine advancement work.', why: 'Makes AI usage repeatable, auditable, and delegable.', links: [{ label: 'Idea detail in memo', href: './ideas.md' }] },
+      { id: 7, title: 'Maker-checker AI validation for donor work', category: 'Risk and quality', impact: 93, novelty: 78, tags: ['quality', 'accuracy'], summary: 'Use one model to generate and another to validate. Escalate disagreements to human review.', why: 'Practical quality control for high-stakes outbound communication.', links: [{ label: 'Idea detail in memo', href: './ideas.md' }, { label: 'Hallucination check workflow', href: 'https://www.s-anand.net/blog/double-checking-reduces-hallucinations/' }] },
+      { id: 8, title: 'Policy prose → machine checklists', category: 'Risk and quality', impact: 87, novelty: 85, tags: ['policy', 'compliance'], summary: 'Convert giving rules and approval conditions into machine-verifiable validators.', why: 'Prevents avoidable compliance errors before materials are sent.', links: [{ label: 'Idea detail in memo', href: './ideas.md' }] },
+      { id: 9, title: 'AI interviews with busy subject experts', category: 'Stewardship', impact: 84, novelty: 83, tags: ['interviews', 'narrative'], summary: 'Use AI as interviewer to capture expert context, then convert to proposals and decks.', why: 'Extracts quality input without waiting for polished manual writeups.', links: [{ label: 'Idea detail in memo', href: './ideas.md' }] },
+      { id: 10, title: 'Personalized stewardship at scale', category: 'Stewardship', impact: 88, novelty: 81, tags: ['personalization', 'donors'], summary: 'Tailor recognition and outreach using donor context and preferences.', why: 'Preserves warmth while scaling personalized communication.', links: [{ label: 'Idea detail in memo', href: './ideas.md' }] },
+      { id: 11, title: 'Internal weekly AI relationship reporter', category: 'Lead generation', impact: 86, novelty: 79, tags: ['news', 'briefs'], summary: 'Automate weekly briefs about alumni, corporates, and sector updates relevant to fundraising.', why: 'Keeps outreach contextual and timely.', links: [{ label: 'Idea detail in memo', href: './ideas.md' }] },
+      { id: 12, title: 'Instrument AI rollout around real usage', category: 'Operations', impact: 82, novelty: 76, tags: ['adoption', 'enablement'], summary: 'Track what features are actually used and optimize training around real patterns.', why: 'Avoids vanity adoption and improves capability depth.', links: [{ label: 'Idea detail in memo', href: './ideas.md' }] },
+      { id: 13, title: 'Layout-aware PDF extraction stack', category: 'Operations', impact: 79, novelty: 74, tags: ['pdf', 'data prep'], summary: 'Use layout-preserving extraction for proposals, reports, and archival documents.', why: 'Improves data quality for downstream synthesis and search.', links: [{ label: 'Idea detail in memo', href: './ideas.md' }] },
+      { id: 14, title: 'Evidence-based vendor/tool evaluation rubric', category: 'Risk and quality', impact: 81, novelty: 77, tags: ['procurement', 'evaluation'], summary: 'Standardize tool evaluation on recency, support, exportability, and primary-source evidence.', why: 'Improves procurement defensibility and long-term portability.', links: [{ label: 'Idea detail in memo', href: './ideas.md' }, { label: 'Evaluation prompt', href: 'https://www.s-anand.net/blog/prompts/evaluate-technology/' }] },
+    ];
+
+    const state = { q: '', category: 'all', impact: 0, novelty: 0 };
+
+    const category = document.getElementById('category');
+    const q = document.getElementById('q');
+    const impact = document.getElementById('impact');
+    const novelty = document.getElementById('novelty');
+    const impactOut = document.getElementById('impact-out');
+    const noveltyOut = document.getElementById('novelty-out');
+    const grid = document.getElementById('grid');
+    const summary = document.getElementById('summary');
+    const metrics = document.getElementById('metrics');
+    const dialog = document.getElementById('dialog');
+    const dialogShell = document.getElementById('dialog-shell');
+
+    const categories = ['all', ...new Set(tips.map((tip) => tip.category))];
+    category.innerHTML = categories.map((c) => `<option value="${c}">${c === 'all' ? 'All categories' : c}</option>`).join('');
+
+    function filtered(withCategory = true) {
+      return tips
+        .filter((tip) => (tip.title + ' ' + tip.summary + ' ' + tip.tags.join(' ')).toLowerCase().includes(state.q))
+        .filter((tip) => tip.impact >= state.impact)
+        .filter((tip) => tip.novelty >= state.novelty)
+        .filter((tip) => !withCategory || state.category === 'all' || tip.category === state.category);
+    }
+
+    function renderMetrics(items) {
+      const highImpact = items.filter((tip) => tip.impact >= 90).length;
+      const frontier = items.filter((tip) => tip.novelty >= 85).length;
+      const avgImpact = items.length ? Math.round(items.reduce((s, tip) => s + tip.impact, 0) / items.length) : 0;
+      metrics.innerHTML = [
+        `<span class="metric">${highImpact} high-impact</span>`,
+        `<span class="metric">${frontier} frontier</span>`,
+        `<span class="metric">avg impact ${avgImpact}</span>`,
+      ].join('');
+    }
+
+    function renderCategoryOptions(scoped) {
+      const counts = Object.fromEntries(categories.map((c) => [c, 0]));
+      counts.all = scoped.length;
+      scoped.forEach((tip) => { counts[tip.category] = (counts[tip.category] || 0) + 1; });
+      category.innerHTML = categories.map((c) => `<option value="${c}" ${state.category === c ? 'selected' : ''}>${c === 'all' ? 'All categories' : c} · ${counts[c] || 0}</option>`).join('');
+    }
+
+    function renderDialog(tip) {
+      dialogShell.innerHTML = `
+        <button class="close" aria-label="close">✕</button>
+        <h2 style="margin: 8px 0 6px;">#${tip.id}. ${tip.title}</h2>
+        <p style="color: var(--muted); margin: 0 0 10px;">${tip.category} · Impact ${tip.impact} · Novelty ${tip.novelty}</p>
+        <p style="line-height: 1.65;">${tip.summary}</p>
+        <p style="line-height: 1.65;"><strong>Why this matters:</strong> ${tip.why}</p>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin: 10px 0 2px;">
+          ${tip.tags.map((tag) => `<span class="tag">${tag}</span>`).join('')}
+        </div>
+        <h3 style="margin: 14px 0 8px;">Links</h3>
+        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+          ${tip.links.map((link) => `<a class="pill" target="_blank" rel="noreferrer" href="${link.href}">${link.label}</a>`).join('')}
+        </div>
+      `;
+      dialogShell.querySelector('.close')?.addEventListener('click', () => dialog.close());
+      dialog.showModal();
+    }
+
+    function render() {
+      const scoped = filtered(false);
+      renderCategoryOptions(scoped);
+      const items = filtered(true).sort((a, b) => b.impact - a.impact || b.novelty - a.novelty);
+      summary.textContent = `Showing ${items.length} of ${tips.length} ideas · impact ≥ ${state.impact} · novelty ≥ ${state.novelty}`;
+      renderMetrics(items);
+
+      if (!items.length) {
+        grid.innerHTML = '<div class="card" style="cursor:default;">No ideas match this filter. Try lowering thresholds.</div>';
+        return;
+      }
+
+      grid.innerHTML = items.map((tip) => `
+        <article class="card" data-id="${tip.id}" tabindex="0">
+          <span class="badge">#${tip.id} · ${tip.category}</span>
+          <h3>${tip.title}</h3>
+          <p>${tip.summary}</p>
+          <div class="meta">
+            <span class="tag">Impact ${tip.impact}</span>
+            <span class="tag">Novelty ${tip.novelty}</span>
+            ${tip.tags.slice(0, 2).map((tag) => `<span class="tag">${tag}</span>`).join('')}
+          </div>
+        </article>
+      `).join('');
+
+      grid.querySelectorAll('.card[data-id]').forEach((card) => {
+        card.addEventListener('click', () => {
+          const tip = items.find((x) => String(x.id) === card.dataset.id);
+          if (tip) renderDialog(tip);
+        });
+        card.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            const tip = items.find((x) => String(x.id) === card.dataset.id);
+            if (tip) renderDialog(tip);
+          }
+        });
+      });
+    }
+
+    q.addEventListener('input', () => { state.q = q.value.trim().toLowerCase(); render(); });
+    category.addEventListener('change', () => { state.category = category.value; render(); });
+    impact.addEventListener('input', () => { state.impact = Number(impact.value); impactOut.textContent = `${state.impact}+`; render(); });
+    novelty.addEventListener('input', () => { state.novelty = Number(novelty.value); noveltyOut.textContent = `${state.novelty}+`; render(); });
+
+    render();
+  </script>
+</body>
+</html>

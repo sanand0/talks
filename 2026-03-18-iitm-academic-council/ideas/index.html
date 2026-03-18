@@ -264,7 +264,7 @@
     .toolbar-grid {
       display: grid;
       gap: 14px;
-      grid-template-columns: minmax(260px, 1.3fr) minmax(180px, 0.5fr) minmax(180px, 0.5fr) minmax(180px, 0.5fr);
+      grid-template-columns: minmax(260px, 1.25fr) repeat(4, minmax(150px, 0.45fr));
       align-items: end;
     }
 
@@ -343,7 +343,7 @@
       min-width: min(100%, 320px);
     }
 
-    input[type='range'] { width: 180px; accent-color: var(--gold); }
+    input[type='range'] { width: 100%; min-width: 120px; accent-color: var(--gold); }
 
     .results-row {
       display: flex;
@@ -773,15 +773,31 @@
     }
 
     @media (max-width: 720px) {
-      .shell { width: min(100vw - 18px, 1440px); padding-top: 10px; }
-      .hero { padding: 28px 18px 20px; border-radius: 22px; }
-      .toolbar { padding: 14px; border-radius: 22px; }
+      .shell { width: min(100vw - 14px, 1440px); padding-top: 8px; }
+      .hero { padding: 16px 14px 14px; border-radius: 20px; margin-bottom: 14px; }
+      .hero::before { font-size: clamp(2.2rem, 20vw, 4rem); top: -8px; right: 10px; }
+      .hero h1 { font-size: clamp(1.7rem, 8vw, 2.3rem); }
+      .hero p.lead { margin-top: 12px; font-size: 0.96rem; line-height: 1.55; }
+      .hero-links { margin-top: 14px; gap: 8px; }
+      .summary-card,
+      .question-card { padding: 14px; border-radius: 18px; }
+      .toolbar { padding: 12px; border-radius: 20px; }
+      .toolbar-grid { gap: 10px; }
       .toolbar-bottom,
       .results-row { align-items: flex-start; }
-      .idea-card { border-radius: 22px; padding: 18px; }
+      .range-wrap { width: 100%; }
+      .idea-card { border-radius: 20px; padding: 16px; }
       .dialog-shell { padding: 20px 14px 16px; }
       dialog { border-radius: 24px; width: min(100vw - 10px, 1080px); }
-      input[type='range'] { width: 120px; }
+    }
+
+    @media (max-width: 560px) {
+      .question-card { display: none; }
+      .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+      .stat { padding: 10px; }
+      .stat-value { font-size: 1.5rem; }
+      .category-row, .toggle-row, .metrics-row { gap: 8px; }
+      .category-chip, .toggle-chip, .metric-chip { padding: 8px 10px; font-size: 0.82rem; }
     }
   </style>
 </head>
@@ -839,10 +855,17 @@
           </select>
         </div>
         <div class="field">
-          <label for="min-importance">Minimum importance</label>
+          <label for="min-importance">Importance threshold (scaled)</label>
           <div class="range-wrap">
-            <input id="min-importance" type="range" min="0" max="100" step="5" value="0" />
+            <input id="min-importance" type="range" min="0" max="100" step="1" value="0" />
             <output id="importance-output" for="min-importance">0+</output>
+          </div>
+        </div>
+        <div class="field">
+          <label for="min-novelty">Novelty threshold (scaled)</label>
+          <div class="range-wrap">
+            <input id="min-novelty" type="range" min="0" max="100" step="1" value="0" />
+            <output id="novelty-output" for="min-novelty">0+</output>
           </div>
         </div>
       </div>
@@ -874,8 +897,22 @@
     const $ = (selector, element = document) => element.querySelector(selector);
     const $$ = (selector, element = document) => [...element.querySelectorAll(selector)];
 
-    const ideas = JSON.parse($('#ideas-data').textContent || '[]');
+    const rawIdeas = JSON.parse($('#ideas-data').textContent || '[]');
     const stats = JSON.parse($('#gallery-stats').textContent || '{}');
+
+    const scaleByRank = (items, key) => {
+      const sorted = [...new Set(items.map((item) => item[key]).sort((a, b) => a - b))];
+      if (sorted.length <= 1) return Object.fromEntries(sorted.map((value) => [value, 100]));
+      return Object.fromEntries(sorted.map((value, index) => [value, Math.round((index / (sorted.length - 1)) * 100)]));
+    };
+
+    const importanceScale = scaleByRank(rawIdeas, 'importance');
+    const noveltyScale = scaleByRank(rawIdeas, 'novelty');
+    const ideas = rawIdeas.map((idea) => ({
+      ...idea,
+      scaled_importance: importanceScale[idea.importance] ?? idea.importance,
+      scaled_novelty: noveltyScale[idea.novelty] ?? idea.novelty,
+    }));
 
     const state = {
       query: '',
@@ -883,6 +920,7 @@
       lens: 'all',
       sort: 'importance',
       minImportance: 0,
+      minNovelty: 0,
       publicOnly: false,
       frontierOnly: false,
     };
@@ -899,6 +937,8 @@
     const sortSelect = /** @type { HTMLSelectElement } */ ($('#sort-select'));
     const minImportance = /** @type { HTMLInputElement } */ ($('#min-importance'));
     const importanceOutput = $('#importance-output');
+    const minNovelty = /** @type { HTMLInputElement } */ ($('#min-novelty'));
+    const noveltyOutput = $('#novelty-output');
     const publicOnlyToggle = /** @type { HTMLButtonElement } */ ($('#public-only-toggle'));
     const frontierToggle = /** @type { HTMLButtonElement } */ ($('#frontier-toggle'));
 
@@ -917,13 +957,18 @@
     `).join('');
 
     const categories = [
-      { slug: 'all', label: `All themes · ${stats.total}` },
-      ...stats.categories.map((category) => ({ slug: category.slug, label: `${category.label} · ${category.count}` })),
+      { slug: 'all', baseLabel: 'All themes' },
+      ...stats.categories.map((category) => ({ slug: category.slug, baseLabel: category.label })),
     ];
 
-    categoryRow.innerHTML = categories.map((category) => `
-      <button class="category-chip${category.slug === 'all' ? ' is-active' : ''}" type="button" data-category="${category.slug}">${category.label}</button>
-    `).join('');
+    const renderCategoryCounts = (items) => {
+      const counts = { all: items.length };
+      items.forEach((idea) => { counts[idea.category_slug] = (counts[idea.category_slug] || 0) + 1; });
+      categoryRow.innerHTML = categories.map((category) => {
+        const count = counts[category.slug] || 0;
+        return `<button class="category-chip${category.slug === state.category ? ' is-active' : ''}" type="button" data-category="${category.slug}">${category.baseLabel} · ${count}</button>`;
+      }).join('');
+    };
 
     const lensOptions = [
       ['all', 'All council lenses'],
@@ -969,7 +1014,8 @@
       .filter((idea) => idea.search_text.includes(state.query))
       .filter((idea) => state.category === 'all' || idea.category_slug === state.category)
       .filter((idea) => state.lens === 'all' || idea.tags.includes(state.lens))
-      .filter((idea) => idea.importance >= state.minImportance)
+      .filter((idea) => idea.scaled_importance >= state.minImportance)
+      .filter((idea) => idea.scaled_novelty >= state.minNovelty)
       .filter((idea) => !state.publicOnly || idea.public_link_count > 0)
       .filter((idea) => !state.frontierOnly || idea.novelty >= 90);
 
@@ -1117,17 +1163,29 @@
       const importance90 = items.filter((idea) => idea.importance >= 90).length;
       const novelty90 = items.filter((idea) => idea.novelty >= 90).length;
       const publicReady = items.filter((idea) => idea.public_link_count >= 2).length;
+      const avgImportance = items.length ? Math.round(items.reduce((sum, idea) => sum + idea.importance, 0) / items.length) : 0;
+      const avgNovelty = items.length ? Math.round(items.reduce((sum, idea) => sum + idea.novelty, 0) / items.length) : 0;
       metricsRow.innerHTML = [
         `<span class="metric-chip"><strong>${importance90}</strong> high-priority</span>`,
         `<span class="metric-chip"><strong>${novelty90}</strong> frontier</span>`,
         `<span class="metric-chip"><strong>${publicReady}</strong> with 2+ public trails</span>`,
+        `<span class="metric-chip"><strong>${avgImportance}</strong> avg importance</span>`,
+        `<span class="metric-chip"><strong>${avgNovelty}</strong> avg novelty</span>`,
       ].join('');
     };
 
     const render = () => {
-      const items = sortedIdeas(filteredIdeas());
+      const scoped = ideas
+        .filter((idea) => idea.search_text.includes(state.query))
+        .filter((idea) => state.lens === 'all' || idea.tags.includes(state.lens))
+        .filter((idea) => idea.scaled_importance >= state.minImportance)
+        .filter((idea) => idea.scaled_novelty >= state.minNovelty)
+        .filter((idea) => !state.publicOnly || idea.public_link_count > 0)
+        .filter((idea) => !state.frontierOnly || idea.novelty >= 90);
+      renderCategoryCounts(scoped);
+      const items = sortedIdeas(state.category === 'all' ? scoped : scoped.filter((idea) => idea.category_slug === state.category));
       const total = ideas.length;
-      resultsSummary.textContent = `Showing ${items.length} of ${total} ideas`;
+      resultsSummary.textContent = `Showing ${items.length} of ${total} ideas · Importance ≥ ${state.minImportance} · Novelty ≥ ${state.minNovelty} (scaled)`;
       updateMetrics(items);
       if (!items.length) {
         ideasGrid.innerHTML = `<div class="empty-state">No ideas match this filter combination. Try lowering the minimum importance, clearing a lens, or turning off “Public trails only”.</div>`;
@@ -1168,6 +1226,12 @@
     minImportance.addEventListener('input', () => {
       state.minImportance = Number(minImportance.value);
       importanceOutput.textContent = `${state.minImportance}+`;
+      render();
+    });
+
+    minNovelty.addEventListener('input', () => {
+      state.minNovelty = Number(minNovelty.value);
+      noveltyOutput.textContent = `${state.minNovelty}+`;
       render();
     });
 

@@ -70,6 +70,18 @@ Document this in 2026-03-18-iitm-academic-council/education-pain-points.md. Incl
 
 Create a beautiful single-page 2026-03-18-iitm-academic-council/ideas/index.html ideas gallery that lists all the ideas in ideas.md as filterable, sortable, searchable cards. Include all information on the cards that would be relevant for the council to pick an idea to explore. Clicking on the card should beautifully open a popup with full details of the idea include (and especially) one or more links where they can explore it further, e.g. on my GitHub (see the repos for deployment), my blog (https://www.s-anand.net/blog/... - see the blog repo for URL structure). Feel free to also include any relevant material from proven research or respected experts for context.
 
+---
+
+The cards are too tall - too much content. Drop the description. Use full screen width (up to 1920px). Compress tags and badges with less padding and try fitting them in a line each. Importance and Novelty can be less tall.
+
+Reword the titles to be a bit more easy to understand for an outsider where possible.
+
+Also include ideas in ideas.md as well as in ideas/index.html from:
+
+- https://www.s-anand.net/blog/when-and-how-to-copy-assignments/
+- https://sanand0.github.io/pyoppe/
+- https://files.s-anand.net/temp/navodaya-2026/
+
 
 <!-- copilot --resume=a6ed9c59-6a61-4aef-82f3-4e0aaad83366 -->
 

@@ -41,27 +41,27 @@ Based on IITM's public governance language and your IITM transcripts, this group
 
 ## What they care about
 
-### 1. Academic standards and defensibility
+### 1. Learn by solving, not by reading notes
 
 They care about whether a change preserves or improves the standard of instruction, education, and examination - not just whether it is innovative.
 
-### 2. Assessment integrity in the age of AI
+### 2. Every question includes an "Ask AI" button
 
 They will care deeply about what exactly is being assessed once students can use ChatGPT, Claude, Gemini, Copilot, or full coding agents.
 
-### 3. Scale
+### 3. Students are allowed to copy, collaborate, and even hack
 
 A beautiful pilot is not enough. They will care whether it works for hundreds or thousands of students, across TAs, departments, and semesters.
 
-### 4. Fairness, transparency, and contestability
+### 4. Teach what AI still cannot do well
 
 If AI is involved in teaching or grading, they will ask: Is it biased? Is it explainable? Can it be gamed? What happens when it is wrong?
 
-### 5. Curriculum relevance
+### 5. Use hard, messy problems to teach real-world problem solving
 
 They care whether students are learning obsolete sub-skills or durable capabilities that still matter once AI can write code, search docs, and draft analysis.
 
-### 6. Governance, process, and cost
+### 6. The course is open for anyone to inspect
 
 They will care about approval load, procurement, licensing, budgets, source-of-truth data, audit trails, privacy, and operational support.
 
@@ -75,31 +75,31 @@ They will care about approval load, procurement, licensing, budgets, source-of-t
 
 ## What their current challenges appear to be
 
-### 1. Traditional assessment is getting easier to game
+### 1. Learn by solving, not by reading notes
 
 Your IITM viva transcripts are explicit that even synchronous viva processes are being gamed with live ChatGPT support, proxy help, and organized outside markets.
 
-### 2. The institute still needs scalable integrity checks
+### 2. Every question includes an "Ask AI" button
 
 There are settings with roughly **2,000+ L1 vivas** and **3,900+ Python-course submissions / OPPE-scale traces**. Human-only checking does not scale cleanly.
 
-### 3. The real bottleneck is often not pedagogy but operations
+### 3. Students are allowed to copy, collaborate, and even hack
 
 Your transcripts repeatedly surface token budgets, Google licensing, AI Pipe reliability, repo hygiene, access issues, and support load. In other words: many academic ideas fail because the plumbing fails.
 
-### 4. Governance friction is real
+### 4. Teach what AI still cannot do well
 
 Syllabus or credit changes need DCC/Senate-style movement. Even when a pedagogical change is obvious, there may be little appetite for a formal approval cycle.
 
-### 5. Source-of-truth data is messy
+### 5. Use hard, messy problems to teach real-world problem solving
 
 Your Jaidev transcript is especially revealing: student histories are manually patched across multiple systems, dashboards for Senate meetings are hard to trust, and automation struggles when upstream processes are inconsistent.
 
-### 6. Student friction can swamp instructional intent
+### 6. The course is open for anyone to inspect
 
 A recurring lesson from TDS and the corporate adaptation transcripts: environmental blockers, unclear interfaces, and brittle instructions can overwhelm even good pedagogy.
 
-### 7. The skills that matter are moving
+### 7. AI-generated comics explain why each question exists
 
 Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, soft skills, domain judgment, storytelling, governance, and verification** - with AI taking over more of the raw coding.
 
@@ -122,7 +122,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 
 ### Course design and learning experience
 
-### 1. Question-only, prompt-first curriculum ("There is no course content")
+### 1. Learn by solving, not by reading notes
 
 - **Description:** You removed most traditional explanatory content and replaced it with problems, prompts, and guided self-learning. Students learn by solving, asking AI, and iterating rather than consuming faculty-written notes.
 - **Nature of impact:** Curriculum design; shifts faculty effort from content delivery to problem framing.
@@ -131,7 +131,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 98%
 - **Novelty:** 93%
 
-### 2. "Ask AI" embedded inside every question, with model choice
+### 2. Every question includes an "Ask AI" button
 
 - **Description:** Every question can be sent directly to an LLM. Students can choose their preferred AI, ask for help at the moment of need, and the course treats that as normal behavior rather than cheating.
 - **Nature of impact:** Student support; in-assessment AI orchestration.
@@ -140,7 +140,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 97%
 - **Novelty:** 95%
 
-### 3. Copying, collaboration, and even hacking are made part of the curriculum
+### 3. Students are allowed to copy, collaborate, and even hack
 
 - **Description:** You explicitly allow students to copy from peers, use AI heavily, and even hack questions where appropriate. The emphasis is not purity of process but resourcefulness, verification, and getting the job done.
 - **Nature of impact:** Academic policy design; assessment philosophy.
@@ -149,7 +149,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 95%
 - **Novelty:** 92%
 
-### 4. The curriculum is being redesigned around what AI still does badly
+### 4. Teach what AI still cannot do well
 
 - **Description:** Instead of emphasizing syntax or routine analysis, the course increasingly targets integration, prompting, debugging, validation, judgment, orchestration, and tool composition.
 - **Nature of impact:** Curriculum prioritization.
@@ -158,7 +158,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 94%
 - **Novelty:** 82%
 
-### 5. Hard, ambiguous, hackable, beyond-syllabus problems are used deliberately
+### 5. Use hard, messy problems to teach real-world problem solving
 
 - **Description:** Questions may be intentionally tricky, partly wrong, hidden in the UI, out of syllabus, or only solvable by unusually resourceful students. The aim is to build adaptability, risk-taking, and real-world resilience.
 - **Nature of impact:** Assessment design; motivation and culture.
@@ -167,7 +167,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 91%
 - **Novelty:** 88%
 
-### 6. The course is public and auditable outside IITM
+### 6. The course is open for anyone to inspect
 
 - **Description:** Anyone can audit the course, inspect the repository, watch changes, and follow public discussions. The boundary between formal course and open educational artifact is intentionally porous.
 - **Nature of impact:** Access model; transparency; reputation.
@@ -185,7 +185,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 72%
 - **Novelty:** 84%
 
-### 8. Interactive explainers are used as a new teaching medium
+### 8. Interactive AI explainers teach unfamiliar concepts
 
 - **Description:** You are using LLMs not just to answer questions but to generate animated, interactive explainers for unfamiliar concepts, making intuition easier to build quickly.
 - **Nature of impact:** Teaching media; concept explanation.
@@ -194,7 +194,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 74%
 - **Novelty:** 78%
 
-### 9. Game-playing agents are turned into learning tasks
+### 9. Students learn through game-playing AI tasks
 
 - **Description:** Students solve network/maze/escape-room style API games manually and with AI agents, learning graph traversal, state management, exploration strategies, and agentic workflows through play.
 - **Nature of impact:** Assessment design; agentic learning.
@@ -212,7 +212,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 80%
 - **Novelty:** 76%
 
-### 11. Diagnostic-first teaching: assess first, teach from the errors
+### 11. Test first, then teach from the mistakes
 
 - **Description:** A recurring pattern in your training and course notes is: let learners attempt something first, then teach based on what failed. AI handles some setup/how-to questions; humans handle judgment and harder conceptual blockers.
 - **Nature of impact:** Teaching sequence; support architecture.
@@ -221,7 +221,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 88%
 - **Novelty:** 81%
 
-### 12. Personalized skill clustering and short next-step feedback
+### 12. Short, personalized next-step feedback from skill clusters
 
 - **Description:** You are experimenting with clustering items into skills, clustering students by gaps, and then generating short, targeted, next-best-practice feedback instead of generic comments.
 - **Nature of impact:** Personalization; mastery support.
@@ -230,7 +230,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 81%
 - **Novelty:** 74%
 
-### 13. Personalized AI learning coach / research coach
+### 13. AI as a personalized learning and research coach
 
 - **Description:** You are using models like O3 not just as answer engines but as personalized, memory-aware learning coaches that pick what you should learn, explain what is interesting, and suggest how to apply it.
 - **Nature of impact:** Self-directed learning; faculty development.
@@ -241,7 +241,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 
 ### Assessment, grading, and integrity
 
-### 14. LLM-based project grading with granular rubrics and explanation-first judging
+### 14. AI project grading with explainable rubrics
 
 - **Description:** Open-ended project grading is broken into binary sub-criteria, and the model is asked to explain its reasoning before judging. High or suspicious scores can be re-evaluated with stronger guardrails.
 - **Nature of impact:** AI grading; rubric design.
@@ -250,7 +250,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 96%
 - **Novelty:** 94%
 
-### 15. Adversarial prompt security is taught as an assessable skill
+### 15. Students are tested on prompt attacks and defenses
 
 - **Description:** Students are asked to jailbreak, defend, or otherwise manipulate LLM behavior - both through direct exam questions and through attacker-vs-defender prompt games.
 - **Nature of impact:** AI safety education; adversarial literacy.
@@ -259,7 +259,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 89%
 - **Novelty:** 96%
 
-### 16. Transparent multi-scheme scoring for adversarial and open-ended tasks
+### 16. Several scoring models are published for transparency
 
 - **Description:** Instead of hiding one scoring rule, you publish multiple schemes (simple wins, role-balanced rates, difficulty-weighted performance, over-expected performance) so the fairness model itself can be inspected.
 - **Nature of impact:** Assessment transparency; scoring theory.
@@ -268,7 +268,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 82%
 - **Novelty:** 90%
 
-### 17. Live LLM API evaluation and hands-on LLM competency batteries
+### 17. Students are tested on live, hands-on AI skills
 
 - **Description:** Students are not only told about LLMs; they are examined through live API-driven questions on embeddings, vision, structured output, speech, hallucination traps, RAG, evals, cost optimization, and more.
 - **Nature of impact:** Assessment infrastructure; skills certification.
@@ -277,7 +277,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 93%
 - **Novelty:** 94%
 
-### 18. Dynamic seeded personalization with server-side validation
+### 18. Each student gets unique question variants checked on the server
 
 - **Description:** Each student gets deterministic but unique variants, and many correct answers are generated or checked server-side rather than exposed on the client. Some tasks also deliberately force social strategy or collaboration economics instead of pure solo solving. This sharply reduces answer-sharing and answer-key leakage.
 - **Nature of impact:** Security architecture; anti-cheating design.
@@ -286,7 +286,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 94%
 - **Novelty:** 89%
 
-### 19. AI-generated assessment content with self-testing and self-correction
+### 19. AI writes, tests, and fixes draft assessment questions
 
 - **Description:** You are not just using AI to draft questions. You are using agentic AI to read the repo, generate question candidates, test them, catch its own errors, and revise before release.
 - **Nature of impact:** Faculty workflow; exam authoring.
@@ -295,7 +295,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 88%
 - **Novelty:** 95%
 
-### 20. Coding agents are used to QA exams and expose the real skill being tested
+### 20. Coding agents are used to test exams before students take them
 
 - **Description:** You now point coding agents at exam tasks both to test whether the question is well-designed and to ask a deeper question: if an agent can solve it, what skill is the exam actually measuring?
 - **Nature of impact:** Assessment QA; curricular reflection.
@@ -304,7 +304,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 84%
 - **Novelty:** 92%
 
-### 21. Repo-grounded AI viva with follow-up code-change checks
+### 21. AI vivas question students about their own repositories
 
 - **Description:** You are experimenting with viva systems that generate questions from a student's repo, probe understanding of their own code, and potentially require them to make a change and push it so the system can diff and score.
 - **Nature of impact:** Integrity checking; oral assessment redesign.
@@ -313,7 +313,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 90%
 - **Novelty:** 91%
 
-### 22. Multimodal and open-ended AI evaluation with vision models, embeddings, and Promptfoo
+### 22. AI grades richer work like images, stories, and analyses
 
 - **Description:** You are evaluating work that cannot be reduced to a single string: images, narratives, analyses, APIs, and data stories - using vision models, embeddings, deterministic assertions, and LLM rubrics together.
 - **Nature of impact:** Open-ended assessment; multimodal grading.
@@ -322,7 +322,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 79%
 - **Novelty:** 94%
 
-### 23. Cohort-level originality / diversity scoring with embeddings
+### 23. Originality bonuses reward work that differs from the cohort
 
 - **Description:** Some experimental image-generation tasks do not just check correctness. They also reward outputs that are meaningfully distinct from the cohort, using embeddings to measure uniqueness.
 - **Nature of impact:** Creativity assessment; anti-convergence design.
@@ -333,7 +333,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 
 ### Support, infrastructure, and operations
 
-### 24. AI Pipe / budgeted proxy access for all students
+### 24. Shared, budgeted AI access for every student
 
 - **Description:** Instead of leaving AI access to personal budgets, you provide a common API-compatible proxy with spend caps. Students get real model access inside a governed perimeter.
 - **Nature of impact:** Access infrastructure; equity; cost control.
@@ -342,7 +342,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 87%
 - **Novelty:** 89%
 
-### 25. AI-use telemetry and model-vs-score analytics inside live assessments
+### 25. Live exams track which AI tools students use
 
 - **Description:** The exam system logs which AI students invoke, which model they choose, and when they ask AI. You then analyze model choice, timing, and scores to see what actually helps.
 - **Nature of impact:** Learning analytics; instrumentation.
@@ -351,7 +351,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 86%
 - **Novelty:** 93%
 
-### 26. Data-driven exam strategy and deadline analytics
+### 26. Exam strategy is redesigned from real behavior data
 
 - **Description:** You are using actual assessment traces to learn what predicts performance - e.g. model choice and submission timing - and feeding that back into course design.
 - **Nature of impact:** Assessment analytics; behavior design.
@@ -360,7 +360,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 77%
 - **Novelty:** 84%
 
-### 27. Virtual TA / chatbot as both student tool and student-built artifact
+### 27. Students build virtual TAs from real course content
 
 - **Description:** Students are asked to build a virtual TA that answers course questions grounded in actual course and Discourse content, while the institution separately experiments with deploying similar bots for support and viva.
 - **Nature of impact:** Student support; productized assessment.
@@ -369,7 +369,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 84%
 - **Novelty:** 86%
 
-### 28. AI as the first-line TA, humans for exceptions, trust, and judgment
+### 28. AI handles routine support; humans handle judgment
 
 - **Description:** The emerging operating model is: let AI handle setup questions, first-pass explanations, repetitive clarifications, and searchable context; reserve humans for ambiguity, reassurance, taste, escalation, and final accountability.
 - **Nature of impact:** Support architecture; TA workload design.
@@ -378,7 +378,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 88%
 - **Novelty:** 83%
 
-### 29. Execution logs, verification notes, and terminal recordings as assessment evidence
+### 29. Process logs become part of the assessment evidence
 
 - **Description:** In some AI-native assessments, the real evidence is not just the final answer but the trace: session recordings, command markers, verification notes, agent logs, and other proof of how the work was done.
 - **Nature of impact:** Evidence design; process-aware assessment.
@@ -389,7 +389,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 
 ### Learning analytics, research, and faculty meta-skills
 
-### 30. Test cases are being reconceived as automated tutors, not just graders
+### 30. Test cases act like tutors, not just graders
 
 - **Description:** In your IITM BS Python OPPE work, the key pedagogical move is to make test cases diagnose specific mental-model failures - e.g. solving the visible examples instead of the problem, parsing by shape instead of contract, relying on brittle heuristics, or returning the wrong structure despite correct logic. The grader becomes a teaching assistant.
 - **Nature of impact:** Feedback design; formative assessment.
@@ -398,7 +398,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 93%
 - **Novelty:** 92%
 
-### 31. Fault-tolerant AST parsing for broken student code
+### 31. Broken code is analyzed before it even compiles
 
 - **Description:** You are exploring `tree-sitter` style parsing so that even syntactically broken student code can still be inspected for logic and misconception patterns, enabling feedback before a clean compile.
 - **Nature of impact:** Programming pedagogy; diagnostic infrastructure.
@@ -407,7 +407,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 83%
 - **Novelty:** 91%
 
-### 32. Mining code snapshots and practice data for misconception patterns
+### 32. Student code traces reveal hidden misconception patterns
 
 - **Description:** You are using AI and timestamped code traces to identify fine-grained mental-model pathologies - overfitting to examples, thrashing, structure confusion, missing invariants, parsing-by-shape, and other hidden learning dynamics from actual student behavior.
 - **Nature of impact:** Learning analytics; early intervention.
@@ -416,7 +416,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 84%
 - **Novelty:** 90%
 
-### 33. Cross-course AI-assisted learning analytics as a research programme
+### 33. Learning analytics becomes a reusable research programme
 
 - **Description:** The OPPE / Python analysis is not being treated as a one-off dashboard. It is being framed as a reusable meta-framework that could track prerequisite transfer, course-to-course movement, and publishable educational research.
 - **Nature of impact:** Institutional research; programme design.
@@ -425,7 +425,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 85%
 - **Novelty:** 88%
 
-### 34. LLM-based fact-checking of textbooks and curriculum claims
+### 34. AI fact-checks textbooks and curriculum claims
 
 - **Description:** You are treating LLMs as large-scale claim extractors and first-pass verifiers for textbooks, using them to flag questionable claims for human follow-up.
 - **Nature of impact:** Curriculum quality assurance.
@@ -434,7 +434,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 68%
 - **Novelty:** 77%
 
-### 35. Directional feedback for AI as a teachable meta-skill
+### 35. Giving AI directional feedback becomes a teachable skill
 
 - **Description:** Instead of trying to give expert-level detailed corrections, you are developing a method for giving AI directional, taste-based, audience-aware feedback so the system can use its own expertise more effectively.
 - **Nature of impact:** Feedback engineering; faculty/student meta-skill.
@@ -443,7 +443,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 71%
 - **Novelty:** 83%
 
-### 36. Peer-review analytics to diagnose evaluator personas
+### 36. Peer-review data reveals reviewer types and bias
 
 - **Description:** You analyzed how students review one another's work and inferred reviewer personas from actual marking behavior - e.g. always-give-full-marks reviewers, safe-midpoint reviewers, extremists, angry zero-markers, and calibrated reviewers.
 - **Nature of impact:** Peer-assessment analytics; calibration and moderation.
@@ -452,7 +452,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 - **Importance:** 67%
 - **Novelty:** 81%
 
-### 37. Verified open-source contribution as coursework
+### 37. Real open-source contributions count as coursework
 
 - **Description:** One project task requires students to make a small, genuinely useful pull request to a public GitHub repository with meaningful real-world visibility, and then prove that it was merged and authored by them.
 - **Nature of impact:** Authentic assessment; industry/public contribution.
@@ -465,7 +465,7 @@ Your IITM/TDS notes explicitly point to a shift toward **MLOps, orchestration, s
 
 A second-pass scan surfaced adjacent innovations from non-education AI/LLM posts, talks, and tooling experiments. They are not all classroom deployments yet, but they clearly shape the direction of your educational practice and are relevant to IITM's governance choices.
 
-### 38. Taste/judgment is treated as an explicit AI-era learning objective
+### 38. Judgment and taste become explicit learning goals
 
 - **Description:** You frame judgment and taste as the skill AI makes more valuable, and propose concrete practices to build it: argument mapping, perceptual learning, expert prediction audits, peer critique against a goal, and a four-way heuristic for AI-eroded skills: enforce, level-up, switch, or accept.
 - **Nature of impact:** Curriculum design; judgment training.
@@ -474,7 +474,7 @@ A second-pass scan surfaced adjacent innovations from non-education AI/LLM posts
 - **Importance:** 86%
 - **Novelty:** 85%
 
-### 39. Specifications, briefs, and acceptance tests become the assessment contract
+### 39. Specs and tests become the real assignment
 
 - **Description:** Instead of treating code or output as the main artifact, you increasingly treat a machine-readable brief or SOP - goal, context, constraints, done-when, examples, counter-examples, and eval or test suite - as the primary product. Code becomes a build artifact.
 - **Nature of impact:** Assessment design; agentic workflow pedagogy.
@@ -483,7 +483,7 @@ A second-pass scan surfaced adjacent innovations from non-education AI/LLM posts
 - **Importance:** 91%
 - **Novelty:** 90%
 
-### 40. Tiered human-in-the-loop governance (green/amber/red) for scaled AI assessment
+### 40. Green/amber/red review levels govern AI at scale
 
 - **Description:** You propose labeling steps or question types by blast radius: green auto-ships, amber is sampled or spot-checked, red is always human-reviewed. This is the governance architecture for large-scale AI grading and support.
 - **Nature of impact:** Governance architecture; risk management.
@@ -492,7 +492,7 @@ A second-pass scan surfaced adjacent innovations from non-education AI/LLM posts
 - **Importance:** 87%
 - **Novelty:** 91%
 
-### 41. Reasoning models become verification infrastructure, not just answer engines
+### 41. Reasoning models verify tough or borderline cases
 
 - **Description:** Your experiments show that increasing reasoning effort on a small model can flip an evaluator from sloppy to reliable, at extra token and time cost. This suggests a cost-aware pattern: cheap screening first, reasoning-backed verification for borderline or high-stakes cases.
 - **Nature of impact:** Evaluation economics; grading infrastructure.
@@ -501,7 +501,7 @@ A second-pass scan surfaced adjacent innovations from non-education AI/LLM posts
 - **Importance:** 83%
 - **Novelty:** 90%
 
-### 42. Semantic plagiarism triage with MinHash and AST cleanup
+### 42. Smarter code-copy detection uses structure and similarity
 
 - **Description:** You are not relying on raw string matching. You strip docstrings, tokenize code, build shingles, and use MinHash or Jaccard similarity to surface suspiciously similar submissions for follow-up.
 - **Nature of impact:** Integrity analytics; plagiarism triage.
@@ -510,7 +510,7 @@ A second-pass scan surfaced adjacent innovations from non-education AI/LLM posts
 - **Importance:** 84%
 - **Novelty:** 86%
 
-### 43. Workflow orchestration briefs are themselves graded artifacts
+### 43. Students are graded on designing AI workflows
 
 - **Description:** Some newer tasks ask students not just to produce an answer, but to specify a multi-step agent workflow: datasets, stages, prompts, tools, quality checks, and delivery formats, in machine-readable JSON.
 - **Nature of impact:** Agentic assessment; workflow design.
@@ -519,7 +519,7 @@ A second-pass scan surfaced adjacent innovations from non-education AI/LLM posts
 - **Importance:** 82%
 - **Novelty:** 90%
 
-### 44. AI-mediated reading modes and re-authoring for personalized study
+### 44. One book becomes many AI-generated study modes
 
 - **Description:** You use AI to summarize books, fact-check claims, compare multiple books, and re-author dense prose in more engaging styles. One text becomes many possible study experiences.
 - **Nature of impact:** Self-directed learning; reading pedagogy.
@@ -528,7 +528,7 @@ A second-pass scan surfaced adjacent innovations from non-education AI/LLM posts
 - **Importance:** 75%
 - **Novelty:** 87%
 
-### 45. Policy documents become executable rules for academic governance
+### 45. Policies can be turned into executable checks
 
 - **Description:** Policies, rubrics, and institutional rules can be translated into machine-executable checks, so compliance is not just interpreted manually but verified automatically and audibly at scale.
 - **Nature of impact:** Governance automation; policy enforcement.
@@ -537,7 +537,7 @@ A second-pass scan surfaced adjacent innovations from non-education AI/LLM posts
 - **Importance:** 82%
 - **Novelty:** 88%
 
-### 46. Retrieval-first institutional memory with canonical Q&A cards
+### 46. Canonical Q&A cards become institutional memory
 
 - **Description:** Instead of letting answers live in experts' heads or stale wikis, recurring questions are converted into canonical Q&A cards with source links, owner, freshness date, and retriever-friendly chunks that both humans and agents can cite.
 - **Nature of impact:** Knowledge infrastructure; support consistency.
@@ -546,7 +546,7 @@ A second-pass scan surfaced adjacent innovations from non-education AI/LLM posts
 - **Importance:** 81%
 - **Novelty:** 84%
 
-### 47. Shadow-mode and canary rollout for AI academic workflows
+### 47. New AI academic workflows roll out in shadow mode first
 
 - **Description:** New AI graders, bots, or support workflows are first run in shadow mode or on a tiny canary slice with synthetic data, kill-switches, and rollbacks, so the institution can learn safely before full deployment.
 - **Nature of impact:** Deployment governance; operational risk control.
@@ -555,7 +555,7 @@ A second-pass scan surfaced adjacent innovations from non-education AI/LLM posts
 - **Importance:** 80%
 - **Novelty:** 86%
 
-### 48. Faculty and staff learn to manage agents, not just use tools
+### 48. Faculty learn to manage agents, not just chat with them
 
 - **Description:** Short, role-specific training on writing specs, setting budgets, adding kill-switches, and defining escalation rules turns non-specialists into competent supervisors of agentic workflows.
 - **Nature of impact:** Faculty development; operational capability-building.
@@ -564,7 +564,7 @@ A second-pass scan surfaced adjacent innovations from non-education AI/LLM posts
 - **Importance:** 78%
 - **Novelty:** 82%
 
-### 49. Vibe coding expands interactive pedagogy beyond technical disciplines
+### 49. AI lets non-coders build interactive learning tools
 
 - **Description:** Non-technical staff and students can use AI to build interactive timelines, maps, biographies, and other learning artifacts for humanities and social-science subjects. The limiting factor becomes imagination, not coding ability.
 - **Nature of impact:** Curriculum expansion; interdisciplinary pedagogy.
@@ -573,7 +573,7 @@ A second-pass scan surfaced adjacent innovations from non-education AI/LLM posts
 - **Importance:** 79%
 - **Novelty:** 85%
 
-### 50. Parallel LLM execution becomes a teachable learning strategy
+### 50. Students learn to run many AI attempts in parallel
 
 - **Description:** Learners are encouraged to run multiple prompts, models, or tasks in parallel to sample more ideas, compare approaches, and converge faster instead of waiting on one sequential path.
 - **Nature of impact:** Meta-skill; workflow pedagogy.
@@ -582,60 +582,94 @@ A second-pass scan surfaced adjacent innovations from non-education AI/LLM posts
 - **Importance:** 75%
 - **Novelty:** 79%
 
+### Assessment, grading, and integrity
+
+### 51. Reward originality without punishing collaboration
+
+- **Description:** Instead of treating copying as automatic misconduct, you reward genuinely novel work with bonus marks, compare only against earlier submissions, and use code-similarity analysis to study how collaboration actually spreads through a cohort.
+- **Nature of impact:** Assessment incentives; integrity design; originality analytics.
+- **Why it matters to IITM:** It offers a more realistic AI-era policy than blanket prohibition: students can learn from one another openly, while the institution still rewards initiative, sharing, and authentic variation.
+- **Source:** `https://www.s-anand.net/blog/when-and-how-to-copy-assignments/`
+- **Importance:** 84%
+- **Novelty:** 92%
+
+### Learning analytics, research, and faculty meta-skills
+
+### 52. Replay galleries turn exam logs into faculty-readable stories
+
+- **Description:** Anonymized coding-exam traces are turned into plain-language public reports, narrated replays, and error-pattern stories so non-technical faculty can see where students get stuck and what interventions or test fixes would help.
+- **Nature of impact:** Learning analytics communication; faculty development; evidence translation.
+- **Why it matters to IITM:** Research only changes policy when decision-makers can understand it. This makes raw exam exhaust legible to faculty, programme teams, and academic leaders without requiring them to read notebooks or logs.
+- **Source:** `https://sanand0.github.io/pyoppe/`; `https://sanand0.github.io/pyoppe/analysis/replays-v3.html`; `https://sanand0.github.io/pyoppe/analysis/report.html`
+- **Importance:** 82%
+- **Novelty:** 88%
+
+### 53. Problem-solving is broken into coachable steps, not one talent
+
+- **Description:** Large-scale response analysis is used to locate the exact step where students break down - reading the givens, choosing a method, surviving multi-select traps, or knowing when to exit a bad section - so the tutor can coach the failed step instead of reteaching everything.
+- **Nature of impact:** Adaptive tutoring; diagnostic assessment; strategy coaching.
+- **Why it matters to IITM:** This is a strong model for turning assessment data into targeted remediation. It replaces vague labels like "weak student" with specific, trainable failure modes and coaching modules.
+- **Source:** `https://files.s-anand.net/temp/navodaya-2026/`
+- **Importance:** 89%
+- **Novelty:** 90%
+
 ## Summary table
 
 | Innovation | Importance (0-100%) | Novelty (0-100%) |
 | --- | ---: | ---: |
-| Question-only, prompt-first curriculum ("There is no course content") | 98% | 93% |
-| "Ask AI" embedded inside every question, with model choice | 97% | 95% |
-| LLM-based project grading with granular rubrics and explanation-first judging | 96% | 94% |
-| Copying, collaboration, and even hacking are made part of the curriculum | 95% | 92% |
-| The curriculum is being redesigned around what AI still does badly | 94% | 82% |
-| Dynamic seeded personalization with server-side validation | 94% | 89% |
-| Live LLM API evaluation and hands-on LLM competency batteries | 93% | 94% |
-| Test cases are being reconceived as automated tutors, not just graders | 93% | 92% |
-| Hard, ambiguous, hackable, beyond-syllabus problems are used deliberately | 91% | 88% |
-| Specifications, briefs, and acceptance tests become the assessment contract | 91% | 90% |
-| Repo-grounded AI viva with follow-up code-change checks | 90% | 91% |
-| Adversarial prompt security is taught as an assessable skill | 89% | 96% |
-| Diagnostic-first teaching: assess first, teach from the errors | 88% | 81% |
-| AI-generated assessment content with self-testing and self-correction | 88% | 95% |
-| AI as the first-line TA, humans for exceptions, trust, and judgment | 88% | 83% |
-| AI Pipe / budgeted proxy access for all students | 87% | 89% |
-| Tiered human-in-the-loop governance (green/amber/red) for scaled AI assessment | 87% | 91% |
-| AI-use telemetry and model-vs-score analytics inside live assessments | 86% | 93% |
-| Taste/judgment is treated as an explicit AI-era learning objective | 86% | 85% |
-| Cross-course AI-assisted learning analytics as a research programme | 85% | 88% |
-| Coding agents are used to QA exams and expose the real skill being tested | 84% | 92% |
-| Semantic plagiarism triage with MinHash and AST cleanup | 84% | 86% |
-| Virtual TA / chatbot as both student tool and student-built artifact | 84% | 86% |
-| Mining code snapshots and practice data for misconception patterns | 84% | 88% |
-| Game-playing agents are turned into learning tasks | 83% | 90% |
-| Fault-tolerant AST parsing for broken student code | 83% | 91% |
-| Reasoning models become verification infrastructure, not just answer engines | 83% | 90% |
-| Policy documents become executable rules for academic governance | 82% | 88% |
-| Transparent multi-scheme scoring for adversarial and open-ended tasks | 82% | 90% |
-| Workflow orchestration briefs are themselves graded artifacts | 82% | 90% |
-| Retrieval-first institutional memory with canonical Q&A cards | 81% | 84% |
-| Personalized skill clustering and short next-step feedback | 81% | 74% |
-| Shadow-mode and canary rollout for AI academic workflows | 80% | 86% |
+| Learn by solving, not by reading notes | 98% | 93% |
+| Every question includes an "Ask AI" button | 97% | 95% |
+| AI project grading with explainable rubrics | 96% | 94% |
+| Students are allowed to copy, collaborate, and even hack | 95% | 92% |
+| Each student gets unique question variants checked on the server | 94% | 89% |
+| Teach what AI still cannot do well | 94% | 82% |
+| Students are tested on live, hands-on AI skills | 93% | 94% |
+| Test cases act like tutors, not just graders | 93% | 92% |
+| Specs and tests become the real assignment | 91% | 90% |
+| Use hard, messy problems to teach real-world problem solving | 91% | 88% |
+| AI vivas question students about their own repositories | 90% | 91% |
+| Students are tested on prompt attacks and defenses | 89% | 96% |
+| Problem-solving is broken into coachable steps, not one talent | 89% | 90% |
+| AI writes, tests, and fixes draft assessment questions | 88% | 95% |
+| AI handles routine support; humans handle judgment | 88% | 83% |
+| Test first, then teach from the mistakes | 88% | 81% |
+| Green/amber/red review levels govern AI at scale | 87% | 91% |
+| Shared, budgeted AI access for every student | 87% | 89% |
+| Live exams track which AI tools students use | 86% | 93% |
+| Judgment and taste become explicit learning goals | 86% | 85% |
+| Learning analytics becomes a reusable research programme | 85% | 88% |
+| Coding agents are used to test exams before students take them | 84% | 92% |
+| Reward originality without punishing collaboration | 84% | 92% |
+| Student code traces reveal hidden misconception patterns | 84% | 90% |
+| Students build virtual TAs from real course content | 84% | 86% |
+| Smarter code-copy detection uses structure and similarity | 84% | 86% |
+| Broken code is analyzed before it even compiles | 83% | 91% |
+| Students learn through game-playing AI tasks | 83% | 90% |
+| Reasoning models verify tough or borderline cases | 83% | 90% |
+| Several scoring models are published for transparency | 82% | 90% |
+| Students are graded on designing AI workflows | 82% | 90% |
+| Policies can be turned into executable checks | 82% | 88% |
+| Replay galleries turn exam logs into faculty-readable stories | 82% | 88% |
+| Canonical Q&A cards become institutional memory | 81% | 84% |
+| Short, personalized next-step feedback from skill clusters | 81% | 74% |
+| New AI academic workflows roll out in shadow mode first | 80% | 86% |
 | Teacher-first AI adoption through familiar formats | 80% | 76% |
-| Vibe coding expands interactive pedagogy beyond technical disciplines | 79% | 85% |
-| Multimodal and open-ended AI evaluation with vision models, embeddings, and Promptfoo | 79% | 94% |
-| Faculty and staff learn to manage agents, not just use tools | 78% | 82% |
-| Execution logs, verification notes, and terminal recordings as assessment evidence | 78% | 89% |
-| The course is public and auditable outside IITM | 78% | 70% |
-| Data-driven exam strategy and deadline analytics | 77% | 84% |
-| Verified open-source contribution as coursework | 76% | 86% |
-| Parallel LLM execution becomes a teachable learning strategy | 75% | 79% |
-| AI-mediated reading modes and re-authoring for personalized study | 75% | 87% |
-| Interactive explainers are used as a new teaching medium | 74% | 78% |
+| AI grades richer work like images, stories, and analyses | 79% | 94% |
+| AI lets non-coders build interactive learning tools | 79% | 85% |
+| Process logs become part of the assessment evidence | 78% | 89% |
+| Faculty learn to manage agents, not just chat with them | 78% | 82% |
+| The course is open for anyone to inspect | 78% | 70% |
+| Exam strategy is redesigned from real behavior data | 77% | 84% |
+| Real open-source contributions count as coursework | 76% | 86% |
+| One book becomes many AI-generated study modes | 75% | 87% |
+| Students learn to run many AI attempts in parallel | 75% | 79% |
+| Interactive AI explainers teach unfamiliar concepts | 74% | 78% |
 | AI-generated comics explain why each question exists | 72% | 84% |
-| Directional feedback for AI as a teachable meta-skill | 71% | 83% |
-| Cohort-level originality / diversity scoring with embeddings | 71% | 95% |
-| Personalized AI learning coach / research coach | 69% | 73% |
-| LLM-based fact-checking of textbooks and curriculum claims | 68% | 77% |
-| Peer-review analytics to diagnose evaluator personas | 67% | 81% |
+| Originality bonuses reward work that differs from the cohort | 71% | 95% |
+| Giving AI directional feedback becomes a teachable skill | 71% | 83% |
+| AI as a personalized learning and research coach | 69% | 73% |
+| AI fact-checks textbooks and curriculum claims | 68% | 77% |
+| Peer-review data reveals reviewer types and bias | 67% | 81% |
 
 ## Bottom line
 

@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Open-Book Exam We Didn't Design — IITM Academic Council, March 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+/* ── Design tokens ──────────────────────────────────────────────────── */
+:root {
+  --cream:   #faf8f4;
+  --ink:     #1c1917;
+  --muted:   #78716c;
+  --border:  #e0dbd0;
+  --flame:   #c2410c;
+  --navy:    #1e3a5f;
+  --green:   #15803d;
+  --amber:   #d97706;
+  --red:     #dc2626;
+  --serif:   'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --display: 'Playfair Display', Georgia, serif;
+  --sans:    system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono:    'Fira Code', 'Cascadia Code', Consolas, monospace;
+  --w:       700px;
+  --wfig:    900px;
+}
+
+/* ── Reset ──────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 18px; scroll-behavior: smooth; }
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--serif);
+  line-height: 1.72;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--flame); }
+
+/* ── Reading progress ───────────────────────────────────────────────── */
+#progress {
+  position: fixed; top: 0; left: 0;
+  height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--flame), #e07b45);
+  z-index: 100;
+  transition: width .1s linear;
+  pointer-events: none;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────── */
+.site-header {
+  max-width: var(--w);
+  margin: 0 auto;
+  padding: 4.5rem 1.5rem 3rem;
+  border-bottom: 2px solid var(--ink);
+}
+.site-header .eyebrow {
+  font-family: var(--sans);
+  font-size: .72rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+.site-header h1 {
+  font-family: var(--display);
+  font-size: clamp(2rem, 5.5vw, 3.25rem);
+  font-weight: 700;
+  line-height: 1.12;
+  margin-bottom: 1.2rem;
+}
+.site-header .deck {
+  font-size: 1.05rem;
+  color: #44403c;
+  max-width: 540px;
+  line-height: 1.6;
+  margin-bottom: 1.4rem;
+}
+.site-header .byline {
+  font-family: var(--sans);
+  font-size: .82rem;
+  color: var(--muted);
+}
+.site-header .byline strong { color: var(--ink); }
+
+/* ── WhatsApp message ───────────────────────────────────────────────── */
+.wapp-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 2.8rem 0 2rem;
+}
+.wapp-msg {
+  background: #1a2e1a;
+  color: #d4e8c8;
+  border-radius: 14px 14px 14px 4px;
+  padding: 1rem 1.4rem 1.2rem;
+  max-width: 310px;
+  width: 100%;
+  font-family: var(--sans);
+  font-size: .88rem;
+  line-height: 1.55;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0,0,0,.18);
+  opacity: 0;
+  transform: translateY(16px) scale(.97);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.wapp-msg.visible { opacity: 1; transform: none; }
+.wapp-msg .wapp-meta {
+  font-size: .68rem;
+  color: #6a9b5c;
+  margin-bottom: .5rem;
+  letter-spacing: .03em;
+}
+.wapp-msg .wapp-sender {
+  font-weight: 700;
+  color: #9fd87a;
+  margin-bottom: .25rem;
+  font-size: .8rem;
+}
+.wapp-msg .wapp-cost {
+  display: inline-block;
+  margin-top: .8rem;
+  background: rgba(255,255,255,.1);
+  border-radius: 20px;
+  padding: .2em .8em;
+  font-size: .75rem;
+  font-weight: 700;
+  color: #9fd87a;
+  letter-spacing: .04em;
+}
+.wapp-msg .wapp-tick {
+  position: absolute;
+  bottom: .6rem; right: .9rem;
+  font-size: .65rem;
+  color: #4fc3f7;
+  font-family: var(--sans);
+}
+
+/* ── Beat sections ──────────────────────────────────────────────────── */
+.beat {
+  padding: 5rem 0 4.5rem;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.beat-label {
+  max-width: var(--w);
+  margin: 0 auto 2.5rem;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+.beat-num {
+  font-family: var(--display);
+  font-size: .8rem;
+  color: var(--flame);
+  font-style: italic;
+  opacity: .8;
+  min-width: 2rem;
+  flex-shrink: 0;
+}
+.beat-title {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* ── Prose ──────────────────────────────────────────────────────────── */
+.prose {
+  max-width: var(--w);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+.prose p { margin-bottom: 1.45rem; }
+.prose p:last-child { margin-bottom: 0; }
+
+/* Drop cap on the first paragraph of each beat */
+.beat > .prose:first-of-type > p:first-child::first-letter {
+  font-family: var(--display);
+  font-size: 3.5em;
+  font-weight: 700;
+  float: left;
+  line-height: .8;
+  margin: .05em .1em 0 0;
+  color: var(--flame);
+}
+
+/* ── Pull quote ─────────────────────────────────────────────────────── */
+.pull-quote {
+  max-width: var(--w);
+  margin: 2.8rem auto;
+  padding: 0 1.5rem;
+}
+.pull-quote blockquote {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--navy);
+  border-left: 3px solid var(--flame);
+  padding-left: 1.5rem;
+}
+
+/* ── Callout ────────────────────────────────────────────────────────── */
+.callout {
+  max-width: var(--w);
+  margin: 2.2rem auto;
+  padding: 0 1.5rem;
+}
+.callout-inner {
+  background: rgba(194,65,12,.05);
+  border: 1px solid rgba(194,65,12,.18);
+  border-radius: 6px;
+  padding: 1.4rem 1.6rem;
+}
+.callout-inner .callout-title {
+  font-family: var(--sans);
+  font-size: .7rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--flame);
+  margin-bottom: 1rem;
+}
+
+/* ── Stat row ───────────────────────────────────────────────────────── */
+.stat-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.stat { flex: 1; min-width: 110px; text-align: center; }
+.stat .num {
+  font-family: var(--display);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--flame);
+  display: block;
+  line-height: 1.1;
+}
+.stat .lbl {
+  font-family: var(--sans);
+  font-size: .75rem;
+  color: var(--muted);
+  margin-top: .3rem;
+  display: block;
+}
+
+/* ── Figure / viz container ─────────────────────────────────────────── */
+.viz {
+  max-width: var(--wfig);
+  margin: 2.8rem auto;
+  padding: 0 1.5rem;
+}
+.viz svg { width: 100%; height: auto; display: block; }
+.viz figcaption {
+  font-family: var(--sans);
+  font-size: .76rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: .6rem;
+  font-style: italic;
+}
+
+/* ── GPS table ──────────────────────────────────────────────────────── */
+.gps-table {
+  max-width: var(--w);
+  margin: 2.2rem auto;
+  padding: 0 1.5rem;
+  overflow-x: auto;
+}
+.gps-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--sans);
+  font-size: .86rem;
+}
+.gps-table th {
+  text-align: left;
+  padding: .55rem .9rem;
+  font-size: .7rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--border);
+}
+.gps-table td {
+  padding: .8rem .9rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.45;
+}
+.gps-table tr:last-child td { border-bottom: none; }
+.gps-table td:first-child { white-space: nowrap; }
+.badge {
+  display: inline-block;
+  padding: .2em .65em;
+  border-radius: 3px;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+.b-enforce { background: #fee2e2; color: #991b1b; }
+.b-levelup { background: #dbeafe; color: #1e40af; }
+.b-switch  { background: #fef3c7; color: #92400e; }
+.b-accept  { background: #d1fae5; color: #065f46; }
+
+/* ── Subsection heading ─────────────────────────────────────────────── */
+.subsect {
+  max-width: var(--w);
+  margin: 3.5rem auto 1.5rem;
+  padding: 0 1.5rem;
+}
+.subsect h3 {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.subsect h3::before {
+  content: '◆ ';
+  color: var(--flame);
+  font-size: .7em;
+}
+
+/* ── Governance tier rows ───────────────────────────────────────────── */
+.tier-rows {
+  max-width: var(--w);
+  margin: 1.8rem auto;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+.tier-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 6px;
+  padding: .9rem 1.2rem;
+  font-family: var(--sans);
+  font-size: .88rem;
+  line-height: 1.45;
+}
+.tier-row.green { background: #d1fae5; border-left: 4px solid #15803d; }
+.tier-row.amber { background: #fef3c7; border-left: 4px solid #d97706; }
+.tier-row.red   { background: #fee2e2; border-left: 4px solid #dc2626; }
+.tier-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+.tier-row.green .tier-dot { background: #15803d; }
+.tier-row.amber .tier-dot { background: #d97706; }
+.tier-row.red   .tier-dot { background: #dc2626; }
+.tier-pct { margin-left: auto; font-weight: 700; font-size: .9rem; opacity: .75; }
+
+/* ── Three-asks list ────────────────────────────────────────────────── */
+.asks {
+  max-width: var(--w);
+  margin: 2.2rem auto;
+  padding: 0 1.5rem;
+  counter-reset: ask;
+}
+.ask-item {
+  counter-increment: ask;
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+  align-items: flex-start;
+}
+.ask-item::before {
+  content: counter(ask);
+  font-family: var(--display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--flame);
+  line-height: 1;
+  min-width: 1.6rem;
+  padding-top: .05em;
+  opacity: .7;
+}
+.ask-item p { margin: 0; font-family: var(--sans); font-size: .92rem; line-height: 1.55; }
+.ask-item strong { color: var(--navy); }
+
+/* ── Key messages section ───────────────────────────────────────────── */
+.key-messages {
+  background: var(--navy);
+  color: #d6e4f5;
+  padding: 5rem 1.5rem;
+}
+.key-messages-inner { max-width: var(--w); margin: 0 auto; }
+.key-messages h2 {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-style: italic;
+  color: #8eb8e8;
+  margin-bottom: 2.5rem;
+}
+.km-list {
+  list-style: none;
+  counter-reset: km;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+.km-item {
+  counter-increment: km;
+  display: flex;
+  gap: 1.2rem;
+  align-items: flex-start;
+}
+.km-item::before {
+  content: counter(km);
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--flame);
+  line-height: 1;
+  min-width: 1.4rem;
+  padding-top: .05em;
+}
+.km-item .km-head { color: #fff; font-weight: 600; }
+.km-item .km-body { font-size: .88rem; color: #8eb8e8; margin-top: .25rem; line-height: 1.5; }
+
+/* ── Tooltip ────────────────────────────────────────────────────────── */
+#tooltip {
+  position: fixed;
+  z-index: 999;
+  background: #1c1917;
+  color: #f5f5f4;
+  font-family: var(--sans);
+  font-size: .78rem;
+  line-height: 1.5;
+  padding: .5rem .85rem;
+  border-radius: 5px;
+  max-width: 260px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .15s;
+  box-shadow: 0 4px 14px rgba(0,0,0,.3);
+}
+[data-tooltip] {
+  cursor: help;
+  border-bottom: 1px dashed rgba(120,113,108,.5);
+}
+
+/* ── Popup ──────────────────────────────────────────────────────────── */
+#popup-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.6);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  backdrop-filter: blur(3px);
+}
+#popup-overlay.open { display: flex; }
+#popup-box {
+  background: #fff;
+  border-radius: 10px;
+  max-width: 680px;
+  width: 100%;
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 64px rgba(0,0,0,.35);
+  overflow: hidden;
+}
+#popup-header {
+  padding: .9rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  background: #faf8f4;
+}
+#popup-title {
+  font-family: var(--sans);
+  font-size: .86rem;
+  font-weight: 600;
+  flex: 1;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#popup-open-link {
+  font-family: var(--sans);
+  font-size: .75rem;
+  color: var(--flame);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+#popup-open-link:hover { text-decoration: underline; }
+#popup-close {
+  background: none; border: none;
+  font-size: 1.3rem; cursor: pointer;
+  color: var(--muted); line-height: 1;
+  padding: .1rem .3rem;
+  flex-shrink: 0;
+}
+#popup-close:hover { color: var(--ink); }
+#popup-body {
+  padding: 1.2rem 1.4rem;
+  overflow-y: auto;
+  font-family: var(--sans);
+  font-size: .88rem;
+  line-height: 1.65;
+  flex: 1;
+}
+.cite-quote {
+  font-style: italic;
+  color: var(--muted);
+  border-left: 3px solid var(--flame);
+  padding-left: 1rem;
+  margin: .75rem 0 .5rem;
+  line-height: 1.6;
+}
+.cite-source { font-size: .78rem; color: var(--muted); margin-bottom: .75rem; }
+.cite-url { font-size: .82rem; word-break: break-all; }
+#popup-body pre {
+  background: #1e1e2e; color: #cdd6f4;
+  padding: 1rem 1.2rem; border-radius: 6px;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: .78rem; line-height: 1.6;
+}
+
+/* ── Clickable cite/file links ──────────────────────────────────────── */
+[data-cite], [data-file] {
+  cursor: pointer;
+  border-bottom: 1px solid rgba(194,65,12,.35);
+  color: var(--ink);
+  transition: border-color .15s, color .15s;
+}
+[data-cite]:hover, [data-file]:hover {
+  color: var(--flame);
+  border-color: var(--flame);
+}
+sup[data-cite] {
+  font-size: .7em;
+  border-bottom: none;
+  color: var(--flame);
+  vertical-align: super;
+}
+
+/* ── Scroll-reveal ──────────────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .65s ease, transform .65s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+.rd1 { transition-delay: .1s; }
+.rd2 { transition-delay: .22s; }
+.rd3 { transition-delay: .34s; }
+
+/* ── Footer ─────────────────────────────────────────────────────────── */
+.site-footer {
+  max-width: var(--w);
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+  border-top: 1px solid var(--border);
+  font-family: var(--sans);
+  font-size: .78rem;
+  color: var(--muted);
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  html { font-size: 16px; }
+  .beat { padding: 3.5rem 0 3rem; }
+  .site-header { padding: 3rem 1.5rem 2rem; }
+  .stat .num { font-size: 1.8rem; }
+  .beat-title { font-size: 1.4rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- ════════════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="eyebrow">IIT Madras &thinsp;·&thinsp; Academic Council &thinsp;·&thinsp; March 2026</div>
+  <h1>The Open-Book Exam<br>We Didn't Design</h1>
+  <p class="deck">Every assessment at IIT Madras is already an open-book exam — whether we designed it that way or not. The question is what rigorous education looks like when the textbook can answer every question.</p>
+  <div class="byline"><strong>Anand S</strong> &thinsp;·&thinsp; Chief Data Scientist, Straive</div>
+</header>
+
+<main>
+
+<!-- ════════════════════════════════════════════════
+     BEAT I — THE ₹800 PROBLEM
+════════════════════════════════════════════════ -->
+<section class="beat" id="beat-1">
+  <div class="beat-label">
+    <span class="beat-num">I</span>
+    <span class="beat-title">The ₹800 Problem</span>
+  </div>
+
+  <div class="wapp-wrap">
+    <div class="wapp-msg" id="wapp-msg">
+      <div class="wapp-meta">10:47 PM &thinsp;·&thinsp; WhatsApp</div>
+      <div class="wapp-sender">ExamHelp_IIT ✓</div>
+      Your proctor tomorrow is <strong>[name]</strong>. He asks about the authentication module first, then error handling. Here's exactly what to say.
+      <div class="wapp-cost">₹800 &thinsp;·&thinsp; Guaranteed pass ✓</div>
+      <div class="wapp-tick">✓✓ Read</div>
+    </div>
+  </div>
+
+  <div class="prose">
+    <p>The message arrives at 10 pm on a Tuesday.</p>
+
+    <p>It costs ₹800. For that price, the sender promises to know your examiner, know your project, and know exactly what to say when the camera turns on tomorrow morning. This is not a rumour. It is a <span data-cite="cheating-market">documented, organised market</span> that has formed around the IIT Madras assessment calendar — bootcamp services that build entire projects for students, WhatsApp networks that distribute proctor identities before vivas begin, scripts optimised for pasting into ChatGPT faster than a human evaluator can detect the pause.</p>
+
+    <p>By the time faculty realised what was happening and started shuffling proctor assignments, the market had already adapted. It adapted because it was never fragile. It was infrastructure.</p>
+
+    <p>The reflex is to call this a student discipline problem. But that framing misses something important. The market did not form because students are dishonest. It formed because the system created an incentive. When an exam measures whether you can recall a fact under pressure, and a service exists that delivers that fact for ₹800, <span data-cite="viva-cheating">the market will form</span>. Every time. This is not a student failing. This is physics.</p>
+
+    <p>The real question — the one this talk is about — is not how to fight the market. It is: <em>why did we build the exam that made the market inevitable?</em></p>
+  </div>
+
+  <figure class="viz" id="viz-market">
+    <svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" aria-label="Market network diagram" style="max-height:380px">
+      <defs>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#64748b"/>
+        </marker>
+        <marker id="arr-money" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#4ade80"/>
+        </marker>
+        <marker id="arr-red" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#f87171"/>
+        </marker>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <style>
+          @keyframes dash {
+            from { stroke-dashoffset: 200; } to { stroke-dashoffset: 0; }
+          }
+          @keyframes dash2 {
+            from { stroke-dashoffset: 160; } to { stroke-dashoffset: 0; }
+          }
+          @keyframes nodeIn {
+            from { opacity:0; transform:scale(0.4); } to { opacity:1; transform:scale(1); }
+          }
+          @keyframes pulse {
+            0%,100% { opacity:.7; } 50% { opacity:1; }
+          }
+          .mn-edge { stroke-dasharray: 6 4; animation: dash 1.8s linear infinite; }
+          .mn-edge-money { stroke-dasharray: 8 3; animation: dash2 1.4s linear infinite; }
+          .mn-node { animation: nodeIn .5s ease both; }
+          .mn-pulse { animation: pulse 2s ease-in-out infinite; }
+          .n0 { animation-delay:.1s } .n1 { animation-delay:.25s } .n2 { animation-delay:.4s }
+          .n3 { animation-delay:.55s } .n4 { animation-delay:.7s } .n5 { animation-delay:.85s }
+          .n6 { animation-delay:1s }  .n7 { animation-delay:1.15s }
+        </style>
+      </defs>
+
+      <!-- Background -->
+      <rect width="760" height="360" rx="10" fill="#0d1b2a"/>
+
+      <!-- Section labels -->
+      <text x="72" y="22" fill="#475569" font-family="system-ui" font-size="9" text-anchor="middle" letter-spacing="1.5" text-transform="uppercase">STUDENTS</text>
+      <text x="310" y="22" fill="#475569" font-family="system-ui" font-size="9" text-anchor="middle" letter-spacing="1.5">MARKET</text>
+      <text x="600" y="22" fill="#475569" font-family="system-ui" font-size="9" text-anchor="middle" letter-spacing="1.5">ASSESSMENT</text>
+
+      <!-- Divider lines -->
+      <line x1="180" y1="30" x2="180" y2="345" stroke="#1e3a5f" stroke-width="1" stroke-dasharray="3 4"/>
+      <line x1="460" y1="30" x2="460" y2="345" stroke="#1e3a5f" stroke-width="1" stroke-dasharray="3 4"/>
+
+      <!-- ── EDGES: Students → Services ── -->
+      <!-- Student 1 → WhatsApp -->
+      <path d="M110,75 C190,75 210,110 270,115" fill="none" stroke="#64748b" stroke-width="1.4" marker-end="url(#arr)" class="mn-edge" style="animation-delay:.2s"/>
+      <!-- Student 2 → Bootcamp -->
+      <path d="M110,145 C200,145 225,175 268,178" fill="none" stroke="#64748b" stroke-width="1.4" marker-end="url(#arr)" class="mn-edge" style="animation-delay:.35s"/>
+      <!-- Student 3 → ChatGPT -->
+      <path d="M110,215 C200,215 220,245 268,248" fill="none" stroke="#64748b" stroke-width="1.4" marker-end="url(#arr)" class="mn-edge" style="animation-delay:.5s"/>
+      <!-- Student 4 → WhatsApp also -->
+      <path d="M110,285 C180,285 200,160 268,128" fill="none" stroke="#64748b" stroke-width="1.2" stroke-opacity=".55" marker-end="url(#arr)" class="mn-edge" style="animation-delay:.65s"/>
+      <!-- Student 5 → Bootcamp also -->
+      <path d="M110,335 C190,335 210,215 268,188" fill="none" stroke="#64748b" stroke-width="1.2" stroke-opacity=".55" marker-end="url(#arr)" class="mn-edge" style="animation-delay:.8s"/>
+
+      <!-- ── EDGES: Services → Assessment ── -->
+      <!-- WhatsApp → Proctor (script/info) -->
+      <path d="M356,118 C400,118 420,155 498,160" fill="none" stroke="#4ade80" stroke-width="1.8" marker-end="url(#arr-money)" class="mn-edge-money" style="animation-delay:.9s"/>
+      <!-- Bootcamp → Proctor (project) -->
+      <path d="M356,180 C400,175 420,165 498,163" fill="none" stroke="#4ade80" stroke-width="1.8" marker-end="url(#arr-money)" class="mn-edge-money" style="animation-delay:1.1s"/>
+      <!-- ChatGPT → Proctor (answers) -->
+      <path d="M356,248 C410,248 430,195 498,168" fill="none" stroke="#fbbf24" stroke-width="1.8" marker-end="url(#arr)" class="mn-edge-money" style="animation-delay:1.3s"/>
+      <!-- Proctor → Exam (grades) -->
+      <path d="M565,163 L618,183" fill="none" stroke="#f87171" stroke-width="2" marker-end="url(#arr-red)" class="mn-edge-money" style="animation-delay:1.5s"/>
+
+      <!-- ── STUDENT NODES ── -->
+      <g class="mn-node n0">
+        <circle cx="72" cy="75" r="22" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="72" y="70" fill="#93c5fd" font-size="16" text-anchor="middle" dy=".35em">👤</text>
+      </g>
+      <g class="mn-node n1">
+        <circle cx="72" cy="145" r="22" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="72" y="145" fill="#93c5fd" font-size="16" text-anchor="middle" dy=".35em">👤</text>
+      </g>
+      <g class="mn-node n2">
+        <circle cx="72" cy="215" r="22" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="72" y="215" fill="#93c5fd" font-size="16" text-anchor="middle" dy=".35em">👤</text>
+      </g>
+      <g class="mn-node n3">
+        <circle cx="72" cy="285" r="18" fill="#152d4a" stroke="#3b82f6" stroke-width="1" stroke-opacity=".6"/>
+        <text x="72" y="285" fill="#93c5fd" font-size="13" text-anchor="middle" dy=".35em">👤</text>
+      </g>
+      <g class="mn-node n4">
+        <circle cx="72" cy="335" r="18" fill="#152d4a" stroke="#3b82f6" stroke-width="1" stroke-opacity=".6"/>
+        <text x="72" y="335" fill="#93c5fd" font-size="13" text-anchor="middle" dy=".35em">👤</text>
+      </g>
+
+      <!-- ── SERVICE NODES ── -->
+      <!-- WhatsApp -->
+      <g class="mn-node n5">
+        <rect x="212" y="94" width="144" height="48" rx="8" fill="#14532d" stroke="#4ade80" stroke-width="1.5"/>
+        <text x="223" y="114" fill="#86efac" font-family="system-ui" font-size="11" font-weight="700">📱 WhatsApp Network</text>
+        <text x="223" y="131" fill="#4ade80" font-family="system-ui" font-size="9.5">"Your proctor is [name]…"</text>
+      </g>
+      <!-- Bootcamp -->
+      <g class="mn-node n5" style="animation-delay:.72s">
+        <rect x="212" y="158" width="144" height="48" rx="8" fill="#451a03" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="223" y="178" fill="#fde68a" font-family="system-ui" font-size="11" font-weight="700">💰 ₹800 Bootcamp</text>
+        <text x="223" y="195" fill="#fbbf24" font-family="system-ui" font-size="9.5">"We'll build the project for you"</text>
+      </g>
+      <!-- ChatGPT -->
+      <g class="mn-node n5" style="animation-delay:.88s">
+        <rect x="212" y="228" width="144" height="48" rx="8" fill="#1e1b4b" stroke="#818cf8" stroke-width="1.5"/>
+        <text x="223" y="248" fill="#c7d2fe" font-family="system-ui" font-size="11" font-weight="700">🤖 ChatGPT window</text>
+        <text x="223" y="265" fill="#818cf8" font-family="system-ui" font-size="9.5">Open during GMeet viva</text>
+      </g>
+
+      <!-- ── PROCTOR NODE ── -->
+      <g class="mn-node n6 mn-pulse" style="animation-delay:1.1s">
+        <circle cx="530" cy="165" r="34" fill="#1c2433" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="530" y="155" fill="#e2e8f0" font-size="18" text-anchor="middle" dy=".35em">👨‍💼</text>
+        <text x="530" y="180" fill="#94a3b8" font-family="system-ui" font-size="9" text-anchor="middle">Proctor</text>
+      </g>
+
+      <!-- ── IITM EXAM NODE ── -->
+      <g class="mn-node n7" style="animation-delay:1.3s">
+        <rect x="620" y="160" width="112" height="52" rx="8" fill="#450a0a" stroke="#f87171" stroke-width="2"/>
+        <text x="676" y="180" fill="#fca5a5" font-family="system-ui" font-size="11" font-weight="700" text-anchor="middle">🔒 IITM Exam</text>
+        <text x="676" y="196" fill="#f87171" font-family="system-ui" font-size="9" text-anchor="middle">Academic credential</text>
+      </g>
+
+      <!-- ── FLOW LABELS ── -->
+      <text x="198" y="108" fill="#4ade80" font-family="system-ui" font-size="8.5" font-weight="600">info flow</text>
+      <text x="393" y="108" fill="#4ade80" font-family="system-ui" font-size="8.5" font-weight="600">scripts · answers</text>
+      <text x="393" y="250" fill="#fbbf24" font-family="system-ui" font-size="8.5" font-weight="600">live responses</text>
+
+      <!-- ── "₹800" labels on student edges ── -->
+      <text x="163" y="100" fill="#fbbf24" font-family="system-ui" font-size="9" font-weight="700">₹800</text>
+      <text x="163" y="168" fill="#fbbf24" font-family="system-ui" font-size="9" font-weight="700">₹800</text>
+    </svg>
+    <figcaption>The ecosystem that formed around the IIT Madras assessment calendar. Green edges: information about proctors and questions. Amber: money flows. The market adapted every time faculty changed the viva design.</figcaption>
+  </figure>
+
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     BEAT II — WE BUILT THIS FOR A DIFFERENT WORLD
+════════════════════════════════════════════════ -->
+<section class="beat" id="beat-2">
+  <div class="beat-label">
+    <span class="beat-num">II</span>
+    <span class="beat-title">We Built This for a Different World</span>
+  </div>
+
+  <div class="prose">
+    <p>For two centuries, the architecture of higher education rested on a single assumption so obvious that no one thought to write it down: <em>expertise is rare.</em></p>
+
+    <p>If you wanted to understand Ottoman monetary policy, you needed a historian who had spent years in Turkish archives. If you wanted to design a structural beam, you needed an engineer who had drilled on load tables for a decade. Knowledge lived in the heads of people who had done the slow, expensive work of acquiring it. The examination existed to identify which students had successfully transferred some of that hard-won knowledge into their own heads.</p>
+
+    <p>This assumption shaped everything: the lecture hall, the closed-book exam, the viva, the grading curve, the moral distinction between consulting a textbook during an exam and consulting one after.</p>
+
+    <p>Then, for <span data-tooltip="As of early 2026, ChatGPT Plus, Claude Pro, and Gemini Advanced each cost approximately ₹1,600–1,800 per month — roughly the price of a meal at a campus canteen, every day for a month.">₹1,600 a month</span> — less than most students spend on coffee — any student in the world gained access to a system that has effectively memorised the output of several centuries of organised human inquiry. It speaks Tamil. It explains the same concept fifteen different ways until you understand. It is available at 3 AM before a deadline, and it does not lose patience on the fifth "dumb question". In many domains, it knows more than most teaching assistants and explains more clearly than most lecturers.</p>
+
+    <p>The assumption that justified the locked-room exam — that information is scarce — does not hold any more. We are still running the locked-room exam.</p>
+  </div>
+
+  <div class="callout reveal">
+    <div class="callout-inner">
+      <div class="callout-title">The new cost of a postgraduate assistant</div>
+      <div class="stat-row">
+        <div class="stat">
+          <span class="num">₹1,600</span>
+          <span class="lbl">per month for frontier AI</span>
+        </div>
+        <div class="stat">
+          <span class="num">17+</span>
+          <span class="lbl">languages spoken fluently</span>
+        </div>
+        <div class="stat">
+          <span class="num">3 AM</span>
+          <span class="lbl">available, infinitely patient</span>
+        </div>
+        <div class="stat">
+          <span class="num">∞</span>
+          <span class="lbl">"dumb questions" answered</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIZ-PLACEHOLDER: info-eras -->
+  <figure class="viz" id="viz-eras" style="max-width:820px">
+    <svg viewBox="0 0 780 290" xmlns="http://www.w3.org/2000/svg" style="max-height:300px">
+      <defs>
+        <style>
+          @keyframes rainDrop {
+            0%   { transform: translateY(-30px); opacity:0; }
+            15%  { opacity:1; }
+            85%  { opacity:1; }
+            100% { transform: translateY(170px); opacity:0; }
+          }
+          .drop { animation: rainDrop 2s linear infinite; }
+          @keyframes pyramidGlow { 0%,100%{opacity:.6} 50%{opacity:.9} }
+          .pg { animation: pyramidGlow 3s ease-in-out infinite; }
+        </style>
+      </defs>
+
+      <rect width="780" height="290" rx="10" fill="#0f172a"/>
+
+      <!-- Divider -->
+      <line x1="390" y1="20" x2="390" y2="270" stroke="#334155" stroke-width="1"/>
+
+      <!-- ══ LEFT: BEFORE 2022 ══ -->
+      <text x="195" y="38" fill="#94a3b8" font-family="system-ui" font-size="10" font-weight="700" text-anchor="middle" letter-spacing="1.5">BEFORE 2022</text>
+
+      <!-- Pyramid tiers (knowledge flows down slowly) -->
+      <!-- Tier 1: IIT professors (top, small) -->
+      <polygon points="195,62 171,102 219,102" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1.5" class="pg"/>
+      <text x="195" y="87" fill="#93c5fd" font-family="system-ui" font-size="8" text-anchor="middle">Professors</text>
+
+      <!-- slow-drip arrows between tiers -->
+      <text x="195" y="116" fill="#475569" font-family="system-ui" font-size="11" text-anchor="middle">▼</text>
+      <text x="195" y="126" fill="#475569" font-family="system-ui" font-size="7" text-anchor="middle">slow drip</text>
+
+      <!-- Tier 2: Textbooks / TAs -->
+      <polygon points="195,130 157,178 233,178" fill="#1e2d4a" stroke="#2563eb" stroke-width="1.2" class="pg" style="animation-delay:.5s"/>
+      <text x="195" y="156" fill="#93c5fd" font-family="system-ui" font-size="8" text-anchor="middle">Books · TAs</text>
+      <text x="195" y="168" fill="#60a5fa" font-family="system-ui" font-size="7.5" text-anchor="middle">office hours</text>
+
+      <!-- slow-drip arrow -->
+      <text x="195" y="192" fill="#475569" font-family="system-ui" font-size="11" text-anchor="middle">▼</text>
+
+      <!-- Tier 3: Students (wide base) -->
+      <polygon points="195,196 126,250 264,250" fill="#172554" stroke="#1d4ed8" stroke-width="1" class="pg" style="animation-delay:1s"/>
+      <text x="195" y="226" fill="#93c5fd" font-family="system-ui" font-size="8" text-anchor="middle">Students</text>
+      <text x="195" y="239" fill="#60a5fa" font-family="system-ui" font-size="7" text-anchor="middle">wait their turn</text>
+
+      <!-- Scarcity label -->
+      <text x="195" y="268" fill="#ef4444" font-family="system-ui" font-size="8.5" text-anchor="middle" font-weight="600">SCARCITY — access gatekept by rank</text>
+
+      <!-- ══ RIGHT: AFTER 2024 ══ -->
+      <text x="585" y="38" fill="#94a3b8" font-family="system-ui" font-size="10" font-weight="700" text-anchor="middle" letter-spacing="1.5">AFTER 2024</text>
+
+      <!-- AI cloud at top -->
+      <ellipse cx="585" cy="62" rx="70" ry="20" fill="#1e1b4b" stroke="#a855f7" stroke-width="1.5"/>
+      <text x="585" y="60" fill="#d8b4fe" font-family="system-ui" font-size="9.5" text-anchor="middle" font-weight="700">AI Tutor</text>
+      <text x="585" y="73" fill="#c084fc" font-family="system-ui" font-size="7.5" text-anchor="middle">17 languages · ₹1,600/mo · 3 AM</text>
+
+      <!-- Rain drops -->
+      <text x="476" y="100" fill="#818cf8" font-family="system-ui" font-size="12" class="drop" style="animation-delay:0s">↓</text>
+      <text x="505" y="100" fill="#818cf8" font-family="system-ui" font-size="12" class="drop" style="animation-delay:.25s">↓</text>
+      <text x="534" y="100" fill="#818cf8" font-family="system-ui" font-size="12" class="drop" style="animation-delay:.5s">↓</text>
+      <text x="563" y="100" fill="#818cf8" font-family="system-ui" font-size="12" class="drop" style="animation-delay:.75s">↓</text>
+      <text x="592" y="100" fill="#818cf8" font-family="system-ui" font-size="12" class="drop" style="animation-delay:1s">↓</text>
+      <text x="621" y="100" fill="#818cf8" font-family="system-ui" font-size="12" class="drop" style="animation-delay:1.25s">↓</text>
+      <text x="650" y="100" fill="#818cf8" font-family="system-ui" font-size="12" class="drop" style="animation-delay:1.5s">↓</text>
+      <text x="679" y="100" fill="#818cf8" font-family="system-ui" font-size="12" class="drop" style="animation-delay:1.75s">↓</text>
+
+      <text x="476" y="100" fill="#a78bfa" font-family="system-ui" font-size="12" class="drop" style="animation-delay:1.0s">↓</text>
+      <text x="518" y="100" fill="#a78bfa" font-family="system-ui" font-size="12" class="drop" style="animation-delay:1.3s">↓</text>
+      <text x="557" y="100" fill="#a78bfa" font-family="system-ui" font-size="12" class="drop" style="animation-delay:.6s">↓</text>
+      <text x="604" y="100" fill="#a78bfa" font-family="system-ui" font-size="12" class="drop" style="animation-delay:.9s">↓</text>
+      <text x="644" y="100" fill="#a78bfa" font-family="system-ui" font-size="12" class="drop" style="animation-delay:.15s">↓</text>
+
+      <!-- Flat student grid -->
+      <rect x="430" y="205" width="310" height="48" rx="6" fill="#1c1917" stroke="#4ade80" stroke-width="1.2"/>
+      <text x="585" y="223" fill="#86efac" font-family="system-ui" font-size="9.5" text-anchor="middle" font-weight="700">ALL students — same access</text>
+      <text x="585" y="239" fill="#4ade80" font-family="system-ui" font-size="8.5" text-anchor="middle">Tier 1 · Tier 2 · Tier 3 · rural · urban</text>
+      <text x="585" y="251" fill="#4ade80" font-family="system-ui" font-size="8" text-anchor="middle">no queue, no gatekeeping</text>
+
+      <!-- Abundance label -->
+      <text x="585" y="268" fill="#4ade80" font-family="system-ui" font-size="8.5" text-anchor="middle" font-weight="600">ABUNDANCE — but assessment unchanged</text>
+    </svg>
+    <figcaption>Left: the old world where knowledge flowed slowly through academic hierarchy. Right: AI delivers PhD-level tutoring to every student simultaneously — but exams still test as if knowledge were scarce.</figcaption>
+  </figure>
+
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     BEAT III — THE CHEAT THAT ISN'T
+════════════════════════════════════════════════ -->
+<section class="beat" id="beat-3">
+  <div class="beat-label">
+    <span class="beat-num">III</span>
+    <span class="beat-title">The Cheat That Isn't</span>
+  </div>
+
+  <div class="prose">
+    <p>Here is the most uncomfortable claim in this talk. Sit with it before you react.</p>
+
+    <p>The student who is gaming your viva — who has learned to paste the question into ChatGPT, scan the answer, adapt it in real time, and deliver it with enough confidence to fool the proctor — is, in the world they are about to enter, <em>doing exactly the right thing.</em></p>
+
+    <p>The ability to give an AI tool a problem, evaluate whether its output is useful, adapt the output to the specific context, and deliver it convincingly under time pressure: this is one of the highest-valued professional skills in the global labour market right now. It is what distinguishes the workers who are thriving in AI-augmented roles from those who are struggling.</p>
+  </div>
+
+  <div class="pull-quote">
+    <blockquote>We have designed a system where the most forward-looking behaviour looks like fraud.</blockquote>
+  </div>
+
+  <div class="prose">
+    <p>The student who memorised the answer and can recall it under pressure — and nothing else — is not, in 2026, better prepared than the student who learned to work with AI. They may be worse prepared, because they have spent their preparation time drilling a skill <span data-cite="skill-erosion">whose market value is approaching zero.</span></p>
+
+    <p>None of this is an argument to abolish assessment. It is an argument that the exam is <em>measuring the wrong thing</em> — and that the thing it was designed to measure stopped mattering before the ink on this year's schedule was dry.</p>
+
+    <p>In <span data-cite="which-llms">the data from a 3,000-student course at this institute</span>, students who use AI tools strategically — who ask, verify, adapt — do not underperform students who work unaided. In some question types, they outperform. The AI is not replacing the learning. For students who use it well, it is accelerating it.</p>
+  </div>
+
+  <!-- VIZ-PLACEHOLDER: venn-skills -->
+  <figure class="viz" id="viz-venn" style="max-width:820px">
+    <svg viewBox="0 0 780 320" xmlns="http://www.w3.org/2000/svg" style="max-height:340px">
+      <defs>
+        <style>
+          @keyframes glowPulse {
+            0%,100% { opacity:.7; filter:blur(6px); }
+            50%      { opacity:1; filter:blur(10px); }
+          }
+          @keyframes fadeSlide {
+            from { opacity:0; transform:translateY(6px); }
+            to   { opacity:1; transform:translateY(0); }
+          }
+          .venn-glow { animation: glowPulse 2.5s ease-in-out infinite; }
+          .venn-label { animation: fadeSlide .6s ease both; }
+          .l1 { animation-delay:.2s } .l2 { animation-delay:.35s } .l3 { animation-delay:.5s }
+          .l4 { animation-delay:.65s } .l5 { animation-delay:.8s }
+        </style>
+        <clipPath id="left-clip"><ellipse cx="270" cy="160" rx="205" ry="145"/></clipPath>
+        <clipPath id="right-clip"><ellipse cx="510" cy="160" rx="205" ry="145"/></clipPath>
+      </defs>
+
+      <!-- Background -->
+      <rect width="780" height="320" rx="10" fill="#0f172a"/>
+
+      <!-- Glow for overlap -->
+      <ellipse cx="390" cy="160" rx="75" ry="125" fill="#fbbf24" fill-opacity=".15" class="venn-glow"/>
+
+      <!-- Left circle: "What we call cheating" -->
+      <ellipse cx="270" cy="160" rx="205" ry="145" fill="#7f1d1d" fill-opacity=".45" stroke="#f87171" stroke-width="1.5"/>
+
+      <!-- Right circle: "What employers pay for" -->
+      <ellipse cx="510" cy="160" rx="205" ry="145" fill="#1e3a5f" fill-opacity=".45" stroke="#60a5fa" stroke-width="1.5"/>
+
+      <!-- Overlap highlight -->
+      <ellipse cx="390" cy="160" rx="75" ry="125" fill="#fbbf24" fill-opacity=".12" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+      <!-- Left labels (cheating behaviors) -->
+      <text x="140" y="100" fill="#fca5a5" font-family="system-ui" font-size="10" text-anchor="middle" class="venn-label l1">Using AI for answers</text>
+      <text x="140" y="118" fill="#fca5a5" font-family="system-ui" font-size="10" text-anchor="middle" class="venn-label l2">Asking peers for help</text>
+      <text x="140" y="136" fill="#fca5a5" font-family="system-ui" font-size="10" text-anchor="middle" class="venn-label l3">Delegating boring tasks</text>
+      <text x="140" y="154" fill="#fca5a5" font-family="system-ui" font-size="10" text-anchor="middle" class="venn-label l4">Changing approach mid-way</text>
+      <text x="140" y="172" fill="#fca5a5" font-family="system-ui" font-size="10" text-anchor="middle" class="venn-label l5">Working around bad specs</text>
+
+      <!-- Right labels (professional skills) -->
+      <text x="638" y="100" fill="#93c5fd" font-family="system-ui" font-size="10" text-anchor="middle" class="venn-label l1">AI tool orchestration</text>
+      <text x="638" y="118" fill="#93c5fd" font-family="system-ui" font-size="10" text-anchor="middle" class="venn-label l2">Collaborative problem-solving</text>
+      <text x="638" y="136" fill="#93c5fd" font-family="system-ui" font-size="10" text-anchor="middle" class="venn-label l3">Effective task delegation</text>
+      <text x="638" y="154" fill="#93c5fd" font-family="system-ui" font-size="10" text-anchor="middle" class="venn-label l4">Adaptive thinking</text>
+      <text x="638" y="172" fill="#93c5fd" font-family="system-ui" font-size="10" text-anchor="middle" class="venn-label l5">Ambiguity navigation</text>
+
+      <!-- Overlap label -->
+      <text x="390" y="148" fill="#fde68a" font-family="system-ui" font-size="11" font-weight="800" text-anchor="middle" class="venn-label l3">These are</text>
+      <text x="390" y="164" fill="#fde68a" font-family="system-ui" font-size="11" font-weight="800" text-anchor="middle" class="venn-label l4">the same</text>
+      <text x="390" y="180" fill="#fde68a" font-family="system-ui" font-size="11" font-weight="800" text-anchor="middle" class="venn-label l5">list.</text>
+
+      <!-- Circle titles -->
+      <text x="180" y="38" fill="#f87171" font-family="system-ui" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing=".5">WHAT WE CALL</text>
+      <text x="180" y="52" fill="#f87171" font-family="system-ui" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing=".5">CHEATING</text>
+      <text x="600" y="38" fill="#60a5fa" font-family="system-ui" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing=".5">WHAT EMPLOYERS</text>
+      <text x="600" y="52" fill="#60a5fa" font-family="system-ui" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing=".5">PAY FOR</text>
+
+      <!-- Salary callout -->
+      <rect x="350" y="220" width="80" height="28" rx="5" fill="#fbbf24" fill-opacity=".2" stroke="#fbbf24" stroke-width="1"/>
+      <text x="390" y="230" fill="#fde68a" font-family="system-ui" font-size="9.5" text-anchor="middle" font-weight="700">₹30–80 LPA</text>
+      <text x="390" y="243" fill="#fde68a" font-family="system-ui" font-size="8" text-anchor="middle">AI-augmented roles</text>
+
+      <!-- Bracket from overlap to salary -->
+      <line x1="390" y1="198" x2="390" y2="218" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3 2"/>
+
+      <!-- Subtitle -->
+      <text x="390" y="298" fill="#475569" font-family="system-ui" font-size="9" text-anchor="middle" font-style="italic">We designed a system where the most forward-looking behaviour looks like fraud.</text>
+    </svg>
+    <figcaption>The behaviours our exams penalise and the behaviours the market rewards are not different lists. They overlap almost entirely.</figcaption>
+  </figure>
+
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     BEAT IV — FOUR CHOICES
+════════════════════════════════════════════════ -->
+<section class="beat" id="beat-4">
+  <div class="beat-label">
+    <span class="beat-num">IV</span>
+    <span class="beat-title">Four Choices</span>
+  </div>
+
+  <div class="prose">
+    <p>Every institution that has faced a disruptive technology has made the same four choices — usually without realising it.</p>
+
+    <p>When autopilot technology became sophisticated enough to fly commercial aircraft, airlines faced a decision about manual flying skills. They didn't abandon them. Autopilot failures — rare but catastrophic — meant that a pilot who couldn't fly manually in an emergency was a liability. Today, regulators <strong>enforce</strong> regular hours in flight simulators. The skill is preserved deliberately, against the automation.</p>
+
+    <p>When spreadsheets arrived, accountants faced the same decision about mental arithmetic. They made a different choice. They let the arithmetic go — and <strong>levelled up</strong>. The job didn't disappear. Accounting became financial analysis. The skill elevated to where machines couldn't follow.</p>
+
+    <p>When photography made photorealistic painting commercially irrelevant, painters made a third choice. They <strong>switched</strong>. Impressionism, cubism, abstract expressionism — these were not lesser substitutes for photography. They were a pivot to something photography couldn't do. The value moved, and the artists moved with it.</p>
+
+    <p>And when GPS became universal, most of us simply <strong>accepted</strong> the loss of map-reading and dead-reckoning navigation. The failure mode — getting lost — is manageable. We made peace with the dependency.</p>
+
+    <p>These are the four options available to any institution when technology changes the value of a skill: <span data-tooltip="A decision framework for AI-eroded skills. For each learning objective, ask: what happens if humans lose this skill entirely? Then choose your response accordingly."><strong>Enforce, Level-Up, Switch, or Accept.</strong></span> The question is whether you choose deliberately — or whether the market chooses for you.</p>
+  </div>
+
+  <div class="gps-table reveal">
+    <table>
+      <thead>
+        <tr>
+          <th>Response</th>
+          <th>When to use it</th>
+          <th>Historical example</th>
+          <th>Education today</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge b-enforce">Enforce</span></td>
+          <td>Failure mode is catastrophic; the skill must remain human</td>
+          <td>Pilots still train in flight simulators despite autopilot</td>
+          <td>Verifying AI output; catching AI errors; judgment under ambiguity</td>
+        </tr>
+        <tr>
+          <td><span class="badge b-levelup">Level-Up</span></td>
+          <td>AI handles the base layer; humans should move higher</td>
+          <td>Spreadsheets eroded arithmetic → accounting became strategy</td>
+          <td>From writing code → designing systems; from running analysis → questioning it</td>
+        </tr>
+        <tr>
+          <td><span class="badge b-switch">Switch</span></td>
+          <td>A different skill is now more valuable than the original</td>
+          <td>Photography displaced realism → painters invented impressionism</td>
+          <td>From syntax recall → writing specs; from domain depth → taste and judgment</td>
+        </tr>
+        <tr>
+          <td><span class="badge b-accept">Accept</span></td>
+          <td>Low failure stakes; AI handles it reliably enough</td>
+          <td>GPS eroded map-reading; we accepted the dependency</td>
+          <td>Basic Python syntax; boilerplate code; standard analysis templates</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- VIZ-PLACEHOLDER: gps-framework -->
+  <figure class="viz" id="viz-gps" style="max-width:860px">
+    <div id="gps-container" style="width:100%;position:relative">
+      <svg id="gps-svg" viewBox="0 0 820 480" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
+        <defs>
+          <style>
+            .gq { cursor:pointer; transition:opacity .2s; }
+            .gq:hover { opacity:.88; }
+            .gq-overlay { pointer-events:none; opacity:0; transition:opacity .25s; }
+            .gq:hover .gq-overlay { opacity:1; }
+            @keyframes compassSpin {
+              from { transform: rotate(0deg); }
+              to   { transform: rotate(360deg); }
+            }
+            .compass-needle { transform-origin: 760px 60px; animation: compassSpin 12s linear infinite; }
+          </style>
+        </defs>
+
+        <!-- Background -->
+        <rect width="820" height="480" rx="10" fill="#0f172a"/>
+
+        <!-- Title -->
+        <text x="340" y="28" fill="#94a3b8" font-family="system-ui" font-size="10" text-anchor="middle" letter-spacing="2">THE GPS FRAMEWORK · HOVER EACH QUADRANT</text>
+
+        <!-- Axis labels -->
+        <text x="20" y="265" fill="#64748b" font-family="system-ui" font-size="9.5" text-anchor="middle" transform="rotate(-90,20,265)" letter-spacing="1">FAILURE COST IF SKILL IS LOST →</text>
+        <text x="340" y="470" fill="#64748b" font-family="system-ui" font-size="9.5" text-anchor="middle" letter-spacing="1">HOW WELL AI CAN DO IT →</text>
+
+        <!-- Grid axes -->
+        <line x1="60" y1="45" x2="60" y2="440" stroke="#1e293b" stroke-width="2"/>
+        <line x1="60" y1="440" x2="630" y2="440" stroke="#1e293b" stroke-width="2"/>
+        <!-- Centre dividers -->
+        <line x1="60" y1="242" x2="630" y2="242" stroke="#1e293b" stroke-width="1" stroke-dasharray="4 3"/>
+        <line x1="345" y1="45" x2="345" y2="440" stroke="#1e293b" stroke-width="1" stroke-dasharray="4 3"/>
+
+        <!-- ── Q1 ENFORCE (top-left: high failure cost, AI does it poorly) ── -->
+        <g class="gq" id="gq-enforce" tabindex="0" role="button" aria-label="Enforce quadrant">
+          <rect x="62" y="47" width="280" height="192" rx="6" fill="#450a0a" fill-opacity=".85"/>
+          <text x="92" y="78" fill="#fca5a5" font-family="system-ui" font-size="13" font-weight="800" letter-spacing=".5">🚨 ENFORCE</text>
+          <text x="92" y="98" fill="#f87171" font-family="system-ui" font-size="10">Keep drilling the skill deliberately</text>
+          <text x="92" y="120" fill="#fca5a5" font-family="system-ui" font-size="9.5">• Pilots → flight simulators</text>
+          <text x="92" y="137" fill="#fca5a5" font-family="system-ui" font-size="9.5">• Surgeons → manual suturing drills</text>
+          <text x="92" y="154" fill="#fca5a5" font-family="system-ui" font-size="9.5">• Navy → celestial navigation</text>
+          <text x="92" y="171" fill="#fca5a5" font-family="system-ui" font-size="9.5">• Education: verify AI output; catch errors</text>
+          <text x="92" y="188" fill="#fca5a5" font-family="system-ui" font-size="9.5">  judge when AI is confidently wrong</text>
+          <!-- Hover overlay with more detail -->
+          <g class="gq-overlay">
+            <rect x="62" y="47" width="280" height="192" rx="6" fill="#450a0a" fill-opacity=".95"/>
+            <text x="92" y="80" fill="#fff" font-family="system-ui" font-size="12" font-weight="800">🚨 ENFORCE</text>
+            <text x="92" y="102" fill="#fca5a5" font-family="system-ui" font-size="9.5">The failure mode is catastrophic.</text>
+            <text x="92" y="118" fill="#fca5a5" font-family="system-ui" font-size="9.5">AI can partially do this, but a human</text>
+            <text x="92" y="134" fill="#fca5a5" font-family="system-ui" font-size="9.5">who loses the skill is a liability in</text>
+            <text x="92" y="150" fill="#fca5a5" font-family="system-ui" font-size="9.5">emergencies. Mandate practice.</text>
+            <text x="92" y="174" fill="#f87171" font-family="system-ui" font-size="9" font-style="italic">In education: verification, debugging,</text>
+            <text x="92" y="190" fill="#f87171" font-family="system-ui" font-size="9" font-style="italic">judgment in ambiguous situations</text>
+            <text x="92" y="208" fill="#f87171" font-family="system-ui" font-size="9" font-style="italic">remain non-negotiable</text>
+          </g>
+        </g>
+
+        <!-- ── Q2 LEVEL-UP (top-right: high failure cost, AI does it well) ── -->
+        <g class="gq" id="gq-levelup" tabindex="0" role="button" aria-label="Level-up quadrant">
+          <rect x="347" y="47" width="280" height="192" rx="6" fill="#172554" fill-opacity=".85"/>
+          <text x="377" y="78" fill="#93c5fd" font-family="system-ui" font-size="13" font-weight="800" letter-spacing=".5">⬆ LEVEL-UP</text>
+          <text x="377" y="98" fill="#60a5fa" font-family="system-ui" font-size="10">Elevate to where AI can't follow (yet)</text>
+          <text x="377" y="120" fill="#93c5fd" font-family="system-ui" font-size="9.5">• Arithmetic → financial strategy</text>
+          <text x="377" y="137" fill="#93c5fd" font-family="system-ui" font-size="9.5">• Drafting → CAD design</text>
+          <text x="377" y="154" fill="#93c5fd" font-family="system-ui" font-size="9.5">• Trade execution → portfolio judgment</text>
+          <text x="377" y="171" fill="#93c5fd" font-family="system-ui" font-size="9.5">• Education: writing code → design systems</text>
+          <text x="377" y="188" fill="#93c5fd" font-family="system-ui" font-size="9.5">  running analysis → questioning it</text>
+          <g class="gq-overlay">
+            <rect x="347" y="47" width="280" height="192" rx="6" fill="#172554" fill-opacity=".97"/>
+            <text x="377" y="80" fill="#fff" font-family="system-ui" font-size="12" font-weight="800">⬆ LEVEL-UP</text>
+            <text x="377" y="102" fill="#93c5fd" font-family="system-ui" font-size="9.5">AI handles the base layer reliably.</text>
+            <text x="377" y="118" fill="#93c5fd" font-family="system-ui" font-size="9.5">Humans should move up the stack</text>
+            <text x="377" y="134" fill="#93c5fd" font-family="system-ui" font-size="9.5">to where AI is still weak: taste,</text>
+            <text x="377" y="150" fill="#93c5fd" font-family="system-ui" font-size="9.5">framing, orchestration, evaluation.</text>
+            <text x="377" y="174" fill="#60a5fa" font-family="system-ui" font-size="9" font-style="italic">The skill doesn't disappear — it</text>
+            <text x="377" y="190" fill="#60a5fa" font-family="system-ui" font-size="9" font-style="italic">evolves. Teach the higher version.</text>
+          </g>
+        </g>
+
+        <!-- ── Q3 SWITCH (bottom-left: low failure, AI does it moderately) ── -->
+        <g class="gq" id="gq-switch" tabindex="0" role="button" aria-label="Switch quadrant">
+          <rect x="62" y="244" width="280" height="192" rx="6" fill="#431407" fill-opacity=".85"/>
+          <text x="92" y="275" fill="#fed7aa" font-family="system-ui" font-size="13" font-weight="800" letter-spacing=".5">↗ SWITCH</text>
+          <text x="92" y="295" fill="#fb923c" font-family="system-ui" font-size="10">Pivot to a skill AI can't automate</text>
+          <text x="92" y="317" fill="#fed7aa" font-family="system-ui" font-size="9.5">• Photography → impressionism</text>
+          <text x="92" y="334" fill="#fed7aa" font-family="system-ui" font-size="9.5">• Vinyl records → live performance</text>
+          <text x="92" y="351" fill="#fed7aa" font-family="system-ui" font-size="9.5">• Machine translation → localisation</text>
+          <text x="92" y="368" fill="#fed7aa" font-family="system-ui" font-size="9.5">• Education: syntax recall → spec writing</text>
+          <text x="92" y="385" fill="#fed7aa" font-family="system-ui" font-size="9.5">  domain depth → taste and judgment</text>
+          <g class="gq-overlay">
+            <rect x="62" y="244" width="280" height="192" rx="6" fill="#431407" fill-opacity=".97"/>
+            <text x="92" y="277" fill="#fff" font-family="system-ui" font-size="12" font-weight="800">↗ SWITCH</text>
+            <text x="92" y="299" fill="#fed7aa" font-family="system-ui" font-size="9.5">AI is taking the original skill over.</text>
+            <text x="92" y="315" fill="#fed7aa" font-family="system-ui" font-size="9.5">A different skill is now more valuable.</text>
+            <text x="92" y="331" fill="#fed7aa" font-family="system-ui" font-size="9.5">Actively redesign what you teach,</text>
+            <text x="92" y="347" fill="#fed7aa" font-family="system-ui" font-size="9.5">don't just let it fade.</text>
+            <text x="92" y="371" fill="#fb923c" font-family="system-ui" font-size="9" font-style="italic">What do we value now? Prompting,</text>
+            <text x="92" y="387" fill="#fb923c" font-family="system-ui" font-size="9" font-style="italic">orchestration, verification, storytelling</text>
+          </g>
+        </g>
+
+        <!-- ── Q4 ACCEPT (bottom-right: low failure, AI does it well) ── -->
+        <g class="gq" id="gq-accept" tabindex="0" role="button" aria-label="Accept quadrant">
+          <rect x="347" y="244" width="280" height="192" rx="6" fill="#052e16" fill-opacity=".85"/>
+          <text x="377" y="275" fill="#86efac" font-family="system-ui" font-size="13" font-weight="800" letter-spacing=".5">✓ ACCEPT</text>
+          <text x="377" y="295" fill="#4ade80" font-family="system-ui" font-size="10">Let AI handle it. Use the freed time.</text>
+          <text x="377" y="317" fill="#86efac" font-family="system-ui" font-size="9.5">• GPS → no longer memorise routes</text>
+          <text x="377" y="334" fill="#86efac" font-family="system-ui" font-size="9.5">• Spell-check → no longer drill spelling</text>
+          <text x="377" y="351" fill="#86efac" font-family="system-ui" font-size="9.5">• Calculators → no mental arithmetic</text>
+          <text x="377" y="368" fill="#86efac" font-family="system-ui" font-size="9.5">• Education: basic Python syntax</text>
+          <text x="377" y="385" fill="#86efac" font-family="system-ui" font-size="9.5">  boilerplate; standard templates</text>
+          <g class="gq-overlay">
+            <rect x="347" y="244" width="280" height="192" rx="6" fill="#052e16" fill-opacity=".97"/>
+            <text x="377" y="277" fill="#fff" font-family="system-ui" font-size="12" font-weight="800">✓ ACCEPT</text>
+            <text x="377" y="299" fill="#86efac" font-family="system-ui" font-size="9.5">The failure mode is manageable.</text>
+            <text x="377" y="315" fill="#86efac" font-family="system-ui" font-size="9.5">AI handles this reliably enough.</text>
+            <text x="377" y="331" fill="#86efac" font-family="system-ui" font-size="9.5">Stop spending curriculum hours on it.</text>
+            <text x="377" y="347" fill="#86efac" font-family="system-ui" font-size="9.5">Redirect that time to Enforce + Level-Up.</text>
+            <text x="377" y="371" fill="#4ade80" font-family="system-ui" font-size="9" font-style="italic">Accepting GPS didn't make us worse</text>
+            <text x="377" y="387" fill="#4ade80" font-family="system-ui" font-size="9" font-style="italic">navigators. It freed us for harder things.</text>
+          </g>
+        </g>
+
+        <!-- Axis arrow heads -->
+        <polygon points="60,42 54,55 66,55" fill="#334155"/>
+        <polygon points="635,440 622,434 622,446" fill="#334155"/>
+
+        <!-- Axis tick labels -->
+        <text x="203" y="458" fill="#475569" font-family="system-ui" font-size="8.5" text-anchor="middle">AI does it poorly</text>
+        <text x="488" y="458" fill="#475569" font-family="system-ui" font-size="8.5" text-anchor="middle">AI does it well</text>
+        <text x="38" y="148" fill="#475569" font-family="system-ui" font-size="8.5" text-anchor="middle" transform="rotate(-90,38,148)">High cost</text>
+        <text x="38" y="340" fill="#475569" font-family="system-ui" font-size="8.5" text-anchor="middle" transform="rotate(-90,38,340)">Low cost</text>
+
+        <!-- Compass rose (decorative) -->
+        <g transform="translate(725,55)">
+          <circle cx="0" cy="0" r="28" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
+          <text x="0" y="-14" fill="#94a3b8" font-size="10" text-anchor="middle" font-family="system-ui">N</text>
+          <text x="0" y="19"  fill="#94a3b8" font-size="10" text-anchor="middle" font-family="system-ui">S</text>
+          <text x="16" y="5"  fill="#94a3b8" font-size="10" text-anchor="middle" font-family="system-ui">E</text>
+          <text x="-16" y="5" fill="#94a3b8" font-size="10" text-anchor="middle" font-family="system-ui">W</text>
+          <g class="compass-needle">
+            <polygon points="0,-18 3,0 0,5 -3,0" fill="#f87171"/>
+            <polygon points="0,5 3,0 0,18 -3,0" fill="#475569"/>
+          </g>
+        </g>
+        <text x="725" y="100" fill="#475569" font-family="system-ui" font-size="8" text-anchor="middle">GPS framework</text>
+      </svg>
+    </div>
+    <figcaption>Hover each quadrant for more detail. Every learning objective in every course needs to be classified using this framework — and the right answer changes as AI improves.</figcaption>
+  </figure>
+
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     BEAT V — THREE REDESIGNS
+════════════════════════════════════════════════ -->
+<section class="beat" id="beat-5">
+  <div class="beat-label">
+    <span class="beat-num">V</span>
+    <span class="beat-title">Three Redesigns</span>
+  </div>
+
+  <div class="prose">
+    <p>For three years, a single course at IIT Madras has been running an experiment. Not a pilot — a <span data-file="tds-readme">live course with several thousand students each year</span>, publicly auditable, carrying real academic credit. It has been redesigned, systematically, around the GPS framework. <span data-file="ideas-md">The full inventory of innovations</span> spans fifty distinct experiments across curriculum, assessment, support, integrity and research.</p>
+    <p>Here is what that looks like in practice.</p>
+  </div>
+
+  <!-- ─── Redesign 1: Curriculum ─────────────────── -->
+  <div class="subsect">
+    <h3>The Curriculum: Remove the Content. Give Them Questions.</h3>
+  </div>
+
+  <div class="prose">
+    <p>The course <span data-cite="tds-jan-2026">no longer has lecture notes.</span> Students who visit the course website looking for explanatory content find only questions — hundreds of problems at varying levels of difficulty. Every question has an <span data-tooltip="An 'Ask AI' button on each exam question that sends it directly to the student's preferred AI model — ChatGPT, Claude, Gemini, etc. Students can copy the answer and move on if AI gets it right.">"Ask AI" button</span> that sends it directly to whichever model the student prefers.</p>
+
+    <p>If AI can answer the question easily, the student pastes the answer and moves on. That is correct behaviour. The point of those questions is to show where AI succeeds. The questions that matter are the ones where AI falls short: integration tasks, debugging AI's own errors, validating outputs that seem plausible but are wrong, designing workflows where the student must decide what to automate and what to supervise.</p>
+
+    <p>Faculty effort has not decreased. It has shifted — from creating content that AI can now generate on demand, toward <span data-cite="breaking-rules">designing problems that reveal the limits of AI and require genuine human judgment.</span></p>
+  </div>
+
+  <!-- VIZ-PLACEHOLDER: curriculum-flow -->
+  <figure class="viz" id="viz-curriculum" style="max-width:860px">
+    <svg viewBox="0 0 840 310" xmlns="http://www.w3.org/2000/svg" style="max-height:320px">
+      <defs>
+        <marker id="cf-arr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0 L7,3.5 L0,7 Z" fill="#475569"/>
+        </marker>
+        <marker id="cf-arr-green" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0 L7,3.5 L0,7 Z" fill="#4ade80"/>
+        </marker>
+        <marker id="cf-arr-amber" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0 L7,3.5 L0,7 Z" fill="#fbbf24"/>
+        </marker>
+        <style>
+          @keyframes cfFlow { from { stroke-dashoffset:60; } to { stroke-dashoffset:0; } }
+          .cf-edge { stroke-dasharray:8 4; animation: cfFlow 1.6s linear infinite; }
+        </style>
+      </defs>
+
+      <rect width="840" height="310" rx="10" fill="#0f172a"/>
+
+      <!-- Labels -->
+      <text x="210" y="22" fill="#ef4444" font-family="system-ui" font-size="9.5" font-weight="700" text-anchor="middle" letter-spacing="1.5">BEFORE — Traditional Curriculum</text>
+      <text x="630" y="22" fill="#4ade80" font-family="system-ui" font-size="9.5" font-weight="700" text-anchor="middle" letter-spacing="1.5">AFTER — AI-Native Design</text>
+
+      <!-- Divider -->
+      <line x1="420" y1="30" x2="420" y2="290" stroke="#1e293b" stroke-width="2"/>
+
+      <!-- ═══════ BEFORE (left) ═══════ -->
+      <!-- Faculty → Content -->
+      <rect x="30" y="50" width="100" height="36" rx="5" fill="#1e293b" stroke="#475569" stroke-width="1.2"/>
+      <text x="80" y="63" fill="#94a3b8" font-family="system-ui" font-size="9" text-anchor="middle" font-weight="600">👨‍🏫 Faculty</text>
+      <text x="80" y="78" fill="#64748b" font-family="system-ui" font-size="8" text-anchor="middle">writes lecture notes</text>
+
+      <line x1="130" y1="68" x2="162" y2="68" stroke="#475569" stroke-width="1.5" marker-end="url(#cf-arr)" class="cf-edge"/>
+
+      <rect x="165" y="50" width="100" height="36" rx="5" fill="#1e293b" stroke="#475569" stroke-width="1.2"/>
+      <text x="215" y="63" fill="#94a3b8" font-family="system-ui" font-size="9" text-anchor="middle" font-weight="600">📚 Content</text>
+      <text x="215" y="78" fill="#64748b" font-family="system-ui" font-size="8" text-anchor="middle">notes · videos · slides</text>
+
+      <line x1="265" y1="68" x2="297" y2="68" stroke="#475569" stroke-width="1.5" marker-end="url(#cf-arr)" class="cf-edge"/>
+
+      <rect x="300" y="50" width="100" height="36" rx="5" fill="#1e293b" stroke="#475569" stroke-width="1.2"/>
+      <text x="350" y="63" fill="#94a3b8" font-family="system-ui" font-size="9" text-anchor="middle" font-weight="600">👩‍🎓 Student</text>
+      <text x="350" y="78" fill="#64748b" font-family="system-ui" font-size="8" text-anchor="middle">reads · memorises</text>
+
+      <!-- Student → Exam -->
+      <line x1="350" y1="86" x2="350" y2="115" stroke="#475569" stroke-width="1.5" marker-end="url(#cf-arr)" class="cf-edge"/>
+
+      <rect x="300" y="118" width="100" height="36" rx="5" fill="#1e293b" stroke="#ef4444" stroke-width="1.2"/>
+      <text x="350" y="131" fill="#fca5a5" font-family="system-ui" font-size="9" text-anchor="middle" font-weight="600">📝 Closed Exam</text>
+      <text x="350" y="146" fill="#f87171" font-family="system-ui" font-size="8" text-anchor="middle">recall under pressure</text>
+
+      <!-- AI enters here (disruption arrow) -->
+      <line x1="350" y1="155" x2="350" y2="180" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3 2"/>
+      <rect x="270" y="183" width="160" height="32" rx="5" fill="#450a0a" stroke="#f87171" stroke-width="1.2"/>
+      <text x="350" y="196" fill="#fca5a5" font-family="system-ui" font-size="9" text-anchor="middle" font-weight="600">🤖 AI disrupts here</text>
+      <text x="350" y="209" fill="#f87171" font-family="system-ui" font-size="8" text-anchor="middle">₹800 service fills the gap</text>
+
+      <!-- "What's being measured?" -->
+      <text x="215" y="250" fill="#475569" font-family="system-ui" font-size="8.5" text-anchor="middle" font-style="italic">Measures: recall under pressure</text>
+      <text x="215" y="265" fill="#ef4444" font-family="system-ui" font-size="8.5" text-anchor="middle" font-style="italic">AI can recall better than any student</text>
+
+      <!-- ═══════ AFTER (right) ═══════ -->
+      <!-- Faculty → Questions -->
+      <rect x="445" y="50" width="108" height="36" rx="5" fill="#14532d" stroke="#4ade80" stroke-width="1.2"/>
+      <text x="499" y="63" fill="#86efac" font-family="system-ui" font-size="9" text-anchor="middle" font-weight="600">👨‍🏫 Faculty</text>
+      <text x="499" y="78" fill="#4ade80" font-family="system-ui" font-size="8" text-anchor="middle">designs questions only</text>
+
+      <line x1="553" y1="68" x2="583" y2="68" stroke="#4ade80" stroke-width="1.5" marker-end="url(#cf-arr-green)" class="cf-edge"/>
+
+      <rect x="586" y="50" width="100" height="36" rx="5" fill="#14532d" stroke="#4ade80" stroke-width="1.2"/>
+      <text x="636" y="63" fill="#86efac" font-family="system-ui" font-size="9" text-anchor="middle" font-weight="600">❓ Questions</text>
+      <text x="636" y="78" fill="#4ade80" font-family="system-ui" font-size="8" text-anchor="middle">+ Ask AI button</text>
+
+      <!-- Questions split into two paths -->
+      <line x1="636" y1="86" x2="595" y2="115" stroke="#64748b" stroke-width="1.2" marker-end="url(#cf-arr)" class="cf-edge" style="animation-delay:.3s"/>
+      <line x1="636" y1="86" x2="677" y2="115" stroke="#4ade80" stroke-width="1.5" marker-end="url(#cf-arr-green)" class="cf-edge" style="animation-delay:.5s"/>
+
+      <!-- AI-solvable (left branch) -->
+      <rect x="530" y="118" width="110" height="36" rx="5" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+      <text x="585" y="131" fill="#94a3b8" font-family="system-ui" font-size="8.5" text-anchor="middle">AI solves easily →</text>
+      <text x="585" y="146" fill="#64748b" font-family="system-ui" font-size="8" text-anchor="middle">student pastes answer ✓</text>
+
+      <!-- Hard AI-fails (right branch) -->
+      <rect x="650" y="118" width="112" height="36" rx="5" fill="#172554" stroke="#60a5fa" stroke-width="1.2"/>
+      <text x="706" y="131" fill="#93c5fd" font-family="system-ui" font-size="8.5" text-anchor="middle">AI fails here →</text>
+      <text x="706" y="146" fill="#60a5fa" font-family="system-ui" font-size="8" text-anchor="middle">real learning happens</text>
+
+      <!-- Hard path → student → skill -->
+      <line x1="706" y1="154" x2="706" y2="180" stroke="#4ade80" stroke-width="1.5" marker-end="url(#cf-arr-green)" class="cf-edge" style="animation-delay:.7s"/>
+
+      <rect x="650" y="183" width="112" height="36" rx="5" fill="#14532d" stroke="#4ade80" stroke-width="1.5"/>
+      <text x="706" y="196" fill="#86efac" font-family="system-ui" font-size="9" text-anchor="middle" font-weight="700">Verified Skill</text>
+      <text x="706" y="209" fill="#4ade80" font-family="system-ui" font-size="8" text-anchor="middle">integration · judgment · taste</text>
+
+      <!-- "What's being measured?" -->
+      <text x="636" y="250" fill="#4ade80" font-family="system-ui" font-size="8.5" text-anchor="middle" font-style="italic">Measures: what AI still can't do</text>
+      <text x="636" y="265" fill="#86efac" font-family="system-ui" font-size="8.5" text-anchor="middle" font-style="italic">That's the skill that matters</text>
+    </svg>
+    <figcaption>Left: traditional curriculum — AI disrupts at the assessment layer, creating the ₹800 market. Right: AI-native design — AI handles what it can, freeing faculty and students for higher-order work.</figcaption>
+  </figure>
+
+  <!-- ─── Redesign 2: Assessment ─────────────────── -->
+  <div class="subsect">
+    <h3>The Assessment: Ask Questions AI Cannot Answer.</h3>
+  </div>
+
+  <div class="prose">
+    <p>The viva problem is real. But the solution is not to ban AI during vivas — that is an arms race the institution cannot win. The solution is to ask questions that <span data-cite="oral-exam">generic AI cannot answer.</span></p>
+
+    <p>Each student's <span data-tooltip="An LLM-driven oral examination where questions are generated from the student's own submitted codebase — not a generic question bank. The system reads the student's functions, comments, and design choices, then asks about them specifically.">viva questions</span> are now generated dynamically from their own code repository. A question like "why did you choose recursion here instead of an iterative approach?" requires the student to understand <em>their</em> specific design decisions. A generic ChatGPT window without access to the private repository cannot answer it. A student who copied the project from a service that built it for them cannot answer it either — because they don't know what decisions were made.</p>
+
+    <p>Graded assignments use <span data-tooltip="Each student receives a unique variant of the same problem, generated from a personal seed. Correct answers are validated server-side, so sharing your answer with a classmate who has a different seed is useless.">dynamic seeded personalisation.</span> Each student receives a different variant of the same underlying question, with correct answers validated server-side. Answer-sharing becomes useless because your answer doesn't work for your neighbour's problem variant.</p>
+  </div>
+
+  <!-- VIZ-PLACEHOLDER: assessment-arch -->
+  <figure class="viz" id="viz-assessment" style="max-width:860px">
+    <svg viewBox="0 0 840 280" xmlns="http://www.w3.org/2000/svg" style="max-height:300px">
+      <defs>
+        <marker id="aa-arr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0 L7,3.5 L0,7 Z" fill="#818cf8"/>
+        </marker>
+        <marker id="aa-arr-r" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0 L7,3.5 L0,7 Z" fill="#f87171"/>
+        </marker>
+        <marker id="aa-arr-g" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0 L7,3.5 L0,7 Z" fill="#4ade80"/>
+        </marker>
+        <style>
+          @keyframes aaFlow { from { stroke-dashoffset:80; } to { stroke-dashoffset:0; } }
+          .aa-edge { stroke-dasharray:6 3; animation: aaFlow 1.5s linear infinite; }
+        </style>
+      </defs>
+
+      <rect width="840" height="280" rx="10" fill="#0f172a"/>
+      <text x="420" y="22" fill="#94a3b8" font-family="system-ui" font-size="9.5" font-weight="700" text-anchor="middle" letter-spacing="1.5">VIVA ASSESSMENT ARCHITECTURE</text>
+
+      <!-- ── MAIN PIPELINE (top row) ── -->
+      <!-- 1. Student Repo -->
+      <rect x="20" y="45" width="118" height="52" rx="6" fill="#1e2d4a" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="79" y="63" fill="#93c5fd" font-family="system-ui" font-size="10" text-anchor="middle">🔗 Student Repo</text>
+      <text x="79" y="79" fill="#60a5fa" font-family="system-ui" font-size="8.5" text-anchor="middle">github.com/student/</text>
+      <text x="79" y="91" fill="#60a5fa" font-family="system-ui" font-size="8.5" text-anchor="middle">project-xyz</text>
+
+      <line x1="138" y1="71" x2="164" y2="71" stroke="#818cf8" stroke-width="1.5" marker-end="url(#aa-arr)" class="aa-edge"/>
+
+      <!-- 2. AST Parser -->
+      <rect x="167" y="45" width="118" height="52" rx="6" fill="#1e1b4b" stroke="#818cf8" stroke-width="1.5"/>
+      <text x="226" y="63" fill="#c7d2fe" font-family="system-ui" font-size="10" text-anchor="middle">📝 Code Parser</text>
+      <text x="226" y="79" fill="#a5b4fc" font-family="system-ui" font-size="8.5" text-anchor="middle">reads your functions,</text>
+      <text x="226" y="91" fill="#a5b4fc" font-family="system-ui" font-size="8.5" text-anchor="middle">design decisions, diffs</text>
+
+      <line x1="285" y1="71" x2="311" y2="71" stroke="#818cf8" stroke-width="1.5" marker-end="url(#aa-arr)" class="aa-edge" style="animation-delay:.3s"/>
+
+      <!-- 3. LLM Question Generator -->
+      <rect x="314" y="45" width="118" height="52" rx="6" fill="#2e1065" stroke="#a855f7" stroke-width="1.5"/>
+      <text x="373" y="63" fill="#d8b4fe" font-family="system-ui" font-size="10" text-anchor="middle">🤖 LLM Generator</text>
+      <text x="373" y="79" fill="#c084fc" font-family="system-ui" font-size="8.5" text-anchor="middle">generates repo-specific</text>
+      <text x="373" y="91" fill="#c084fc" font-family="system-ui" font-size="8.5" text-anchor="middle">questions dynamically</text>
+
+      <line x1="432" y1="71" x2="458" y2="71" stroke="#a855f7" stroke-width="1.5" marker-end="url(#aa-arr)" class="aa-edge" style="animation-delay:.6s"/>
+
+      <!-- 4. Personalised Questions -->
+      <rect x="461" y="45" width="130" height="52" rx="6" fill="#1c1917" stroke="#f59e0b" stroke-width="2"/>
+      <text x="526" y="60" fill="#fde68a" font-family="system-ui" font-size="9.5" text-anchor="middle" font-weight="700">❓ "Why did you use</text>
+      <text x="526" y="75" fill="#fde68a" font-family="system-ui" font-size="9.5" text-anchor="middle" font-weight="700">recursion here?"</text>
+      <text x="526" y="91" fill="#f59e0b" font-family="system-ui" font-size="8" text-anchor="middle">unique per student · per repo</text>
+
+      <!-- 4 → Student response -->
+      <line x1="591" y1="71" x2="617" y2="71" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#aa-arr)" class="aa-edge" style="animation-delay:.9s"/>
+
+      <!-- 5. Student answers -->
+      <rect x="620" y="45" width="110" height="52" rx="6" fill="#14532d" stroke="#4ade80" stroke-width="1.5"/>
+      <text x="675" y="63" fill="#86efac" font-family="system-ui" font-size="10" text-anchor="middle">👩‍🎓 Student</text>
+      <text x="675" y="79" fill="#4ade80" font-family="system-ui" font-size="8.5" text-anchor="middle">answers live · real-time</text>
+      <text x="675" y="91" fill="#4ade80" font-family="system-ui" font-size="8.5" text-anchor="middle">no prep possible</text>
+
+      <!-- ── WHY GENERIC AI FAILS (below middle) ── -->
+      <line x1="373" y1="97" x2="373" y2="130" stroke="#f87171" stroke-width="1.5" stroke-dasharray="3 2"/>
+      <rect x="290" y="133" width="166" height="42" rx="5" fill="#450a0a" stroke="#f87171" stroke-width="1.2"/>
+      <text x="373" y="150" fill="#fca5a5" font-family="system-ui" font-size="9.5" text-anchor="middle" font-weight="700">🚫 Generic ChatGPT fails</text>
+      <text x="373" y="166" fill="#f87171" font-family="system-ui" font-size="8.5" text-anchor="middle">No access to private repo → wrong answers</text>
+
+      <!-- ── COPIED PROJECT PATH (below student) ── -->
+      <line x1="675" y1="97" x2="675" y2="130" stroke="#f87171" stroke-width="1.5" stroke-dasharray="3 2"/>
+      <rect x="610" y="133" width="130" height="42" rx="5" fill="#450a0a" stroke="#f87171" stroke-width="1.2"/>
+      <text x="675" y="150" fill="#fca5a5" font-family="system-ui" font-size="9.5" text-anchor="middle" font-weight="700">🚫 Copied project fails</text>
+      <text x="675" y="166" fill="#f87171" font-family="system-ui" font-size="8.5" text-anchor="middle">Can't explain decisions you didn't make</text>
+
+      <!-- ── SUCCESS PATH ── -->
+      <line x1="675" y1="97" x2="526" y2="195" stroke="#4ade80" stroke-width="2" stroke-opacity=".4" stroke-dasharray="4 2"/>
+      <rect x="370" y="198" width="312" height="42" rx="6" fill="#052e16" stroke="#4ade80" stroke-width="2"/>
+      <text x="526" y="215" fill="#86efac" font-family="system-ui" font-size="10" text-anchor="middle" font-weight="700">✓ Only genuine understanding passes</text>
+      <text x="526" y="231" fill="#4ade80" font-family="system-ui" font-size="8.5" text-anchor="middle">scored · explained · auditable · scalable</text>
+
+      <!-- ── Seeded personalisation note (left) ── -->
+      <rect x="20" y="150" width="230" height="52" rx="5" fill="#1c1917" stroke="#d97706" stroke-width="1"/>
+      <text x="135" y="167" fill="#fde68a" font-family="system-ui" font-size="9" text-anchor="middle" font-weight="700">+ Seeded Personalisation</text>
+      <text x="135" y="182" fill="#d97706" font-family="system-ui" font-size="8" text-anchor="middle">Each student gets a unique variant.</text>
+      <text x="135" y="196" fill="#d97706" font-family="system-ui" font-size="8" text-anchor="middle">Sharing answers is useless.</text>
+    </svg>
+    <figcaption>Questions generated from the student's own repository. Generic AI has no access to it. A copied project can't be explained. Only genuine understanding produces the right answer.</figcaption>
+  </figure>
+
+  <!-- ─── Redesign 3: Governance ─────────────────── -->
+  <div class="subsect">
+    <h3>The Governance: Tiered Oversight, Not a Binary Choice.</h3>
+  </div>
+
+  <div class="prose">
+    <p>The hardest governance objection to AI-assisted assessment is: we cannot review everything. Three thousand students, thousands of submissions — human review of each one is not feasible.</p>
+    <p>This is a false binary. The right architecture is not full automation or full manual review. It is tiered oversight — defined by the consequence of getting it wrong.</p>
+  </div>
+
+  <div class="tier-rows reveal">
+    <div class="tier-row green">
+      <div class="tier-dot"></div>
+      <div>
+        <strong>Green — Auto-grade.</strong>
+        Factual, verifiable, low-stakes outputs. Automated grading is reliable. No human review needed.
+      </div>
+      <span class="tier-pct">~80%</span>
+    </div>
+    <div class="tier-row amber">
+      <div class="tier-dot"></div>
+      <div>
+        <strong>Amber — Spot-check.</strong>
+        Higher stakes, borderline scores, unusual patterns. A sample — ~10–15% — goes to human review. AI flags which ones to check.
+      </div>
+      <span class="tier-pct">~15%</span>
+    </div>
+    <div class="tier-row red">
+      <div class="tier-dot"></div>
+      <div>
+        <strong>Red — Always human.</strong>
+        Appeals, academic integrity decisions, exceptional circumstances. Humans are always in the loop here, with full audit trail.
+      </div>
+      <span class="tier-pct">~5%</span>
+    </div>
+  </div>
+
+  <div class="prose">
+    <p>This is not a concession to AI. It is a design choice that makes review more targeted and consistent, not less rigorous. And it creates an <span data-tooltip="Every automated grading decision is logged with the model used, input, output, confidence score, and flagging criteria. Any decision can be reviewed or appealed with a complete record — unlike current systems where a single examiner grades under time pressure with no trace of how borderlines were resolved.">audit trail</span> — documented reasoning, flagging criteria, review decisions — that is more defensible in a Senate review than the current system, where a single human grades under time pressure with no record of how borderline cases were resolved.</p>
+  </div>
+
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     BEAT VI — WHAT IITM NOW HAS
+════════════════════════════════════════════════ -->
+<section class="beat" id="beat-6">
+  <div class="beat-label">
+    <span class="beat-num">VI</span>
+    <span class="beat-title">What IITM Now Has</span>
+  </div>
+
+  <div class="prose">
+    <p>There is one more thing the Academic Council should know.</p>
+
+    <p>IIT Madras is, right now, sitting on one of the most valuable educational research datasets in the world.</p>
+
+    <p>Every submission from every student in a 3,000-student programme. Every AI query made during an assessment — <span data-cite="which-llms">which model was chosen, which question triggered it, at what moment in the exam it was asked, whether it correlated with getting the answer right.</span> Every viva recording. Every timestamped code trace from a student working through a problem over hours.</p>
+
+    <p>From that data, we already know things no controlled study could easily prove. Students who use Claude on certain question types show different patterns than students who use ChatGPT. Submission timing — how far before the deadline a student submits — correlates with performance in ways that could support much earlier intervention. A certain class of Python errors in the introductory programming course is not a knowledge gap. It is a specific <span data-tooltip="For example: a student who consistently returns None from functions that should return a value is not missing knowledge about return statements — they have a mental model that conflates 'printing' with 'returning'. The right test case catches this pattern before the student submits.">mental-model failure</span> about how functions return values — and the right test case can surface it before the student ever submits broken code.</p>
+
+    <p>None of this is published yet. It could be. The institution that mines this data systematically will not just solve its own assessment problems. It will lead the field. It will publish the research that every university in the world is looking for.</p>
+  </div>
+
+  <!-- VIZ-PLACEHOLDER: data-asset -->
+  <figure class="viz" id="viz-data" style="max-width:820px">
+    <svg viewBox="0 0 780 380" xmlns="http://www.w3.org/2000/svg" style="max-height:400px">
+      <defs>
+        <style>
+          @keyframes ringPulse {
+            0%,100% { opacity:.55; }
+            50% { opacity:.85; }
+          }
+          @keyframes dotOrbit {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+          }
+          @keyframes dataIn {
+            from { opacity:0; transform: scale(.5); }
+            to   { opacity:1; transform: scale(1); }
+          }
+          .ring1 { animation: ringPulse 3s ease-in-out infinite; }
+          .ring2 { animation: ringPulse 3s ease-in-out 1s infinite; }
+          .ring3 { animation: ringPulse 3s ease-in-out 2s infinite; }
+          .orbit1 { transform-origin: 390px 190px; animation: dotOrbit 18s linear infinite; }
+          .orbit2 { transform-origin: 390px 190px; animation: dotOrbit 28s linear infinite reverse; }
+          .orbit3 { transform-origin: 390px 190px; animation: dotOrbit 40s linear infinite; }
+          .da-node { animation: dataIn .5s ease both; }
+        </style>
+      </defs>
+
+      <rect width="780" height="380" rx="10" fill="#0f172a"/>
+      <text x="390" y="22" fill="#94a3b8" font-family="system-ui" font-size="9.5" font-weight="700" text-anchor="middle" letter-spacing="2">IITM'S GROWING DATA ASSET</text>
+
+      <!-- Ring 3 (outer): Research outputs -->
+      <circle cx="390" cy="190" r="164" fill="none" stroke="#1e3a5f" stroke-width="1" class="ring3"/>
+      <circle cx="390" cy="190" r="164" fill="#1e3a5f" fill-opacity=".12" class="ring3"/>
+
+      <!-- Ring 2 (middle): Analytics layer -->
+      <circle cx="390" cy="190" r="114" fill="none" stroke="#164e63" stroke-width="1" class="ring2"/>
+      <circle cx="390" cy="190" r="114" fill="#164e63" fill-opacity=".18" class="ring2"/>
+
+      <!-- Ring 1 (inner): Raw data -->
+      <circle cx="390" cy="190" r="68" fill="none" stroke="#0c4a6e" stroke-width="1.5" class="ring1"/>
+      <circle cx="390" cy="190" r="68" fill="#0c4a6e" fill-opacity=".28" class="ring1"/>
+
+      <!-- Centre: IITM -->
+      <circle cx="390" cy="190" r="32" fill="#1e3a5f" stroke="#60a5fa" stroke-width="2"/>
+      <text x="390" y="184" fill="#93c5fd" font-family="system-ui" font-size="9" text-anchor="middle" font-weight="700">IITM</text>
+      <text x="390" y="197" fill="#60a5fa" font-family="system-ui" font-size="8" text-anchor="middle">3,000+</text>
+      <text x="390" y="208" fill="#60a5fa" font-family="system-ui" font-size="8" text-anchor="middle">students/yr</text>
+
+      <!-- ── Ring 1 nodes: Raw data ── -->
+      <!-- Orbiting data nodes (ring 1, r~68) -->
+      <g class="orbit1">
+        <g transform="translate(390,122)" class="da-node" style="animation-delay:.2s">
+          <circle cx="0" cy="0" r="18" fill="#0c4a6e" stroke="#38bdf8" stroke-width="1.5"/>
+          <text x="0" y="-4" fill="#7dd3fc" font-family="system-ui" font-size="7.5" text-anchor="middle">AI queries</text>
+          <text x="0" y="7"  fill="#38bdf8" font-family="system-ui" font-size="7" text-anchor="middle">model · timing</text>
+        </g>
+      </g>
+      <g class="orbit1" style="transform-origin:390px 190px; transform:rotate(120deg)">
+        <g transform="translate(390,122)" class="da-node" style="animation-delay:.4s">
+          <circle cx="0" cy="0" r="18" fill="#0c4a6e" stroke="#38bdf8" stroke-width="1.5"/>
+          <text x="0" y="-4" fill="#7dd3fc" font-family="system-ui" font-size="7.5" text-anchor="middle">Submissions</text>
+          <text x="0" y="7"  fill="#38bdf8" font-family="system-ui" font-size="7" text-anchor="middle">every answer</text>
+        </g>
+      </g>
+      <g class="orbit1" style="transform-origin:390px 190px; transform:rotate(240deg)">
+        <g transform="translate(390,122)" class="da-node" style="animation-delay:.6s">
+          <circle cx="0" cy="0" r="18" fill="#0c4a6e" stroke="#38bdf8" stroke-width="1.5"/>
+          <text x="0" y="-4" fill="#7dd3fc" font-family="system-ui" font-size="7.5" text-anchor="middle">Code traces</text>
+          <text x="0" y="7"  fill="#38bdf8" font-family="system-ui" font-size="7" text-anchor="middle">timestamps</text>
+        </g>
+      </g>
+
+      <!-- ── Ring 2 nodes: Analytics ── (r~114) -->
+      <g style="transform-origin:390px 190px; transform:rotate(30deg)">
+        <g transform="translate(390,76)" class="da-node" style="animation-delay:.7s">
+          <rect x="-42" y="-16" width="84" height="32" rx="5" fill="#164e63" stroke="#22d3ee" stroke-width="1.2"/>
+          <text x="0" y="-3" fill="#a5f3fc" font-family="system-ui" font-size="7.5" text-anchor="middle">Claude vs ChatGPT</text>
+          <text x="0" y="9" fill="#22d3ee" font-family="system-ui" font-size="7" text-anchor="middle">score differences</text>
+        </g>
+      </g>
+      <g style="transform-origin:390px 190px; transform:rotate(150deg)">
+        <g transform="translate(390,76)" class="da-node" style="animation-delay:.9s">
+          <rect x="-46" y="-16" width="92" height="32" rx="5" fill="#164e63" stroke="#22d3ee" stroke-width="1.2"/>
+          <text x="0" y="-3" fill="#a5f3fc" font-family="system-ui" font-size="7.5" text-anchor="middle">Submission timing</text>
+          <text x="0" y="9" fill="#22d3ee" font-family="system-ui" font-size="7" text-anchor="middle">→ grade correlation</text>
+        </g>
+      </g>
+      <g style="transform-origin:390px 190px; transform:rotate(270deg)">
+        <g transform="translate(390,76)" class="da-node" style="animation-delay:1.1s">
+          <rect x="-46" y="-16" width="92" height="32" rx="5" fill="#164e63" stroke="#22d3ee" stroke-width="1.2"/>
+          <text x="0" y="-3" fill="#a5f3fc" font-family="system-ui" font-size="7.5" text-anchor="middle">Python misconceptions</text>
+          <text x="0" y="9" fill="#22d3ee" font-family="system-ui" font-size="7" text-anchor="middle">return vs print confusion</text>
+        </g>
+      </g>
+
+      <!-- ── Ring 3 nodes: Research ── (r~164) -->
+      <!-- Top -->
+      <g class="da-node" style="animation-delay:1.3s">
+        <rect x="340" y="15" width="100" height="30" rx="5" fill="#1e3a5f" stroke="#818cf8" stroke-width="1.5"/>
+        <text x="390" y="26" fill="#c7d2fe" font-family="system-ui" font-size="8" text-anchor="middle" font-weight="700">📄 Publications</text>
+        <text x="390" y="38" fill="#818cf8" font-family="system-ui" font-size="7.5" text-anchor="middle">lead the field</text>
+      </g>
+      <!-- Left -->
+      <g class="da-node" style="animation-delay:1.5s">
+        <rect x="172" y="175" width="86" height="30" rx="5" fill="#1e3a5f" stroke="#818cf8" stroke-width="1.5"/>
+        <text x="215" y="186" fill="#c7d2fe" font-family="system-ui" font-size="8" text-anchor="middle" font-weight="700">🎯 Early alerts</text>
+        <text x="215" y="198" fill="#818cf8" font-family="system-ui" font-size="7.5" text-anchor="middle">intervention signals</text>
+      </g>
+      <!-- Right -->
+      <g class="da-node" style="animation-delay:1.7s">
+        <rect x="521" y="175" width="88" height="30" rx="5" fill="#1e3a5f" stroke="#818cf8" stroke-width="1.5"/>
+        <text x="565" y="186" fill="#c7d2fe" font-family="system-ui" font-size="8" text-anchor="middle" font-weight="700">🧪 Research</text>
+        <text x="565" y="198" fill="#818cf8" font-family="system-ui" font-size="7.5" text-anchor="middle">unique at scale</text>
+      </g>
+      <!-- Bottom -->
+      <g class="da-node" style="animation-delay:1.9s">
+        <rect x="330" y="343" width="120" height="30" rx="5" fill="#1e3a5f" stroke="#818cf8" stroke-width="1.5"/>
+        <text x="390" y="354" fill="#c7d2fe" font-family="system-ui" font-size="8" text-anchor="middle" font-weight="700">🏛 Policy design</text>
+        <text x="390" y="366" fill="#818cf8" font-family="system-ui" font-size="7.5" text-anchor="middle">evidence-based governance</text>
+      </g>
+
+      <!-- Ring labels -->
+      <text x="456" y="152" fill="#38bdf8" font-family="system-ui" font-size="7.5" fill-opacity=".7">RAW DATA</text>
+      <text x="502" y="114" fill="#22d3ee" font-family="system-ui" font-size="7.5" fill-opacity=".7">ANALYTICS</text>
+      <text x="550" y="80" fill="#818cf8" font-family="system-ui" font-size="7.5" fill-opacity=".7">RESEARCH OUTPUTS</text>
+    </svg>
+    <figcaption>IITM's data asset spans three layers: raw learning traces (inner ring), analytical insights (middle), and the research outputs and policy designs those insights enable (outer). None of this is published yet.</figcaption>
+  </figure>
+
+  <div class="subsect">
+    <h3>Three asks for this body</h3>
+  </div>
+
+  <div class="asks reveal">
+    <div class="ask-item">
+      <p><strong>Commission a <span data-tooltip="A structured review process where every learning objective across every course is classified into one of four GPS categories: Enforce, Level-Up, Switch, or Accept. The goal is an explicit institutional decision about AI's role in each skill domain.">GPS audit</span>.</strong> For every learning objective in every course, classify the skill: Enforce, Level-Up, Switch, or Accept. This is not a faculty exercise — it requires coordination across programmes and a mandate from academic governance.</p>
+    </div>
+    <div class="ask-item">
+      <p><strong>Establish an AI-assessment design standard.</strong> Require new assessments to declare their AI policy. Create a fast-track review process for courses redesigned around the GPS framework. Make it easy to experiment rather than hard.</p>
+    </div>
+    <div class="ask-item">
+      <p><strong>Fund the data infrastructure.</strong> Build a shared analytical layer across courses. Commission cross-course learning analytics. Treat the data as the institutional asset it already is.</p>
+    </div>
+  </div>
+
+  <div class="pull-quote">
+    <blockquote>The exam is already open-book. The only question is whether we designed it.</blockquote>
+  </div>
+
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     KEY MESSAGES
+════════════════════════════════════════════════ -->
+<section class="key-messages" id="key-messages">
+  <div class="key-messages-inner">
+    <h2>Five things to carry out of this room</h2>
+    <ol class="km-list">
+      <li class="km-item">
+        <div>
+          <div class="km-head">The intern is already in the room.</div>
+          <div class="km-body">Every student has a postgraduate AI assistant. The question is what we do about it — not whether to acknowledge it.</div>
+        </div>
+      </li>
+      <li class="km-item">
+        <div>
+          <div class="km-head">The cheat is the skill.</div>
+          <div class="km-body">The behaviour we call academic fraud is, in many cases, the behaviour employers will require. Redesign the exam, not just the policy.</div>
+        </div>
+      </li>
+      <li class="km-item">
+        <div>
+          <div class="km-head">Enforce / Level-Up / Switch / Accept.</div>
+          <div class="km-body">A decision rule you can apply in committee tomorrow. For each learning objective: what do we do when AI can do it better than most students?</div>
+        </div>
+      </li>
+      <li class="km-item">
+        <div>
+          <div class="km-head">Tiered governance is more rigorous, not less.</div>
+          <div class="km-body">Green / amber / red tiers make review targeted and auditable. A documented process scales better than heroic manual review with no trail.</div>
+        </div>
+      </li>
+      <li class="km-item">
+        <div>
+          <div class="km-head">IITM's scale is a research asset.</div>
+          <div class="km-body">The data already exists. The institution that mines it will lead — not follow — the field in AI-assisted education research.</div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <p>Anand S &thinsp;·&thinsp; IIT Madras Academic Council, March 2026 &thinsp;·&thinsp;
+  <a href="https://github.com/sanand0/talks/tree/main/2026-03-18-iitm-academic-council" target="_blank">Source on GitHub ↗</a></p>
+</footer>
+
+<!-- ── Tooltip ────────────────────────────────────────────────────────── -->
+<div id="tooltip" role="tooltip"></div>
+
+<!-- ── Popup ──────────────────────────────────────────────────────────── -->
+<div id="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+  <div id="popup-box">
+    <div id="popup-header">
+      <span id="popup-title">Reference</span>
+      <a id="popup-open-link" href="#" target="_blank" rel="noopener">Open original ↗</a>
+      <button id="popup-close" aria-label="Close popup">×</button>
+    </div>
+    <div id="popup-body"></div>
+  </div>
+</div>
+
+<script>
+/* ── Progress bar ─────────────────────────────────────────────────────── */
+const progressEl = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  progressEl.style.width = (window.scrollY / max * 100) + '%';
+}, { passive: true });
+
+/* ── Scroll-reveal ────────────────────────────────────────────────────── */
+const revObs = new IntersectionObserver(entries =>
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+  { threshold: 0.12 }
+);
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+/* ── WhatsApp message trigger ─────────────────────────────────────────── */
+const wappObs = new IntersectionObserver(entries =>
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+  { threshold: 0.5 }
+);
+const wappEl = document.getElementById('wapp-msg');
+if (wappEl) wappObs.observe(wappEl);
+
+/* ── Tooltip ──────────────────────────────────────────────────────────── */
+const tip = document.getElementById('tooltip');
+let tipTimer;
+document.addEventListener('mouseover', e => {
+  const el = e.target.closest('[data-tooltip]');
+  if (!el) return;
+  clearTimeout(tipTimer);
+  tip.textContent = el.dataset.tooltip;
+  tip.style.opacity = '1';
+  moveTip(e);
+});
+document.addEventListener('mousemove', e => {
+  if (tip.style.opacity === '1') moveTip(e);
+});
+document.addEventListener('mouseout', e => {
+  if (e.target.closest('[data-tooltip]'))
+    tipTimer = setTimeout(() => { tip.style.opacity = '0'; }, 80);
+});
+function moveTip(e) {
+  const p = 14, tw = tip.offsetWidth, th = tip.offsetHeight;
+  let x = e.clientX + p, y = e.clientY + p;
+  if (x + tw > window.innerWidth - p) x = e.clientX - tw - p;
+  if (y + th > window.innerHeight - p) y = e.clientY - th - p;
+  tip.style.left = x + 'px'; tip.style.top = y + 'px';
+}
+
+/* ── Popup ────────────────────────────────────────────────────────────── */
+const overlay  = document.getElementById('popup-overlay');
+const popTitle = document.getElementById('popup-title');
+const popLink  = document.getElementById('popup-open-link');
+const popBody  = document.getElementById('popup-body');
+document.getElementById('popup-close').addEventListener('click', closePopup);
+overlay.addEventListener('click', e => { if (e.target === overlay) closePopup(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
+
+function openPopup(title, href, bodyHTML) {
+  popTitle.textContent = title;
+  popLink.href = href;
+  popBody.innerHTML = bodyHTML;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closePopup() {
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── Citation data ────────────────────────────────────────────────────── */
+const CITES = {
+  'cheating-market': {
+    title: 'TEQSA blocks more cheating websites',
+    url: 'https://www.theaustralian.com.au/higher-education/teqsa-blocks-more-cheating-websites/news-story/f9e835a3783154cd0c469e7ee8097bd6',
+    quote: 'Contract cheating services have proliferated into organised markets, with some operating as structured businesses complete with customer service, pricing tiers, and money-back guarantees.',
+    source: 'The Australian, Higher Education'
+  },
+  'viva-cheating': {
+    title: 'ChatGPT: The End of Online Exam Integrity?',
+    url: 'https://www.mdpi.com/2227-7102/14/6/656',
+    quote: 'Results indicate that ChatGPT successfully answered the majority of questions across all subjects, raising serious concerns about the integrity of online examinations that rely on closed-book recall.',
+    source: 'MDPI Education Sciences, 2024'
+  },
+  'skill-erosion': {
+    title: 'Automation and skill erosion (AI & Society)',
+    url: 'https://link.springer.com/article/10.1007/s00146-025-02422-7',
+    quote: 'Automation erodes skills that are no longer exercised, with the degree of erosion depending on whether the skill is actively maintained through deliberate practice or allowed to atrophy.',
+    source: 'AI & Society, Springer, 2025'
+  },
+  'which-llms': {
+    title: 'Which LLMs get you better grades?',
+    url: 'https://www.s-anand.net/blog/which-llms-get-you-better-grades/',
+    quote: 'Students who used Claude on graded assignments showed measurable differences in score distributions compared to those using ChatGPT or Gemini — suggesting AI-use patterns are not only detectable but analytically rich.',
+    source: 'Anand S, s-anand.net, 2026'
+  },
+  'oral-exam': {
+    title: 'Reconsidering the Use of Oral Exams and Assessments',
+    url: 'https://journals.sagepub.com/doi/full/10.3102/0013189X251333638',
+    quote: 'Oral assessment formats probe understanding in ways that resist AI-assisted cheating, as they require real-time contextual reasoning that cannot be scripted without access to the specific artefact being examined.',
+    source: 'Educational Researcher, AERA, 2025'
+  },
+  'tds-jan-2026': {
+    title: 'Tools in Data Science — Jan 2026',
+    url: 'https://www.s-anand.net/blog/tools-in-data-science-jan-2026/',
+    quote: '"I removed all the content. What\'s the point of teaching material when AI generates it on demand? I might as well give students the prompts directly and let them focus on where AI fails."',
+    source: 'Anand S, s-anand.net, Jan 2026'
+  },
+  'breaking-rules': {
+    title: 'Breaking Rules in the Age of AI',
+    url: 'https://www.s-anand.net/blog/breaking-rules-in-the-age-of-ai/',
+    quote: '"We\'ve taught students a lot of learned helplessness — you can\'t ask dumb questions, you can\'t use AI for help, you can\'t fail. Doing the opposite is also an important skill for the AI age."',
+    source: 'Anand S, s-anand.net, Feb 2026'
+  }
+};
+
+/* ── File data ────────────────────────────────────────────────────────── */
+const FILES = {
+  'tds-readme': {
+    title: 'tools-in-data-science-public / README.md',
+    url: 'https://github.com/sanand0/tools-in-data-science-public/blob/main/README.md',
+    raw: 'https://raw.githubusercontent.com/sanand0/tools-in-data-science-public/main/README.md'
+  },
+  'ideas-md': {
+    title: '50 AI-in-Education Innovations (ideas.md)',
+    url: 'https://github.com/sanand0/talks/blob/main/2026-03-18-iitm-academic-council/ideas.md',
+    raw: 'https://raw.githubusercontent.com/sanand0/talks/main/2026-03-18-iitm-academic-council/ideas.md'
+  },
+  'breaking-rules': {
+    title: 'Breaking Rules in the Age of AI (s-anand.net)',
+    url: 'https://s-anand.net/blog/breaking-rules-in-the-age-of-ai/',
+    raw: 'https://raw.githubusercontent.com/sanand0/talks/main/2025-05-10-vibe-coding/breaking-rules-in-the-age-of-ai.md'
+  }
+};
+
+/* ── Click handler ────────────────────────────────────────────────────── */
+document.addEventListener('click', async e => {
+  const citeEl = e.target.closest('[data-cite]');
+  if (citeEl) {
+    const c = CITES[citeEl.dataset.cite];
+    if (c) openPopup(c.title, c.url,
+      `<p class="cite-quote">"${c.quote}"</p>
+       <p class="cite-source">${c.source}</p>
+       <p class="cite-url"><a href="${c.url}" target="_blank" rel="noopener">${c.url}</a></p>`
+    );
+    return;
+  }
+  const fileEl = e.target.closest('[data-file]');
+  if (fileEl) {
+    const f = FILES[fileEl.dataset.file];
+    if (!f) return;
+    openPopup(f.title, f.url, '<p style="font-style:italic;color:#78716c">Loading…</p>');
+    try {
+      const res = await fetch(f.raw);
+      const txt = await res.text();
+      const safe = txt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      popBody.innerHTML = `<pre><code>${safe.slice(0, 30000)}</code></pre>`;
+    } catch {
+      popBody.innerHTML = `<p style="color:#dc2626">Could not load file.</p>
+        <p><a href="${f.url}" target="_blank">Open on GitHub ↗</a></p>`;
+    }
+  }
+});
+</script>
+</body>
+</html>

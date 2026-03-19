@@ -31,19 +31,19 @@ This gives the Council a reassuring frame: the goal is **not to surrender standa
 
 Use this as the recurring structure of the talk.
 
-1. **Enforce**  
+1. **Enforce**\
    What must students still be able to do without AI because it is foundational, safety-critical, or identity-forming?
 
-2. **Level up**  
-   What higher-order skill becomes more important because AI can do the lower-order version?  
+2. **Level up**\
+   What higher-order skill becomes more important because AI can do the lower-order version?\
    Examples: framing, verification, critique, taste, communication, judgment, problem selection.
 
-3. **Switch**  
-   What teaching or assessment format must change because AI has broken the old one?  
+3. **Switch**\
+   What teaching or assessment format must change because AI has broken the old one?\
    Examples: from content delivery to question design, from output grading to evidence grading, from hidden AI use to observable AI use.
 
-4. **Accept**  
-   What skills have become commoditized enough that we should stop pretending they are scarce markers of academic value?  
+4. **Accept**\
+   What skills have become commoditized enough that we should stop pretending they are scarce markers of academic value?\
    Examples: syntax recall, routine drafting, basic lookup, first-pass coding.
 
 ### End-state skills to emphasize
@@ -92,7 +92,7 @@ This is the turn of the story.
 
 The central claim:
 
-> The question for a university is no longer "Did the student use AI?"  
+> The question for a university is no longer "Did the student use AI?"\
 > It is "What should we preserve, what should we raise, and what should we redesign when AI is available?"
 
 Then land the autopilot metaphor:
@@ -170,7 +170,7 @@ Suggested closing move:
 
 Possible closing line:
 
-> In the age of AI, the university's job is not to prove that students worked alone.  
+> In the age of AI, the university's job is not to prove that students worked alone.\
 > It is to ensure that they can frame problems well, use tools wisely, verify results rigorously, and stand behind what they submit.
 
 ## Key messages to repeat

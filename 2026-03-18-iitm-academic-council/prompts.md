@@ -82,7 +82,6 @@ Also include ideas in ideas.md as well as in ideas/index.html from:
 - https://sanand0.github.io/pyoppe/
 - https://files.s-anand.net/temp/navodaya-2026/
 
-
 <!-- copilot --resume=a6ed9c59-6a61-4aef-82f3-4e0aaad83366 -->
 
 ## Alternate storyline (Copilot Yolo - Claude Sonnet 4.6)

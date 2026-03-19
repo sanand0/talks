@@ -12,7 +12,7 @@
 
 Every educator knows the logic of an open-book exam: when information is freely available, test for judgment, not recall. We use it deliberately in some settings — because we recognise that the skill we're after is synthesis, application, decision-making, not retrieval.
 
-AI has made *every* exam an open-book exam, whether we called it that or not. The student sitting your closed-book test has a postgraduate intern in their pocket who knows more than most TAs, is available at 3 AM, never loses patience, and costs ₹1,600 a month. The question is not whether students will use it. They already are. The question is: **what does rigorous, fair, scalable education look like when every exam is already open-book?**
+AI has made _every_ exam an open-book exam, whether we called it that or not. The student sitting your closed-book test has a postgraduate intern in their pocket who knows more than most TAs, is available at 3 AM, never loses patience, and costs ₹1,600 a month. The question is not whether students will use it. They already are. The question is: **what does rigorous, fair, scalable education look like when every exam is already open-book?**
 
 ### Secondary: The GPS Decision Framework
 
@@ -33,21 +33,22 @@ Every learning objective in every course now needs this audit. Not once, as a cu
 
 Open with a specific moment IITM faculty already know:
 
-> Before a viva, a student in your programme receives a WhatsApp message: *"Your proctor is [name]. He asks these questions. Here's what to say."*
+> Before a viva, a student in your programme receives a WhatsApp message: _"Your proctor is [name]. He asks these questions. Here's what to say."_
 
 This is not a rumour. It is documented reality. Organised markets have formed around the IITM assessment calendar — ₹800 bootcamps that promise to do the entire project. Proxy viva services. Scripts written to paste into ChatGPT faster than the proctor can notice. The viva system shuffled proctors to stop the leak; within weeks, the leak adapted.
 
-**The tension**: This is not a student discipline problem. It is an architecture problem. The assessment was designed to measure something. But the thing it now measures — under the current design — is resourcefulness at gaming it. Which raises an uncomfortable question: *is that wrong?*
+**The tension**: This is not a student discipline problem. It is an architecture problem. The assessment was designed to measure something. But the thing it now measures — under the current design — is resourcefulness at gaming it. Which raises an uncomfortable question: _is that wrong?_
 
 ### Beat 2 — Setup: We Built This for a Different World (5 minutes)
 
-Traditional education was engineered for information scarcity. The closed-book exam, the supervised assignment, the solo project — all of these rest on a single assumption: *expertise is rare and expensive, so the ability to store and retrieve it is worth testing.*
+Traditional education was engineered for information scarcity. The closed-book exam, the supervised assignment, the solo project — all of these rest on a single assumption: _expertise is rare and expensive, so the ability to store and retrieve it is worth testing._
 
 That assumption held for two centuries. A student who had internalised the knowledge had a genuine advantage over one who hadn't.
 
 Then intelligence got cheap. Not eventually — now.
 
 For ₹1,600 a month, any student can access a system that:
+
 - Knows more than most teaching assistants in most domains
 - Is available at 3 AM before a deadline
 - Speaks Tamil, Telugu, Hindi, and English without switching modes
@@ -68,20 +69,20 @@ The ability to orchestrate AI tools to get work done. To verify the output. To a
 
 The student who memorised the answer and can recall it under pressure — and nothing else — is less prepared for the world they are entering than the student who learned to work with AI, verify it, and deliver. We are accidentally selecting against the future.
 
-This is not an argument to abolish assessment. It is an argument that **the question has changed**. We used to ask: *can you recall this?* The right question now is: *can you do this — using any tool at your disposal — and can you tell me why the answer is right?*
+This is not an argument to abolish assessment. It is an argument that **the question has changed**. We used to ask: _can you recall this?_ The right question now is: _can you do this — using any tool at your disposal — and can you tell me why the answer is right?_
 
 ### Beat 4 — Revelation: The GPS Moment (7 minutes)
 
 Every generation faces a GPS moment — a moment when a new technology forces a decision about what to do with the skill it is replacing.
 
-| Technology | Skill eroded | Institutional response |
-|---|---|---|
-| Autopilots | Manual flying | **Enforce** — flight simulators, because catastrophic failure |
-| Spreadsheets | Manual calculation | **Level-up** — from arithmetic to financial strategy |
-| Photography | Brushwork replication | **Switch** — to composition, intention, impressionism |
-| GPS | Navigation from maps | **Accept** — we're fine without it |
+| Technology   | Skill eroded          | Institutional response                                        |
+| ------------ | --------------------- | ------------------------------------------------------------- |
+| Autopilots   | Manual flying         | **Enforce** — flight simulators, because catastrophic failure |
+| Spreadsheets | Manual calculation    | **Level-up** — from arithmetic to financial strategy          |
+| Photography  | Brushwork replication | **Switch** — to composition, intention, impressionism         |
+| GPS          | Navigation from maps  | **Accept** — we're fine without it                            |
 
-AI is your GPS moment for most of the skills in most of your courses. The question is not *whether* AI will change what you teach. It is *how deliberately you will choose* the response.
+AI is your GPS moment for most of the skills in most of your courses. The question is not _whether_ AI will change what you teach. It is _how deliberately you will choose_ the response.
 
 Some skills still need to be enforced — understanding where AI fails, verification, judgment in ambiguous situations, hands-on lab competence. These are skills where the failure mode of not having them is too serious to accept AI substitution.
 
@@ -99,33 +100,33 @@ Here is what this looks like in practice. These are not proposals. They are expe
 
 ---
 
-**Redesign 1: The Curriculum** — *Remove the content. Give them questions.*
+**Redesign 1: The Curriculum** — _Remove the content. Give them questions._
 
-The Tools in Data Science course no longer has explanatory lecture notes. Students receive questions. Every question has an "Ask AI" button that sends it to their preferred model. If AI can answer the question easily — great, they paste the answer and move on. The point of *those* questions is to show them where AI succeeds.
+The Tools in Data Science course no longer has explanatory lecture notes. Students receive questions. Every question has an "Ask AI" button that sends it to their preferred model. If AI can answer the question easily — great, they paste the answer and move on. The point of _those_ questions is to show them where AI succeeds.
 
 The questions that matter are the ones AI answers badly: integration tasks, debugging AI output, validating results, making judgment calls under ambiguity, designing workflows. Those questions teach something a textbook cannot.
 
-This is not lazy teaching. It is teaching redesigned around what the GPS moment demands: not *what* to know, but *when to trust what you know*.
+This is not lazy teaching. It is teaching redesigned around what the GPS moment demands: not _what_ to know, but _when to trust what you know_.
 
 **What the Council controls here**: syllabus design. This is a model for what a course looks like when it has been through the GPS audit.
 
 ---
 
-**Redesign 2: The Assessment** — *Make it impossible to game with generic AI.*
+**Redesign 2: The Assessment** — _Make it impossible to game with generic AI._
 
 The viva problem is real. But the solution is not to ban AI during vivas — it is to ask questions AI cannot answer without the student's specific work.
 
-Concretely: each student's viva questions are generated dynamically from *their own codebase*. A question like "why did you use recursion here instead of iteration?" requires the student to know *their* code. A generic ChatGPT window — without the private repo — cannot answer it well. A student who copied the project from someone else cannot answer it at all.
+Concretely: each student's viva questions are generated dynamically from _their own codebase_. A question like "why did you use recursion here instead of iteration?" requires the student to know _their_ code. A generic ChatGPT window — without the private repo — cannot answer it well. A student who copied the project from someone else cannot answer it at all.
 
 Beyond vivas: assessments now use dynamic seeded personalisation. Each student gets a different variant of the same question, with server-side validation of correct answers. Answer-sharing becomes useless because your answer doesn't apply to your neighbour's question.
 
 At the highest tier: live LLM API competency assessments where students must actually call real model endpoints, analyse outputs, and catch hallucinations in real time. This cannot be prepared for generically. It requires genuine capability.
 
-**What the Council controls here**: assessment policy. The question to put to every programme is: *if you pointed a state-of-the-art coding agent at your exam, what would it score? And what does that tell you about what you're measuring?*
+**What the Council controls here**: assessment policy. The question to put to every programme is: _if you pointed a state-of-the-art coding agent at your exam, what would it score? And what does that tell you about what you're measuring?_
 
 ---
 
-**Redesign 3: The Governance** — *Tiered oversight, not a binary choice.*
+**Redesign 3: The Governance** — _Tiered oversight, not a binary choice._
 
 The hardest governance objection to AI in assessment is: we cannot review everything at scale. A 3,000-student course generates thousands of submissions. Human review of each one is not feasible.
 
@@ -135,7 +136,7 @@ This is a false binary. The right architecture is tiered:
 - **Amber** (spot-check): Higher-stakes, borderline, or unusual. A sample — say 10-15% — goes to human review. AI flags which ones to check.
 - **Red** (always human): Judgment calls, appeals, exceptional cases, academic integrity decisions. Humans are always in the loop here.
 
-This is not a concession to AI. This is a design choice that makes review *more* targeted, not less rigorous. Humans review what matters. AI handles the routine. The result is more consistent grading, faster turnaround, and a defensible audit trail.
+This is not a concession to AI. This is a design choice that makes review _more_ targeted, not less rigorous. Humans review what matters. AI handles the routine. The result is more consistent grading, faster turnaround, and a defensible audit trail.
 
 The same architecture extends to student support: AI handles the first 80% of questions (setup, syntax, clarification). Human TAs handle the 20% that requires judgment, reassurance, and escalation.
 
@@ -143,7 +144,7 @@ The same architecture extends to student support: AI handles the first 80% of qu
 
 ---
 
-**The common thread**: in all three redesigns, AI use is made *visible, structured, and governable* — rather than pretending it can be kept out.
+**The common thread**: in all three redesigns, AI use is made _visible, structured, and governable_ — rather than pretending it can be kept out.
 
 ### Beat 6 — Implication: What IITM Now Has (5 minutes)
 
@@ -185,7 +186,7 @@ This is not just an operations asset. It is a research programme. The institutio
 
 **The hook is real and local.** The ₹800 WhatsApp market is not a hypothetical. The audience knows about it. Starting there earns credibility.
 
-**The central insight flips the frame.** The audience comes in believing the cheater is the problem. They leave understanding the *system* is the problem — and that the solution is a redesign they are empowered to commission.
+**The central insight flips the frame.** The audience comes in believing the cheater is the problem. They leave understanding the _system_ is the problem — and that the solution is a redesign they are empowered to commission.
 
 **The GPS framework is portable.** The audience can use it in committee, in a Senate meeting, in a conversation with a colleague who is resisting. It gives them language for a decision they otherwise have no vocabulary for.
 

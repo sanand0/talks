@@ -1,5 +1,6 @@
 # Anand's Talks
 
+- 18 Mar 2026. **[AI for IITM Office of Institutional Advancement](2026-03-18-iitm-office-of-institutional-advancement/index.html ":ignore")** at [Office of Institutional Advancement, IIT Madras](https://ia.iitm.ac.in/), Chennai. [💬 Transcript](2026-03-18-iitm-office-of-institutional-advancement/transcript.md) [💡 Use Cases](2026-03-18-iitm-office-of-institutional-advancement/ideas.html)
 - 18 Mar 2026. **[AI for IITM Funding Team](2026-03-18-iitm-funding-team/index.html ":ignore")** at [IIT Madras](https://www.iitm.ac.in/), Chennai. [🧠 Ideas memo](2026-03-18-iitm-funding-team/ideas.md)
 - 18 Mar 2026. **[AI for IITM Academic Council](2026-03-18-iitm-academic-council/ideas/index.html ":ignore")** at [IIT Madras](https://www.iitm.ac.in/), Chennai. [🧠 Ideas list](2026-03-18-iitm-academic-council/ideas/index.html) [📖 Story page](2026-03-18-iitm-academic-council/v2/index.html)
 - 15 Mar 2026. **[How Students Learn Python](2026-03-15-how-students-learn-python/ ":ignore")** at [PyConf Hyderabad](https://in.pycon.org/), Hyderabad.

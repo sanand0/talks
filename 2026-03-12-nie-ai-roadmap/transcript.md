@@ -144,7 +144,7 @@
 
 **Srikanth**: [07:32] Can we pull on here? Just say yes. Perfect. Great.
 
-**Unsure**: [07:44] [Kannada: Idu nillisalikkaagutta? Idu nillilla.] *(Translation: Can this be stopped? It hasn't stopped.)*
+**Unsure**: [07:44] [Kannada: Idu nillisalikkaagutta? Idu nillilla.] _(Translation: Can this be stopped? It hasn't stopped.)_
 
 **Anand**: [07:54] Let me know when I'm good to resume, Srikanth.
 
@@ -382,7 +382,7 @@
 
 **Srikanth**: [22:21] Phygital, physical plus digital, I was just going to say, you know, this is all about how we deliver the content. I don't want to belabor this point, it's basically using digital content in your curriculum and ensuring that you can deliver all these AI courses. Okay, so I will skip through.
 
-**Srikanth**: [22:45] But I want to... so lastly, let me just say on the *doing* part. I just wanted to say, course projects, I would like at least our new AI courses to be project-oriented. Do things like Anand is showing. Your students are going to learn a heck of a lot more, right? They will remember all of these concepts because they have actually built something, right?
+**Srikanth**: [22:45] But I want to... so lastly, let me just say on the _doing_ part. I just wanted to say, course projects, I would like at least our new AI courses to be project-oriented. Do things like Anand is showing. Your students are going to learn a heck of a lot more, right? They will remember all of these concepts because they have actually built something, right?
 
 **Srikanth**: [23:09] Final year project, let's not only get the final year project with AI assistance done, but also papers that come with it.
 

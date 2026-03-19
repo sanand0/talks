@@ -615,61 +615,61 @@ A second-pass scan surfaced adjacent innovations from non-education AI/LLM posts
 
 ## Summary table
 
-| Innovation | Importance (0-100%) | Novelty (0-100%) |
-| --- | ---: | ---: |
-| Learn by solving, not by reading notes | 98% | 93% |
-| Every question includes an "Ask AI" button | 97% | 95% |
-| AI project grading with explainable rubrics | 96% | 94% |
-| Students are allowed to copy, collaborate, and even hack | 95% | 92% |
-| Each student gets unique question variants checked on the server | 94% | 89% |
-| Teach what AI still cannot do well | 94% | 82% |
-| Students are tested on live, hands-on AI skills | 93% | 94% |
-| Test cases act like tutors, not just graders | 93% | 92% |
-| Specs and tests become the real assignment | 91% | 90% |
-| Use hard, messy problems to teach real-world problem solving | 91% | 88% |
-| AI vivas question students about their own repositories | 90% | 91% |
-| Students are tested on prompt attacks and defenses | 89% | 96% |
-| Problem-solving is broken into coachable steps, not one talent | 89% | 90% |
-| AI writes, tests, and fixes draft assessment questions | 88% | 95% |
-| AI handles routine support; humans handle judgment | 88% | 83% |
-| Test first, then teach from the mistakes | 88% | 81% |
-| Green/amber/red review levels govern AI at scale | 87% | 91% |
-| Shared, budgeted AI access for every student | 87% | 89% |
-| Live exams track which AI tools students use | 86% | 93% |
-| Judgment and taste become explicit learning goals | 86% | 85% |
-| Learning analytics becomes a reusable research programme | 85% | 88% |
-| Coding agents are used to test exams before students take them | 84% | 92% |
-| Reward originality without punishing collaboration | 84% | 92% |
-| Student code traces reveal hidden misconception patterns | 84% | 90% |
-| Students build virtual TAs from real course content | 84% | 86% |
-| Smarter code-copy detection uses structure and similarity | 84% | 86% |
-| Broken code is analyzed before it even compiles | 83% | 91% |
-| Students learn through game-playing AI tasks | 83% | 90% |
-| Reasoning models verify tough or borderline cases | 83% | 90% |
-| Several scoring models are published for transparency | 82% | 90% |
-| Students are graded on designing AI workflows | 82% | 90% |
-| Policies can be turned into executable checks | 82% | 88% |
-| Replay galleries turn exam logs into faculty-readable stories | 82% | 88% |
-| Canonical Q&A cards become institutional memory | 81% | 84% |
-| Short, personalized next-step feedback from skill clusters | 81% | 74% |
-| New AI academic workflows roll out in shadow mode first | 80% | 86% |
-| Teacher-first AI adoption through familiar formats | 80% | 76% |
-| AI grades richer work like images, stories, and analyses | 79% | 94% |
-| AI lets non-coders build interactive learning tools | 79% | 85% |
-| Process logs become part of the assessment evidence | 78% | 89% |
-| Faculty learn to manage agents, not just chat with them | 78% | 82% |
-| The course is open for anyone to inspect | 78% | 70% |
-| Exam strategy is redesigned from real behavior data | 77% | 84% |
-| Real open-source contributions count as coursework | 76% | 86% |
-| One book becomes many AI-generated study modes | 75% | 87% |
-| Students learn to run many AI attempts in parallel | 75% | 79% |
-| Interactive AI explainers teach unfamiliar concepts | 74% | 78% |
-| AI-generated comics explain why each question exists | 72% | 84% |
-| Originality bonuses reward work that differs from the cohort | 71% | 95% |
-| Giving AI directional feedback becomes a teachable skill | 71% | 83% |
-| AI as a personalized learning and research coach | 69% | 73% |
-| AI fact-checks textbooks and curriculum claims | 68% | 77% |
-| Peer-review data reveals reviewer types and bias | 67% | 81% |
+| Innovation                                                       | Importance (0-100%) | Novelty (0-100%) |
+| ---------------------------------------------------------------- | ------------------: | ---------------: |
+| Learn by solving, not by reading notes                           |                 98% |              93% |
+| Every question includes an "Ask AI" button                       |                 97% |              95% |
+| AI project grading with explainable rubrics                      |                 96% |              94% |
+| Students are allowed to copy, collaborate, and even hack         |                 95% |              92% |
+| Each student gets unique question variants checked on the server |                 94% |              89% |
+| Teach what AI still cannot do well                               |                 94% |              82% |
+| Students are tested on live, hands-on AI skills                  |                 93% |              94% |
+| Test cases act like tutors, not just graders                     |                 93% |              92% |
+| Specs and tests become the real assignment                       |                 91% |              90% |
+| Use hard, messy problems to teach real-world problem solving     |                 91% |              88% |
+| AI vivas question students about their own repositories          |                 90% |              91% |
+| Students are tested on prompt attacks and defenses               |                 89% |              96% |
+| Problem-solving is broken into coachable steps, not one talent   |                 89% |              90% |
+| AI writes, tests, and fixes draft assessment questions           |                 88% |              95% |
+| AI handles routine support; humans handle judgment               |                 88% |              83% |
+| Test first, then teach from the mistakes                         |                 88% |              81% |
+| Green/amber/red review levels govern AI at scale                 |                 87% |              91% |
+| Shared, budgeted AI access for every student                     |                 87% |              89% |
+| Live exams track which AI tools students use                     |                 86% |              93% |
+| Judgment and taste become explicit learning goals                |                 86% |              85% |
+| Learning analytics becomes a reusable research programme         |                 85% |              88% |
+| Coding agents are used to test exams before students take them   |                 84% |              92% |
+| Reward originality without punishing collaboration               |                 84% |              92% |
+| Student code traces reveal hidden misconception patterns         |                 84% |              90% |
+| Students build virtual TAs from real course content              |                 84% |              86% |
+| Smarter code-copy detection uses structure and similarity        |                 84% |              86% |
+| Broken code is analyzed before it even compiles                  |                 83% |              91% |
+| Students learn through game-playing AI tasks                     |                 83% |              90% |
+| Reasoning models verify tough or borderline cases                |                 83% |              90% |
+| Several scoring models are published for transparency            |                 82% |              90% |
+| Students are graded on designing AI workflows                    |                 82% |              90% |
+| Policies can be turned into executable checks                    |                 82% |              88% |
+| Replay galleries turn exam logs into faculty-readable stories    |                 82% |              88% |
+| Canonical Q&A cards become institutional memory                  |                 81% |              84% |
+| Short, personalized next-step feedback from skill clusters       |                 81% |              74% |
+| New AI academic workflows roll out in shadow mode first          |                 80% |              86% |
+| Teacher-first AI adoption through familiar formats               |                 80% |              76% |
+| AI grades richer work like images, stories, and analyses         |                 79% |              94% |
+| AI lets non-coders build interactive learning tools              |                 79% |              85% |
+| Process logs become part of the assessment evidence              |                 78% |              89% |
+| Faculty learn to manage agents, not just chat with them          |                 78% |              82% |
+| The course is open for anyone to inspect                         |                 78% |              70% |
+| Exam strategy is redesigned from real behavior data              |                 77% |              84% |
+| Real open-source contributions count as coursework               |                 76% |              86% |
+| One book becomes many AI-generated study modes                   |                 75% |              87% |
+| Students learn to run many AI attempts in parallel               |                 75% |              79% |
+| Interactive AI explainers teach unfamiliar concepts              |                 74% |              78% |
+| AI-generated comics explain why each question exists             |                 72% |              84% |
+| Originality bonuses reward work that differs from the cohort     |                 71% |              95% |
+| Giving AI directional feedback becomes a teachable skill         |                 71% |              83% |
+| AI as a personalized learning and research coach                 |                 69% |              73% |
+| AI fact-checks textbooks and curriculum claims                   |                 68% |              77% |
+| Peer-review data reveals reviewer types and bias                 |                 67% |              81% |
 
 ## Bottom line
 

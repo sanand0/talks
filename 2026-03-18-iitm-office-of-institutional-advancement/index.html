@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Office That Learned to Crack the Whip | AI for IIT Madras Advancement</title>
+  <meta name="description" content="What happens when an LLM Psychologist walks into IIT Madras's fundraising office and starts live-coding in front of a team that manages ₹320 crore in annual giving? A story of voice memos, synthetic data, and the 50-conversations-a-day rule.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ── Variables ── */
+    :root {
+      --bg: #f8f5f0;
+      --ink: #18120a;
+      --ink2: #3d3020;
+      --accent: #8B1D1D;
+      --accent2: #1a4a8a;
+      --gold: #b8860b;
+      --gold-light: #f5e9c8;
+      --muted: #6b5f50;
+      --border: #ddd5c5;
+      --highlight: #fef9ec;
+      --dark: #120c04;
+      --dark2: #1a1010;
+      --iitm: #003087;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'Source Serif 4', Georgia, serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.8;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── Progress bar ── */
+    #progress {
+      position: fixed; top: 0; left: 0;
+      height: 3px; width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      z-index: 1000; transition: width 0.15s linear;
+    }
+
+    /* ── Masthead ── */
+    .masthead {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(248,245,240,0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      backdrop-filter: blur(8px);
+    }
+    .masthead-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem; flex-wrap: wrap;
+    }
+    .masthead-brand {
+      font-family: var(--font-display); font-size: 0.88rem;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+      text-decoration: none;
+    }
+    .masthead-brand:hover { color: var(--accent); }
+    .masthead-right { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+    .masthead-date { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); }
+    .masthead-link {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      color: var(--accent); text-decoration: none;
+      border: 1px solid var(--accent); padding: 0.28rem 0.55rem;
+      transition: all 0.2s; white-space: nowrap;
+    }
+    .masthead-link:hover { background: var(--accent); color: #fff; }
+    .masthead-link.ideas {
+      background: var(--accent); color: #fff; border-color: var(--accent);
+    }
+    .masthead-link.ideas:hover { background: var(--dark2); border-color: var(--dark2); }
+
+    /* ── Hero ── */
+    .hero {
+      max-width: 780px; margin: 0 auto;
+      padding: 4rem 2rem 2.5rem; text-align: center;
+    }
+    .hero-kicker {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1.4rem;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+      font-weight: 700; line-height: 1.1;
+      letter-spacing: -0.02em; margin-bottom: 1.2rem; color: var(--ink);
+    }
+    .hero-subtitle {
+      font-family: var(--font-display); font-size: 1.25rem;
+      font-style: italic; color: var(--ink2);
+      max-width: 640px; margin: 0 auto 2rem; line-height: 1.5;
+    }
+    .hero-meta {
+      display: flex; justify-content: center; gap: 1.5rem;
+      flex-wrap: wrap; font-size: 0.83rem; color: var(--muted);
+    }
+    .hero-meta a { color: var(--accent2); text-decoration: none; border-bottom: 1px solid rgba(26,74,138,0.25); transition: border-color 0.2s; }
+    .hero-meta a:hover { border-bottom-color: var(--accent2); }
+
+    /* ── Quick-links bar ── */
+    .quick-links {
+      background: var(--iitm); padding: 0.9rem 2rem;
+    }
+    .quick-links-inner {
+      max-width: 860px; margin: 0 auto;
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; align-items: center;
+    }
+    .quick-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: var(--font-mono); font-size: 0.72rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(255,255,255,0.9); text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.3); padding: 0.35rem 0.75rem;
+      transition: all 0.2s;
+    }
+    .quick-link:hover { background: rgba(255,255,255,0.15); color: #fff; border-color: rgba(255,255,255,0.6); }
+    .quick-link.primary {
+      background: var(--gold); color: var(--dark); border-color: var(--gold); font-weight: 700;
+    }
+    .quick-link.primary:hover { background: #d4a012; border-color: #d4a012; }
+
+    /* ── Article column ── */
+    .article { max-width: 680px; margin: 0 auto; padding: 0 2rem 4rem; }
+    .article p { margin-bottom: 1.55rem; }
+    .article a { color: var(--accent2); text-decoration: none; border-bottom: 1px solid rgba(26,74,138,0.25); transition: border-color 0.2s; }
+    .article a:hover { border-bottom-color: var(--accent2); }
+    .article h2 {
+      font-family: var(--font-display); font-size: 1.85rem;
+      font-weight: 700; margin: 3.5rem 0 1.2rem;
+      padding-top: 2.5rem; border-top: 1px solid var(--border); line-height: 1.2;
+    }
+    .article h3 {
+      font-family: var(--font-display); font-size: 1.25rem;
+      font-weight: 600; margin: 2rem 0 0.7rem; color: var(--accent);
+    }
+    .article ul, .article ol { margin: 1.2rem 0; padding-left: 1.75rem; }
+    .article li { margin-bottom: 0.55rem; }
+    strong { font-weight: 700; }
+
+    /* ── Drop cap ── */
+    .dropcap::first-letter {
+      font-family: var(--font-display); font-size: 5.5rem;
+      float: left; line-height: 0.78;
+      padding-right: 0.45rem; padding-top: 0.15rem;
+      font-weight: 700; color: var(--accent);
+    }
+
+    /* ── Blockquote ── */
+    .article blockquote {
+      font-family: var(--font-display);
+      font-size: 1.4rem; font-style: italic; font-weight: 500;
+      line-height: 1.42; color: var(--dark2);
+      border-left: 5px solid var(--gold);
+      padding: 1.1rem 0 1.1rem 1.7rem;
+      margin: 2.5rem 0 2.5rem -0.25rem;
+      background: var(--highlight);
+    }
+    .article blockquote cite {
+      display: block; font-style: normal;
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); margin-top: 0.7rem;
+    }
+
+    /* ── Pull quote (full-bleed) ── */
+    .pullquote {
+      background: var(--dark2); color: #fff;
+      padding: 3rem 2rem; margin: 3rem -100vw;
+      margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%);
+      text-align: center;
+    }
+    .pullquote-text {
+      font-family: var(--font-display); font-size: clamp(1.35rem, 2.8vw, 2rem);
+      font-style: italic; line-height: 1.35; max-width: 760px; margin: 0 auto 1rem;
+    }
+    .pullquote-attr {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold);
+    }
+
+    /* ── Callout ── */
+    .callout {
+      background: var(--highlight); border-left: 4px solid var(--gold);
+      padding: 1.2rem 1.5rem; margin: 2rem 0; font-size: 0.95rem;
+    }
+    .callout-label {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      text-transform: uppercase; letter-spacing: 0.15em;
+      color: #8a6a00; margin-bottom: 0.45rem; font-weight: 600;
+    }
+    .callout p { margin-bottom: 0; }
+
+    /* ── Sketchnote ── */
+    .sketchnote-wrap {
+      background: #ede7da;
+      margin: 2.5rem calc(-50vw + 50%);
+      padding: 2.5rem max(2rem, calc((100% - 1100px) / 2));
+    }
+    .sketchnote-wrap a { border: none !important; display: block; }
+    .sketchnote-wrap img {
+      width: 100%; max-width: 1100px; margin: 0 auto;
+      display: block; cursor: zoom-in;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+      transition: transform 0.3s, box-shadow 0.3s;
+      border-radius: 2px;
+    }
+    .sketchnote-wrap img:hover { transform: scale(1.005); box-shadow: 0 14px 60px rgba(0,0,0,0.25); }
+    .sketchnote-cap {
+      text-align: center; margin-top: 0.8rem;
+      font-family: var(--font-mono); font-size: 0.67rem;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ── Stat band ── */
+    .stat-band {
+      background: var(--iitm); color: #fff;
+      padding: 3rem 2rem;
+      margin: 3rem calc(-50vw + 50%);
+    }
+    .stat-band-inner { max-width: 900px; margin: 0 auto; }
+    .stat-band h3 {
+      font-family: var(--font-display); font-size: 1.2rem;
+      color: var(--gold-light); margin-bottom: 2rem; text-align: center;
+      border: none !important; padding: 0 !important; margin-top: 0 !important;
+    }
+    .stat-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.5rem;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-family: var(--font-display); font-size: 2.4rem;
+      font-weight: 700; color: var(--gold-light); line-height: 1;
+    }
+    .stat-label { font-size: 0.8rem; color: rgba(255,255,255,0.75); margin-top: 0.4rem; line-height: 1.35; }
+
+    /* ── SVG explainer ── */
+    .svg-explainer {
+      background: #1a1010; padding: 2.5rem 2rem;
+      margin: 3rem calc(-50vw + 50%);
+    }
+    .svg-explainer h3 {
+      font-family: var(--font-display); color: var(--gold-light);
+      font-size: 1.1rem; margin-bottom: 1.25rem; text-align: center;
+      border: none !important; padding: 0 !important; margin-top: 0 !important;
+    }
+    .svg-explainer svg { max-width: 100%; display: block; margin: 0 auto; }
+    .svg-caption {
+      font-family: var(--font-mono); font-size: 0.66rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.45); text-align: center; margin-top: 1rem;
+    }
+
+    /* ── AI-output card links ── */
+    .demo-cards {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 0.85rem; margin: 2rem 0;
+    }
+    .demo-card {
+      display: flex; flex-direction: column; gap: 0.3rem;
+      background: #fff; border: 1px solid var(--border);
+      border-top: 3px solid var(--accent2);
+      padding: 1rem 1.1rem; text-decoration: none !important;
+      color: var(--ink); border-bottom: none !important;
+      transition: all 0.2s;
+    }
+    .demo-card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px rgba(0,0,0,0.09); border-top-color: var(--accent); }
+    .demo-card-emoji { font-size: 1.4rem; }
+    .demo-card-title { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; color: var(--accent2); }
+    .demo-card-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+    .demo-card-tool { font-family: var(--font-mono); font-size: 0.63rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-top: 0.2rem; }
+
+    /* ── Ideas section ── */
+    .ideas-band {
+      background: linear-gradient(135deg, #1a1010 0%, var(--iitm) 100%);
+      padding: 3rem 2rem;
+      margin: 3rem calc(-50vw + 50%);
+      text-align: center;
+    }
+    .ideas-band h2 {
+      font-family: var(--font-display); color: #fff; font-size: 1.7rem;
+      margin-bottom: 0.75rem; border: none !important; padding: 0 !important;
+    }
+    .ideas-band p { color: rgba(255,255,255,0.8); max-width: 600px; margin: 0 auto 1.75rem; font-size: 0.95rem; }
+    .ideas-cta {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--gold); color: var(--dark); font-family: var(--font-display);
+      font-size: 1.1rem; font-weight: 700; padding: 0.85rem 2rem;
+      text-decoration: none !important; border: none !important;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .ideas-cta:hover { background: #d4a012; transform: translateY(-2px); color: var(--dark) !important; }
+    .ideas-sub { font-family: var(--font-mono); font-size: 0.66rem; color: rgba(255,255,255,0.5); margin-top: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+    /* ── Tooltip ── */
+    [data-tip] { position: relative; border-bottom: 1px dotted var(--muted); cursor: help; }
+    [data-tip]:hover::after {
+      content: attr(data-tip);
+      position: absolute; bottom: 1.6em; left: 50%; transform: translateX(-50%);
+      background: var(--ink); color: #fff; font-family: var(--font-mono);
+      font-size: 0.68rem; padding: 0.35rem 0.65rem; white-space: nowrap;
+      pointer-events: none; z-index: 50; border-radius: 2px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    }
+
+    /* ── Popup citations ── */
+    .cite-btn {
+      display: inline; font-family: var(--font-mono); font-size: 0.72em;
+      background: none; border: none; border-bottom: 1px dashed var(--gold);
+      color: var(--gold); padding: 0 0.1em; cursor: pointer;
+      vertical-align: baseline; line-height: inherit;
+      transition: color 0.15s, border-bottom-color 0.15s;
+    }
+    .cite-btn:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .popup-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7); z-index: 5000;
+      align-items: center; justify-content: center; padding: 1.5rem;
+    }
+    .popup-overlay.open { display: flex; }
+    .popup-box {
+      background: #fff; max-width: 520px; width: 100%;
+      padding: 2rem; position: relative;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.4);
+      max-height: 80vh; overflow-y: auto;
+    }
+    .popup-close {
+      position: absolute; top: 0.8rem; right: 1rem;
+      font-size: 1.5rem; cursor: pointer; background: none;
+      border: none; color: var(--muted); line-height: 1;
+    }
+    .popup-close:hover { color: var(--ink); }
+    .popup-label {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold); margin-bottom: 0.6rem;
+    }
+    .popup-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .popup-body { font-size: 0.85rem; line-height: 1.65; color: var(--ink2); }
+    .popup-body a { color: var(--accent2); }
+    .popup-source { margin-top: 1rem; font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 0.75rem; }
+
+    /* ── Takeaways ── */
+    .takeaways {
+      background: linear-gradient(135deg, #120c04 0%, #1a1010 50%, #0d1f3c 100%);
+      color: #fff; padding: 4.5rem 2rem;
+      margin: 3rem calc(-50vw + 50%);
+    }
+    .takeaways-inner { max-width: 960px; margin: 0 auto; }
+    .takeaways h2 {
+      font-family: var(--font-display); font-size: 2.1rem;
+      text-align: center; margin-bottom: 3rem; color: #fff;
+      border: none !important; padding: 0 !important;
+    }
+    .takeaway-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .takeaway-card {
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      padding: 1.75rem 1.5rem; transition: all 0.3s;
+    }
+    .takeaway-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-4px); }
+    .takeaway-num {
+      font-family: var(--font-display); font-size: 2.6rem;
+      font-weight: 700; color: var(--gold); line-height: 1; margin-bottom: 0.7rem;
+    }
+    .takeaway-title { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .takeaway-text { font-size: 0.82rem; color: rgba(255,255,255,0.7); line-height: 1.55; }
+
+    /* ── Resource cards ── */
+    .resource-section {
+      background: #e8e1d3; padding: 3rem 2rem;
+      margin: 0 calc(-50vw + 50%);
+    }
+    .resource-section h2 {
+      font-family: var(--font-display); font-size: 1.65rem;
+      text-align: center; margin-bottom: 1.5rem; color: var(--ink);
+      border: none !important; padding: 0 !important;
+    }
+    .resource-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem; max-width: 960px; margin: 0 auto;
+    }
+    .resource-card {
+      display: flex; flex-direction: column;
+      background: #fff; border: 1px solid var(--border);
+      border-top: 3px solid var(--accent2);
+      padding: 1.1rem 1.2rem; text-decoration: none !important;
+      color: var(--ink); border-bottom: none !important;
+      transition: all 0.2s;
+    }
+    .resource-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); border-top-color: var(--accent); }
+    .resource-card-emoji { font-size: 1.45rem; margin-bottom: 0.3rem; }
+    .resource-card-title { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; color: var(--accent2); margin-bottom: 0.3rem; }
+    .resource-card-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 2.5rem 2rem;
+      text-align: center; font-size: 0.82rem; color: var(--muted);
+    }
+    footer a { color: var(--accent2); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Misc ── */
+    .tag {
+      display: inline-block; font-family: var(--font-mono);
+      font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+      background: var(--accent); color: #fff; padding: 0.12rem 0.45rem; margin-right: 0.3rem;
+    }
+    .section-label {
+      font-family: var(--font-mono); font-size: 0.65rem;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .funny-aside {
+      background: #fff8e6; border: 1px solid #e0c87a; border-left: 4px solid var(--gold);
+      padding: 0.9rem 1.2rem; margin: 1.5rem 0; font-size: 0.88rem; font-style: italic; color: var(--ink2);
+    }
+    .funny-aside::before { content: "😄 "; }
+
+    @media (max-width: 720px) {
+      body { font-size: 16px; }
+      .hero { padding: 2.5rem 1.25rem 2rem; }
+      .article { padding: 0 1.25rem 3rem; }
+      .pullquote { padding: 2rem 1.25rem; }
+      .stat-band { padding: 2.5rem 1.25rem; }
+      .svg-explainer { padding: 2rem 1.25rem; }
+      .takeaways { padding: 3rem 1.25rem; }
+      .resource-section { padding: 2.5rem 1.25rem; }
+      .ideas-band { padding: 2.5rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- Popup overlay (shared) -->
+<div class="popup-overlay" id="popup-overlay">
+  <div class="popup-box" id="popup-box">
+    <button class="popup-close" id="popup-close">&#x2715;</button>
+    <div class="popup-label" id="popup-label"></div>
+    <div class="popup-title" id="popup-title"></div>
+    <div class="popup-body" id="popup-body"></div>
+    <div class="popup-source" id="popup-source"></div>
+  </div>
+</div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-inner">
+    <a href="../" class="masthead-brand">Anand's Talks</a>
+    <div class="masthead-right">
+      <span class="masthead-date">18 Mar 2026 · IIT Madras</span>
+      <a href="transcript.md" class="masthead-link">💬 Transcript</a>
+      <a href="ideas.html" class="masthead-link ideas">💡 Use Cases</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-kicker">AI for Institutional Advancement · IIT Madras · 18 March 2026</p>
+  <h1 class="hero-title">The Office That Learned<br>to Crack the Whip</h1>
+  <p class="hero-subtitle">What happens when an LLM Psychologist walks into IIT Madras's fundraising office and starts live-coding in front of a team that manages ₹320 crore in annual giving?</p>
+  <div class="hero-meta">
+    <span>By <a href="https://www.s-anand.net/" target="_blank">Anand S.</a>, <span data-tip="Anand coined this title live on stage at MDI Gurgaon after a tweet by Andrej Karpathy">LLM Psychologist</span> at <a href="https://straive.com/" target="_blank">Straive</a></span>
+    <span>At <a href="https://ia.iitm.ac.in/" target="_blank">Office of Institutional Advancement, IIT Madras</a></span>
+    <span><a href="transcript.md">💬 Full Transcript</a></span>
+    <span><a href="ideas.html">💡 Explore Use Cases</a></span>
+  </div>
+</section>
+
+<!-- QUICK LINKS BAR -->
+<div class="quick-links">
+  <div class="quick-links-inner">
+    <a href="sketchnote.avif" target="_blank" class="quick-link">🖼 Sketchnote (full size)</a>
+    <a href="transcript.md" class="quick-link">💬 Talk Transcript</a>
+    <a href="ideas.html" class="quick-link primary">💡 AI Use Cases for OIA →</a>
+    <a href="ideas.md" class="quick-link">📄 Raw Ideas (Markdown)</a>
+  </div>
+</div>
+
+<!-- SKETCHNOTE -->
+<div class="sketchnote-wrap">
+  <a href="sketchnote.avif" target="_blank" title="Open full-size sketchnote in new tab">
+    <img src="sketchnote.avif" alt="Sketchnote summarising the IITM Office of Institutional Advancement AI talk by Anand S." loading="lazy">
+  </a>
+  <p class="sketchnote-cap">✏️ Sketchnote — click to open full size · Generated with Gemini Pro</p>
+</div>
+
+<!-- ARTICLE BODY starts here — content will be added in subsequent chunks -->
+<main class="article" id="article-start">
+
+<!-- ── SECTION 1: OPENING NARRATIVE ── -->
+
+<p class="dropcap">On the morning of 18 March 2026, Anand S. walked from the car park to the <a href="https://ia.iitm.ac.in/" target="_blank">Office of Institutional Advancement</a> at IIT Madras. He didn't prepare a deck. He didn't rehearse talking points. Instead, he dictated — into ChatGPT's voice interface, while walking — a rambling, stream-of-consciousness brief about who he was about to meet, what they did, what they worried about, and what surprises might be useful to them. By the time he reached the door, the AI had already drafted a list of use cases for the team. The talk had essentially prepared itself.</p>
+
+<p>This is the kind of thing that sounds implausible the first time you hear it. It sounds less implausible the second time. And by the third time, it starts to feel like the obvious question is: why isn't everyone doing this?</p>
+
+<p>The Office of Institutional Advancement is not a small office <button class="cite-btn" onclick="openPopup('oiaStats')">[stats]</button>. It is IIT Madras's fundraising and relationship engine — the team responsible for building partnerships with alumni, corporations, foundations, and trusts. In 2024–25, they raised ₹320 crores. They manage 55,000+ alumni across 82 countries. They run 1,500+ projects, stewarding donors who give anywhere from a few thousand rupees to, as one team member described that day, a crore — or five hundred.</p>
+
+<p>This is, in other words, a team that lives and dies by relationships. High-touch sales. Careful profiling. The kind of work that is deeply human, deeply personal, and — as the session would reveal — surprisingly, powerfully amenable to AI.</p>
+
+<!-- ── STAT BAND ── -->
+<div class="stat-band">
+  <div class="stat-band-inner">
+    <h3>The Scale of What OIA Does</h3>
+    <div class="stat-grid">
+      <div class="stat-item">
+        <div class="stat-num">₹320 Cr</div>
+        <div class="stat-label">raised in 2024–25, including ₹195 Cr under CSR</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">55,000+</div>
+        <div class="stat-label">alumni engaged across 82 countries</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">1,500+</div>
+        <div class="stat-label">active projects on Joy of Giving platform</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">140+</div>
+        <div class="stat-label">corporate partners in the network</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2>The Rule Nobody Follows</h2>
+
+<p>Anand, who holds what may be the world's most unusual job title — "LLM Psychologist" at <a href="https://straive.com/" target="_blank">Straive</a> <button class="cite-btn" onclick="openPopup('llmPsych')">[origin]</button> — did not begin with a lengthy preamble. "The content is more important than introductions," he said, declining a formal introduction. He dove straight in.</p>
+
+<p>And his first point was a number: <strong>fifty.</strong></p>
+
+<blockquote>
+  "The number one rule that I am suggesting is: use ChatGPT or whatever — Gemini, Claude, whatever — fifty times a day."
+  <cite>— Anand S., LLM Psychologist, Straive</cite>
+</blockquote>
+
+<p>The room, naturally, pushed back. <em>"But I barely have things I can ask it five times a day."</em></p>
+
+<p>Anand was ready for this objection. He always is, because it is the objection.</p>
+
+<blockquote>
+  "Very good. Then make this your sixth question: 'What can I ask you?'"
+  <cite>— Anand S.</cite>
+</blockquote>
+
+<p>This is not a trick. It is the crux of everything that followed. The bottleneck to using AI well, Anand argues, is not intelligence or technical skill. It is the absence of a <em>reflex</em> — the habit of turning to the machine before you turn to Google, before you turn to a colleague, before you sit quietly and wonder <button class="cite-btn" onclick="openPopup('rule50')">[more on this]</button>.</p>
+
+<p>The second rule followed immediately, and it was, if anything, even more important:</p>
+
+<blockquote>
+  "Use voice. There is just so much you can put into a voice request."
+  <cite>— Anand S.</cite>
+</blockquote>
+
+<p>Voice is underrated <button class="cite-btn" onclick="openPopup('voiceTip')">[Anand's workflow]</button>. We type more carefully than we speak, which means we censor, compress, and strip away context. When you dictate — while walking to a meeting, while grabbing lunch, while waiting for a Zoom to connect — you speak in full sentences, with full context. (Anand documented this entire workflow in <a href="https://www.s-anand.net/blog/voice-chat-to-slides-my-new-ai-powered-workflow/" target="_blank">Voice Chat to Slides</a>.) You mention the name of the person you met, the thing they said that surprised you, the vague feeling that something is off about the proposal. The AI can work with all of that. A typed query often can't capture it.</p>
+
+<!-- ── ANIMATED SVG: The 50-conversations workflow ── -->
+<div class="svg-explainer">
+  <h3>How the 50-Conversations Habit Works</h3>
+  <svg width="780" height="200" viewBox="0 0 780 200" xmlns="http://www.w3.org/2000/svg" aria-label="Animated diagram showing the AI conversation habit loop">
+    <defs>
+      <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" fill="#b8860b"/>
+      </marker>
+    </defs>
+    <!-- Nodes -->
+    <g id="n1">
+      <rect x="20" y="70" width="130" height="60" rx="6" fill="#2a1a0a" stroke="#b8860b" stroke-width="1.5"/>
+      <text x="85" y="97" font-family="'JetBrains Mono',monospace" font-size="10" fill="#b8860b" text-anchor="middle">YOU HAVE</text>
+      <text x="85" y="113" font-family="'JetBrains Mono',monospace" font-size="10" fill="#fff" text-anchor="middle">a thought / task</text>
+    </g>
+    <g id="n2">
+      <rect x="195" y="70" width="130" height="60" rx="6" fill="#2a1a0a" stroke="#b8860b" stroke-width="1.5"/>
+      <text x="260" y="97" font-family="'JetBrains Mono',monospace" font-size="10" fill="#b8860b" text-anchor="middle">ASK AI</text>
+      <text x="260" y="113" font-family="'JetBrains Mono',monospace" font-size="10" fill="#fff" text-anchor="middle">voice or text</text>
+    </g>
+    <g id="n3">
+      <rect x="370" y="70" width="130" height="60" rx="6" fill="#2a1a0a" stroke="#b8860b" stroke-width="1.5"/>
+      <text x="435" y="97" font-family="'JetBrains Mono',monospace" font-size="10" fill="#b8860b" text-anchor="middle">COMPARE 3</text>
+      <text x="435" y="113" font-family="'JetBrains Mono',monospace" font-size="10" fill="#fff" text-anchor="middle">Claude · Gemini · GPT</text>
+    </g>
+    <g id="n4">
+      <rect x="545" y="70" width="130" height="60" rx="6" fill="#2a1a0a" stroke="#b8860b" stroke-width="1.5"/>
+      <text x="610" y="97" font-family="'JetBrains Mono',monospace" font-size="10" fill="#b8860b" text-anchor="middle">LOG PATTERN</text>
+      <text x="610" y="113" font-family="'JetBrains Mono',monospace" font-size="10" fill="#fff" text-anchor="middle">who did best?</text>
+    </g>
+    <!-- Arrows between nodes -->
+    <line x1="151" y1="100" x2="193" y2="100" stroke="#b8860b" stroke-width="1.5" marker-end="url(#arr)"/>
+    <line x1="326" y1="100" x2="368" y2="100" stroke="#b8860b" stroke-width="1.5" marker-end="url(#arr)"/>
+    <line x1="501" y1="100" x2="543" y2="100" stroke="#b8860b" stroke-width="1.5" marker-end="url(#arr)"/>
+    <!-- No ideas? arrow back up -->
+    <path d="M260,70 Q260,20 85,20 Q50,20 85,69" stroke="#b8860b" stroke-width="1.2" stroke-dasharray="4,3" fill="none" marker-end="url(#arr)"/>
+    <text x="175" y="15" font-family="'JetBrains Mono',monospace" font-size="9" fill="rgba(255,255,255,0.55)" text-anchor="middle">No ideas? Ask: "What can I ask you?"</text>
+    <!-- Animated dot -->
+    <circle r="7" fill="#b8860b" opacity="0.9">
+      <animateMotion dur="3.5s" repeatCount="indefinite" calcMode="linear">
+        <mpath href="#flow-path"/>
+      </animateMotion>
+    </circle>
+    <path id="flow-path" d="M85,100 L193,100 L260,100 L368,100 L435,100 L543,100 L610,100" fill="none"/>
+    <!-- Labels below -->
+    <text x="85" y="165" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="rgba(255,255,255,0.4)" text-anchor="middle">1. Any thought</text>
+    <text x="260" y="165" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="rgba(255,255,255,0.4)" text-anchor="middle">2. Voice or type</text>
+    <text x="435" y="165" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="rgba(255,255,255,0.4)" text-anchor="middle">3. Send to all three</text>
+    <text x="610" y="165" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="rgba(255,255,255,0.4)" text-anchor="middle">4. Note the winner</text>
+  </svg>
+  <p class="svg-caption">The 50-conversations loop — building the reflex over days and weeks</p>
+</div>
+
+<h2>The Talk That Prepared Itself</h2>
+
+<p>Here is what Anand actually did, that morning. He had a call the previous day with two members of the OIA team — a preparatory conversation about what the team needed. His phone auto-records calls. A transcript was automatically generated. And while walking to the session, he fed that transcript to an AI agent — along with his blog posts, his notes, his past transcripts, his own writings on AI — and asked it to figure out the most useful things he could share with this specific team.</p>
+
+<blockquote>
+  "Here is all the Google Drive of material about me. Use the combination and create something that I can deliver for them."
+  <cite>— Anand S., describing his pre-talk preparation workflow</cite>
+</blockquote>
+
+<p>The result was a web page — <a href="ideas.html" target="_blank">a full set of AI use cases for the OIA</a>, generated entirely from the combination of one call transcript and Anand's accumulated notes. It was ready before the meeting began.</p>
+
+<div class="callout">
+  <div class="callout-label">🔧 The Process</div>
+  <p>Anand used a <a href="prompts.md" target="_blank">structured prompt</a> (dictated while walking) to instruct an AI agent to: research the OIA team, read the prep-call transcript, scan his blog and past transcripts for relevant tips, then produce an <a href="ideas.md" target="_blank">ideas file</a>. A second prompt converted that into <a href="ideas.html" target="_blank">ideas.html</a> — a shareable web page ready before the meeting started.</p>
+</div>
+
+<!-- ── IDEAS BAND ── -->
+<div class="ideas-band">
+  <h2>Explore the Use Cases</h2>
+  <p>Before this session, Anand generated a comprehensive set of AI use cases tailored for IIT Madras's Office of Institutional Advancement — from meeting intelligence to donor stewardship at scale. Explore them here.</p>
+  <a href="ideas.html" class="ideas-cta">💡 Open the Use Cases Page →</a>
+  <p class="ideas-sub">14 detailed ideas · sourced from Anand's blog, transcripts &amp; notes · generated with AI</p>
+</div>
+
+</main>
+
+<!-- ── SECTION 2: THE LIVE DEMOS ── -->
+
+<main class="article">
+
+<h2>The Experiment, Live</h2>
+
+<p>Once seated, Anand opened his laptop and did something almost no speaker does: he ran an experiment in front of the audience, with no predetermined outcome.</p>
+
+<p>"I'm discussing with the IIT Madras team that's focused on, among other things, funding. Now, just search online and tell me what are some interesting use cases for them." He typed this into Claude, Gemini, and ChatGPT — simultaneously.</p>
+
+<blockquote>
+  "Why bother sending it to one? Send it to three. If one of them does a better job, and I find that it does a better job ten times, then great — I will use that more."
+  <cite>— Anand S.</cite>
+</blockquote>
+
+<p>This is the pattern Anand practices obsessively. He keeps notes — in Visual Studio Code, though he was quick to add "you can use Excel, use whatever you want" — of which model does better on which type of question. <em>"I asked, 'How does an innovator build accountability?' And I found that Sonnet did a better job than GPT-4, looking down on Gemini 3."</em> Over time, he compiles the comparisons, feeds them back to yet another model, and asks it to synthesise: what is each model good for?</p>
+
+<div class="pullquote">
+  <div class="pullquote-text">"The bottleneck to fifty conversations a day is not that we don't have ideas. It is that we are not trained on <em>asking for ideas</em> when we don't have ideas."</div>
+  <div class="pullquote-attr">— Anand S. · IIT Madras, 18 March 2026</div>
+</div>
+
+<p>A team member asked: does it matter that I have a cluttered history? Won't all those random questions mess up its memory of me?</p>
+
+<p>Anand's response was not "no, don't worry." It was a masterclass in meta-thinking:</p>
+
+<blockquote>
+  "This is exactly the habit that we need to build. We have a question — immediately ask. You're asking me — that's valid. But also ask <em>it</em>."
+  <cite>— Anand S.</cite>
+</blockquote>
+
+<p>And then, on the question of cluttered memories: "You can clean up memories. You can tell it what to ignore. You can ask it to do an audit. If it says 'I can't automatically delete,' you say 'I still want to automatically delete — write me a program.' It will write the program. If you can't run the program, it will tell you how. And if you still can't, stop, give up, move on — because the number of things you can do is infinite."</p>
+
+<!-- ── The Demo: Three Models at Once ── -->
+<h2>The Demonstration That Prepared Itself</h2>
+
+<p>The team had received a rich list of use cases from Claude, Gemini, and ChatGPT before the session even started. But Anand now showed how those links were generated — by walking them through the live sessions he had shared.</p>
+
+<div class="demo-cards">
+  <a href="https://claude.ai/share/369fbd8e-548f-483c-b643-d440ae074576" target="_blank" class="demo-card">
+    <div class="demo-card-emoji">🤖</div>
+    <div class="demo-card-title">Claude: OIA Use Cases</div>
+    <div class="demo-card-desc">What use cases would be interesting to the IIT Madras advancement team? Researched live during the session.</div>
+    <div class="demo-card-tool">Claude · Shared Session</div>
+  </a>
+  <a href="https://gemini.google.com/share/f732aa2acec5" target="_blank" class="demo-card">
+    <div class="demo-card-emoji">✨</div>
+    <div class="demo-card-title">Gemini: OIA Use Cases</div>
+    <div class="demo-card-desc">Same question, different model. Compare tone, depth, and insight across models.</div>
+    <div class="demo-card-tool">Google Gemini · Shared Session</div>
+  </a>
+  <a href="https://chatgpt.com/share/69badcc9-fbe8-8003-bae0-252e43b697bc" target="_blank" class="demo-card">
+    <div class="demo-card-emoji">🔎</div>
+    <div class="demo-card-title">ChatGPT: Alumni in Mumbai</div>
+    <div class="demo-card-desc">Deep research on IIT Madras alumni based in Mumbai with VP-and-above designations.</div>
+    <div class="demo-card-tool">ChatGPT Deep Research</div>
+  </a>
+  <a href="https://chatgpt.com/share/69badcf4-35b0-8003-8725-3dbd61d6a40b" target="_blank" class="demo-card">
+    <div class="demo-card-emoji">📊</div>
+    <div class="demo-card-title">ChatGPT: Synthetic Data</div>
+    <div class="demo-card-desc">Generating realistic attendance data for OIA events — the starting point for the live data analysis demo.</div>
+    <div class="demo-card-tool">ChatGPT · Data Generation</div>
+  </a>
+  <a href="https://chatgpt.com/share/69badd59-9be4-8003-a6de-8e04b470ef19" target="_blank" class="demo-card">
+    <div class="demo-card-emoji">📈</div>
+    <div class="demo-card-title">ChatGPT: Data Analysis</div>
+    <div class="demo-card-desc">AI-generated insights from the synthetic attendance data — recommendations the team found immediately actionable.</div>
+    <div class="demo-card-tool">ChatGPT · Analysis Agent</div>
+  </a>
+  <a href="https://chatgpt.com/share/69bb520a-fdac-8003-b8da-a85c74ab6982" target="_blank" class="demo-card">
+    <div class="demo-card-emoji">🧩</div>
+    <div class="demo-card-title">ChatGPT: JSON Meta-Prompting</div>
+    <div class="demo-card-desc">Turning a rambling prompt into structured JSON — the live demo that showed how format disciplines your thinking.</div>
+    <div class="demo-card-tool">ChatGPT · Prompt Engineering</div>
+  </a>
+  <a href="https://chatgpt.com/share/69bb5220-1800-8003-860f-82dd2d56cd6c" target="_blank" class="demo-card">
+    <div class="demo-card-emoji">🔁</div>
+    <div class="demo-card-title">ChatGPT: Structured Meta-Prompting</div>
+    <div class="demo-card-desc">Ask the AI to research best prompting practices and rewrite your own prompt. The before/after comparison is the lesson.</div>
+    <div class="demo-card-tool">ChatGPT · Meta-Prompt</div>
+  </a>
+  <a href="https://claude.ai/share/087a929c-c8bf-4231-9dcc-3c13c9b93591" target="_blank" class="demo-card">
+    <div class="demo-card-emoji">🪪</div>
+    <div class="demo-card-title">Claude: QR Campaign Ideator</div>
+    <div class="demo-card-desc">The ideator that generated the "Human-Verified Match Campaign" idea from two unrelated notes — a fundraising idea the team had never imagined.</div>
+    <div class="demo-card-tool">Claude · Ideation Tool</div>
+  </a>
+</div>
+
+<!-- ── Animated SVG: The "send to three" workflow ── -->
+<div class="svg-explainer">
+  <h3>The Three-Model Workflow</h3>
+  <svg width="760" height="230" viewBox="0 0 760 230" xmlns="http://www.w3.org/2000/svg" aria-label="Animated diagram showing prompt sent to three AI models simultaneously">
+    <defs>
+      <marker id="arr2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" fill="#b8860b"/>
+      </marker>
+    </defs>
+    <!-- Prompt source -->
+    <rect x="290" y="10" width="180" height="48" rx="6" fill="#2a1a0a" stroke="#b8860b" stroke-width="1.5"/>
+    <text x="380" y="31" font-family="'JetBrains Mono',monospace" font-size="9.5" fill="#b8860b" text-anchor="middle">YOUR PROMPT</text>
+    <text x="380" y="47" font-family="'JetBrains Mono',monospace" font-size="9" fill="rgba(255,255,255,0.7)" text-anchor="middle">(voice or text)</text>
+
+    <!-- Three branches -->
+    <line x1="380" y1="58" x2="120" y2="108" stroke="#b8860b" stroke-width="1.2" marker-end="url(#arr2)"/>
+    <line x1="380" y1="58" x2="380" y2="108" stroke="#b8860b" stroke-width="1.2" marker-end="url(#arr2)"/>
+    <line x1="380" y1="58" x2="640" y2="108" stroke="#b8860b" stroke-width="1.2" marker-end="url(#arr2)"/>
+
+    <!-- Claude box -->
+    <rect x="30" y="110" width="180" height="50" rx="6" fill="#3a1a2a" stroke="#b8860b" stroke-width="1.5"/>
+    <text x="120" y="132" font-family="'Playfair Display',serif" font-size="11" fill="#e8d0ff" text-anchor="middle">Claude</text>
+    <text x="120" y="150" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="rgba(255,255,255,0.6)" text-anchor="middle">best for writing</text>
+
+    <!-- Gemini box -->
+    <rect x="290" y="110" width="180" height="50" rx="6" fill="#1a2a3a" stroke="#b8860b" stroke-width="1.5"/>
+    <text x="380" y="132" font-family="'Playfair Display',serif" font-size="11" fill="#d0e8ff" text-anchor="middle">Gemini</text>
+    <text x="380" y="150" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="rgba(255,255,255,0.6)" text-anchor="middle">Google Workspace</text>
+
+    <!-- ChatGPT box -->
+    <rect x="550" y="110" width="180" height="50" rx="6" fill="#1a3a2a" stroke="#b8860b" stroke-width="1.5"/>
+    <text x="640" y="132" font-family="'Playfair Display',serif" font-size="11" fill="#d0ffe8" text-anchor="middle">ChatGPT</text>
+    <text x="640" y="150" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="rgba(255,255,255,0.6)" text-anchor="middle">voice &amp; analysis</text>
+
+    <!-- Converge to compare -->
+    <line x1="120" y1="160" x2="340" y2="193" stroke="#b8860b" stroke-width="1.2" marker-end="url(#arr2)"/>
+    <line x1="380" y1="160" x2="380" y2="193" stroke="#b8860b" stroke-width="1.2" marker-end="url(#arr2)"/>
+    <line x1="640" y1="160" x2="420" y2="193" stroke="#b8860b" stroke-width="1.2" marker-end="url(#arr2)"/>
+
+    <!-- Compare + log -->
+    <rect x="290" y="195" width="180" height="28" rx="4" fill="#2a2a0a" stroke="#b8860b" stroke-width="1.5"/>
+    <text x="380" y="213" font-family="'JetBrains Mono',monospace" font-size="9" fill="#b8860b" text-anchor="middle">COMPARE · LOG WINNER</text>
+
+    <!-- Animated dots for each stream -->
+    <circle r="5" fill="#e8d0ff" opacity="0.85">
+      <animateMotion dur="2.8s" repeatCount="indefinite" calcMode="linear" begin="0s">
+        <mpath href="#path-claude"/>
+      </animateMotion>
+    </circle>
+    <circle r="5" fill="#d0e8ff" opacity="0.85">
+      <animateMotion dur="2.8s" repeatCount="indefinite" calcMode="linear" begin="0.4s">
+        <mpath href="#path-gemini"/>
+      </animateMotion>
+    </circle>
+    <circle r="5" fill="#d0ffe8" opacity="0.85">
+      <animateMotion dur="2.8s" repeatCount="indefinite" calcMode="linear" begin="0.8s">
+        <mpath href="#path-chatgpt"/>
+      </animateMotion>
+    </circle>
+    <path id="path-claude" d="M380,34 L120,110 L340,195" fill="none"/>
+    <path id="path-gemini" d="M380,34 L380,110 L380,195" fill="none"/>
+    <path id="path-chatgpt" d="M380,34 L640,110 L420,195" fill="none"/>
+  </svg>
+  <p class="svg-caption">Send every interesting question to all three simultaneously — then compare and log the winner</p>
+</div>
+
+<h2>Cracking the Whip Without Writing Code</h2>
+
+<p>Anand is not, in any meaningful sense, the person who builds the things he demos. He says this openly. "It's Greek to me," he told the team, when asked about the code ChatGPT had just written. The code was irrelevant. The result was what mattered.</p>
+
+<p>He has a philosophy about this that he articulated with deliberate provocation.</p>
+
+<blockquote>
+  "People who don't know how to code can produce better programs than people who know how to code — because they will stupidly try and interfere with the agent, and the agent can do a good job."
+  <cite>— Anand S.</cite>
+</blockquote>
+
+<p>He gave a concrete example. When he needs an urgent client demo built, he doesn't go to his senior engineers. He goes to interns.</p>
+
+<div class="funny-aside">
+  "Do not apply your brains, you do not have any. Take that, give it to a coding agent. At the end, use your <em>some</em> validation muscle. Do one basic filter. Show me. If I like it I'll take it, if not I'm not even going to give you feedback. I'm going to drop it. Because cost is nothing. You're just dictating and reviewing. You can do that ten times."
+</div>
+
+<p>This is not cruelty. It is a precise description of how AI-assisted work functions at its best. The experienced engineer brings assumptions about how code <em>should</em> be structured. The intern brings a question: "What do you want it to do?" The AI provides the structure. Experience, in this model, is a constraint.</p>
+
+<h2>The Synthetic Data Trick</h2>
+
+<p>The team's Kaviraj asked a question about attendance data. They had records in Zoho. They wanted to analyze patterns — who attended events, who converted to donors, which channels worked. But the session wasn't the right moment to share live sensitive data.</p>
+
+<p>Anand's solution: don't use real data. Don't even have it.</p>
+
+<blockquote>
+  "I'm doing a demonstration of how we can analyze attendance data for insights. I don't have data. I still want to run the demo. I will ask for data."
+  <cite>— Anand S.</cite>
+</blockquote>
+
+<p>He typed a prompt into ChatGPT: generate a rich, realistic synthetic attendance dataset for an institution like the IIT Madras Office of Institutional Advancement. Include alumni IDs, event attendance, check-ins, donation history, city of residence. Make it realistic — with the kinds of patterns you'd actually find in such data.</p>
+
+<p>Within minutes, a CSV file materialized. He downloaded it. Then he fed it back to ChatGPT with an analytical prompt that he had clearly been refining for years:</p>
+
+<div class="callout">
+  <div class="callout-label">📋 The Analysis Prompt</div>
+  <p><em>"I have uploaded the attendance data. I'm not sure what to analyze for — so if I were leading this team, what kinds of useful insights might I want? Analyze accordingly. Tell me the most actionable, surprising, non-obvious insights. Begin with a crisp executive summary of one to three bullet points of what I should do. Then go into all the details."</em></p>
+</div>
+
+<p>A team member watched the output scroll by and said: <em>"Wow. The prompt itself is very clear on what I can get."</em></p>
+
+<p>Anand was characteristically self-deprecating about where the prompt came from:</p>
+
+<blockquote>
+  "This is not coming as much from a deep thought as from frustration. I've seen very, very dumb analyses that people give. And this is basically all of the stuff I've been telling twenty people for the last twenty years about what not to give me — dumped in here. Dump your emotions into it."
+  <cite>— Anand S.</cite>
+</blockquote>
+
+<p>The synthetic data analysis came back with four recommendations. All four were sensible. One in particular caught the team's attention: <em>"Fix RSVP forecasting — a significant number of people who said 'maybe' or 'no' still attended."</em> This was not a quirk of the synthetic data. This is real. And with real data, it would tell you something useful: you cannot trust your RSVPs to plan event resources or target last-minute attendees.</p>
+
+<p>Kaviraj said it directly: "This is a very good analysis, use cases actually."</p>
+
+<p>Anand replied: "With real data, it will be sensible <em>and correct</em>."</p>
+
+<h2>JSON Prompting and the Meta-Prompt</h2>
+
+<p>A team member named Manoj had sent in a question in advance about <span data-tip="Writing prompts in a structured format like JSON or YAML, rather than as free-flowing prose">JSON prompting</span>. The team had heard it would improve results. Was it worth learning?</p>
+
+<p>Anand's answer distilled years of experimentation into two sentences:</p>
+
+<blockquote>
+  "The structured way is important. The specific format is not important."
+  <cite>— Anand S.</cite>
+</blockquote>
+
+<p>It doesn't matter if you write in JSON or YAML or a Word document with headings. What matters is that you stop rambling and start structuring: a context section, an objective section, a constraints section, an output format section. The discipline of structure is the point — not the syntax.</p>
+
+<p>But, he added, there is a shortcut for people who don't know how to structure prompts: ask the AI to do it for you. This technique — <strong>meta-prompting</strong> — involves giving the AI a messy, rambling prompt and asking it to: (1) research best practices on prompting, and (2) rewrite your prompt using those best practices. Anand has written about using this technique in <a href="https://www.s-anand.net/blog/meta-ai-coding-using-ai-to-prompt-ai/" target="_blank">Meta AI Coding: Using AI to Prompt AI</a>.</p>
+
+<div class="callout">
+  <div class="callout-label">🔁 Meta-Prompting</div>
+  <p><em>"I am going to give you a prompt. I am not an expert on prompting. So I want you to research best practices on prompting, and convert my prompt into the best possible prompt that I can give using the best principles of prompting."</em> — Then give it your rambling prompt.</p>
+</div>
+
+<p>The result is your own prompt, upgraded. You can review it, tweak it, and use it. More importantly, you <em>learn</em> from comparing the before and after. Over time, you start building the habit of structured thinking — because you've seen, repeatedly, what structured thinking looks like.</p>
+
+</main>
+
+<!-- ══════════════════════════════════════════
+     SECTION 3: HUMAN MOMENTS
+═══════════════════════════════════════════ -->
+<main class="article">
+
+<h2>The Walled Garden Problem</h2>
+
+<p>After the break, the conversation shifted from broad principles to specific use cases the team actually cared about. Kaviraj had a concrete request: he wanted to build a tool that would crawl LinkedIn for IIT Madras alumni based in Mumbai who held vice-president or above titles. He wanted it cross-referenced against their own alumni database of 60,000 people, with alerts triggered whenever someone went public in a Forbes list or an IPO. He had the workflow mapped in his head. He just needed to know how to build it cheaply.</p>
+
+<p>Anand walked him toward a live demo — ChatGPT deep research on alumni — and then delivered a quiet reality check:</p>
+
+<blockquote>
+  "LinkedIn is not crawlable. Twitter is now not crawlable. Reddit is now not crawlable."
+  <cite>— Anand S.</cite>
+</blockquote>
+
+<p>The platforms had quietly closed the door. Not to human readers — to AI crawlers. <a href="https://www.theverge.com/2023/6/30/23779764/reddit-api-data-access-shutting-down-ai-training" target="_blank">Reddit followed in mid-2023</a>; LinkedIn has always guarded its graph. The "open web" that AI models were trained on was contracting.</p>
+
+<blockquote>
+  "These things are becoming easy so rapidly that what I tell you might take you a month to learn — and in two months it will be available anyway in a tool. You wasted one month. How many like this will you learn? Don't you have other things to do? Just wait a few months."
+  <cite>— Anand S.</cite>
+</blockquote>
+
+<p>This is a non-obvious principle. The cost of learning to solve a problem that will be solved <em>for you</em> in two months is not just the month — it's every other thing you could have done instead. Stay aware, use what works, let tools catch up.</p>
+
+<h2>The Ideator: Two Random Thoughts → One Fundraising Idea</h2>
+
+<p>The most intellectually delightful moment of the session came when Anand showed a small tool he'd built: an <strong>ideator</strong>. Feed it two completely unrelated notes from your notebook. Specify a domain. It generates five hybrid ideas. He pulled two at random:</p>
+
+<ul>
+  <li><em>"The internet is forking into human internet versus agent web."</em></li>
+  <li><em>"QR codes need a white border to scan properly."</em></li>
+</ul>
+
+<p>Target domain: <strong>a fundraising technique</strong>. The AI, prompted as a "radical concept synthesizer," returned five ideas. One stopped the room.</p>
+
+<div class="callout">
+  <div class="callout-label">💡 AI-Generated Idea (Live in Session)</div>
+  <p><strong>Human-Verified Match Campaign:</strong> As the internet splits into agent-generated and human-generated activity, corporate sponsors increasingly want proof that donors are real humans. Print QR codes at events or mail them on postcards. When scanned, they generate a one-time presence token tied to that physical code. Tell your corporate sponsors: <em>"I will deliver 500 verified human donors — people who have physically been at this location, not random clicks."</em></p>
+  <p style="margin-top:0.75rem"><a href="https://claude.ai/share/087a929c-c8bf-4231-9dcc-3c13c9b93591" target="_blank" style="color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:0.85rem">→ See the live Claude session that generated this idea</a></p>
+</div>
+
+<p>Anand drew the larger lesson:</p>
+
+<blockquote>
+  "The way to use AI is often not by asking, 'How can AI help me in my job?' The question to ask perhaps is: 'How can AI help me find out what my job is going to be when I don't even know what it is going to become?'"
+  <cite>— Anand S.</cite>
+</blockquote>
+
+<h2>The Hallucination Problem — Reframed</h2>
+
+<p>A team member raised the concern that haunts every institutional AI conversation: hallucination. The AI had told them Toyota did something. Toyota hadn't. How do you trust a tool that lies with confidence?</p>
+
+<p>Anand's response was not reassurance. It was a reframing <button class="cite-btn" onclick="openPopup('hallucination')">[research]</button>.</p>
+
+<p>He described being on an IIM interview panel the previous day — which he later wrote about at <a href="https://www.s-anand.net/blog/iim-bangalore-pgp-interview-panel/" target="_blank">IIM Bangalore PGP Interview Panel</a>. A candidate with 37 months of analytics experience saw a chart: US GDP 3%, Europe 1.5%. What's the combined growth? "4.5%," said the candidate. No weighted average. Just addition.</p>
+
+<blockquote>
+  "That is CAT-level human hallucination. I compare that with AI hallucination today and ask myself: who would I trust?"
+  <cite>— Anand S.</cite>
+</blockquote>
+
+<p>Three fixes, in order of effort:</p>
+<ol>
+  <li><strong>Ask again.</strong> "Are you sure? Is this your best work?" Catches a surprising fraction of errors.</li>
+  <li><strong>Claim there are errors.</strong> "I know you have three errors — find them." Even without knowing what they are, the AI becomes absurdly diligent.</li>
+  <li><strong>Cross-check with a second LLM.</strong> Two models hallucinating the same fact is less likely than one.</li>
+</ol>
+
+<div class="funny-aside">
+  A team member compared this to Dobby in Harry Potter. Anand agreed: "You slave-drive it, it will get there. It will come up with, 'Here I used the phrase <em>something</em>, I could have used <em>this phrase</em>, it would have sounded better, and that is an error.'"
+</div>
+
+<h2>The Birthday Cake Story</h2>
+
+<p>The session's most human moment: Anand's daughter turned 20 the previous day. He was stuck on calls all evening. No cake. At 10 pm, with bread, peanut butter, jam, Nutella, regular butter, and tea candles — he asked Claude. (<a href="https://www.s-anand.net/blog/birthday-sandwich-cake/" target="_blank">He wrote about it on his blog</a>.)</p>
+
+<p>Claude replied with detailed culinary improvisation: toast bread until crisp, coat outside with Nutella (it looks like chocolate frosting), pipe "Happy Birthday Dhia" using a milk packet with a small corner cut off, arrange twenty tea-light candles in a star pattern.</p>
+
+<blockquote>
+  "It was stunning the effect that I could create with that, and it took one hour — which is the amount of time it would have taken me to go order a cake."
+  <cite>— Anand S.</cite>
+</blockquote>
+
+<p>Kaviraj, after the break: "After this kind of an experience, I will worship any tool that gives me this."</p>
+
+<h2>On Energy, Origins, and the Title</h2>
+
+<p>A team member asked about the environmental cost of 50 daily conversations. Anand had done the arithmetic <button class="cite-btn" onclick="openPopup('envCost')">[source]</button>. Each conversation ≈ three drops of bath water. Fifty conversations ≈ one-third of a mug. His proposal: "Take a bath with one-third mug less."</p>
+
+<p>Someone suggested: "Others can contribute more by not taking a bath at all." Anand agreed this was also valid.</p>
+
+<blockquote>
+  "Use AI even more — and figure out ways of reducing <em>inefficient</em> energy consumption. That is my submission."
+  <cite>— Anand S.</cite>
+</blockquote>
+
+<p>The title question: how did Anand become the world's first LLM Psychologist? He needed a gimmick for an MDI Gurgaon talk. Found a <a href="https://karpathy.ai/" target="_blank" data-tip="Former OpenAI research director; one of the most cited figures in deep learning">Karpathy</a> tweet about prompting becoming "like psychology." Called his Head of HR from the stage. Got permission. Changed his LinkedIn designation live. "Branding," he said.</p>
+
+<blockquote>
+  "The audience laughed. But the insight is real. The best way to work with an LLM is not to understand its code. It is to understand its behaviour — its tendencies, blind spots, moods, defaults. That is psychology. Not engineering."
+  <cite>— Anand S. (paraphrased)</cite>
+</blockquote>
+
+<p>He closed as he always does — not with a framework, but with a reading list <button class="cite-btn" onclick="openPopup('mollick')">[who to follow]</button> and an imperative:
+
+<blockquote>
+  "It's just using it fifty times a day. The rest is detail. It is like an assistant that will follow you and do everything that you tell it. Use it."
+  <cite>— Anand S.</cite>
+</blockquote>
+
+</main>
+
+<!-- ══════════════════════════════════════════
+     TAKEAWAYS
+═══════════════════════════════════════════ -->
+<section class="takeaways">
+  <div class="takeaways-inner">
+    <h2>Top Takeaways</h2>
+    <div class="takeaway-grid">
+      <div class="takeaway-card">
+        <div class="takeaway-num">01</div>
+        <div class="takeaway-title">The 50-Conversations Rule</div>
+        <div class="takeaway-text">Use AI 50 times a day. If you can't find 50 things to ask, make the sixth question "What can I ask you?" The habit itself — not any single insight — is the unlock.</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-num">02</div>
+        <div class="takeaway-title">Voice First</div>
+        <div class="takeaway-text">Dictate instead of type. Voice captures context, emotion, and nuance that typed queries strip away. Use ChatGPT for dictation, paste into Gemini or Claude for the work.</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-num">03</div>
+        <div class="takeaway-title">Send to Three</div>
+        <div class="takeaway-text">Send every interesting question to Claude, Gemini, and ChatGPT simultaneously. Log which one does better. Over time, learn their personalities — like knowing which colleague to call for what.</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-num">04</div>
+        <div class="takeaway-title">Your Data Is Your Talk</div>
+        <div class="takeaway-text">A call transcript + your accumulated notes = a customised talk, prepared before the meeting starts. Let AI search your "Google Drive of material" and create something tailored for whoever you're meeting.</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-num">05</div>
+        <div class="takeaway-title">Synthetic Data Unlocks Demos</div>
+        <div class="takeaway-text">Don't have data? Ask AI to generate realistic synthetic data for your context. Run the analysis. The advice it gives — even on fake data — is often sensible enough to be immediately actionable.</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-num">06</div>
+        <div class="takeaway-title">Meta-Prompt Your Way to Better Prompts</div>
+        <div class="takeaway-text">Rambling prompt? Ask the AI to research best practices on prompting and rewrite your prompt for you. The structure is the point — not the format (JSON, YAML, Word headings all work).</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-num">07</div>
+        <div class="takeaway-title">Hallucination ≠ Disqualifying</div>
+        <div class="takeaway-text">Compare AI errors to human errors, not to perfection. Ask again, claim there are errors ("find three"), and use a second model to cross-check. Verification is faster than starting from scratch.</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-num">08</div>
+        <div class="takeaway-title">Wait, Don't Build</div>
+        <div class="takeaway-text">If solving a technical problem would take a month, wait two — it will likely become a tool. The real scarce resource is attention. Spend it on things AI can't catch up to yet.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     RESOURCE CARDS
+═══════════════════════════════════════════ -->
+<section class="resource-section">
+  <h2>Explore Further</h2>
+  <div class="resource-grid">
+    <a href="ideas.html" class="resource-card">
+      <div class="resource-card-emoji">💡</div>
+      <div class="resource-card-title">AI Use Cases for OIA</div>
+      <div class="resource-card-desc">14 detailed, sourced ideas for how the IIT Madras Office of Institutional Advancement can use AI — from meeting intelligence to donor stewardship at scale.</div>
+    </a>
+    <a href="transcript.md" class="resource-card">
+      <div class="resource-card-emoji">💬</div>
+      <div class="resource-card-title">Full Transcript</div>
+      <div class="resource-card-desc">The complete transcript of the session — every question, every demo, every tangent about birthday cakes and Dobby.</div>
+    </a>
+    <a href="https://www.s-anand.net/blog/" target="_blank" class="resource-card">
+      <div class="resource-card-emoji">📝</div>
+      <div class="resource-card-title">Anand's Blog</div>
+      <div class="resource-card-desc">The source material that generated this talk's ideas — posts on prompting, voice workflows, hallucinations, vibe coding, and more.</div>
+    </a>
+    <a href="https://www.oneusefulthing.org/" target="_blank" class="resource-card">
+      <div class="resource-card-emoji">🎓</div>
+      <div class="resource-card-title">One Useful Thing</div>
+      <div class="resource-card-desc">Ethan Mollick's newsletter — the most grounded, evidence-based writing on AI and work. Anand's top recommendation for staying current.</div>
+    </a>
+    <a href="https://simonwillison.net/" target="_blank" class="resource-card">
+      <div class="resource-card-emoji">🔧</div>
+      <div class="resource-card-title">Simon Willison's Blog</div>
+      <div class="resource-card-desc">Exhaustive, practical coverage of LLM tools, security, and usage. The most trusted technical voice on how these systems actually work.</div>
+    </a>
+    <a href="https://ia.iitm.ac.in/" target="_blank" class="resource-card">
+      <div class="resource-card-emoji">🏛️</div>
+      <div class="resource-card-title">IIT Madras OIA</div>
+      <div class="resource-card-desc">The Office of Institutional Advancement — the team that manages ₹320 Cr in annual giving, 55,000+ alumni, and 1,500+ projects.</div>
+    </a>
+    <a href="https://joyofgiving.alumni.iitm.ac.in/" target="_blank" class="resource-card">
+      <div class="resource-card-emoji">🎁</div>
+      <div class="resource-card-title">Joy of Giving</div>
+      <div class="resource-card-desc">IITM's donor and alumni platform — explore active projects, giving campaigns, and the scale of the institution's philanthropic work.</div>
+    </a>
+    <a href="https://straive.com/" target="_blank" class="resource-card">
+      <div class="resource-card-emoji">🌐</div>
+      <div class="resource-card-title">Straive</div>
+      <div class="resource-card-desc">Anand's employer — a content intelligence company where he holds the title of LLM Psychologist. Formerly known as SPi Global.</div>
+    </a>
+    <a href="https://www.s-anand.net/blog/double-checking-reduces-hallucinations/" target="_blank" class="resource-card">
+      <div class="resource-card-emoji">🔍</div>
+      <div class="resource-card-title">Double-checking Reduces Hallucinations</div>
+      <div class="resource-card-desc">Anand's analysis showing that using two LLMs to cross-check each other reduces errors from ~14% to 1% — without much extra cost.</div>
+    </a>
+    <a href="https://www.s-anand.net/blog/voice-chat-to-slides-my-new-ai-powered-workflow/" target="_blank" class="resource-card">
+      <div class="resource-card-emoji">🎙️</div>
+      <div class="resource-card-title">Voice Chat to Slides Workflow</div>
+      <div class="resource-card-desc">How Anand turned voice dictation into a full presentation — the workflow behind the talk-prep technique he demonstrated in this session.</div>
+    </a>
+    <a href="https://www.s-anand.net/blog/meta-ai-coding-using-ai-to-prompt-ai/" target="_blank" class="resource-card">
+      <div class="resource-card-emoji">🧠</div>
+      <div class="resource-card-title">Meta AI Coding: AI to Prompt AI</div>
+      <div class="resource-card-desc">Using one AI to craft better prompts for another AI — the meta-prompting technique Anand recommends for anyone who struggles to structure their prompts.</div>
+    </a>
+    <a href="https://www.s-anand.net/blog/birthday-sandwich-cake/" target="_blank" class="resource-card">
+      <div class="resource-card-emoji">🎂</div>
+      <div class="resource-card-title">The Birthday Sandwich Cake</div>
+      <div class="resource-card-desc">How Claude helped Anand make a birthday cake from bread, peanut butter, and Nutella at 10pm — the human story behind the session's best moment.</div>
+    </a>
+    <a href="https://www.s-anand.net/blog/chatgpt-everyday-uses/" target="_blank" class="resource-card">
+      <div class="resource-card-emoji">📱</div>
+      <div class="resource-card-title">ChatGPT Everyday Uses</div>
+      <div class="resource-card-desc">From dry-fruit snack choices to blood test analysis — a diary of Anand's real daily AI conversations that embody the 50-a-day rule in action.</div>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>
+    Talk delivered 18 March 2026 at the <a href="https://ia.iitm.ac.in/" target="_blank">Office of Institutional Advancement, IIT Madras</a> ·
+    <a href="https://www.s-anand.net/" target="_blank">Anand S.</a>, LLM Psychologist at <a href="https://straive.com/" target="_blank">Straive</a>
+  </p>
+  <p style="margin-top:0.5rem">
+    <a href="../">← All Talks</a> ·
+    <a href="transcript.md">Transcript</a> ·
+    <a href="ideas.html">Use Cases</a>
+  </p>
+</footer>
+
+<script>
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const el = document.getElementById('progress');
+    const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+    el.style.width = Math.min(pct, 100) + '%';
+  });
+
+  // Popup system
+  const popups = {
+    'oiaStats': {
+      label: 'Citation · IIT Madras OIA',
+      title: 'Scale of IITM\'s Office of Institutional Advancement',
+      body: `The OIA raised <strong>₹320 crores in 2024–25</strong> — ₹124.4 Cr from key alumni and ₹195.20 Cr under CSR. The Joy of Giving platform lists <strong>1,500+ projects, 15,000+ donors, ₹1,500+ Cr received</strong> across <strong>55,000+ alumni in 82 countries</strong>.`,
+      source: `<a href="https://joyofgiving.alumni.iitm.ac.in/" target="_blank">Joy of Giving, IITM</a> · <a href="https://www.iitm.ac.in/happenings/press-releases-and-coverages/iit-madras-62nd-convocation-witnesses-graduation-3227" target="_blank">IITM Convocation 2024–25</a>`
+    },
+    'llmPsych': {
+      label: 'Citation · Andrej Karpathy, 2023',
+      title: 'The Tweet That Coined "LLM Psychologist"',
+      body: `<a href="https://karpathy.ai/" target="_blank">Andrej Karpathy</a>, former Director of AI at Tesla and OpenAI researcher, wrote in November 2023 that interacting with LLMs was becoming "more like a psychology" than programming — requiring understanding of model behaviour, moods, and biases. Anand adopted the title <em>LLM Psychologist</em> as his official LinkedIn designation live on stage at <a href="https://www.mdi.ac.in/" target="_blank">MDI Gurgaon</a>.`,
+      source: `Andrej Karpathy on X (Twitter), ~Nov 2023 · Referenced in talk transcript`
+    },
+    'rule50': {
+      label: 'Framework · Anand\'s #1 Rule',
+      title: 'The 50-Conversations-a-Day Rule',
+      body: `Anand's most fundamental recommendation: use ChatGPT, Gemini, or Claude <strong>50 times a day</strong>. The logic is counter-intuitive: if you can't find 50 questions, <em>make your sixth question "What can I ask you?"</em> The bottleneck to habit formation is not the lack of use-cases — it's the lack of a trained reflex to <em>ask</em> when you don't know what to ask. Voice conversations (during walks, over lunch) are the fastest route to building this volume.`,
+      source: `Transcript [04:58] · Consistent across Anand's talks at NPTEL, Ashoka, NIE, and others`
+    },
+    'voiceTip': {
+      label: 'Tip · Voice Dictation',
+      title: 'Why Anand Only Dictates to ChatGPT',
+      body: `Google has the best audio transcription for uploaded files. But for <em>live dictation</em>, Anand exclusively uses ChatGPT's voice mode — which he finds dramatically better than Gemini's. His workflow: dictate the prompt into ChatGPT, copy the transcribed text, then paste it into Gemini or Claude for the actual work. "Wherever I want to use voice, I only go to ChatGPT, copy from there and paste everywhere else."`,
+      source: `Transcript [16:46–17:11]`
+    },
+    'hallucination': {
+      label: 'Research · Hallucinations',
+      title: 'AI Hallucination vs. Human Hallucination',
+      body: `Anand's research-backed take: compare AI errors not against perfection, but against human errors. Studies like <em>GPT-4 Technical Report</em> (OpenAI, 2023) show GPT-4 passes the US Bar Exam at the 90th percentile. Meanwhile at an IIM interview panel, a CAT-qualified candidate with 37 months of analytics experience claimed US GDP growth + European GDP growth = "4.5%" combined — a basic weighted-average error. <strong>"That is CAT-level human hallucination."</strong> Anand's counter: verify AI with a second AI, provide citations, and ask "I know you have three errors — find them."`,
+      source: `Transcript [03:20–06:00] · <a href="https://www.s-anand.net/blog/double-checking-reduces-hallucinations/" target="_blank">Double-checking reduces hallucinations</a>`
+    },
+    'envCost': {
+      label: 'Research · AI Energy Use',
+      title: 'The Environmental Cost of an AI Conversation',
+      body: `When asked about the environmental impact of 50 daily AI conversations, Anand shared his calculation: each chat is roughly equivalent to <strong>three drops of water</strong> used when bathing. 50 conversations ≈ one-third of a mug of water. Research from <a href="https://arxiv.org/abs/2304.03271" target="_blank">Luccioni et al. (2023)</a> estimates GPT-3.5 inference at ~0.001 kWh per query, making the carbon footprint comparable to sending a few emails. Anand's conclusion: use AI more, not less — and find efficiencies elsewhere.`,
+      source: `Transcript [00:27–01:52] · Luccioni et al., "Power Hungry Processing" (2023)`
+    },
+    'mollick': {
+      label: 'Resource · Who to Follow',
+      title: 'Ethan Mollick & Simon Willison',
+      body: `Anand's two recommended follows for staying current on AI:<br><br>
+      <strong><a href="https://www.oneusefulthing.org/" target="_blank">Ethan Mollick</a></strong> — Wharton professor, author of <em>Co-Intelligence</em>, runs the "One Useful Thing" newsletter. Widely credited for the most grounded, evidence-based writing on AI and work.<br><br>
+      <strong><a href="https://simonwillison.net/" target="_blank">Simon Willison</a></strong> — creator of Django, runs an exhaustive blog on LLM tools, security, and practical usage. One of the most trusted technical voices on how LLMs actually work in practice.`,
+      source: `Transcript [07:21–08:12]`
+    }
+  };
+
+  function openPopup(id) {
+    const d = popups[id]; if (!d) return;
+    document.getElementById('popup-label').textContent = d.label;
+    document.getElementById('popup-title').textContent = d.title;
+    document.getElementById('popup-body').innerHTML = d.body;
+    document.getElementById('popup-source').innerHTML = '📚 Source: ' + d.source;
+    document.getElementById('popup-overlay').classList.add('open');
+  }
+  document.getElementById('popup-close').addEventListener('click', () => {
+    document.getElementById('popup-overlay').classList.remove('open');
+  });
+  document.getElementById('popup-overlay').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('popup-overlay'))
+      document.getElementById('popup-overlay').classList.remove('open');
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') document.getElementById('popup-overlay').classList.remove('open');
+  });
+</script>
+</body>
+</html>

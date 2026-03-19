@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Who Owns the Commit? | AI in SDLC Panel · PyConf Hyderabad 2026</title>
+  <meta name="description" content="At PyConf Hyderabad 2026, three AI practitioners — a triple Kaggle Grandmaster, an enterprise architect, and a self-declared LLM Psychologist — debated who really builds software now that AI does the work.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ── Variables ── */
+    :root {
+      --bg: #f7f4ef;
+      --ink: #1a1207;
+      --ink2: #3d3020;
+      --accent: #1a5276;        /* Python-blue */
+      --accent2: #7b241c;       /* warm red */
+      --gold: #c49a2a;
+      --gold-light: #fef9e7;
+      --python-yellow: #ffd43b;
+      --python-blue: #306998;
+      --muted: #6b5f50;
+      --border: #ddd7ce;
+      --highlight: #fff8e7;
+      --dark: #0d1728;
+      --dark2: #1a1010;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'Source Serif 4', Georgia, serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.8;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── Progress bar ── */
+    #progress {
+      position: fixed; top: 0; left: 0;
+      height: 3px; width: 0%;
+      background: linear-gradient(90deg, var(--python-blue), var(--python-yellow));
+      z-index: 1000; transition: width 0.15s linear;
+    }
+
+    /* ── Masthead ── */
+    .masthead {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(247,244,239,0.97);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      backdrop-filter: blur(8px);
+    }
+    .masthead-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem; flex-wrap: wrap;
+    }
+    .masthead-brand {
+      font-family: var(--font-display); font-size: 0.88rem;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+      text-decoration: none;
+    }
+    .masthead-brand:hover { color: var(--accent); }
+    .masthead-right { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+    .masthead-date { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); }
+    .masthead-link {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      color: var(--accent); text-decoration: none;
+      border: 1px solid var(--accent); padding: 0.28rem 0.55rem;
+      transition: all 0.2s; white-space: nowrap;
+    }
+    .masthead-link:hover { background: var(--accent); color: #fff; }
+
+    /* ── Hero ── */
+    .hero {
+      max-width: 820px; margin: 0 auto;
+      padding: 4rem 2rem 2.5rem; text-align: center;
+    }
+    .hero-kicker {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--python-blue); margin-bottom: 1.4rem;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+      font-weight: 700; line-height: 1.1;
+      letter-spacing: -0.02em; margin-bottom: 1.2rem; color: var(--ink);
+    }
+    .hero-subtitle {
+      font-family: var(--font-display); font-size: 1.25rem;
+      font-style: italic; color: var(--ink2);
+      max-width: 640px; margin: 0 auto 2rem; line-height: 1.5;
+    }
+    .hero-meta {
+      display: flex; justify-content: center; gap: 1.5rem;
+      flex-wrap: wrap; font-size: 0.83rem; color: var(--muted);
+    }
+    .hero-meta a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(26,82,118,0.25); transition: border-color 0.2s; }
+    .hero-meta a:hover { border-bottom-color: var(--accent); }
+
+    /* ── Quick-links bar ── */
+    .quick-links {
+      background: var(--dark); padding: 0.9rem 2rem;
+    }
+    .quick-links-inner {
+      max-width: 860px; margin: 0 auto;
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; align-items: center;
+    }
+    .quick-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: var(--font-mono); font-size: 0.72rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(255,255,255,0.9); text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.3); padding: 0.35rem 0.75rem;
+      transition: all 0.2s;
+    }
+    .quick-link:hover { background: rgba(255,255,255,0.15); color: #fff; border-color: rgba(255,255,255,0.6); }
+    .quick-link.primary {
+      background: var(--python-yellow); color: var(--dark); border-color: var(--python-yellow); font-weight: 700;
+    }
+    .quick-link.primary:hover { background: #e6be35; border-color: #e6be35; }
+
+    /* ── Sketchnote (full-width bleed) ── */
+    .sketchnote-wrap {
+      background: #eae4d8;
+      margin: 2.5rem 0; padding: 2.5rem max(1.5rem, calc((100% - 1100px) / 2));
+    }
+    .sketchnote-wrap a { border: none !important; display: block; }
+    .sketchnote-wrap img {
+      width: 100%; max-width: 1100px; margin: 0 auto;
+      display: block; cursor: zoom-in;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .sketchnote-wrap img:hover { transform: scale(1.01); box-shadow: 0 12px 50px rgba(0,0,0,0.2); }
+    .sketchnote-cap {
+      text-align: center; margin-top: 0.75rem;
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ── Speaker cards ── */
+    .speaker-band {
+      background: var(--dark);
+      padding: 3rem 2rem; margin: 0;
+    }
+    .speaker-band-title {
+      font-family: var(--font-display); font-size: 1.1rem;
+      text-align: center; color: rgba(255,255,255,0.5);
+      letter-spacing: 0.15em; text-transform: uppercase;
+      margin-bottom: 2rem; font-style: italic;
+    }
+    .speaker-grid {
+      max-width: 1000px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1.25rem;
+    }
+    .speaker-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-top: 3px solid var(--python-yellow);
+      padding: 1.5rem 1.25rem; text-align: center;
+      transition: all 0.3s;
+    }
+    .speaker-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-4px); }
+    .speaker-role {
+      font-family: var(--font-mono); font-size: 0.6rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--python-yellow); margin-bottom: 0.5rem;
+    }
+    .speaker-name {
+      font-family: var(--font-display); font-size: 1.1rem;
+      font-weight: 700; color: #fff; margin-bottom: 0.5rem; line-height: 1.2;
+    }
+    .speaker-desc {
+      font-size: 0.75rem; color: rgba(255,255,255,0.6); line-height: 1.5; margin-bottom: 0.75rem;
+    }
+    .speaker-links { display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap; }
+    .speaker-link {
+      font-family: var(--font-mono); font-size: 0.6rem;
+      color: rgba(255,255,255,0.7); text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.2); padding: 0.18rem 0.45rem;
+      transition: all 0.2s;
+    }
+    .speaker-link:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+    /* ── Article column ── */
+    .article { max-width: 680px; margin: 0 auto; padding: 0 2rem 4rem; }
+    .article p { margin-bottom: 1.55rem; }
+    .article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(26,82,118,0.25); transition: border-color 0.2s; }
+    .article a:hover { border-bottom-color: var(--accent); }
+    .article h2 {
+      font-family: var(--font-display); font-size: 1.85rem;
+      font-weight: 700; margin: 3.5rem 0 1.2rem;
+      padding-top: 2.5rem; border-top: 1px solid var(--border); line-height: 1.2;
+    }
+    .article h3 {
+      font-family: var(--font-display); font-size: 1.25rem;
+      font-weight: 600; margin: 2rem 0 0.7rem; color: var(--accent2);
+    }
+    .article ul, .article ol { margin: 1.2rem 0; padding-left: 1.75rem; }
+    .article li { margin-bottom: 0.55rem; }
+    strong { font-weight: 700; }
+
+    /* Drop cap */
+    .dropcap::first-letter {
+      font-family: var(--font-display); font-size: 5.5rem;
+      float: left; line-height: 0.78;
+      padding-right: 0.45rem; padding-top: 0.05rem;
+      font-weight: 700; color: var(--python-blue);
+    }
+
+    /* ── Blockquote ── */
+    .article blockquote {
+      font-family: var(--font-display);
+      font-size: 1.4rem; font-style: italic; font-weight: 500;
+      line-height: 1.42; color: var(--accent2);
+      border-left: 5px solid var(--gold);
+      padding: 1.2rem 0 1.2rem 1.75rem;
+      margin: 2.5rem 0 2.5rem -0.5rem;
+    }
+    .article blockquote cite {
+      display: block; font-style: normal;
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); margin-top: 0.75rem;
+    }
+
+    /* ── Callout ── */
+    .callout {
+      background: var(--gold-light); border-left: 4px solid var(--gold);
+      padding: 1.25rem 1.5rem; margin: 2rem 0; font-size: 0.93rem;
+    }
+    .callout-label {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      text-transform: uppercase; letter-spacing: 0.15em;
+      color: #8a6d00; margin-bottom: 0.5rem; font-weight: 500;
+    }
+
+    /* ── Pull quote (wide bleed) ── */
+    .pullquote {
+      background: var(--dark); color: #fff;
+      padding: 3rem 2rem; margin: 3rem calc(-50vw + 50%);
+      text-align: center;
+    }
+    .pullquote-text {
+      font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 2rem);
+      font-style: italic; line-height: 1.35; max-width: 720px; margin: 0 auto 1rem;
+    }
+    .pullquote-attr {
+      font-family: var(--font-mono); font-size: 0.72rem;
+      letter-spacing: 0.15em; text-transform: uppercase; color: var(--python-yellow);
+    }
+    @media (max-width: 700px) { .pullquote { margin: 3rem -1rem; } }
+
+    /* ── Funny aside ── */
+    .funny-aside {
+      background: #fff8e6; border: 1px solid #e0c87a; border-left: 4px solid var(--gold);
+      padding: 0.9rem 1.2rem; margin: 1.5rem 0; font-size: 0.88rem; font-style: italic; color: var(--ink2);
+    }
+    .funny-aside::before { content: "😄 "; }
+
+    /* ── Stat band (wide bleed) ── */
+    .stat-band {
+      background: #e8f4f8; border-top: 3px solid var(--python-blue); border-bottom: 3px solid var(--python-blue);
+      padding: 2.5rem 2rem; margin: 3rem calc(-50vw + 50%);
+    }
+    .stat-band-inner {
+      max-width: 820px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem; text-align: center;
+    }
+    .stat-item {}
+    .stat-num {
+      font-family: var(--font-display); font-size: 2.8rem;
+      font-weight: 700; color: var(--python-blue); line-height: 1;
+    }
+    .stat-label { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 0.3rem; }
+    @media (max-width: 700px) { .stat-band { margin: 3rem -1rem; } }
+
+    /* ── Animated SVG container ── */
+    .svg-explainer {
+      background: #f0ebff;
+      border-top: 3px solid #7c3aed;
+      padding: 3rem 2rem; margin: 3rem calc(-50vw + 50%);
+    }
+    .svg-explainer-title {
+      font-family: var(--font-display); font-size: 1.3rem;
+      font-weight: 700; text-align: center; color: #4c1d95; margin-bottom: 0.5rem;
+    }
+    .svg-explainer-sub {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      text-align: center; color: #7c3aed; letter-spacing: 0.12em;
+      text-transform: uppercase; margin-bottom: 1.5rem;
+    }
+    .svg-explainer svg { display: block; max-width: 900px; margin: 0 auto; width: 100%; }
+    @media (max-width: 700px) { .svg-explainer { margin: 3rem -1rem; } }
+
+    /* ── Tooltip ── */
+    [data-tip] { position: relative; border-bottom: 1px dotted var(--muted); cursor: help; }
+    [data-tip]:hover::after {
+      content: attr(data-tip);
+      position: absolute; bottom: 1.6em; left: 50%; transform: translateX(-50%);
+      background: var(--ink); color: #fff; font-family: var(--font-mono);
+      font-size: 0.67rem; padding: 0.35rem 0.65rem; white-space: nowrap;
+      pointer-events: none; z-index: 50; border-radius: 2px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25); max-width: 280px; white-space: normal; text-align: center;
+    }
+
+    /* ── Cite button ── */
+    .cite-btn {
+      display: inline; font-family: var(--font-mono); font-size: 0.72em;
+      background: none; border: none; border-bottom: 1px dashed var(--gold);
+      color: var(--gold); padding: 0 0.1em; cursor: pointer;
+      vertical-align: baseline; line-height: inherit;
+      transition: color 0.15s, border-bottom-color 0.15s;
+    }
+    .cite-btn:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* ── Popup ── */
+    .popup-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.72); z-index: 5000;
+      align-items: center; justify-content: center; padding: 1.5rem;
+    }
+    .popup-overlay.open { display: flex; }
+    .popup-box {
+      background: #fff; max-width: 520px; width: 100%;
+      padding: 2rem; position: relative;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.4);
+      max-height: 80vh; overflow-y: auto;
+    }
+    .popup-close {
+      position: absolute; top: 0.8rem; right: 1rem;
+      font-size: 1.5rem; cursor: pointer; background: none;
+      border: none; color: var(--muted); line-height: 1;
+    }
+    .popup-close:hover { color: var(--ink); }
+    .popup-label {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold); margin-bottom: 0.6rem;
+    }
+    .popup-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .popup-body { font-size: 0.85rem; line-height: 1.65; color: var(--ink2); }
+    .popup-body a { color: var(--accent); }
+    .popup-source { margin-top: 1rem; font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 0.75rem; }
+
+    /* ── Takeaways ── */
+    .takeaways {
+      background: linear-gradient(135deg, var(--dark) 0%, #0d2744 60%, #1a0d0d 100%);
+      color: #fff; padding: 4.5rem 2rem;
+      margin: 3rem calc(-50vw + 50%);
+    }
+    .takeaways-inner { max-width: 980px; margin: 0 auto; }
+    .takeaways h2 {
+      font-family: var(--font-display); font-size: 2rem;
+      text-align: center; margin-bottom: 3rem; color: #fff;
+      border: none !important; padding: 0 !important;
+    }
+    .takeaway-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .takeaway-card {
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      border-top: 3px solid var(--python-yellow);
+      padding: 1.75rem 1.5rem; transition: all 0.3s;
+    }
+    .takeaway-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-4px); }
+    .takeaway-num {
+      font-family: var(--font-display); font-size: 2.6rem;
+      font-weight: 700; color: var(--python-yellow); line-height: 1; margin-bottom: 0.7rem;
+    }
+    .takeaway-title { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .takeaway-text { font-size: 0.82rem; color: rgba(255,255,255,0.7); line-height: 1.55; }
+    @media (max-width: 700px) { .takeaways { margin: 3rem -1rem; } }
+
+    /* ── Resources ── */
+    .resource-section {
+      background: #e2ddd4; padding: 3rem 2rem;
+      margin: 0 calc(-50vw + 50%);
+    }
+    .resource-section h2 {
+      font-family: var(--font-display); font-size: 1.65rem;
+      text-align: center; margin-bottom: 1.5rem; color: var(--ink);
+      border: none !important; padding: 0 !important;
+    }
+    .resource-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem; max-width: 980px; margin: 0 auto;
+    }
+    .resource-card {
+      display: flex; flex-direction: column;
+      background: #fff; border: 1px solid var(--border);
+      border-top: 3px solid var(--accent);
+      padding: 1.1rem 1.2rem; text-decoration: none !important;
+      color: var(--ink); border-bottom: none !important;
+      transition: all 0.2s;
+    }
+    .resource-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); border-top-color: var(--python-blue); }
+    .resource-card-emoji { font-size: 1.45rem; margin-bottom: 0.3rem; }
+    .resource-card-title { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; color: var(--accent); margin-bottom: 0.3rem; }
+    .resource-card-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+    @media (max-width: 700px) { .resource-section { margin: 0 -1rem; } }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 2.5rem 2rem;
+      text-align: center; font-size: 0.82rem; color: var(--muted);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Section label ── */
+    .section-label {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--python-blue);
+      margin-bottom: 0.4rem;
+    }
+
+    @media (max-width: 720px) {
+      body { font-size: 16px; }
+      .hero { padding: 2.5rem 1.25rem 2rem; }
+      .article { padding: 0 1.25rem 3rem; }
+      .pullquote { padding: 2rem 1.25rem; }
+      .stat-band { padding: 2.5rem 1.25rem; }
+      .svg-explainer { padding: 2rem 1.25rem; }
+      .takeaways { padding: 3rem 1.25rem; }
+      .resource-section { padding: 2.5rem 1.25rem; }
+      .speaker-band { padding: 2.5rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- Popup overlay -->
+<div class="popup-overlay" id="popup-overlay">
+  <div class="popup-box" id="popup-box">
+    <button class="popup-close" id="popup-close">&#x2715;</button>
+    <div class="popup-label" id="popup-label"></div>
+    <div class="popup-title" id="popup-title"></div>
+    <div class="popup-body" id="popup-body"></div>
+    <div class="popup-source" id="popup-source"></div>
+  </div>
+</div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-inner">
+    <a href="../" class="masthead-brand">Anand's Talks</a>
+    <div class="masthead-right">
+      <span class="masthead-date">15 Mar 2026 · PyConf Hyderabad</span>
+      <a href="transcript.md" class="masthead-link">💬 Transcript</a>
+      <a href="audio.opus" class="masthead-link">🎧 Audio</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-kicker">PyConf Hyderabad 2026 · AI in SDLC Panel Discussion</p>
+  <h1 class="hero-title">Who Owns<br>the Commit?</h1>
+  <p class="hero-subtitle">Three AI practitioners walked onto a stage in Hyderabad with very different answers to a question nobody could quite agree on.</p>
+  <div class="hero-meta">
+    <span>15 March 2026</span>
+    <span><a href="https://2026.pyconfhyd.org/" target="_blank">PyConf Hyderabad 2026</a></span>
+    <span>Panel Discussion</span>
+    <span><a href="transcript.md">Full Transcript</a></span>
+    <span><a href="audio.opus">🎧 Listen</a></span>
+  </div>
+</section>
+
+<!-- QUICK LINKS -->
+<nav class="quick-links">
+  <div class="quick-links-inner">
+    <a class="quick-link primary" href="sketchnote.avif" target="_blank">🎨 View Sketchnote</a>
+    <a class="quick-link" href="transcript.md">📄 Transcript</a>
+    <a class="quick-link" href="audio.opus">🎧 Audio</a>
+    <a class="quick-link" href="https://2026.pyconfhyd.org/schedule?day=day2&track=track1" target="_blank">📅 PyConf Schedule</a>
+    <a class="quick-link" href="https://2026.pyconfhyd.org/" target="_blank">🐍 PyConf Hyderabad</a>
+  </div>
+</nav>
+
+<!-- SKETCHNOTE -->
+<div class="sketchnote-wrap">
+  <a href="sketchnote.avif" target="_blank" title="Click to open full-size sketchnote">
+    <img src="sketchnote.avif" alt="Sketchnote of AI in SDLC panel discussion at PyConf Hyderabad 2026" loading="lazy">
+  </a>
+  <p class="sketchnote-cap">Sketchnote · Click to open full size · AI in SDLC Panel, PyConf Hyderabad 2026</p>
+</div>
+
+<!-- SPEAKERS -->
+<section class="speaker-band">
+  <p class="speaker-band-title">The Panel</p>
+  <div class="speaker-grid">
+    <div class="speaker-card">
+      <p class="speaker-role">Panelist</p>
+      <p class="speaker-name">Usha Rengaraju</p>
+      <p class="speaker-desc">World's first female triple Kaggle Grandmaster. Chief of Research at Exa Protocol. Deep learning, GenAI & probabilistic graphical models. Organised India's first NeuroAI symposium.</p>
+      <div class="speaker-links">
+        <a class="speaker-link" href="https://2026.pyconfhyd.org/speakers/usha-rengaraju" target="_blank">PyConf</a>
+        <a class="speaker-link" href="https://www.kaggle.com/usharengaraju" target="_blank">Kaggle</a>
+        <a class="speaker-link" href="https://www.linkedin.com/in/usha-rengaraju-b570b7a2/" target="_blank">LinkedIn</a>
+      </div>
+    </div>
+    <div class="speaker-card">
+      <p class="speaker-role">Panelist</p>
+      <p class="speaker-name">Anand S</p>
+      <p class="speaker-desc">LLM Psychologist at Straive. Co-founder of Gramener (acquired). Specialist in AI-driven workflows, rapid prototyping, and making interns look like rockstars.</p>
+      <div class="speaker-links">
+        <a class="speaker-link" href="https://2026.pyconfhyd.org/speakers/anand-s" target="_blank">PyConf</a>
+        <a class="speaker-link" href="https://www.s-anand.net/" target="_blank">Blog</a>
+        <a class="speaker-link" href="https://twitter.com/sanand0" target="_blank">X/Twitter</a>
+        <a class="speaker-link" href="https://github.com/sanand0" target="_blank">GitHub</a>
+        <a class="speaker-link" href="https://www.linkedin.com/in/sanand0/" target="_blank">LinkedIn</a>
+      </div>
+    </div>
+    <div class="speaker-card">
+      <p class="speaker-role">Panelist</p>
+      <p class="speaker-name">Lakshman Peethani</p>
+      <p class="speaker-desc">Director, Technology Solutions at EPAM Systems. Enterprise-scale GenAI integration: AI-powered developer experience, LLM-based coding assistance, and RAG in production.</p>
+      <div class="speaker-links">
+        <a class="speaker-link" href="https://2026.pyconfhyd.org/speakers/lakshman-peethani" target="_blank">PyConf</a>
+        <a class="speaker-link" href="https://www.linkedin.com/in/lakshman-peethani/" target="_blank">LinkedIn</a>
+      </div>
+    </div>
+    <div class="speaker-card" style="border-top-color: rgba(255,255,255,0.3);">
+      <p class="speaker-role">Moderator</p>
+      <p class="speaker-name">Snehith Allamraju</p>
+      <p class="speaker-desc">Director, Data &amp; Analytics at RSM US LLP. Also a PyConf Hyderabad organizer — threading five questions into forty-five minutes of controlled chaos.</p>
+      <div class="speaker-links">
+        <a class="speaker-link" href="https://www.linkedin.com/in/snehithallamraju" target="_blank">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLE -->
+<article class="article">
+
+  <h2>The Question in the Room</h2>
+
+  <p class="dropcap">Picture the scene. Hyderabad, March 15, 2026. The second day of PyConf, India's largest Python conference, and track one has just filled up faster than the others. Not because of a framework tutorial or a deep-dive into async Python. Because someone has put three people on a stage and asked them to argue about something every developer in that room is quietly worried about: <em>what happens to us now that AI can write the code?</em></p>
+
+  <p>The moderator, Snehith Allamraju — Director of Data &amp; Analytics at RSM US LLP and part of the PyConf organizing team — starts with a disarming question. Not "will AI take our jobs?" (too obvious) or "is AI reliable?" (too abstract). He asks each panelist: <em>walk me through your day</em>.</p>
+
+  <p>What follows is forty-five minutes that nobody in the room quite expected.</p>
+
+  <h2>Act I: Three People, Three Realities</h2>
+
+  <p>The first thing you notice is that the three panelists aren't just offering different opinions. They're describing different <em>worlds</em>.</p>
+
+  <p><strong>Usha Rengaraju</strong> — <span data-tip="Kaggle has three tiers of Grandmaster: Competitions, Datasets, and Notebooks. Usha holds all three — a feat achieved by fewer than 20 people globally.">triple Kaggle Grandmaster</span>, Chief of Research at Exa Protocol — works primarily with pre-seed startups that haven't yet raised their seed round. Greenfield systems. Demos for investors. Speed is everything. For her, AI isn't a productivity multiplier. It's a team replacement.</p>
+
+  <blockquote>
+    "Until 2024, I used to have six to seven interns, predominantly hired from IITs — Bombay and Chennai. Because I want less people, six or seven, but the volume of work is very high. I used to spend somewhere around 3 to 3.5 lakhs on intern salaries every month. From March and April 2024 till now, I am saving like 60, 70 lakhs on intern salaries every year."
+    <cite>— Usha Rengaraju</cite>
+  </blockquote>
+
+  <p>Let that settle. Sixty to seventy lakhs a year. Saved. Not because she's getting less done — because she's getting <em>more</em> done, with no interns. For the kind of work she does — startup prototypes, early-stage demos, greenfield code — AI has entirely replaced a six-person team.</p>
+
+  <p><strong>Lakshman Peethani</strong> lives in a different world entirely. Director of Technology Solutions at <a href="https://www.epam.com/" target="_blank">EPAM Systems</a>, he spends his days talking to large enterprise clients about how AI can accelerate product cycles. His world is brownfield: legacy systems, compliance requirements, thousands of engineers, and the kind of institutional inertia that makes a three-day sprint feel like a moon landing.</p>
+
+  <blockquote>
+    "We are now leveraging AI to be more competitive and bid for those projects at a much lower price point."
+    <cite>— Lakshman Peethani</cite>
+  </blockquote>
+
+  <p>For Lakshman, AI is a competitive weapon in an industry where margins are tight and clients are demanding. His team is building agentic solutions — systems where AI agents run feature implementations end-to-end and raise a PR when they're done. Humans review. Humans approve. But the writing? That's the agents' job now.</p>
+
+  <p>And then there's <strong>Anand S</strong> — <span data-tip="Anand coined this title live on stage at MDI Gurgaon, inspired by a tweet from Andrej Karpathy about how prompting was becoming 'more like psychology than programming.'"><a href="https://www.s-anand.net/" target="_blank">LLM Psychologist</a></span> at <a href="https://straive.com/" target="_blank">Straive</a>, former co-founder of Gramener. He doesn't ease you into his answer.</p>
+
+</article>
+
+<!-- PULL QUOTE: Anand's big claim -->
+<div class="pullquote">
+  <p class="pullquote-text">"AI is my SDLC. I've stopped designing, I've stopped gathering requirements, I've stopped coding, I've stopped testing, I've stopped deploying."</p>
+  <p class="pullquote-attr">— Anand S, LLM Psychologist · PyConf Hyderabad 2026</p>
+</div>
+
+<article class="article">
+
+  <p>The audience laughs — and then realizes he's not joking. Anand's workflow now looks like this: a colleague calls, Anand records it. He sends the recording to Gemini and asks "tell me what he wants." Gemini produces a prompt. The prompt goes to Copilot or Claude. Claude writes the code. Another agent tests it. A third deploys it. A fourth emails the stakeholder. He describes this with the studied nonchalance of someone who has been doing it for eighteen months and finds your surprise slightly quaint.</p>
+
+  <p>Even more striking: Anand is hiring <em>more</em> interns, not fewer — the opposite of Usha. His logic is counterintuitive but watertight: experienced developers bring preconceptions, slow down the process, and resist the new way. Interns, fresh out of college, have none of that baggage. He puts Varun — a student from IIT Madras — directly in front of Ankor, Straive's CEO. "Ankor is like, 'This guy is fantastic, how is he doing it?'" Anand grins. "The process is: he records the call, he feeds it to ChatGPT, and gets the result."</p>
+
+  <!-- STAT BAND -->
+</article>
+
+<div class="stat-band">
+  <div class="stat-band-inner">
+    <div class="stat-item">
+      <div class="stat-num">₹70L</div>
+      <div class="stat-label">Annual intern salary savings<br>for Usha's consultancy</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">3 days</div>
+      <div class="stat-label">For a 3rd-year student to learn<br>advanced CUDA kernel fusion with AI</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">0</div>
+      <div class="stat-label">Lines of code Anand<br>writes manually anymore</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">4 centuries</div>
+      <div class="stat-label">Of legal precedent for corporate<br>accountability — none for AI agents</div>
+    </div>
+  </div>
+</div>
+
+<!-- ANIMATED SVG: AI in SDLC Pipeline -->
+<div class="svg-explainer">
+  <p class="svg-explainer-title">The New Software Development Pipeline</p>
+  <p class="svg-explainer-sub">How AI has transformed each stage of SDLC — from voice call to deployed app</p>
+  <svg viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg" aria-label="Animated diagram of AI-powered SDLC pipeline">
+    <defs>
+      <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#7c3aed"/>
+      </marker>
+      <marker id="arrow-gold" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#c49a2a"/>
+      </marker>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="2" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+
+    <!-- Background -->
+    <rect width="900" height="280" fill="#f5f0ff" rx="8"/>
+
+    <!-- Stage boxes -->
+    <!-- 1: Voice/Idea -->
+    <rect x="20" y="100" width="110" height="80" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+    <text x="75" y="133" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#4c1d95" font-weight="bold">📞 Voice</text>
+    <text x="75" y="150" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#6d28d9">Call / Idea</text>
+    <text x="75" y="165" text-anchor="middle" font-family="monospace" font-size="8" fill="#7c3aed">HUMAN</text>
+
+    <!-- Arrow 1→2 -->
+    <line x1="131" y1="140" x2="159" y2="140" stroke="#7c3aed" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="145" y="130" text-anchor="middle" font-family="monospace" font-size="7" fill="#7c3aed">Gemini</text>
+
+    <!-- 2: Requirements -->
+    <rect x="160" y="100" width="110" height="80" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="215" y="133" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#1e3a8a" font-weight="bold">📋 Req'ts</text>
+    <text x="215" y="150" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#1d4ed8">Auto-generated</text>
+    <text x="215" y="165" text-anchor="middle" font-family="monospace" font-size="8" fill="#2563eb">AI AGENT</text>
+
+    <!-- Arrow 2→3 -->
+    <line x1="271" y1="140" x2="299" y2="140" stroke="#7c3aed" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="285" y="130" text-anchor="middle" font-family="monospace" font-size="7" fill="#7c3aed">Claude</text>
+
+    <!-- 3: Code -->
+    <rect x="300" y="100" width="110" height="80" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+    <text x="355" y="133" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#064e3b" font-weight="bold">💻 Code</text>
+    <text x="355" y="150" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#065f46">Generated</text>
+    <text x="355" y="165" text-anchor="middle" font-family="monospace" font-size="8" fill="#059669">AI AGENT</text>
+
+    <!-- Arrow 3→4 -->
+    <line x1="411" y1="140" x2="439" y2="140" stroke="#7c3aed" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="425" y="130" text-anchor="middle" font-family="monospace" font-size="7" fill="#7c3aed">Agent</text>
+
+    <!-- 4: Test -->
+    <rect x="440" y="100" width="110" height="80" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="495" y="133" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#78350f" font-weight="bold">🧪 Test</text>
+    <text x="495" y="150" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#92400e">Auto + Review</text>
+    <text x="495" y="165" text-anchor="middle" font-family="monospace" font-size="8" fill="#d97706">AI + HUMAN</text>
+
+    <!-- Arrow 4→5 -->
+    <line x1="551" y1="140" x2="579" y2="140" stroke="#7c3aed" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <!-- 5: Deploy -->
+    <rect x="580" y="100" width="110" height="80" rx="8" fill="#fce7f3" stroke="#db2777" stroke-width="1.5"/>
+    <text x="635" y="133" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#831843" font-weight="bold">🚀 Deploy</text>
+    <text x="635" y="150" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#9d174d">Automated</text>
+    <text x="635" y="165" text-anchor="middle" font-family="monospace" font-size="8" fill="#db2777">AI AGENT</text>
+
+    <!-- Arrow 5→6 -->
+    <line x1="691" y1="140" x2="719" y2="140" stroke="#7c3aed" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <!-- 6: Notify -->
+    <rect x="720" y="100" width="110" height="80" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+    <text x="775" y="133" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#4c1d95" font-weight="bold">📧 Notify</text>
+    <text x="775" y="150" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#6d28d9">Stakeholders</text>
+    <text x="775" y="165" text-anchor="middle" font-family="monospace" font-size="8" fill="#7c3aed">AI AGENT</text>
+
+    <!-- Human oversight arc (above) -->
+    <path d="M 75 100 Q 450 30 775 100" fill="none" stroke="#c49a2a" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow-gold)"/>
+    <text x="425" y="48" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#92400e" font-style="italic">Human: direction, taste, accountability</text>
+
+    <!-- Feedback loop (below) -->
+    <path d="M 775 180 Q 450 240 75 180" fill="none" stroke="#6b7280" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="425" y="245" text-anchor="middle" font-family="monospace" font-size="8" fill="#6b7280">↻ Feedback loop — captured in skills.md</text>
+
+    <!-- Animated packet 1 -->
+    <circle r="5" fill="#7c3aed" opacity="0.85" filter="url(#glow)">
+      <animateMotion dur="4s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#pipeline-path"/>
+      </animateMotion>
+    </circle>
+    <!-- Animated packet 2 (offset) -->
+    <circle r="4" fill="#059669" opacity="0.75">
+      <animateMotion dur="4s" begin="1.3s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#pipeline-path"/>
+      </animateMotion>
+    </circle>
+    <!-- Animated packet 3 (offset) -->
+    <circle r="3.5" fill="#db2777" opacity="0.7">
+      <animateMotion dur="4s" begin="2.6s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#pipeline-path"/>
+      </animateMotion>
+    </circle>
+
+    <path id="pipeline-path" d="M 20 140 L 160 140 L 300 140 L 440 140 L 580 140 L 720 140 L 870 140" fill="none" stroke="none"/>
+  </svg>
+</div>
+
+<article class="article">
+
+  <h2>Act II: The Polyglot Future</h2>
+
+  <p>Snehith pivots to the question every student and junior developer in the room is holding. Not out loud — nobody wants to ask it out loud. But the moderator asks it for them: <em>will they ever write raw code again?</em></p>
+
+  <p>Lakshman's answer is the one that deserves to be framed and hung in every computer science department in the country.</p>
+
+  <blockquote>
+    "It's no longer like, 'I'm a Java developer, I will only write Java code,' or 'I'm a React developer, I will only write React code.' No, you have to be a polyglot developer and you have to do end-to-end. Not necessarily just a developer role, but you need to understand product management, you need to understand refinement of your requirements, development, and even QA as well."
+    <cite>— Lakshman Peethani</cite>
+  </blockquote>
+
+  <p>This is a genuine inversion. For two decades, software engineering moved toward <em>specialization</em>. You were a frontend developer or a backend developer, a DBA or a DevOps engineer. The tooling, the frameworks, the interview pipelines — everything reinforced the idea that depth was more valuable than breadth. Now Lakshman is describing a reversal: AI handles the depth, humans supply the breadth. You're a generalist again. You're back to doing everything end-to-end — just with better tools.</p>
+
+  <p>Usha, whose work spans both bleeding-edge AI research and desktop application development she'd never touched before last year, offers the acceleration story. Give a third-year engineering student access to Claude and ChatGPT Pro, set a three-day deadline, and ask them to learn <span data-tip="CUDA kernel fusion is an advanced GPU optimization technique used in large-scale ML training — typically the domain of senior ML systems engineers.">kernel fusion</span> and advanced PyTorch internals?</p>
+
+  <blockquote>
+    "You give a third-year engineering student good access to all cutting-edge tools, three days' time, he will still be able to do it. That's the amount of acceleration which AI brings in."
+    <cite>— Usha Rengaraju</cite>
+  </blockquote>
+
+  <p>Anand's advice to junior developers, delivered with characteristic compression:</p>
+
+  <blockquote>
+    "Use AI like crazy to find out what it does well. If it's doing something well, stop learning that. Nobody is going to hire you for that. Where it breaks, use AI to learn that. That way you'll be building a skill."
+    <cite>— Anand S</cite>
+  </blockquote>
+
+  <p>There's something almost Zen about it. The edge of AI competence is precisely where human value lives. Not the comfortable middle, where AI is reliable and fluent. The edge — where it hallucinates, where it loses the thread, where it confidently produces something confidently wrong. <em>That's</em> where you want to be. That's where it's still possible to know more than the machine.</p>
+
+  <div class="callout">
+    <p class="callout-label">💡 Insight</p>
+    <p>Usha spent four months building a desktop application (she'd never done desktop development before) using <a href="https://www.electronjs.org/" target="_blank">Electron</a> and AI assistance. "Three years back, if you asked desktop development, I would have run three kilometers away. But now I'm confident of breaking anything in the SDLC lifecycle."</p>
+  </div>
+
+  <h2>Act III: The Accountability Problem</h2>
+
+  <p>Snehith, who has been threading these threads with the dexterity of someone who's spent a lot of time managing consultants, now reaches for the question that will define the next decade of enterprise software: <em>who owns the commit?</em></p>
+
+  <p>If an AI agent writes the code, raises the PR, and the code passes review — who's accountable when it breaks in production?</p>
+
+  <p>Lakshman gives the expected answer: the developer who delegated to the agent is still responsible. It's a reasonable, defensible position. Accountability chains don't disappear just because you've added an intermediary.</p>
+
+  <p>But Anand reaches for history. He always does.</p>
+
+  <blockquote>
+    "It's largely about how do we assign responsibility and control. Humans, we know how to do that. Four centuries ago, we learned how to do that for companies. We also do that for gods, rivers, ships. These are all legal precedents where you can actually hold them accountable by law. We haven't yet learned how to do it for agents."
+    <cite>— Anand S <button class="cite-btn" onclick="openPopup('agentAccountability')">📚</button></cite>
+  </blockquote>
+
+  <p>He's not being dramatic. He's being precise. The legal doctrine of <span data-tip="Corporate personhood is the legal fiction that a corporation has rights and liabilities similar to a person. Established progressively from the 17th century through landmark court cases.">corporate personhood</span> took centuries to develop. Rivers in New Zealand have legal personhood. Ships have been held "accountable" through legal constructs for over a thousand years. Every one of these was a creative legal solution to the problem of assigning responsibility to non-human actors.</p>
+
+  <p>And then he proposes something remarkable: what if you could create an agency — a <em>limited liability corporation for AI agents?</em></p>
+
+</article>
+
+<div class="pullquote">
+  <p class="pullquote-text">"We may be able to create something like a limited liability corporation with a pool of agents and still give them a significant chunk of accountability while being able to trust them because they are going to be so bloody cheap."</p>
+  <p class="pullquote-attr">— Anand S · PyConf Hyderabad 2026</p>
+</div>
+
+<article class="article">
+
+  <p>He describes it with characteristic specificity: a pool of five journalist agents for the Times of India. Each agent has a name. Each one earns feedback. Good agents get more compute; bad agents get terminated. "Not that they mind dying — they are just agents." Out of a fixed budget of tokens and compute, you create an <em>ecology</em> — not a factory, not an assembly line, but something more like an evolutionary system. Performance determines survival.</p>
+
+  <p>This is somewhere between corporate org-chart and Darwin. And the audience — mostly developers who spend their days thinking about pull requests and sprint reviews — suddenly finds themselves thinking about accountability philosophy.</p>
+
+  <div class="callout">
+    <p class="callout-label">⚖️ The Accountability Gap</p>
+    <p>As of 2026, no legal framework holds AI agents directly accountable. The developer who deploys an agent remains responsible. But as agents become more autonomous — and the chain between human instruction and agent action grows longer — this will become untenable. The panel agreed: we're building the accountability frameworks now, empirically, through practice.</p>
+  </div>
+
+  <h2>Act IV: Safe Spaces for Hallucination</h2>
+
+  <p>Usha draws the line clearly. She wouldn't hand over complete control. Not even for greenfield. Especially not for anything touching sensitive domains: <span data-tip="CUDA libraries from NVIDIA used in large-scale ML training, such as NEMO for speech AI">Nvidia's specialist libraries</span>, banking systems using obscure proprietary languages, anything where the training data thins out and the model starts confabulating with confidence.</p>
+
+  <blockquote>
+    "The amount of knowledge which is available externally for the LLM to be trained on is very limited. I find the hallucination rate is so high that if I have to do it from scratch, it would have taken me half the time. Fixing and debugging the code takes... for certain areas it's literally very high."
+    <cite>— Usha Rengaraju</cite>
+  </blockquote>
+
+  <p>Anand's response is his most elegant: find a domain where hallucinations don't matter. Or better yet — find one where they're a <em>feature</em>.</p>
+
+  <blockquote>
+    "I have a continuous publication of comics from news. When it hallucinates, it is a feature. Exactly! So in that case, I can discover 10 things, 20 things that it can do which will be useful tomorrow."
+    <cite>— Anand S</cite>
+  </blockquote>
+
+  <div class="funny-aside">
+    At one point, Snehith mentioned they'd discussed having an AI panelist on stage. He'd rejected the idea. "I was afraid that probably AI would take over my job as a moderator." Anand, deadpan: "That's why I stopped inviting it as a co-host — it was stealing the show."
+  </div>
+
+  <p>The deeper point is strategic: you can't learn to trust AI by giving it high-stakes tasks and hoping for the best. You learn to trust it by giving it low-stakes tasks where failure is informative rather than catastrophic. Each failure teaches you the contours of competence. Each success builds confidence. Over time, you develop a mental map of where AI is reliable enough for production and where it isn't — yet.</p>
+
+  <p>Lakshman echoes this: "Experimenting in the safe areas is the best way to start this adoption." And then adds the kicker: "Whether we like it or not, this is going to be the norm." He's talking to clients who used to accept 30% productivity gains and are now asking for 50%, 80%. The numbers are moving. The question isn't whether to adopt AI in your engineering process. It's how fast.</p>
+
+  <h2>Coda: The People Problem</h2>
+
+  <p>Near the end, Snehith cuts to the core of it: <em>what is the biggest blocker to AI in SDLC?</em></p>
+
+  <p>Anand doesn't pause. "It's the people. It's our unwillingness to include that as a part of... I am a coder. If AI is going to do my code, what am I?"</p>
+
+  <p>Identity. That's the blocker. Not the tools — the tools work. Not the infrastructure — the infrastructure is there. The blocker is the profound human discomfort of having your professional identity threaten to evaporate. For twenty years, being a developer meant being someone who could write code. And now, suddenly, writing code is the thing you're being asked to stop doing. The ego has to be renegotiated, and nobody told us the ego was part of the job.</p>
+
+  <p>Usha closes with something warmer. She says she's charging the same rates she charged in 2023 and 2024. "But the time is running out. I am quite aware of it." She appreciates the acceleration, the new confidence that lets her tackle topics she'd have run from before. And she closes with something that has nothing to do with AI at all — a genuine, warm appreciation for the Python community in Hyderabad, which she calls one of the most active in the world.</p>
+
+  <blockquote>
+    "PyCon Hyderabad, the Python community in Hyderabad, is one of the most active Python developer communities in the world, actually. I travel across the globe to give keynotes at PyCons. So I can say hats off to all the organizing committee."
+    <cite>— Usha Rengaraju</cite>
+  </blockquote>
+
+  <p>It's a reminder that amid all the disruption and the philosophy and the agent LLCs, this panel took place because a group of people got together, volunteered their time, and built a community. And the community showed up.</p>
+
+  <p>Anand's last thought is the one that lingers. He says the hardest thing isn't the AI — it's the planning horizon. We're making year-long plans based on the capabilities of today, and today's capabilities are already outdated by next quarter. His solution: extrapolate a year out, put it in a "safe pocket somewhere," and revisit it when the world catches up.</p>
+
+  <blockquote>
+    "Having a safe space where hallucinations are not a problem and running with it — I think that is one way of being able to anticipate the future."
+    <cite>— Anand S</cite>
+  </blockquote>
+
+</article>
+
+<!-- TAKEAWAYS -->
+<div class="takeaways">
+  <div class="takeaways-inner">
+    <h2>Top Takeaways</h2>
+    <div class="takeaway-grid">
+      <div class="takeaway-card">
+        <div class="takeaway-num">01</div>
+        <div class="takeaway-title">Greenfield vs Brownfield is a real divide</div>
+        <div class="takeaway-text">AI delivers transformative results in greenfield (new projects), but brownfield (legacy) requires significant groundwork, workflow redesign, and mindset shifts before it pays off.</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-num">02</div>
+        <div class="takeaway-title">Intern economics have inverted</div>
+        <div class="takeaway-text">One practitioner saves ₹60–70L/year on interns. Another is hiring more. The difference: whether you want AI to replace people, or people to leverage AI. Both strategies work — in different contexts.</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-num">03</div>
+        <div class="takeaway-title">The polyglot developer era has arrived</div>
+        <div class="takeaway-text">Specialization is out. End-to-end ownership is back. You need to understand product, dev, QA, and deployment — because AI handles the deep execution. The human supplies judgment across the whole system.</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-num">04</div>
+        <div class="takeaway-title">Learn where AI breaks, not where it works</div>
+        <div class="takeaway-text">"If it does something well, stop learning that." The only sustainable skill-building strategy is to work at the edges of AI competence — the domains where it hallucates — and develop expertise there.</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-num">05</div>
+        <div class="takeaway-title">AI accountability is the next legal frontier</div>
+        <div class="takeaway-text">We have 400 years of legal precedent for assigning responsibility to companies, rivers, and ships. We have none for AI agents. The framework that emerges will reshape software engineering as much as any technology.</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-num">06</div>
+        <div class="takeaway-title">Find your safe hallucination space</div>
+        <div class="takeaway-text">Experiment with AI in domains where failure is acceptable — even valuable. Comics that hallucinate are funny. Production banking systems that hallucinate are catastrophic. Build expertise in the gap between them.</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-num">07</div>
+        <div class="takeaway-title">The real blocker is identity</div>
+        <div class="takeaway-text">"I am a coder. If AI does my code, what am I?" The technology is ready. The infrastructure is ready. The barrier is human ego — the need to renegotiate professional identity in a world where coding is no longer the value add.</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-num">08</div>
+        <div class="takeaway-title">Plan for where you'll be in a year</div>
+        <div class="takeaway-text">AI capabilities will make your current plans obsolete in one quarter. Build experimental systems today that will be production-ready when AI catches up. Put those plans in a safe pocket — and revisit.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESOURCES -->
+<div class="resource-section">
+  <h2>Go Deeper</h2>
+  <div class="resource-grid">
+    <a class="resource-card" href="transcript.md" target="_blank">
+      <span class="resource-card-emoji">💬</span>
+      <span class="resource-card-title">Full Transcript</span>
+      <span class="resource-card-desc">Complete verbatim transcript of the panel discussion — every exchange, including the funny parts.</span>
+    </a>
+    <a class="resource-card" href="audio.opus" target="_blank">
+      <span class="resource-card-emoji">🎧</span>
+      <span class="resource-card-title">Panel Audio</span>
+      <span class="resource-card-desc">Listen to the full discussion. You can hear the laughter when Anand says AI "stole the show."</span>
+    </a>
+    <a class="resource-card" href="https://2026.pyconfhyd.org/" target="_blank">
+      <span class="resource-card-emoji">🐍</span>
+      <span class="resource-card-title">PyConf Hyderabad 2026</span>
+      <span class="resource-card-desc">The conference where this happened — India's largest Python gathering, March 14–15, 2026.</span>
+    </a>
+    <a class="resource-card" href="https://www.s-anand.net/blog/kick-starting-a-pyconf-panelist-interview/" target="_blank">
+      <span class="resource-card-emoji">✍️</span>
+      <span class="resource-card-title">Anand's Post-Panel Story</span>
+      <span class="resource-card-desc">What happened when a volunteer tried to interview Anand after the panel — and AI fixed the conversation.</span>
+    </a>
+    <a class="resource-card" href="https://www.s-anand.net/blog/when-to-vibe-code-if-speed-beats-certainty/" target="_blank">
+      <span class="resource-card-emoji">🎸</span>
+      <span class="resource-card-title">When to Vibe Code</span>
+      <span class="resource-card-desc">Anand's blog post on AI-assisted coding as a tactic — not a methodology. Use it when speed beats certainty.</span>
+    </a>
+    <a class="resource-card" href="https://www.s-anand.net/blog/ai-beats-me-at-dataviz/" target="_blank">
+      <span class="resource-card-emoji">📊</span>
+      <span class="resource-card-title">AI Beats Me at DataViz</span>
+      <span class="resource-card-desc">"I used to be a data visualization expert. I'm not sure I still am." Anand's reckoning with AI superiority in his own domain.</span>
+    </a>
+    <a class="resource-card" href="https://www.kaggle.com/usharengaraju" target="_blank">
+      <span class="resource-card-emoji">🏆</span>
+      <span class="resource-card-title">Usha on Kaggle</span>
+      <span class="resource-card-desc">The world's first female triple Kaggle Grandmaster. Competitions, Notebooks, and Datasets — all three.</span>
+    </a>
+    <a class="resource-card" href="https://sanand0.github.io/talks/2026-03-15-pyconf-ai-in-sdlc/sketchnote.avif" target="_blank">
+      <span class="resource-card-emoji">🎨</span>
+      <span class="resource-card-title">Full-Size Sketchnote</span>
+      <span class="resource-card-desc">The visual summary of the entire panel — colourful, detailed, and funny. AI-assisted, naturally.</span>
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p>
+    <a href="../">← All Talks</a> ·
+    <a href="transcript.md">Transcript</a> ·
+    <a href="audio.opus">Audio</a> ·
+    <a href="https://2026.pyconfhyd.org/" target="_blank">PyConf Hyderabad 2026</a>
+  </p>
+  <p style="margin-top:0.75rem">
+    Panel Discussion: <em>AI in SDLC</em> · 15 March 2026 · Hyderabad, India<br>
+    Story by <a href="https://www.s-anand.net/" target="_blank">Anand S</a> · Moderated by Snehith Allamraju
+  </p>
+</footer>
+
+<script>
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const el = document.getElementById('progress');
+    const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+    el.style.width = Math.min(pct, 100) + '%';
+  });
+
+  // Popup system
+  const popups = {
+    'agentAccountability': {
+      label: 'Citation · Legal Personhood',
+      title: 'Four Centuries of Non-Human Accountability',
+      body: `Corporate personhood — the legal fiction that companies have rights and responsibilities like persons — emerged in England with the <strong>East India Company</strong> (chartered 1600) and was cemented through centuries of case law. In New Zealand, the <a href="https://www.theguardian.com/world/2017/mar/16/new-zealand-river-granted-same-legal-rights-as-human-being" target="_blank">Whanganui River was granted legal personhood in 2017</a>. <a href="https://en.wikipedia.org/wiki/Personification_of_ships" target="_blank">Ships have been treated as legal persons</a> in admiralty law for centuries, with vessels being "arrested" and held liable. Hindu temples have legal personality in Indian law. Anand's point: humans are creative about assigning accountability to non-humans when it's economically useful — and it will be economically very useful to do so for AI agents.`,
+      source: `<a href="https://en.wikipedia.org/wiki/Corporate_personhood" target="_blank">Corporate personhood — Wikipedia</a> · <a href="https://www.theguardian.com/world/2017/mar/16/new-zealand-river-granted-same-legal-rights-as-human-being" target="_blank">Whanganui River personhood, The Guardian</a>`
+    }
+  };
+
+  function openPopup(id) {
+    const d = popups[id]; if (!d) return;
+    document.getElementById('popup-label').textContent = d.label;
+    document.getElementById('popup-title').textContent = d.title;
+    document.getElementById('popup-body').innerHTML = d.body;
+    document.getElementById('popup-source').innerHTML = '📚 Source: ' + d.source;
+    document.getElementById('popup-overlay').classList.add('open');
+  }
+  document.getElementById('popup-close').addEventListener('click', () => {
+    document.getElementById('popup-overlay').classList.remove('open');
+  });
+  document.getElementById('popup-overlay').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('popup-overlay'))
+      document.getElementById('popup-overlay').classList.remove('open');
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') document.getElementById('popup-overlay').classList.remove('open');
+  });
+</script>
+</body>
+</html>

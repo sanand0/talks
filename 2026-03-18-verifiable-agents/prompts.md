@@ -1,4 +1,4 @@
-# IITM
+# Prompts
 
 ## Story (Copilot Yolo - Claude Sonnet 4.6 high)
 

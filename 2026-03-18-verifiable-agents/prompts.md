@@ -7,7 +7,7 @@ Generate a beautiful narrative story about the talk [Ankor Rai](https://www.link
 Create this as 2026-03-18-verifiable-agents/index.html
 
 Write in the engaging style of Malcolm Gladwell, weaving in anecdotes, insights, and a compelling narrative arc.
-Use 2026-03-18-iitm-office-of-institutional-advancement/index.html, 2026-03-12-nie-ai-roadmap/index.html, 2026-02-26-vibe-coding-for-humanities-ashoka/index.html as examples - to follow LOOSELY, not stricly.
+Use 2026-03-18-iitm-office-of-institutional-advancement/index.html, 2026-03-12-nie-ai-roadmap/index.html, 2026-02-26-vibe-coding-for-humanities-ashoka/index.html as examples - to follow LOOSELY, not strictly.
 
 Use 2026-03-18-verifiable-agents/transcript.md - that's the talk transcript.
 
@@ -67,6 +67,12 @@ This will be deployed at https://sanand0.github.io/talks/2026-03-18-verifiable-a
 Update README.md to include this talk in the list of talks.
 
 IMPORTANT: Because Claude will almost certainly stall when generating such a large file at one shot, you MUST break this into parts, generating a SMALL scaffolding for index.html first, saving it, then then updating it with the next layer or chunk, and so on.
+
+---
+
+Create a 2026-03-18-verifiable-agents/email.md that has a MUCH shorter version of the story, suitable for an email. Summarize key points, include to key slides / visuals, link to the full story, etc.
+
+<!-- copilot --resume=e95b7f18-3246-4d65-b32f-216cb137587c -->
 
 ## Sketchnote
 

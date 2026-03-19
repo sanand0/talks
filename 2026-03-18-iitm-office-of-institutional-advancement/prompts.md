@@ -31,7 +31,7 @@ Generate a beautiful narrative story about the talk [Anand](https://www.s-anand.
 Create this as 2026-03-18-iitm-office-of-institutional-advancement/index.html
 
 Write in the engaging style of Malcolm Gladwell, weaving in anecdotes, insights, and a compelling narrative arc.
-Use 2026-03-12-nie-ai-roadmap/index.html, 2026-02-26-vibe-coding-for-humanities-ashoka/index.html and 2026-01-11-nptel-vibe-coding-workshop/index.html as examples - to follow LOOSELY, not stricly.
+Use 2026-03-12-nie-ai-roadmap/index.html, 2026-02-26-vibe-coding-for-humanities-ashoka/index.html and 2026-01-11-nptel-vibe-coding-workshop/index.html as examples - to follow LOOSELY, not strictly.
 
 Use 2026-03-18-iitm-office-of-institutional-advancement/transcript.md - that's the talk transcript.
 

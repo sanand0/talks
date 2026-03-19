@@ -7,7 +7,7 @@ Generate a beautiful narrative story about the talk [Srikanth](https://www.linke
 Create this as 2026-03-12-nie-ai-roadmap/index.html
 
 Write in the engaging style of Malcolm Gladwell, weaving in anecdotes, insights, and a compelling narrative arc.
-Use 2026-02-11-amat-dt-day/index.html, 2025-12-06-mining-digital-exhaust/index.html and 2026-01-11-nptel-vibe-coding-workshop/index.html as examples - to follow LOOSELY, not stricly.
+Use 2026-02-11-amat-dt-day/index.html, 2025-12-06-mining-digital-exhaust/index.html and 2026-01-11-nptel-vibe-coding-workshop/index.html as examples - to follow LOOSELY, not strictly.
 
 Use 2026-03-12-nie-ai-roadmap/transcript.md - that's the talk transcript.
 

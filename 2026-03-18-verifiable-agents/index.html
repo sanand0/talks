@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Trust Problem | Verifiable Agents — Ankor Rai &amp; Anand S, Straive</title>
+  <meta name="description" content="When AI is probabilistic and enterprises need certainty, what happens? Ankor Rai and Anand S from Straive walk through the real state of verification in agentic AI — and why 'it just works' is never enough.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/prolog.min.js"></script>
+  <style>
+    /* ── Variables ── */
+    :root {
+      --bg: #f8f5f0;
+      --ink: #1a1207;
+      --ink2: #3d2f1a;
+      --accent: #1B3F6E;
+      --accent2: #c0392b;
+      --gold: #b8860b;
+      --gold-light: #f7f0d8;
+      --muted: #7a6a55;
+      --border: #e2d9cc;
+      --highlight: #fef9ec;
+      --dark: #0d1a2b;
+      --dark2: #111822;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'Source Serif 4', Georgia, serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.8;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── Reading progress ── */
+    #progress {
+      position: fixed; top: 0; left: 0;
+      height: 3px; width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      z-index: 1000; transition: width 0.1s linear;
+    }
+
+    /* ── Masthead ── */
+    .masthead {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(248,245,240,0.96);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      backdrop-filter: blur(8px);
+    }
+    .masthead-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem; flex-wrap: wrap;
+    }
+    .masthead-brand {
+      font-family: var(--font-display); font-size: 0.88rem;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+      text-decoration: none;
+    }
+    .masthead-brand:hover { color: var(--accent); }
+    .masthead-right { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+    .masthead-date { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); }
+    .masthead-link {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      color: var(--accent); text-decoration: none;
+      border: 1px solid var(--accent); padding: 0.28rem 0.55rem;
+      transition: all 0.2s; white-space: nowrap;
+    }
+    .masthead-link:hover { background: var(--accent); color: #fff; }
+
+    /* ── Hero ── */
+    .hero {
+      max-width: 780px; margin: 0 auto;
+      padding: 4.5rem 2rem 2.5rem; text-align: center;
+    }
+    .hero-kicker {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1.4rem;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 5.8vw, 4.2rem);
+      font-weight: 700; line-height: 1.08;
+      letter-spacing: -0.025em; margin-bottom: 1.25rem; color: var(--ink);
+    }
+    .hero-subtitle {
+      font-family: var(--font-display); font-size: 1.3rem;
+      font-style: italic; color: var(--ink2);
+      max-width: 620px; margin: 0 auto 2rem; line-height: 1.5;
+    }
+    .hero-meta {
+      display: flex; justify-content: center; gap: 1.5rem;
+      flex-wrap: wrap; font-size: 0.83rem; color: var(--muted);
+    }
+    .hero-meta a { color: var(--accent); text-decoration: none;
+      border-bottom: 1px solid rgba(27,63,110,0.25); transition: border-color 0.2s; }
+    .hero-meta a:hover { border-bottom-color: var(--accent); }
+
+    /* ── Quick-links bar ── */
+    .quick-links {
+      background: var(--accent); padding: 0.85rem 2rem;
+    }
+    .quick-links-inner {
+      max-width: 860px; margin: 0 auto;
+      display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; align-items: center;
+    }
+    .quick-link {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(255,255,255,0.88); text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.3); padding: 0.32rem 0.7rem;
+      transition: all 0.2s;
+    }
+    .quick-link:hover { background: rgba(255,255,255,0.15); color: #fff; border-color: rgba(255,255,255,0.6); }
+    .quick-link.primary {
+      background: var(--gold); color: var(--dark); border-color: var(--gold); font-weight: 700;
+    }
+    .quick-link.primary:hover { background: #d4a012; border-color: #d4a012; }
+
+    /* ── Sketchnote ── */
+    .sketchnote-wrap {
+      background: var(--dark2);
+      padding: 3rem 2rem;
+      margin: 2.5rem 0;
+      text-align: center;
+    }
+    .sketchnote-wrap h3 {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: rgba(255,255,255,0.45); margin-bottom: 1.25rem;
+    }
+    .sketchnote-wrap a { display: inline-block; }
+    .sketchnote-wrap img {
+      max-width: 900px; width: 100%;
+      border: 2px solid rgba(255,255,255,0.1);
+      cursor: zoom-in; transition: opacity 0.2s;
+    }
+    .sketchnote-wrap img:hover { opacity: 0.9; }
+    .sketchnote-wrap .caption {
+      font-family: var(--font-mono); font-size: 0.65rem;
+      color: rgba(255,255,255,0.35); margin-top: 0.75rem;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── Article column ── */
+    .article { max-width: 680px; margin: 0 auto; padding: 0 2rem 4rem; }
+    .article p { margin-bottom: 1.55rem; }
+    .article a { color: var(--accent); text-decoration: none;
+      border-bottom: 1px solid rgba(27,63,110,0.25); transition: border-color 0.2s; }
+    .article a:hover { border-bottom-color: var(--accent); }
+    .article h2 {
+      font-family: var(--font-display); font-size: 1.9rem;
+      font-weight: 700; margin: 3.5rem 0 1.2rem;
+      padding-top: 2.5rem; border-top: 2px solid var(--border); line-height: 1.2;
+    }
+    .article h3 {
+      font-family: var(--font-display); font-size: 1.25rem;
+      font-weight: 600; margin: 2rem 0 0.7rem; color: var(--accent);
+    }
+    .article ul, .article ol { margin: 1.1rem 0; padding-left: 1.75rem; }
+    .article li { margin-bottom: 0.5rem; }
+    strong { font-weight: 700; }
+
+    /* ── Drop cap ── */
+    .dropcap::first-letter {
+      font-family: var(--font-display); font-size: 5.5rem;
+      float: left; line-height: 0.8;
+      padding-right: 0.4rem; padding-top: 0.12rem;
+      font-weight: 700; color: var(--accent);
+    }
+
+    /* ── Blockquote ── */
+    .article blockquote {
+      font-family: var(--font-display);
+      font-size: 1.35rem; font-style: italic; font-weight: 500;
+      line-height: 1.42; color: var(--dark2);
+      border-left: 5px solid var(--gold);
+      padding: 1.1rem 0 1.1rem 1.65rem;
+      margin: 2.5rem 0 2.5rem -0.25rem;
+      background: var(--gold-light);
+    }
+    .article blockquote cite {
+      display: block; font-style: normal;
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); margin-top: 0.65rem;
+    }
+
+    /* ── Pull quote (full-bleed) ── */
+    .pullquote {
+      background: var(--dark);
+      padding: 3.5rem 2rem;
+      margin: 3rem calc(-50vw + 50%);
+      width: 100vw;
+      text-align: center;
+    }
+    .pullquote-text {
+      font-family: var(--font-display); font-size: clamp(1.35rem, 2.8vw, 2.1rem);
+      font-style: italic; line-height: 1.35; color: #fff;
+      max-width: 820px; margin: 0 auto 0.9rem;
+    }
+    .pullquote-attr {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold);
+    }
+
+    /* ── Callout ── */
+    .callout {
+      background: var(--highlight); border-left: 4px solid var(--gold);
+      padding: 1.2rem 1.5rem; margin: 2rem 0; font-size: 0.95rem;
+    }
+    .callout-label {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      text-transform: uppercase; letter-spacing: 0.15em;
+      color: var(--gold); margin-bottom: 0.4rem; display: block;
+    }
+
+    /* ── Stat cards ── */
+    .stat-band {
+      background: var(--accent);
+      padding: 2.5rem 2rem;
+      margin: 2.5rem calc(-50vw + 50%);
+      width: 100vw;
+    }
+    .stat-band-inner {
+      max-width: 860px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.5rem; text-align: center;
+    }
+    .stat-card { color: #fff; }
+    .stat-number {
+      font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 3.4rem);
+      font-weight: 700; line-height: 1; margin-bottom: 0.3rem;
+      color: var(--gold);
+    }
+    .stat-label {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(255,255,255,0.78); line-height: 1.4;
+    }
+
+    /* ── Slide grid ── */
+    .slide-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem; margin: 2rem 0;
+    }
+    .slide-thumb {
+      cursor: pointer; border: 2px solid var(--border);
+      overflow: hidden; transition: all 0.2s; background: #fff;
+    }
+    .slide-thumb:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(27,63,110,0.18); }
+    .slide-thumb img { width: 100%; display: block; }
+    .slide-thumb .label {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      padding: 0.3rem 0.5rem; color: var(--muted);
+      text-align: center; background: var(--bg);
+    }
+
+    /* ── Single slide ── */
+    .slide-solo {
+      margin: 2rem 0; border: 2px solid var(--border);
+      overflow: hidden; cursor: pointer; transition: all 0.2s;
+    }
+    .slide-solo:hover { border-color: var(--accent); }
+    .slide-solo img { width: 100%; display: block; }
+
+    /* ── Video demos ── */
+    .demo-video-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem; margin: 2rem 0;
+    }
+    .demo-video-card { background: #fff; border: 2px solid var(--border); overflow: hidden; }
+    .demo-video-card video { width: 100%; display: block; max-height: 200px; object-fit: cover; }
+    .demo-video-card .label {
+      font-family: var(--font-mono); font-size: 0.65rem; padding: 0.5rem 0.75rem;
+      color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase;
+    }
+
+    /* ── Image demos ── */
+    .demo-img-stack { margin: 2rem 0; display: flex; flex-direction: column; gap: 1rem; }
+    .demo-img-card {
+      border: 2px solid var(--border); overflow: hidden;
+      cursor: pointer; transition: border-color 0.2s;
+    }
+    .demo-img-card:hover { border-color: var(--accent); }
+    .demo-img-card img { width: 100%; display: block; }
+    .demo-img-card .label {
+      font-family: var(--font-mono); font-size: 0.65rem; padding: 0.5rem 0.75rem;
+      color: var(--muted); background: var(--bg); border-top: 1px solid var(--border);
+    }
+
+    /* ── Code block wrapper ── */
+    .code-wrap {
+      background: var(--dark2); border-radius: 0;
+      margin: 1.5rem 0; overflow: hidden;
+    }
+    .code-wrap .code-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.5rem 1rem;
+      background: rgba(255,255,255,0.06);
+      font-family: var(--font-mono); font-size: 0.68rem;
+      color: rgba(255,255,255,0.5); letter-spacing: 0.05em;
+    }
+    .code-wrap pre { margin: 0; border-radius: 0; font-size: 0.82rem; }
+    .code-wrap code { border-radius: 0 !important; }
+
+    /* ── Decision tree ── */
+    .tree {
+      font-family: var(--font-mono); font-size: 0.83rem;
+      background: var(--dark2); color: #e2e8f0;
+      padding: 1.5rem 1.75rem; margin: 1.5rem 0;
+      line-height: 2;
+    }
+    .tree .fail { color: #fc8181; font-weight: 700; }
+    .tree .pass { color: #68d391; }
+    .tree .warn { color: #f6ad55; }
+    .tree .indent1 { padding-left: 1.5rem; }
+    .tree .indent2 { padding-left: 3rem; }
+    .tree .indent3 { padding-left: 4.5rem; }
+    .tree .indent4 { padding-left: 6rem; }
+
+    /* ── Facts grid ── */
+    .facts-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.5rem; margin: 1rem 0;
+    }
+    .fact-item {
+      font-family: var(--font-mono); font-size: 0.78rem;
+      background: #fff; border: 1px solid var(--border);
+      padding: 0.4rem 0.7rem; color: var(--ink2);
+    }
+
+    /* ── PDF embed ── */
+    .pdf-embed {
+      width: 100%; height: 420px; border: 2px solid var(--border);
+      margin: 1.5rem 0;
+    }
+
+    /* ── Animated SVG container ── */
+    .svg-explainer {
+      margin: 2.5rem calc(-50vw + 50%);
+      width: 100vw;
+      background: var(--dark);
+      padding: 2.5rem 2rem;
+      overflow: hidden;
+    }
+    .svg-explainer-inner {
+      max-width: 1000px; margin: 0 auto;
+    }
+    .svg-explainer h4 {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(255,255,255,0.4); margin-bottom: 1.5rem; text-align: center;
+    }
+
+    /* ── Stack diagram (enterprise AI stack) ── */
+    .stack-diagram {
+      margin: 2.5rem calc(-50vw + 50%);
+      width: 100vw;
+      background: #0f1923;
+      padding: 3rem 2rem;
+    }
+    .stack-diagram-inner { max-width: 860px; margin: 0 auto; }
+    .stack-diagram h4 {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(255,255,255,0.4); margin-bottom: 2rem; text-align: center;
+    }
+    .stack-layers { display: flex; flex-direction: column; gap: 0.5rem; }
+    .stack-layer {
+      padding: 1rem 1.5rem;
+      border-left: 4px solid;
+      display: flex; flex-direction: column; gap: 0.2rem;
+      opacity: 0; transform: translateX(-20px);
+      animation: slideIn 0.5s forwards;
+    }
+    .stack-layer:nth-child(1) { animation-delay: 0.1s; border-color: #4a9eff; background: rgba(74,158,255,0.1); }
+    .stack-layer:nth-child(2) { animation-delay: 0.25s; border-color: #f6ad55; background: rgba(246,173,85,0.1); }
+    .stack-layer:nth-child(3) { animation-delay: 0.4s; border-color: #fc8181; background: rgba(252,129,129,0.18); }
+    .stack-layer:nth-child(4) { animation-delay: 0.55s; border-color: #68d391; background: rgba(104,211,145,0.1); }
+    .stack-layer:nth-child(5) { animation-delay: 0.7s; border-color: #b794f4; background: rgba(183,148,244,0.1); }
+    .stack-layer:nth-child(6) { animation-delay: 0.85s; border-color: #90cdf4; background: rgba(144,205,244,0.1); }
+    @keyframes slideIn {
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .stack-layer-name {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.5);
+    }
+    .stack-layer-title {
+      font-family: var(--font-display); font-size: 1.15rem;
+      font-weight: 600; color: #fff;
+    }
+    .stack-layer-desc {
+      font-family: var(--font-body); font-size: 0.82rem;
+      color: rgba(255,255,255,0.55); margin-top: 0.2rem;
+    }
+
+    /* ── Takeaways ── */
+    .takeaways-band {
+      background: var(--accent);
+      padding: 3rem 2rem;
+      margin: 3rem calc(-50vw + 50%);
+      width: 100vw;
+    }
+    .takeaways-inner { max-width: 780px; margin: 0 auto; }
+    .takeaways-band h2 {
+      font-family: var(--font-display); font-size: 2rem;
+      color: #fff; font-weight: 700; margin-bottom: 0.35rem;
+    }
+    .takeaways-band .sub {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      text-transform: uppercase; letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.5); margin-bottom: 2rem;
+    }
+    .takeaway-list { list-style: none; padding: 0; }
+    .takeaway-item {
+      display: flex; gap: 1.25rem; align-items: flex-start;
+      margin-bottom: 1.5rem; padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+    .takeaway-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .takeaway-num {
+      font-family: var(--font-display); font-size: 2.4rem; font-weight: 700;
+      color: rgba(255,255,255,0.18); line-height: 1; flex-shrink: 0; width: 2.2rem;
+    }
+    .takeaway-body { flex: 1; }
+    .takeaway-title {
+      font-family: var(--font-display); font-size: 1.2rem;
+      font-weight: 700; color: #fff; margin-bottom: 0.3rem; line-height: 1.3;
+    }
+    .takeaway-desc {
+      font-family: var(--font-body); font-size: 0.9rem;
+      color: rgba(255,255,255,0.65); line-height: 1.6;
+    }
+
+    /* ── Tooltip ── */
+    [data-tip] {
+      position: relative; border-bottom: 1px dashed var(--gold);
+      cursor: help; color: inherit;
+    }
+    [data-tip]::after {
+      content: attr(data-tip);
+      position: absolute; bottom: calc(100% + 6px); left: 50%;
+      transform: translateX(-50%);
+      background: var(--dark2); color: #fff;
+      font-family: var(--font-mono); font-size: 0.68rem; line-height: 1.45;
+      padding: 0.5rem 0.75rem; white-space: normal; width: 240px;
+      pointer-events: none; opacity: 0; transition: opacity 0.2s;
+      z-index: 100; border: 1px solid rgba(255,255,255,0.1);
+    }
+    [data-tip]:hover::after { opacity: 1; }
+
+    /* ── Popup / lightbox ── */
+    .popup-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.88); z-index: 500;
+      justify-content: center; align-items: center; padding: 1.5rem;
+    }
+    .popup-overlay.open { display: flex; }
+    .popup-box {
+      background: var(--bg); max-width: 900px; width: 100%;
+      max-height: 90vh; overflow-y: auto;
+      padding: 2rem; position: relative;
+    }
+    .popup-close {
+      position: absolute; top: 0.75rem; right: 1rem;
+      font-family: var(--font-mono); font-size: 1.1rem;
+      background: none; border: none; cursor: pointer; color: var(--muted);
+    }
+    .popup-close:hover { color: var(--accent2); }
+    .popup-title {
+      font-family: var(--font-display); font-size: 1.25rem;
+      font-weight: 700; margin-bottom: 1rem; padding-right: 2rem;
+    }
+    .popup-body { font-size: 0.9rem; line-height: 1.7; }
+    .popup-body p { margin-bottom: 0.9rem; }
+    .popup-body a { color: var(--accent); }
+
+    /* ── Lightbox for images ── */
+    #img-lightbox {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.92); z-index: 600;
+      justify-content: center; align-items: center; cursor: zoom-out;
+    }
+    #img-lightbox.open { display: flex; }
+    #img-lightbox img { max-width: 96vw; max-height: 96vh; object-fit: contain; }
+
+    /* ── Accuracy vis ── */
+    .accuracy-bars { margin: 1.5rem 0; }
+    .acc-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; }
+    .acc-label {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      width: 150px; flex-shrink: 0; color: var(--ink2); text-align: right;
+    }
+    .acc-track {
+      flex: 1; height: 22px; background: var(--border);
+      position: relative; overflow: hidden;
+    }
+    .acc-fill {
+      height: 100%; background: var(--accent);
+      display: flex; align-items: center; justify-content: flex-end;
+      padding-right: 0.4rem;
+      font-family: var(--font-mono); font-size: 0.65rem; color: #fff;
+      transition: width 1.2s ease-out; width: 0;
+    }
+    .acc-fill.danger { background: var(--accent2); }
+    .acc-fill.warning { background: var(--gold); }
+    .acc-fill.success { background: #2e7d32; }
+
+    /* ── Section divider ── */
+    .section-rule {
+      border: none; border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      background: var(--dark2); color: rgba(255,255,255,0.4);
+      text-align: center; padding: 2.5rem 2rem;
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.06em; line-height: 2;
+    }
+    .footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
+    .footer a:hover { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      body { font-size: 16px; }
+      .hero { padding: 3rem 1.25rem 1.5rem; }
+      .article { padding: 0 1.25rem 3rem; }
+      .demo-video-grid { grid-template-columns: 1fr; }
+      .stat-band-inner { grid-template-columns: repeat(2, 1fr); }
+      .pullquote { padding: 2.5rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- ── Masthead ── -->
+<header class="masthead">
+  <div class="masthead-inner">
+    <a href="../" class="masthead-brand">Straive Talks</a>
+    <div class="masthead-right">
+      <span class="masthead-date">March 18, 2026</span>
+      <a href="transcript.md" class="masthead-link" target="_blank">📄 Transcript</a>
+    </div>
+  </div>
+</header>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <p class="hero-kicker">Straive · Verifiable Agents · March 18, 2026</p>
+  <h1 class="hero-title">The Trust Problem</h1>
+  <p class="hero-subtitle">When AI is probabilistic and enterprises need certainty, the gap between "demo-ready" and "production-ready" can cost you everything.</p>
+  <div class="hero-meta">
+    <span>By <a href="https://www.linkedin.com/in/ankorrai" target="_blank">Ankor Rai</a> &amp; <a href="https://www.s-anand.net/" target="_blank">Anand S</a> · <a href="https://www.straive.com/" target="_blank">Straive</a></span>
+    <span>18 March 2026</span>
+    <a href="transcript.md">Full Transcript</a>
+  </div>
+</section>
+
+<!-- ── Quick links ── -->
+<nav class="quick-links" aria-label="Jump to section">
+  <div class="quick-links-inner">
+    <a href="#problem" class="quick-link">The Problem</a>
+    <a href="#verification-today" class="quick-link">How Peers Verify</a>
+    <a href="#demos" class="quick-link">Live Demos</a>
+    <a href="#future" class="quick-link">The Future</a>
+    <a href="#takeaways" class="quick-link primary">Top Takeaways</a>
+  </div>
+</nav>
+
+<!-- ── Sketchnote ── -->
+<div class="sketchnote-wrap">
+  <h3>Session Sketchnote</h3>
+  <a href="sketchnote.avif" target="_blank" title="Open full-size sketchnote in new tab">
+    <img src="sketchnote.avif" alt="Sketchnote of the Verifiable Agents talk" loading="eager">
+  </a>
+  <p class="caption">Click to open full-size · Visual summary of the talk</p>
+</div>
+
+<!-- ── Article body ── -->
+<main class="article">
+
+<!-- SECTION 1: OPENING NARRATIVE -->
+<p class="dropcap">There is a McDonald's somewhere in America — or rather, there <em>was</em> — where an AI took drive-through orders. Customers would roll up, speak to a machine, and the machine would try its best. It often got things wrong. Not occasionally wrong. Not edge-case wrong. Wrong in ways that required a human being in Manila to watch the feed and intervene, over and over again. The company that built that system, Presto, disclosed in its own regulatory filing that <strong>70% of AI-processed drive-through orders needed human intervention</strong> before being placed. McDonald's eventually pulled the plug.</p>
+
+<p>Ankor Rai tells this story not to mock the AI, or the company, or even the ambition. He tells it because it is, he says, the story of almost every AI deployment in the enterprise today — just told faster, louder, and in front of a lot more customers.</p>
+
+<blockquote>
+  "We are at the cusp of what we would call really an agentic AI explosion. Without a robust verification architecture, these investments will fail — like McDonald's, which had to deploy the AI and then withdraw it."
+  <cite>— Ankor Rai, CEO, Straive</cite>
+</blockquote>
+
+<!-- SECTION 2: THE PROBLEM -->
+<h2 id="problem">The Probabilistic Machine</h2>
+
+<p>Ankor Rai has spent the better part of 25 years watching enterprises deploy technology — first data, then machine learning, now AI agents. He is not a pessimist about any of it. But on a Wednesday morning in March 2026, speaking to a room of insurance and asset management professionals in London, he laid out a problem so fundamental that it reframes every breathless announcement you've read about autonomous AI.</p>
+
+<p>The problem is this: software, throughout all of computing history, has been <strong>deterministic</strong>. You write a function. You give it an input. It produces an output. Every single time. If you test the function once and it passes, you can ship it and be confident it will keep passing for that same input forever.</p>
+
+<p><strong>LLMs are not deterministic.</strong> They are probabilistic. They can produce a different output for the exact same input on two consecutive runs. The function metaphor breaks down. The entire edifice of software quality assurance — CI/CD pipelines, regression testing, edge case libraries — was built for a world that no longer exists the moment you put a language model in the loop.</p>
+
+<blockquote>
+  "The core issue is not a fault with the data pipeline. It wasn't negligence. The underlying AIs are probabilistic — which means unless every single output has a verification architecture, you run the risk of delivering an output that is not valid."
+  <cite>— Ankor Rai</cite>
+</blockquote>
+
+<p>To make this concrete, Ankor walks through what happens when this truth is ignored. The examples come from the public domain, chosen because they are famous enough that everyone in the room has heard of them — and infamous enough that nobody wants to be the next one.</p>
+
+
+</main><!-- end article, break to full-bleed -->
+
+<!-- Slide 5: failures -->
+<div class="svg-explainer" style="background:#1a0a08;">
+  <div class="svg-explainer-inner">
+    <h4>What Happens When AI Has No Verification</h4>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;">
+      <!-- card template -->
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,100,50,0.3);padding:1.2rem;">
+        <div style="font-family:var(--font-mono);font-size:0.65rem;text-transform:uppercase;letter-spacing:.1em;color:#f6ad55;margin-bottom:.5rem;">Healthcare · IBM Watson Oncology</div>
+        <div style="color:#fff;font-size:0.9rem;line-height:1.55;">Generated cancer treatment recommendations that oncologists described as <strong style="color:#fc8181;">"unsafe and incorrect."</strong></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,100,50,0.3);padding:1.2rem;">
+        <div style="font-family:var(--font-mono);font-size:0.65rem;text-transform:uppercase;letter-spacing:.1em;color:#f6ad55;margin-bottom:.5rem;">Insurance · UnitedHealth nH Predict</div>
+        <div style="color:#fff;font-size:0.9rem;line-height:1.55;">AI denied post-acute care to elderly patients, overriding physician recommendations. <strong style="color:#fc8181;">90% of denials reversed on appeal.</strong></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,100,50,0.3);padding:1.2rem;">
+        <div style="font-family:var(--font-mono);font-size:0.65rem;text-transform:uppercase;letter-spacing:.1em;color:#f6ad55;margin-bottom:.5rem;">Real Estate · Zillow ML Model</div>
+        <div style="color:#fff;font-size:0.9rem;line-height:1.55;">ML model systematically overvalued homes, couldn't adapt to market reversal. <strong style="color:#fc8181;">$304M write-down.</strong> Division shut down.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,100,50,0.3);padding:1.2rem;">
+        <div style="font-family:var(--font-mono);font-size:0.65rem;text-transform:uppercase;letter-spacing:.1em;color:#f6ad55;margin-bottom:.5rem;">Compliance · NYC Chatbot</div>
+        <div style="color:#fff;font-size:0.9rem;line-height:1.55;">Advised business owners to <strong style="color:#fc8181;">violate city health codes</strong> by misinterpreting regulatory language.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,100,50,0.3);padding:1.2rem;">
+        <div style="font-family:var(--font-mono);font-size:0.65rem;text-transform:uppercase;letter-spacing:.1em;color:#f6ad55;margin-bottom:.5rem;">Operations · McDonald's Drive-Through</div>
+        <div style="color:#fff;font-size:0.9rem;line-height:1.55;">AI ordering abandoned at 100+ locations. Provider Presto disclosed <strong style="color:#fc8181;">70% of orders needed human intervention</strong> from Philippines-based team.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,100,50,0.3);padding:1.2rem;">
+        <div style="font-family:var(--font-mono);font-size:0.65rem;text-transform:uppercase;letter-spacing:.1em;color:#f6ad55;margin-bottom:.5rem;">Legal · Air Canada Chatbot</div>
+        <div style="color:#fff;font-size:0.9rem;line-height:1.55;">Chatbot invented a bereavement fare policy. Court ruled the airline <strong style="color:#fc8181;">responsible for its AI's hallucinations</strong> — a landmark liability ruling.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main class="article">
+
+<!-- Stats band -->
+</main>
+<div class="stat-band">
+  <div class="stat-band-inner">
+    <div class="stat-card">
+      <div class="stat-number">78%</div>
+      <div class="stat-label">of enterprises use AI in at least one function</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">14%</div>
+      <div class="stat-label">have enterprise-level governance &amp; verification</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">74%</div>
+      <div class="stat-label">of deployed agents rely on <em>manual</em> human verification</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">5%</div>
+      <div class="stat-label">of agent outputs go directly to another system (not a human)</div>
+    </div>
+  </div>
+</div>
+<main class="article" style="margin-top:0;">
+
+<p>The last two numbers deserve a moment. <strong>74% of agents have a human expert looking at every output.</strong> And yet only 5% of agents interface with other software directly — the rest terminate in a person. Ankor lets the math sink in before drawing the implication:</p>
+
+<blockquote>
+  "If you assume agentic AI being deployed across a variety of use cases, it is untenable to rely on humans across every use case in this way."
+  <cite>— Ankor Rai</cite>
+</blockquote>
+
+<p>This is not a technology failure. It is a structural one. We have built agents powerful enough to synthesize research, draft contracts, adjudicate claims — and then stationed a human being at the exit to check the work before it goes anywhere. The assembly line produces outputs; humans read every one of them. We've automated the labor but not the trust.</p>
+
+<div class="slide-solo" onclick="openLightbox('slide-06.avif')" title="Click to enlarge">
+  <img src="slide-06.avif" alt="And it can get worse — Agentic AI Explosion slide" loading="lazy">
+</div>
+
+<p>And it could get worse. The global generative AI market is projected to go from $40B today to over $1 trillion by the early 2030s. Ankor calls this the "<strong>agentic AI explosion</strong>." His point is not triumphalist — it's a warning. If the verification problem is already stressing enterprises at current scale, what happens when the number of deployed agents multiplies by 25?</p>
+
+
+<!-- SECTION 3: VERIFICATION TODAY -->
+<h2 id="verification-today">How Your Peers Are Doing It (And Why It's Not Enough)</h2>
+
+<p>Ankor does not offer theory without grounding. Straive works with 350+ clients across 30 markets, which means that when he describes what "enterprises are actually doing today," he is drawing on a very large dataset. What he describes is a picture of sophisticated organizations doing sophisticated work — and still, somehow, arriving at the same structural answer: <em>get a human to check it.</em></p>
+
+<div class="slide-solo" onclick="openLightbox('slide-07.avif')" title="Click to enlarge">
+  <img src="slide-07.avif" alt="State of AI deployment and verification today — peer examples" loading="lazy">
+</div>
+
+<p>Morgan Stanley's AI assistant doesn't roam the internet. It is explicitly pointed at a curated library of roughly 100,000 internal research documents. JPMorgan's AML and fraud detection agents cross-validate against internal research and hand off to human investigators. BlackRock and UBS run <span data-tip="Multiple models evaluating the same output independently, then comparing results to flag divergence">multi-model validation</span> with deep stress testing — and then a human expert.</p>
+
+<p>What's striking is not the sophistication of the individual approaches. It's that every single one of them ends with a human. The agents have been given the most powerful tool in the history of language processing, and the organizations deploying them have essentially said: <em>yes, but also, someone needs to check the homework.</em></p>
+
+<blockquote>
+  "Out of all deployed AI, 95% have an end user who is a human. Only 5% of agents today — their output directly enters another agent or another system."
+  <cite>— Ankor Rai</cite>
+</blockquote>
+
+<p>This is not because the engineers are timid. It is because the engineers are correct. The verification problem is real. The non-determinism is real. And the gap between what an AI can do in a demo and what you can bet your enterprise on in production is, right now, enormous.</p>
+
+<h3>The Five Strategies</h3>
+
+<p>Ankor describes two broad classes of response. The first is to <strong>constrain the agent</strong> — essentially to build so many guardrails around it that its autonomy becomes notional. The second is to <strong>validate the output</strong> — to run every result through one or more additional layers of checking before it goes anywhere.</p>
+
+</main>
+<!-- Animated SVG: Verification Architecture -->
+<div class="svg-explainer">
+  <div class="svg-explainer-inner">
+    <h4>Verification Architecture — How It Works Today</h4>
+    <svg viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;display:block;margin:0 auto;" aria-label="Animated flow showing agent input, constrained deployment, output validation, and human verification">
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#4a9eff"/>
+        </marker>
+        <marker id="arr2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#f6ad55"/>
+        </marker>
+        <marker id="arrg" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#68d391"/>
+        </marker>
+        <style>
+          .node-box { rx:4; ry:4; }
+          .flow-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; fill: rgba(255,255,255,0.6); }
+          .node-title { font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; font-size: 13px; fill: #fff; }
+          .node-sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; fill: rgba(255,255,255,0.5); }
+          .dash-line { stroke-dasharray: 6,3; stroke-dashoffset: 0; animation: dashAnim 1.5s linear infinite; }
+          @keyframes dashAnim { to { stroke-dashoffset: -18; } }
+          .pulse { animation: pulseFade 2s ease-in-out infinite; }
+          @keyframes pulseFade { 0%,100%{opacity:.5} 50%{opacity:1} }
+        </style>
+      </defs>
+      <!-- Row 1: Input -->
+      <rect x="20" y="120" width="110" height="60" rx="4" fill="rgba(74,158,255,0.15)" stroke="#4a9eff" stroke-width="1.5"/>
+      <text x="75" y="145" text-anchor="middle" class="node-title">User / Data</text>
+      <text x="75" y="163" text-anchor="middle" class="node-sub">Input</text>
+      <!-- Arrow 1 -->
+      <line x1="130" y1="150" x2="175" y2="150" stroke="#4a9eff" stroke-width="2" marker-end="url(#arr)" class="dash-line"/>
+      <!-- Constrained Agent -->
+      <rect x="175" y="100" width="145" height="100" rx="4" fill="rgba(246,173,85,0.12)" stroke="#f6ad55" stroke-width="1.5"/>
+      <text x="248" y="128" text-anchor="middle" class="node-title">Agent</text>
+      <text x="248" y="146" text-anchor="middle" class="node-sub">Constrained Deployment</text>
+      <text x="248" y="162" text-anchor="middle" class="node-sub">• Fixed data sources</text>
+      <text x="248" y="177" text-anchor="middle" class="node-sub">• Max 10 steps</text>
+      <!-- Arrow 2 -->
+      <line x1="320" y1="150" x2="370" y2="150" stroke="#4a9eff" stroke-width="2" marker-end="url(#arr)" class="dash-line"/>
+      <!-- Output box -->
+      <rect x="370" y="115" width="100" height="70" rx="4" fill="rgba(252,129,129,0.12)" stroke="#fc8181" stroke-width="1.5"/>
+      <text x="420" y="145" text-anchor="middle" class="node-title">Output</text>
+      <text x="420" y="163" text-anchor="middle" class="node-sub">Non-deterministic</text>
+      <!-- Validation branches - arrow down -->
+      <line x1="420" y1="185" x2="420" y2="220" stroke="#4a9eff" stroke-width="2" marker-end="url(#arr)" class="dash-line"/>
+      <!-- Validation layer -->
+      <rect x="300" y="220" width="240" height="80" rx="4" fill="rgba(104,211,145,0.1)" stroke="#68d391" stroke-width="1.5"/>
+      <text x="420" y="244" text-anchor="middle" class="node-title">Verification Layer</text>
+      <text x="360" y="262" text-anchor="middle" class="node-sub" fill="#68d391">LLM-as-judge</text>
+      <text x="420" y="262" text-anchor="middle" class="node-sub">·</text>
+      <text x="470" y="262" text-anchor="middle" class="node-sub" fill="#68d391">Cross-ref</text>
+      <text x="360" y="278" text-anchor="middle" class="node-sub" fill="#68d391">Rules</text>
+      <text x="420" y="278" text-anchor="middle" class="node-sub">·</text>
+      <text x="470" y="278" text-anchor="middle" class="node-sub" fill="#68d391">Simulation</text>
+      <!-- Arrow from validation to human -->
+      <line x1="540" y1="260" x2="585" y2="260" stroke="#f6ad55" stroke-width="2" marker-end="url(#arr2)" class="dash-line"/>
+      <!-- Human box -->
+      <rect x="585" y="230" width="120" height="60" rx="4" fill="rgba(183,148,244,0.12)" stroke="#b794f4" stroke-width="1.5"/>
+      <text x="645" y="256" text-anchor="middle" class="node-title">Human Expert</text>
+      <text x="645" y="274" text-anchor="middle" class="node-sub">74% of agents</text>
+      <!-- Arrow to final output -->
+      <line x1="705" y1="260" x2="750" y2="260" stroke="#68d391" stroke-width="2" marker-end="url(#arrg)" class="dash-line"/>
+      <rect x="750" y="230" width="120" height="60" rx="4" fill="rgba(104,211,145,0.12)" stroke="#68d391" stroke-width="1.5"/>
+      <text x="810" y="256" text-anchor="middle" class="node-title">Trusted</text>
+      <text x="810" y="274" text-anchor="middle" class="node-sub">Output</text>
+      <!-- Label at top -->
+      <text x="450" y="30" text-anchor="middle" class="flow-label" style="font-size:13px;fill:rgba(255,255,255,0.35)">Current State: Agents constrained + outputs manually verified</text>
+      <!-- "Only 5%" label -->
+      <text x="780" y="215" text-anchor="middle" class="node-sub" style="fill:#f6ad55;">Only 5% skip to</text>
+      <text x="780" y="228" text-anchor="middle" class="node-sub" style="fill:#f6ad55;">next system directly</text>
+    </svg>
+  </div>
+</div>
+
+<main class="article" style="margin-top:0;">
+
+<p>Eighty percent of deployed agents today use <strong>static workflows</strong> — meaning the agent doesn't decide where to get its data; a human engineer already decided that, encoded it, and locked it down. Over two-thirds of agents are restricted to fewer than ten autonomous steps. The point of all this confinement is to limit the blast radius if something goes wrong.</p>
+
+<p>Then, on the output side, there's a layered defense:</p>
+
+<ul>
+  <li><strong>LLM-as-judge:</strong> A second model is trained on a "golden dataset" and evaluates whether the production agent's output meets expectations. Used by over 51% of deployments.</li>
+  <li><strong>Cross-referencing:</strong> The AI's output is compared against existing verified data sources to catch fabrications. If the sales intelligence agent says a client meeting happened in 2019, the CRM data can confirm or deny it.</li>
+  <li><strong>Rule-based checks:</strong> Simple programmatic checks outside the LLM loop — "Does the approved claim amount fall within coverage limits?" — applied as a final sanity filter.</li>
+  <li><strong>Simulation and testing:</strong> Running the agent against synthetic scenarios to probe failure modes before production.</li>
+  <li><strong>Human validation:</strong> The backstop. 74% of the time, someone reads the output.</li>
+</ul>
+
+<div class="slide-solo" onclick="openLightbox('slide-08.avif')" title="Click to enlarge">
+  <img src="slide-08.avif" alt="Strategies to verify agentic AI outputs" loading="lazy">
+</div>
+
+<div class="callout">
+  <span class="callout-label">⚠ The CI/CD Problem</span>
+  Today's software quality process — write code, run tests, if tests pass deploy — fundamentally breaks with LLMs. You can't write a comprehensive test suite for a system with unbounded inputs and non-deterministic outputs. The output that passed in testing may fail in production for the same input.
+</div>
+
+<blockquote>
+  "This sort of process doesn't work for agentic AI. Why? Because the outputs are non-deterministic. For software, once I check the pipeline, if it produces a result for a certain test case at one time, I know for a fact it will deterministically produce the same output 100 times over. That is not the case for agentic AI."
+  <cite>— Ankor Rai</cite>
+</blockquote>
+
+
+<!-- SECTION 4: DEMOS - begins with Anand handoff -->
+<h2 id="demos">Making It Real: Anand's Demos</h2>
+
+<p>At this point, Ankor hands over to Anand Subramanian — the person Ankor calls "the head of our R&D and the one who does the coolest work in the company." Anand is more measured in his own description: he calls himself an <em>LLM psychologist</em>. His job is to understand how these models behave, where they fail, and how to build systems around them that are actually trustworthy.</p>
+
+<p>What follows is forty-five minutes of live demos — not slides, not theoretical frameworks, but real systems, running in real time, showing what verification actually looks like when the rubber meets the road.</p>
+
+<h3 id="demo-sales">Demo 1: Sales Intelligence — Grounding as Verification</h3>
+
+<p>The first demo is a sales intelligence tool deployed at <a href="https://www.pgim.com/" target="_blank">PGIM</a>, the asset management arm of Prudential Financial. The anonymised version Anand shows is built around a fictional scenario: a relationship manager at Apollo Global Management trying to understand how to grow their relationship with Abu Dhabi Investment Authority.</p>
+
+<p>What the tool produces is a multi-layer brief. At the top level, a strategic summary: wallet share is 0.4%, there's massive headroom, and you need a CEO-level meeting — the last one was in 2019. Beneath that, a set of ranked signals, each with a <strong>confidence score</strong> and a citation. Beneath that, inferences built from multiple signals, each inference showing its evidence chain. And beneath that, a list of <em>known unknowns</em> — things the system explicitly doesn't know.</p>
+
+</main>
+<!-- Demo videos: full-bleed -->
+<div class="svg-explainer" style="background:#0d1a2b;padding:2.5rem 2rem;">
+  <div class="svg-explainer-inner">
+    <h4>Sales Intelligence Demo — PGIM (Anonymised)</h4>
+    <div class="demo-video-grid" style="max-width:900px;margin:0 auto;">
+      <div class="demo-video-card">
+        <video autoplay muted loop playsinline loading="lazy">
+          <source src="sales-intelligence-client-snapshot.webm" type="video/webm">
+        </video>
+        <div class="label">Client Snapshot — top-level brief with wallet share &amp; next steps</div>
+      </div>
+      <div class="demo-video-card">
+        <video autoplay muted loop playsinline loading="lazy">
+          <source src="sales-intelligence-signals-library.webm" type="video/webm">
+        </video>
+        <div class="label">Signals Library — 65 grounded signals with citations &amp; confidence scores</div>
+      </div>
+      <div class="demo-video-card">
+        <video autoplay muted loop playsinline loading="lazy">
+          <source src="sales-intelligence-strategic-narrative.webm" type="video/webm">
+        </video>
+        <div class="label">Strategic Narrative — inferences, evidence chains, known unknowns</div>
+      </div>
+      <div class="demo-video-card">
+        <video autoplay muted loop playsinline loading="lazy">
+          <source src="sales-intelligence-actionable-insights.webm" type="video/webm">
+        </video>
+        <div class="label">Actionable Insights — prioritised actions with urgency and stakeholders</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main class="article" style="margin-top:0;">
+
+<p>The key verification mechanism here is not a separate judge model or a human reviewer. It is <strong>grounding</strong> — every claim the AI makes can be traced back to a source. The sheikh has been confirmed as MD? That came from document 52, with high confidence. The five-year expected returns of 12–15%? Medium confidence; sourced from the annual review. Low-confidence claims don't make it into the final brief.</p>
+
+<blockquote>
+  "If we want something that's verifiable: show the original source, show the grounding. Ask for a level of confidence — which it tends to do a reasonable job of — and show it clearly enough to a human so that they can say, 'Yeah, this makes sense,' or 'I can just click here and go check.'"
+  <cite>— Anand S, LLM Psychologist, Straive</cite>
+</blockquote>
+
+<p>This is a profound reframing of the problem. The question is not "Is the AI always right?" (it isn't). The question is "Can a human quickly determine whether the AI is right?" If the answer is yes — if the citations are surfaced, the confidence scores are visible, and the unknowns are explicit — then the system is verifiable even if it is not always correct.</p>
+
+
+<!-- Contract Analysis Demo -->
+<h3 id="demo-contract">Demo 2: Contract Analysis — LLM as Judge</h3>
+
+<p>The second demo shifts the question slightly. The first demo asked: <em>can an AI generate something verifiable?</em> This one asks: <em>can an AI verify something a human already produced?</em></p>
+
+<p>Anand loads a batch of ten synthetic insurance contracts — the kind of supplemental accident and life certificates that fill filing cabinets in every large insurer. Against those ten contracts, he runs a checklist of twenty items: Does the contract name the insurer, policy owner, and insured? Does it specify the benefit schedule? Is there a reinstatement-after-lapse clause? Does it include an appeals process?</p>
+
+<p>The output is a matrix. Contract 7 has a policy number: here's the citation, section 1.2. Contract 3 has no appeals process: the AI found none, so the cell is red. Total cost of one contract validation: <strong>3 cents and 6 seconds.</strong></p>
+
+<div class="demo-img-stack">
+  <div class="demo-img-card" onclick="openLightbox('contract-analysis-checklist.webp')">
+    <img src="contract-analysis-checklist.webp" alt="Contract analysis checklist items" loading="lazy">
+    <div class="label">The 20-item checklist — gaps are flagged across all 10 contracts</div>
+  </div>
+  <div class="demo-img-card" onclick="openLightbox('contract-analysis-matrix.webp')">
+    <img src="contract-analysis-matrix.webp" alt="Contract analysis matrix — pass/fail per contract per check" loading="lazy">
+    <div class="label">The matrix — click any cell to see the citation from the contract</div>
+  </div>
+  <div class="demo-img-card" onclick="openLightbox('contract-analysis-results.webp')">
+    <img src="contract-analysis-results.webp" alt="Contract analysis results for a single contract" loading="lazy">
+    <div class="label">Single-contract analysis — 3¢, 6 seconds, with exact clause citations</div>
+  </div>
+</div>
+
+<blockquote>
+  "Fact-checking becomes easier for human as well as for agent — and that allows us to identify with some confidence that there's a gap. Could this be wrong? Yes, potentially. But it increases human verifiability in two ways: one, by accelerating with a great degree of confidence where it's found stuff; and two, by providing a list of what's missing — which reduces what the human has to check."
+  <cite>— Anand S</cite>
+</blockquote>
+
+<p>The insight here is subtle but important. The AI is not replacing the compliance reviewer. It is making the compliance reviewer dramatically faster. A reviewer who would otherwise read a 40-page contract to confirm 20 checkboxes can now spend their time on the flagged gaps — the red cells — rather than the confirmed-green ones. The human's effort is re-targeted, not eliminated.</p>
+
+
+<!-- Customer Support Demo -->
+<h3 id="demo-support">Demo 3: Cross-Referencing — Double-Checking Hallucinations</h3>
+
+<p>This is where Anand gets mathematical — and funny. The premise: a customer support AI that classifies incoming queries into routing categories. "When will I receive my order?" should go to the "delivery period" queue. GPT 4.1 mini, running that classification, sometimes sends it to "track order" instead. Not always. But enough.</p>
+
+<p>Average error rate across models: <strong>14%.</strong> One in seven queries, misclassified.</p>
+
+<p>But here's the trick: no two models fail in the same way. Run two models independently, and only pass a classification forward if <em>both agree</em>. Their errors are largely uncorrelated — a correlation of about 0.2. So the joint error rate drops to <strong>3.7%</strong>. Triple-check with a third model, and it falls to <strong>0.7%</strong>.</p>
+
+<div class="callout" style="margin:1.5rem 0;">
+  <span class="callout-label">The Accuracy Trade-off</span>
+  <div class="accuracy-bars" id="acc-bars">
+    <div class="acc-row">
+      <div class="acc-label">1 model</div>
+      <div class="acc-track"><div class="acc-fill danger" id="acc1" style="width:86%;"> 86%</div></div>
+    </div>
+    <div class="acc-row">
+      <div class="acc-label">2 models</div>
+      <div class="acc-track"><div class="acc-fill warning" id="acc2" style="width:96.3%;">96.3%</div></div>
+    </div>
+    <div class="acc-row">
+      <div class="acc-label">3 models</div>
+      <div class="acc-track"><div class="acc-fill success" id="acc3" style="width:99.3%;">99.3%</div></div>
+    </div>
+  </div>
+  <p style="font-size:0.82rem;margin-top:.5rem;color:var(--muted);">But the manual queue for human review grows: 0% → 12.6% → 28% of volume as models disagree more often.</p>
+</div>
+
+<blockquote>
+  "Imagine somebody comes to you and says, 'I'll give you 99.3% accuracy and save you only 72% of your effort.' So you've got to put in three people instead of ten at 99.3% accuracy. In some processes, you'd grab it."
+  <cite>— Anand S</cite>
+</blockquote>
+
+<p>The live double-checking results are published at <a href="https://sanand0.github.io/llmevals/double-checking/" target="_blank">sanand0.github.io/llmevals/double-checking</a>. The improvement is visible:</p>
+
+<div class="demo-img-card" style="max-width:700px;" onclick="window.open('https://sanand0.github.io/llmevals/double-checking/')">
+  <img src="https://sanand0.github.io/llmevals/double-checking/improvement.webp" alt="Double-checking accuracy improvement across models" loading="lazy">
+  <div class="label">Accuracy improvement from double-checking · Click to explore the interactive analysis</div>
+</div>
+
+<p>The limitation Anand is honest about: cross-referencing gets you very high accuracy, but it still doesn't get you to <em>programmatic</em> certainty. There's a difference between "99.3% likely correct" and "I can prove this is correct." For insurance claims, financial trades, medical decisions — you often need the latter. Which brings us to the most technically ambitious demo of the session.</p>
+
+
+<!-- Claims Adjudication Demo -->
+<h3 id="demo-claims">Demo 4: Claims Adjudication — When Code Replaces Confidence</h3>
+
+<p>Anand's most striking demonstration is also the one that requires the most context to appreciate. It begins with a question: what if, instead of asking an LLM whether a claim should be approved, you instead asked the LLM to <em>write the rules</em> — and then ran those rules as a program?</p>
+
+<p>The research comes from Cambridge, which developed a <a href="https://mynkpdr.github.io/insurle-demo/v2" target="_blank">Prolog-based domain-specific language called InsurLE</a> for representing insurance contracts as executable logic. An LLM reads an insurance contract and converts it into InsurLE rules. Those rules are then a program — not a probabilistic prediction, but a deterministic proof.</p>
+
+<blockquote>
+  "This is not LLM generated. This is a program running a check, and cannot go wrong. More importantly, it is able to tell us the <em>why</em> a claim is rejected."
+  <cite>— Anand S</cite>
+</blockquote>
+
+<p>Here's the contract: <a href="https://mynkpdr.github.io/insurle-demo/contract_pdfs/contract_auto.pdf" target="_blank">AutoGuard Vehicle Insurance, Policy AG-VH-2024-001</a>. It covers personal passenger vehicles within the continental US, requires the driver to be 21+, and excludes any claim where BAC exceeds 0.08 g/dL at the time of the incident.</p>
+
+<iframe src="https://mynkpdr.github.io/insurle-demo/contract_pdfs/contract_auto.pdf" class="pdf-embed" title="AutoGuard Vehicle Insurance contract" loading="lazy"></iframe>
+
+<p>The LLM converts that contract into this InsurLE program:</p>
+
+<div class="code-wrap">
+  <div class="code-header">
+    <span>InsurLE Rules — AutoGuard Vehicle Insurance · AG-VH-2024-001</span>
+    <span>Prolog</span>
+  </div>
+  <pre><code class="language-prolog">%% AutoGuard Vehicle Insurance — InsurLE Contract Rules
+%% Policy: AG-VH-2024-001  ·  4-Level Nested Predicate Hierarchy
+
+valid_claim(C) :-
+    driver_fully_eligible(C) :-
+        age_eligible(C) :-
+            age(C, A), A >= 21,
+            driving_experience_months(C, E), E >= 12,
+            age_class_verified(C, A, E) :-
+                A >= 25, E >= 24.                  %% Standard driver
+            age_class_verified(C, A, E) :-
+                A >= 21, A < 25, E >= 12,
+                novice_endorsement(C, true).        %% Young driver
+
+        license_compliant(C) :-
+            license_valid(C, true),
+            license_expired(C, false),
+            license_jurisdiction(C, Jur),
+            recognized_jurisdiction(Jur).
+
+        driving_history_acceptable(C) :-
+            dui_history(C, N),
+            fault_accidents_36mo(C, F),
+            history_within_limits(C, N, F) :-
+                history_within_limits(_, 0, F) :- F =< 2.
+                history_within_limits(C, N, _) :-
+                    N > 0,
+                    months_since_last_dui(C, M), M >= 60,
+                    high_risk_surcharge_paid(C, true),
+                    defensive_course_completed(C, true).
+
+    incident_circumstances_covered(C) :-
+        sobriety_confirmed(C) :-
+            bac_within_limit(C) :-
+                bac(C, B), B =< 0.08.             %% DUI exclusion
+            narcotics_absent(C) :-
+                under_influence_narcotics(C, false).
+
+        geographic_scope_met(C) :-
+            incident_location(C, Loc),
+            location_covered(C, Loc).
+
+    claim_procedure_followed(C) :-
+        reported_in_time(C) :-
+            days_since_incident(C, D), D =< 30.
+        evidence_complete(C) :-
+            police_report(C, true).
+        fraud_cleared(C) :-
+            fraud_indicator(C, false).</code></pre>
+</div>
+
+<p>Now enter Marcia Delgado. Her claim: a single-vehicle accident on Highway 101, vehicle drifted off the road and struck a guardrail at 65 mph. The responding officers administered a breathalyzer. BAC: <strong>0.14%</strong> — nearly double the legal limit of 0.08%.</p>
+
+<p>Her claim form: <a href="https://mynkpdr.github.io/insurle-demo/claim_pdfs/claim_auto_2.pdf" target="_blank">Claim auto_2 — Marcia Delgado, $12,000</a></p>
+
+<iframe src="https://mynkpdr.github.io/insurle-demo/claim_pdfs/claim_auto_2.pdf" class="pdf-embed" title="Marcia Delgado's claim" loading="lazy"></iframe>
+
+<p>The InsurLE engine converts her claim into a set of facts:</p>
+
+<div class="facts-grid">
+  <div class="fact-item">age(claim_auto_2, 28).</div>
+  <div class="fact-item">driving_experience_months(claim_auto_2, 84).</div>
+  <div class="fact-item">license_valid(claim_auto_2, true).</div>
+  <div class="fact-item">license_expired(claim_auto_2, false).</div>
+  <div class="fact-item">dui_history(claim_auto_2, 0).</div>
+  <div class="fact-item">vehicle_ownership(claim_auto_2, own).</div>
+  <div class="fact-item">vehicle_class(claim_auto_2, passenger).</div>
+  <div class="fact-item">vehicle_weight_kg(claim_auto_2, 1420).</div>
+  <div class="fact-item" style="border-color:var(--accent2);background:#fff5f5;"><strong style="color:var(--accent2);">bac(claim_auto_2, 0.14).</strong></div>
+  <div class="fact-item">incident_location(claim_auto_2, continental_us).</div>
+  <div class="fact-item">days_since_incident(claim_auto_2, 2).</div>
+  <div class="fact-item">police_report(claim_auto_2, true).</div>
+</div>
+
+<p>The program runs. Most checks pass. Then it hits the sobriety clause. The proof tree fails — and not vaguely. It fails with an exact branch:</p>
+
+<div class="tree">
+  <div><span class="fail">✗</span> <strong>valid_claim(claim_auto_2)</strong> — <span class="fail">DENIED</span></div>
+  <div class="indent1"><span class="pass">✓</span> Driver Fully Eligible</div>
+  <div class="indent1"><span class="pass">✓</span> Vehicle Authorization Valid</div>
+  <div class="indent1"><span class="fail">✗</span> <strong>Incident Circumstances Covered</strong></div>
+  <div class="indent2"><span class="fail">✗</span> <strong>Sobriety Verification</strong></div>
+  <div class="indent3"><span class="fail">✗</span> <strong>Sobriety Checks</strong></div>
+  <div class="indent4"><span class="fail">✗</span> BAC ≤ 0.08 g/dL &nbsp;·&nbsp; <span class="warn">0.14 &gt; 0.08</span> — <span class="fail">DUI VIOLATION ✗</span></div>
+  <div class="indent1"><span class="pass">✓</span> Claim Procedure Followed</div>
+</div>
+
+<p>This is the difference between probabilistic and programmatic. The answer is not "I think this claim is likely invalid (confidence: 94%)." The answer is: <em>Marcia Delgado's claim fails because BAC 0.14 > 0.08, violating Section 3 (Sobriety & Intoxication Exclusion). End of proof.</em></p>
+
+<p>The LLM's role is front-loaded — converting the contract into rules. That conversion can go wrong, and Anand is honest about this. But it's a <em>one-time check</em>. A compliance expert reviews the generated rules against the original contract once. After that, every subsequent claim adjudication is a pure program — auditable, reproducible, and explainable.</p>
+
+<div class="callout">
+  <span class="callout-label">🔗 Live Demo</span>
+  Explore the full <a href="https://mynkpdr.github.io/insurle-demo/v2" target="_blank">InsurLE claims adjudication demo</a> — try different contracts and claims to see the proof tree in action.
+</div>
+
+
+<!-- FRED API / coding agent demo -->
+<h3 id="demo-fred">Demo 5: The Coding Agent — When Code Is the Verifier</h3>
+
+<p>The final demo is a pivot from the determinism of logic programs to the self-correcting dynamism of coding agents. Anand loads an API agent and points it at <a href="https://fred.stlouisfed.org/" target="_blank">FRED</a> — the Federal Reserve Economic Data service — with a simple question: what is the 10-year treasury constant maturity rate over the last week?</p>
+
+<p>He deliberately picks a cheap model to illustrate a point. The agent thinks, writes code, calls the FRED API — and fails. Wrong parameter name. The API returns an error.</p>
+
+<blockquote>
+  "The error message comes in handy, because it has the ability to think about the error and revise the code. The reason is probably because the API key parameter name, which it guessed, is wrong — and the error message says the API key is not set."
+  <cite>— Anand S</cite>
+</blockquote>
+
+<div class="demo-img-stack" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;">
+  <div class="demo-img-card" onclick="openLightbox('fred-api-1-question.webp')">
+    <img src="fred-api-1-question.webp" alt="FRED API agent — initial question" loading="lazy">
+    <div class="label">Step 1 — Agent writes code to query FRED API</div>
+  </div>
+  <div class="demo-img-card" onclick="openLightbox('fred-api-2-failure.webp')">
+    <img src="fred-api-2-failure.webp" alt="FRED API agent — failure on first attempt" loading="lazy">
+    <div class="label">Step 2 — API call fails; error message returned</div>
+  </div>
+  <div class="demo-img-card" onclick="openLightbox('fred-api-3-fix.webp')">
+    <img src="fred-api-3-fix.webp" alt="FRED API agent — self-corrects and fixes code" loading="lazy">
+    <div class="label">Step 3 — Agent reads error, rewrites code, retries</div>
+  </div>
+  <div class="demo-img-card" onclick="openLightbox('fred-api-4-success.webp')">
+    <img src="fred-api-4-success.webp" alt="FRED API agent — success with treasury rates" loading="lazy">
+    <div class="label">Step 4 — Validator confirms success: 4.21%, 4.27%, 4.28%…</div>
+  </div>
+</div>
+
+<blockquote>
+  "Writing code fails in very different ways. It either works or it doesn't work. It's not hallucinating in the traditional sense — and that's the kind of reliability we want. The self-correction means we have the ability to constantly iterate and go forward."
+  <cite>— Anand S</cite>
+</blockquote>
+
+<p>The agent reads the error, understands it, rewrites the code with the correct parameter name, and calls again. The data comes back: 4.21 on the 11th, 4.27, 4.28. A built-in validator confirms success. The whole loop took about a minute.</p>
+
+<p>This is a fundamentally different kind of reliability. When an LLM generates natural language, it can confidently assert something false. When it generates code, the code either runs or it doesn't. Errors are deterministic and legible. The agent's self-correction loop is a verification mechanism built into the generation process itself.</p>
+
+<h3>The METR Horizon: How Long Can Agents Work Alone?</h3>
+
+<p>Anand pulls up a chart that stops the room. It comes from <a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/" target="_blank">METR</a> — the Model Evaluation and Threat Research organization — which measures how long AI agents can work independently on complex tasks without human intervention.</p>
+
+<div class="demo-img-card" onclick="window.open('https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/')">
+  <img src="metr-horizon.webp" alt="METR horizon chart — AI agent autonomous task duration over time" loading="lazy">
+  <div class="label">METR Horizon Chart — time agents can work independently, doubling every ~7 months · Click to read the full report</div>
+</div>
+
+<blockquote>
+  "As of 2026, agents can work — something like Claude Opus 4.6 can work for 12 hours continuously. We just saw something work for what, a minute? Well, take the whole thing. Because this trend is going almost exponentially — this is a logarithmic scale, so it's just growing exponentially — in a few months we should be seeing agents work for days, weeks."
+  <cite>— Anand S</cite>
+</blockquote>
+
+<p>The METR chart shows agent autonomy horizon doubling roughly every seven months. In 2023, agents could reliably complete tasks requiring about 2 minutes of focused human work. By early 2026, that figure has reached roughly 60 minutes for the best models. Extrapolate the trend: by 2027, agents that can work for a full working day without intervention. The implications for verification — and for the entire framework Ankor laid out — are seismic.</p>
+
+
+<!-- FUTURE SECTION -->
+<h2 id="future">The Future: Five Vectors to Verifiable Autonomy</h2>
+
+<p>Ankor returns to close the session with what he calls "five interconnected vectors" for how the field moves from its current state — constrained, human-dependent, probabilistic — to something genuinely trustworthy at scale.</p>
+
+<div class="slide-solo" onclick="openLightbox('slide-09.avif')" title="Click to enlarge">
+  <img src="slide-09.avif" alt="The Future of Verifiable Autonomy — five vectors" loading="lazy">
+</div>
+
+<p>The first vector is the most fundamental: <strong>moving beyond "testing correctness" to standard CI/CD testing.</strong> Right now, verification happens at the output level — every result checked individually. The goal is to verify the <em>pipeline</em> once and trust the results. To get there, the field needs a rigorous taxonomy of agent failure modes. What specific inputs cause which models to hallucinate? What are the boundary conditions? Right now, teams treat non-determinism as ambient background noise. The future requires treating it as an engineering problem with measurable failure modes.</p>
+
+<p>The second: <strong>better understanding of how and when agents fail.</strong> "We treat it as, 'Oh, it's probabilistic,'" Ankor says. "That's basically like an assembly line which produces 5% defects and we're like, 'We'll figure out, we'll look at the defective pieces.' That works for an assembly line. It definitely doesn't work for software being put into production." The frontier model labs are already shifting from benchmarking capabilities to benchmarking failure modes. This is the work that unlocks everything else.</p>
+
+<p>The third: <strong>production and verification integrated into the same agent subtask.</strong> Today's architecture separates the production agent from the verification layer. Future agents will self-verify continuously — running their own tests as they work, flagging uncertainty before it reaches the output, correcting mid-stream. The coding agent demo foreshadows this: the self-correction loop is a primitive form of integrated verification.</p>
+
+<p>The fourth: <strong>agents becoming software-facing rather than human-facing.</strong> Today, 95% of agent outputs go to a human. As verification matures, agents will increasingly output directly to other systems — APIs, databases, downstream agents. The 5% becomes 50%, then 95%. This is the transition from "AI that helps people" to "AI that runs processes."</p>
+
+<p>The fifth: <strong>verification as a standard layer in the enterprise AI stack</strong> — not bolted on, not a team's afterthought, but a formal organizational function with its own budget, its own tooling, and its own people. Ankor draws the parallel to the post-2008 financial crisis:</p>
+
+<blockquote>
+  "After the Global Financial Crisis, the OCC basically said every quantitative model and every tool that is deployed needs to be validated and monitored. Very quickly we're going to have to institute similar processes to what we had for model validation. Before any model goes into production, it needs a separate validation layer. Just as the second line of defense — where the developer is different from the validator — there needs to be a separate team validating LLM models."
+  <cite>— Ankor Rai</cite>
+</blockquote>
+
+<div class="slide-solo" onclick="openLightbox('slide-10.avif')" title="Click to enlarge">
+  <img src="slide-10.avif" alt="Enterprise AI Stack with Verifiable Autonomy" loading="lazy">
+</div>
+
+</main>
+
+<!-- Enterprise AI Stack diagram (full-bleed) -->
+<div class="stack-diagram">
+  <div class="stack-diagram-inner">
+    <h4>Enterprise AI Stack with Verifiable Autonomy</h4>
+    <div class="stack-layers">
+      <div class="stack-layer">
+        <span class="stack-layer-name">Layer 1 · Business Application</span>
+        <span class="stack-layer-title">Purpose-Built AI Applications</span>
+        <span class="stack-layer-desc">Claims · Regulatory · Sales · Marketing · HR · Research — delivering verified outputs to end users and operations.</span>
+      </div>
+      <div class="stack-layer">
+        <span class="stack-layer-name">Layer 2 · Agentic Orchestration</span>
+        <span class="stack-layer-title">Multi-Agent Workflow Engine</span>
+        <span class="stack-layer-desc">Task decomposition, agent coordination, complete audit trail. Constrained autonomy — static workflows, bounded steps.</span>
+      </div>
+      <div class="stack-layer" style="border-color:#fc8181;background:rgba(252,129,129,0.18);">
+        <span class="stack-layer-name" style="color:#fc8181;">Layer 3 · VERIFICATION (The New Layer)</span>
+        <span class="stack-layer-title" style="color:#fc8181;">Verification &amp; Trust Engine</span>
+        <span class="stack-layer-desc">LLM-as-judge · Cross-referencing · Rule-based checks · Simulation · Human escalation. Every output passes through this layer before use.</span>
+      </div>
+      <div class="stack-layer">
+        <span class="stack-layer-name">Layer 4 · Foundational Models</span>
+        <span class="stack-layer-title">LLMs &amp; Reasoning Models</span>
+        <span class="stack-layer-desc">GPT, Claude, Gemini, Llama — probabilistic, powerful, and inherently non-deterministic. The layer that requires all the others.</span>
+      </div>
+      <div class="stack-layer">
+        <span class="stack-layer-name">Layer 5 · Data</span>
+        <span class="stack-layer-title">Grounded, Curated Data Sources</span>
+        <span class="stack-layer-desc">Internal CRMs, research libraries, structured databases — the ground truth that makes grounding possible.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main class="article" style="margin-top:0;">
+
+<p>"When you step back," Ankor says, almost conspiratorially, "this is not actually rocket science that I'm talking about. You go back to every quantitative analytical advancement — finally you have separate organizations making sure you can trust the output. That's where we see the future."</p>
+
+<p>The Chief AI Officer, a role that's proliferating across financial services companies, will have verification as a core responsibility — not "controlling all the AI development" but serving as the second line of defense, independent of the teams shipping features. Quarterly monitoring reports. Production validation requirements. Separation of developer from validator.</p>
+
+<p>The NFL analogy comes at the end, delivered with the particular satisfaction of someone who has found exactly the right metaphor: <em>"You know what they say about great NFL teams and Super Bowls? They're won in the trenches. This is what makes sure stuff is actually operationalizable."</em></p>
+
+<hr class="section-rule">
+
+
+</main>
+
+<!-- ── Takeaways ── -->
+<div class="takeaways-band" id="takeaways">
+  <div class="takeaways-inner">
+    <h2>Top Takeaways</h2>
+    <p class="sub">What Ankor &amp; Anand want you to remember</p>
+    <ul class="takeaway-list">
+      <li class="takeaway-item">
+        <div class="takeaway-num">1</div>
+        <div class="takeaway-body">
+          <div class="takeaway-title">AI without verification cannot be operationalised</div>
+          <div class="takeaway-desc">LLMs are probabilistic. Every output can be different for the same input. This isn't a bug or negligence — it's fundamental to the architecture. Without a verification layer, you have a demo, not a product.</div>
+        </div>
+      </li>
+      <li class="takeaway-item">
+        <div class="takeaway-num">2</div>
+        <div class="takeaway-body">
+          <div class="takeaway-title">74% of deployed agents still terminate in a human</div>
+          <div class="takeaway-desc">Your peers at Morgan Stanley, BlackRock, JPMorgan — they've all deployed AI. They've all kept a human at the exit. As agentic AI scales exponentially, this is untenable. Verification must become programmatic.</div>
+        </div>
+      </li>
+      <li class="takeaway-item">
+        <div class="takeaway-num">3</div>
+        <div class="takeaway-body">
+          <div class="takeaway-title">Grounding is verification: show the source, show the confidence</div>
+          <div class="takeaway-desc">The most practical verification is making the AI show its work. Citations from source documents, confidence scores, known unknowns — these let humans quickly validate rather than blindly trust.</div>
+        </div>
+      </li>
+      <li class="takeaway-item">
+        <div class="takeaway-num">4</div>
+        <div class="takeaway-body">
+          <div class="takeaway-title">Code is more verifiable than language — use it</div>
+          <div class="takeaway-desc">LLMs that generate programs (InsurLE rules, API queries, SQL) produce deterministic, auditable outputs. A Prolog rule either proves a claim valid or it doesn't. Code fails loudly. Language fails silently. Design for code where you need certainty.</div>
+        </div>
+      </li>
+      <li class="takeaway-item">
+        <div class="takeaway-num">5</div>
+        <div class="takeaway-body">
+          <div class="takeaway-title">Cross-checking cuts error rates from 14% to 0.7%</div>
+          <div class="takeaway-desc">Independent models disagree on different things. Running three models in cross-check mode reduces error from 14% to 0.7% — at the cost of a 28% manual queue. For many enterprise processes, this is an excellent trade.</div>
+        </div>
+      </li>
+      <li class="takeaway-item">
+        <div class="takeaway-num">6</div>
+        <div class="takeaway-body">
+          <div class="takeaway-title">Verification is becoming a standard enterprise function — like model risk</div>
+          <div class="takeaway-desc">Post-GFC, every quantitative model needed a separate validation team. The same is coming for AI. Chief AI Officers will own verification, not just innovation. Developer ≠ validator. This is the trajectory.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── Pullquote close ── -->
+<div class="pullquote">
+  <div class="pullquote-text">"Great NFL teams win Super Bowls in the trenches. Verification is what makes sure AI is actually operationalisable."</div>
+  <div class="pullquote-attr">— Ankor Rai, CEO, Straive · March 18, 2026</div>
+</div>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <p>Talk by <a href="https://www.linkedin.com/in/ankorrai" target="_blank">Ankor Rai</a> (CEO, Straive) &amp; <a href="https://www.s-anand.net/" target="_blank">Anand S</a> (LLM Psychologist, Straive) · March 18, 2026</p>
+  <p><a href="transcript.md">Full Transcript</a> · <a href="../">All Talks</a> · <a href="https://www.straive.com/" target="_blank">Straive</a></p>
+  <p style="margin-top:0.5rem;font-size:0.62rem;opacity:.5;">Story written in the style of Malcolm Gladwell. Content based on public talk. All demo data synthetic or anonymised.</p>
+</footer>
+
+<!-- ── Lightbox ── -->
+<div id="img-lightbox" onclick="this.classList.remove('open')">
+  <img id="lightbox-img" src="" alt="Full size slide">
+</div>
+
+<!-- ── Popup overlay ── -->
+<div id="popup" class="popup-overlay" onclick="if(event.target===this)closePopup()">
+  <div class="popup-box">
+    <button class="popup-close" onclick="closePopup()">✕</button>
+    <div class="popup-title" id="popup-title"></div>
+    <div class="popup-body" id="popup-body"></div>
+  </div>
+</div>
+
+<script>
+  // Reading progress
+  const prog = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    prog.style.width = (window.scrollY / total * 100) + '%';
+  });
+
+  // Lightbox
+  function openLightbox(src) {
+    const lb = document.getElementById('img-lightbox');
+    document.getElementById('lightbox-img').src = src;
+    lb.classList.add('open');
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.getElementById('img-lightbox').classList.remove('open');
+      closePopup();
+    }
+  });
+
+  // Popup
+  function openPopup(title, body) {
+    document.getElementById('popup-title').textContent = title;
+    document.getElementById('popup-body').innerHTML = body;
+    document.getElementById('popup').classList.add('open');
+  }
+  function closePopup() {
+    document.getElementById('popup').classList.remove('open');
+  }
+
+  // Animate accuracy bars on scroll
+  const bars = document.querySelectorAll('.acc-fill');
+  if (bars.length) {
+    const targets = [86, 96.3, 99.3];
+    bars.forEach((bar, i) => { bar.style.width = '0'; });
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          bars.forEach((bar, i) => {
+            setTimeout(() => { bar.style.width = targets[i] + '%'; }, i * 200);
+          });
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+    const barWrap = document.getElementById('acc-bars');
+    if (barWrap) observer.observe(barWrap);
+  }
+
+  // Highlight.js
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+  });
+</script>
+</body>
+</html>

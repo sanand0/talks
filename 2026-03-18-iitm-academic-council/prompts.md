@@ -58,6 +58,24 @@ IMPORTANT: Because Claude will almost certainly stall when generating such a lar
 
 <!-- copilot --resume=2dde2369-5f14-40da-ae75-b828052b72d5 -->
 
+## Ideas Page (Copilot Yolo - Claude Sonnet 4.6 high)
+
+Modify 2026-03-18-iitm-academic-council/ideas/index.html so that the cards are of uniform height.
+Move all ideas data into 2026-03-18-iitm-academic-council/ideas/ideas.json and generate the cards from that.
+
+Create an 2026-03-18-iitm-academic-council/ideas/table.html that shows the ideas as an elegant, minimal, sortable table from the same ideas.json data.
+Columns: council lens, title, importance, novelty. Clicking the title should open a popup with the full idea description and all other details.
+
+Link to 2026-03-18-iitm-academic-council/ideas/table.html from README.md (with the ":ignore").
+
+---
+
+In table.html, increase the default font size, make it more compact by allowing it to collapse to a natural width (dropping the 100%) - making sure the .table-wrap is handled appropriately. Add a light/dark mode toggle (defaulting to system preference). Add a search box that filters the table in real time based on the title, description fields. Scale the importance / novelty bars so that the smallest value maps to 5%. Increase the width of the bars by 50%.
+
+When the popup is open, arrow keys should navigate to the next/previous idea in the table, and the popup content should update accordingly. Use a more compact design. e.g. the "Explore further" is a card that has cards that has a card -- that's too much padding, condense it. Merge the source trail into Explore further, unobtrusively. The link is more important than the source trail. Unless the Evidence profile provides additional information we cannot derive from Explore further / source trail, drop it. Same with trail depth.
+
+<!-- copilot --resume=42bfe6a5-2d25-4c14-a1f1-d5d5b71eb49a -->
+
 ## Sketchnote
 
 <!--

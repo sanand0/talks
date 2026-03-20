@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IITM Academic Council · Ideas Table</title>
+  <meta name="description" content="A sortable table of 53 AI-in-education ideas for the IIT Madras Academic Council." />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d1426'/%3E%3Ctext x='32' y='38' text-anchor='middle' font-size='32'%3E%F0%9F%92%A1%3C/text%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --ink: #f4efe2;
+      --muted: #b8b0a2;
+      --dim: rgba(244, 239, 226, 0.42);
+      --line: rgba(255, 244, 212, 0.12);
+      --surface: rgba(16, 22, 39, 0.96);
+      --row-hover: rgba(255, 255, 255, 0.045);
+      --row-border: rgba(255, 244, 212, 0.055);
+      --th-bg: rgba(255, 255, 255, 0.04);
+      --bar-track: rgba(255, 255, 255, 0.09);
+      --badge-bg: rgba(255, 255, 255, 0.06);
+      --badge-border: rgba(255, 255, 255, 0.11);
+      --shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+      --dialog-bg: rgba(9, 14, 26, 0.98);
+      --detail-bg: rgba(255, 255, 255, 0.038);
+      --detail-border: rgba(255, 255, 255, 0.07);
+      --search-bg: rgba(255, 255, 255, 0.055);
+      --gold: #f2c879;
+      --rose: #f59e8b;
+      --azure: #7eb6ff;
+      --violet: #b79dff;
+      --font-d: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      --font-ui: "Avenir Next", "Gill Sans", "Trebuchet MS", "Segoe UI", sans-serif;
+      --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+    }
+
+    [data-theme="light"] {
+      --ink: #1c1810;
+      --muted: #7a7060;
+      --dim: rgba(28, 24, 16, 0.38);
+      --line: rgba(28, 24, 16, 0.13);
+      --surface: rgba(255, 252, 244, 0.98);
+      --row-hover: rgba(0, 0, 0, 0.028);
+      --row-border: rgba(28, 24, 16, 0.07);
+      --th-bg: rgba(0, 0, 0, 0.035);
+      --bar-track: rgba(0, 0, 0, 0.1);
+      --badge-bg: rgba(0, 0, 0, 0.055);
+      --badge-border: rgba(0, 0, 0, 0.12);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      --dialog-bg: rgba(255, 252, 244, 0.99);
+      --detail-bg: rgba(0, 0, 0, 0.032);
+      --detail-border: rgba(0, 0, 0, 0.08);
+      --search-bg: rgba(0, 0, 0, 0.055);
+      --gold: #9a6c00;
+      --rose: #c05038;
+      --azure: #2060b8;
+      --violet: #5830a0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-ui);
+      font-size: 1rem;
+      color: var(--ink);
+      overflow-x: hidden;
+      transition: color 250ms ease;
+    }
+
+    [data-theme="dark"] body {
+      background:
+        radial-gradient(circle at 15% 20%, rgba(114,225,209,0.14), transparent 30%),
+        radial-gradient(circle at 85% 10%, rgba(242,200,121,0.10), transparent 28%),
+        linear-gradient(180deg, #0a0e18 0%, #0d1426 55%, #10192c 100%);
+    }
+
+    [data-theme="light"] body {
+      background:
+        radial-gradient(circle at 15% 20%, rgba(114,225,209,0.07), transparent 30%),
+        radial-gradient(circle at 85% 10%, rgba(242,200,121,0.06), transparent 28%),
+        linear-gradient(180deg, #f7f4ed 0%, #f2ede2 55%, #ede8da 100%);
+    }
+
+    a { color: inherit; }
+    button { font: inherit; color: inherit; cursor: pointer; border: none; }
+
+    .shell {
+      width: fit-content;
+      max-width: calc(100vw - 32px);
+      min-width: min(680px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 28px 0 72px;
+    }
+
+    /* Header */
+    .page-header {
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .page-title {
+      font-family: var(--font-d);
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin: 0;
+    }
+
+    .page-subtitle { color: var(--muted); font-size: 0.88rem; margin: 4px 0 0; }
+
+    .header-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    .search-input {
+      appearance: none;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--search-bg);
+      color: var(--ink);
+      font: inherit;
+      font-size: 0.92rem;
+      padding: 7px 14px;
+      outline: none;
+      width: 200px;
+      transition: border-color 150ms ease, width 200ms ease, box-shadow 150ms ease;
+    }
+    .search-input::placeholder { color: var(--dim); }
+    .search-input:focus {
+      border-color: rgba(126, 182, 255, 0.5);
+      box-shadow: 0 0 0 3px rgba(126, 182, 255, 0.1);
+      width: 260px;
+    }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: var(--badge-bg);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: background 150ms ease;
+    }
+    .icon-btn:hover { background: var(--row-hover); }
+
+    .header-link {
+      font-size: 0.88rem;
+      color: var(--gold);
+      text-decoration: none;
+      border: 1px solid color-mix(in srgb, var(--gold) 35%, transparent);
+      border-radius: 999px;
+      padding: 7px 13px;
+      background: color-mix(in srgb, var(--gold) 8%, transparent);
+      transition: background 150ms ease;
+      white-space: nowrap;
+    }
+    .header-link:hover { background: color-mix(in srgb, var(--gold) 15%, transparent); }
+
+    /* Table */
+    .table-wrap {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      width: fit-content;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    table { border-collapse: collapse; width: auto; }
+
+    thead tr { background: var(--th-bg); border-bottom: 1px solid var(--line); }
+
+    th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: var(--muted);
+      font-weight: 700;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    th.sortable { cursor: pointer; transition: color 140ms ease; }
+    th.sortable:hover { color: var(--ink); }
+    th.sort-asc::after  { content: " \2191"; color: var(--gold); }
+    th.sort-desc::after { content: " \2193"; color: var(--gold); }
+
+    tbody tr {
+      border-bottom: 1px solid var(--row-border);
+      cursor: pointer;
+      transition: background 100ms ease;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--row-hover); }
+    tbody tr.is-active { background: color-mix(in srgb, var(--gold) 8%, transparent); }
+
+    td { padding: 11px 16px; vertical-align: middle; line-height: 1.4; }
+
+    .lens-badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      background: var(--badge-bg);
+      border: 1px solid var(--badge-border);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    td.col-title { min-width: 260px; max-width: 420px; }
+    .title-text { font-family: var(--font-d); font-size: 1rem; letter-spacing: -0.01em; display: block; }
+    .category-sub { display: block; font-size: 0.76rem; color: var(--muted); margin-top: 2px; }
+
+    td.col-score { white-space: nowrap; }
+
+    .score-wrap { display: flex; align-items: center; gap: 8px; min-width: 120px; }
+
+    .score-num { font-family: var(--font-d); font-size: 1rem; min-width: 2.4ch; text-align: right; }
+
+    .score-bar-bg {
+      flex: 1;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--bar-track);
+      overflow: hidden;
+      min-width: 60px;
+    }
+
+    .score-bar { height: 100%; border-radius: 999px; }
+    .score-bar.importance { background: linear-gradient(90deg, var(--gold), var(--rose)); }
+    .score-bar.novelty    { background: linear-gradient(90deg, var(--violet), var(--azure)); }
+
+    .empty-state { padding: 28px; text-align: center; color: var(--muted); font-size: 0.95rem; }
+
+    /* Dialog */
+    dialog {
+      width: min(860px, calc(100vw - 16px));
+      max-height: calc(100dvh - 16px);
+      margin: 8px auto;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      color: var(--ink);
+      background: var(--dialog-bg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    dialog::backdrop { background: rgba(4, 8, 16, 0.72); backdrop-filter: blur(8px); }
+
+    .dialog-shell { overflow-y: auto; max-height: calc(100dvh - 16px); }
+
+    .dialog-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      position: sticky;
+      top: 0;
+      background: var(--dialog-bg);
+      z-index: 2;
+      border-bottom: 1px solid var(--detail-border);
+    }
+
+    .nav-btn {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--detail-bg);
+      font-size: 0.82rem;
+      padding: 4px 11px;
+      transition: background 140ms ease;
+    }
+    .nav-btn:hover:not(:disabled) { background: var(--row-hover); }
+    .nav-btn:disabled { opacity: 0.32; cursor: not-allowed; }
+
+    .nav-counter { font-size: 0.82rem; color: var(--muted); flex: 1; text-align: center; }
+
+    .dialog-close {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: var(--detail-bg);
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .dialog-body { padding: 16px 20px 22px; }
+
+    .dialog-overline {
+      margin: 0 0 5px;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .dialog-title {
+      margin: 0 0 4px;
+      font-family: var(--font-d);
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      line-height: 1.06;
+      letter-spacing: -0.025em;
+    }
+
+    .dialog-scores {
+      display: flex;
+      gap: 20px;
+      margin: 10px 0 14px;
+      flex-wrap: wrap;
+    }
+
+    .score-line { display: flex; align-items: center; gap: 7px; font-size: 0.86rem; color: var(--muted); }
+    .score-line strong { font-family: var(--font-d); font-size: 1.1rem; color: var(--ink); }
+    .score-line .mini-bar-bg { width: 64px; height: 5px; border-radius: 999px; background: var(--bar-track); overflow: hidden; }
+    .score-line .mini-bar { height: 100%; border-radius: 999px; }
+    .score-line .mini-bar.importance { background: linear-gradient(90deg, var(--gold), var(--rose)); }
+    .score-line .mini-bar.novelty    { background: linear-gradient(90deg, var(--violet), var(--azure)); }
+    .score-line .score-note { font-size: 0.74rem; color: var(--muted); }
+
+    .dialog-summary {
+      margin: 0 0 10px;
+      line-height: 1.68;
+      font-size: 0.95rem;
+      color: color-mix(in srgb, var(--ink) 85%, var(--muted));
+    }
+
+    .dialog-impact, .dialog-why {
+      margin: 0 0 7px;
+      line-height: 1.62;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    .dialog-impact strong, .dialog-why strong { color: var(--ink); }
+
+    .dialog-pick {
+      margin: 10px 0;
+      padding: 8px 11px;
+      border-radius: 9px;
+      background: var(--detail-bg);
+      border: 1px solid var(--detail-border);
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .dialog-pick strong { color: var(--ink); }
+
+    .dialog-tags { margin: 8px 0 14px; display: flex; flex-wrap: wrap; gap: 5px; }
+    .tag-chip {
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      background: var(--badge-bg);
+      border: 1px solid var(--badge-border);
+      color: var(--muted);
+    }
+
+    .explore-section { border-top: 1px solid var(--detail-border); padding-top: 14px; }
+    .explore-section h3 { margin: 0 0 9px; font-family: var(--font-d); font-size: 1rem; letter-spacing: -0.01em; }
+
+    .explore-links { display: flex; flex-direction: column; gap: 2px; }
+
+    .explore-link {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      text-decoration: none;
+      font-size: 0.88rem;
+      color: var(--ink);
+      padding: 5px 7px;
+      border-radius: 7px;
+      transition: background 100ms ease;
+    }
+    .explore-link:hover { background: var(--row-hover); }
+    .explore-link .link-label { flex: 1; }
+    .explore-link .link-kind {
+      font-size: 0.68rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    .no-links { font-size: 0.88rem; color: var(--muted); font-style: italic; margin: 0; }
+
+    .source-refs-section { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--detail-border); }
+    .source-refs-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 4px; }
+    .source-ref-item { font-family: var(--font-mono); font-size: 0.74rem; color: var(--muted); line-height: 1.6; opacity: 0.6; }
+
+    @media (max-width: 640px) {
+      .shell { min-width: calc(100vw - 24px); padding: 14px 0 56px; }
+      th, td { padding: 9px 11px; }
+      .search-input { width: 150px; }
+      .search-input:focus { width: 170px; }
+      .score-wrap { min-width: 80px; }
+      .score-bar-bg { min-width: 36px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="page-header">
+      <div>
+        <h1 class="page-title">Ideas Table</h1>
+        <p class="page-subtitle" id="result-count">Loading…</p>
+      </div>
+      <div class="header-controls">
+        <input class="search-input" id="search-input" type="search" placeholder="Search…" autocomplete="off" />
+        <button class="icon-btn" id="theme-toggle" aria-label="Toggle light/dark mode" title="Toggle light/dark mode">☀️</button>
+        <a class="header-link" href="index.html">← Gallery</a>
+      </div>
+    </header>
+
+    <div class="table-wrap" id="table-wrap">
+      <table id="ideas-table">
+        <thead>
+          <tr>
+            <th class="sortable" data-col="primary_lens">Council lens</th>
+            <th class="sortable" data-col="title">Title</th>
+            <th class="sortable sort-desc" data-col="importance">Importance</th>
+            <th class="sortable" data-col="novelty">Novelty</th>
+          </tr>
+        </thead>
+        <tbody id="ideas-tbody">
+          <tr><td colspan="4" class="empty-state">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <dialog id="idea-dialog" aria-modal="true">
+    <div class="dialog-shell" id="dialog-shell">
+      <div class="dialog-nav">
+        <button class="nav-btn" id="prev-btn" aria-label="Previous idea">← Prev</button>
+        <span class="nav-counter" id="nav-counter"></span>
+        <button class="nav-btn" id="next-btn" aria-label="Next idea">Next →</button>
+        <button class="dialog-close" id="dialog-close" aria-label="Close">✕</button>
+      </div>
+      <div class="dialog-body" id="dialog-body"></div>
+    </div>
+  </dialog>
+
+  <script>
+    const $ = (sel, el = document) => el.querySelector(sel);
+    const $$ = (sel, el = document) => [...el.querySelectorAll(sel)];
+
+    /* ── Theme ── */
+    const html = document.documentElement;
+    const themeBtn = $('#theme-toggle');
+    const applyTheme = () => {
+      themeBtn.textContent = html.dataset.theme === 'dark' ? '☀️' : '🌙';
+    };
+    const savedTheme = localStorage.getItem('ideas-table-theme');
+    if (savedTheme) {
+      html.dataset.theme = savedTheme;
+    } else {
+      html.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    applyTheme();
+    themeBtn.addEventListener('click', () => {
+      html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('ideas-table-theme', html.dataset.theme);
+      applyTheme();
+    });
+
+    /* ── State ── */
+    const lensLabels = {
+      curriculum: 'Curriculum', assessment: 'Assessment', integrity: 'Integrity',
+      faculty: 'Faculty', analytics: 'Analytics', research: 'Research',
+      operations: 'Operations', personalization: 'Personalization',
+      governance: 'Governance', workflow: 'Workflow',
+    };
+
+    let sortCol = 'importance';
+    let sortDir = -1;
+    let searchQuery = '';
+    let allIdeas = [];
+    let displayedIdeas = [];
+    let currentIdx = -1;
+    let impMin, impMax, novMin, novMax;
+
+    const scaleBar = (value, min, max) =>
+      Math.round(5 + ((value - min) / (max - min)) * 95);
+
+    const ideaDialog = /** @type {HTMLDialogElement} */ ($('#idea-dialog'));
+    const dialogBody = $('#dialog-body');
+    const navCounter = $('#nav-counter');
+    const prevBtn = $('#prev-btn');
+    const nextBtn = $('#next-btn');
+    const tbody = $('#ideas-tbody');
+    const resultCount = $('#result-count');
+    const searchInput = /** @type {HTMLInputElement} */ ($('#search-input'));
+
+    /* ── Table ── */
+    const renderBar = (value, cls, min, max) => {
+      const pct = scaleBar(value, min, max);
+      return `<div class="score-wrap">
+        <span class="score-num">${value}</span>
+        <div class="score-bar-bg"><div class="score-bar ${cls}" style="width:${pct}%"></div></div>
+      </div>`;
+    };
+
+    const getDisplayed = () => {
+      const q = searchQuery.toLowerCase();
+      const filtered = q
+        ? allIdeas.filter(i =>
+            i.title.toLowerCase().includes(q) ||
+            i.description.toLowerCase().includes(q))
+        : [...allIdeas];
+      return filtered.sort((a, b) => {
+        const av = a[sortCol], bv = b[sortCol];
+        return typeof av === 'number'
+          ? sortDir * (bv - av)
+          : sortDir * String(av).localeCompare(String(bv));
+      });
+    };
+
+    const renderTable = () => {
+      displayedIdeas = getDisplayed();
+      const n = displayedIdeas.length;
+      const total = allIdeas.length;
+      resultCount.textContent = n === total
+        ? `${total} ideas · IIT Madras Academic Council · 2026`
+        : `${n} of ${total} ideas · IIT Madras Academic Council · 2026`;
+
+      if (!n) {
+        tbody.innerHTML = `<tr><td colspan="4" class="empty-state">No ideas match "${searchQuery}"</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = displayedIdeas.map((idea, idx) => `
+        <tr data-idx="${idx}" data-slug="${idea.slug}"${idx === currentIdx && ideaDialog.open ? ' class="is-active"' : ''}>
+          <td><span class="lens-badge">${lensLabels[idea.primary_lens] ?? idea.primary_lens}</span></td>
+          <td class="col-title">
+            <span class="title-text">${idea.title}</span>
+            <span class="category-sub">${idea.category_label}</span>
+          </td>
+          <td class="col-score">${renderBar(idea.importance, 'importance', impMin, impMax)}</td>
+          <td class="col-score">${renderBar(idea.novelty, 'novelty', novMin, novMax)}</td>
+        </tr>
+      `).join('');
+
+      $$('tbody tr').forEach(row => {
+        row.addEventListener('click', () => openAtIdx(Number(row.dataset.idx)));
+      });
+
+      $$('th[data-col]').forEach(th => {
+        th.classList.remove('sort-asc', 'sort-desc');
+        if (th.dataset.col === sortCol)
+          th.classList.add(sortDir === -1 ? 'sort-desc' : 'sort-asc');
+      });
+    };
+
+    /* ── Dialog ── */
+    const renderDialogContent = (idea) => {
+      const impPct = scaleBar(idea.importance, impMin, impMax);
+      const novPct = scaleBar(idea.novelty, novMin, novMax);
+
+      const importanceNote = idea.importance >= 90 ? 'Strongest bet'
+        : idea.importance >= 80 ? 'Strong candidate' : 'Watchlist';
+      const noveltyNote = idea.novelty >= 90 ? 'Frontier move'
+        : idea.novelty >= 80 ? 'Ahead of mainstream' : 'Familiar move';
+
+      const linksHtml = idea.public_links.length
+        ? idea.public_links.map(l => `
+            <a class="explore-link" href="${l.url}" target="_blank" rel="noreferrer">
+              <span class="link-label">${l.label}</span>
+              <span class="link-kind">${l.kind}</span>
+            </a>`).join('')
+        : '<p class="no-links">No public trails yet.</p>';
+
+      const sourceRefsHtml = `
+        <div class="source-refs-section">
+          <div class="source-refs-label">Source trail</div>
+          ${idea.source_refs.map(ref => `<div class="source-ref-item">${ref}</div>`).join('')}
+        </div>`;
+
+      return `
+        <p class="dialog-overline">Idea #${idea.id} · ${idea.category_label} · ${idea.selection_label}</p>
+        <h2 class="dialog-title">${idea.title}</h2>
+        <div class="dialog-scores">
+          <div class="score-line">
+            <span>Importance</span>
+            <strong>${idea.importance}</strong>
+            <div class="mini-bar-bg"><div class="mini-bar importance" style="width:${impPct}%"></div></div>
+            <span class="score-note">${importanceNote}</span>
+          </div>
+          <div class="score-line">
+            <span>Novelty</span>
+            <strong>${idea.novelty}</strong>
+            <div class="mini-bar-bg"><div class="mini-bar novelty" style="width:${novPct}%"></div></div>
+            <span class="score-note">${noveltyNote}</span>
+          </div>
+        </div>
+        <p class="dialog-summary">${idea.description}</p>
+        <p class="dialog-impact"><strong>Impact:</strong> ${idea.nature}</p>
+        <p class="dialog-why"><strong>Why IITM:</strong> ${idea.why}</p>
+        <div class="dialog-pick"><strong>Pick when:</strong> ${idea.pick_for}</div>
+        <div class="dialog-tags">${idea.tags.map(t => `<span class="tag-chip">${t}</span>`).join('')}</div>
+        <div class="explore-section">
+          <h3>Explore further</h3>
+          <div class="explore-links">${linksHtml}</div>
+          ${sourceRefsHtml}
+        </div>`;
+    };
+
+    const updateNav = () => {
+      navCounter.textContent = `${currentIdx + 1} / ${displayedIdeas.length}`;
+      prevBtn.disabled = currentIdx <= 0;
+      nextBtn.disabled = currentIdx >= displayedIdeas.length - 1;
+    };
+
+    const openAtIdx = (idx) => {
+      currentIdx = idx;
+      const idea = displayedIdeas[idx];
+      dialogBody.innerHTML = renderDialogContent(idea);
+      updateNav();
+      $$('tbody tr').forEach(r => r.classList.remove('is-active'));
+      $(`tbody tr[data-idx="${idx}"]`)?.classList.add('is-active');
+      if (!ideaDialog.open) ideaDialog.showModal();
+      history.replaceState(null, '', `#${idea.slug}`);
+    };
+
+    const closeIdea = () => {
+      ideaDialog.close();
+      $$('tbody tr').forEach(r => r.classList.remove('is-active'));
+      history.replaceState(null, '', location.pathname + location.search);
+    };
+
+    prevBtn.addEventListener('click', () => { if (currentIdx > 0) openAtIdx(currentIdx - 1); });
+    nextBtn.addEventListener('click', () => { if (currentIdx < displayedIdeas.length - 1) openAtIdx(currentIdx + 1); });
+    $('#dialog-close').addEventListener('click', closeIdea);
+
+    ideaDialog.addEventListener('click', (e) => {
+      const rect = ideaDialog.getBoundingClientRect();
+      const outside = e.clientY < rect.top || e.clientY > rect.bottom ||
+                      e.clientX < rect.left || e.clientX > rect.right;
+      if (outside) closeIdea();
+    });
+
+    ideaDialog.addEventListener('close', () => {
+      history.replaceState(null, '', location.pathname + location.search);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!ideaDialog.open) return;
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (currentIdx > 0) openAtIdx(currentIdx - 1);
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (currentIdx < displayedIdeas.length - 1) openAtIdx(currentIdx + 1);
+      }
+    });
+
+    searchInput.addEventListener('input', () => {
+      searchQuery = searchInput.value.trim();
+      renderTable();
+    });
+
+    $$('th.sortable').forEach(th => {
+      th.addEventListener('click', () => {
+        const col = th.dataset.col;
+        if (col === sortCol) { sortDir = -sortDir; }
+        else { sortCol = col; sortDir = col === 'title' ? 1 : -1; }
+        renderTable();
+      });
+    });
+
+    fetch('ideas.json').then(r => r.json()).then(ideas => {
+      allIdeas = ideas;
+      impMin = Math.min(...ideas.map(i => i.importance));
+      impMax = Math.max(...ideas.map(i => i.importance));
+      novMin = Math.min(...ideas.map(i => i.novelty));
+      novMax = Math.max(...ideas.map(i => i.novelty));
+      renderTable();
+
+      const slug = location.hash.replace(/^#/, '');
+      if (slug) {
+        const idx = displayedIdeas.findIndex(i => i.slug === slug);
+        if (idx >= 0) openAtIdx(idx);
+      }
+    });
+  </script>
+</body>
+</html>

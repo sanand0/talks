@@ -974,12 +974,12 @@
         if (target?.closest('.dialog-close')) return;
       });
       ideaDialog.showModal();
-      history.replaceState(null, '', `#${idea.slug}`);
+      history.replaceState(null, '', `?id=${idea.short_id}`);
     };
 
     const closeIdea = () => {
       ideaDialog.close();
-      history.replaceState(null, '', window.location.pathname + window.location.search);
+      history.replaceState(null, '', window.location.pathname);
     };
 
     const scoreTone = (value) => value >= 90 ? 'excellent' : value >= 80 ? 'strong' : 'emerging';
@@ -1220,18 +1220,18 @@
     });
 
     ideaDialog.addEventListener('close', () => {
-      history.replaceState(null, '', window.location.pathname + window.location.search);
+      history.replaceState(null, '', window.location.pathname);
     });
 
-    const openFromHash = () => {
-      const slug = window.location.hash.replace(/^#/, '');
-      if (!slug) return;
-      const idea = ideas.find((entry) => entry.slug === slug);
+    const openFromParam = () => {
+      const id = new URLSearchParams(window.location.search).get('id');
+      if (!id) return;
+      const idea = ideas.find((entry) => entry.short_id === id);
       if (idea) openIdea(idea);
     };
 
     render();
-    openFromHash();
+    openFromParam();
   }); // fetch ideas.json
   </script>
 </body>

@@ -429,14 +429,15 @@
       <table id="ideas-table">
         <thead>
           <tr>
+            <th class="sortable sort-desc" data-col="id" style="width:2.5rem;text-align:right">#</th>
             <th class="sortable" data-col="primary_lens">Council lens</th>
             <th class="sortable" data-col="title">Title</th>
-            <th class="sortable sort-desc" data-col="importance">Importance</th>
+            <th class="sortable" data-col="importance">Importance</th>
             <th class="sortable" data-col="novelty">Novelty</th>
           </tr>
         </thead>
         <tbody id="ideas-tbody">
-          <tr><td colspan="4" class="empty-state">Loading…</td></tr>
+          <tr><td colspan="5" class="empty-state">Loading…</td></tr>
         </tbody>
       </table>
     </div>
@@ -485,7 +486,7 @@
       governance: 'Governance', workflow: 'Workflow',
     };
 
-    let sortCol = 'importance';
+    let sortCol = 'id';
     let sortDir = -1;
     let searchQuery = '';
     let allIdeas = [];
@@ -538,12 +539,13 @@
         : `${n} of ${total} ideas · IIT Madras Academic Council · 2026`;
 
       if (!n) {
-        tbody.innerHTML = `<tr><td colspan="4" class="empty-state">No ideas match "${searchQuery}"</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No ideas match "${searchQuery}"</td></tr>`;
         return;
       }
 
       tbody.innerHTML = displayedIdeas.map((idea, idx) => `
         <tr data-idx="${idx}" data-slug="${idea.slug}"${idx === currentIdx && ideaDialog.open ? ' class="is-active"' : ''}>
+          <td style="text-align:right;color:var(--muted);font-size:0.78rem;font-variant-numeric:tabular-nums">${idea.id}</td>
           <td><span class="lens-badge">${lensLabels[idea.primary_lens] ?? idea.primary_lens}</span></td>
           <td class="col-title">
             <span class="title-text">${idea.title}</span>
@@ -632,13 +634,13 @@
       $$('tbody tr').forEach(r => r.classList.remove('is-active'));
       $(`tbody tr[data-idx="${idx}"]`)?.classList.add('is-active');
       if (!ideaDialog.open) ideaDialog.showModal();
-      history.replaceState(null, '', `#${idea.slug}`);
+      history.replaceState(null, '', `?id=${idea.short_id}`);
     };
 
     const closeIdea = () => {
       ideaDialog.close();
       $$('tbody tr').forEach(r => r.classList.remove('is-active'));
-      history.replaceState(null, '', location.pathname + location.search);
+      history.replaceState(null, '', location.pathname);
     };
 
     prevBtn.addEventListener('click', () => { if (currentIdx > 0) openAtIdx(currentIdx - 1); });
@@ -653,7 +655,7 @@
     });
 
     ideaDialog.addEventListener('close', () => {
-      history.replaceState(null, '', location.pathname + location.search);
+      history.replaceState(null, '', location.pathname);
     });
 
     document.addEventListener('keydown', (e) => {
@@ -676,7 +678,7 @@
       th.addEventListener('click', () => {
         const col = th.dataset.col;
         if (col === sortCol) { sortDir = -sortDir; }
-        else { sortCol = col; sortDir = col === 'title' ? 1 : -1; }
+        else { sortCol = col; sortDir = -1; }
         renderTable();
       });
     });
@@ -689,9 +691,9 @@
       novMax = Math.max(...ideas.map(i => i.novelty));
       renderTable();
 
-      const slug = location.hash.replace(/^#/, '');
-      if (slug) {
-        const idx = displayedIdeas.findIndex(i => i.slug === slug);
+      const id = new URLSearchParams(location.search).get('id');
+      if (id) {
+        const idx = displayedIdeas.findIndex(i => i.short_id === id);
         if (idx >= 0) openAtIdx(idx);
       }
     });

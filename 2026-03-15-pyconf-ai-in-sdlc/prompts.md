@@ -62,6 +62,10 @@ Update README.md to include this talk in the list of talks.
 
 IMPORTANT: Because Claude will almost certainly stall when generating such a large file at one shot, you MUST break this into parts, generating a SMALL scaffolding for index.html first, saving it, then then updating it with the next layer or chunk, and so on.
 
+---
+
+See how YouTube videos are incorporated in 2026-01-20-agentic-ai-in-action-deloitte/index.html and 2026-02-26-vibe-coding-for-humanities-ashoka/index.html and introduce https://youtu.be/RehYogPYQ1U into this talk similarly. Feel free to add links/cards wherever required in the content. Also update README.md.
+
 <!-- copilot --resume=562da0ee-ebae-4135-b7f9-2f48b47e28bb -->
 
 ## Sketchnote

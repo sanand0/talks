@@ -1,10 +1,12 @@
 # Anand's Talks
 
-- 21 Mar 2026. **[The McKinsey in Your Pocket](2026-03-21-faculty-ai-transformation-nie/index.html ":ignore")** at [NIE, Mysore](https://nie.ac.in/) Faculty Session, with [Srikanth Nadhamuni](https://www.linkedin.com/in/srikanthnadhamuni/). [💬 Transcript](2026-03-21-faculty-ai-transformation-nie/transcript.md)
-- 18 Mar 2026. **[Verification Architecture for Autonomous AI](2026-03-18-verifiable-agents/index.html ":ignore")** at [Straive](https://straive.com/) webinar, with [Ankor Rai](https://www.linkedin.com/in/ankorrai) (CEO, Straive). [💬 Transcript](2026-03-18-verifiable-agents/transcript.md)
-- 18 Mar 2026. **[AI for IITM Office of Institutional Advancement](2026-03-18-iitm-office-of-institutional-advancement/index.html ":ignore")** at [Office of Institutional Advancement, IIT Madras](https://ia.iitm.ac.in/), Chennai. [💬 Transcript](2026-03-18-iitm-office-of-institutional-advancement/transcript.md) [💡 Use Cases](2026-03-18-iitm-office-of-institutional-advancement/ideas.html ":ignore")
-- 18 Mar 2026. **[The Open-Book Exam We Never Designed](2026-03-18-iitm-academic-council/index.html ":ignore")** at [IIT Madras Academic Advisory Council](https://www.iitm.ac.in/administration/senate), Chennai. [💬 Transcript](2026-03-18-iitm-academic-council/transcript.md) [🧠 Ideas Catalog](2026-03-18-iitm-academic-council/ideas/index.html ":ignore") [📊 Ideas Table](2026-03-18-iitm-academic-council/ideas/table.html ":ignore")
-- 15 Mar 2026. **[AI in SDLC — Panel Discussion](2026-03-15-pyconf-ai-in-sdlc/index.html ":ignore")** at [PyConf Hyderabad 2026](https://2026.pyconfhyd.org/), Hyderabad. With [Usha Rengaraju](https://2026.pyconfhyd.org/speakers/usha-rengaraju), [Lakshman Peethani](https://2026.pyconfhyd.org/speakers/lakshman-peethani); moderated by [Snehith Allamraju](https://www.linkedin.com/in/snehithallamraju). [💬 Transcript](2026-03-15-pyconf-ai-in-sdlc/transcript.md) [🎧 Audio](2026-03-15-pyconf-ai-in-sdlc/audio.opus)
+<!-- Use ":ignore" on non-Markdown links, e.g. HTML, .opus -->
+
+- 21 Mar 2026. **[The McKinsey in Your Pocket](2026-03-21-faculty-ai-transformation-nie/ ":ignore")** at [NIE, Mysore](https://nie.ac.in/) Faculty Session, with [Srikanth Nadhamuni](https://www.linkedin.com/in/srikanthnadhamuni/). [💬 Transcript](2026-03-21-faculty-ai-transformation-nie/transcript.md)
+- 18 Mar 2026. **[Verification Architecture for Autonomous AI](2026-03-18-verifiable-agents/ ":ignore")** at [Straive](https://straive.com/) webinar, with [Ankor Rai](https://www.linkedin.com/in/ankorrai) (CEO, Straive). [💬 Transcript](2026-03-18-verifiable-agents/transcript.md)
+- 18 Mar 2026. **[AI for IITM Office of Institutional Advancement](2026-03-18-iitm-office-of-institutional-advancement/ ":ignore")** at [Office of Institutional Advancement, IIT Madras](https://ia.iitm.ac.in/), Chennai. [💬 Transcript](2026-03-18-iitm-office-of-institutional-advancement/transcript.md) [💡 Use Cases](2026-03-18-iitm-office-of-institutional-advancement/ideas.html ":ignore")
+- 18 Mar 2026. **[The Open-Book Exam We Never Designed](2026-03-18-iitm-academic-council/ ":ignore")** at [IIT Madras Academic Advisory Council](https://www.iitm.ac.in/administration/senate), Chennai. [💬 Transcript](2026-03-18-iitm-academic-council/transcript.md) [🧠 Ideas Catalog](2026-03-18-iitm-academic-council/ideas/ ":ignore") [📊 Ideas Table](2026-03-18-iitm-academic-council/ideas/table.html ":ignore")
+- 15 Mar 2026. **[AI in SDLC — Panel Discussion](2026-03-15-pyconf-ai-in-sdlc/ ":ignore")** at [PyConf Hyderabad 2026](https://2026.pyconfhyd.org/), Hyderabad. [⏯️ Video](https://youtu.be/RehYogPYQ1U) [💬 Transcript](2026-03-15-pyconf-ai-in-sdlc/transcript.md) [🎧 Audio](2026-03-15-pyconf-ai-in-sdlc/audio.opus ":ignore")
 - 15 Mar 2026. **[How Students Learn Python](2026-03-15-how-students-learn-python/ ":ignore")** at [PyConf Hyderabad](https://in.pycon.org/), Hyderabad.
 - 12 Mar 2026. **[AI Roadmap for Engineering Education](2026-03-12-nie-ai-roadmap/ ":ignore")** at [NIE, Mysore](https://nie.ac.in/), with [Srikanth Nadhamuni](https://www.linkedin.com/in/srikanthnadhamuni/). Guest: [N.R. Narayana Murthy](https://en.wikipedia.org/wiki/N._R._Narayana_Murthy). [💬 Transcript](2026-03-12-nie-ai-roadmap/transcript.md)
 - 26 Feb 2026. **[Vibe Coding for Humanities](2026-02-26-vibe-coding-for-humanities-ashoka/ ":ignore")** at [Ashoka University](https://www.ashoka.edu.in/), Sonepat. [⏯️ Video (52m)](https://youtu.be/mCJLNML7FrE) [💬 Transcript](2026-02-26-vibe-coding-for-humanities-ashoka/transcript.md)
@@ -78,7 +80,7 @@ I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtu
   · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/2014-05-15-NCERT-NRG-Workshop-small.pptx)
   [Compressed](https://github.com/sanand0/talks/releases/download/talks/2014-05-15-NCERT-NRG-Workshop-small.pptx)
 - 17 Feb 2011: **Python Imaging**
-  · [🖥️ Code](python-imaging/index.html)
+  · [🖥️ Code](python-imaging/)
 - 28 Jan 2011: **Learning R** at [Datameet](http://www.datameet.org/)
   · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/2011-01-28-datameet-learning-r.pptx)
   · [Slides](https://github.com/sanand0/talks/releases/download/talks/2011-01-28-datameet-learning-r.pptx)

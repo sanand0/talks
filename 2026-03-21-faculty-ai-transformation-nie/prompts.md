@@ -57,6 +57,8 @@ This will be deployed at https://sanand0.github.io/talks/2026-03-21-faculty-ai-t
 
 Update README.md to include this talk in the list of talks.
 
+<!-- claude --resume 061f35ab-1011-4a6b-8e9f-d5de0d4ff1fe -->
+
 ## Sketchnote
 
 <!--
@@ -65,4 +67,4 @@ Gemini Pro - https://gemini.google.com/u/2/app/5b69493deaebe8d5
 
 Summarize this talk transcript as a visually rich, intricately detailed, colorful, and funny, sketchnote. Think about the most important points, structure it logically so that the sketchnote is easy to follow, then draw it.
 
-<!-- Video: https://youtu.be/#TODO -->
+<!-- Video: https://youtu.be/QdZp6j1S2KM -->

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chart Critique</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f1eb;
+    --surface: #fff;
+    --text: #1a1a1a;
+    --text-muted: #6b6155;
+    --accent: #c4432e;
+    --accent-light: #c4432e18;
+    --teal: #1a7a6d;
+    --border: #d9d0c5;
+    --annotation-bg: #fffdf8;
+    --shadow: 0 2px 20px rgba(0,0,0,0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .header {
+    padding: 1rem 1.5rem 0.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .header h1 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .header .subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 0.35rem;
+    line-height: 1.5;
+  }
+
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .chart-container {
+    position: relative;
+    background: var(--surface);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 1rem;
+    border: 1px solid var(--border);
+  }
+
+  .chart-container img {
+    width: 100%;
+    display: block;
+    border-radius: 6px;
+  }
+
+  /* Annotation hotspot on chart */
+  .hotspot {
+    position: absolute;
+    pointer-events: none;
+    border: 2.5px solid var(--accent);
+    border-radius: 6px;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    transform: scale(0.95);
+    z-index: 2;
+  }
+
+  .hotspot.active {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .hotspot-pulse {
+    position: absolute;
+    inset: -6px;
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    opacity: 0;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(1.02); }
+  }
+
+  .hotspot-label {
+    position: absolute;
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    letter-spacing: 0.03em;
+  }
+
+  /* Connector line from hotspot to sidebar */
+  .connector-line {
+    position: absolute;
+    right: -1rem;
+    top: 50%;
+    width: 1rem;
+    height: 2px;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 1;
+  }
+
+  .connector-line.active {
+    opacity: 0.4;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    position: sticky;
+    top: 1.5rem;
+  }
+
+  .step-counter {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+  }
+
+  .feedback-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    min-height: 220px;
+    transition: border-color 0.3s ease;
+  }
+
+  .feedback-card.level-construction {
+    border-left: 4px solid var(--accent);
+  }
+
+  .feedback-card.level-structural {
+    border-left: 4px solid var(--teal);
+  }
+
+  .feedback-level {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 0.75rem;
+  }
+
+  .level-construction .feedback-level {
+    background: var(--accent-light);
+    color: var(--accent);
+  }
+
+  .level-structural .feedback-level {
+    background: #1a7a6d15;
+    color: var(--teal);
+  }
+
+  .feedback-title {
+    font-family: 'Source Serif 4', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    line-height: 1.3;
+  }
+
+  .feedback-body {
+    font-size: 0.87rem;
+    line-height: 1.65;
+    color: var(--text-muted);
+  }
+
+  .feedback-body strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* Navigation */
+  .nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.25rem;
+  }
+
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.55rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .nav-btn:hover:not(:disabled) {
+    background: var(--text);
+    color: var(--surface);
+    border-color: var(--text);
+  }
+
+  .nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .nav-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .progress-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .dot.active {
+    background: var(--accent);
+    transform: scale(1.2);
+  }
+
+  .dot.structural.active {
+    background: var(--teal);
+  }
+
+  /* Keyboard hint */
+  .kbd-hint {
+    text-align: center;
+    margin-top: 0.75rem;
+    font-size: 0.7rem;
+    color: var(--border);
+  }
+
+  .kbd-hint kbd {
+    display: inline-block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+  }
+
+  /* Fade transition */
+  .feedback-card {
+    animation: fadeSlide 0.35s ease;
+  }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 820px) {
+    .main {
+      grid-template-columns: 1fr;
+      padding: 1rem;
+    }
+    .sidebar { position: static; }
+    .connector-line { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Chart Critique</h1>
+  <p class="subtitle">Welfare Schemes &amp; Animal Protein Consumption &mdash; annotated feedback</p>
+</div>
+
+<div class="main">
+  <div class="chart-container" id="chartContainer">
+    <img src="critique.webp" alt="Chart: How Consumption of Eggs, Fish and Meat Associates with Welfare Schemes" id="chartImg">
+    <!-- Hotspots rendered dynamically -->
+  </div>
+
+  <div class="sidebar">
+    <div class="step-counter" id="stepCounter">Step 1 of 8</div>
+    <div id="cardMount"></div>
+    <div class="nav-bar">
+      <button class="nav-btn" id="prevBtn" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        Prev
+      </button>
+      <div class="progress-dots" id="dots"></div>
+      <button class="nav-btn" id="nextBtn">
+        Next
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+    <div class="kbd-hint"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> arrow keys</div>
+  </div>
+</div>
+
+<script>
+const FEEDBACK = [
+  {
+    level: "construction",
+    levelLabel: "Chart Construction",
+    title: "Dual-axis split hinders connection",
+    body: "The top line chart (% of food budget) and bottom bar chart (₹ spent) tell two facets of the <strong>same</strong> story, but visually they read as separate charts sharing an x-axis. The reader must do significant cognitive work to connect them. A single unified encoding — like a dot plot — would integrate both dimensions more naturally.",
+    // hotspot as % of image: [left, top, width, height]
+    hotspot: [0, 42, 100, 8],
+    hotspotLabel: "Split between panels"
+  },
+  {
+    level: "construction",
+    levelLabel: "Chart Construction",
+    title: "Narrow y-axis exaggerates differences",
+    body: "The line chart's y-axis runs from <strong>0.06 to 0.11</strong> — a narrow band that makes the PDS non-beneficiary drop look dramatic. It's roughly 4 percentage points, but the visual encodes it as a cliff. Starting from zero, or labelling more honestly, would convey true magnitude.",
+    hotspot: [2, 3, 9, 42],
+    hotspotLabel: "Truncated y-axis"
+  },
+  {
+    level: "construction",
+    levelLabel: "Chart Construction",
+    title: "\"0.10\" should read \"10%\"",
+    body: "The y-axis labels show decimals (0.08, 0.10…) for what are percentages of food budget. Labelling as <strong>8%, 10%</strong> removes an unnecessary mental conversion step. Small friction, but it compounds across a busy chart.",
+    hotspot: [2, 10, 10, 8],
+    hotspotLabel: "Confusing labels"
+  },
+  {
+    level: "construction",
+    levelLabel: "Chart Construction",
+    title: "No meaningful x-axis ordering",
+    body: "The five schemes are neither sorted by gap size, spending level, nor any policy logic. Since a line chart implies sequence, the eye reads a \"trend\" in its rises and falls — but <strong>there is no trend</strong>. These are unordered categories. Sorting by gap size would make the comparison argument sharper.",
+    hotspot: [8, 43, 88, 7],
+    hotspotLabel: "Arbitrary ordering"
+  },
+  {
+    level: "construction",
+    levelLabel: "Chart Construction",
+    title: "Color carries inconsistent cognitive load",
+    body: "Both panels use the same teal / dark-red pairing, but the line chart asks you to <strong>track two crossing lines</strong> while the bar chart asks you to <strong>compare adjacent bar heights</strong>. These are cognitively different tasks dressed in the same visual clothing.",
+    hotspot: [30, 23, 42, 7],
+    hotspotLabel: "Legend → dual tasks"
+  },
+  {
+    level: "structural",
+    levelLabel: "Structural / Argument",
+    title: "Correlation is not the causal story",
+    body: "The stated narrative is: <strong>\"once carbs are ensured, money goes to protein.\"</strong> But the chart only shows correlation — beneficiaries spend more. It cannot show <em>why</em>. Are they spending more because of the scheme, or are they simply a different population with different dietary norms? Regional, cultural, and religious confounders in Indian meat consumption are enormous.",
+    hotspot: [5, 52, 92, 40],
+    hotspotLabel: "What does this comparison actually mean?"
+  },
+  {
+    level: "structural",
+    levelLabel: "Structural / Argument",
+    title: "Five different comparisons, not five replications",
+    body: "PDS targets BPL households. Ayushman Bharat has a different eligibility pool. Midday meals target school-age children. The <strong>non-beneficiary</strong> comparison group shifts with every scheme. Placing them side-by-side implies they're five replications of one finding — they aren't. Each is a different natural experiment with different confounders.",
+    hotspot: [8, 43, 88, 50],
+    hotspotLabel: "Each column = different population"
+  },
+  {
+    level: "structural",
+    levelLabel: "Structural / Argument",
+    title: "A simpler chart — or no chart at all",
+    body: "The strongest version of this argument might be: <strong>\"Across 5 welfare schemes, beneficiaries consistently spend ₹30–60 more per capita on animal protein.\"</strong> One sentence, one number. Then reinforce with a dot plot — one row per scheme, two dots per row (beneficiary vs. not), horizontal ₹ axis. The gap <em>is</em> the argument. No dual axes, no crossing lines.",
+    hotspot: [0, 0, 100, 100],
+    hotspotLabel: "Rethink the whole chart"
+  }
+];
+
+let current = 0;
+
+const container = document.getElementById('chartContainer');
+const cardMount = document.getElementById('cardMount');
+const stepCounter = document.getElementById('stepCounter');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const dotsContainer = document.getElementById('dots');
+
+// Build dots
+FEEDBACK.forEach((f, i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (f.level === 'structural' ? ' structural' : '');
+  d.addEventListener('click', () => goTo(i));
+  dotsContainer.appendChild(d);
+});
+
+function renderHotspot(idx) {
+  // Remove old hotspots
+  container.querySelectorAll('.hotspot').forEach(el => el.remove());
+
+  const f = FEEDBACK[idx];
+  const hs = document.createElement('div');
+  hs.className = 'hotspot active';
+  hs.style.left = f.hotspot[0] + '%';
+  hs.style.top = f.hotspot[1] + '%';
+  hs.style.width = f.hotspot[2] + '%';
+  hs.style.height = f.hotspot[3] + '%';
+
+  const pulse = document.createElement('div');
+  pulse.className = 'hotspot-pulse';
+  hs.appendChild(pulse);
+
+  const label = document.createElement('div');
+  label.className = 'hotspot-label';
+  label.textContent = f.hotspotLabel;
+  hs.appendChild(label);
+
+  container.appendChild(hs);
+}
+
+function renderCard(idx) {
+  const f = FEEDBACK[idx];
+  cardMount.innerHTML = `
+    <div class="feedback-card level-${f.level}" key="${idx}">
+      <div class="feedback-level">${f.levelLabel}</div>
+      <div class="feedback-title">${f.title}</div>
+      <div class="feedback-body">${f.body}</div>
+    </div>
+  `;
+}
+
+function goTo(idx) {
+  current = Math.max(0, Math.min(idx, FEEDBACK.length - 1));
+
+  stepCounter.textContent = `Step ${current + 1} of ${FEEDBACK.length}`;
+  prevBtn.disabled = current === 0;
+  nextBtn.disabled = current === FEEDBACK.length - 1;
+
+  // Dots
+  dotsContainer.querySelectorAll('.dot').forEach((d, i) => {
+    d.classList.toggle('active', i === current);
+  });
+
+  renderHotspot(current);
+  renderCard(current);
+}
+
+prevBtn.addEventListener('click', () => goTo(current - 1));
+nextBtn.addEventListener('click', () => goTo(current + 1));
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goTo(current - 1);
+});
+
+// Init
+goTo(0);
+</script>
+
+</body>
+</html>

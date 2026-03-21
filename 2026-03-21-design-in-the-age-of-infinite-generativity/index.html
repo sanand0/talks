@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design in the Age of Infinite Generativity | Chennai Design Festival 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400;1,6..72,600&family=Fira+Code:wght@400;500&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #fef9f0;
+      --ink: #1c1917;
+      --vermillion: #c9392c;
+      --forest: #2d5a3d;
+      --gold: #b07e2a;
+      --muted: #6b6560;
+      --faint: #a8a09a;
+      --border: #e8e0d5;
+      --highlight: #fff8ec;
+      --dark-green: #1a2e20;
+      --warm-dark: #1c1917;
+      --section-alt: #f5f0e8;
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-body: 'Newsreader', Georgia, serif;
+      --font-mono: 'Fira Code', monospace;
+      --font-label: 'Barlow Condensed', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    html { overflow-x: clip; }
+    body {
+      font-family: var(--font-body);
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.8;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: clip;
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      position: fixed; top: 0; left: 0;
+      width: 0%; height: 3px;
+      background: linear-gradient(90deg, var(--vermillion), var(--gold));
+      z-index: 1000; transition: width 0.1s linear;
+    }
+
+    /* Header */
+    .masthead {
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 2rem;
+      position: sticky; top: 0;
+      background: rgba(254, 249, 240, 0.95);
+      z-index: 100; backdrop-filter: blur(10px);
+    }
+    .masthead-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .masthead-brand {
+      font-family: var(--font-label);
+      font-size: 0.85rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--muted);
+      font-weight: 600;
+    }
+    .masthead-brand span { color: var(--vermillion); }
+    .masthead-date {
+      font-size: 0.78rem; color: var(--faint);
+      font-family: var(--font-mono);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 5rem 2rem 2.5rem;
+      max-width: 820px; margin: 0 auto;
+      text-align: center;
+    }
+    .hero-kicker {
+      font-family: var(--font-label);
+      font-size: 0.72rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--vermillion);
+      margin-bottom: 1.5rem; font-weight: 600;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.6rem, 6.5vw, 4.8rem);
+      font-weight: 900; line-height: 1.06;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.03em; color: var(--ink);
+      font-optical-sizing: auto;
+    }
+    .hero-subtitle {
+      font-family: var(--font-body);
+      font-size: 1.3rem; font-style: italic;
+      color: var(--muted);
+      max-width: 620px; margin: 0 auto 2rem;
+      line-height: 1.5;
+    }
+    .hero-meta {
+      display: flex; justify-content: center;
+      gap: 2rem; font-size: 0.88rem;
+      color: var(--muted); flex-wrap: wrap;
+      font-family: var(--font-label);
+      letter-spacing: 0.04em;
+    }
+    .hero-meta a { color: var(--vermillion); text-decoration: none; }
+    .hero-meta a:hover { text-decoration: underline; }
+
+    /* Sketchnote — full bleed */
+    .sketchnote-section {
+      background: var(--dark-green);
+      padding: 3rem 0; margin: 2rem 0;
+      width: 100%;
+    }
+    .sketchnote-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 2rem;
+    }
+    .sketchnote-label {
+      font-family: var(--font-label);
+      font-size: 0.7rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: rgba(255,255,255,0.5);
+      text-align: center; margin-bottom: 1rem; font-weight: 600;
+    }
+    .sketchnote-img-wrap {
+      position: relative; display: block;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      overflow: hidden; cursor: pointer;
+      transition: box-shadow 0.3s ease;
+    }
+    .sketchnote-img-wrap:hover {
+      box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+    }
+    .sketchnote-img-wrap img {
+      width: 100%; height: auto; display: block;
+      transition: transform 0.4s ease;
+    }
+    .sketchnote-img-wrap:hover img { transform: scale(1.01); }
+    .sketchnote-caption {
+      text-align: center; margin-top: 1rem;
+      font-family: var(--font-label);
+      font-size: 0.72rem; letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+    }
+
+    /* Audio card */
+    .audio-section {
+      max-width: 680px; margin: 0 auto 2rem;
+      padding: 0 2rem;
+    }
+    .audio-card {
+      background: var(--warm-dark); color: #fff;
+      padding: 1.5rem 2rem;
+      display: flex; align-items: center; gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .audio-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .audio-info { flex: 1; min-width: 200px; }
+    .audio-title {
+      font-family: var(--font-display);
+      font-size: 1rem; font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+    .audio-subtitle { font-size: 0.78rem; color: #999; }
+    .audio-card audio {
+      width: 100%; max-width: 300px; height: 38px;
+    }
+
+    /* Quick-links bar */
+    .quicklinks {
+      max-width: 680px; margin: 0 auto 2.5rem;
+      padding: 0 2rem;
+      display: flex; gap: 0.75rem; flex-wrap: wrap;
+    }
+    .ql {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--section-alt);
+      border: 1px solid var(--border);
+      color: var(--ink); padding: 0.45rem 0.9rem;
+      font-family: var(--font-label);
+      font-size: 0.78rem; letter-spacing: 0.08em;
+      text-decoration: none; font-weight: 600;
+      transition: all 0.2s;
+    }
+    .ql:hover { background: var(--vermillion); color: #fff; border-color: var(--vermillion); }
+
+    /* Article */
+    .article {
+      max-width: 680px; margin: 0 auto;
+      padding: 0 2rem 4rem;
+    }
+    .article p { margin-bottom: 1.6rem; }
+    .article a {
+      color: var(--vermillion); text-decoration: none;
+      border-bottom: 1px solid rgba(201, 57, 44, 0.3);
+      transition: border-color 0.2s;
+    }
+    .article a:hover { border-bottom-color: var(--vermillion); }
+    .article strong { font-weight: 600; }
+    .dropcap::first-letter {
+      font-family: var(--font-display);
+      font-size: 5.2rem; float: left;
+      line-height: 0.78; padding-right: 0.5rem;
+      padding-top: 0.08rem; font-weight: 900;
+      color: var(--vermillion);
+    }
+    .article h2 {
+      font-family: var(--font-display);
+      font-size: 2.1rem; font-weight: 700;
+      margin: 4rem 0 1.5rem;
+      padding-top: 2.5rem;
+      border-top: 2px solid var(--border);
+      line-height: 1.15;
+    }
+    .article h3 {
+      font-family: var(--font-label);
+      font-size: 1.1rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--forest); margin: 2.5rem 0 1rem;
+    }
+
+    /* Pull quote */
+    .pullquote {
+      font-family: var(--font-display);
+      font-size: 1.55rem; font-style: italic;
+      font-weight: 400; line-height: 1.38;
+      color: var(--ink);
+      border-left: 4px solid var(--vermillion);
+      padding: 1.2rem 0 1.2rem 1.8rem;
+      margin: 2.5rem 0 2.5rem -0.5rem;
+      background: var(--highlight);
+    }
+    .pullquote-attr {
+      font-family: var(--font-label);
+      font-size: 0.78rem; font-style: normal;
+      color: var(--muted); display: block;
+      margin-top: 0.6rem; letter-spacing: 0.06em;
+    }
+
+    /* Section break slide */
+    .act-break {
+      margin: 3rem 0; padding: 3.5rem 2rem;
+      background: linear-gradient(135deg, var(--dark-green) 0%, #0f1f15 100%);
+      color: #fff; text-align: center;
+    }
+    .act-break-number {
+      font-family: var(--font-label);
+      font-size: 0.7rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: rgba(255,255,255,0.45);
+      margin-bottom: 0.75rem; font-weight: 600;
+    }
+    .act-break-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 900; color: #fff;
+      margin-bottom: 0.6rem;
+    }
+    .act-break-title em { color: #7ec8a0; font-style: normal; }
+    .act-break-subtitle {
+      font-size: 1rem; color: rgba(255,255,255,0.65);
+      font-style: italic; max-width: 460px; margin: 0 auto;
+    }
+
+    /* Wide media block */
+    .wide-block {
+      margin: 2.5rem -4rem;
+      background: var(--section-alt);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .wide-block-inner { padding: 2rem; }
+    .wide-block-caption {
+      font-family: var(--font-label);
+      font-size: 0.72rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted);
+      text-align: center; padding: 0.75rem 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .wide-block a {
+      display: block; border: none;
+    }
+    .wide-block img, .wide-block video {
+      width: 100%; height: auto; display: block;
+    }
+    @media (max-width: 800px) {
+      .wide-block { margin: 2rem -2rem; }
+      .act-break { margin: 3rem 0; padding: 2.5rem 1.5rem; }
+    }
+
+    /* Insight box */
+    .insight-box {
+      background: var(--highlight);
+      border: 1px solid rgba(176, 126, 42, 0.4);
+      border-left: 4px solid var(--gold);
+      padding: 1.5rem 1.5rem 1.5rem 1.8rem;
+      margin: 2.5rem 0;
+    }
+    .insight-label {
+      font-family: var(--font-label);
+      font-size: 0.65rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 0.5rem; font-weight: 700;
+    }
+
+    /* Popup trigger */
+    .popup-trigger {
+      cursor: pointer;
+      color: var(--forest) !important;
+      border-bottom-color: rgba(45, 90, 61, 0.3) !important;
+      border-bottom-style: dashed !important;
+    }
+    .popup-trigger:hover {
+      border-bottom-color: var(--forest) !important;
+      border-bottom-style: solid !important;
+    }
+
+    /* Tooltip */
+    .tip {
+      position: relative; cursor: help;
+      border-bottom: 1px dotted var(--muted);
+    }
+    .tip::after {
+      content: attr(data-tip);
+      position: absolute; bottom: calc(100% + 8px);
+      left: 50%; transform: translateX(-50%);
+      background: var(--ink); color: #fff;
+      font-family: var(--font-label);
+      font-size: 0.75rem; letter-spacing: 0.03em;
+      padding: 0.55rem 1rem;
+      width: max-content; max-width: 320px; min-width: 180px;
+      white-space: normal; line-height: 1.5;
+      pointer-events: none; opacity: 0;
+      transition: opacity 0.2s; z-index: 50;
+      text-align: left;
+    }
+    .tip:hover::after { opacity: 1; }
+
+    /* Inline idea figures */
+    .idea-fig {
+      margin: 1.25rem 0 0.25rem;
+    }
+    .idea-fig img {
+      width: 100%; height: auto; display: block;
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .idea-fig img:hover { opacity: 0.92; }
+    .idea-fig figcaption {
+      font-family: var(--font-label);
+      font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+      margin-top: 0.4rem; padding-top: 0.4rem;
+      border-top: 1px solid var(--border);
+      line-height: 1.4;
+    }
+    .idea-figures-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0.75rem; margin: 1.25rem 0 0.25rem;
+    }
+    .idea-figures-grid .idea-fig { margin: 0; }
+    @media (max-width: 500px) {
+      .idea-figures-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Critique full-bleed section */
+    .critique-full-bleed {
+      background: #1a1412;
+      padding: 2.5rem 1.5rem;
+      margin: 0;
+    }
+    .critique-full-bleed-label {
+      font-family: var(--font-label);
+      font-size: 0.68rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+      text-align: center; margin-bottom: 1rem; font-weight: 600;
+    }
+    .critique-full-bleed iframe {
+      display: block;
+      width: 100%; max-width: 1400px;
+      margin: 0 auto;
+      height: 640px;
+      border: none;
+      border-radius: 4px;
+    }
+    @media (max-width: 820px) {
+      .critique-full-bleed iframe { height: 860px; }
+    }
+
+    /* Art technique popup image */
+    .art-popup-img {
+      width: 100%; max-width: 440px; display: block;
+      margin: 1rem auto; cursor: pointer;
+      border: 1px solid var(--border);
+    }
+
+    /* Lightbox */
+    .lightbox-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 999; display: none;
+      align-items: center; justify-content: center;
+      padding: 2rem;
+    }
+    .lightbox-overlay.active { display: flex; }
+    .lightbox-img {
+      max-width: 92vw; max-height: 90vh;
+      object-fit: contain; display: block;
+    }
+    .lightbox-close {
+      position: fixed; top: 1.5rem; right: 1.5rem;
+      background: none; border: none; cursor: pointer;
+      color: #fff; font-size: 2rem; line-height: 1;
+      z-index: 1001;
+    }
+    .lightbox-caption {
+      position: fixed; bottom: 1.5rem;
+      left: 50%; transform: translateX(-50%);
+      color: rgba(255,255,255,0.65);
+      font-family: var(--font-label);
+      font-size: 0.8rem; letter-spacing: 0.06em;
+    }
+
+    /* Modal popup */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 998; display: none;
+      align-items: flex-start; justify-content: center;
+      padding: 2rem 1rem;
+      overflow-y: auto;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+      background: var(--cream);
+      max-width: 780px; width: 100%;
+      margin: auto;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+      position: relative;
+    }
+    .modal-header {
+      background: var(--dark-green);
+      color: #fff; padding: 1.5rem 2rem;
+      display: flex; align-items: center;
+      justify-content: space-between;
+    }
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 1.3rem; font-weight: 700;
+    }
+    .modal-close {
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.7); font-size: 1.5rem;
+      transition: color 0.2s; flex-shrink: 0; margin-left: 1rem;
+    }
+    .modal-close:hover { color: #fff; }
+    .modal-body {
+      padding: 2rem;
+      font-family: var(--font-body);
+      font-size: 0.92rem; line-height: 1.75;
+      color: var(--ink);
+      max-height: 70vh; overflow-y: auto;
+    }
+    .modal-body h2 {
+      font-family: var(--font-label);
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--vermillion); margin: 1.5rem 0 0.5rem;
+    }
+    .modal-body h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem; font-weight: 700;
+      margin: 1.5rem 0 0.5rem; color: var(--ink);
+    }
+    .modal-body p { margin-bottom: 1rem; }
+    .modal-body ol, .modal-body ul {
+      padding-left: 1.5rem; margin-bottom: 1rem;
+    }
+    .modal-body li { margin-bottom: 0.5rem; }
+    .modal-body a { color: var(--vermillion); }
+    .modal-body strong { font-weight: 600; }
+    .modal-body em { font-style: italic; }
+    .modal-source {
+      padding: 1rem 2rem; background: var(--section-alt);
+      border-top: 1px solid var(--border);
+      font-family: var(--font-label);
+      font-size: 0.72rem; color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+    .modal-source a { color: var(--vermillion); }
+
+    /* Transcript modal (wider, markdown-rendered) */
+    .modal-overlay.transcript .modal-box { max-width: 860px; }
+    .modal-body .transcript-md { font-family: var(--font-body); font-size: 0.9rem; line-height: 1.8; }
+    .modal-body .transcript-md h1 { font-family: var(--font-display); font-size: 1.4rem; margin: 1.5rem 0 0.5rem; }
+    .modal-body .transcript-md h2 { font-family: var(--font-label); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--vermillion); margin: 1.5rem 0 0.4rem; }
+    .modal-body .transcript-md blockquote { border-left: 3px solid var(--gold); margin: 1rem 0; padding: 0.5rem 1rem; background: var(--highlight); font-style: italic; }
+    .modal-body .transcript-md strong { font-weight: 600; }
+    .modal-body .transcript-md video, .modal-body .transcript-md img { max-width: 100%; height: auto; display: block; margin: 0.75rem 0; }
+    .modal-body .transcript-md div[style] { display: none; } /* hide slide divs */
+    .modal-body .transcript-md a { color: var(--vermillion); }
+
+    /* Takeaways */
+    .takeaways {
+      background: linear-gradient(135deg, var(--dark-green) 0%, #0e1c12 100%);
+      color: #fff; padding: 5rem 2rem; margin: 4rem 0 0;
+    }
+    .takeaways-inner { max-width: 900px; margin: 0 auto; }
+    .takeaways-label {
+      font-family: var(--font-label);
+      font-size: 0.72rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+      text-align: center; margin-bottom: 0.75rem; font-weight: 600;
+    }
+    .takeaways h2 {
+      font-family: var(--font-display);
+      font-size: 2.5rem; text-align: center;
+      margin: 0 0 3rem; color: #fff; font-weight: 700;
+    }
+    .takeaway-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .takeaway-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 2rem 1.5rem;
+      transition: all 0.3s;
+    }
+    .takeaway-card:hover {
+      background: rgba(255,255,255,0.09);
+      transform: translateY(-4px);
+      border-color: rgba(126, 200, 160, 0.3);
+    }
+    .takeaway-number {
+      font-family: var(--font-display);
+      font-size: 3rem; font-weight: 900;
+      color: #7ec8a0; line-height: 1;
+      margin-bottom: 0.75rem;
+    }
+    .takeaway-title {
+      font-family: var(--font-label);
+      font-size: 1rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin-bottom: 0.75rem; color: #fff;
+    }
+    .takeaway-text {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.65); line-height: 1.55;
+    }
+
+    /* Resources */
+    .resources-section {
+      background: var(--section-alt);
+      padding: 4rem 2rem; margin: 0;
+    }
+    .resources-inner { max-width: 1080px; margin: 0 auto; }
+    .resources-section-label {
+      font-family: var(--font-label);
+      font-size: 0.7rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--muted);
+      text-align: center; margin-bottom: 0.5rem;
+    }
+    .resources-section h2 {
+      font-family: var(--font-display);
+      font-size: 2rem; text-align: center;
+      margin-bottom: 2.5rem; color: var(--ink);
+      font-weight: 700;
+    }
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    .resource-card {
+      display: block; padding: 1.1rem 1.25rem;
+      background: #fff; border: 1px solid var(--border);
+      text-decoration: none; color: var(--ink);
+      transition: all 0.2s; border-bottom: none;
+    }
+    .resource-card:hover {
+      border-color: var(--vermillion);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+    .rc-title {
+      font-family: var(--font-label);
+      font-weight: 700; font-size: 0.95rem;
+      color: var(--vermillion); margin-bottom: 0.3rem;
+      letter-spacing: 0.04em;
+    }
+    .rc-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.4; }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem; text-align: center;
+      background: var(--cream);
+    }
+    .footer-author {
+      display: flex; align-items: center;
+      justify-content: center; gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .footer-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--vermillion), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.2rem; font-weight: 700; color: #fff;
+    }
+    .footer-info { text-align: left; }
+    .footer-name { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }
+    .footer-title { font-size: 0.8rem; color: var(--muted); }
+    .footer-links {
+      display: flex; justify-content: center;
+      gap: 2rem; flex-wrap: wrap;
+    }
+    .footer-links a {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.85rem; font-family: var(--font-label);
+      letter-spacing: 0.06em; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--vermillion); }
+
+    /* Lists */
+    .article ul, .article ol { margin: 1.5rem 0; padding-left: 1.5rem; }
+    .article li { margin-bottom: 0.75rem; }
+
+    /* Calvin */
+    .calvin-wrap {
+      margin: 3rem -2rem;
+      background: var(--warm-dark); padding: 2rem;
+      text-align: center;
+    }
+    .calvin-wrap img { max-width: 100%; height: auto; display: inline-block; }
+    .calvin-caption {
+      font-family: var(--font-label);
+      font-size: 0.72rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+      margin-top: 1rem;
+    }
+
+    /* Inline image with caption */
+    .fig {
+      margin: 2rem 0;
+    }
+    .fig img {
+      width: 100%; height: auto; display: block;
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .fig img:hover { opacity: 0.9; }
+    .figcaption {
+      font-family: var(--font-label);
+      font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+      margin-top: 0.5rem; text-align: center;
+    }
+
+    /* Video wrapper */
+    .video-wrap {
+      margin: 2rem 0;
+    }
+    .video-wrap video {
+      width: 100%; height: auto; display: block;
+    }
+    .video-caption {
+      font-family: var(--font-label);
+      font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+      margin-top: 0.5rem; padding: 0.4rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Annotation / aside */
+    .aside-note {
+      border-left: 3px solid var(--gold);
+      background: var(--highlight);
+      padding: 1rem 1.2rem;
+      margin: 1.5rem 0;
+      font-size: 0.88rem;
+      color: var(--muted); font-style: italic;
+    }
+    .aside-note a { color: var(--gold); }
+
+    /* Animation on scroll */
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1; transform: translateY(0);
+    }
+
+    code { font-family: var(--font-mono); font-size: 0.85em; }
+  </style>
+</head>
+
+<body>
+  <div class="progress-bar" id="progress"></div>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <div class="masthead-brand"><span>Chennai Design Festival</span> · 2026</div>
+      <div class="masthead-date">21 Mar 2026</div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-kicker">Design × Artificial Intelligence × Infinite Generativity</div>
+    <h1 class="hero-title">Design in the Age of Infinite Generativity</h1>
+    <p class="hero-subtitle">When AI collapses the cost of execution, what remains for designers — and what becomes possible?</p>
+    <div class="hero-meta">
+      <span>By <a href="https://www.s-anand.net/" target="_blank">S Anand</a>, LLM Psychologist</span>
+      <span><a href="https://www.straive.com/" target="_blank">Straive</a></span>
+      <span>12 min read</span>
+      <span><a href="https://www.chennaidesignfestival.com/" target="_blank">Chennai Design Festival</a></span>
+    </div>
+  </section>
+
+  <!-- SKETCHNOTE -->
+  <div class="sketchnote-section">
+    <div class="sketchnote-inner">
+      <div class="sketchnote-label">Talk Sketchnote · Click to open full size</div>
+      <a href="sketchnote.avif" target="_blank" class="sketchnote-img-wrap">
+        <img src="sketchnote.avif" alt="Sketchnote of Design in the Age of Infinite Generativity — visual summary of ideation, execution, evaluation, design ideas, AI-generated art, and the Calvin conclusion" loading="lazy">
+      </a>
+      <div class="sketchnote-caption">Visual sketchnote · Click to open full size in new tab</div>
+    </div>
+  </div>
+
+  <!-- AUDIO + QUICKLINKS -->
+  <div class="audio-section">
+    <div class="audio-card">
+      <div class="audio-icon">🎧</div>
+      <div class="audio-info">
+        <div class="audio-title">Listen to the Talk</div>
+        <div class="audio-subtitle">Chennai Design Festival · 21 March 2026</div>
+      </div>
+      <audio controls preload="metadata">
+        <source src="audio.opus" type="audio/ogg; codecs=opus">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+  </div>
+
+  <div class="quicklinks">
+    <a href="#" class="ql popup-trigger" data-popup="transcript-popup">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      Full Transcript
+    </a>
+    <a href="https://drive.google.com/drive/folders/1unGwiNE2HVmBP_tbIGqLhWddfPSzoyif" class="ql" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+      Slides &amp; Resources
+    </a>
+    <a href="https://www.chennaidesignfestival.com/" class="ql" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+      Chennai Design Festival
+    </a>
+  </div>
+
+  <!-- ARTICLE BODY -->
+  <article class="article">
+
+    <p class="dropcap">Consider one of the strangest facts about human language. A finite vocabulary — a few thousand common words, a handful of grammatical rules — can produce an infinite number of sentences. Linguists call this property
+    <span class="tip" data-tip="Noam Chomsky's term for the ability to produce infinitely many expressions from finite means. Alexander von Humboldt described it as 'the infinite use of finite means.'">infinite generativity</span>.
+    Every child masters it before learning to multiply. You are doing it right now, reading a sentence that you have almost certainly never encountered before in exactly this form, and understanding it without effort.</p>
+
+    <p>For most of human history, design did not work this way. Design was constrained. A beautiful cloth had to be woven by a weaver. A building had to be drawn by an architect. A typeface had to be cut by a punchcutter. The vocabulary of design was finite, and the grammar of execution was expensive. Ideas came cheap; making them real was the hard part.</p>
+
+    <p>On the morning of March 21, 2026, at the <a href="https://www.chennaidesignfestival.com/" target="_blank">Chennai Design Festival</a>, a man named <a href="https://www.s-anand.net/" target="_blank">Anand</a> — officially the world's first <span class="tip" data-tip="Anand's self-assigned title at Straive, reflecting his focus on understanding how LLMs think, fail, and behave — more like a psychologist studying a subject than an engineer building a tool.">LLM Psychologist</span> at <a href="https://www.straive.com/" target="_blank">Straive</a> — walked onto a stage before an audience of designers and made a claim that should have sounded alarming but somehow felt liberating: AI is about to give design the same property that human language has always had. <em>Infinite generativity.</em></p>
+
+    <div class="pullquote">
+      "Before AI, execution was what took the bulk of the time. Now AI is collapsing the amount of time it takes for execution — which means that what's left is figuring out what to build and how to evaluate it."
+    </div>
+
+    <p>The host had introduced him as someone who would "show us that as we design the future of AI, we need to stop being just programmers and start being philosophers." It was a grand billing. But Anand is not, by temperament, a philosopher. He is a tinkerer. What followed was not a philosophical treatise but a rapid-fire demonstration of what happens when an endlessly curious person with access to every AI tool on the market decides to see what's actually possible in design — and then shows the receipts.</p>
+
+  </article>
+
+  <!-- ACT 1: THE SHIFT -->
+  <div class="act-break reveal">
+    <div class="act-break-number">The Central Premise</div>
+    <div class="act-break-title">The <em>Effort</em> Has Moved</div>
+    <div class="act-break-subtitle">Execution used to be 80% of design. AI just made it 5%. What do designers do with the other 75%?</div>
+  </div>
+
+  <article class="article">
+
+    <p>For years, the standard model of creative work looked like a bell curve. Ideation — the spark, the concept — sat on the left, taking maybe ten percent of the effort. Execution occupied the fat middle: the 80% spent rendering, building, iterating, implementing. Evaluation sat on the right at another ten percent. The shape of that curve was a law of the creative universe, as stable as gravity.</p>
+
+    <p>Then something shifted. Slowly at first, then suddenly.</p>
+
+    <p>Anand put up a visualization — <a href="https://claude.ai/public/artifacts/ac9cc611-dec8-468f-a72d-981c5afbd8fb" target="_blank">built entirely by Claude</a> from a prompt he wrote — showing exactly what is happening to that curve:</p>
+
+    <div class="wide-block reveal">
+      <video controls autoplay loop muted playsinline preload="metadata" style="max-width:100%;height:auto;display:block;">
+        <source src="ai-execution.webm" type="video/webm">
+      </video>
+      <div class="wide-block-caption">
+        The shift in design effort. Execution collapses from 80% to 5% with AI. Ideation and evaluation remain — and rise in relative importance.
+        <a href="https://claude.ai/public/artifacts/ac9cc611-dec8-468f-a72d-981c5afbd8fb" target="_blank" style="color: var(--vermillion); margin-left: 0.5rem;">View interactive</a>
+      </div>
+    </div>
+
+    <p>Watch the visualization long enough and something uncomfortable sets in. The execution hump — the fat middle where most creative professionals spend most of their careers — is smoothly flattening. The ideation and evaluation dots, previously dwarfed, are now taller. The shape of work has inverted.</p>
+
+    <p>This is not a distant prediction. It is already happening, and <span class="tip" data-tip="LLM API costs have dropped over 99% since GPT-3 in 2020, while quality has improved dramatically — Anand tracks this at sanand0.github.io/llmpricing">the economics are accelerating it</span>. The question that concerned Anand — and, by the end of his talk, the audience — was not "will this happen?" but "what do we do with the 75% of effort that just got freed up?"</p>
+
+    <p>His answer came in three acts: Ideation, Execution, and Evaluation. Not just as stages of design — but as new territories, each opened up by AI in ways designers hadn't fully imagined.</p>
+
+  </article>
+
+  <!-- ACT 2: IDEATION -->
+  <div class="act-break reveal">
+    <div class="act-break-number">Act One · Ideation</div>
+    <div class="act-break-title"><em>Discover</em> New Art</div>
+    <div class="act-break-subtitle">Explore the opportunity space of design — the vocabulary you didn't know existed</div>
+  </div>
+
+  <article class="article">
+
+    <h2>The Vocabulary Problem</h2>
+
+    <p>Anand has no formal design education. He will tell you this cheerfully, without apology. He is a coder, a data scientist, someone who spent decades making things with software — not with brushes or fabric or light. And for most of his career, this meant his vocabulary for <em>describing</em> what he wanted to create was limited. You can't ask for what you don't have words for.</p>
+
+    <p>So he did what any curious person with access to an LLM does: he asked.</p>
+
+    <p>"Give me some new designs. Tell me what are the different kinds of styles, art techniques that I can use, and what are the different prompts that I can use for this."</p>
+
+    <p>The AI came back with a gallery of techniques Anand had never heard of. <a href="#" class="popup-trigger" data-popup="art-decalcomania">Decalcomania</a>. <a href="#" class="popup-trigger" data-popup="art-grattage">Grattage</a>. <a href="#" class="popup-trigger" data-popup="art-sgraffito">Sgraffito</a>. <a href="#" class="popup-trigger" data-popup="art-stippling">Stippling Mixed Media</a>. And then, buried in the list, the one that stopped him cold: <a href="#" class="popup-trigger" data-popup="art-xerox">the Xerox style</a>.</p>
+
+    <p>"Effectively a style of art which is simply based on photocopies of photocopies of photocopies, and it has a very gritty and interesting effect."</p>
+
+    <p>Each of these was a door. And behind each door was a prompt — a set of words that could be passed to an image-generation model to produce something in that style. Anand had built a gallery:</p>
+
+    <div class="wide-block reveal">
+      <a href="https://sanand0.github.io/llmartstyle/?category=art" target="_blank">
+        <img src="llm-art-style.avif" alt="LLM Art Style Explorer — a gallery of art techniques discovered by asking an LLM" style="width:100%;height:auto;display:block;">
+      </a>
+      <div class="wide-block-caption">
+        <a href="https://sanand0.github.io/llmartstyle/?category=art" target="_blank">LLM Art Style Explorer</a> — techniques including Decalcomania, Grattage, Sgraffito, Stippling, and dozens more. Click to explore.
+      </div>
+    </div>
+
+    <p>This is a more profound act than it first appears. The limitation in creative work is rarely ability — it is <em>vocabulary</em>. Designers who have spent years in formal education acquire hundreds of terms for things. Someone who hasn't spent those years is not less capable of recognizing beauty; they simply have fewer handles to grab onto. AI doesn't replace the human judgment. It hands you the vocabulary at speed.</p>
+
+    <div class="insight-box reveal">
+      <div class="insight-label">Key Insight</div>
+      <strong>Knowing the names builds the vocabulary. And in order to build a vocabulary, sometimes all you have to do is ask it to build a gallery.</strong> The design space is far larger than any individual's exposure to it. AI can map that space — not to replace human taste, but to expand it.
+      <br><br>
+      <small>(See also: <a href="https://sanand0.github.io/datastories/novel-dataviz/" target="_blank">Claude Code creating three novel data visualizations</a>, and <a href="https://sanand0.github.io/datastories/anthropic-work/" target="_blank">discovering the most apt visualizations for research papers</a> — the same principle of vocabulary expansion applied to data design.)</small>
+    </div>
+
+    <h2>The Outlier Map</h2>
+
+    <p>But discovering what's possible in the abstract is only half the ideation challenge. The more interesting question is: <em>who is doing things nobody else is doing?</em> Where are the outliers — the designers whose vocabulary is genuinely different from everyone else's?</p>
+
+    <p>Anand's team approached this empirically. They took roughly 200 charts from ten major publications — <a href="https://www.nytimes.com/" target="_blank">the New York Times</a>, <a href="https://www.wsj.com/" target="_blank">the Wall Street Journal</a>, <a href="https://www.economist.com/" target="_blank">The Economist</a>, <a href="https://www.scmp.com/" target="_blank">South China Morning Post</a>, <a href="https://www.reuters.com/" target="_blank">Reuters</a>, <a href="https://www.bloomberg.com/" target="_blank">Bloomberg</a>, <a href="https://www.theguardian.com/" target="_blank">The Guardian</a>, <a href="https://pudding.cool/" target="_blank">The Pudding</a>, <a href="https://www.washingtonpost.com/" target="_blank">The Washington Post</a> — and ran them through an image embedding model. Similar charts cluster together. Very different charts end up far apart.</p>
+
+    <div class="wide-block reveal">
+      <video controls autoplay loop muted playsinline preload="metadata" style="max-width:100%;height:auto;display:block;">
+        <source src="data-journalism-chart-map.webm" type="video/webm">
+      </video>
+      <div class="wide-block-caption">
+        <a href="https://ritesh17rb.github.io/chart-map/" target="_blank">A UMAP of ~200 charts</a> from 10 publications — showing how the South China Morning Post occupies a distinctive cluster while The Economist sits in the middle, and The Washington Post clusters at the other end.
+      </div>
+    </div>
+
+    <div class="pullquote">
+      "The South China Morning Post almost has a distinctive cluster very different from the others. If I can find some of these weird outliers, people who think very differently, very creatively, I can give examples of those and ask it to generate stuff."
+    </div>
+
+    <p>The insight here is deceptively simple. AI needs inspiration just as much as humans do. You cannot prompt your way to genuine novelty with only generic descriptions. But if you can find the actual outliers — the practitioners at the edge of the distribution — you can feed those as examples and use AI to generate variations on genuinely unusual ideas. The outlier becomes the seed. AI becomes the germinator.</p>
+
+    <p>This is the new skill: not just prompting, but <em>curating the inputs</em>. Finding the humans who think differently. Building the community at the frontier. Figuring out who the outliers are. As Anand put it, "that's where our job is." And generative AI is making even that easier.</p>
+
+    <aside class="aside-note">
+      What does it look like when AI discovers its own novel visual vocabularies? Anand's team has been exploring this:
+      <a href="https://gemini.google.com/share/7222553e0795" target="_blank">a "Bending Space Time" map-based visualization</a> for Einstein's visual biography, and
+      <a href="https://claude.ai/public/artifacts/f2202606-da5c-4114-845c-29c1a0171824" target="_blank">flowing particle streams based on electromagnetic field diagrams</a> — "Cognitive Field Lines" — for the same subject. Each represents AI inventing a visual form that didn't exist before the prompt.
+    </aside>
+
+  </article>
+
+  <!-- DESIGN IDEAS SECTION — Sustainable -->
+  <div class="act-break reveal" style="background: linear-gradient(135deg, #3d1a0a, #1c0e04);">
+    <div class="act-break-number">From the Festival Floor</div>
+    <div class="act-break-title">AI as <em>Design Partner</em></div>
+    <div class="act-break-subtitle">Inspired by other designers at Chennai Design Festival — then amplified tenfold</div>
+  </div>
+
+  <article class="article">
+
+    <p>The talk was not purely theoretical. Anand had spent the hours before the session sitting with ideas from the designers around him — and running them through AI to see what would come back.</p>
+
+    <p>Take <a href="https://www.linkedin.com/in/senthil-gopalan-05935719" target="_blank">Senthil</a> and Amutha, founders of <a href="https://www.payir.org/" target="_blank">Payir</a>, a grassroots organization in Tamil Nadu. They had demonstrated at the festival a re-usable fabric calendar — a calendar that, when its year is done, converts into a bag. It was a small, beautiful example of what the founders believed: that good design can be for the masses and by the masses, reclaiming time, energy, and joy.</p>
+
+    <p>Anand fed this idea to Claude and asked for half a dozen ideas in the same spirit. What came back was
+    <a href="#" class="popup-trigger" data-popup="sustainable-popup">a full conversation worth reading</a>
+    — Claude reasoning carefully about Payir's ethos before generating ideas. The results:</p>
+
+  </article>
+
+  <article class="article">
+
+    <h3>The Modular Kolam Mat</h3>
+    <p>A fabric mat with a grid of snap-on/Velcro tiles in traditional <span class="tip" data-tip="Kolam: a form of drawing practised in South India, made from rice flour, chalk, or coloured powder, usually at the entrance of homes. Both a daily ritual and a geometric art form.">kolam</span> patterns. Each morning, rearrange the tiles to create new designs — teaching geometry, symmetry, and cultural patterns to children while serving as a doormat. When tiles wear out, they become cleaning rags. The base mat eventually becomes a shopping bag. It's meditation, math lesson, home decoration, and zero-waste design in one object.</p>
+    <div class="idea-figures-grid">
+      <figure class="idea-fig">
+        <img src="modular-kolam-1.avif" alt="Assembled doormat showing snap-on kolam-patterned tiles" onclick="openLightbox(this.src, this.alt)" loading="lazy">
+        <figcaption>Assembled: kolam-patterned tiles snap onto the base mat</figcaption>
+      </figure>
+      <figure class="idea-fig">
+        <img src="modular-kolam-2.avif" alt="Child rearranging tiles to learn geometry and kolam symmetry" onclick="openLightbox(this.src, this.alt)" loading="lazy">
+        <figcaption>Education: rearranging tiles teaches geometry and symmetry</figcaption>
+      </figure>
+      <figure class="idea-fig">
+        <img src="modular-kolam-3.avif" alt="Worn tile being used as a cleaning rag" onclick="openLightbox(this.src, this.alt)" loading="lazy">
+        <figcaption>Zero waste: worn tiles repurposed as cleaning rags</figcaption>
+      </figure>
+      <figure class="idea-fig">
+        <img src="modular-kolam-4.avif" alt="Base mat being sewn into a shopping tote bag" onclick="openLightbox(this.src, this.alt)" loading="lazy">
+        <figcaption>Final transformation: the base mat becomes a shopping tote</figcaption>
+      </figure>
+    </div>
+
+    <h3>The Growth Chart Kurta</h3>
+    <p>A child's <span class="tip" data-tip="Kurta: a loose collarless shirt worn in South Asia, typically made of cotton or silk, common for both daily wear and festive occasions.">kurta</span> with measurement markings embroidered along the seam. As the child grows, parents mark their height with simple stitches or fabric markers. When outgrown, the garment is unpicked and reconstructed into a smaller kurta for a younger sibling, or a pouch, or a doll. The measurements become a family record — a fabric memory that doesn't end up in landfill. Every stitch holds a story.</p>
+    <figure class="idea-fig">
+      <img src="growth-chart-kurta.avif" alt="Growth Chart Kurta — measurement markings embroidered along the seam, shown in multiple views" onclick="openLightbox(this.src, this.alt)" loading="lazy">
+      <figcaption>The kurta as family record: embroidered height markings persist across generations as the garment is reconstructed</figcaption>
+    </figure>
+
+    <h3>The Seed Library Sari Border</h3>
+    <p><span class="tip" data-tip="Sari: a garment of 5–9 metres of unstitched fabric draped in a variety of styles across South Asia. The border (called pallu or zari) is traditionally its most ornate section.">Sari</span> borders designed with pockets holding indigenous seed varieties — millets, traditional vegetables, pulses. Women exchange border sections at community gatherings, literally trading seeds while trading stories. The border can be removed when the sari wears thin, becoming a seed-storage belt or headband. Agricultural preservation disguised as fashion; distributed knowledge disguised as decoration.</p>
+    <div class="idea-figures-grid">
+      <figure class="idea-fig">
+        <img src="seed-library-sari-1.avif" alt="Women wearing seed-border saris at a community gathering" onclick="openLightbox(this.src, this.alt)" loading="lazy">
+        <figcaption>The wearable library in daily life — seeds integrated into the sari border</figcaption>
+      </figure>
+      <figure class="idea-fig">
+        <img src="seed-library-sari-2.avif" alt="Close-up of concealed seed pockets in the woven border" onclick="openLightbox(this.src, this.alt)" loading="lazy">
+        <figcaption>Hidden compartments hold labelled indigenous seed varieties</figcaption>
+      </figure>
+      <figure class="idea-fig">
+        <img src="seed-library-sari-3.avif" alt="Two women exchanging seed-border sections at a gathering" onclick="openLightbox(this.src, this.alt)" loading="lazy">
+        <figcaption>The exchange: trading seeds and stories simultaneously</figcaption>
+      </figure>
+      <figure class="idea-fig">
+        <img src="seed-library-sari-4.avif" alt="Border repurposed as a utility belt and headband" onclick="openLightbox(this.src, this.alt)" loading="lazy">
+        <figcaption>Afterlife: belt and headband when the sari wears thin</figcaption>
+      </figure>
+    </div>
+
+    <h3>The Recipe Towel Chronicle</h3>
+    <p>Kitchen towels with regional recipes printed in Tamil — not just ingredients, but the <em>why</em> behind each step (fermentation science, spice medicine, seasonal timing). As towels wear from washing, the faded sections reveal which recipes the family cooks most. Eventually the towel becomes produce bags or pot holders. Culinary knowledge literally woven into daily rhythm, aging gracefully into new utility.</p>
+    <figure class="idea-fig">
+      <img src="recipe-towel.avif" alt="Kitchen towel printed with Tamil recipes, fading with use to reveal most-cooked dishes" onclick="openLightbox(this.src, this.alt)" loading="lazy">
+      <figcaption>The most-used recipes fade fastest — the towel's wear pattern becomes a cooking history</figcaption>
+    </figure>
+
+    <div class="pullquote">
+      "Now, these are the kinds of things that you can generate with generative AI. That is the whole point of generative AI."
+      <span class="pullquote-attr">— Anand</span>
+    </div>
+
+    <p>What made these ideas remarkable was not just that they were good — though they were. It was that they were <em>culturally specific</em> in the way only good design is. AI, given examples from a specific community with a specific ethos, produced ideas that honored that community's constraints, materials, and values. Not generic solutions. Not Western solutions. Kolam patterns, Tamil recipes, Indian saris, village seed-trading networks. The vocabulary of the training data, selectively invoked.</p>
+
+    <h2>Everyday Design Problems</h2>
+
+    <p>Anand had taken the same approach with ideas from another designer at the festival: <a href="https://in.linkedin.com/in/narendraghate" target="_blank">Narendra Ghate</a>, whose ideas ran toward the elegant and behavioral — dimming lights to reduce office noise, tearable double shampoo sachets, stain band-aids.</p>
+
+    <p>He fed those to Claude and asked: give me half a dozen ideas that'll make us go "Wow! That's clever AND high impact."
+    <a href="#" class="popup-trigger" data-popup="everyday-popup">Read the full conversation</a>. What came back:</p>
+
+    <h3>Medication Packaging That Changes Color When Expired</h3>
+    <p>pH-sensitive ink on blister packs that shifts from green to red when the drug degrades. Not a printed date you squint at — the whole pack turns orange when it's time to discard. Works because most medications release acids as they break down.</p>
+    <figure class="idea-fig">
+      <img src="expired-medication-color.avif" alt="Blister pack with pH-sensitive ink shifting from green to red as medication expires" onclick="openLightbox(this.src, this.alt)" loading="lazy">
+      <figcaption>The entire pack changes color — no more squinting at tiny printed expiry dates</figcaption>
+    </figure>
+
+    <h3>The "Ready to Order" Coaster</h3>
+    <p>Flip the coaster from green to red when you've decided. Solves the eternal "hovering waiter vs. neglected table" problem without apps, buttons, or staff training. Gives customers agency while signaling intent clearly. Costs nothing, reduces frustration on both sides.</p>
+    <figure class="idea-fig">
+      <img src="ready-to-order-coaster.avif" alt="Two-sided coaster: green while browsing, red when ready to order" onclick="openLightbox(this.src, this.alt)" loading="lazy">
+      <figcaption>Green = still deciding. Red = ready. No app required.</figcaption>
+    </figure>
+
+    <h3>USB Cables That Glow When Drawing Phantom Power</h3>
+    <p>A thin phosphorescent strip that lights up when current flows — even 0.1W. Surfaces the invisible <span class="tip" data-tip="Phantom power / vampire drain: the standby energy drawn by devices or chargers left plugged in but not in active use. Can account for 5–10% of home electricity consumption.">vampire drain</span> from chargers left plugged in. People don't unplug because they can't <em>see</em> the waste. Make it visible, behavior changes instantly. Also an instant diagnostic for "why isn't this charging?"</p>
+    <figure class="idea-fig">
+      <img src="glowing-usb-cable.avif" alt="USB cable with phosphorescent strip glowing to show current flow" onclick="openLightbox(this.src, this.alt)" loading="lazy">
+      <figcaption>Invisible phantom drain made visible — the glow means energy is being consumed</figcaption>
+    </figure>
+
+    <h3>Reverse Parking Sensor for Shopping Carts</h3>
+    <p>When a shopping cart is pushed <em>backward</em>, it emits a gentle beep — like a truck reversing. Solves the epidemic of heel-clipping in grocery aisles. Simple piezo buzzer triggered by wheel direction. Cost: pennies. Impact: massive goodwill.</p>
+    <figure class="idea-fig">
+      <img src="reversing-beep-signal.avif" alt="Shopping cart with piezo buzzer emitting a beep when pushed backward" onclick="openLightbox(this.src, this.alt)" loading="lazy">
+      <figcaption>Truck-reversing beep triggered by backward wheel direction — pennies of hardware, massive goodwill</figcaption>
+    </figure>
+
+    <p>What all of these shared, Anand noted, was a quality Claude's response explicitly named: "They surface invisible problems... they leverage existing human instincts... they feel <em>obvious</em> in hindsight — the mark of great design."</p>
+
+    <p>AI had not just generated ideas. It had generated ideas with a theory of why they worked.</p>
+
+  </article>
+
+  <!-- ACT 3: EXECUTION -->
+  <div class="act-break reveal">
+    <div class="act-break-number">Act Two · Execution</div>
+    <div class="act-break-title"><em>Discover</em> Tool Capability</div>
+    <div class="act-break-subtitle">Create a gallery of possibilities — you don't know what your tools can do until you ask</div>
+  </div>
+
+  <article class="article">
+
+    <h2>The Tool Problem</h2>
+
+    <p>Here is a confession that Anand made with no embarrassment whatsoever: "I've been using <span class="tip" data-tip="ImageMagick: a free, open-source suite for image processing and manipulation, released in 1990. A standard tool for batch image operations.">ImageMagick</span> as a tool for the last what, thirty years or something like that, ever since it was invented probably."</p>
+
+    <p>Thirty years. And yet — until he asked an LLM to "go crazy, create all kinds of ImageMagick filters and give me the code for each one" — he had no idea what the tool was truly capable of.</p>
+
+    <div class="wide-block reveal">
+      <a href="https://sanand0.github.io/image-filters/" target="_blank">
+        <img src="llm-image-filters.avif" alt="LLM-discovered ImageMagick filters — a gallery of creative effects discovered by prompting AI to explore the tool" style="width:100%;height:auto;display:block;">
+      </a>
+      <div class="wide-block-caption">
+        <a href="https://sanand0.github.io/image-filters/" target="_blank">Gallery of ImageMagick filters</a> discovered by asking an LLM to "go crazy." Each thumbnail links to the code that produces it.
+      </div>
+    </div>
+
+    <p>The AI cataloged the possibilities, generated the outputs, and produced a gallery of how to use the tool. An encyclopedia of its own capabilities, written by a machine that had read every StackOverflow answer, every documentation page, every blog post that had ever mentioned the word "ImageMagick."</p>
+
+    <div class="pullquote">
+      "It is cataloging the possibilities, generating the outputs. So now I have a gallery of how to use it. Obviously, I'm not going to use it. I'm going to give this to another agent and tell it to use it."
+    </div>
+
+    <p>This is a subtle and important point. The gallery is not for Anand. It's for the next AI agent. He is building institutional memory for a system that learns — a vocabulary, a prior, a reference library. When you ask an agent to create an image effect, having a concrete gallery of possibilities dramatically improves the output. You can say "go towards the esoteric end" or "try something from the bottom half of this." The human role becomes steering, not rowing.</p>
+
+    <aside class="aside-note">
+      Anand has explored this idea of AI discovering tool capabilities more systematically.
+      <a href="https://www.s-anand.net/blog/self-discover-llm-capabilities/" target="_blank">How we can use Claude to discover the visualization capabilities of ffmpeg</a> to create algorithmic art — see the
+      <a href="https://www.youtube.com/watch?v=d7NXU2jeSiU" target="_blank">YouTube output</a>. The same pattern: ask the AI to explore the tool, not just use it.
+    </aside>
+
+    <h2>The Blender Intern</h2>
+
+    <p>And then there was the architecture story, which is perhaps the most revealing.</p>
+
+    <div class="wide-block reveal">
+      <video controls autoplay loop muted playsinline preload="metadata" style="max-width:100%;height:auto;display:block;">
+        <source src="blender.webm" type="video/webm">
+      </video>
+      <div class="wide-block-caption">
+        <a href="https://pavankumart18.github.io/ai-blender-design-journey/" target="_blank">Generating 3D Architecture Through Conversation</a> — an AI building, inspecting, breaking, repairing, and replicating a 14-story office building inside Blender using the Blender MCP with Claude.
+      </div>
+    </div>
+
+    <p>Anand had absolutely no experience with <span class="tip" data-tip="Blender: a free, open-source 3D creation suite used for modeling, animation, rendering, and visual effects. The industry standard for open-source 3D.">Blender</span>. Neither did the intern he assigned this to. Here was the task: take a single building, and using AI with a <span class="tip" data-tip="MCP: Model Context Protocol — a standard that allows AI models to interface with external tools and applications like Blender, databases, browsers, etc.">Blender MCP</span>, create a campus.</p>
+
+    <p>The intern spent one hour installing Blender. One hour prompting. The AI looked at the building, inspected it, created a copy, looked at the result from different angles, said "okay, let me create two more," created four sites, zoomed out, zoomed in, made adjustments — and finished with a campus in roughly five prompts.</p>
+
+    <div class="pullquote">
+      "He has never installed Blender. He spent one hour installing Blender, one hour prompting it, and the whole job got done."
+    </div>
+
+    <p>But Anand's most provocative line came after this story:</p>
+
+    <div class="pullquote">
+      "There is no excuse not to use the best tools. You not knowing it doesn't make a difference. No excuse not to use AI for even the tools that you know well, because there is a good chance that it will know how to do it better. And <strong>no excuse not to do ten times more with that tool — because you can run it in parallel across ten different windows</strong>."
+    </div>
+
+    <p>Scale. This is the word that kept surfacing. Not just that AI makes individual tasks faster. But that it enables a kind of parallel, distributed execution that was structurally impossible for individual humans. You cannot personally explore ten different design directions simultaneously. You can direct ten AI agents to do exactly that, in the time you'd spend on one.</p>
+
+  </article>
+
+  <!-- ACT 4: EVALUATION -->
+  <div class="act-break reveal">
+    <div class="act-break-number">Act Three · Evaluation</div>
+    <div class="act-break-title"><em>Review</em> Your Designs</div>
+    <div class="act-break-subtitle">Find errors and suggest improvements — the muscle designers need to build</div>
+  </div>
+
+  <article class="article">
+
+    <h2>The Humble Critic</h2>
+
+    <p>This was the section of the talk that felt most personal — and most honest. Anand had been contacted by an ex-colleague who sent an image of a chart and asked for feedback. Anand did what he now does reflexively: he uploaded it to <a href="https://claude.ai/share/fd6796dc-e1da-436a-81d1-36dbdf8c989b" target="_blank">Claude</a> and asked for a critique.</p>
+
+  </article>
+
+  <!-- CHART CRITIQUE — full viewport width -->
+  <div class="critique-full-bleed reveal">
+    <div class="critique-full-bleed-label">Interactive Chart Critique · Step through the annotations</div>
+    <iframe src="critique.html" title="Interactive Chart Critique" loading="lazy"></iframe>
+  </div>
+
+  <article class="article">
+
+    <p>Anand paused. "It went on to a series of review suggestions which I, who have several years — in fact, decades of experience in data visualization — am not able to beat."</p>
+
+    <p>And then, unprompted, a small act of intellectual honesty that landed in the room: "Of course, I'm lazy, that's another point. But it is actually better than me. <strong>So why would I hang on to my experience, my skills, whatever? Let me learn from it. What is the harm? Some humility always helps.</strong>"</p>
+
+    <aside class="aside-note">
+      The same principle applies to visual generation. Anand's team has been using LLMs to
+      <a href="https://pavankumart18.github.io/svg-generation-analysis/" target="_blank">review SVG generation quality</a> — not just generating, but systematically evaluating output.
+      And further: using LLMs to
+      <a href="https://www.s-anand.net/blog/the-nano-banana-paradox/" target="_blank">generate paradoxical images <em>and</em> evaluate their quality</a> — AI as both creator and critic in the same loop.
+    </aside>
+
+    <p>The evaluation space, Anand argued, was perhaps the most valuable and least explored of the three. Ideation and execution get the attention. But systematic evaluation — the kind of rigorous, experienced critique that most design work never receives — is where AI can add the most immediate value with the least risk.</p>
+
+    <div class="insight-box reveal">
+      <div class="insight-label">The Three-Part Framework</div>
+      <strong>Execution effort has come down dramatically. This means you can scale execution like crazy. Ideation has become important — but that allows you to use AI for ideation as well. Evaluation is what you need to build muscle on. AI can help you with that too.</strong>
+      <br><br>
+      The underinvested skill for the AI age is not prompting. It is knowing a good output from a bad one — fast, systematically, at scale.
+    </div>
+
+  </article>
+
+  <!-- CLOSING -->
+  <article class="article">
+
+    <h2>Leave the Math to the Machines</h2>
+
+    <p>The talk had been moving fast. Slides, demos, images, videos, AI conversations — each one a data point in Anand's broader argument. And then, at the end, he stopped. He put up a single image.</p>
+
+  </article>
+
+  <div class="calvin-wrap reveal">
+    <img src="calvin-play-outside.avif" alt="Calvin telling Miss Wormwood: Given the pace of technology, I propose we leave the math to the machines and go play outside." style="max-width: 680px;">
+    <div class="calvin-caption">Bill Watterson's Calvin, citing the only sensible response to AI — and Anand's closing slide</div>
+  </div>
+
+  <article class="article">
+
+    <div class="pullquote">
+      "Given the pace of technology, I propose we leave the math to the machines and go play outside."
+      <span class="pullquote-attr">— Calvin (Bill Watterson), via Anand's closing slide</span>
+    </div>
+
+    <p>It was a perfect ending — funny, deflating, and somehow true. If AI is going to handle the execution, optimize the variations, critique the outputs, catalog the tools, and generate the ideas — what remains?</p>
+
+    <p>Play. Curiosity. Wandering into territory you don't understand. Finding the outliers. Building the community. Asking the questions that the machine doesn't know to ask because no one has yet told it what matters.</p>
+
+    <p>"But if AI is going to be doing all of this, what are we going to do?" Anand had asked. His answer, wrapped in a six-year-old's logic, was actually quite serious: the human job, in the age of infinite generativity, is to play. To explore. To bring the domain knowledge, the cultural context, the <em>why</em> that no training dataset has fully captured. To sit in a room at the Chennai Design Festival and look at a man converting a calendar into a bag and say: <em>what else could this be?</em></p>
+
+    <p>The machine amplifies from there. But the question has to come from somewhere. The question has to come from you.</p>
+
+    <p>"Go have fun, everyone."</p>
+
+    <div style="margin-top: 2rem;">
+      <a href="#" class="popup-trigger" data-popup="transcript-popup" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--ink);color:#fff;padding:0.75rem 1.25rem;text-decoration:none;font-family:var(--font-label);font-size:0.78rem;letter-spacing:0.08em;font-weight:600;transition:all 0.3s;border:none;" onmouseover="this.style.background='var(--vermillion)'" onmouseout="this.style.background='var(--ink)'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+        READ FULL TRANSCRIPT →
+      </a>
+    </div>
+
+  </article>
+
+  <!-- TAKEAWAYS -->
+  <section class="takeaways">
+    <div class="takeaways-inner">
+      <div class="takeaways-label">Top Takeaways</div>
+      <h2>Design in the AI Age</h2>
+      <div class="takeaway-grid">
+        <div class="takeaway-card reveal">
+          <div class="takeaway-number">1</div>
+          <div class="takeaway-title">Execution Has Collapsed</div>
+          <div class="takeaway-text">AI has reduced execution effort from ~80% of design work to ~5%. The time freed is your design opportunity — not your anxiety.</div>
+        </div>
+        <div class="takeaway-card reveal">
+          <div class="takeaway-number">2</div>
+          <div class="takeaway-title">Build Vocabulary First</div>
+          <div class="takeaway-text">You can't ask for what you don't have words for. Use AI to discover the techniques, styles, and approaches you don't know exist yet. Gallery before generation.</div>
+        </div>
+        <div class="takeaway-card reveal">
+          <div class="takeaway-number">3</div>
+          <div class="takeaway-title">Find the Outliers</div>
+          <div class="takeaway-text">AI needs unusual inputs to produce unusual outputs. Finding the designers, artists, and thinkers at the edge of the distribution — that's the new creative sourcing.</div>
+        </div>
+        <div class="takeaway-card reveal">
+          <div class="takeaway-number">4</div>
+          <div class="takeaway-title">Tools You Know Have Secrets</div>
+          <div class="takeaway-text">Ask AI to "go crazy" with any tool you've used for years. There is a good chance it knows capabilities you've never discovered — even after decades.</div>
+        </div>
+        <div class="takeaway-card reveal">
+          <div class="takeaway-number">5</div>
+          <div class="takeaway-title">Build Evaluation Muscle</div>
+          <div class="takeaway-text">The critical skill for the AI age isn't prompting — it's knowing good output from bad output, fast and systematically. AI can help you evaluate too.</div>
+        </div>
+        <div class="takeaway-card reveal">
+          <div class="takeaway-number">6</div>
+          <div class="takeaway-title">Go Play Outside</div>
+          <div class="takeaway-text">The human contribution is curiosity, cultural context, and the questions the machine hasn't been asked. Leave the math to the machines and explore.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="resources-section">
+    <div class="resources-inner">
+      <div class="resources-section-label">From the Talk</div>
+      <h2>Links &amp; Resources</h2>
+      <div class="resources-grid">
+        <a href="https://sanand0.github.io/llmartstyle/?category=art" class="resource-card" target="_blank">
+          <div class="rc-title">LLM Art Style Explorer</div>
+          <div class="rc-desc">Gallery of art techniques discovered by asking an LLM — Decalcomania, Grattage, Sgraffito, Xerox style, and more.</div>
+        </a>
+        <a href="https://ritesh17rb.github.io/chart-map/" class="resource-card" target="_blank">
+          <div class="rc-title">Data Journalism Chart Map</div>
+          <div class="rc-desc">UMAP of ~200 charts from 10 publications showing the distinctive visual vocabulary of the South China Morning Post vs. others.</div>
+        </a>
+        <a href="https://sanand0.github.io/image-filters/" class="resource-card" target="_blank">
+          <div class="rc-title">ImageMagick Filter Gallery</div>
+          <div class="rc-desc">AI-cataloged gallery of creative ImageMagick effects — each with the code that produces it.</div>
+        </a>
+        <a href="https://pavankumart18.github.io/ai-blender-design-journey/" class="resource-card" target="_blank">
+          <div class="rc-title">3D Architecture via AI</div>
+          <div class="rc-desc">Building a 14-story office campus in Blender using Claude MCP — by someone who had never installed Blender before.</div>
+        </a>
+        <a href="https://claude.ai/share/fd6796dc-e1da-436a-81d1-36dbdf8c989b" class="resource-card" target="_blank">
+          <div class="rc-title">Chart Critique Session</div>
+          <div class="rc-desc">The Claude conversation where AI critiques a dual-axis chart — systematically beating decades of human experience.</div>
+        </a>
+        <a href="critique.html" class="resource-card" target="_blank">
+          <div class="rc-title">Full Chart Critique</div>
+          <div class="rc-desc">The complete critique output — dual-axis split, truncated y-axis, label formatting, ordering, and more.</div>
+        </a>
+        <a href="https://claude.ai/share/f9f8bce9-bb29-4795-b5c1-8faa7eca4dfe" class="resource-card" target="_blank">
+          <div class="rc-title">Sustainable Design Ideas</div>
+          <div class="rc-desc">Claude's conversation generating Payir-inspired design ideas: Kolam Mat, Growth Chart Kurta, Seed Library Sari, Recipe Towel.</div>
+        </a>
+        <a href="https://claude.ai/share/74c27359-7710-463e-8488-60fef2df6bfc" class="resource-card" target="_blank">
+          <div class="rc-title">Everyday Design Ideas</div>
+          <div class="rc-desc">Claude's conversation generating ideas inspired by Narendra Ghate: expiry-alert packaging, ready-to-order coaster, power-glow USB cable.</div>
+        </a>
+        <a href="https://claude.ai/public/artifacts/ac9cc611-dec8-468f-a72d-981c5afbd8fb" class="resource-card" target="_blank">
+          <div class="rc-title">Execution Shift Visualization</div>
+          <div class="rc-desc">Interactive animation showing how AI redistributes design effort from execution (80%→5%) to ideation and evaluation.</div>
+        </a>
+        <a href="https://sanand0.github.io/llmpricing/" class="resource-card" target="_blank">
+          <div class="rc-title">LLM Pricing Trends</div>
+          <div class="rc-desc">Real-time tracker of LLM API costs — falling over 99% since GPT-3 while quality has dramatically improved.</div>
+        </a>
+        <a href="https://sanand0.github.io/datastories/novel-dataviz/" class="resource-card" target="_blank">
+          <div class="rc-title">Novel Data Visualizations</div>
+          <div class="rc-desc">Claude Code creating three genuinely novel visualization forms — not chart types that existed before the prompt.</div>
+        </a>
+        <a href="https://sanand0.github.io/datastories/anthropic-work/" class="resource-card" target="_blank">
+          <div class="rc-title">Apt Visualizations for Research</div>
+          <div class="rc-desc">Discovering the most fitting visualization forms for data and research papers — AI as visual vocabulary expander.</div>
+        </a>
+        <a href="https://gemini.google.com/share/7222553e0795" class="resource-card" target="_blank">
+          <div class="rc-title">Bending Space Time Map</div>
+          <div class="rc-desc">A novel map-based visualization of Einstein's visual biography — AI inventing a form that didn't exist before the prompt.</div>
+        </a>
+        <a href="https://claude.ai/public/artifacts/f2202606-da5c-4114-845c-29c1a0171824" class="resource-card" target="_blank">
+          <div class="rc-title">Cognitive Field Lines</div>
+          <div class="rc-desc">Flowing particle streams based on electromagnetic field diagrams — another AI-invented visualization form for Einstein's biography.</div>
+        </a>
+        <a href="https://www.s-anand.net/blog/self-discover-llm-capabilities/" class="resource-card" target="_blank">
+          <div class="rc-title">Self-Discovering Capabilities</div>
+          <div class="rc-desc">Using Claude to discover ffmpeg's visualization capabilities — and the algorithmic art that resulted.</div>
+        </a>
+        <a href="https://www.youtube.com/watch?v=d7NXU2jeSiU" class="resource-card" target="_blank">
+          <div class="rc-title">Algorithmic Art from ffmpeg</div>
+          <div class="rc-desc">YouTube: the actual video output of AI-discovered ffmpeg visualization techniques.</div>
+        </a>
+        <a href="https://pavankumart18.github.io/svg-generation-analysis/" class="resource-card" target="_blank">
+          <div class="rc-title">SVG Generation Quality Review</div>
+          <div class="rc-desc">Using LLMs to evaluate the quality of AI-generated SVG — AI as critic of AI output.</div>
+        </a>
+        <a href="https://www.s-anand.net/blog/the-nano-banana-paradox/" class="resource-card" target="_blank">
+          <div class="rc-title">The Nano Banana Paradox</div>
+          <div class="rc-desc">Generating paradoxical images <em>and</em> evaluating their quality — AI as both creator and critic in the same loop.</div>
+        </a>
+        <a href="https://www.payir.org/" class="resource-card" target="_blank">
+          <div class="rc-title">Payir Trust</div>
+          <div class="rc-desc">Senthil and Amutha's grassroots organization in Tamil Nadu — whose reusable fabric calendar inspired the sustainable design ideas.</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-author">
+      <div class="footer-avatar">SA</div>
+      <div class="footer-info">
+        <div class="footer-name">S Anand</div>
+        <div class="footer-title">LLM Psychologist at <a href="https://www.straive.com/" target="_blank" style="color:inherit;">Straive</a> · IIT Madras Faculty</div>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="https://www.s-anand.net/" target="_blank">Blog</a>
+      <a href="https://www.linkedin.com/in/sanand0/" target="_blank">LinkedIn</a>
+      <a href="https://github.com/sanand0/" target="_blank">GitHub</a>
+      <a href="https://sanand0.github.io/talks/" target="_blank">More Talks</a>
+    </div>
+  </footer>
+
+  <!-- LIGHTBOX OVERLAY -->
+  <div class="lightbox-overlay" id="lightbox" onclick="closeLightbox(event)">
+    <button class="lightbox-close" onclick="closeLightbox()">×</button>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="">
+    <div class="lightbox-caption" id="lightbox-caption"></div>
+  </div>
+
+  <!-- MODAL: Sustainable Ideas -->
+  <div class="modal-overlay" id="sustainable-popup" onclick="closeModal(event, 'sustainable-popup')">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">Sustainable Design Ideas — The AI Conversation</div>
+        <button class="modal-close" onclick="closeModal(null, 'sustainable-popup')">×</button>
+      </div>
+      <div class="modal-body">
+        <h2>The Brief</h2>
+        <p>At the Chennai Design Festival, <strong>Senthil &amp; Amutha</strong>, founders of <a href="https://www.payir.org/" target="_blank">Payir</a>, demonstrated a <a href="https://thinaistore.myinstamojo.com/product/fabric-calendar-hanging-model-reusable" target="_blank">re-usable fabric calendar</a> that converts into a bag for re-use. Their message: good design can be <em>for</em> the masses and <em>by</em> the masses to reclaim their time, energy, and joy.</p>
+        <p>Anand gave Claude this context and asked for half a dozen ideas they would be thrilled by.</p>
+        <h2>Claude's Response</h2>
+        <p>Claude first recognized Payir's ethos: <em>"dignified self-reliance, zero waste, cultural rootedness, and design that treats rural communities as creators, not just consumers."</em></p>
+        <ol>
+          <li><strong>The Modular Kolam Mat</strong> — A fabric mat with snap-on/Velcro tiles in traditional kolam patterns. Each morning, rearrange tiles to create new designs — teaching geometry, symmetry, and cultural patterns to children while serving as a doormat. When tiles wear out, they become cleaning rags. The base mat becomes a shopping bag. Meditation, math lesson, home decoration, and zero-waste design in one object.</li>
+          <li><strong>The Growth Chart Kurta</strong> — A child's kurta with measurement markings embroidered along the seam. As the child grows, parents mark height with stitches. When outgrown, the garment is unpicked and reconstructed for a younger sibling, or made into a pouch, or a doll. The measurements become a family record — a fabric memory that doesn't end up in landfill.</li>
+          <li><strong>The Seed Library Sari Border</strong> — Sari borders designed with pockets that hold indigenous seed varieties. Women exchange border sections at community gatherings, literally trading seeds while trading stories. The border can be removed when the sari wears thin, becoming a seed-storage belt or headband.</li>
+          <li><strong>The Meeting Mandala</strong> — A large circular fabric mat divided into sections, each embroidered with Tamil proverbs, panchayat meeting protocols, or community guidelines. When spread on the ground, it becomes the meeting space. Sections can be detached for household use as cushion covers. After years, reconstructed into school bags.</li>
+          <li><strong>The Recipe Towel Chronicle</strong> — Kitchen towels with regional recipes printed in Tamil — not just ingredients, but the <em>why</em> behind each step (fermentation science, spice medicine, seasonal timing). As towels wear from washing, the faded sections reveal which recipes the family cooks most.</li>
+          <li><strong>The Story Blanket Ecosystem</strong> — A patchwork blanket where each square is contributed by a different village woman, depicting scenes from local folklore. Squares can be detached and rearranged seasonally. When children leave for city work, they take a square. Worn squares become hand puppets for the next generation.</li>
+        </ol>
+        <p><em>Claude's reflection: "What makes these thrilling to Payir's ethos: they all reclaim time (through multi-use and zero purchasing cycles), reclaim energy (by honoring existing skills and cultural knowledge), and reclaim joy (by making necessity beautiful and making beauty necessary)."</em></p>
+      </div>
+      <div class="modal-source">
+        Full conversation: <a href="https://claude.ai/share/f9f8bce9-bb29-4795-b5c1-8faa7eca4dfe" target="_blank">claude.ai/share/f9f8bce9...</a>
+        · Images generated by Gemini
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Everyday Design -->
+  <div class="modal-overlay" id="everyday-popup" onclick="closeModal(event, 'everyday-popup')">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">Everyday Design Ideas — The AI Conversation</div>
+        <button class="modal-close" onclick="closeModal(null, 'everyday-popup')">×</button>
+      </div>
+      <div class="modal-body">
+        <h2>The Brief</h2>
+        <p>Anand gave Claude examples from <strong><a href="https://in.linkedin.com/in/narendraghate" target="_blank">Narendra Ghate</a></strong>'s design thinking:</p>
+        <ul>
+          <li>When lights are dimmed people speak softer — so dimming lights reduces office noise.</li>
+          <li>Rather than reduce shampoo sachets, include 2 in one sachet, tearable in the middle.</li>
+          <li>Price sachets at 95p with a 5p deposit — which rag-pickers can collect and return.</li>
+          <li>A "stain band-aid" where you stick a strip, remove after 5 min to remove the stain.</li>
+          <li>A mechanical wind-up fish that stirs water in a bucket while clothes soak.</li>
+        </ul>
+        <p>He asked for half a dozen ULTRA cool, grounded &amp; practical ideas — "Wow! That's clever AND high impact."</p>
+        <h2>Claude's Response</h2>
+        <ol>
+          <li><strong>Reverse Parking Sensor for Shopping Carts</strong> — When a shopping cart is pushed <em>backward</em>, it emits a gentle beep. Solves the epidemic of heel-clipping in grocery aisles. Simple piezo buzzer triggered by wheel direction. Cost: pennies. Impact: massive goodwill.</li>
+          <li><strong>Medication Packaging That Changes Color When Expired</strong> — pH-sensitive ink on blister packs that shifts from green to red when the drug degrades. Not a printed date you squint at — the <em>whole pack</em> turns orange when it's time to discard. Works because most medications release acids as they break down.</li>
+          <li><strong>The "Meeting Tax" Digital Calendar Block</strong> — When you create a calendar invite, it auto-blocks 15 minutes <em>before</em> for the organizer to prep, and 15 minutes <em>after</em> for attendees to process. Makes the hidden cost of meetings visible.</li>
+          <li><strong>Stairs That Display Calorie Burn in Real-Time</strong> — Pressure sensors + simple display at each landing. "You've burned 12 calories — same as half an apple!" Makes the invisible visible.</li>
+          <li><strong>Restaurant Tables With a Discreet "Ready to Order" Coaster</strong> — Flip the coaster from green to red when you've decided. Solves the "hovering waiter vs. neglected table" problem without apps or buttons.</li>
+          <li><strong>USB Cables That Glow When Drawing Phantom Power</strong> — Thin phosphorescent strip that lights up when current flows — even 0.1W. Surfaces the invisible vampire drain from chargers left plugged in. Also: instant diagnostic for "why isn't this charging?"</li>
+        </ol>
+        <p><em>Claude's reflection: "They surface invisible problems. They leverage existing human instincts (color = status, glowing = active, sound = warning). Minimal tech, maximum behavioral leverage. They feel <strong>obvious</strong> in hindsight — the mark of great design."</em></p>
+      </div>
+      <div class="modal-source">
+        Full conversation: <a href="https://claude.ai/share/74c27359-7710-463e-8488-60fef2df6bfc" target="_blank">claude.ai/share/74c27359...</a>
+        · Images generated by Gemini
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Transcript -->
+  <div class="modal-overlay transcript" id="transcript-popup" onclick="closeModal(event, 'transcript-popup')">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">Full Transcript</div>
+        <button class="modal-close" onclick="closeModal(null, 'transcript-popup')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="transcript-md" id="transcript-content"><em>Loading…</em></div>
+      </div>
+      <div class="modal-source">
+        Source: <a href="transcript.md" target="_blank">transcript.md</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Art Technique — Xerox -->
+  <div class="modal-overlay" id="art-xerox" onclick="closeModal(event, 'art-xerox')">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">Xerox Photocopy Aesthetic</div>
+        <button class="modal-close" onclick="closeModal(null, 'art-xerox')">×</button>
+      </div>
+      <div class="modal-body">
+        <p>Images that look like photocopies of photocopies — grain builds up, tones flatten, edges harden into high-contrast ghosts. The texture is part signal, part noise, and entirely unmistakable. It's the aesthetic of zines, punk flyers, and faxed ransom notes: gritty, urgent, and somehow more honest than anything clean.</p>
+        <img class="art-popup-img" src="https://sanand0.github.io/llmartstyle/images/cafe.xerox-photocopy-aesthetic.nano-banana-2.webp" alt="Xerox photocopy aesthetic — AI-generated café scene" onclick="openLightbox(this.src, 'Xerox Photocopy Aesthetic')">
+      </div>
+      <div class="modal-source">
+        Full-size image: <a href="https://github.com/sanand0/llmartstyle/releases/download/images/cafe.xerox-photocopy-aesthetic.nano-banana-2.png" target="_blank">PNG</a>
+        · Gallery: <a href="https://sanand0.github.io/llmartstyle/?category=art" target="_blank">sanand0.github.io/llmartstyle</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Art Technique — Decalcomania -->
+  <div class="modal-overlay" id="art-decalcomania" onclick="closeModal(event, 'art-decalcomania')">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">Decalcomania</div>
+        <button class="modal-close" onclick="closeModal(null, 'art-decalcomania')">×</button>
+      </div>
+      <div class="modal-body">
+        <p>Press paint between two surfaces, then peel apart to create unpredictable, organic patterns — used by Surrealists like Max Ernst. The random branching resembles coral, moss, or alien terrain.</p>
+        <img class="art-popup-img" src="https://sanand0.github.io/llmartstyle/images/cafe.decalcomania.nano-banana-2.webp" alt="Decalcomania style — AI-generated café scene" onclick="openLightbox(this.src, 'Decalcomania style')">
+      </div>
+      <div class="modal-source">
+        Full-size image: <a href="https://github.com/sanand0/llmartstyle/releases/download/images/cafe.decalcomania.nano-banana-2.png" target="_blank">PNG</a>
+        · Gallery: <a href="https://sanand0.github.io/llmartstyle/?category=art" target="_blank">sanand0.github.io/llmartstyle</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Art Technique — Grattage -->
+  <div class="modal-overlay" id="art-grattage" onclick="closeModal(event, 'art-grattage')">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">Grattage</div>
+        <button class="modal-close" onclick="closeModal(null, 'art-grattage')">×</button>
+      </div>
+      <div class="modal-body">
+        <p>Apply thick paint, then scrape or scratch it off while wet to reveal layers beneath. Creates dramatic textures — like excavated earth, rough bark, or cracked plaster.</p>
+        <img class="art-popup-img" src="https://sanand0.github.io/llmartstyle/images/cafe.grattage.nano-banana-2.webp" alt="Grattage style — AI-generated café scene" onclick="openLightbox(this.src, 'Grattage style')">
+      </div>
+      <div class="modal-source">
+        Full-size image: <a href="https://github.com/sanand0/llmartstyle/releases/download/images/cafe.grattage.nano-banana-2.png" target="_blank">PNG</a>
+        · Gallery: <a href="https://sanand0.github.io/llmartstyle/?category=art" target="_blank">sanand0.github.io/llmartstyle</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Art Technique — Sgraffito -->
+  <div class="modal-overlay" id="art-sgraffito" onclick="closeModal(event, 'art-sgraffito')">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">Sgraffito</div>
+        <button class="modal-close" onclick="closeModal(null, 'art-sgraffito')">×</button>
+      </div>
+      <div class="modal-body">
+        <p>Scratch through a surface layer to expose a contrasting color beneath. Used in fresco painting and ceramics — ancient technique that creates crisp, incised lines with the expressiveness of drawing.</p>
+        <img class="art-popup-img" src="https://sanand0.github.io/llmartstyle/images/cafe.sgraffito.nano-banana-2.webp" alt="Sgraffito style — AI-generated café scene" onclick="openLightbox(this.src, 'Sgraffito style')">
+      </div>
+      <div class="modal-source">
+        Full-size image: <a href="https://github.com/sanand0/llmartstyle/releases/download/images/cafe.sgraffito.nano-banana-2.png" target="_blank">PNG</a>
+        · Gallery: <a href="https://sanand0.github.io/llmartstyle/?category=art" target="_blank">sanand0.github.io/llmartstyle</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Art Technique — Stippling Mixed Media -->
+  <div class="modal-overlay" id="art-stippling" onclick="closeModal(event, 'art-stippling')">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">Stippling Mixed Media</div>
+        <button class="modal-close" onclick="closeModal(null, 'art-stippling')">×</button>
+      </div>
+      <div class="modal-body">
+        <p>Building tone and texture through thousands of tiny dots rather than lines. Mixed-media stippling combines this ink technique with collage, watercolor washes, or found materials — creating images that feel both painstaking and alive.</p>
+        <img class="art-popup-img" src="https://sanand0.github.io/llmartstyle/images/cafe.stippling-mixed-media.nano-banana-2.webp" alt="Stippling Mixed Media style — AI-generated café scene" onclick="openLightbox(this.src, 'Stippling Mixed Media style')">
+      </div>
+      <div class="modal-source">
+        Full-size image: <a href="https://github.com/sanand0/llmartstyle/releases/download/images/cafe.stippling-mixed-media.nano-banana-2.png" target="_blank">PNG</a>
+        · Gallery: <a href="https://sanand0.github.io/llmartstyle/?category=art" target="_blank">sanand0.github.io/llmartstyle</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Progress bar
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      document.getElementById('progress').style.width = (winScroll / height) * 100 + '%';
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Lightbox
+    function openLightbox(src, caption) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox-caption').textContent = caption || '';
+      document.getElementById('lightbox').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox(event) {
+      if (!event || event.target === document.getElementById('lightbox') || event.target.classList.contains('lightbox-close')) {
+        document.getElementById('lightbox').classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeLightbox({ target: document.getElementById('lightbox') });
+        document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+        document.body.style.overflow = '';
+      }
+    });
+
+    // Make fig images clickable
+    document.querySelectorAll('.fig img').forEach(img => {
+      img.addEventListener('click', () => openLightbox(img.src, img.alt));
+    });
+
+    // Modals
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal(event, id) {
+      if (!event || event.target === document.getElementById(id)) {
+        document.getElementById(id).classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    // Popup triggers
+    let transcriptLoaded = false;
+    document.querySelectorAll('.popup-trigger').forEach(el => {
+      el.addEventListener('click', e => {
+        e.preventDefault();
+        const popupId = el.dataset.popup;
+        if (!popupId) return;
+        if (popupId === 'transcript-popup' && !transcriptLoaded) {
+          fetch('transcript.md')
+            .then(r => r.text())
+            .then(md => {
+              document.getElementById('transcript-content').innerHTML = marked.parse(md);
+              transcriptLoaded = true;
+            })
+            .catch(() => {
+              document.getElementById('transcript-content').textContent = 'Could not load transcript.';
+            });
+        }
+        openModal(popupId);
+      });
+    });
+
+    // Stagger reveal for cards
+    document.querySelectorAll('.takeaway-card').forEach((el, i) => {
+      el.style.transitionDelay = (i * 0.08) + 's';
+    });
+  </script>
+</body>
+</html>

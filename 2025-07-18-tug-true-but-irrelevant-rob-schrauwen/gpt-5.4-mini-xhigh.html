@@ -1,0 +1,2051 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="A Gladwell-style narrative on Rob Schrauwen's TUG 2025 talk 'True but Irrelevant' about markup, annotation, provenance, and content standards.">
+  <title>True but Irrelevant | Rob Schrauwen at TUG 2025</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23161b22'/%3E%3Cpath d='M14 41h36M14 24h36' stroke='%23d18b45' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='22' cy='24' r='5' fill='%23f2e6d8'/%3E%3Ccircle cx='42' cy='41' r='5' fill='%23f2e6d8'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --ink: #161513;
+      --muted: #5f584f;
+      --paper: #f5efe4;
+      --paper-2: #ede3d4;
+      --sand: #d9c2a1;
+      --line: rgba(31, 26, 20, 0.12);
+      --accent: #b15b26;
+      --accent-2: #0f3d4b;
+      --accent-3: #8a2d3a;
+      --dark: #111111;
+      --dark-2: #1a1816;
+      --white: #fff9f1;
+      --shadow: 0 24px 60px rgba(19, 15, 9, 0.12);
+      --shadow-2: 0 14px 30px rgba(19, 15, 9, 0.16);
+      --font-display: "Cormorant Garamond", Georgia, serif;
+      --font-body: "Literata", Georgia, serif;
+      --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-body);
+      line-height: 1.82;
+      font-size: 18px;
+      background:
+        radial-gradient(circle at top left, rgba(177, 91, 38, 0.12), transparent 34%),
+        radial-gradient(circle at top right, rgba(15, 61, 75, 0.08), transparent 28%),
+        linear-gradient(180deg, #faf6ef 0%, var(--paper) 30%, #f3ebdf 100%);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.42;
+      background-image:
+        linear-gradient(rgba(22, 21, 19, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(22, 21, 19, 0.035) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 95%);
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .progress {
+      position: fixed;
+      inset: 0 auto auto 0;
+      width: 0;
+      height: 3px;
+      z-index: 1000;
+      background: linear-gradient(90deg, var(--accent), #d7a058 55%, var(--accent-2));
+      box-shadow: 0 0 18px rgba(177, 91, 38, 0.5);
+    }
+
+    .masthead {
+      position: sticky;
+      top: 0;
+      z-index: 900;
+      border-bottom: 1px solid var(--line);
+      background: rgba(245, 239, 228, 0.82);
+      backdrop-filter: blur(14px);
+    }
+
+    .masthead-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0.9rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: linear-gradient(145deg, #111111, #23201c);
+      display: grid;
+      place-items: center;
+      color: #f8ead6;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      line-height: 1;
+      box-shadow: var(--shadow-2);
+    }
+
+    .brand-copy {
+      min-width: 0;
+    }
+
+    .brand-kicker {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.15rem;
+    }
+
+    .brand-title {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 1.08rem;
+      line-height: 1;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .masthead-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 0.55rem;
+    }
+
+    .chip,
+    .chip:visited {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.78rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 242, 0.9);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink);
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+    }
+
+    .chip:hover,
+    .chip:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(177, 91, 38, 0.35);
+      box-shadow: 0 8px 20px rgba(19, 15, 9, 0.08);
+      outline: none;
+    }
+
+    .hero {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 4.2rem 1.5rem 1.5rem;
+      display: grid;
+      gap: 2rem;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      align-items: start;
+    }
+
+    .hero-copy {
+      padding-top: 0.35rem;
+      animation: rise 1s ease both;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      margin-bottom: 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .kicker::before {
+      content: "";
+      width: 22px;
+      height: 2px;
+      background: var(--accent);
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(3.2rem, 8vw, 6rem);
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      margin: 1rem 0 1.25rem;
+      max-width: 24ch;
+      font-family: var(--font-display);
+      font-size: clamp(1.45rem, 3.2vw, 2rem);
+      line-height: 1.15;
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    .lede {
+      max-width: 58ch;
+      margin: 0;
+      color: #2f2a24;
+      font-size: 1.03rem;
+    }
+
+    .hero-meta {
+      margin: 1.4rem 0 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+
+    .hero-note {
+      margin-top: 1.45rem;
+      padding: 1rem 1.05rem;
+      border-left: 4px solid var(--accent);
+      background: rgba(255, 250, 242, 0.84);
+      box-shadow: 0 10px 22px rgba(19, 15, 9, 0.06);
+      border-radius: 0 14px 14px 0;
+    }
+
+    .hero-note strong {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .hero-visual {
+      display: grid;
+      gap: 1rem;
+      animation: rise 1s ease 0.12s both;
+    }
+
+    .sketchnote-card {
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 1.25rem;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 244, 228, 0.72)),
+        #fff;
+      box-shadow: var(--shadow);
+      transform: rotate(-0.7deg);
+      transition: transform 220ms ease, box-shadow 220ms ease;
+    }
+
+    .sketchnote-card:hover {
+      transform: rotate(0deg) translateY(-2px);
+      box-shadow: 0 28px 64px rgba(19, 15, 9, 0.16);
+    }
+
+    .sketchnote-card a {
+      text-decoration: none;
+    }
+
+    .sketchnote-card img {
+      width: 100%;
+      border-radius: 0.85rem;
+      border: 1px solid rgba(22, 21, 19, 0.12);
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      background: #f1e7d8;
+    }
+
+    .sketchnote-caption {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      margin-top: 0.75rem;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .sketchnote-caption strong {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.2rem;
+    }
+
+    .hero-aside {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .micro-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .micro-card {
+      min-height: 90px;
+      padding: 0.85rem 0.9rem;
+      border: 1px solid var(--line);
+      border-radius: 1rem;
+      background: rgba(255, 250, 242, 0.9);
+      box-shadow: 0 10px 20px rgba(19, 15, 9, 0.06);
+    }
+
+    .micro-card strong {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .micro-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .hero-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+
+    .media-band {
+      margin: 1.8rem 0 3.5rem;
+      padding: 2.2rem 0 3rem;
+      background:
+        radial-gradient(circle at top left, rgba(177, 91, 38, 0.18), transparent 36%),
+        radial-gradient(circle at bottom right, rgba(15, 61, 75, 0.18), transparent 36%),
+        linear-gradient(180deg, #181614 0%, #111111 100%);
+      color: #f5ebde;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .media-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: grid;
+      gap: 1.25rem;
+      grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+      align-items: start;
+    }
+
+    .video-panel,
+    .audio-panel {
+      border-radius: 1.2rem;
+      overflow: hidden;
+      box-shadow: 0 28px 60px rgba(0, 0, 0, 0.34);
+    }
+
+    .video-panel {
+      background: #050505;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .video-shell {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: #060606;
+    }
+
+    .video-launch {
+      all: unset;
+      position: absolute;
+      inset: 0;
+      display: block;
+      cursor: pointer;
+    }
+
+    .video-launch img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-overlay {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background:
+        linear-gradient(180deg, rgba(10, 10, 10, 0.18), rgba(10, 10, 10, 0.56)),
+        radial-gradient(circle at center, rgba(177, 91, 38, 0.08), transparent 55%);
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .video-play {
+      width: min(88%, 360px);
+      padding: 1rem 1.1rem 1.1rem;
+      border-radius: 1.1rem;
+      background: rgba(17, 17, 17, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.3);
+      color: #f9eddf;
+    }
+
+    .video-play strong {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-family: var(--font-display);
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .video-play span {
+      display: block;
+      color: #d1c2b2;
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .video-shell iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .media-note {
+      padding: 0.9rem 1rem 1.05rem;
+      background: rgba(255, 255, 255, 0.04);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.92rem;
+      color: #d3c7bb;
+    }
+
+    .audio-panel {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .audio-head {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .audio-title {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 2rem;
+      line-height: 0.95;
+    }
+
+    .audio-subtitle {
+      margin: 0.25rem 0 0;
+      color: #cfbfad;
+      font-size: 0.9rem;
+    }
+
+    .audio-pill {
+      align-self: start;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.42rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #f5ebde;
+    }
+
+    audio {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+
+    .audio-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .audio-links a,
+    .audio-links a:visited {
+      color: #f5ebde;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+
+    .article {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .article p {
+      margin: 0 0 1.35rem;
+      font-size: 1.02rem;
+    }
+
+    .article h2 {
+      margin: 4rem 0 1rem;
+      font-family: var(--font-display);
+      font-size: clamp(2.15rem, 4.6vw, 3.25rem);
+      line-height: 0.98;
+      letter-spacing: -0.035em;
+    }
+
+    .article h3 {
+      margin: 2.2rem 0 0.85rem;
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      line-height: 1.05;
+    }
+
+    .dropcap::first-letter {
+      float: left;
+      margin: 0.06em 0.16em 0 0;
+      font-family: var(--font-display);
+      font-size: 4.7rem;
+      line-height: 0.8;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .tip {
+      position: relative;
+      border-bottom: 1px dashed rgba(177, 91, 38, 0.65);
+      cursor: help;
+      white-space: nowrap;
+    }
+
+    .tip::after {
+      content: attr(data-tip);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 0.7rem);
+      transform: translateX(-50%) translateY(8px);
+      width: min(320px, 72vw);
+      padding: 0.8rem 0.9rem;
+      border-radius: 0.9rem;
+      background: #111111;
+      color: #f7ecdd;
+      font-size: 0.78rem;
+      line-height: 1.45;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      z-index: 20;
+      white-space: normal;
+    }
+
+    .tip:hover::after,
+    .tip:focus-visible::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .pullquote {
+      margin: 2.7rem -2rem;
+      padding: 1.2rem 1.3rem 1.2rem 1.7rem;
+      border-left: 4px solid var(--accent);
+      background:
+        linear-gradient(90deg, rgba(177, 91, 38, 0.12), transparent 48%),
+        rgba(255, 250, 242, 0.82);
+      border-radius: 0 1rem 1rem 0;
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      line-height: 1.25;
+      font-style: italic;
+      box-shadow: 0 12px 24px rgba(19, 15, 9, 0.08);
+    }
+
+    .pullquote small {
+      display: block;
+      margin-top: 0.7rem;
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-style: normal;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    @media (min-width: 980px) {
+      .pullquote {
+        margin-left: -4rem;
+        margin-right: -4rem;
+      }
+    }
+
+    .wide-band {
+      margin: 4rem calc(50% - 50vw) 0;
+      padding: 3rem 0;
+    }
+
+    .wide-band-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .band-sand {
+      background:
+        radial-gradient(circle at top right, rgba(177, 91, 38, 0.14), transparent 32%),
+        linear-gradient(180deg, #efe3d3 0%, #e7d4bc 100%);
+      border-block: 1px solid rgba(22, 21, 19, 0.08);
+    }
+
+    .band-ink {
+      background:
+        radial-gradient(circle at top left, rgba(177, 91, 38, 0.18), transparent 30%),
+        linear-gradient(180deg, #141312 0%, #1b1917 100%);
+      color: #f8ecde;
+      border-block: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .band-cream {
+      background:
+        radial-gradient(circle at top right, rgba(15, 61, 75, 0.12), transparent 28%),
+        linear-gradient(180deg, #f6efe3 0%, #f0e4d3 100%);
+      border-block: 1px solid rgba(22, 21, 19, 0.08);
+    }
+
+    .band-header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.2rem;
+    }
+
+    .band-header h2,
+    .band-header h3 {
+      margin: 0;
+    }
+
+    .band-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .band-ink .band-kicker {
+      color: #f2c38a;
+    }
+
+    .band-note {
+      max-width: 50ch;
+      margin: 0;
+      color: inherit;
+      opacity: 0.8;
+      font-size: 0.95rem;
+    }
+
+    .pipeline {
+      border-radius: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+        rgba(10, 10, 10, 0.4);
+      overflow: hidden;
+      box-shadow: 0 26px 58px rgba(0, 0, 0, 0.2);
+    }
+
+    .pipeline svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .pipeline text {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      letter-spacing: 0.02em;
+    }
+
+    .pipeline .label {
+      font-size: 13px;
+      fill: #eadfd3;
+      opacity: 0.92;
+    }
+
+    .pipeline .step {
+      fill: rgba(255, 255, 255, 0.07);
+      stroke: rgba(255, 255, 255, 0.18);
+      stroke-width: 1.25;
+    }
+
+    .pipeline .step-title {
+      fill: #fff3e7;
+      font-weight: 600;
+    }
+
+    .pipeline .sub {
+      fill: #c8b9aa;
+      font-size: 12px;
+    }
+
+    .pipeline .track {
+      stroke: rgba(244, 223, 202, 0.28);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 1 16;
+      animation: dash 14s linear infinite;
+    }
+
+    .pipeline .dot {
+      filter: drop-shadow(0 0 10px rgba(242, 195, 138, 0.85));
+    }
+
+    .pipeline .dot-one {
+      fill: #f2c38a;
+    }
+
+    .pipeline .dot-two {
+      fill: #c87a46;
+    }
+
+    .pipeline .dot-three {
+      fill: #8bc0d0;
+    }
+
+    .slide-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+
+    .slide-card {
+      grid-column: span 6;
+      display: grid;
+      gap: 0;
+      border-radius: 1rem;
+      overflow: hidden;
+      text-decoration: none;
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 40px rgba(19, 15, 9, 0.11);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .slide-card:hover,
+    .slide-card:focus-visible {
+      transform: translateY(-3px);
+      box-shadow: 0 24px 52px rgba(19, 15, 9, 0.18);
+      outline: none;
+    }
+
+    .slide-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #201d1a;
+    }
+
+    .slide-caption {
+      padding: 0.95rem 1rem 1.05rem;
+      background: #fffaf3;
+      color: var(--ink);
+    }
+
+    .slide-caption strong {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+
+    .slide-caption span {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .slide-caption em {
+      display: block;
+      margin-top: 0.35rem;
+      font-family: var(--font-mono);
+      font-style: normal;
+      font-size: 0.66rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .slide-grid.tight .slide-card {
+      grid-column: span 4;
+    }
+
+    .slide-grid.wide .slide-card {
+      grid-column: span 12;
+    }
+
+    .code-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin: 1.5rem 0 0;
+    }
+
+    .code-panel {
+      border-radius: 1rem;
+      background: #171513;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      box-shadow: 0 20px 42px rgba(19, 15, 9, 0.18);
+      overflow: hidden;
+    }
+
+    .code-head {
+      padding: 0.8rem 1rem;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #f2c38a;
+    }
+
+    .code-panel pre {
+      margin: 0;
+      padding: 1rem;
+      overflow: auto;
+      color: #f7f0e9;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.65;
+      white-space: pre;
+    }
+
+    .code-panel code {
+      font-family: inherit;
+    }
+
+    .code-panel .xml {
+      color: #f7e5cf;
+    }
+
+    .code-panel .tag {
+      color: #f2c38a;
+    }
+
+    .code-panel .attr {
+      color: #8bc0d0;
+    }
+
+    .code-panel .value {
+      color: #d7a058;
+    }
+
+    .code-panel .comment {
+      color: #9b8a7b;
+    }
+
+    .insight-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin-top: 1.25rem;
+    }
+
+    .insight-card {
+      border-radius: 1rem;
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 242, 0.92);
+      padding: 1rem;
+      box-shadow: 0 14px 28px rgba(19, 15, 9, 0.08);
+    }
+
+    .insight-card strong {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+    }
+
+    .insight-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.65;
+    }
+
+    .reference-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.9rem;
+      margin-top: 1.2rem;
+    }
+
+    .ref-card {
+      width: 100%;
+      text-align: left;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.06);
+      color: inherit;
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.18);
+      padding: 1rem;
+      cursor: pointer;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .ref-card:hover,
+    .ref-card:focus-visible {
+      transform: translateY(-3px);
+      border-color: rgba(242, 195, 138, 0.36);
+      box-shadow: 0 24px 52px rgba(0, 0, 0, 0.26);
+      outline: none;
+    }
+
+    .ref-card .eyebrow {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #f2c38a;
+    }
+
+    .ref-card h3 {
+      margin: 0 0 0.45rem;
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .ref-card p {
+      margin: 0;
+      color: rgba(248, 236, 222, 0.84);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .ref-hint {
+      display: block;
+      margin-top: 0.55rem;
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #f7c98d;
+    }
+
+    .cite-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.22rem 0.52rem;
+      border: 1px solid rgba(177, 91, 38, 0.22);
+      border-radius: 999px;
+      background: rgba(255, 250, 242, 0.78);
+      font: inherit;
+      font-size: 0.84rem;
+      color: var(--ink);
+      cursor: pointer;
+      vertical-align: baseline;
+      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+    }
+
+    .cite-chip:hover,
+    .cite-chip:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(177, 91, 38, 0.42);
+      background: #fff;
+      outline: none;
+    }
+
+    dialog {
+      width: min(760px, calc(100vw - 2rem));
+      border: none;
+      padding: 0;
+      border-radius: 1.2rem;
+      background: #faf3e8;
+      color: var(--ink);
+      box-shadow: 0 38px 90px rgba(0, 0, 0, 0.32);
+    }
+
+    dialog::backdrop {
+      background: rgba(9, 8, 7, 0.62);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 1rem;
+      padding: 1.1rem 1.15rem;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.68), rgba(255, 241, 225, 0.85));
+    }
+
+    .modal-head h3 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .modal-head p {
+      margin: 0.3rem 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .modal-close {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.7rem;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .modal-body {
+      padding: 1.15rem;
+    }
+
+    .modal-body p {
+      margin: 0 0 0.9rem;
+      color: #2d251d;
+    }
+
+    .modal-body ul {
+      margin: 0.75rem 0 1rem;
+      padding-left: 1.2rem;
+    }
+
+    .modal-body li + li {
+      margin-top: 0.35rem;
+    }
+
+    .modal-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .modal-links a {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.45rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(177, 91, 38, 0.22);
+      background: rgba(255, 255, 255, 0.84);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .takeaways {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.25rem;
+    }
+
+    .takeaway {
+      border-radius: 1rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 18px 32px rgba(0, 0, 0, 0.16);
+    }
+
+    .takeaway strong {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #f2c38a;
+    }
+
+    .takeaway p {
+      margin: 0;
+      line-height: 1.6;
+      color: inherit;
+      opacity: 0.9;
+    }
+
+    .footer {
+      max-width: 760px;
+      margin: 3rem auto 0;
+      padding: 0 1.5rem 3rem;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer a:hover,
+    .footer a:focus-visible {
+      text-decoration: underline;
+    }
+
+    .fade-up {
+      animation: rise 0.8s ease both;
+    }
+
+    .delay-1 {
+      animation-delay: 120ms;
+    }
+
+    .delay-2 {
+      animation-delay: 240ms;
+    }
+
+    .delay-3 {
+      animation-delay: 360ms;
+    }
+
+    @keyframes rise {
+      from {
+        transform: translateY(18px);
+      }
+
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes dash {
+      to {
+        stroke-dashoffset: -340;
+      }
+    }
+
+    @media (max-width: 1080px) {
+      .hero,
+      .media-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 3.2rem;
+      }
+
+      .hero-aside {
+        order: -1;
+      }
+
+      .micro-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .code-grid,
+      .takeaways,
+      .insight-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .slide-grid.tight .slide-card,
+      .slide-card {
+        grid-column: span 12;
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        font-size: 17px;
+      }
+
+      .masthead-inner,
+      .hero,
+      .media-inner,
+      .wide-band-inner,
+      .article,
+      .footer {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      h1 {
+        font-size: clamp(2.7rem, 13vw, 4.5rem);
+      }
+
+      .subtitle {
+        max-width: 18ch;
+      }
+
+      .micro-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-meta,
+      .hero-links,
+      .audio-links,
+      .modal-links,
+      .masthead-links {
+        gap: 0.45rem;
+      }
+
+      .pullquote {
+        margin-left: 0;
+        margin-right: 0;
+        font-size: 1.35rem;
+      }
+
+      .slide-grid {
+        gap: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">#</div>
+        <div class="brand-copy">
+          <span class="brand-kicker">TUG 2025 narrative</span>
+          <span class="brand-title">Rob Schrauwen: True but Irrelevant</span>
+        </div>
+      </div>
+      <nav class="masthead-links" aria-label="Source links">
+        <a class="chip" href="transcript.md">Transcript</a>
+        <a class="chip" href="https://tug.org/tug2025/av/d1-t01-schrauwen-content/d1-t01-schrauwen-content-slides.pdf" target="_blank" rel="noreferrer noopener">Slides PDF</a>
+        <a class="chip" href="https://tug.org/tug2025/abstracts/schrauwen-content.txt" target="_blank" rel="noreferrer noopener">License</a>
+        <a class="chip" href="https://youtu.be/XGO5ushzXMA?is=tsgd05UvRUb_oGM9" target="_blank" rel="noreferrer noopener">Video</a>
+        <a class="chip" href="podcast.opus">Podcast</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="kicker">TeX User Group 2025, 18 July 2025</div>
+        <h1>True but Irrelevant</h1>
+        <div class="subtitle">A family tree, a knowledge graph, and the uncomfortable truth that the best standards are the ones that survive contact with reality.</div>
+        <p class="lede dropcap">
+          Rob Schrauwen did not begin with a diagram of XML. He began with a six-year-old girl in Amsterdam, a skeptical teacher, and a drawing that claimed a child had <em>seven grandmothers</em>. By the time the story reached Elsevier's knowledge graph, the joke had turned into a serious argument about provenance, precision, and why a publishing system should never silently rewrite what it sees.
+        </p>
+        <div class="hero-meta">
+          <a class="chip" href="transcript.md">Read the transcript</a>
+          <a class="chip" href="https://tug.org/tug2025/av/d1-t01-schrauwen-content/d1-t01-schrauwen-content-slides.pdf#page=1" target="_blank" rel="noreferrer noopener">Slide deck page 1</a>
+          <a class="chip" href="https://tug.org/tug2025/abstracts/schrauwen-content.txt" target="_blank" rel="noreferrer noopener">Abstract and license</a>
+          <a class="chip" href="https://www.linkedin.com/in/robschrauwen/" target="_blank" rel="noreferrer noopener">Rob on LinkedIn</a>
+        </div>
+        <div class="hero-note">
+          <strong>Companion media</strong>
+          <p style="margin:0;">The page includes the sketchnote, the transcript, the companion podcast, the embedded talk video, selected slides, XML examples, and researched references from TEI, W3C, NISO, NCBI, and the scholarly knowledge-graph literature.</p>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="sketchnote-card fade-up">
+          <a href="sketchnote.avif" target="_blank" rel="noreferrer noopener" aria-label="Open the sketchnote in a new tab">
+            <img src="sketchnote.avif" alt="Sketchnote summarizing Rob Schrauwen's TUG 2025 talk">
+          </a>
+          <div class="sketchnote-caption">
+            <div>
+              <strong>Sketchnote</strong>
+              Click to open the full-size image in a new tab.
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);">Large and clickable</div>
+          </div>
+        </div>
+
+        <div class="hero-aside">
+          <div class="micro-grid">
+            <div class="micro-card fade-up delay-1">
+              <strong>Transcript</strong>
+              <span>Primary source for the narrative and quotes.</span>
+            </div>
+            <div class="micro-card fade-up delay-2">
+              <strong>Podcast</strong>
+              <span>A Malcolm Gladwell and Tim Harford style companion discussion.</span>
+            </div>
+            <div class="micro-card fade-up delay-3">
+              <strong>Research</strong>
+              <span>Standards, provenance, and annotation references.</span>
+            </div>
+          </div>
+          <div class="hero-links">
+            <a class="chip" href="#video-band">Go to video</a>
+            <a class="chip" href="#slides">Go to slides</a>
+            <a class="chip" href="#references">Go to references</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="media-band" id="video-band">
+      <div class="media-inner">
+        <div class="video-panel fade-up">
+          <div class="video-shell" id="video-shell">
+            <button class="video-launch" type="button" id="video-launch" aria-label="Load the embedded YouTube video">
+              <img src="https://i.ytimg.com/vi/XGO5ushzXMA/hqdefault.jpg" alt="Thumbnail for Rob Schrauwen's TUG 2025 talk on YouTube">
+              <div class="video-overlay">
+                <div class="video-play">
+                  <strong>Play</strong>
+                  <span>Load the embedded YouTube player for Rob's talk.</span>
+                </div>
+              </div>
+            </button>
+          </div>
+          <div class="media-note">
+            The embedded player loads on demand. That keeps the page fast and avoids a broken third-party frame in browsers that do not like autoplaying embeds.
+          </div>
+        </div>
+
+        <aside class="audio-panel fade-up delay-1">
+          <div class="audio-head">
+            <div>
+              <div class="audio-pill">Podcast companion</div>
+              <h2 class="audio-title">Malcolm and Tim, but about Rob</h2>
+              <p class="audio-subtitle">A discussion-style summary of the talk, captured in <code style="font-family: var(--font-mono);">podcast.opus</code>.</p>
+            </div>
+          </div>
+          <audio controls preload="metadata" src="podcast.opus" aria-label="Podcast companion audio player"></audio>
+          <p style="margin:0; color:#d2c5b4; font-size:0.92rem;">About 19.6 minutes long. Long enough to get the joke, short enough to keep the arguments in your head.</p>
+          <div class="audio-links">
+            <a class="chip" href="podcast.opus">Open audio file</a>
+            <a class="chip" href="transcript.md">Transcript</a>
+            <a class="chip" href="https://youtu.be/XGO5ushzXMA?is=tsgd05UvRUb_oGM9" target="_blank" rel="noreferrer noopener">YouTube source</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <article class="article">
+      <h2>The drawing was the talk.</h2>
+      <p>
+        The room in Thiruvananthapuram knew it was getting a systems talk. Rob had been with Elsevier since 1991. He had been a mathematician. He had been the Chief Content Architect. He had the résumé of someone who could have spoken comfortably about DTDs, XML pipelines, and enterprise content strategy for an hour without once mentioning a child with colored pencils.
+      </p>
+      <p>
+        Instead he told a story about his granddaughter Emily, who at age six told her teacher that she had seven grandmothers. The teacher said that was impossible. Emily did what every good data engineer hopes users will do: she brought evidence. Her drawing had numbered grandmothers, a family tree, and a policy choice hidden inside it. Great-grandmothers counted too.
+      </p>
+      <blockquote class="pullquote">
+        "I have seven grandmothers."
+        <small>Rob's granddaughter, as retold from the transcript</small>
+      </blockquote>
+      <p>
+        The joke is that the child's drawing was not childish at all. It had a definition. It had a registry of entities. It had a unique identifier for each Oma. It even had a piece of defensive programming: when she did not know how to spell Hetty, she fell back to the generic label "Oma" instead of risking a bad fact.
+      </p>
+      <p>
+        That is the first large idea in the talk: data quality is not only about correctness. It is about <span class="tip" tabindex="0" data-tip="The record of where a fact came from, who asserted it, and when. In Rob's world, provenance protects the original source from silent rewriting.">provenance</span>, definitions, and the courage to leave uncertainty visible when you do not know enough to tidy it away.
+      </p>
+
+      <div class="pullquote">
+        "We need to be able to mark up things that aren't there."
+        <small>The sentence that turns a family anecdote into a content-standard manifesto</small>
+      </div>
+
+      <h2>Elsevier's graph is bigger than a file.</h2>
+      <p>
+        Rob's next move was to zoom out from the drawing to the system he actually works on. Elsevier's <span class="tip" tabindex="0" data-tip="A graph of entities and relationships across articles, patents, researchers, organizations, and other scholarly objects.">knowledge graph</span> is not a neat database table. It is a constantly re-argued map of research objects: 23.8 million full-text articles from ScienceDirect, 102.3 million Scopus records, author profiles, organization profiles, patents, standards, grant awards, and more.
+      </p>
+      <p>
+        The language he used was almost understated, which made it stronger: the platform harvests evidence, extracts occurrences, matches and clusters entities, and then forms a context view for each product. It is a machine for turning many partial truths into something usable without pretending the truth was ever simple.
+      </p>
+      <blockquote class="pullquote">
+        "All these things are heavily probabilistic."
+        <small>The hidden philosophy of the whole pipeline</small>
+      </blockquote>
+    </article>
+
+    <section class="wide-band band-ink">
+      <div class="wide-band-inner">
+        <div class="band-header">
+          <div>
+            <div class="band-kicker">Process diagram</div>
+            <h2 style="font-family: var(--font-display); font-size: clamp(2.1rem, 4vw, 3rem); margin: 0.2rem 0 0;">Evidence becomes a graph, not a guess.</h2>
+          </div>
+          <p class="band-note">The talk keeps returning to one flow: evidence arrives, entities are extracted, duplicates are merged, and products receive a context view. The moving dots below make that logic visible.</p>
+        </div>
+        <div class="pipeline" role="img" aria-label="Animated pipeline showing evidence, extraction, matching, context view, and datasets">
+          <svg viewBox="0 0 1200 270" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="pipeAccent" x1="0" x2="1">
+                <stop offset="0%" stop-color="#f2c38a"/>
+                <stop offset="55%" stop-color="#c87a46"/>
+                <stop offset="100%" stop-color="#8bc0d0"/>
+              </linearGradient>
+            </defs>
+            <path class="track" d="M 105 130 H 1100"></path>
+
+            <g transform="translate(72 73)">
+              <rect class="step" rx="18" ry="18" width="160" height="114"></rect>
+              <text class="step-title" x="18" y="42">Harvest</text>
+              <text class="sub" x="18" y="66">evidence</text>
+              <text class="label" x="18" y="92">from many places</text>
+            </g>
+
+            <g transform="translate(285 73)">
+              <rect class="step" rx="18" ry="18" width="160" height="114"></rect>
+              <text class="step-title" x="18" y="42">Extract</text>
+              <text class="sub" x="18" y="66">occurrences</text>
+              <text class="label" x="18" y="92">from the evidence</text>
+            </g>
+
+            <g transform="translate(498 73)">
+              <rect class="step" rx="18" ry="18" width="160" height="114"></rect>
+              <text class="step-title" x="18" y="42">Match</text>
+              <text class="sub" x="18" y="66">&amp; cluster</text>
+              <text class="label" x="18" y="92">entities together</text>
+            </g>
+
+            <g transform="translate(711 73)">
+              <rect class="step" rx="18" ry="18" width="160" height="114"></rect>
+              <text class="step-title" x="18" y="42">Context</text>
+              <text class="sub" x="18" y="66">view</text>
+              <text class="label" x="18" y="92">for each product</text>
+            </g>
+
+            <g transform="translate(924 73)">
+              <rect class="step" rx="18" ry="18" width="160" height="114"></rect>
+              <text class="step-title" x="18" y="42">Dataset</text>
+              <text class="sub" x="18" y="66">available</text>
+              <text class="label" x="18" y="92">to consumers</text>
+            </g>
+
+            <circle class="dot dot-one" r="10">
+              <animateMotion dur="7s" repeatCount="indefinite" path="M 105 130 H 1100"></animateMotion>
+            </circle>
+            <circle class="dot dot-two" r="8">
+              <animateMotion dur="7s" begin="2.2s" repeatCount="indefinite" path="M 105 130 H 1100"></animateMotion>
+            </circle>
+            <circle class="dot dot-three" r="6">
+              <animateMotion dur="7s" begin="4.3s" repeatCount="indefinite" path="M 105 130 H 1100"></animateMotion>
+            </circle>
+
+            <text x="80" y="240" fill="#f4e8dc">A probabilistic machine that keeps provenance visible while still making the corpus useful.</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <article class="article">
+      <h2 id="markup">From markup to annotation.</h2>
+      <p>
+        Rob's central pivot was not a new file format. It was a change in posture. He said that the team had moved from <span class="tip" tabindex="0" data-tip="Tags inside the document itself. Useful, but brittle when many people need to claim different things about the same text.">markup</span> to <span class="tip" tabindex="0" data-tip="Claims that sit outside the source and point back at it. That is where multiple opinions, provenance, and overlap become possible.">annotation</span>. That means the document stays the document, while the claims about the document live beside it.
+      </p>
+      <p>
+        This is where the standards trail becomes important. TEI's <a href="https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-standOff.html" target="_blank" rel="noreferrer noopener">standOff</a> container explicitly supports linked data, contextual information, and stand-off annotations. The <a href="https://www.w3.org/TR/annotation-model/" target="_blank" rel="noreferrer noopener">W3C Web Annotation Data Model</a> does the same job on the web: a body, a target, and a relationship that can be shared across platforms.
+        <button class="cite-chip" type="button" data-ref="tei">TEI standOff note</button>
+        <button class="cite-chip" type="button" data-ref="webanno">W3C Web Annotation</button>
+      </p>
+      <p>
+        Rob's line about wanting to make assertions about the <span class="tip" tabindex="0" data-tip="His real complaint is not about XML syntax; it is about where the semantic claim is allowed to live.">LaTeX document</span> rather than the XML document lands because it is funny and serious at the same time. He is not anti-XML. He is anti-collapsing everything into one fragile layer.
+      </p>
+      <blockquote class="pullquote">
+        "Annotations are even more tagging than tagging."
+        <small>His sticky-note analogy, sharpened into a design principle</small>
+      </blockquote>
+
+      <div class="code-grid" aria-label="Illustrative XML and annotation examples">
+        <div class="code-panel">
+          <div class="code-head">Inline markup</div>
+          <pre><code class="xml"><span class="comment">&lt;!-- The source file carries the claim inside it --&gt;</span>
+<span class="tag">&lt;article</span> <span class="attr">xml:id</span>=<span class="value">"art-17"</span>&gt;
+  <span class="tag">&lt;title&gt;</span>True but Irrelevant<span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;p&gt;</span>
+    The copy editor changed <span class="tag">&lt;italic&gt;</span>page 38<span class="tag">&lt;/italic&gt;</span>
+    to fit the house style.
+  <span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/article&gt;</span></code></pre>
+        </div>
+        <div class="code-panel">
+          <div class="code-head">Stand-off annotation</div>
+          <pre><code class="xml"><span class="comment">&lt;!-- The claim lives outside the source and points back to it --&gt;</span>
+<span class="tag">&lt;standOff&gt;</span>
+  <span class="tag">&lt;annotation</span> <span class="attr">xml:id</span>=<span class="value">"ann-38"</span>
+              <span class="attr">target</span>=<span class="value">"#art-17"</span>
+              <span class="attr">resp</span>=<span class="value">"#copy-editor"</span>
+              <span class="attr">cert</span>=<span class="value">"0.98"</span>&gt;
+    <span class="tag">&lt;note&gt;</span>page 38<span class="tag">&lt;/note&gt;</span>
+  <span class="tag">&lt;/annotation&gt;</span>
+<span class="tag">&lt;/standOff&gt;</span></code></pre>
+        </div>
+      </div>
+
+      <p>
+        The difference between the two examples is almost comic until you realize how much institutional pain hides inside it. Inline markup is tidy until two people need to disagree about the same line. Stand-off annotation looks messier, but it lets one person say "author", another say "copy editor", and a third preserve the original text without flattening the argument.
+      </p>
+    </article>
+
+    <section class="wide-band band-sand">
+      <div class="wide-band-inner">
+        <div class="band-header">
+          <div>
+            <div class="band-kicker">Historical audit</div>
+            <h2 style="font-family: var(--font-display); font-size: clamp(2.1rem, 4vw, 3rem); margin: 0.2rem 0 0;">The 1990s were right, and not enough.</h2>
+          </div>
+          <p class="band-note">Rob revisited the promises made when SGML and XML were still new. His verdict was not that they were false. It was that many were true but irrelevant unless they changed the workflow around them.</p>
+        </div>
+
+        <div class="slide-grid tight">
+          <a class="slide-card" href="https://tug.org/tug2025/av/d1-t01-schrauwen-content/d1-t01-schrauwen-content-slides.pdf#page=5" target="tug2025-slides" rel="noreferrer noopener">
+            <img src="slide-05.avif" alt="Slide 5: How did we get there? Timeline from SGML to CP/LD">
+            <div class="slide-caption">
+              <strong>How did we get there?</strong>
+              <span>The timeline that explains why the talk feels like archaeology.</span>
+              <em>Open slide 5 in a named window</em>
+            </div>
+          </a>
+          <a class="slide-card" href="https://tug.org/tug2025/av/d1-t01-schrauwen-content/d1-t01-schrauwen-content-slides.pdf#page=6" target="tug2025-slides" rel="noreferrer noopener">
+            <img src="slide-06.avif" alt="Slide 6: Reflections on whether the 1990s promises materialized">
+            <div class="slide-caption">
+              <strong>True, but irrelevant</strong>
+              <span>Separate content and presentation, republish content, XML-first.</span>
+              <em>Open slide 6 in a named window</em>
+            </div>
+          </a>
+          <a class="slide-card" href="https://tug.org/tug2025/av/d1-t01-schrauwen-content/d1-t01-schrauwen-content-slides.pdf#page=7" target="tug2025-slides" rel="noreferrer noopener">
+            <img src="slide-07.avif" alt="Slide 7: Eat your own dog food">
+            <div class="slide-caption">
+              <strong>Eat your own dog food</strong>
+              <span>The house style had to survive the people who built it.</span>
+              <em>Open slide 7 in a named window</em>
+            </div>
+          </a>
+        </div>
+
+        <div class="insight-grid">
+          <div class="insight-card">
+            <strong>1. Separate content and presentation</strong>
+            <p>True, but Rob points out the hard parts never went away: tables, math, flexible naming, and display rules still forced content to remember layout.</p>
+          </div>
+          <div class="insight-card">
+            <strong>2. Re-publish content</strong>
+            <p>True in theory, but exact re-publication was rare. The same article usually showed up with a new DOI, a new context, or a new editorial life.</p>
+          </div>
+          <div class="insight-card">
+            <strong>3. XML-first</strong>
+            <p>True as discipline, but dangerous as dogma. Once a system hardens, even small changes become expensive and organizationally noisy.</p>
+          </div>
+        </div>
+
+        <blockquote class="pullquote" style="margin-top: 1.8rem;">
+          "The DTD was wrong all along."
+          <small>Rob's bluntest line, and the one most likely to start a hallway argument</small>
+        </blockquote>
+
+        <p style="max-width: 66ch; margin: 0 auto; color: #3f3428; font-size: 0.98rem;">
+          The strongest comic detail in this section is the "emphasis 1" to "emphasis 9" anecdote. Someone had decided that bold and italic were too crude, so the DTD grew a ladder of increasingly fine-grained emphasis levels. Rob's response was simpler: interpretation can go wrong, and when it does, it tends to go wrong in the exact place where users least want surprises.
+        </p>
+      </div>
+    </section>
+
+    <article class="article">
+      <p>
+        The dog-food confession matters because it makes the talk self-inverting. The company that spent years teaching the world about XML discipline eventually found some of its own documentation easier to manage in Markdown. Not because Markdown is better for everything, but because real workflows punish overfit standards. The phrase on the slide was short: <strong>hard to write, hard to display</strong>.
+      </p>
+
+      <h2 id="validation">Validate on departure, ignore on arrival.</h2>
+      <p>
+        This was Rob at his most operational. The producer does the tests. The receiver picks what it needs. The recipient does not get to pretend that incoming data is perfect, only to treat the source as if it were already fixed.
+      </p>
+      <blockquote class="pullquote">
+        "Schema validation alone never has been sufficient."
+        <small>The reason the system needs provenance as much as it needs syntax</small>
+      </blockquote>
+      <p>
+        If that sounds obvious, it is only obvious after decades of broken content. The interesting point is the asymmetry: data should be validated before it leaves the producer, not "cleaned up" by a downstream system that no longer knows what changed.
+      </p>
+
+      <h2 id="modeling">Model the data, not the world.</h2>
+      <p>
+        Slide 9 was one of the most elegant in the deck because it reduced a large philosophy to three small corrections:
+      </p>
+      <div class="insight-grid" style="margin-top: 0.9rem;">
+        <div class="insight-card">
+          <strong>Affiliation strings aren't affiliations</strong>
+          <p>An affiliation string is a representation. The institution is a modeled thing with context, identity, and history.</p>
+        </div>
+        <div class="insight-card">
+          <strong>Reference strings aren't references</strong>
+          <p>A citation string is not the same as a fully resolved, provenance-bearing bibliographic object.</p>
+        </div>
+        <div class="insight-card">
+          <strong>Bylines aren't authors</strong>
+          <p>Names on a page are useful evidence, but they are still evidence, not the final truth.</p>
+        </div>
+      </div>
+      <p>
+        That is why Rob kept insisting on a common vocabulary and on the ability to represent absence. It is also why he kept returning to time, because content that changes without a record of change ceases to be content and becomes rumor.
+      </p>
+
+      <h2>Articles are not alone.</h2>
+      <p>
+        The platform view becomes more interesting once you realize that content changes outside the article itself: copyright notices move on separate workflows, authors revise, copy editors intervene, and the corpus keeps growing. Rob's answer was to optimize for revision resiliency, reproducible identifiers, and corpus-wide consistency rather than fetishizing a single pristine file.
+      </p>
+      <blockquote class="pullquote">
+        "The whole database matters."
+        <small>Rob's reminder that the unit of value is the corpus, not the page</small>
+      </blockquote>
+      <p>
+        That is also where the phrase "precision and recall" stops being academic jargon. When the thing you are building has 100 million records, small error rates are no longer small. They are a business model, a trust problem, and a UX problem.
+      </p>
+    </article>
+
+    <section class="wide-band band-cream">
+      <div class="wide-band-inner">
+        <div class="band-header">
+          <div>
+            <div class="band-kicker">Selected slides</div>
+            <h2 style="font-family: var(--font-display); font-size: clamp(2.1rem, 4vw, 3rem); margin: 0.2rem 0 0;">The slide deck is the skeleton.</h2>
+          </div>
+          <p class="band-note">These slides carry the argument in compressed form. The images below are thumbnails; each opens the matching PDF page in a named window.</p>
+        </div>
+
+        <div class="slide-grid" id="slides">
+          <a class="slide-card" href="https://tug.org/tug2025/av/d1-t01-schrauwen-content/d1-t01-schrauwen-content-slides.pdf#page=3" target="tug2025-slides" rel="noreferrer noopener">
+            <img src="slide-03.avif" alt="Slide 3: Where we are now - platform replaces point solutions">
+            <div class="slide-caption">
+              <strong>Platform replaces point solutions</strong>
+              <span>Knowledge graph scale, evidence harvesting, and product-specific context views.</span>
+              <em>Open slide 3 in a named window</em>
+            </div>
+          </a>
+          <a class="slide-card" href="https://tug.org/tug2025/av/d1-t01-schrauwen-content/d1-t01-schrauwen-content-slides.pdf#page=4" target="tug2025-slides" rel="noreferrer noopener">
+            <img src="slide-04.avif" alt="Slide 4: Tagging replaces markup">
+            <div class="slide-caption">
+              <strong>Tagging replaces markup</strong>
+              <span>Annotations, provenance, and the limits of inline markup.</span>
+              <em>Open slide 4 in a named window</em>
+            </div>
+          </a>
+          <a class="slide-card" href="https://tug.org/tug2025/av/d1-t01-schrauwen-content/d1-t01-schrauwen-content-slides.pdf#page=8" target="tug2025-slides" rel="noreferrer noopener">
+            <img src="slide-08.avif" alt="Slide 8: Validate on departure, ignore on arrival">
+            <div class="slide-caption">
+              <strong>Validate on departure</strong>
+              <span>The sender tests first; the receiver should not pretend otherwise.</span>
+              <em>Open slide 8 in a named window</em>
+            </div>
+          </a>
+          <a class="slide-card" href="https://tug.org/tug2025/av/d1-t01-schrauwen-content/d1-t01-schrauwen-content-slides.pdf#page=9" target="tug2025-slides" rel="noreferrer noopener">
+            <img src="slide-09.avif" alt="Slide 9: Data modeling equals modeling the data">
+            <div class="slide-caption">
+              <strong>Model the data, not the world</strong>
+              <span>Strings are not the same thing as the things they describe.</span>
+              <em>Open slide 9 in a named window</em>
+            </div>
+          </a>
+          <a class="slide-card" href="https://tug.org/tug2025/av/d1-t01-schrauwen-content/d1-t01-schrauwen-content-slides.pdf#page=10" target="tug2025-slides" rel="noreferrer noopener">
+            <img src="slide-10.avif" alt="Slide 10: Articles are not alone">
+            <div class="slide-caption">
+              <strong>Articles are not alone</strong>
+              <span>Revision resilience, reproducible identifiers, and the corpus as the unit of meaning.</span>
+              <em>Open slide 10 in a named window</em>
+            </div>
+          </a>
+          <a class="slide-card" href="https://tug.org/tug2025/av/d1-t01-schrauwen-content/d1-t01-schrauwen-content-slides.pdf#page=12" target="tug2025-slides" rel="noreferrer noopener">
+            <img src="slide-12.avif" alt="Slide 12: Requirements for a next-gen content standard">
+            <div class="slide-caption">
+              <strong>Requirements for the next standard</strong>
+              <span>Annotation, provenance, flexible content, and validation.</span>
+              <em>Open slide 12 in a named window</em>
+            </div>
+          </a>
+          <a class="slide-card" href="https://tug.org/tug2025/av/d1-t01-schrauwen-content/d1-t01-schrauwen-content-slides.pdf#page=13" target="tug2025-slides" rel="noreferrer noopener">
+            <img src="slide-13.avif" alt="Slide 13: Content Profiles / Linked Data answer">
+            <div class="slide-caption">
+              <strong>Content Profiles / Linked Data</strong>
+              <span>HTML5 as canvas, JSON-LD as semantic minigraphs, and a standards-based answer.</span>
+              <em>Open slide 13 in a named window</em>
+            </div>
+          </a>
+          <a class="slide-card" href="https://tug.org/tug2025/av/d1-t01-schrauwen-content/d1-t01-schrauwen-content-slides.pdf#page=14" target="tug2025-slides" rel="noreferrer noopener">
+            <img src="slide-14.avif" alt="Slide 14: Discussion questions about CP/LD">
+            <div class="slide-caption">
+              <strong>The questions came back</strong>
+              <span>Can we afford the guarantees? Is the tooling wide enough? How embedded is XML?</span>
+              <em>Open slide 14 in a named window</em>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <article class="article">
+      <h2 id="future">What comes after XML?</h2>
+      <p>
+        Rob did not answer that question with a moonshot. He answered it with a standard: <span class="tip" tabindex="0" data-tip="NISO's Content Profile/Linked Document standard uses HTML5 and JSON-LD to combine content, data, semantics, and other resources from separate sources into one standards-based package.">Content Profiles / Linked Data (CP/LD)</span>. The important thing about CP/LD is not that it sounds modern. It is that it makes the separation he keeps talking about concrete: content, semantics, and display can be linked without collapsing into one giant schema.
+        <button class="cite-chip" type="button" data-ref="cpld">NISO CP/LD</button>
+      </p>
+      <p>
+        That conclusion lines up with the standards literature. The <a href="https://www.w3.org/TR/rdf11-concepts/" target="_blank" rel="noreferrer noopener">RDF 1.1 Concepts and Abstract Syntax</a> document defines RDF as a graph data model. <a href="https://www.w3.org/TR/json-ld11/" target="_blank" rel="noreferrer noopener">JSON-LD 1.1</a> gives you a JSON-friendly way to serialize linked data. <a href="https://www.w3.org/TR/shacl/" target="_blank" rel="noreferrer noopener">SHACL</a> gives you a way to validate shapes. That stack is very close to Rob's "clear vocabulary" plus "language for validation" wish list.
+        <button class="cite-chip" type="button" data-ref="rdfstack">RDF / JSON-LD / SHACL</button>
+      </p>
+      <p>
+        Provenance matters too. W3C's <a href="https://www.w3.org/TR/prov-dm/" target="_blank" rel="noreferrer noopener">PROV-DM</a> explicitly defines provenance as information about entities, activities, and people involved in producing a thing, which is almost exactly the intuition Rob was applying when he refused to let a downstream system silently overwrite source data.
+        <button class="cite-chip" type="button" data-ref="prov">W3C PROV</button>
+      </p>
+      <p>
+        The closest thing to a counterweight is not a contradiction, but a caution. NISO's own CP/LD material says the standard complements existing models instead of replacing them. That is the adult version of Rob's argument: the future is not a clean break from text; it is a layered system where the source stays visible and the claims about it become portable.
+      </p>
+
+      <blockquote class="pullquote">
+        "The text must be extremely high quality."
+        <small>His answer to the AI question, and the reason corpus curation still matters</small>
+      </blockquote>
+      <p>
+        The audience's question about AI made the point sharper. If large language models are going to sit in front of the scholarly corpus, then the original text becomes more valuable, not less. Rob's second answer was almost managerial, but it was also strategic: the knowledge graphs are what let Elsevier do something distinctive with those models. The graph is not an ornament. It is the memory.
+      </p>
+      <p>
+        His multilingual answer followed the same pattern. He did not promise magical universal formatting. He said the problem is almost impossible if you try to generate text from tags for every permutation, and that the better move is to separate content from annotations so the textual form can stay textual.
+      </p>
+
+      <div class="band-header" style="margin-top: 2.2rem;">
+        <div>
+          <div class="band-kicker">Research links</div>
+          <h3 style="font-family: var(--font-display); font-size: 2rem; margin: 0.2rem 0 0;">Standards that support Rob's direction.</h3>
+        </div>
+        <p class="band-note">Tap a card to open a popup with why the source matters.</p>
+      </div>
+
+      <div class="reference-grid" id="references">
+        <button class="ref-card" type="button" data-ref="tei">
+          <span class="eyebrow">TEI</span>
+          <h3>Stand-off annotations</h3>
+          <p>TEI explicitly treats standOff as linked data, contextual information, and stand-off annotations embedded beside the base text.</p>
+          <span class="ref-hint">Open citation popup</span>
+        </button>
+        <button class="ref-card" type="button" data-ref="webanno">
+          <span class="eyebrow">W3C</span>
+          <h3>Web Annotation</h3>
+          <p>The Web Annotation model is a body-target framework that can be shared and reused across platforms.</p>
+          <span class="ref-hint">Open citation popup</span>
+        </button>
+        <button class="ref-card" type="button" data-ref="prov">
+          <span class="eyebrow">W3C</span>
+          <h3>Provenance</h3>
+          <p>PROV-DM says provenance is information about entities, activities, and people involved in producing data or things.</p>
+          <span class="ref-hint">Open citation popup</span>
+        </button>
+        <button class="ref-card" type="button" data-ref="cpld">
+          <span class="eyebrow">NISO</span>
+          <h3>CP/LD</h3>
+          <p>NISO's CP/LD standard combines content, data, semantics, and linked data using HTML5 and JSON-LD.</p>
+          <span class="ref-hint">Open citation popup</span>
+        </button>
+        <button class="ref-card" type="button" data-ref="rdfstack">
+          <span class="eyebrow">W3C</span>
+          <h3>RDF, JSON-LD, SHACL</h3>
+          <p>The graph, its JSON serialization, and a validation language map cleanly to Rob's vocabulary-and-validation wish list.</p>
+          <span class="ref-hint">Open citation popup</span>
+        </button>
+        <button class="ref-card" type="button" data-ref="pubmed">
+          <span class="eyebrow">NCBI</span>
+          <h3>PubMed data management</h3>
+          <p>PubMed requires publishers to manage and correct their own citations through formal upstream workflows.</p>
+          <span class="ref-hint">Open citation popup</span>
+        </button>
+        <button class="ref-card" type="button" data-ref="skg">
+          <span class="eyebrow">Springer</span>
+          <h3>Scholarly knowledge graphs</h3>
+          <p>A review article on scholarly knowledge graphs supports the idea that curation, refinement, and utilization matter as much as the graph itself.</p>
+          <span class="ref-hint">Open citation popup</span>
+        </button>
+      </div>
+
+      <p style="margin-top: 1.5rem;">
+        My inference from those sources is simple: Rob is right that the next layer should preserve the source and attach meaning around it, but the broader standards ecosystem also suggests that annotation works best as a companion layer, not a replacement fantasy. That is the useful middle ground.
+      </p>
+    </article>
+
+    <section class="wide-band band-ink">
+      <div class="wide-band-inner">
+        <div class="band-header">
+          <div>
+            <div class="band-kicker">Takeaways</div>
+            <h2 style="font-family: var(--font-display); font-size: clamp(2.1rem, 4vw, 3rem); margin: 0.2rem 0 0;">What stayed after the applause.</h2>
+          </div>
+          <p class="band-note">The talk is about XML only on the surface. Underneath, it is about trust, layered meaning, and the right place to put a claim.</p>
+        </div>
+
+        <div class="takeaways">
+          <div class="takeaway">
+            <strong>1. Separate content from annotation.</strong>
+            <p>That separation is what allows multiple opinions, provenance, and overlap to coexist without rewriting the source.</p>
+          </div>
+          <div class="takeaway">
+            <strong>2. Never silently normalize away the source.</strong>
+            <p>Rob's insistence on staying true to the source is a practical trust policy, not a purity test.</p>
+          </div>
+          <div class="takeaway">
+            <strong>3. Model the data, not the world.</strong>
+            <p>Strings are evidence. The modeled object is the thing you actually need to reason about.</p>
+          </div>
+          <div class="takeaway">
+            <strong>4. The corpus is the unit.</strong>
+            <p>At Elsevier scale, small errors matter because the value comes from consistency across the whole graph.</p>
+          </div>
+          <div class="takeaway">
+            <strong>5. AI increases the premium on source quality.</strong>
+            <p>If the front door is an LLM, the underlying text has to be cleaner, richer, and better grounded than ever.</p>
+          </div>
+          <div class="takeaway">
+            <strong>6. Real change is a step change.</strong>
+            <p>Rob's answer to standards drift is not fiddling around the edges. It is a new layer with enough clarity to reset habits.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p style="margin-top:0;">
+        Built from <a href="transcript.md">the transcript</a>, the <a href="https://tug.org/tug2025/av/d1-t01-schrauwen-content/d1-t01-schrauwen-content-slides.pdf" target="_blank" rel="noreferrer noopener">TUG 2025 slide deck</a>, the <a href="https://tug.org/tug2025/abstracts/schrauwen-content.txt" target="_blank" rel="noreferrer noopener">abstract/license file</a>, the sketchnote, and the companion audio.
+      </p>
+    </footer>
+  </main>
+
+  <dialog id="citation-modal" aria-labelledby="citation-title">
+    <div class="modal-head">
+      <div>
+        <h3 id="citation-title">Citation</h3>
+        <p id="citation-summary"></p>
+      </div>
+      <button class="modal-close" type="button" data-close>Close</button>
+    </div>
+    <div class="modal-body" id="citation-body"></div>
+  </dialog>
+
+  <script>
+    const refs = {
+      tei: {
+        title: 'TEI standOff',
+        summary: 'TEI treats standOff as linked data, contextual information, and stand-off annotations embedded beside the base text.',
+        body: [
+          'Why it matters here: Rob is not inventing a new idea from scratch. He is describing a long-standing standards pattern for separating the source from the claims about the source.',
+          'The TEI page is especially useful because it names stand-off annotations directly and shows how they sit around the text rather than inside it.'
+        ],
+        links: [
+          { label: 'Open TEI standOff', href: 'https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-standOff.html' },
+          { label: 'TEI annotation', href: 'https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-annotation.html' }
+        ]
+      },
+      webanno: {
+        title: 'Web Annotation',
+        summary: 'W3C Web Annotation gives a body-target model for annotations that can be shared and reused across platforms.',
+        body: [
+          'Why it matters here: it matches Rob\'s sticky-note metaphor almost exactly. An annotation is a resource about a target resource, not a rewrite of the target.',
+          'This is the web-native version of the same idea TEI already exposes in XML.'
+        ],
+        links: [
+          { label: 'W3C Web Annotation Data Model', href: 'https://www.w3.org/TR/annotation-model/' }
+        ]
+      },
+      prov: {
+        title: 'W3C PROV',
+        summary: 'PROV-DM defines provenance as information about entities, activities, and people involved in producing a thing.',
+        body: [
+          'Why it matters here: Rob keeps returning to provenance because the original source is part of the meaning, not just a transport detail.',
+          'PROV gives that instinct a standard vocabulary, which is exactly the kind of shared language his talk keeps asking for.'
+        ],
+        links: [
+          { label: 'PROV-DM', href: 'https://www.w3.org/TR/prov-dm/' }
+        ]
+      },
+      cpld: {
+        title: 'NISO CP/LD',
+        summary: 'CP/LD is an application of HTML5 and JSON-LD to create semantic relationships between data elements in scholarly publishing workflows.',
+        body: [
+          'Why it matters here: it is the cleanest standards-level answer to Rob\'s question about what comes after XML.',
+          'NISO explicitly says CP/LD complements existing models rather than replacing them, which is a much more realistic framing than a hard break.'
+        ],
+        links: [
+          { label: 'NISO overview', href: 'https://www.niso.org/niso-io/2025/05/wgc-icc' },
+          { label: 'Content Profiles and Linked Data', href: 'https://www.niso.org/niso-io/2021/02/content-profiles-and-linked-data' }
+        ]
+      },
+      rdfstack: {
+        title: 'RDF + JSON-LD + SHACL',
+        summary: 'RDF provides the graph, JSON-LD serializes linked data in JSON, and SHACL validates graph shapes.',
+        body: [
+          'Why it matters here: Rob wants a common vocabulary and a language for validation. This trio is a very close standards match for that requirement.',
+          'The stack also keeps the data model separate from the syntax, which is exactly the kind of decoupling his argument depends on.'
+        ],
+        links: [
+          { label: 'RDF 1.1 Concepts', href: 'https://www.w3.org/TR/rdf11-concepts/' },
+          { label: 'JSON-LD 1.1', href: 'https://www.w3.org/TR/json-ld11/' },
+          { label: 'SHACL', href: 'https://www.w3.org/TR/shacl/' }
+        ]
+      },
+      pubmed: {
+        title: 'PubMed data management',
+        summary: 'PubMed Data Management lets providers create, review, and edit citation data at any time, and PubMed expects publishers to manage their own XML accurately.',
+        body: [
+          'Why it matters here: this is a real-world validation workflow that runs upstream, which is close to Rob\'s "validate on departure" line.',
+          'It is also a reminder that upstream metadata errors are normal enough to warrant formal correction paths, not silent fixes by downstream systems.'
+        ],
+        links: [
+          { label: 'PMDM Help', href: 'https://www.ncbi.nlm.nih.gov/pubmed/management/help/' },
+          { label: 'XML Help for data providers', href: 'https://www.ncbi.nlm.nih.gov/books/NBK3828/' },
+          { label: 'PubMed Data Provider Help', href: 'https://www.ncbi.nlm.nih.gov/pubmed/help/tech-eval' }
+        ]
+      },
+      skg: {
+        title: 'Scholarly knowledge graphs',
+        summary: 'A Springer review on scholarly knowledge graphs reports active work on construction, refinement, and utilization in the scholarly domain.',
+        body: [
+          'Why it matters here: it supports Rob\'s scale argument. Scholarly communication is increasingly being modeled as a graph of entities and relationships, not just a pile of PDFs.',
+          'The review also reinforces a caveat: building the graph is only half the job; curation and refinement are the other half.'
+        ],
+        links: [
+          { label: 'Springer review', href: 'https://link.springer.com/article/10.1007/s40747-022-00806-6' },
+          { label: 'PubMed record', href: 'https://pubmed.ncbi.nlm.nih.gov/35965491/' }
+        ]
+      }
+    };
+
+    const modal = document.getElementById('citation-modal');
+    const title = document.getElementById('citation-title');
+    const summary = document.getElementById('citation-summary');
+    const body = document.getElementById('citation-body');
+    const videoShell = document.getElementById('video-shell');
+    const videoLaunch = document.getElementById('video-launch');
+
+    function renderLinks(links) {
+      return links.map(({ label, href }) => `<a href="${href}" target="_blank" rel="noreferrer noopener">${label}</a>`).join('');
+    }
+
+    function openRef(id) {
+      const ref = refs[id];
+      if (!ref || !modal) return;
+      title.textContent = ref.title;
+      summary.textContent = ref.summary;
+      body.innerHTML = `
+        ${ref.body.map((text) => `<p>${text}</p>`).join('')}
+        <div class="modal-links">${renderLinks(ref.links)}</div>
+      `;
+      modal.showModal();
+    }
+
+    document.querySelectorAll('[data-ref]').forEach((button) => {
+      button.addEventListener('click', () => openRef(button.dataset.ref));
+    });
+
+    document.querySelectorAll('[data-close]').forEach((button) => {
+      button.addEventListener('click', () => modal.close());
+    });
+
+    videoLaunch?.addEventListener('click', () => {
+      videoShell.innerHTML = `
+        <iframe
+          src="https://www.youtube.com/embed/XGO5ushzXMA?rel=0&autoplay=1"
+          title="Rob Schrauwen - True but Irrelevant - TUG 2025"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen></iframe>
+      `;
+    });
+
+    modal?.addEventListener('click', (event) => {
+      const rect = modal.getBoundingClientRect();
+      const inDialog = (
+        rect.top <= event.clientY &&
+        event.clientY <= rect.top + rect.height &&
+        rect.left <= event.clientX &&
+        event.clientX <= rect.left + rect.width
+      );
+      if (!inDialog) {
+        modal.close();
+      }
+    });
+
+    const progress = document.querySelector('.progress');
+    const updateProgress = () => {
+      const height = document.documentElement.scrollHeight - window.innerHeight;
+      const value = height > 0 ? (window.scrollY / height) * 100 : 0;
+      progress.style.width = `${Math.max(0, Math.min(100, value))}%`;
+    };
+
+    updateProgress();
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+  </script>
+</body>
+</html>

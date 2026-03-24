@@ -135,6 +135,12 @@ This will be deployed at https://sanand0.github.io/talks/2025-07-18-tug-true-but
 
 <!-- claude --resume caa61d2d-ad81-4838-b5ad-7a183c36b231 -->
 
+## Version 3 (GPT 5.4 mini - xhigh)
+
+Same as above, but generates 2025-07-18-tug-true-but-irrelevant-rob-schrauwen/gpt-5.4-mini-xhigh.html
+
+<!-- codex resume 019d1f47-0813-7592-8221-913c48169394 -->
+
 ## Sketchnote
 
 <!--

@@ -1,13 +1,4 @@
----
-tags:
-goal:
-kind candor:
-effectiveness:
----
-
-# 2025-07-18 TUG Rob
-
-## Transcript
+# Transcript
 
 **Boris Veytsman**: [09:40] Okay, friends, could you please take your seats?
 

@@ -41,30 +41,38 @@ else
   exit 1
 fi
 
+# ── Pick resize tool ─────────────────────────────────────────────────────────
+if command -v magick &>/dev/null; then
+  RESIZE_CMD="magick"
+elif command -v convert &>/dev/null; then
+  RESIZE_CMD="convert"
+else
+  echo "ERROR: Install ImageMagick to resize images." >&2
+  echo "  Ubuntu/Debian: sudo apt install imagemagick" >&2
+  echo "  macOS:         brew install imagemagick" >&2
+  exit 1
+fi
+
 # ── Encode to AVIF or WebP ───────────────────────────────────────────────────
 COUNT=0
 for SRC in "$TMPDIR"/slide-*."$EXT"; do
   [ -f "$SRC" ] || continue
   COUNT=$((COUNT + 1))
   N="$(printf '%02d' "$COUNT")"
+  RESIZED="$TMPDIR/resized-$N.png"
   DEST_AVIF="$OUTDIR/slide-$N.avif"
   DEST_WEBP="$OUTDIR/slide-$N.webp"
 
+  # Resize to max 1280px wide, preserving aspect ratio
+  "$RESIZE_CMD" "$SRC" -resize '1280x>' "$RESIZED"
+
   if command -v avifenc &>/dev/null; then
-    avifenc --quality 55 --speed 6 "$SRC" "$DEST_AVIF" &>/dev/null
+    avifenc --quality 55 --speed 6 "$RESIZED" "$DEST_AVIF" &>/dev/null
     echo "  slide-$N.avif"
-  elif command -v convert &>/dev/null; then
-    # ImageMagick: resize to max 1280px wide, quality 82
-    convert "$SRC" -resize '1280x>' -quality 82 "$DEST_WEBP"
-    echo "  slide-$N.webp"
-  elif command -v magick &>/dev/null; then
-    magick "$SRC" -resize '1280x>' -quality 82 "$DEST_WEBP"
-    echo "  slide-$N.webp"
   else
-    echo "ERROR: Install avifenc (libavif-apps) or ImageMagick to encode images." >&2
-    echo "  Ubuntu/Debian: sudo apt install libavif-apps  OR  imagemagick" >&2
-    echo "  macOS:         brew install libavif           OR  imagemagick" >&2
-    exit 1
+    # ImageMagick WebP fallback
+    "$RESIZE_CMD" "$RESIZED" -quality 82 "$DEST_WEBP"
+    echo "  slide-$N.webp"
   fi
 done
 

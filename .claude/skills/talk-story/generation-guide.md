@@ -150,6 +150,9 @@ body {
 
 ### Blockquote (memorable quotes from transcript)
 
+Make blockquotes stand out. They should be visually prominent — bigger, with room to breathe,
+and ideally wider than the main column so they feel like a pause in the reading flow.
+
 ```html
 <blockquote class="pull-quote">
   <p>"The quote text here."</p>
@@ -160,11 +163,26 @@ body {
 ```css
 blockquote.pull-quote {
   border-left: 4px solid var(--accent);
-  padding: 1rem 1.5rem;
-  margin: 2rem 0;
+  padding: 1.25rem 2rem;
+  /* Extend 10% past each side of the column — visually striking, not full-width */
+  margin: 2.5rem -10%;
   font-style: italic;
-  font-size: 1.15rem;
+  font-size: 1.2rem;
+  line-height: 1.65;
   background: var(--highlight-bg);
+  border-radius: 0 4px 4px 0;
+}
+blockquote.pull-quote cite {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  font-style: normal;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+}
+/* On narrow viewports, don't overflow the screen */
+@media (max-width: 600px) {
+  blockquote.pull-quote { margin-left: 0; margin-right: 0; }
 }
 ```
 
@@ -189,10 +207,12 @@ blockquote.pull-quote {
 
 ### Audio player
 
+Audio files are always `.opus`. Place the player in the hero meta section (near the top).
+
 ```html
 <div class="audio-player">
   <span>🎧 Listen to the recording</span>
-  <audio controls preload="none" style="width:100%">
+  <audio controls preload="none" style="width:100%; margin-top:0.5rem; display:block;">
     <source src="audio.opus" type="audio/ogg; codecs=opus">
   </audio>
 </div>
@@ -219,16 +239,31 @@ blockquote.pull-quote {
 
 ### Popup button (for citations, rich content)
 
+The cite button should feel like part of the text flow — a small superscript-style marker.
+Do NOT use `vertical-align: super` (breaks line spacing) or remove the border entirely (feels incomplete).
+
 ```html
-<button class="cite-btn" onclick="openPopup('popup-id-1')">Source</button>
+<sup><button class="cite-btn" onclick="openPopup('popup-id-1')" title="View source">①</button></sup>
 <div id="popup-id-1" class="popup-data" hidden>
   <h3>Title</h3>
   <p>Rich content here. Can include images, links, markdown converted to HTML.</p>
+  <a href="https://source.url" target="_blank">Read more ↗</a>
 </div>
 ```
 
 ```css
-.cite-btn { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 0.15rem 0.5rem; border-radius: 3px; font-size: 0.8rem; cursor: pointer; vertical-align: middle; }
+.cite-btn {
+  background: none;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  line-height: 1;
+}
+.cite-btn:hover { background: var(--accent); color: #fff; }
 ```
 
 ### YouTube embed card
@@ -308,8 +343,31 @@ Width 100%, viewBox set for content. Add `role="img"` and `aria-label`.
 
 ## Common pitfalls
 
-- **Horizontal scroll**: Always add `overflow-x: hidden` to `body`. Full-width elements MUST use `margin-left: calc(50% - 50vw)` pattern, not `margin: 0 -100vw`.
-- **Broken popup JS**: The `openPopup(id)` function should read the `innerHTML` of `#id` and inject it into `#popup-content`.
-- **Audio not playing**: Always use `<source>` inside `<audio>`, not `src=` directly, for opus files.
-- **Truncated chunks**: End each chunk at a complete HTML element, never mid-tag.
-- **TODOs left in file**: Search for "TODO" before finalising.
+### Horizontal scroll (the #1 recurring issue)
+
+This appears in almost every generated talk and must be explicitly prevented.
+
+**Root cause**: Any element with `margin-left: -Nvw`, `margin: 0 -100vw`, or `width: 100vw`
+without the correct centring trick will cause horizontal overflow.
+
+**The only safe full-width pattern**:
+```css
+body { overflow-x: hidden; }  /* MUST be on body */
+
+.any-full-width-element {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);  /* NOT -100vw, NOT -50vw */
+}
+```
+
+After completing all chunks, grep the file: `grep -n 'margin.*-[0-9]*vw\|margin.*-50%' index.html`
+Any match is a horizontal scroll bug — replace with the pattern above.
+
+### Other pitfalls
+
+- **Broken popup JS**: The `openPopup(id)` function should copy `innerHTML` of `#id` into `#popup-content`. Check that every `openPopup('X')` call has a matching `id="X"` element.
+- **Audio not playing**: Use `<source src="audio.opus" type="audio/ogg; codecs=opus">` inside `<audio>`. Never use `<audio src="audio.opus">` directly.
+- **Truncated chunks**: End each chunk at a complete HTML element boundary, never mid-tag or mid-attribute.
+- **TODOs left in file**: `grep -c "TODO" index.html` before finalising — must be 0.
+- **White text on white**: Any element inside a dark-background container that inherits `--ink` colour will be invisible. Set explicit `color: #f0ece4` or similar on dark sections.
+- **Multiple `<main>` tags**: Only one `<main>` per page. Use `<article>`, `<section>`, or `<div>` for inner wrappers.

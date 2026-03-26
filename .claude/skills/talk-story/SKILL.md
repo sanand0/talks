@@ -34,7 +34,7 @@ Run `ls -la <talk-dir>/` and note which assets are present. Categorise them:
 | `transcript.md` | REQUIRED | Primary content |
 | `context.md` | REQUIRED | Event/speaker metadata — see Step 4 |
 | `sketchnote.avif` / `sketchnote.webp` | optional | Visual summary |
-| `audio.opus` / `audio.mp3` / `audio.ogg` | optional | Recording |
+| `audio.opus` | optional | Recording (only .opus is used) |
 | `slide-NN.avif` / `slide-NN.webp` | optional | Extracted slide images |
 | `*.pdf` | optional | Slide deck — convert if no slide images |
 | `*.avif` / `*.webp` / `*.webm` / `*.mp4` | optional | Images/videos referenced in talk |
@@ -65,13 +65,18 @@ If the script reports missing tools, tell the user what to install.
 
 ### Step 5 — Screenshot key links (if needed)
 
-If `context.md` contains a `## Screenshots` section listing URLs, screenshot each one:
+If `context.md` contains a `## Screenshots` section listing URLs, screenshot each one using `uvx rodney`:
 
 ```bash
-bash ${CLAUDE_SKILL_DIR}/scripts/screenshot-url.sh "<url>" "<talk-dir>/screenshot-<slug>.webp"
+uvx rodney start
+uvx rodney open "<url>"
+uvx rodney screenshot -w 1280 -h 800 "<talk-dir>/screenshot-<slug>.png"
+uvx rodney stop
 ```
 
-Only run this when the screenshot file doesn't already exist.
+Then convert to WebP if `cwebp` is available: `cwebp -q 80 screenshot-<slug>.png -o screenshot-<slug>.webp && rm screenshot-<slug>.png`
+
+Only screenshot when the output file doesn't already exist. Start rodney once per batch, not once per URL.
 
 ### Step 6 — Read all context
 
@@ -99,8 +104,8 @@ See [generation-guide.md](generation-guide.md) for complete design patterns and 
 After each chunk, verify the file is valid (no truncated tags, matching open/close).
 
 **After all chunks**, do a final review pass:
-- No horizontal scrollbar (check for elements wider than `100vw`)
-- Audio player present if `audio.*` exists
+- No horizontal scrollbar: grep for `margin.*-[0-9]*vw` or `margin.*-100` — these always cause overflow. The only safe full-width pattern is `margin-left: calc(50% - 50vw)` with `body { overflow-x: hidden }`.
+- Audio player present if `audio.opus` exists
 - Sketchnote is full-width with contrasting background
 - Slide thumbnails open in popup lightbox
 - All `TODO:` placeholders removed

@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Journalist and the Machine | Times of India × Anand</title>
+  <meta name="description" content="How Anand worked with the Times of India to automate 'Hack of the Day' using LLMs — a story about AI, journalism, and the future of storytelling.">
+  <meta property="og:title" content="The Journalist and the Machine">
+  <meta property="og:description" content="How India's largest newspaper quietly let an AI write for it.">
+  <meta property="og:image" content="hack-of-the-day-1.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1a0a0a;
+      --paper: #f9f5ee;
+      --accent: #c8001e;
+      --gold: #c49b2a;
+      --muted: #5e4a4a;
+      --faint: #9a8a8a;
+      --border: #ddd5c8;
+      --highlight-bg: #fff8e6;
+      --dark: #1a0a0a;
+      --toi-red: #c8001e;
+      --sidebar-bg: #f0ebe0;
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'Libre Baskerville', Georgia, serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.78;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      position: fixed; top: 0; left: 0;
+      width: 0%; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      z-index: 1000; transition: width 0.1s linear;
+    }
+
+    /* Masthead */
+    .masthead {
+      border-bottom: 3px double var(--border);
+      padding: 0.75rem 2rem;
+      position: sticky; top: 0;
+      background: var(--paper);
+      z-index: 100;
+    }
+    .masthead-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .masthead-brand {
+      font-family: var(--font-display);
+      font-size: 0.88rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .masthead-brand a { color: var(--accent); text-decoration: none; }
+    .masthead-date {
+      font-size: 0.8rem; color: var(--faint);
+      font-family: var(--font-mono);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 4rem 2rem 2.5rem;
+      max-width: 860px; margin: 0 auto;
+      text-align: center;
+    }
+    .hero-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.7rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+    .hero-rule {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .hero-rule::before, .hero-rule::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      font-weight: 700; line-height: 1.0;
+      letter-spacing: -0.03em; color: var(--ink);
+      margin-bottom: 1.25rem;
+    }
+    .hero-title em { color: var(--accent); font-style: italic; }
+    .hero-subtitle {
+      font-family: var(--font-display);
+      font-size: 1.5rem; font-weight: 400; font-style: italic;
+      color: var(--muted); max-width: 640px;
+      margin: 0 auto 2.5rem; line-height: 1.45;
+    }
+    .hero-meta {
+      display: flex; justify-content: center;
+      gap: 2.5rem; font-size: 0.85rem;
+      color: var(--muted); flex-wrap: wrap;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .hero-meta a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(200,0,30,0.25); transition: border-color 0.2s; }
+    .hero-meta a:hover { border-bottom-color: var(--accent); }
+    .hero-byline { font-style: italic; }
+
+    /* Article body */
+    .article {
+      max-width: 680px; margin: 0 auto; padding: 0 2rem 4rem;
+    }
+    .article p { margin-bottom: 1.6rem; }
+    .article a {
+      color: var(--accent); text-decoration: none;
+      border-bottom: 1px solid rgba(200,0,30,0.28);
+      transition: border-color 0.2s;
+    }
+    .article a:hover { border-bottom-color: var(--accent); }
+
+    .dropcap::first-letter {
+      font-family: var(--font-display);
+      font-size: 5.2rem; float: left;
+      line-height: 0.76; padding-right: 0.5rem;
+      padding-top: 0.1rem; font-weight: 700;
+      color: var(--accent);
+    }
+
+    .article h2 {
+      font-family: var(--font-display);
+      font-size: 2.2rem; font-weight: 700;
+      margin: 3.5rem 0 1.25rem;
+      padding-top: 2.5rem; border-top: 1px solid var(--border);
+      line-height: 1.2;
+    }
+    .article h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem; font-weight: 600;
+      margin: 2.5rem 0 0.85rem; color: var(--accent);
+    }
+    .article ul, .article ol { margin: 1.5rem 0; padding-left: 1.75rem; }
+    .article li { margin-bottom: 0.7rem; }
+    strong { font-weight: 700; }
+    code {
+      font-family: var(--font-mono); font-size: 0.82em;
+      background: rgba(0,0,0,0.05); padding: 0.1em 0.3em;
+    }
+
+    /* Pull quote */
+    .pullquote {
+      font-family: var(--font-display);
+      font-size: 1.7rem; font-style: italic; font-weight: 500;
+      line-height: 1.32; color: var(--accent);
+      border-left: 4px solid var(--gold);
+      padding: 1.25rem 0 1.25rem 2rem;
+      margin: 2.5rem 0 2.5rem -1.5rem;
+    }
+    .pullquote-attr {
+      font-family: var(--font-body);
+      font-size: 0.82rem; font-style: normal;
+      color: var(--faint); margin-top: 0.6rem; display: block;
+    }
+
+    /* Blockquote — conversational */
+    .conversation-quote {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--toi-red);
+      padding: 1.5rem 1.75rem;
+      margin: 2.5rem 0;
+      font-style: italic;
+      font-size: 1.05rem;
+    }
+    .conversation-quote .speaker {
+      font-family: var(--font-mono);
+      font-size: 0.7rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent);
+      font-style: normal; margin-bottom: 0.5rem; display: block;
+    }
+    .conversation-quote p { margin-bottom: 0.75rem; }
+    .conversation-quote p:last-child { margin-bottom: 0; }
+
+    /* Insight box */
+    .insight-box {
+      background: var(--highlight-bg);
+      border-left: 4px solid var(--gold);
+      padding: 1.5rem 1.75rem;
+      margin: 2.5rem 0; font-size: 0.95rem;
+    }
+    .insight-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem; text-transform: uppercase;
+      letter-spacing: 0.14em; color: #8a6200;
+      margin-bottom: 0.5rem; display: block;
+    }
+
+    /* Full-bleed section */
+    .full-bleed {
+      margin-left: calc(50% - 50vw);
+      width: 100vw; padding: 3.5rem 2rem;
+    }
+    .full-bleed-inner {
+      max-width: 1100px; margin: 0 auto;
+    }
+
+    /* Sketchnote */
+    .sketchnote-section {
+      background: #1a0a0a;
+    }
+    .sketchnote-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.45);
+      margin-bottom: 1.25rem; display: block; text-align: center;
+    }
+    .sketchnote-section a { display: block; }
+    .sketchnote-section img {
+      width: 100%; max-width: 1100px; display: block;
+      margin: 0 auto; cursor: zoom-in;
+      transition: opacity 0.2s;
+    }
+    .sketchnote-section img:hover { opacity: 0.92; }
+    .sketchnote-caption {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      color: rgba(255,255,255,0.4); text-align: center;
+      margin-top: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+
+    /* Hack card strip */
+    .hack-strip-section {
+      background: #f0ebe0;
+    }
+    .hack-strip-label {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 1.25rem; text-align: center;
+    }
+    .hack-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.25rem;
+    }
+    .hack-tweet {
+      background: #fff;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .hack-tweet:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+    .hack-tweet img { width: 100%; display: block; }
+    .hack-tweet-caption {
+      font-family: var(--font-mono); font-size: 0.72rem;
+      color: var(--muted); padding: 0.65rem 0.85rem;
+      letter-spacing: 0.04em;
+    }
+
+    /* Inline Hack of the Day card */
+    .hack-card-wrapper {
+      margin: 2.5rem 0;
+      font-size: 0.88rem;
+    }
+    .hack-card {
+      background: #fff;
+      border: 2px solid #e0d8c8;
+      overflow: hidden;
+      max-width: 480px;
+      margin: 0 auto;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .hack-card-header {
+      background: var(--toi-red);
+      color: #fff;
+      padding: 0.6rem 1rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .hack-card-header-brand {
+      font-family: var(--font-mono);
+      font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+      opacity: 0.85;
+    }
+    .hack-card-header-tag {
+      font-family: var(--font-mono);
+      font-size: 0.58rem; background: rgba(255,255,255,0.15);
+      padding: 0.15rem 0.4rem; letter-spacing: 0.06em;
+    }
+    .hack-card-title-bar {
+      background: var(--ink);
+      color: #fff; padding: 0.85rem 1rem;
+    }
+    .hack-card-title-bar h3 {
+      font-family: var(--font-display);
+      font-size: 1.05rem; font-weight: 700; font-style: normal;
+      color: #fff; letter-spacing: 0.04em; margin: 0;
+      text-transform: uppercase; line-height: 1.25;
+    }
+    .hack-card-body { padding: 0.85rem 1rem; }
+    .hack-card-problem {
+      font-size: 0.78rem; color: var(--muted); font-style: italic;
+      margin-bottom: 0.6rem;
+    }
+    .hack-card-what {
+      font-size: 0.82rem; font-weight: 700;
+      color: var(--ink); margin-bottom: 0.6rem; line-height: 1.4;
+    }
+    .hack-card-steps { padding-left: 0; list-style: none; margin: 0 0 0.75rem; }
+    .hack-card-steps li {
+      font-size: 0.75rem; color: var(--ink);
+      padding: 0.3rem 0; border-bottom: 1px solid #f0ebe0;
+      margin-bottom: 0; line-height: 1.4;
+      display: flex; gap: 0.35rem;
+    }
+    .hack-card-steps li:last-child { border-bottom: none; }
+    .hack-card-steps li strong { color: var(--toi-red); flex-shrink: 0; }
+    .hack-card-note {
+      background: #fff8e6; border-left: 3px solid var(--gold);
+      padding: 0.5rem 0.65rem; font-size: 0.72rem;
+      color: var(--muted); line-height: 1.4; margin-top: 0.5rem;
+    }
+    .hack-card-note-label {
+      font-family: var(--font-mono); font-size: 0.6rem;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: #8a6200; font-weight: 600;
+    }
+    .hack-card-footer {
+      background: #f5f0e8; padding: 0.4rem 1rem;
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--font-mono); font-size: 0.62rem;
+      color: var(--faint); letter-spacing: 0.04em;
+    }
+    .hack-card-email { color: var(--accent); }
+    .hack-card-caption {
+      text-align: center; font-family: var(--font-mono);
+      font-size: 0.65rem; color: var(--faint);
+      margin-top: 0.5rem; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+
+    /* Prompt snippet */
+    .prompt-block {
+      background: #0f1117;
+      color: #e0e6f0; padding: 1.5rem 1.75rem;
+      margin: 2.5rem 0; font-family: var(--font-mono);
+      font-size: 0.78rem; line-height: 1.7;
+      position: relative; overflow-x: auto;
+    }
+    .prompt-block-label {
+      position: absolute; top: 0.5rem; right: 0.75rem;
+      font-size: 0.6rem; text-transform: uppercase;
+      letter-spacing: 0.1em; color: rgba(255,255,255,0.3);
+    }
+    .prompt-block .highlight { color: #79c0ff; }
+    .prompt-block .string { color: #a5d6ff; }
+    .prompt-block .comment { color: rgba(255,255,255,0.35); font-style: italic; }
+
+    /* Pipeline diagram */
+    .pipeline-section {
+      background: #1a0a0a;
+    }
+    .pipeline-label {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(255,255,255,0.45); margin-bottom: 1.5rem; text-align: center;
+    }
+    .pipeline {
+      display: flex; align-items: center;
+      flex-wrap: wrap; gap: 0; justify-content: center;
+    }
+    .pipeline-step {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 1rem 1.25rem; text-align: center;
+      min-width: 130px; flex: 1;
+    }
+    .pipeline-step-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
+    .pipeline-step-label {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.5); margin-bottom: 0.25rem;
+    }
+    .pipeline-step-name {
+      font-family: var(--font-display); font-size: 0.95rem;
+      color: #fff; font-weight: 600;
+    }
+    .pipeline-step-model {
+      font-family: var(--font-mono); font-size: 0.58rem;
+      color: var(--gold); margin-top: 0.2rem;
+    }
+    .pipeline-arrow {
+      color: rgba(255,255,255,0.3); font-size: 1.25rem;
+      padding: 0 0.25rem; flex-shrink: 0;
+    }
+
+    /* Accuracy stats */
+    .stats-band {
+      background: linear-gradient(135deg, var(--toi-red), #8b0016);
+    }
+    .stats-band-inner {
+      max-width: 900px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 2rem; text-align: center;
+    }
+    .stat-item {}
+    .stat-number {
+      font-family: var(--font-display); font-size: 3rem;
+      font-weight: 700; color: #fff; line-height: 1;
+    }
+    .stat-label {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.6); margin-top: 0.4rem;
+    }
+
+    /* Takeaways */
+    .takeaways {
+      background: linear-gradient(135deg, #1a0a0a 0%, #2d1010 100%);
+      color: #fff; padding: 4rem 2rem; margin: 4rem 0 0;
+    }
+    .takeaways-inner { max-width: 900px; margin: 0 auto; }
+    .takeaways h2 {
+      font-family: var(--font-display); font-size: 2.2rem;
+      text-align: center; border: none; padding: 0;
+      margin: 0 0 0.5rem; color: #fff;
+    }
+    .takeaways-subhead {
+      text-align: center; color: rgba(255,255,255,0.5);
+      font-family: var(--font-mono); font-size: 0.72rem;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      margin-bottom: 3rem;
+    }
+    .takeaway-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .takeaway-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 1.75rem 1.5rem; text-align: center;
+      transition: all 0.3s ease;
+    }
+    .takeaway-card:hover {
+      background: rgba(255,255,255,0.09);
+      transform: translateY(-4px);
+    }
+    .takeaway-number {
+      font-family: var(--font-display); font-size: 2.8rem;
+      font-weight: 700; color: var(--gold); line-height: 1; margin-bottom: 0.85rem;
+    }
+    .takeaway-title {
+      font-family: var(--font-display); font-size: 1.1rem;
+      font-weight: 600; margin-bottom: 0.65rem;
+    }
+    .takeaway-text {
+      font-size: 0.85rem; color: rgba(255,255,255,0.65); line-height: 1.55;
+      font-family: var(--font-body);
+    }
+
+    /* Footer */
+    .footer { border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; }
+    .footer-author {
+      display: flex; align-items: center; justify-content: center;
+      gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .footer-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 1.3rem;
+      font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .footer-info { text-align: left; }
+    .footer-name { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; }
+    .footer-title { font-size: 0.8rem; color: var(--muted); }
+    .footer-links {
+      display: flex; justify-content: center; gap: 2rem;
+      flex-wrap: wrap; margin-top: 1.5rem;
+    }
+    .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* Tooltip */
+    [data-tooltip] { position: relative; cursor: help; border-bottom: 1px dashed var(--faint); }
+    [data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute; bottom: 130%; left: 50%;
+      transform: translateX(-50%);
+      background: var(--ink); color: #fff;
+      padding: 0.5rem 0.85rem; font-family: var(--font-body);
+      font-size: 0.78rem; line-height: 1.4; white-space: normal;
+      width: max-content; max-width: 260px; font-style: normal;
+      pointer-events: none; opacity: 0; transition: opacity 0.2s;
+      z-index: 200; border-radius: 2px;
+    }
+    [data-tooltip]:hover::after { opacity: 1; }
+
+    /* Popup modal */
+    .popup-trigger {
+      cursor: pointer;
+      border-bottom: 1px dotted var(--accent);
+      color: var(--accent);
+    }
+    .popup-trigger sup {
+      font-size: 0.6em; color: var(--gold); font-family: var(--font-mono);
+    }
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(26,10,10,0.75);
+      z-index: 500; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-box {
+      background: var(--paper); max-width: 560px; width: 90%;
+      max-height: 80vh; overflow-y: auto;
+      padding: 2rem; border: 1px solid var(--border);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      position: relative;
+    }
+    .modal-box h4 {
+      font-family: var(--font-display); font-size: 1.35rem;
+      font-weight: 700; margin-bottom: 0.85rem; line-height: 1.3;
+    }
+    .modal-body { font-size: 0.88rem; line-height: 1.65; color: var(--muted); }
+    .modal-body a { color: var(--accent); }
+    .modal-body p { margin-bottom: 0.75rem; }
+    .modal-body blockquote {
+      border-left: 3px solid var(--gold); padding-left: 0.85rem;
+      color: var(--ink); font-style: italic; margin: 0.75rem 0;
+    }
+    .modal-close {
+      position: absolute; top: 0.75rem; right: 1rem;
+      background: none; border: none; font-size: 1.4rem;
+      cursor: pointer; color: var(--muted); line-height: 1;
+    }
+    .modal-close:hover { color: var(--accent); }
+    .modal-source {
+      font-family: var(--font-mono); font-size: 0.65rem;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--faint); margin-top: 1rem; padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Wide visual break */
+    .wide-break {
+      margin-left: calc(50% - 50vw);
+      width: 100vw;
+    }
+    .image-caption {
+      font-family: var(--font-mono); font-size: 0.65rem;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--faint); text-align: center; margin-top: 0.65rem;
+    }
+
+    /* Resources */
+    .resources-section { background: #f0ebe0; padding: 3rem 2rem; }
+    .resources-inner { max-width: 1000px; margin: 0 auto; }
+    .resources-section h2 {
+      font-family: var(--font-display); font-size: 1.8rem;
+      text-align: center; margin-bottom: 2rem;
+    }
+    .resources-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    .resource-card {
+      display: block; padding: 1rem 1.25rem;
+      background: #fff; border: 1px solid var(--border);
+      text-decoration: none; color: var(--ink);
+      font-size: 0.88rem; transition: all 0.2s;
+    }
+    .resource-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.07); }
+    .resource-card-title { font-family: var(--font-display); font-weight: 600; font-size: 1rem; color: var(--accent); margin-bottom: 0.3rem; }
+    .resource-card-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.45; }
+
+    @media (max-width: 760px) {
+      body { font-size: 16px; }
+      .hero-title { font-size: 2.8rem; }
+      .pullquote { margin-left: 0; font-size: 1.4rem; }
+      .pipeline { flex-direction: column; }
+      .pipeline-arrow { transform: rotate(90deg); }
+      .hack-strip { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .hack-strip { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav class="masthead" aria-label="Site navigation">
+  <div class="masthead-inner">
+    <div class="masthead-brand">
+      <a href="https://s-anand.net/">S. Anand</a> · Talks
+    </div>
+    <div class="masthead-date">26 March 2026</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-kicker">Journalism · Artificial Intelligence · The Times of India</div>
+  <div class="hero-rule">
+    <span style="font-family:var(--font-display);font-size:0.82rem;color:var(--faint);white-space:nowrap;">◆ March 2026 ◆</span>
+  </div>
+  <h1 class="hero-title">The Journalist<br>and the <em>Machine</em></h1>
+  <p class="hero-subtitle">How India's largest English newspaper quietly let an AI write for it — and what happened next.</p>
+  <div class="hero-meta">
+    <span class="hero-byline">A story about <a href="https://s-anand.net/">Anand</a>, LLM Psychologist at <a href="https://straive.com/">Straive</a></span>
+    <span>With <a href="https://www.linkedin.com/in/rohitsaran/">Rohit Saran</a>, <a href="https://x.com/bansaurabh">Saurabh Banerjee</a>, <a href="https://www.linkedin.com/in/saikat-dasgupta-1180b797/">Saikat Dasgupta</a>, <a href="https://www.linkedin.com/in/sajeev-kumarapuram-205ba933/">Sajeev Kumarapuram</a></span>
+    <span><a href="https://timesofindia.indiatimes.com/">Times of India</a> · <a href="https://x.com/search?q=%23hackoftheday&src=typed_query&f=live">#hackoftheday</a></span>
+  </div>
+</header>
+
+<!-- SKETCHNOTE (full bleed, dark bg) -->
+<div class="full-bleed sketchnote-section" style="padding-top:2.5rem;padding-bottom:2.5rem;">
+  <div class="full-bleed-inner">
+    <span class="sketchnote-label">Visual Summary — Sketchnote</span>
+    <a href="sketchnote.avif" target="_blank" rel="noopener" title="Click to open full-size sketchnote">
+      <img src="sketchnote.avif" alt="Sketchnote summarising the Times of India Hack of the Day AI collaboration" loading="eager">
+    </a>
+    <p class="sketchnote-caption">Click to open full-size · Sketchnote by Gemini Pro</p>
+  </div>
+</div>
+
+<!-- NARRATIVE PART 1 -->
+<main class="article" id="main-content">
+
+  <p class="dropcap" style="margin-top:3.5rem;">It begins, as the best stories often do, with a bad joke. Two old friends — <a href="https://s-anand.net/">Anand</a>, a data scientist who moonlights as an "LLM Psychologist," and <a href="https://www.linkedin.com/in/rohitsaran/">Rohit Saran</a>, the Managing Editor of <a href="https://en.wikipedia.org/wiki/The_Times_of_India" data-tooltip="The Times of India is India's largest English-language daily newspaper, with a readership of over 7 million. Founded in 1838, it is the world's most widely circulated English-language broadsheet.">The Times of India</a> — meet in a Singapore hotel on a February afternoon in 2026. Rohit has just come from a conference organized by the <span data-tooltip="International News Media Association: the global association for news publishers focused on digital strategy, product innovation, and revenue.">INMA</span> and <a href="https://openai.com/">OpenAI</a> for journalists. He barely says hello before saying:</p>
+
+  <div class="conversation-quote">
+    <span class="speaker">Rohit Saran, Managing Editor, Times of India</span>
+    <p>"No, no. But you have lost weight!"</p>
+  </div>
+
+  <p>And so two men who have talked about data journalism for fifteen years — who both know that the story is in the numbers, never in the noise — open their most consequential conversation ever by talking about body mass.</p>
+
+  <p>Anand had indeed lost 25 kilograms. Rohit had put some on. "Net difference is…" Anand begins. Rohit laughs. And then, inevitably, they get to work.</p>
+
+  <p>What happened over the next six weeks would quietly change something fundamental about how one of the world's oldest and largest English newspapers produces content. Not with a dramatic press release. Not with a CEO announcement. But through a series of video calls, WhatsApp voice notes, debugging sessions, and at least one memorable conversation about induction cooktops.</p>
+
+  <h2>The World's Largest English Newspaper Has a Problem</h2>
+
+  <p>The <a href="https://en.wikipedia.org/wiki/The_Times_of_India">Times of India</a> is enormous. Founded in 1838, it employs hundreds of journalists across India, publishes editions in over a dozen cities, and reaches millions of readers every single day. Its <a href="https://timesofindia.indiatimes.com/">digital properties</a> dwarf most Western news organizations. This is not a scrappy startup experimenting with AI. This is the establishment.</p>
+
+  <p>And yet.</p>
+
+  <p>Every morning, somewhere in the TOI newsroom, a reporter was sitting down to write "Hack of the Day" — a short, practical technology tip aimed at readers who might not know that they can check how many SIM cards are registered under their name, or lock their <span data-tooltip="Aadhaar is India's biometric national identity system, managed by UIDAI, linking a 12-digit unique number to fingerprint and iris data for over 1.3 billion residents.">Aadhaar biometrics</span>, or file their <span data-tooltip="EPFO (Employees' Provident Fund Organisation) manages retirement savings for Indian salaried workers. E-nomination allows members to designate who receives benefits in the event of death.">EPFO e-nomination</span> before something goes wrong. Good, useful, entirely human journalism. Except that after four months of daily publication, the human well was beginning to run dry.</p>
+
+  <div class="conversation-quote">
+    <span class="speaker">Saikat Dasgupta, Editor, Times of India</span>
+    <p>"We are approaching the final laps. These are the fag end of government hacks."</p>
+  </div>
+
+  <p>The problem was not quality. The problem was volume. And volume, it turns out, is exactly what AI is good at.</p>
+
+  <h2>Singapore, February 12, 2026</h2>
+
+  <p>Rohit Saran had come to Singapore for the INMA/OpenAI conference. He had spent a full day sitting across from the people who built ChatGPT, discussing how it might transform journalism. He was curious. He was skeptical. He was, by his own admission, only a light AI user.</p>
+
+  <p>Then he met Anand for dinner, and Anand said something he always says:</p>
+
+  <div class="pullquote">
+    "Some things are best shown." <br><em style="font-size:0.7em;opacity:0.7;">[pause]</em> <br>"I was going to say 'shown.' I'm going to correct myself and say 'done.'"
+    <span class="pullquote-attr">— Anand, opening his laptop</span>
+  </div>
+
+  <p>He opened a browser, dictated a prompt into ChatGPT — not because ChatGPT was the best model, but because it has <em>the best transcription of the lot</em> — then switched to <a href="https://claude.ai/">Claude</a>, and typed: "Find the MoSPI data. Download it. Analyze it. Create a nice data story with rich interactive visualizations about all the anomalies you can find. Run all the usual statistical tests — traditional, non-traditional — and give me a fantastic story."</p>
+
+  <p>The AI started writing code. It started searching. It found the data. It noticed that charts were broken and flagged them for repair. It caught anomalies no human had spotted in years of using the same government datasets — statistical impossibilities, impossible weather readings, a state spelled as "Maharashtra dollar" in a national crime report. Within minutes, it had produced a scrollytelling page that looked like something The New York Times would publish.</p>
+
+  <p>Rohit watched in silence.</p>
+
+  <div class="conversation-quote">
+    <span class="speaker">Rohit Saran</span>
+    <p>"It's magical. I mean even magical is… [trails off]. While you do this, let's see how far out expanding thought that this would be. I don't know how many days and how many people would have to sit together. Right? That's just…"</p>
+  </div>
+
+  <p>The silence that follows is more eloquent than any statistic Anand could cite. In 20 minutes, an AI had done what would have taken a team of journalists and data scientists days. Not because it was smarter than humans, but because it was faster, tireless, and — crucially — it knew exactly what Anand had taught it to look for.</p>
+
+  <div class="insight-box">
+    <span class="insight-label">The Key Insight</span>
+    <p><strong>"My net contribution was: taking that recording, putting it into Claude, and publishing it. Time spent: 20 minutes."</strong> Anand had taken a phone call with a client, recorded it, passed the transcript to Claude with his entire accumulated knowledge of how to build data stories, and let the machine do the rest. This was not AI replacing a journalist. This was AI acting as the world's fastest, most attentive intern.</p>
+  </div>
+
+  <h2>How Fast Is Fast?</h2>
+
+  <p>In 2025, Anand had set himself a target: write 20 data stories by the end of the year. It seemed ambitious. By August, it became clear that it was not ambitious enough. It was laughably, embarrassingly conservative.</p>
+
+  <div class="pullquote">
+    "I can write 20 data stories in 20 days."
+    <span class="pullquote-attr">— Anand, February 2026</span>
+  </div>
+
+  <p>Think about what that means. A data story — the kind that requires downloading government datasets, cleaning them, running statistical analysis, finding the anomalous data point that changes the entire framing, writing engaging prose, building interactive charts — had historically taken weeks of skilled work. Now it was taking a morning.</p>
+
+  <p>Rohit, who had spent his career fighting for resources, time, and talent to do exactly this kind of journalism, understood immediately what he was hearing.</p>
+
+  <div class="conversation-quote">
+    <span class="speaker">Rohit Saran</span>
+    <p>"The tool is... see, the tool in your hand is so powerful. Tool is only as good as the user, but you have this tool which you found..."</p>
+  </div>
+
+  <h2>The Problem with Experience</h2>
+
+  <p>Here is one of the stranger findings from Anand's months of AI work: the people who adopt these tools fastest are the newest arrivals. The interns. The people who have not yet calcified their workflows.</p>
+
+  <div class="conversation-quote">
+    <span class="speaker">Anand</span>
+    <p>"The more experienced people, in proportion to their experience, struggle with getting it. The interns get it instantly."</p>
+  </div>
+
+  <p>This is not, Anand is careful to note, a story about intelligence. It is a story about mental models. The experienced journalist has a very clear picture of how a story gets made — and AI does not fit that picture. The intern has no such picture, so they just use it.</p>
+
+  <p>Rohit, to his enormous credit, had none of this resistance. He had something better: he had seen what the tool could do, and he wanted it in his newsroom immediately.</p>
+
+  <p>The meeting in Singapore was supposed to be a reconnection between old friends. It ended as a strategy session. Anand would spend the next six weeks building something inside the Times of India's editorial pipeline. Not as a contractor. Not as a consultant. As something stranger and newer: an AI collaborator with a GitHub repository and a very long list of prompts.</p>
+
+  <h2>The Vision: Five Phantom Reporters</h2>
+
+  <p>Before they got to "Hack of the Day," Anand had a bigger idea. He called it "Five AI Reporters."</p>
+
+  <p>The concept was seductive in its simplicity: enroll five AI agents as phantom journalists inside the TOI newsroom. Give them the same evening news list that human reporters receive. Let them pitch stories every morning. And then — this was the crucial part — treat their output exactly as you would treat output from any junior reporter. Let the desk decide what to publish.</p>
+
+  <div class="conversation-quote">
+    <span class="speaker">Anand</span>
+    <p>"Treat their output exactly like how your journalists would. Let us see if any of these actually get published."</p>
+  </div>
+
+  <p>Each AI agent would have a different specialty. One would be a <span data-tooltip="A reporter who specializes in finding statistical anomalies in government data — impossible values, unexplained spikes, data that doesn't match reality.">data anomaly hunter</span>, scanning public datasets for things that don't add up. Another would be a visual storyteller. Another would specialize in consumer rights — scraping court judgments for stories about insurance companies that consistently reject legitimate claims, or the inexplicable gap in compensation awards across Indian states for identical smartphone damage.</p>
+
+  <p>This was not a small idea. This was a reimagining of what a newsroom could be — not as a collection of human journalists, but as a hybrid of human judgment and machine speed. The humans would still decide what to publish. But they'd have an infinite supply of pitches to choose from.</p>
+
+  <p>Rohit's response was characteristic of someone who had spent decades thinking about the future of journalism.</p>
+
+  <div class="conversation-quote">
+    <span class="speaker">Rohit Saran</span>
+    <p>"The people who will not adopt [AI] will get so far left behind so fast. In the newsroom itself. People who will adopt will write so much better and so much faster."</p>
+  </div>
+
+  <h2>Enter: Hack of the Day</h2>
+
+  <p>But big ideas need small entry points. You don't walk into a 187-year-old newspaper and replace the entire editorial floor. You find a door that's already open and walk through it.</p>
+
+  <p>The door was a small feature called <strong>Hack of the Day</strong>.</p>
+
+  <p>Richa, the TOI reporter who had been anchoring the feature for four months, was running out of steam. The format was simple — a daily practical tip about something digital in an Indian reader's life: how to check if someone has registered a SIM card in your name, how to lock your Aadhaar biometrics, how to file an EPFO e-nomination before it's too late. Useful. Real. Valuable. But finite. The well of obvious government hacks was nearly dry.</p>
+
+  <p>It was Saikat Dasgupta, TOI's editor and resident technology skeptic (who also happened to have built an internal AI tool called <span data-tooltip='"Beans" is TOI\'s internal AI layer, built on enterprise OpenAI access, used by all 400 reporters for grammar-checking, structure suggestions, translation, and transcription.'>Beans</span> used daily by all 400 TOI reporters), who first named it explicitly on a call in early March 2026:</p>
+
+  <div class="conversation-quote">
+    <span class="speaker">Saikat Dasgupta, Editor, Times of India</span>
+    <p>"Just the way we're doing Statoistics, we can also look at 'Hack of the Day.' We want to extend this by another 90 hacks."</p>
+  </div>
+
+  <p>90 more hacks. Three more months of content. Not written by a human. Written by an AI that Anand would build over a single weekend.</p>
+
+  <h2>The Technical Journey: How a Machine Learns to Tip</h2>
+
+  <p>The architecture of Hack of the Day is deceptively simple. It has four stages.</p>
+
+</main>
+
+<!-- PIPELINE DIAGRAM (full bleed, dark) -->
+<div class="full-bleed pipeline-section" style="padding:3rem 2rem;">
+  <div class="full-bleed-inner">
+    <p class="pipeline-label">The AI Pipeline — Hack of the Day</p>
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="pipeline-step-icon">🎙️</div>
+        <div class="pipeline-step-label">Step 1</div>
+        <div class="pipeline-step-name">Research</div>
+        <div class="pipeline-step-model">ChatGPT</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">
+        <div class="pipeline-step-icon">🧠</div>
+        <div class="pipeline-step-label">Step 2</div>
+        <div class="pipeline-step-name">Meta-Prompt</div>
+        <div class="pipeline-step-model">Claude</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">
+        <div class="pipeline-step-icon">📋</div>
+        <div class="pipeline-step-label">Step 3</div>
+        <div class="pipeline-step-name">JSON Cards</div>
+        <div class="pipeline-step-model">Structured Output</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">
+        <div class="pipeline-step-icon">🎨</div>
+        <div class="pipeline-step-label">Step 4</div>
+        <div class="pipeline-step-name">SVG Design</div>
+        <div class="pipeline-step-model">Claude Code</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">
+        <div class="pipeline-step-icon">✅</div>
+        <div class="pipeline-step-label">Step 5</div>
+        <div class="pipeline-step-name">Review &amp; Print</div>
+        <div class="pipeline-step-model">Richa + Sajeev</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main class="article">
+
+  <p>First, research. Anand used ChatGPT — not because it was his favourite model, but because it is the best at web research, at finding primary sources, at knowing which government portals actually work. The prompt was deliberately expansive: not just government hacks, but global digital tips, social platforms, privacy tools, financial services, cultural moments.</p>
+
+  <p>Second, meta-prompting. Claude generated the prompts themselves. Then those prompts were run in ChatGPT to generate the actual content. This is the kind of recursive AI choreography that sounds complicated but is, in practice, surprisingly reliable.</p>
+
+  <p>Third, structured output. The AI returned each hack as a JSON object: title, what it solves, what to do, step-by-step instructions, a warning note, attribution. Clean, machine-readable, editable.</p>
+
+  <p>Fourth — and this is where it gets interesting — design. Anand built a visual template in SVG that matched TOI's existing "Hack of the Day" format exactly: the red header, the dark title bar, the numbered steps, the careful warning label at the bottom. The JSON was fed into a coding agent, which wrote the SVG code that filled the template.</p>
+
+  <p>Note what Anand <em>did not</em> do. He did not ask the AI to <em>draw</em> anything.</p>
+
+  <div class="conversation-quote">
+    <span class="speaker">Anand, explaining to Sajeev Kumarapuram (Visual Journalist)</span>
+    <p>"ChatGPT is better than one of the best programmers in the world. On the software benchmarks, it is actually beating the best programmers. Now if you said, 'I want you to draw an image' — you are talking to a class-5 student. But if you say, 'I want you to write a program that can create an SVG' — now you are talking to a world-class expert. That's what I am doing."</p>
+  </div>
+
+  <p>This distinction — between asking AI to <em>draw</em> and asking AI to <em>code something that draws</em> — is one of the most important practical insights in the story. It explains why the results were not fuzzy AI-generated images with wrong fonts and mangled logos. They were clean, print-ready SVG files with pixel-perfect typography.</p>
+
+  <h3>The Font Problem (and Every Other Problem)</h3>
+
+  <p>Of course, nothing worked perfectly the first time.</p>
+
+  <p><a href="https://www.linkedin.com/in/sajeev-kumarapuram-205ba933/">Sajeev Kumarapuram</a>, TOI's visual journalist and the person who would ultimately place these AI-generated files into print layouts, had a very specific concern.</p>
+
+  <div class="conversation-quote">
+    <span class="speaker">Sajeev Kumarapuram, Visual Journalist, Times of India</span>
+    <p>"If I say can you use this particular font, it's not able to understand. Fonts are one of the biggest challenges."</p>
+  </div>
+
+  <p>The AI would approximate fonts. It would pick something close. It would, in Anand's words, "give you three out of four colors — not the fourth." This was not a failure of AI. It was a failure of expectations. The solution was to simplify the constraints: use black and white as the primary palette, reduce the number of typographic variables, and let the AI succeed at what it's actually good at — layout, hierarchy, information design — rather than fighting over proprietary typefaces.</p>
+
+  <p>There was also the matter of a mysterious blue band that kept appearing in early SVG outputs. Anand spent an embarrassing amount of debugging time on this issue before discovering the root cause: he had simply forgotten to push the correct branch to GitHub.</p>
+
+  <div class="conversation-quote">
+    <span class="speaker">Anand</span>
+    <p>"I just forgot to push. That's all it was."</p>
+  </div>
+
+  <p>Some bugs are profound. Some are Git commits you forgot to make at 11pm.</p>
+
+  <h3>The Feedback Loop</h3>
+
+  <p>Here is the part that separates Anand's approach from most AI experiments in newsrooms: the feedback mechanism was voice notes on WhatsApp.</p>
+
+  <p>Richa, the reporter anchoring the feature, would send voice messages reviewing each AI-generated hack — exactly as she might leave feedback for a junior colleague or a cartoonist: "This one is too complicated." "This one we've done before." "Can you make the steps shorter?" Those voice messages were transcribed and fed back into the agent as updated instructions.</p>
+
+  <div class="insight-box">
+    <span class="insight-label">The Brilliant Simplicity</span>
+    <p>The editorial review system was WhatsApp voice notes → transcription → prompt refinement. No special interface. No training data. No fine-tuning. Just talking to the AI the way you'd talk to an intern. The AI, unlike most interns, remembered every correction and applied it to every subsequent card.</p>
+  </div>
+
+  <p>Anand built a small review website — deployed automatically to GitHub Pages — where Richa and the team could browse all generated hacks, mark them "Accepted / Rejected / Pending," and download the SVG or HTML files. TOI's designers could then open these in Illustrator or InDesign, make minor adjustments, and place them directly into the print layout.</p>
+
+  <h2>What the Cards Looked Like</h2>
+
+  <p>Here is an example of what the AI was generating — a card based on the real data from the content pipeline:</p>
+
+</main>
+
+<!-- INLINE HACK CARD — CHECK AADHAAR AUTHENTICATION -->
+<div class="full-bleed" style="background:#f0ebe0;padding:3rem 2rem;">
+  <div class="full-bleed-inner" style="max-width:960px;">
+    <p style="font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem;text-align:center;">Sample AI-Generated Card — As Sent to TOI Editorial Review</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;align-items:start;">
+
+      <!-- Card 1: Aadhaar History -->
+      <div class="hack-card">
+        <div class="hack-card-header">
+          <span class="hack-card-header-brand">Times of India · Hack of the Day</span>
+          <span class="hack-card-header-tag">#hackoftheday</span>
+        </div>
+        <div class="hack-card-title-bar">
+          <h3>Check Your Aadhaar Authentication History</h3>
+        </div>
+        <div class="hack-card-body">
+          <p class="hack-card-problem">Helps you detect whether your Aadhaar has been used recently for authentication in places or services you do not recognize.</p>
+          <p class="hack-card-what">Review your Aadhaar authentication history online to spot unusual activity early.</p>
+          <ol class="hack-card-steps">
+            <li><strong>Visit</strong> <span>the UIDAI or myAadhaar portal.</span></li>
+            <li><strong>Log in</strong> <span>using your Aadhaar number and OTP.</span></li>
+            <li><strong>Open</strong> <span>the "Authentication History" section.</span></li>
+            <li><strong>Select</strong> <span>the date range you want to review.</span></li>
+            <li><strong>Check</strong> <span>the records and note any unfamiliar entry.</span></li>
+          </ol>
+          <div class="hack-card-note">
+            <span class="hack-card-note-label">Careful — </span>
+            If you see suspicious entries, lock your biometrics and contact UIDAI support.
+          </div>
+        </div>
+        <div class="hack-card-footer">
+          <span class="hack-card-email">editorial.desk@timesinternet.com</span>
+          <span>✓ Accepted</span>
+        </div>
+      </div>
+
+      <!-- Card 2: EPFO e-nomination -->
+      <div class="hack-card">
+        <div class="hack-card-header">
+          <span class="hack-card-header-brand">Times of India · Hack of the Day</span>
+          <span class="hack-card-header-tag">#hackoftheday</span>
+        </div>
+        <div class="hack-card-title-bar">
+          <h3>File Your EPFO E-Nomination Now</h3>
+        </div>
+        <div class="hack-card-body">
+          <p class="hack-card-problem">Makes it easier for your family to claim EPF, pension, and insurance benefits if something unexpected happens to you.</p>
+          <p class="hack-card-what">Complete your e-nomination on the EPFO member portal instead of leaving it pending for later.</p>
+          <ol class="hack-card-steps">
+            <li><strong>Visit</strong> <span>the EPFO member portal and log in with your UAN.</span></li>
+            <li><strong>Open</strong> <span>the "E-Nomination" option under your profile.</span></li>
+            <li><strong>Add</strong> <span>your nominee details, relation, and share percentage.</span></li>
+            <li><strong>Verify</strong> <span>using OTP and submit the nomination request.</span></li>
+            <li><strong>Download</strong> <span>and save the acknowledgement for your records.</span></li>
+          </ol>
+          <div class="hack-card-note">
+            <span class="hack-card-note-label">Note — </span>
+            Nomination does not mean guaranteed claim. Ensure your UAN is linked to Aadhaar and your bank account is updated.
+          </div>
+        </div>
+        <div class="hack-card-footer">
+          <span class="hack-card-email">editorial.desk@timesinternet.com</span>
+          <span>✓ Accepted</span>
+        </div>
+      </div>
+
+    </div>
+    <p style="font-family:var(--font-mono);font-size:0.65rem;color:var(--faint);text-align:center;margin-top:1rem;text-transform:uppercase;letter-spacing:0.08em;">AI-generated content from cards.json · Reviewed &amp; accepted by TOI editorial team</p>
+  </div>
+</div>
+
+<main class="article">
+
+  <h2>The Hacks Go Live</h2>
+
+  <p>On <strong>March 20, 2026</strong>, the first AI-generated "Hack of the Day" appeared in print and on the <a href="https://x.com/timesofindia">Times of India's Twitter/X</a> account. It was titled: <em>"Show Gemini your screen or camera for live help."</em></p>
+
+  <p>Nobody announced it. There was no press release. The Twitter post looked exactly like every other Hack of the Day post. The readers who liked it had no idea that the suggestion they were looking at — simple, useful, practically formatted — had been conceived by an AI, structured by an AI, and visually rendered by an AI, with a human editor doing a final check before it went to print.</p>
+
+</main>
+
+<!-- HACK OF THE DAY TWEET STRIP (full bleed) -->
+<div class="full-bleed hack-strip-section" style="padding:3rem 2rem;">
+  <div class="full-bleed-inner">
+    <p class="hack-strip-label">The First Four AI-Generated Hacks · Published in Times of India · March 2026</p>
+    <div class="hack-strip">
+      <a href="https://x.com/timesofindia/status/2034925416444829727?s=20" target="_blank" rel="noopener" class="hack-tweet" title="Show Gemini your screen or camera for live help">
+        <img src="hack-of-the-day-1.webp" alt="Hack of the Day #1: Show Gemini your screen or camera for live help" loading="lazy">
+        <div class="hack-tweet-caption">Mar 20 · Show Gemini your screen for live help</div>
+      </a>
+      <a href="https://x.com/timesofindia/status/2036321109831041376?s=20" target="_blank" rel="noopener" class="hack-tweet" title="Free up space without deleting your apps">
+        <img src="hack-of-the-day-2.webp" alt="Hack of the Day #2: Free up space without deleting your apps" loading="lazy">
+        <div class="hack-tweet-caption">Mar 22 · Free up space without deleting apps</div>
+      </a>
+      <a href="https://x.com/timesofindia/status/2036707153512403193?s=20" target="_blank" rel="noopener" class="hack-tweet" title="Check your Aadhaar authentication history">
+        <img src="hack-of-the-day-3.webp" alt="Hack of the Day #3: Check your Aadhaar authentication history" loading="lazy">
+        <div class="hack-tweet-caption">Mar 23 · Check your Aadhaar authentication history</div>
+      </a>
+      <a href="https://x.com/timesofindia/status/2037103515231752665?s=20" target="_blank" rel="noopener" class="hack-tweet" title="File your EPFO e-nomination now">
+        <img src="hack-of-the-day-4.webp" alt="Hack of the Day #4: File your EPFO e-nomination now" loading="lazy">
+        <div class="hack-tweet-caption">Mar 24 · File your EPFO e-nomination now</div>
+      </a>
+    </div>
+    <p style="font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);text-align:center;margin-top:1.25rem;">
+      <a href="https://x.com/search?q=%23hackoftheday&src=typed_query&f=live" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">#hackoftheday</a> on X/Twitter · More are being published daily
+    </p>
+  </div>
+</div>
+
+<main class="article">
+
+  <h2>The Numbers That Should Have Been Impossible</h2>
+
+  <p>The accuracy story is perhaps the most counterintuitive part of the entire project. When Anand showed the TOI team how he cross-checks AI outputs against each other, Rohit's response cut straight to something journalists think about constantly: how wrong are humans?</p>
+
+  <div class="conversation-quote">
+    <span class="speaker">Rohit Saran</span>
+    <p>"Which humans can't guarantee. Yeah."</p>
+  </div>
+
+  <p>The technique is elegant: run the same classification task through multiple AI models. Where they agree, trust the output. Where they disagree, have a human check. In practice, a single AI model makes errors on about 14% of classifications. Two models checking each other reduces this to 3.7%. Three models: 2.2%. Five models: 0.7%.</p>
+
+</main>
+
+<!-- ACCURACY STATS (full bleed, red) -->
+<div class="full-bleed stats-band" style="padding:3rem 2rem;">
+  <div class="stats-band-inner">
+    <div class="stat-item">
+      <div class="stat-number">14%</div>
+      <div class="stat-label">Error rate, single AI model</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">3.7%</div>
+      <div class="stat-label">Error rate, two models cross-checking</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">0.7%</div>
+      <div class="stat-label">Error rate, five models (quintuple-check)</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">72%</div>
+      <div class="stat-label">Cost saved at 99.3% accuracy</div>
+    </div>
+  </div>
+</div>
+
+<main class="article">
+
+  <p>The critical reframe is this: 72% of the verification work was saved, at better-than-human accuracy. And this 0.7% residual error? Anand's hypothesis: "I think it's because I am wrong — not it." The ground truth used to benchmark the models had human errors in it.</p>
+
+  <div class="conversation-quote">
+    <span class="speaker">Rohit Saran</span>
+    <p>"100%. 100%. Verifying 100% is easier than creating from 0 to 50."</p>
+  </div>
+
+  <h2>The Deeper Disruption: What AI Is Actually Doing to Journalism</h2>
+
+  <p>Somewhere in the middle of a call about induction cooktops — there was a genuine, multi-minute digression about gas versus induction cooking, triggered by a story about Iran-Qatar gas disruptions — Rohit said something that stopped the conversation.</p>
+
+  <div class="pullquote">
+    "Some of the bloodbath in the media because SEO engines are collapsing is a huge business disruption, but it's great news for journalism. Because so much of shallowness was floating."
+    <span class="pullquote-attr">— Rohit Saran, Managing Editor, Times of India</span>
+  </div>
+
+  <p>For the past decade, the internet news economy had been built on a dark bargain: chase <span data-tooltip="Search Engine Optimization: the practice of writing content designed to rank well in Google searches, often at the expense of depth, originality, or journalistic value.">SEO</span> metrics, produce templated content, optimize for clicks rather than understanding. Every major news organization knew this was corrosive. None could afford to stop.</p>
+
+  <p>Now, AI is making that model obsolete. <a href="https://ahrefs.com/blog/google-ai-overview-impact/" data-tooltip="Ahrefs research shows AI Overviews reducing clicks to news sites by 25-34% for informational queries.">Google's AI overviews</a> are eating the traffic that came from shallow "what are the five things that rose the most" articles. The templated commodity story is being commoditized out of existence by the same AI that makes deeper journalism possible.</p>
+
+  <p>Anand calls this the <span data-tooltip='"Disrupting is hard. Bypassing it and coming up with a new thing that nobody knows about is easier." — Anand, on why starting with new AI-native formats is more effective than trying to replace existing ones.'>bypass strategy</span>: don't try to replace what already exists. Build something new alongside it, let it prove itself, and watch the old system gradually become irrelevant by comparison.</p>
+
+  <div class="conversation-quote">
+    <span class="speaker">Saikat Dasgupta, on the pace of AI adoption</span>
+    <p>"The pace of realization [of AI's impact] is exactly the polar opposite of the pace at which it is doing it. It's stunning."</p>
+  </div>
+
+  <p>What Saikat means: AI is moving at warp speed. The people who need to understand and respond to it are processing it at human speed. The gap between the two is where disruption lives.</p>
+
+  <h2>The Warning at the Peak</h2>
+
+  <p>Not everything in these conversations was triumphant. Anand, who has thought more carefully about AI's failure modes than almost anyone in the country, offered a warning at the moment of maximum optimism.</p>
+
+  <div class="conversation-quote">
+    <span class="speaker">Anand</span>
+    <p>"This may actually be the peak of optimism that we may have in the cycle, at least for the short run. Because right now we've seen what it can do. We haven't seen the failures yet."</p>
+  </div>
+
+  <p>Every technology follows this arc. The peak of inflated expectations, then the trough of disillusionment, then the plateau of productivity. AI in newsrooms is somewhere on the steep upward slope right now. The failures will come — the hallucinated facts, the misattributed quotes, the subtly wrong statistics that get into print before anyone catches them.</p>
+
+  <p>His advice: don't wait for perfection. Build systems that catch errors. Start with use cases where errors are low-cost and reversible. "Hack of the Day" tips about digital tools is an ideal starting point — the worst that happens if a step is slightly wrong is that a reader tries a menu that doesn't exist.</p>
+
+  <div class="insight-box">
+    <span class="insight-label">The Institutional Knowledge Insight</span>
+    <p>One of the most underappreciated aspects of Anand's work is what he calls "codifying institutional knowledge." Every judgment call he makes — how to structure a data story, what anomalies are newsworthy, how to fact-check statistical claims — gets encoded as a prompt. <strong>"This is how institutional knowledge starts getting codified."</strong> The prompt becomes the procedure. The procedure becomes the policy. The policy outlives any single person.</p>
+  </div>
+
+  <h2>What the Prompts Actually Look Like</h2>
+
+  <p>One of the most valuable things Anand does — and one of the least visible — is prompt engineering. His prompts for Hack of the Day are not a single line. They are documents. Instructions built up over weeks of iteration, encoding everything about editorial judgment that previously lived only in Richa's head.</p>
+
+  <p>Here is the kind of instruction that turns a language model into a Times of India tipster:</p>
+
+</main>
+
+<!-- PROMPT SNIPPET (full bleed, dark) -->
+<div class="full-bleed" style="background:#0f1117;padding:3rem 2rem;">
+  <div class="full-bleed-inner" style="max-width:860px;">
+    <p style="font-family:var(--font-mono);font-size:0.65rem;text-transform:uppercase;letter-spacing:0.14em;color:rgba(255,255,255,0.35);text-align:center;margin-bottom:1.5rem;">Prompt Architecture — Hack of the Day Research Agent</p>
+    <div style="background:#161b22;border:1px solid rgba(255,255,255,0.08);padding:1.75rem;font-family:var(--font-mono);font-size:0.8rem;line-height:1.8;color:#e0e6f0;overflow-x:auto;">
+      <div style="color:rgba(255,255,255,0.3);font-style:italic;margin-bottom:1rem;"># Research prompt for 90 new Hack of the Day tips</div>
+      <div>Generate <span style="color:#79c0ff;">90 practical technology hacks</span> for readers of the Times of India.</div>
+      <div style="margin-top:0.75rem;color:rgba(255,255,255,0.55);font-style:italic;"># Scope: beyond government — go global, social, cultural</div>
+      <div>Include hacks about: <span style="color:#a5d6ff;">UPI, government portals, privacy tools,<br>social media, smartphones, AI tools, consumer rights,<br>education, health, finance, digital safety</span></div>
+      <div style="margin-top:0.75rem;color:rgba(255,255,255,0.55);font-style:italic;"># Format constraint</div>
+      <div>Each hack must have:</div>
+      <div style="padding-left:1.5rem;color:#7ee787;">
+        - title (UPPERCASE, &lt;8 words, action-oriented)<br>
+        - what_it_solves (1 sentence, reader benefit)<br>
+        - what_to_do (1 sentence, concrete action)<br>
+        - steps (3–5 steps, each with bold_title + text)<br>
+        - note_label: "NOTE" or "CAREFUL"<br>
+        - note: 1–2 sentences of important caveat
+      </div>
+      <div style="margin-top:0.75rem;color:rgba(255,255,255,0.55);font-style:italic;"># Editorial standard</div>
+      <div>Verify each hack against a <span style="color:#ffa657;">primary source</span> (official portal,<br>government notification, or authoritative guide).<br>Do <span style="color:#ff7b72;">NOT</span> include hacks that are outdated, incorrect, or<br>require access most Indians don't have.</div>
+      <div style="margin-top:0.75rem;color:rgba(255,255,255,0.55);font-style:italic;"># Output</div>
+      <div>Return as valid <span style="color:#79c0ff;">JSON array</span> matching the card schema.</div>
+    </div>
+    <p style="font-family:var(--font-mono);font-size:0.62rem;color:rgba(255,255,255,0.3);text-align:center;margin-top:0.75rem;text-transform:uppercase;letter-spacing:0.08em;">Illustrative prompt structure — actual prompts at <a href="https://sanand0.github.io/journalists/hackoftheday/" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.45);">sanand0.github.io/journalists</a></p>
+  </div>
+</div>
+
+<main class="article">
+
+  <h2>The Futures Being Planned</h2>
+
+  <p>By the final conversation in this series — a call on March 25, 2026 — the tone had shifted from "let's try this" to "let's build more." Saikat summarized the state of play with characteristic directness:</p>
+
+  <div class="conversation-quote">
+    <span class="speaker">Saikat Dasgupta</span>
+    <p>"Hack of the Day I see is largely cracked."</p>
+  </div>
+
+  <p>Which meant it was time to talk about what came next. The list of future projects being actively discussed by this small group — a Singapore-based AI practitioner and four journalists in Delhi — reads like a product roadmap for journalism in 2027.</p>
+
+  <p><strong>The AI Headline Evaluator.</strong> Rohit's most urgent request. A tool that assesses any proposed headline against three criteria: factual accuracy, analytical rigor, and emotional resonance. It generates three or four alternatives for every headline. The new Copenhagen-built CMS coming into TOI from March 20 would be the integration point.</p>
+
+  <p><strong>The AI Junior Editor.</strong> An agent trained on Rohit's editorial philosophy — encoded over years into prompts — that takes a first pass at every filed story. Not to replace human editing, but to catch the things that get missed when you're editing under deadline: the missing context, the statistic that needs sourcing, the logical gap between paragraph three and paragraph four.</p>
+
+  <p><strong>Consumer Court Microsites.</strong> TOI has scraped all <span data-tooltip="NCDRC: National Consumer Disputes Redressal Commission — the apex consumer court in India, which adjudicates disputes between consumers and companies.">NCDRC</span> consumer court judgments into a cloud database. An AI agent will surface the newsworthy anomalies: why does a consumer in Chennai get ₹50,000 compensation for a damaged iPhone when a consumer in Lucknow gets ₹2,000 for the same model? These are publishable stories. There are thousands of them.</p>
+
+  <p><strong>The Cartoon Exhibition.</strong> Six AI agents, each with a different cartooning style, generate daily editorial cartoons based on the news. A private website shows all six side-by-side. Eventually — if the political and sensitivity checks can be worked out — this might be the strangest and most delightful experiment in the history of Indian journalism.</p>
+
+  <p><strong>Data Anomaly Hunting.</strong> A standing agent that never sleeps, monitoring public datasets — NCRB crime statistics, RBI monetary data, IMD weather stations — for impossible values. The kind of thing a diligent journalist would catch if they had time to read every government data release in India. Which no human does. But an AI can.</p>
+
+  <div class="pullquote">
+    "Treat their output exactly like how your journalists would. Let us see if any of these actually get published."
+    <span class="pullquote-attr">— Anand, on the idea of AI phantom reporters inside the TOI newsroom</span>
+  </div>
+
+  <h2>The Chennai Design Festival Moment</h2>
+
+  <p>On March 21, 2026 — a week after his last call with Sajeev about font rendering — Anand spoke at the <a href="https://www.chennaidesignfestival.com/">Chennai Design Festival</a>. He had prepared a talk. Then, 15 minutes before going on stage, he changed his mind.</p>
+
+  <p>He had been sitting in the audience listening to the other speakers — designers, architects, artists — talking about their creative process. He fed their ideas into Claude. He asked it to generate more. And then he walked on stage and presented Claude's output as his demonstration, in real time.</p>
+
+  <div class="conversation-quote">
+    <span class="speaker">Anand, describing the moment</span>
+    <p>"I don't think there was a stronger way to make the point that: boss, all of what we know, hold dear, etc. is going outside the window."</p>
+  </div>
+
+  <p>He was wearing a kurta with a growth chart on it — a literal data visualization, printed on fabric. The audience, he reported, was "looking at the kurta in disbelief." Not at the chart. At the fact that this was a kurta at a design festival.</p>
+
+  <p>But the talk itself — the live demonstration of AI generating ideas from the very conference it was at, in real time — that was the point. Not that AI replaces designers. But that the boundary between human creativity and AI augmentation has become so thin that the only way to understand it is to stand right at the edge and keep going.</p>
+
+  <h2>The Most Productive Meeting</h2>
+
+  <p>At the end of their first session in Singapore, Rohit said something that landed like the final line of a good story:</p>
+
+  <div class="conversation-quote">
+    <span class="speaker">Rohit Saran</span>
+    <p>"I'm so glad because this is just… I think probably the most productive meetings I've had. More productive than one day with OpenAI."</p>
+  </div>
+
+  <p>He had spent a full day with the people who build these tools. And found a longer-lasting return in a few hours with someone who simply <em>uses</em> them, deeply, obsessively, and with a journalist's instinct for what actually matters.</p>
+
+  <p>That, perhaps, is the real story here. The technology is extraordinary. The models are extraordinary. But the bottleneck — always — is the person who knows what question to ask. Who understands which problems are worth solving. Who can look at a feature called "Hack of the Day" running out of ideas and see, in that specific constraint, the perfect first step toward something much larger.</p>
+
+  <p>India's largest English newspaper now has an AI writing for it. It happened quietly, over six weeks, through video calls and WhatsApp voice notes. The first published hack suggested that readers show Gemini their screen for live help. The irony that an AI was teaching readers to use AI was not lost on anyone.</p>
+
+  <p>More are being published daily. Tagged <a href="https://x.com/search?q=%23hackoftheday&src=typed_query&f=live"><strong>#hackoftheday</strong></a>.</p>
+
+</main>
+
+<!-- TAKEAWAYS (full bleed, dark) -->
+<section class="takeaways">
+  <div class="takeaways-inner">
+    <h2>Top Takeaways</h2>
+    <p class="takeaways-subhead">What this story teaches about AI, journalism, and institutional change</p>
+    <div class="takeaway-grid">
+      <div class="takeaway-card">
+        <div class="takeaway-number">01</div>
+        <div class="takeaway-title">Start Small, Win Big</div>
+        <div class="takeaway-text">Don't try to replace everything at once. Find the smallest, most contained use case — a feature running out of ideas — and build there. Hack of the Day was the door into something much larger.</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-number">02</div>
+        <div class="takeaway-title">Code, Not Draw</div>
+        <div class="takeaway-text">Ask AI to write code that generates SVG, not to generate images. You get pixel-perfect, editable, print-ready output instead of blurry approximations with wrong fonts.</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-number">03</div>
+        <div class="takeaway-title">Verification &gt; Creation</div>
+        <div class="takeaway-text">It is far easier to verify AI output than to create from scratch. Two models cross-checking each other drops error rates from 14% to 3.7%. Five models: 0.7%. At 72% less cost.</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-number">04</div>
+        <div class="takeaway-title">Prompts Are Policy</div>
+        <div class="takeaway-text">Every prompt encodes an editorial judgment. Writing a good prompt is how institutional knowledge — accumulated over careers — gets preserved, transferred, and scaled.</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-number">05</div>
+        <div class="takeaway-title">Experience Can Be a Trap</div>
+        <div class="takeaway-text">The interns adopt AI instantly. The more experienced the person, the harder the adjustment. Mental models built over decades can block, rather than accelerate, adaptation.</div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-number">06</div>
+        <div class="takeaway-title">The SEO Bloodbath is Good News</div>
+        <div class="takeaway-text">AI is destroying shallow, algorithmically-optimized content. For genuine journalism — deep stories, real data, original analysis — this is a liberation, not a threat.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESOURCES -->
+<section class="resources-section">
+  <div class="resources-inner">
+    <h2>Explore Further</h2>
+    <div class="resources-grid">
+      <a class="resource-card" href="https://sanand0.github.io/journalists/hackoftheday/" target="_blank" rel="noopener">
+        <div class="resource-card-title">Hack of the Day Gallery</div>
+        <div class="resource-card-desc">Browse all AI-generated hacks, review status, and download SVG files.</div>
+      </a>
+      <a class="resource-card" href="https://x.com/search?q=%23hackoftheday&src=typed_query&f=live" target="_blank" rel="noopener">
+        <div class="resource-card-title">#hackoftheday on X</div>
+        <div class="resource-card-desc">Live feed of all published Hack of the Day posts from @timesofindia.</div>
+      </a>
+      <a class="resource-card" href="https://timesofindia.indiatimes.com/" target="_blank" rel="noopener">
+        <div class="resource-card-title">Times of India</div>
+        <div class="resource-card-desc">India's largest English-language daily newspaper, founded 1838.</div>
+      </a>
+      <a class="resource-card" href="https://www.inma.org/" target="_blank" rel="noopener">
+        <div class="resource-card-title">INMA</div>
+        <div class="resource-card-desc">International News Media Association — where Rohit Saran was when this story began.</div>
+      </a>
+      <a class="resource-card" href="https://s-anand.net/" target="_blank" rel="noopener">
+        <div class="resource-card-title">S. Anand</div>
+        <div class="resource-card-desc">LLM Psychologist at Straive. Data journalist. Builder of things that shouldn't exist yet.</div>
+      </a>
+      <a class="resource-card" href="https://nieman.harvard.edu/news/2024/01/can-ai-help-save-local-journalism/" target="_blank" rel="noopener">
+        <div class="resource-card-title">AI and Local Journalism</div>
+        <div class="resource-card-desc">Nieman Lab on how AI is changing newsroom workflows globally.</div>
+      </a>
+      <a class="resource-card" href="https://uidai.gov.in/" target="_blank" rel="noopener">
+        <div class="resource-card-title">UIDAI — Aadhaar Portal</div>
+        <div class="resource-card-desc">The official source for Aadhaar authentication history, biometric lock, and VID generation.</div>
+      </a>
+      <a class="resource-card" href="https://unifiedportal-mem.epfindia.gov.in/" target="_blank" rel="noopener">
+        <div class="resource-card-title">EPFO Member Portal</div>
+        <div class="resource-card-desc">File your e-nomination. One of the first AI-generated Hack of the Day tips to go live.</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- POPUP MODALS -->
+<div class="modal-overlay" id="modal-toi-scale" role="dialog" aria-modal="true" aria-labelledby="modal-toi-scale-title">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-toi-scale')" aria-label="Close">×</button>
+    <h4 id="modal-toi-scale-title">The Scale of Times of India</h4>
+    <div class="modal-body">
+      <p>The Times of India is not just India's largest English newspaper — it is one of the most widely circulated English-language newspapers in the world. With a daily readership of over 7 million and a digital reach exceeding 200 million unique monthly visitors across its network, TOI's scale makes it a particularly significant site for AI experimentation.</p>
+      <p>The newsroom employs hundreds of journalists with bureaus in every major Indian city. Decisions made here about editorial workflow ripple across the entire ecosystem of Indian English journalism.</p>
+      <blockquote>"20% of the world's research is published by Straive." — Anand, on the scale of his own organisation</blockquote>
+    </div>
+    <div class="modal-source">Source: Wikipedia, WAN-IFRA World Press Trends</div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-beans" role="dialog" aria-modal="true" aria-labelledby="modal-beans-title">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-beans')" aria-label="Close">×</button>
+    <h4 id="modal-beans-title">Beans: TOI's Internal AI Layer</h4>
+    <div class="modal-body">
+      <p>Saikat Dasgupta and the TOI tech team built "Beans" — an internal AI system used by all 400 reporters daily. It sits on top of enterprise OpenAI access and handles:</p>
+      <ul style="padding-left:1.25rem;margin:0.75rem 0;">
+        <li>Grammar and style checking</li>
+        <li>Story structure suggestions</li>
+        <li>Language translation (including regional languages)</li>
+        <li>Transcription of interviews and recordings</li>
+      </ul>
+      <p>A new CMS from Copenhagen was going live from March 20, 2026, extending AI capabilities to the "desk" stage — final headline writing, sub-editing, and story processing. The Hack of the Day automation represents the next layer: not just editing existing content, but generating new content from scratch.</p>
+    </div>
+    <div class="modal-source">Source: Conversations with Saikat Dasgupta, March 2026</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-author">
+    <div class="footer-avatar">SA</div>
+    <div class="footer-info">
+      <div class="footer-name"><a href="https://s-anand.net/" style="color:inherit;text-decoration:none;">S. Anand</a></div>
+      <div class="footer-title">LLM Psychologist · Straive · Singapore</div>
+    </div>
+  </div>
+  <div class="footer-links">
+    <a href="https://s-anand.net/">Website</a>
+    <a href="https://twitter.com/sanand0">Twitter / X</a>
+    <a href="https://github.com/sanand0">GitHub</a>
+    <a href="https://www.linkedin.com/in/sanand0/">LinkedIn</a>
+    <a href="https://sanand0.github.io/talks/">All Talks</a>
+    <a href="https://sanand0.github.io/journalists/hackoftheday/">Hack of the Day Gallery</a>
+  </div>
+  <p style="margin-top:2rem;font-family:var(--font-mono);font-size:0.68rem;color:var(--faint);">
+    Published 26 March 2026 · Story generated with Claude Sonnet 4.6
+  </p>
+</footer>
+
+<script>
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const doc = document.documentElement;
+    const scrolled = doc.scrollTop / (doc.scrollHeight - doc.clientHeight);
+    document.getElementById('progressBar').style.width = (scrolled * 100) + '%';
+  });
+
+  // Modal functions
+  function openModal(id) {
+    const m = document.getElementById(id);
+    if (m) { m.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  }
+  function closeModal(id) {
+    const m = document.getElementById(id);
+    if (m) { m.classList.remove('open'); document.body.style.overflow = ''; }
+  }
+  // Close modal on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) closeModal(overlay.id);
+    });
+  });
+  // Close on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.open').forEach(m => closeModal(m.id));
+    }
+  });
+</script>
+
+</body>
+</html>
+
+
+

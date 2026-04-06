@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Times of Intelligence | How Anand Brought LLMs to the Times of India</title>
+  <meta name="description" content="A Malcolm Gladwell-style narrative of how Anand S., LLM Psychologist at Straive, worked with the Times of India in early 2026 to automate journalistic processes with AI.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ===== VARIABLES ===== */
+    :root {
+      --ink:          #0e1628;
+      --paper:        #f8f5f0;
+      --accent:       #ec1b22;
+      --gold:         #c49b2a;
+      --muted:        #5e5e5e;
+      --faint:        #9a9a9a;
+      --border:       #d9d5cc;
+      --highlight-bg: #fdf5e6;
+      --dark:         #0e1628;
+      --dark2:        #1a2540;
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'Libre Baskerville', Georgia, serif;
+      --font-mono:    'IBM Plex Mono', monospace;
+    }
+
+    /* ===== RESET ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.78;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ===== PROGRESS BAR ===== */
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      z-index: 1000;
+      transition: width 0.1s linear;
+    }
+
+    /* ===== MASTHEAD ===== */
+    .masthead {
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 2rem;
+      position: sticky;
+      top: 0;
+      background: rgba(248, 245, 240, 0.95);
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+    .masthead-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .masthead-brand {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .masthead-brand span {
+      color: var(--accent);
+    }
+    .masthead-nav {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .masthead-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .masthead-nav a:hover { color: var(--accent); }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: var(--dark);
+      color: #fff;
+      padding: 5rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 80% 20%, rgba(236, 27, 34, 0.15) 0%, transparent 60%),
+        radial-gradient(ellipse at 20% 80%, rgba(196, 155, 42, 0.10) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .hero-kicker::after {
+      content: '';
+      display: inline-block;
+      height: 1px;
+      width: 3rem;
+      background: var(--accent);
+      opacity: 0.5;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 7vw, 5rem);
+      font-weight: 700;
+      line-height: 1.06;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+    .hero-title em {
+      color: var(--gold);
+      font-style: italic;
+    }
+    .hero-subtitle {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 400;
+      font-style: italic;
+      color: rgba(255,255,255,0.72);
+      max-width: 680px;
+      margin-bottom: 2.5rem;
+      line-height: 1.45;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.05em;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      padding-top: 1.5rem;
+    }
+    .hero-meta a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .hero-meta a:hover {
+      color: var(--gold);
+      border-color: var(--gold);
+    }
+    .hero-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .hero-meta-icon { opacity: 0.5; }
+
+    /* ===== TIMELINE STRIP ===== */
+    .timeline-strip {
+      background: var(--dark2);
+      padding: 2rem 2rem 2.5rem;
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      overflow-x: auto;
+    }
+    .timeline-strip-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .timeline-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 1.25rem;
+    }
+    .timeline-nodes {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      position: relative;
+    }
+    .timeline-nodes::before {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      height: 1px;
+      background: rgba(255,255,255,0.15);
+    }
+    .timeline-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      min-width: 100px;
+      position: relative;
+      cursor: default;
+    }
+    .timeline-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 2px solid var(--dark2);
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+      margin-bottom: 0.6rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .timeline-node:hover .timeline-dot {
+      transform: scale(1.3);
+      box-shadow: 0 0 0 4px rgba(196,155,42,0.2);
+    }
+    .timeline-dot.accent { background: var(--accent); }
+    .timeline-date {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--gold);
+      margin-bottom: 0.3rem;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .timeline-event {
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      line-height: 1.3;
+      max-width: 90px;
+    }
+
+    /* ===== ARTICLE COLUMN ===== */
+    .article {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 3rem 2rem 4rem;
+    }
+    .article p { margin-bottom: 1.5rem; }
+    .article a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(236, 27, 34, 0.3);
+      transition: border-color 0.2s;
+    }
+    .article a:hover { border-bottom-color: var(--accent); }
+
+    /* Drop cap */
+    .dropcap::first-letter {
+      font-family: var(--font-display);
+      font-size: 5rem;
+      float: left;
+      line-height: 0.78;
+      padding-right: 0.55rem;
+      padding-top: 0.1rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* Section headings */
+    .article h2 {
+      font-family: var(--font-display);
+      font-size: 2.1rem;
+      font-weight: 700;
+      margin: 4rem 0 1.25rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+      line-height: 1.15;
+      color: var(--ink);
+    }
+    .article h3 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin: 2.5rem 0 0.8rem;
+      color: var(--accent);
+    }
+
+    /* ===== PULL QUOTE ===== */
+    .pullquote {
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      font-style: italic;
+      font-weight: 500;
+      line-height: 1.32;
+      color: var(--accent);
+      border-left: 4px solid var(--gold);
+      padding: 1.25rem 0 1.25rem 2rem;
+      margin: 2.5rem 0 2.5rem -1rem;
+    }
+    .pullquote-attribution {
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      font-style: normal;
+      color: var(--faint);
+      margin-top: 0.6rem;
+      display: block;
+    }
+
+    /* ===== WIDE PULLQUOTE (full-bleed) ===== */
+    .wide-pullquote {
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      background: var(--dark);
+      padding: 4rem 2rem;
+    }
+    .wide-pullquote-inner {
+      max-width: 780px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .wide-pullquote .quote-mark {
+      font-family: var(--font-display);
+      font-size: 6rem;
+      line-height: 0.6;
+      color: var(--accent);
+      opacity: 0.4;
+      display: block;
+      margin-bottom: 1rem;
+    }
+    .wide-pullquote blockquote {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      font-style: italic;
+      font-weight: 500;
+      line-height: 1.3;
+      color: #fff;
+      margin: 0;
+    }
+    .wide-pullquote cite {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 1.25rem;
+      font-style: normal;
+    }
+
+    /* ===== INSIGHT BOX ===== */
+    .insight-box {
+      background: var(--highlight-bg);
+      border-left: 4px solid var(--gold);
+      padding: 1.4rem 1.5rem;
+      margin: 2.5rem 0;
+      font-size: 0.95rem;
+    }
+    .insight-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #8a6d00;
+      margin-bottom: 0.5rem;
+    }
+    .insight-box p { margin-bottom: 0.5rem; }
+    .insight-box p:last-child { margin-bottom: 0; }
+
+    /* ===== STAT BLOCK ===== */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      margin: 2.5rem 0;
+      border: 1px solid var(--border);
+    }
+    .stat-cell {
+      background: var(--paper);
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      display: block;
+    }
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.4rem;
+      display: block;
+    }
+    .stat-sub {
+      font-size: 0.82rem;
+      color: var(--faint);
+      margin-top: 0.25rem;
+      display: block;
+      font-family: var(--font-body);
+    }
+
+    /* ===== SKETCHNOTE SECTION ===== */
+    .sketchnote-wrap {
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      background: var(--dark);
+      padding: 3rem 2rem;
+    }
+    .sketchnote-wrap-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .sketchnote-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 1rem;
+    }
+    .sketchnote-wrap a {
+      display: block;
+      border: none;
+    }
+    .sketchnote-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 8px 48px rgba(0,0,0,0.4);
+      cursor: zoom-in;
+      transition: opacity 0.2s;
+    }
+    .sketchnote-wrap img:hover { opacity: 0.92; }
+    .sketchnote-caption {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.35);
+      text-align: center;
+      margin-top: 0.75rem;
+    }
+
+    /* ===== TWEET GALLERY ===== */
+    .tweet-gallery {
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      background: #12192b;
+      padding: 3.5rem 2rem;
+    }
+    .tweet-gallery-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .gallery-heading {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 0.75rem;
+    }
+    .gallery-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .gallery-subtitle {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 2.5rem;
+    }
+    .gallery-subtitle a {
+      color: var(--gold);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(196,155,42,0.3);
+    }
+    .gallery-subtitle a:hover { border-color: var(--gold); }
+    .tweet-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+    .tweet-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+    }
+    .tweet-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+      border-color: rgba(255,255,255,0.15);
+    }
+    .tweet-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .tweet-card-meta {
+      padding: 0.9rem 1rem;
+    }
+    .tweet-card-brand {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+    .tweet-card-label {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.3;
+    }
+
+    /* ===== HACK GALLERY ===== */
+    .hack-gallery {
+      background: var(--highlight-bg);
+      border: 1px solid var(--border);
+      padding: 1.75rem;
+      margin: 2.5rem 0;
+    }
+    .hack-gallery-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .hack-gallery-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    .hack-gallery p {
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+    .hack-gallery a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(236,27,34,0.3);
+    }
+
+    /* ===== CODE BLOCK ===== */
+    .code-block {
+      background: var(--dark);
+      color: #e8e8e8;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.6;
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin: 1.75rem 0;
+      position: relative;
+    }
+    .code-label {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.75rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ===== PEOPLE CARDS ===== */
+    .people-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin: 1.5rem 0 2rem;
+    }
+    .person-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--dark);
+      color: #fff;
+      padding: 0.45rem 1rem 0.45rem 0.45rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      transition: background 0.2s;
+      border: none;
+    }
+    .person-pill:hover { background: var(--accent); border: none; }
+    .person-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* ===== TOOLTIP ===== */
+    [data-tooltip] {
+      position: relative;
+      cursor: help;
+      border-bottom: 1px dotted var(--gold);
+      color: inherit;
+    }
+    [data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--dark);
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 400;
+      font-style: normal;
+      line-height: 1.4;
+      padding: 0.6rem 0.9rem;
+      width: max-content;
+      max-width: 280px;
+      white-space: normal;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    [data-tooltip]:hover::after { opacity: 1; }
+
+    /* ===== CITATION POPUP ===== */
+    .cite-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--gold);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      font-weight: 700;
+      cursor: pointer;
+      vertical-align: super;
+      margin-left: 2px;
+      border: none;
+      text-decoration: none;
+      line-height: 1;
+      transition: background 0.2s;
+    }
+    .cite-btn:hover { background: var(--accent); border: none; }
+
+    /* Modal overlay */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(14,22,40,0.75);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: var(--paper);
+      max-width: 580px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 2.5rem;
+      position: relative;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+    }
+    .modal-close {
+      position: absolute;
+      top: 1rem; right: 1.25rem;
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--muted);
+      line-height: 1;
+    }
+    .modal-close:hover { color: var(--accent); }
+    .modal-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+    .modal-body {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--ink);
+    }
+    .modal-body p { margin-bottom: 0.75rem; }
+    .modal-body a { color: var(--accent); }
+    .modal-body strong { font-weight: 700; }
+
+    /* ===== TAKEAWAYS ===== */
+    .takeaways-wrap {
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      background: var(--dark);
+      padding: 4.5rem 2rem 5rem;
+    }
+    .takeaways-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .takeaways-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+    }
+    .takeaways-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 2.5rem;
+      line-height: 1.1;
+    }
+    .takeaway-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+    .takeaway-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 1.75rem;
+      position: relative;
+      transition: background 0.2s;
+    }
+    .takeaway-card:hover { background: rgba(255,255,255,0.08); }
+    .takeaway-number {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      color: rgba(196,155,42,0.2);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .takeaway-heading {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.6rem;
+      line-height: 1.25;
+    }
+    .takeaway-body {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.6;
+    }
+    .takeaway-body a {
+      color: var(--gold);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(196,155,42,0.3);
+    }
+    .takeaway-body a:hover { border-color: var(--gold); }
+
+    /* ===== FOOTER ===== */
+    .site-footer {
+      background: #080d18;
+      color: rgba(255,255,255,0.4);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+    }
+    .site-footer a {
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+    .site-footer a:hover { color: var(--gold); border-color: var(--gold); }
+
+    /* ===== FADE-IN ANIMATION ===== */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 680px) {
+      .hero { padding: 3.5rem 1.5rem 3rem; }
+      .article { padding: 2rem 1.5rem 3rem; }
+      .pullquote { margin-left: 0; }
+      .timeline-nodes { flex-wrap: wrap; gap: 0.75rem; }
+      .timeline-nodes::before { display: none; }
+      .masthead-nav { display: none; }
+      .tweet-cards { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 420px) {
+      .tweet-cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Progress bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- Masthead -->
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a href="https://sanand0.github.io/talks/" class="masthead-brand">TIMES OF <span>INTELLIGENCE</span></a>
+      <nav class="masthead-nav">
+        <a href="#act1">The Meeting</a>
+        <a href="#act2">The Revelation</a>
+        <a href="#act4">Style Transfer</a>
+        <a href="#act6">Hack of the Day</a>
+        <a href="#takeaways">Takeaways</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-kicker">Long Read · March 2026</div>
+      <h1 class="hero-title">The <em>Journalist</em><br>and the Machine</h1>
+      <p class="hero-subtitle">How a chance meeting at a Singapore hotel between an LLM psychologist and India's most powerful editor set off a quiet revolution inside the Times of India.</p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <span class="hero-meta-icon">◎</span>
+          <span>Feb–Mar 2026</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-icon">✦</span>
+          <a href="https://www.s-anand.net/" target="_blank">Anand S.</a>,
+          LLM Psychologist, <a href="https://straive.com/" target="_blank">Straive</a>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-icon">✦</span>
+          <a href="https://www.linkedin.com/in/rohitsaran/" target="_blank">Rohit Saran</a>,
+          Managing Editor, <a href="https://timesofindia.indiatimes.com/" target="_blank">Times of India</a>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-icon">⬡</span>
+          Published <a href="https://x.com/timesofindia" target="_blank">@timesofindia</a> ·
+          <a href="https://x.com/search?q=%23hackoftheday&src=typed_query&f=live" target="_blank">#hackoftheday</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline strip -->
+  <div class="timeline-strip">
+    <div class="timeline-strip-inner">
+      <div class="timeline-label">Story Arc — Six weeks that changed a newsroom</div>
+      <div class="timeline-nodes">
+        <div class="timeline-node">
+          <div class="timeline-dot accent"></div>
+          <div class="timeline-date">12 Feb</div>
+          <div class="timeline-event">Singapore hotel. 2+ hours with Rohit</div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">20 Feb</div>
+          <div class="timeline-event">Follow-up. News lists plan</div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-dot accent"></div>
+          <div class="timeline-date">2 Mar</div>
+          <div class="timeline-event">Meet Saurabh &amp; Saikat. Statoistics demo</div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">6 Mar</div>
+          <div class="timeline-event">Consumer court DB. Hack of Day first ideas</div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-dot accent"></div>
+          <div class="timeline-date">10 Mar</div>
+          <div class="timeline-event">Hack of the Day — live generation demo</div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">12–17 Mar</div>
+          <div class="timeline-event">Font wars. SVG workflow locked</div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-dot accent"></div>
+          <div class="timeline-date">20 Mar</div>
+          <div class="timeline-event">First AI hack published. #hackoftheday begins</div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">25 Mar</div>
+          <div class="timeline-event">Review. Statnoistics pipeline. What's next</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Main article -->
+  <article class="article">
+
+    <!-- Act 1: The Reunion -->
+    <section id="act1">
+      <h2>The Hotel Lobby That Started It All</h2>
+
+      <p class="dropcap fade-in">The first thing <a href="https://www.linkedin.com/in/rohitsaran/" target="_blank">Rohit Saran</a> said when he spotted Anand across the lobby of the Singapore hotel was not "hello." It was: "You've lost weight."</p>
+
+      <p class="fade-in">It was February 12, 2026. Both men were in Singapore for an INMA/OpenAI conference on AI for journalism — Rohit as <a href="https://timesofindia.indiatimes.com/" target="_blank">Times of India</a>'s Managing Editor, Anand as, by his own somewhat unusual title, LLM Psychologist at <a href="https://straive.com/" target="_blank">Straive</a>. They hadn't seen each other properly in a while. "Almost 25 kilograms," <a href="https://www.s-anand.net/" target="_blank">Anand</a> confirmed cheerfully. It's the kind of opener that signals: we know each other well enough to skip straight to the personal stuff.</p>
+
+      <p class="fade-in">They settled into chairs and Rohit pulled out something. A slim book, freshly published with <a href="https://www.harpercollins.co.in/" target="_blank">HarperCollins</a>. <em>Data Story</em> — a work on data journalism for general readers that had taken three serious years and then materialized almost entirely between April and November of the previous year. Rohit described the frantic sprint to the finish, the designer Sajeev who had finally clicked as a partner, the website built by a young coder named Rithvij Parekh who turned out to be, in Anand's words, "a wild <em>dharashah</em> — an amazing coder." Rohit mentioned that the book had even gotten quiet encouragement from an unexpected quarter: Samir Jain, the proprietor of the Times of India Group, who turns out to be, as Rohit put it, "a great lover of infographics" — so much so that he once floated the idea of a daily visual-only newspaper to Rohit.</p>
+
+      <p class="fade-in">Small talk, then a pivot. Rohit had just spent days sitting across from OpenAI's team in the same hotel. He had opinions about distribution, about content, about what journalism needed. And then, almost as a continuation of the conversation rather than a new one, he turned to Anand: "How have you been using AI? What are you doing with it? Because I mean, you've been such a... leader..."</p>
+
+      <p class="fade-in">Anand started to say "shown." Then corrected himself: <em>"done."</em></p>
+
+    </section>
+
+    <!-- Sketchnote bleed -->
+    <div class="sketchnote-wrap fade-in" style="margin: 3rem 0;">
+      <div class="sketchnote-wrap-inner">
+        <div class="sketchnote-label">Visual Summary · Click to view full size</div>
+        <a href="sketchnote.avif" target="_blank" title="Click to open full-size sketchnote in new tab">
+          <img src="sketchnote.avif" alt="Sketchnote: The Journalist and the Machine — visual summary of Anand's work with Times of India" loading="lazy">
+        </a>
+        <div class="sketchnote-caption">Sketchnote by AI (Gemini Pro) · Summarizing the full arc from Singapore to #hackoftheday</div>
+      </div>
+    </div>
+
+    <section>
+      <p class="fade-in">He opened his laptop. For the next two hours and change, in a hotel lobby in Singapore, one of India's most powerful editors watched as a man who had previously described himself as "somebody slightly crazy about AI" dismantled just about every assumption Rohit had about what a journalist could accomplish in twenty minutes.</p>
+
+      <!-- Act 2: The 20-in-20 Revelation -->
+      <h2 id="act2">Twenty Stories in Twenty Days</h2>
+
+      <p class="fade-in">Here is the story Anand told first. The previous week, a colleague named KG — head of the Science &amp; Research division at Straive — had called him. <span data-tooltip="Straive manages the publishing operations for 20% of the world's research output, including back-end systems for Elsevier, LexisNexis, and Dun &amp; Bradstreet.">Straive</span>, the company that acquired Anand's data-visualization firm Gramener, processes a staggering share of the world's scientific literature.<button class="cite-btn" data-modal="modal-straive">1</button> And one of their clients, Elsevier, was coming for a visit. Could Anand create a data story about paper retractions?</p>
+
+      <p class="fade-in">What happened next was the kind of thing that, if you described it to a journalist five years ago, they would have assumed you were joking. Anand took the recorded conversation with his colleague, passed it to <a href="https://claude.ai/" target="_blank">Claude Code</a>, and — doing very little other than watching and occasionally redirecting — had a rich, interactive, publication-ready data story on research retractions in twenty minutes.</p>
+
+      <div class="pullquote fade-in">
+        "My net contribution was: taking that recording, putting it into Claude, and publishing it. Time spent: 20 minutes."
+        <span class="pullquote-attribution">— Anand, in conversation with Rohit Saran</span>
+      </div>
+
+      <p class="fade-in">The story had everything. It showed retractions happening in waves, not individually — "big spikes" in 2010 and 2011 that could be almost entirely explained by removing just two publishers from the dataset.<button class="cite-btn" data-modal="modal-retractions">2</button> It showed that <strong>87% of all retractions</strong> at one point were coming from a single publisher. It showed "industrialized misconduct" — a term for semi-formal networks of people who pay services to get them published and even insert fake reviewers into the process. It showed country patterns: "China is right up there. India is right up there."<button class="cite-btn" data-modal="modal-countries">3</button></p>
+
+      <p class="fade-in">Rohit stared at it. "It's magical. I mean even magical is..." He trailed off.</p>
+
+      <p class="fade-in">Then Anand mentioned something else. In 2025, he had set himself a goal: write 20 data stories in a year. By August of that year, he had realized the goal was, in his word, "a joke." Not because it was too hard. Because it was suddenly trivial.</p>
+    </section>
+
+  </article>
+
+  <!-- Wide pullquote -->
+  <div class="wide-pullquote fade-in">
+    <div class="wide-pullquote-inner">
+      <span class="quote-mark">"</span>
+      <blockquote>I can write 20 data stories in 20 days.</blockquote>
+      <cite>— Anand S., LLM Psychologist at Straive</cite>
+    </div>
+  </div>
+
+  <article class="article">
+
+    <section>
+      <p class="fade-in">This was not boasting. It was arithmetic. The models had improved dramatically in just a few months — stories that required five attempts to get right in late 2024 now succeeded eight times in ten on the first try. And the pace of improvement was itself accelerating. "Given that pace of progress..." Anand said, and didn't need to finish the sentence.</p>
+
+      <h3>The Quintuple-Checking Trick</h3>
+
+      <p class="fade-in">But Rohit pushed: what about verification? Hallucinations? Isn't that the whole problem?</p>
+
+      <p class="fade-in">Anand had an answer — and it was one of those answers that, once you hear it, seems obvious in retrospect. He pulled up a slide from his work: an experiment in classifying chat support messages across multiple AI models. The overall error rate across models? About <strong>14%</strong>. Not great. But here's what happens when you run the same task through two models and only accept answers where both agree:</p>
+
+      <div class="stat-row fade-in">
+        <div class="stat-cell">
+          <span class="stat-number">14%</span>
+          <span class="stat-label">Single model error rate</span>
+          <span class="stat-sub">Baseline accuracy</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-number">3.7%</span>
+          <span class="stat-label">Two models agree</span>
+          <span class="stat-sub">Error drops dramatically</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-number">2.2%</span>
+          <span class="stat-label">Triple-check</span>
+          <span class="stat-sub">Better still</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-number">0.7%</span>
+          <span class="stat-label">Quintuple-check</span>
+          <span class="stat-sub">99.3% accuracy<button class="cite-btn" data-modal="modal-ensemble">4</button></span>
+        </div>
+      </div>
+
+      <p class="fade-in">The math works because models make <em>random</em> errors, not systematic ones. When five models independently make the same classification, the chances of all five being wrong in the same way are vanishingly small. And for cases where they <em>disagree</em>? That's where human review gets focused — about 28% of the effort. The other 72% can go untouched.</p>
+
+      <p class="fade-in">"So I'm saving 72% cost at 99.3% accuracy," Anand summarized.</p>
+
+      <p class="fade-in">"Which humans can't guarantee," Rohit responded.</p>
+
+      <p class="fade-in">There's a philosophical point buried here. We have spent enormous energy worrying about whether AI outputs are trustworthy enough to use. But that anxiety assumes the alternative is perfect human verification — which, of course, it isn't. The question is never "AI vs. perfection." It's always "AI vs. the actual alternative."</p>
+
+      <p class="fade-in">Anand had another example: one of his interns had taken NCERT school textbooks — the backbone of India's national curriculum — and had an LLM go through them page by page, flagging potential errors.<button class="cite-btn" data-modal="modal-ncert">5</button> It found 45 issues. Some were clearly wrong. Some were hedged. "According to Greek sources, Mauryan army had 600,000 soldiers. Almost certainly inflated but I can't guarantee that." The system was appropriately uncertain about appropriate things. "This is one of the lowest hanging AI use cases because it does no harm," Anand noted. "And these are all potential TOI stories."</p>
+
+      <p class="fade-in">Rohit's eyes lit up. TOI has ten education reporters posted across India. No publication could match that on-the-ground presence. "Exactly — we can always reach out to NCERT officials."</p>
+
+      <h2 id="act3">The Data Crime</h2>
+
+      <p class="fade-in">At some point in the conversation, Rohit stopped being a polite audience and started being a journalist. He began diagnosing a problem he'd been sitting with for years, and naming it with the bluntness of someone who has run out of patience for euphemism.</p>
+    </section>
+
+  </article>
+
+  <!-- Wide pullquote: data crime -->
+  <div class="wide-pullquote fade-in" style="--dark: #1a0a0a;">
+    <div class="wide-pullquote-inner">
+      <span class="quote-mark">"</span>
+      <blockquote>The data crime we are committing — because of our lack of knowledge.</blockquote>
+      <cite>— Rohit Saran, Managing Editor, Times of India</cite>
+    </div>
+  </div>
+
+  <article class="article">
+
+    <section>
+      <p class="fade-in">Here's the crime. Every month, the Indian government releases a calendar of data: IIP figures, CPI inflation, GDP numbers. Every month, a team of reporters downloads the file, looks inside, and writes the same story: "These are the five things that rose the most." Every month, nobody asks whether the thing that rose most actually means anything. Did it rise from a negative? Is the rise statistically significant? Is there an obvious confounding factor that renders the comparison meaningless?</p>
+
+      <p class="fade-in">"What is happening in TOI and all newspapers?" Rohit said, with a flat precision that came from having watched this happen too many times. "Government releases data at 4pm. 'These are the five things that rose the most, these are the five things...' <em>Khatam.</em>" Done. Filed. Published.</p>
+
+      <div class="insight-box fade-in">
+        <div class="insight-label">The newsroom math</div>
+        <p>TOI has <strong>28 newsrooms</strong>, <strong>55 editions</strong>, approximately <strong>400 full-time reporters</strong>, 300 more on exclusive retainer arrangements, 400 desk editors, and roughly 200 senior editors and designers.<button class="cite-btn" data-modal="modal-toi-stats">7</button> That's one of the largest field reporting forces in India — and yet, Rohit argued, the organization was systematically wasting it.</p>
+      </div>
+
+      <p class="fade-in">The deeper crime, Rohit argued, was a kind of structural miscommunication. Reporters who had spent 15 years on a beat had become exquisitely specialized and correspondingly narrow. A crime reporter in Delhi knows Delhi Police; they have no antenna for national crime patterns. A health reporter covers their city. Nobody is looking at the data that connects individual incidents into stories that actually explain something about the country. Good stories were dying at the local level because local reporters couldn't see how to pitch them nationally.</p>
+
+      <p class="fade-in">And meanwhile, perfectly good data sat untouched. <span data-tooltip="Ministry of Statistics and Programme Implementation — India's primary body for official statistics, including GDP, inflation (CPI/WPI), employment, and sectoral data.">MOSPI</span> releases vast datasets. The National Family Health Survey. The NSSO. Census language data. These are goldmines — but turning them into stories requires someone to look at them with curiosity, ask the right questions, and recognize what's anomalous.</p>
+
+      <p class="fade-in">Anand ran the demo right there. He gave Claude Code a simple prompt: find data from MOSPI, analyze it, look for anomalies. A few minutes later they were looking at an interactive heat map of India's inflation patterns. A K-shaped recovery. Urban areas facing statistically proven higher inflation than rural — attributed to higher services inflation in cities. A bizarre Delhi spike that should happen less than once in fifteen thousand data points.</p>
+
+      <p class="fade-in">"Because this solves so many challenges of telling data stories in popular media," Rohit said, watching charts animate on Anand's laptop. He was thinking aloud. "If you want to do a story, you just do a call-out here and say... and that becomes for the reader an entry point."</p>
+
+      <h3>Bypassing vs. Disrupting</h3>
+
+      <p class="fade-in">Anand had already thought through the implementation problem. Changing how a 700-person newsroom does its daily data processing is not a project; it's a decade-long negotiation. There's always a reason the existing process exists, always someone who's invested in it, always a workflow dependency that nobody mentioned when you were designing the solution.</p>
+
+      <div class="pullquote fade-in">
+        "Disrupting existing processes is hard. Bypassing it and coming up with something new is easier."
+        <span class="pullquote-attribution">— Anand, in conversation with Rohit Saran</span>
+      </div>
+
+      <p class="fade-in">The bypass, in this case, was a new format. Not "let's redo how CPI stories are written." But: "let's create something that doesn't compete with the existing CPI story at all." The new format would be better, more interesting, and would naturally draw editors toward it. The old format would fade not through conflict but through obsolescence.</p>
+
+      <p class="fade-in">He described what he'd noticed about who learns this fastest. "The interns get it instantly. The more experienced people, in proportion to their experience, struggle with getting it." Rohit protested mildly — "not entirely" — but acknowledged the pattern. Juniors: told once, they run. Seniors: shown, and they get there, but it takes longer. The clean slate, it turns out, is an advantage.</p>
+
+      <!-- Act 4: Style Transfer -->
+      <h2 id="act4">Write Like Malcolm Gladwell. Visualize Like the New York Times.</h2>
+
+      <p class="fade-in">While waiting for the MOSPI analysis to run, Anand showed Rohit something that seemed almost too simple to be significant.</p>
+
+      <p class="fade-in">Earlier in the session, he had created a scrollytelling data story for Frontiers, the academic publisher — a side-by-side narrative format where text on the left guided the reader through animated charts on the right. Rohit was floored. "It has created this format? I can't believe this." Anand confirmed that he had not even read the output properly before it was done.</p>
+
+      <p class="fade-in">"In the Frontiers thing, you asked to create the side-by-side?" Rohit pressed.</p>
+
+      <p class="fade-in">"Yeah. I said, 'Create a New York Times-style data storytelling story.' That's all."</p>
+
+      <p class="fade-in">This is the idea Anand calls <strong>Style Transfer</strong>. The AI has read, processed, and internalized essentially the entire archive of quality journalism. It knows The Upshot, The Pudding, Hans Rosling's Gapminder visualizations, Quartz's chart style, Vox's explainer format. It doesn't just know these styles the way a student knows them from reading — it knows them the way a practitioner knows them, from having absorbed thousands of examples.</p>
+    </section>
+
+  </article>
+
+  <!-- Wide pullquote: style transfer -->
+  <div class="wide-pullquote fade-in">
+    <div class="wide-pullquote-inner">
+      <span class="quote-mark">"</span>
+      <blockquote>Write like Malcolm Gladwell, visualize like the New York Times.</blockquote>
+      <cite>— Anand's default prompt instruction</cite>
+    </div>
+  </div>
+
+  <article class="article">
+
+    <section>
+      <p class="fade-in">The practical upshot: instead of describing what you want from scratch — a lengthy, imprecise exercise — you invoke a style that already exists. "My current default is: write like Malcolm Gladwell, visualize like the New York Times," Anand said. That five-word instruction communicates more to a language model than three paragraphs of description might.</p>
+
+      <p class="fade-in">Rohit scrolled through Anand's catalog of styles. Hans Rosling. The Pudding. John Murdoch. Quartz. Vox. "Everybody is here. There is nobody who is not." He was genuinely delighted. "This is the way."</p>
+
+      <div class="insight-box fade-in">
+        <div class="insight-label">The style catalog</div>
+        <p>Anand maintains a curated list of journalism and data visualization styles he knows AI models can replicate. Instead of describing what he wants visually, he names a reference: "The Upshot," "The Pudding," "Hans Rosling," "Quartz explainer," "NYT scrollytelling." The AI has absorbed enough of each to reproduce its conventions reliably. The catalog also functions as a menu for what's achievable — if the AI described the style, it can probably render it.</p>
+      </div>
+
+      <p class="fade-in">The concept extends beyond visual style. Rohit started talking about institutional knowledge — the uncodified knowledge that lives in editors' heads, built up over decades. "Verification is easier than creation," Anand said at one point. Rohit's response was immediate and emphatic: "<strong>100%. 100%. Verifying is easier than creating from 0 to 50.</strong>" But what if you could take all the things an editor like Rohit knows about what makes a good story — the logical fallacies to watch for, the questions that always need answering, the structural elements a TOI piece needs — and encode it? "This is how institutional knowledge starts getting codified," Anand said.</p>
+
+      <p class="fade-in">Two hours had become three. A session that was supposed to be a catch-up had turned into something close to a business plan. Before they left the lobby, they had agreed on a date for an online workshop with the Times of India editorial team. Anand would enroll AI agents as fictional journalists — five reporters and an editor — and TOI would treat them like any other contributor: pitch ideas, accept some, reject others, give feedback. They would run the experiment and see what happened.</p>
+
+    </section>
+
+    <!-- Act 5: Meeting the Team -->
+    <section id="act5">
+      <h2>The House on Fire</h2>
+
+      <p class="fade-in">On March 2, Anand met the rest of the team. <a href="https://x.com/bansaurabh" target="_blank">Saurabh Banerjee</a>, an editor at TOI, joined first. Then, after a few minutes of technical difficulties, <a href="https://www.linkedin.com/in/saikat-dasgupta-1180b797/" target="_blank">Saikat Dasgupta</a> — the editor who had built TOI's in-house AI system and thought about these problems in the most structurally rigorous way of anyone Anand met.</p>
+
+      <div class="people-row fade-in">
+        <a href="https://www.s-anand.net/" target="_blank" class="person-pill"><span class="person-dot"></span>Anand S. · LLM Psychologist, Straive</a>
+        <a href="https://www.linkedin.com/in/rohitsaran/" target="_blank" class="person-pill"><span class="person-dot"></span>Rohit Saran · Managing Editor, TOI</a>
+        <a href="https://x.com/bansaurabh" target="_blank" class="person-pill"><span class="person-dot"></span>Saurabh Banerjee · Editor, TOI</a>
+        <a href="https://www.linkedin.com/in/saikat-dasgupta-1180b797/" target="_blank" class="person-pill"><span class="person-dot"></span>Saikat Dasgupta · Editor, TOI</a>
+        <a href="https://www.linkedin.com/in/sajeev-kumarapuram-205ba933/" target="_blank" class="person-pill"><span class="person-dot"></span>Sajeev Kumarapuram · Visual Journalist, TOI</a>
+      </div>
+
+      <p class="fade-in">When Saurabh asked Anand to introduce himself, the answer was brief and, coming from a man who had just spent three hours in a hotel lobby changing someone's mind about AI, somewhat memorable: "Somebody from the outside who lights a spark, sets the house on fire, moves to the next house. Nothing more than that."</p>
+
+      <div class="pullquote fade-in">
+        "Somebody from the outside who lights a spark, sets the house on fire, moves to the next house."
+        <span class="pullquote-attribution">— Anand's self-description to the TOI team</span>
+      </div>
+
+      <p class="fade-in">He said they could go in any direction. Saurabh had sent over some examples of <span data-tooltip="TOI's proprietary data visualization format for print: statistics rendered as visual stories, combining infographics with dense text, designed for lay readers.">Statoistics</span> — TOI's proprietary format for turning statistics into compact, beautifully designed print graphics. What would it take to automate their creation? "Rather than talk about it, why don't we <em>do</em> it?" Anand said. He shared his screen and started.</p>
+
+      <p class="fade-in">He took three screenshots of Statoistics and dropped them into a prompt — not an instruction to recreate them, but a meta-prompt: <em>describe what I would need to prompt an AI to create these.</em> The output was the prompt itself. Then he ran that prompt. Twenty minutes of watching the clock while AI spun up data from public sources. Anand got pull-ready results on road safety (Tamil Nadu has the most crashes; UP has the most deaths), on <a href="https://mospi.gov.in/" target="_blank">MOSPI</a> data, on anemia rates — "Ladakh: 90% anemia in children." Small, specific, surprising. The kind of data point that makes a journalist reach for the phone.</p>
+
+      <p class="fade-in">"That was a Statoistic we carried," Saurabh said about the road safety one. The anemia story: "This we haven't done." The bank fraud one — "Fraud cases tripled but money halved because it's mostly small digital hits" — Saurabh leaned forward: "That's on the right track. This is the kind of stuff we..."</p>
+
+      <h3>The Peak of Optimism</h3>
+
+      <p class="fade-in">By the March 6 follow-up call, Saurabh had shared the Statoistics with Rohit. Rohit had a suggestion: focus on <span data-tooltip="Ministry of Statistics and Programme Implementation — India's primary body for official statistics.">MOSPI</span> data and Parliament question-and-answers for the initial pilot. Get the design standardized. Then expand. It seemed like a reasonable, incremental plan.</p>
+
+      <p class="fade-in">But Anand introduced a note of caution that, in retrospect, was almost prophetic: "This may actually be the peak of optimism in the cycle, at least for the short run. Why? Because we've seen what is possible. We are assuming that what we now want to tweak will also be possible because so much was possible. Usually, I find the opposite to be true."</p>
+
+      <p class="fade-in">He reached for an analogy that was, in its bluntness, more useful than any amount of diplomatic hedging:</p>
+
+      <div class="pullquote fade-in">
+        "Arre yaar, don't you understand civil engineering? And it will say, 'No, I'm a three-year-old.'"
+        <span class="pullquote-attribution">— Anand, explaining the limits of current AI to the TOI team</span>
+      </div>
+
+      <p class="fade-in">The specific limitation was fonts and precise color palettes. The AI that could generate twenty data stories was also an AI that, when told "use exactly these four colors," would give you three of the four and substitute something adjacent for the fourth. Every time. For reasons nobody fully understands. The model is, genuinely, a three-year-old who draws wonderful pictures but cannot design a house.</p>
+
+      <p class="fade-in">He offered four approaches: wait for the models to improve; accept a 1-in-10 good output; take the base and do the rest manually; or keep constraints simple enough that the models can handle them. None of these are the answer. All of them are valid depending on the situation. The craft, Anand suggested, is in knowing which approach fits which problem.</p>
+
+      <h3>The Consumer Court Database</h3>
+
+      <p class="fade-in">Saikat had been sitting on something he'd been wanting to share. TOI had built a database — scraped with help from Google, now living in their cloud — of all consumer court judgments across India's state courts and the <span data-tooltip="National Consumer Disputes Redressal Commission — India's apex body for consumer dispute resolution, handling major compensation cases across sectors.">NCDRC</span>.<button class="cite-btn" data-modal="modal-consumer">6</button> Every judgment. Updated daily by a scraper. The question was what to do with it.</p>
+
+      <p class="fade-in">Saikat gave an example so clean it almost felt like a prepared pitch: "If a damaged iPhone — the compensation awarded in Gujarat versus the compensation awarded in Manipur. There's a huge difference. That's a very interesting story. But there's no way for us to know unless we physically go through each judgment, which is impossible."</p>
+
+      <div class="insight-box fade-in">
+        <div class="insight-label">The Consumer Court story</div>
+        <p>India's consumer court system — the <span data-tooltip="National Consumer Disputes Redressal Commission — India's apex body for consumer dispute resolution.">NCDRC</span> and 30+ state commissions — handles thousands of cases annually. TOI's database includes all available judgments, scraped and updated daily. The AI opportunity: semantic search across this corpus to find patterns, anomalies, and disparity stories that would be impossible to surface through manual review. The eventual goal: a newspaper page and a microsite dedicated to consumer court data journalism.</p>
+      </div>
+
+      <p class="fade-in">Beyond the consumer court database, Anand flagged a broader theme: data quality anomalies in public datasets. An Australian weather station showing a minimum temperature higher than its maximum temperature — over 400 times across 15 years. Maharashtra spelled "Maharashtra dollar" in an NCRB report. State-level crime data showing a non-zero total where every component is listed as "NA." These are stories in themselves — and they are stories only AI can find, because only AI can check every cell in every table.</p>
+
+    </section>
+
+    <!-- Act 6: Hack of the Day -->
+    <section id="act6">
+      <h2>Hack of the Day</h2>
+
+      <p class="fade-in">On March 10, Saikat came to the call with a specific request. TOI had been running a feature called <strong>Hack of the Day</strong> — short, practical cards about digital life for readers who aren't very tech-savvy but want to be. Tips about <a href="https://sancharsaathi.gov.in/" target="_blank">Sanchar Saathi</a>, government portals, UPI safety, <span data-tooltip="Unique Identification Authority of India's biometric ID system, used for KYC, banking, and government service access.">Aadhaar</span> features. The feature had been running for about four months, anchored by a journalist named Richa. The problem: they were running out of ideas. Could AI help?</p>
+
+      <p class="fade-in">Anand had already been playing. He shared his screen and showed a card. Twenty hacks, already generated. Saikat scrolled through them. Some overlapped with things TOI had already published. Three or four were genuinely new. "I can see about three or four in the ones you've shown me which we haven't done," Saikat said.</p>
+
+      <p class="fade-in">"Is this the first iteration?" Saikat asked.</p>
+
+      <p class="fade-in">"No, second," Anand said.</p>
+
+      <p class="fade-in">Live, in the call, Anand dictated twelve more ideas. "Look, all of this is nice, but some have already been covered. I get a feeling it's getting a little repetitive. Let's go a little global — it doesn't have to be only about Indian government sites. Let's talk about things that people use on a practical day-to-day basis, things not always obvious even though there's widespread adoption. It doesn't have to be technological hacks. Could be social hacks, educational hacks, cultural hacks." Five minutes later: twelve new cards.</p>
+
+      <p class="fade-in">Saikat wanted to keep it going. Three more months of content. 90 cards. A visual refresh. Could it also come in SVG format — something the design team could open in InDesign and edit? Yes. HTML as well? Yes. And the feedback model would be voice messages on WhatsApp — just record your reaction as if talking to a human intern.</p>
+
+      <div class="hack-gallery fade-in">
+        <div class="hack-gallery-label">The Published Gallery</div>
+        <div class="hack-gallery-title">Hack of the Day — Live</div>
+        <p>All published Hack of the Day cards are viewable at the <a href="https://sanand0.github.io/journalists/hackoftheday/" target="_blank">Hack of the Day gallery</a>. The content is generated from a structured JSON format, with each hack including title, what it solves, what to do, and step-by-step instructions.</p>
+        <p>Follow <a href="https://x.com/search?q=%23hackoftheday&src=typed_query&f=live" target="_blank">#hackoftheday on X</a> to see new cards as they're published.</p>
+      </div>
+
+      <p class="fade-in">The process uses a structured data format for each hack:</p>
+
+      <div class="code-block fade-in">
+        <div class="code-label">cards.json · format</div>
+{
+  "title": "CHECK YOUR AADHAAR AUTHENTICATION HISTORY",
+  "what_it_solves": "Find out if your Aadhaar has been used without your knowledge for banking, SIM registration, or government schemes.",
+  "what_to_do": "Visit the UIDAI resident portal, log in, and check authentication history.",
+  "steps": [
+    "Go to resident.uidai.gov.in",
+    "Click 'Aadhaar Authentication History'",
+    "Login with your Aadhaar and OTP",
+    "Check the list of authentication attempts"
+  ]
+}
+      </div>
+
+      <p class="fade-in">By the March 17 check-in, 19 hacks had been accepted and 28 were pending review. Estimated yield: about 33 cards to start, with more on order "however many you need."</p>
+
+    </section>
+
+    <!-- Act 7: Font Wars -->
+    <section id="act7">
+      <h2>The Font Wars</h2>
+
+      <p class="fade-in">The stumbling block, when it arrived, was fonts. Specifically: the TOI house fonts. Specifically: could AI use them?</p>
+
+      <p class="fade-in"><a href="https://www.linkedin.com/in/sajeev-kumarapuram-205ba933/" target="_blank">Sajeev Kumarapuram</a>, TOI's visual journalist, joined the March 12 call. His primary concern, voiced politely but with the specificity of someone who has lost many hours to this exact problem: "I tried to use ChatGPT to apply fonts. It doesn't understand the fonts."</p>
+
+      <p class="fade-in">Anand's diagnosis was immediate: Sajeev had been using ChatGPT as an image generator. In that mode — image generation mode, where the output is a PNG — the model is roughly as capable as a talented fifth-grader. It makes about 1% spelling errors. It often ignores font specifications. It doesn't apply custom typography reliably.</p>
+
+      <p class="fade-in">But there's another mode. And in that mode, the same model is something different entirely.</p>
+
+      <div class="pullquote fade-in">
+        "ChatGPT is better than the best programmers in the world on software benchmarks. That's who you're talking to now."
+        <span class="pullquote-attribution">— Anand, to Sajeev Kumarapuram on the font question</span>
+      </div>
+
+      <p class="fade-in">The insight: don't ask the AI to <em>draw</em> an image with the right fonts. Ask it to <em>write a program</em> that creates an SVG. An SVG is code, and coding is where these models genuinely excel. In code mode, you can specify the exact font family, size, weight, spacing — and the AI will implement it correctly because it's writing a program, not drawing a picture. The SVG is then editable in Illustrator or InDesign.</p>
+
+      <p class="fade-in">There was a brief technical discussion about SVG text wrapping — foreign elements, tspan elements, how InDesign handles them. There was a debugging session where Anand's SVG was showing a mysterious blue band in Sajeev's browser and not in Anand's. (Cause: he'd forgotten to push the right branch to GitHub. "Still my mistake.") There was a print-to-PDF workflow that needed to survive intact.</p>
+
+      <p class="fade-in">By the end of the March 17 call, the format question was resolved. "This is okay now," Sajeev said, looking at the SVG in his browser. "I think we can use it as it is." The fonts matched. The colors matched. Minor editorial tweaks would still happen manually — that was understood, accepted, fine. But the base was solid.</p>
+
+      <p class="fade-in">During these calls, <span data-tooltip="Times of India's in-house AI writing assistant, built on OpenAI/Gemini/Claude. Used by 400 reporters for grammar checking, structure, translation, transcription, and copy processing.">Beans</span> came up repeatedly. TOI had built their own AI layer — thin, integrated into their CMS, deployed to all 400 reporters — before Anand's involvement. It handled grammar, structure, translation, currency conversions (preventing the "lakh dollars" problem). Saikat had built it. And from March 20 onward, it was going to roll out to the desk layer as well — the editors who write final headlines and process copy before publication.</p>
+
+      <p class="fade-in">"What is the biggest thing?" Rohit had asked OpenAI's representatives at the Singapore conference. "Before we reach distribution, let's talk about creation."</p>
+
+    </section>
+
+    <!-- Act 8: Going Live -->
+    <section id="act8">
+      <h2>Going Live</h2>
+
+      <p class="fade-in">On March 20, 2026, the first AI-generated Hack of the Day appeared on the <a href="https://x.com/timesofindia" target="_blank">Times of India's Twitter account</a>.</p>
+    </section>
+
+  </article>
+
+  <!-- Tweet gallery - full bleed -->
+  <div class="tweet-gallery fade-in">
+    <div class="tweet-gallery-inner">
+      <div class="gallery-heading">Published · #hackoftheday on Twitter/X</div>
+      <div class="gallery-title">From Concept to Column</div>
+      <p class="gallery-subtitle">
+        Four cards published in the first week · All tagged
+        <a href="https://x.com/search?q=%23hackoftheday&src=typed_query&f=live" target="_blank">#hackoftheday</a> ·
+        View gallery at <a href="https://sanand0.github.io/journalists/hackoftheday/" target="_blank">sanand0.github.io/journalists/hackoftheday</a>
+      </p>
+      <div class="tweet-cards">
+        <a href="https://x.com/timesofindia/status/2034925416444829727" target="_blank" class="tweet-card">
+          <img src="https://pbs.twimg.com/media/HD0_dtbboAMrZZW?format=png&name=small" alt="Show Gemini your screen or camera for live help" loading="lazy">
+          <div class="tweet-card-meta">
+            <div class="tweet-card-brand">@timesofindia · 20 Mar 2026</div>
+            <div class="tweet-card-label">Show Gemini your screen for live help</div>
+          </div>
+        </a>
+        <a href="https://x.com/timesofindia/status/2036321109831041376" target="_blank" class="tweet-card">
+          <img src="https://pbs.twimg.com/media/HEJqHOQaIAM6aAA?format=webp&name=small" alt="Free up phone space without deleting your apps" loading="lazy">
+          <div class="tweet-card-meta">
+            <div class="tweet-card-brand">@timesofindia · 22 Mar 2026</div>
+            <div class="tweet-card-label">Free up phone space without deleting apps</div>
+          </div>
+        </a>
+        <a href="https://x.com/timesofindia/status/2036707153512403193" target="_blank" class="tweet-card">
+          <img src="https://pbs.twimg.com/media/HEOxKZqbQAAb0kr?format=webp&name=small" alt="Check your Aadhaar authentication history" loading="lazy">
+          <div class="tweet-card-meta">
+            <div class="tweet-card-brand">@timesofindia · 23 Mar 2026</div>
+            <div class="tweet-card-label">Check your Aadhaar authentication history</div>
+          </div>
+        </a>
+        <a href="https://x.com/timesofindia/status/2037103515231752665" target="_blank" class="tweet-card">
+          <img src="https://pbs.twimg.com/media/HEU3gTibYAEsvsO?format=webp&name=small" alt="File your EPFO e-nomination now" loading="lazy">
+          <div class="tweet-card-meta">
+            <div class="tweet-card-brand">@timesofindia · 24 Mar 2026</div>
+            <div class="tweet-card-label">File your EPFO e-nomination now</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <article class="article">
+
+    <section>
+      <p class="fade-in">The first card: "Show Gemini your screen or camera for live help." The format — clean, dark background, numbered steps, a single clear benefit statement — was the result of weeks of iteration between Anand's agents, Richa's feedback, and Sajeev's design adjustments. To look at it was to see something completely ordinary. Which was the point.</p>
+
+      <p class="fade-in">Then the Aadhaar history card. Then EPFO e-nomination. Then phone storage. Each one a small practical tip. Each one produced by a system with no journalist attached to the generation step — only to the selection step.</p>
+
+      <p class="fade-in">In the March 25 review call, Saikat said something that stopped the conversation for a moment. He was talking about the broader picture — the way TOI had built Beans, had deployed AI to reporters, was watching colleagues struggle to adopt it. And he was watching Anand demonstrate something new every week.</p>
+
+      <div class="pullquote fade-in">
+        "The pace of realization is exactly the polar opposite of the pace at which it is doing it. It's stunning."
+        <span class="pullquote-attribution">— Saikat Dasgupta, Editor, Times of India</span>
+      </div>
+
+      <p class="fade-in">The tools improve faster than people can internalize the fact that they've improved. You form an impression of what AI can do based on your last interaction with it — and by the time you've formed that impression, it's already out of date. The gap between capability and perception is, right now, enormous. And it is growing.</p>
+
+      <!-- Act 9: The Bigger Picture -->
+      <h2 id="act9">The Bigger Picture</h2>
+
+      <p class="fade-in">By the March 25 call, the scope of the project had widened considerably. The Hack of the Day pipeline was working. <span data-tooltip="Anand's pun on 'statistics + agnostic + TOI' — a pipeline to automatically generate TOI-style visual statistics from public data sources like MOSPI PLFS.">Statnoistics</span> — Anand's pun name for a new pipeline that could automatically generate Statoistics-style graphics from <span data-tooltip="Ministry of Statistics and Programme Implementation — India's primary statistics body, publishing PLFS employment data, CPI inflation data, and more.">MOSPI</span>'s Periodic Labour Force Survey and other public data — was in development. The consumer court database project was waiting on a data dump. A set of visual explainers on current affairs was in the queue.</p>
+
+      <p class="fade-in">The Chennai Design Festival anecdote from the March 25 call put a cap on the whole story. Anand had attended as a speaker. His planned talk was on AI and visual design. But fifteen minutes before he was due to go on stage, he was sitting in the audience watching other speakers present design work from the field — fabric calendars that double as bags at end of year, kurtas with embroidered growth charts for children, saree borders containing seeds for trading. Local design, deeply functional, embedded in Indian life.</p>
+
+      <p class="fade-in">And Anand just... changed his talk. He fed a few of the ideas he'd heard into Claude, asked for more in the same vein, moved to Gemini and asked it to illustrate them. In fifteen minutes, he had a completely new presentation. Then he walked on stage and presented AI-generated ideas — ideas that were, in his assessment, genuinely as strong as what the human designers had spent months developing.</p>
+
+      <p class="fade-in">"I literally just took a few of their ideas and told Claude, give me more such ideas, told Gemini, draw these out, and I went there and presented," he said. "And I don't think there was a stronger way to make the point that boss, all of what we know, hold dear, etc. is going outside the window."</p>
+
+      <p class="fade-in">Saikat said: "We are in the middle of this whole thing where we have an AI backbone, and you should see the questions and the skepticism that people still hold. I mean..."</p>
+
+      <p class="fade-in">Saurabh finished the thought: "You know, it's a general fear — that AI will take my job away rather than make my work better."</p>
+
+      <p class="fade-in">Rohit had addressed this directly in the February conversation. His response to colleagues worried about AI hallucinations: "How many times have you filed wrong stories yourself without AI?" The comparison was never perfect humans versus imperfect machines. It was imperfect machines versus imperfect humans, where machines are improving exponentially and the humans, to be fair to them, have only biological hardware to work with.</p>
+
+      <p class="fade-in">"Verification is easier than creation," Anand had said back in February. The Hack of the Day project had proven this at scale. The AI generates thirty options; humans select nineteen; the system produces cards. The creative bottleneck is gone. What remains is editorial judgment — the question of which thirty options to generate, which nineteen to accept, which tone fits today's news cycle. That is still, irreducibly, human work. But it's the good kind of human work: the judgment and selection, not the drudgery of starting from zero.</p>
+
+    </section>
+
+  </article>
+
+
+  <!-- Takeaways section -->
+  <div class="takeaways-wrap fade-in" id="takeaways">
+    <div class="takeaways-inner">
+      <div class="takeaways-kicker">Key Insights</div>
+      <h2 class="takeaways-title">What the Times of India<br>Experiment Teaches Us</h2>
+      <div class="takeaway-cards">
+
+        <div class="takeaway-card">
+          <div class="takeaway-number">01</div>
+          <div class="takeaway-heading">20 stories in 20 days — the speed shift is already here</div>
+          <div class="takeaway-body">What used to take a reporter a year now takes three weeks. The constraint is no longer production; it's selection and judgment. The blank page problem is gone. The curation problem just got much bigger.</div>
+        </div>
+
+        <div class="takeaway-card">
+          <div class="takeaway-number">02</div>
+          <div class="takeaway-heading">Verification is easier than creation</div>
+          <div class="takeaway-body">"Verifying is easier than creating from 0 to 50." AI removes the most painful part of editorial work — starting from nothing. What remains is checking, selecting, and improving. That's the interesting part anyway.</div>
+        </div>
+
+        <div class="takeaway-card">
+          <div class="takeaway-number">03</div>
+          <div class="takeaway-heading">Style Transfer is a superpower</div>
+          <div class="takeaway-body">"Write like Malcolm Gladwell, visualize like the New York Times." Five words unlock professional-quality output. The AI has internalized every major journalism style — The Upshot, The Pudding, Hans Rosling, Quartz, Vox. Name the style; get the style.</div>
+        </div>
+
+        <div class="takeaway-card">
+          <div class="takeaway-number">04</div>
+          <div class="takeaway-heading">The ensemble verification trick</div>
+          <div class="takeaway-body">Run five models on the same task. Where they agree: 99.3% accurate. Where they disagree: human review. Net result: 72% cost saving, near-human accuracy. Models make <em>random</em> errors; the ensemble makes them nearly disappear.</div>
+        </div>
+
+        <div class="takeaway-card">
+          <div class="takeaway-number">05</div>
+          <div class="takeaway-heading">Bypass, don't disrupt</div>
+          <div class="takeaway-body">Changing existing processes is a decade-long negotiation. Building something new is a week. New formats are easier than workflow reform. Once the new format proves itself, the old one fades — not through conflict, but through obsolescence.</div>
+        </div>
+
+        <div class="takeaway-card">
+          <div class="takeaway-number">06</div>
+          <div class="takeaway-heading">Voice feedback multiplies output</div>
+          <div class="takeaway-body">WhatsApp voice notes as feedback: richer, faster, more natural than typing. "Record a voice message as if talking to a human intern." Speaking mode activates different thinking. The AI learns from conversational feedback in ways typed notes don't capture.</div>
+        </div>
+
+        <div class="takeaway-card">
+          <div class="takeaway-number">07</div>
+          <div class="takeaway-heading">The interns will lead</div>
+          <div class="takeaway-body">"The interns get it instantly. The more experienced people, in proportion to their experience, struggle." Clean slates are advantages. The next generation of journalists won't remember the blank-page era — and they'll be better for it.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>
+      <a href="https://www.s-anand.net/" target="_blank">Anand S.</a> ·
+      LLM Psychologist at <a href="https://straive.com/" target="_blank">Straive</a> ·
+      Collaborating with <a href="https://timesofindia.indiatimes.com/" target="_blank">Times of India</a> ·
+      February–March 2026 ·
+      <a href="https://x.com/search?q=%23hackoftheday&src=typed_query&f=live" target="_blank">#hackoftheday</a>
+    </p>
+    <p style="margin-top: 0.75rem;">
+      Part of <a href="https://sanand0.github.io/talks/" target="_blank">Anand's Talks</a> ·
+      Published at <a href="https://sanand0.github.io/talks/2026-03-26-hack-of-the-day-toi/" target="_blank">sanand0.github.io/talks</a>
+    </p>
+  </footer>
+
+  <!-- Citation modals -->
+  <div class="modal-overlay" id="modal-straive">
+    <div class="modal-box">
+      <button class="modal-close" data-close="modal-straive">×</button>
+      <div class="modal-kicker">Citation 1</div>
+      <div class="modal-title">Straive's Scale in Academic Publishing</div>
+      <div class="modal-body">
+        <p><strong>Claim:</strong> "20% of the world's research is published by Straive."</p>
+        <p>Straive (formerly SPi Global, part of the EQT portfolio) manages the production, editorial, and typesetting workflows for a major share of the world's academic journals and textbooks. Their clients include Elsevier, Springer Nature, Wiley, and dozens of other major publishers. The 20% figure refers to their share of the global academic content production pipeline — not ownership.</p>
+        <p>Straive's three divisions: Science &amp; Research (academic publishing), Data Analytics (including back-end for Dun &amp; Bradstreet, LexisNexis, Elsevier Reaxys), and EdTech (curriculum platforms used by roughly 15% of US state systems). Total headcount: approximately 18,000, with the largest concentrations in Chennai and Pondicherry.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-retractions">
+    <div class="modal-box">
+      <button class="modal-close" data-close="modal-retractions">×</button>
+      <div class="modal-kicker">Citation 2</div>
+      <div class="modal-title">Research Retractions and Hindawi/Elsevier</div>
+      <div class="modal-body">
+        <p><strong>Claim:</strong> "87% of all retractions from one publisher" and the story on industrialized misconduct.</p>
+        <p>The <a href="https://retractionwatch.com/" target="_blank">Retraction Watch</a> database tracks all known paper retractions globally. In certain periods, the majority of retractions have come from a handful of publishers — particularly Hindawi (an MDPI-style open-access publisher, later acquired by Wiley) which was hit severely by "paper mill" operations: organized groups that produce fake research papers and insert compromised reviewers into the peer-review process.</p>
+        <p>Industrialized misconduct refers specifically to commercial services that offer to get researchers published — particularly in China, India, and some Middle Eastern countries — by coordinating networks of fake peer reviewers, fabricated datasets, and pay-per-publication mills. The phenomenon is extensively documented by Retraction Watch and academic journals including <em>Science</em> and <em>Nature</em>.</p>
+        <p>The spike in 2010–2011 visible in retraction data corresponds to major wave retractions, particularly from IEEE and some Elsevier journals, where peer review failures were identified post-publication.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-countries">
+    <div class="modal-box">
+      <button class="modal-close" data-close="modal-countries">×</button>
+      <div class="modal-kicker">Citation 3</div>
+      <div class="modal-title">China and India in Retraction Statistics</div>
+      <div class="modal-body">
+        <p><strong>Claim:</strong> "China is right up there. India is right up there" — referring to country-level retraction patterns.</p>
+        <p>Multiple analyses of the <a href="https://retractionwatch.com/" target="_blank">Retraction Watch database</a> confirm that China and India are among the top countries by volume of retracted papers, though this is partly correlated with the large absolute numbers of papers they produce. The <em>rate</em> of retraction per published paper is a more meaningful metric and varies by subfield and publication type.</p>
+        <p>A 2023 analysis in <em>Science</em> documented surge in retractions particularly in journals that had been compromised by paper mills, with China-affiliated institutions and Iranian institutions being disproportionately represented in industrialized misconduct cases. India's retraction rate has grown as domestic publication volumes have grown, with pressure on faculty to publish in international journals creating incentives that paper mills exploit.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-ensemble">
+    <div class="modal-box">
+      <button class="modal-close" data-close="modal-ensemble">×</button>
+      <div class="modal-kicker">Citation 4</div>
+      <div class="modal-title">The Ensemble Verification Approach</div>
+      <div class="modal-body">
+        <p><strong>The technique:</strong> Run the same classification task through multiple independent LLMs. Accept only outputs where all models agree. Route disagreements to human review.</p>
+        <p><strong>Error rate reduction in Anand's experiment:</strong></p>
+        <ul style="margin-left: 1.25rem; margin-bottom: 0.75rem;">
+          <li>Single model: ~14% error rate</li>
+          <li>Two models agree: 3.7% error rate</li>
+          <li>Triple-check: 2.2%</li>
+          <li>Quintuple-check: 0.7% (99.3% accuracy)</li>
+        </ul>
+        <p><strong>Why it works:</strong> Language model errors tend to be independent rather than correlated — different models make different mistakes on different inputs. When five models agree, the probability that all five are wrong in the same way on the same input is extremely small.</p>
+        <p><strong>Cost structure:</strong> Only ~28% of inputs required human review (the cases where models disagreed). 72% were handled automatically at near-perfect accuracy. Net result: significant cost savings with accuracy that exceeds typical human consistency rates.</p>
+        <p>This technique is related to ensemble learning in classical ML and to the "mixture of experts" approach in model design, but applied at the inference level rather than training.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-ncert">
+    <div class="modal-box">
+      <button class="modal-close" data-close="modal-ncert">×</button>
+      <div class="modal-kicker">Citation 5</div>
+      <div class="modal-title">AI Fact-Checking of NCERT Textbooks</div>
+      <div class="modal-body">
+        <p><strong>The experiment:</strong> An intern at Anand's team used an LLM to go through NCERT (National Council of Educational Research and Training) textbooks page by page, identifying potentially incorrect or misleading statements.</p>
+        <p><strong>Example finding:</strong> The textbook stated that archaeological sites typically contain only "broken and useless objects" discarded by ancient people. The AI flagged this as incorrect and cited archaeological literature showing that intact ritual objects are commonly found — discarded as offerings, left behind during migrations, or lost in ways unrelated to breakage. The AI found papers supporting this correction.</p>
+        <p><strong>Scale:</strong> In approximately 50 pages (stopped due to API credit limits), the system identified 45 potential issues. Some were definite errors with supporting citations; others were flagged as uncertain ("Greek sources say 600,000 soldiers — almost certainly inflated, but I can't confirm").</p>
+        <p>NCERT textbooks are freely available digitally, cover all subjects for classes 1–12, and are the backbone of India's CBSE curriculum — used by millions of students. The implication: a systematic AI audit could surface real errors at a scale no human audit team could manage.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-consumer">
+    <div class="modal-box">
+      <button class="modal-close" data-close="modal-consumer">×</button>
+      <div class="modal-kicker">Citation 6</div>
+      <div class="modal-title">The Consumer Court Database</div>
+      <div class="modal-body">
+        <p><strong>Source:</strong> TOI's internally built database of Indian consumer court judgments, constructed with help from Google Cloud. The database scrapes the <span data-tooltip="National Consumer Disputes Redressal Commission">NCDRC</span> and state consumer commissions, updating daily.</p>
+        <p><strong>Coverage:</strong> All available judgments from the NCDRC (national level) and 30+ State Consumer Disputes Redressal Commissions (SCDRC) across India. Judgments are stored in TOI's cloud infrastructure, accessible via a search interface integrated with Beans AI for summarization.</p>
+        <p><strong>The story opportunity:</strong> Consumer courts adjudicate thousands of similar cases annually (defective products, service failures, insurance disputes, hospital billing fraud). The compensation awarded for identical or similar cases varies dramatically by state — creating disparity stories that would be impossible to find manually but straightforward to surface with semantic search and AI analysis.</p>
+        <p><strong>Example:</strong> Compensation for a damaged iPhone in Gujarat versus Manipur. Nobody knows the difference. AI across 100,000 judgments could tell you in seconds.</p>
+        <p><strong>End goal:</strong> A dedicated consumer-journalism microsite and regular newspaper page drawing from this database, with AI surfacing story angles that human journalists then investigate and report.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-toi-stats">
+    <div class="modal-box">
+      <button class="modal-close" data-close="modal-toi-stats">×</button>
+      <div class="modal-kicker">Citation 7</div>
+      <div class="modal-title">Times of India — Scale and Structure</div>
+      <div class="modal-body">
+        <p><strong>Operational scale (as described by Rohit Saran):</strong></p>
+        <ul style="margin-left: 1.25rem; margin-bottom: 0.75rem;">
+          <li><strong>28 newsrooms</strong> across India</li>
+          <li><strong>55 editions</strong> published daily</li>
+          <li><strong>~400 full-time reporters</strong></li>
+          <li><strong>~300 exclusive retainers</strong> (paid monthly, must offer stories to TOI first)</li>
+          <li><strong>400 desk editors</strong></li>
+          <li><strong>~200 senior editors and designers</strong></li>
+        </ul>
+        <p>The <a href="https://timesofindia.indiatimes.com/" target="_blank">Times of India</a> is India's largest English-language newspaper by circulation and has achieved the unusual distinction of overtaking The Hindu in Chennai — traditionally Hindu's home market — in distribution. This is attributed partly to TOI's "thali" philosophy: serve readers a full spread, let them choose. Don't editorially narrow their options.</p>
+        <p>The paper is part of the Bennett Coleman &amp; Co. Ltd. group, chaired by Samir Jain, who is credited with transforming TOI into a commercial powerhouse and who, somewhat unexpectedly, turns out to be a significant enthusiast of data journalism and infographics.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // ===== PROGRESS BAR =====
+    const progressBar = document.getElementById('progressBar');
+    function updateProgress() {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+      progressBar.style.width = progress + '%';
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
+
+    // ===== INTERSECTION OBSERVER FOR FADE-IN =====
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // ===== CITATION MODALS =====
+    function openModal(id) {
+      const overlay = document.getElementById(id);
+      if (overlay) overlay.classList.add('open');
+    }
+    function closeModal(id) {
+      const overlay = document.getElementById(id);
+      if (overlay) overlay.classList.remove('open');
+    }
+
+    document.querySelectorAll('.cite-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal(btn.dataset.modal);
+      });
+    });
+
+    document.querySelectorAll('.modal-close').forEach(btn => {
+      btn.addEventListener('click', () => closeModal(btn.dataset.close));
+    });
+
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal(overlay.id);
+      });
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(o => o.classList.remove('open'));
+      }
+    });
+  </script>
+
+</body>
+</html>

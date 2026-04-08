@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IIMB 2001 Global | April 2025 spike analysis</title>
+<style>
+  :root {
+    --ink:#0B1F3A;
+    --muted:#56657D;
+    --line:#D9E1EE;
+    --blue:#0F5BFF;
+    --blue2:#8BB3FF;
+    --gold:#E67E22;
+    --bg:#F5F7FB;
+    --card:#FFFFFF;
+    --soft:#EEF3FB;
+    --accent:#E9F1FF;
+  }
+  * { box-sizing:border-box; }
+  html,body { margin:0; padding:0; background:linear-gradient(180deg,#F7F9FD 0%, #EFF3FA 100%); color:var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+  body { line-height:1.35; }
+  .shell { display:grid; grid-template-columns: 260px minmax(900px, 1fr); gap:28px; max-width: 1800px; margin:0 auto; padding:24px 24px 60px; }
+  .rail {
+    position:sticky; top:18px; align-self:start; background:rgba(255,255,255,.76); backdrop-filter: blur(12px);
+    border:1px solid rgba(15,91,255,.08); border-radius:22px; padding:22px 18px; box-shadow:0 18px 50px rgba(9,30,66,.08);
+  }
+  .rail h1 { margin:0 0 8px; font-size:22px; line-height:1.15; }
+  .rail .sub { color:var(--muted); font-size:13px; margin-bottom:18px; }
+  .rail .thesis {
+    background:linear-gradient(180deg,#0B1F3A 0%, #123158 100%);
+    color:white; border-radius:16px; padding:14px 14px 12px; margin-bottom:18px;
+    box-shadow:0 16px 28px rgba(11,31,58,.18);
+  }
+  .rail .thesis .k { font-size:11px; text-transform:uppercase; letter-spacing:.12em; opacity:.75; }
+  .rail .thesis .v { font-size:14px; font-weight:700; margin-top:4px; line-height:1.35; }
+  .rail nav a {
+    display:flex; gap:12px; align-items:flex-start; text-decoration:none; color:var(--ink);
+    border-radius:14px; padding:10px 10px; margin:4px 0; transition:.2s ease;
+  }
+  .rail nav a:hover, .rail nav a.active { background:var(--accent); }
+  .rail .num {
+    width:30px; height:30px; border-radius:999px; display:grid; place-items:center; flex:none;
+    background:#EAF0FA; color:var(--blue); font-weight:800; font-size:12px;
+  }
+  .rail .label { font-size:13px; color:var(--muted); line-height:1.3; }
+  .deck { display:flex; flex-direction:column; gap:28px; }
+  .slide {
+    background:var(--card); border:1px solid rgba(12,31,58,.06); border-radius:28px; aspect-ratio: 16 / 9;
+    min-height: 860px; padding:34px 42px 30px; box-shadow:0 30px 70px rgba(9,30,66,.09); position:relative; overflow:hidden;
+  }
+  .slide::before {
+    content:""; position:absolute; inset:0 0 auto auto; width:360px; height:360px;
+    background: radial-gradient(circle at 30% 30%, rgba(15,91,255,.10), rgba(15,91,255,0) 68%);
+    pointer-events:none;
+  }
+  .kicker {
+    font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--blue); font-weight:800; margin-bottom:14px;
+  }
+  .title {
+    font-size:40px; line-height:1.08; letter-spacing:-.03em; margin:0 0 10px; max-width:1320px;
+  }
+  .subtitle { color:var(--muted); font-size:18px; max-width:1200px; margin-bottom:24px; }
+  .footer-note {
+    position:absolute; left:42px; right:42px; bottom:18px; color:#70809C; font-size:11.5px;
+    display:flex; justify-content:space-between; gap:12px; border-top:1px solid var(--line); padding-top:10px;
+  }
+  .hero {
+    display:grid; grid-template-columns: 1.15fr .85fr; gap:28px; align-items:end; height:calc(100% - 160px);
+  }
+  .hero .statement {
+    font-size:58px; line-height:1.02; letter-spacing:-.05em; font-weight:850; max-width:920px;
+  }
+  .hero .statement span { color:var(--blue); }
+  .hero .panel {
+    background:linear-gradient(180deg,#0B1F3A 0%, #123158 100%); color:white; border-radius:24px; padding:26px 28px;
+    box-shadow:0 24px 50px rgba(11,31,58,.18);
+  }
+  .hero .panel .big { font-size:68px; font-weight:900; line-height:1; }
+  .hero .panel .small { font-size:15px; opacity:.8; }
+  .hero-grid { display:grid; grid-template-columns: repeat(3,1fr); gap:14px; margin-top:18px; }
+  .hero-grid .mini {
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); border-radius:16px; padding:14px;
+  }
+  .hero-grid .mini .n { font-size:28px; font-weight:850; line-height:1; margin-bottom:5px; }
+  .hero-grid .mini .l { font-size:12px; opacity:.82; }
+  .grid-3 { display:grid; grid-template-columns: repeat(3, 1fr); gap:18px; }
+  .card {
+    background:linear-gradient(180deg,#FFFFFF 0%, #FBFDFF 100%);
+    border:1px solid var(--line); border-radius:22px; padding:20px 20px 18px; position:relative;
+  }
+  .card .icon {
+    width:42px; height:42px; border-radius:14px; display:grid; place-items:center; background:var(--accent);
+    color:var(--blue); font-weight:900; margin-bottom:14px; font-size:19px;
+  }
+  .card h3 { font-size:23px; line-height:1.15; margin:0 0 10px; letter-spacing:-.02em; }
+  .card p { color:var(--muted); font-size:15px; margin:0 0 10px; }
+  .bullet { display:flex; gap:10px; margin:8px 0; color:var(--ink); font-size:15px; }
+  .bullet::before {
+    content:""; width:7px; height:7px; border-radius:999px; background:var(--blue); margin-top:7px; flex:none;
+  }
+  .metric-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:16px; margin:20px 0 22px; }
+  .metric {
+    background:var(--soft); border:1px solid #DCE6F7; border-radius:18px; padding:18px 18px 16px;
+  }
+  .metric .n { font-size:38px; font-weight:900; letter-spacing:-.03em; line-height:1; }
+  .metric .l { color:var(--muted); font-size:14px; margin-top:7px; }
+  .two-col { display:grid; grid-template-columns: 1.08fr .92fr; gap:22px; }
+  .chart-card {
+    background:white; border:1px solid var(--line); border-radius:20px; padding:16px 18px 14px;
+  }
+  .chart-title { font-size:17px; font-weight:800; margin:0 0 10px; }
+  .chart-sub { color:var(--muted); font-size:13px; margin-bottom:8px; }
+  .chart-svg { width:100%; height:auto; display:block; }
+  .grid { stroke:#E8EDF6; stroke-width:1; }
+  .axis { fill:#70809C; font-size:12px; }
+  .value { fill:#0B1F3A; font-size:13px; font-weight:800; }
+  .split {
+    display:grid; grid-template-columns: .92fr 1.08fr; gap:22px;
+  }
+  .quote-box {
+    background:linear-gradient(180deg,#F8FBFF 0%, #F1F6FF 100%);
+    border:1px solid #D8E6FF; border-radius:22px; padding:20px 20px 16px;
+  }
+  .quote-box .q { font-size:22px; line-height:1.18; font-weight:820; letter-spacing:-.02em; margin-bottom:12px; }
+  .quote-box .cap { color:var(--muted); font-size:14px; }
+  .timeline {
+    position:relative; display:grid; grid-template-columns: repeat(5,1fr); gap:14px; margin-top:10px;
+  }
+  .timeline::before {
+    content:""; position:absolute; left:0; right:0; top:26px; height:2px; background:linear-gradient(90deg,#C8D7F3,#C8D7F3);
+    z-index:0;
+  }
+  .step {
+    position:relative; z-index:1; background:white; border:1px solid var(--line); border-radius:20px; padding:16px 14px 14px;
+    box-shadow:0 10px 24px rgba(11,31,58,.04);
+  }
+  .step .dot {
+    width:16px; height:16px; border-radius:999px; background:var(--blue); border:4px solid white; box-shadow:0 0 0 2px #C8D7F3;
+    margin-bottom:16px;
+  }
+  .step .day { font-size:12px; text-transform:uppercase; letter-spacing:.12em; color:var(--blue); font-weight:800; margin-bottom:6px; }
+  .step .head { font-size:18px; font-weight:850; line-height:1.1; margin-bottom:8px; }
+  .step .desc { color:var(--muted); font-size:14px; line-height:1.35; }
+  .compare {
+    display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-top:18px;
+  }
+  .lane {
+    border-radius:22px; padding:20px; border:1px solid var(--line);
+  }
+  .lane.good { background:linear-gradient(180deg,#FBFDFF 0%, #F7FBFF 100%); }
+  .lane.bad { background:linear-gradient(180deg,#FFF9F4 0%, #FFF4EA 100%); border-color:#F5D8BF; }
+  .lane h3 { margin:0 0 12px; font-size:23px; letter-spacing:-.02em; }
+  .lane .tag {
+    display:inline-block; font-size:11px; text-transform:uppercase; letter-spacing:.12em; font-weight:800;
+    padding:6px 10px; border-radius:999px; margin-bottom:12px;
+  }
+  .good .tag { background:#EAF3FF; color:var(--blue); }
+  .bad .tag { background:#FFE8D2; color:#B65B00; }
+  .rec-grid {
+    display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-top:18px;
+  }
+  .rec {
+    border:1px solid var(--line); border-radius:22px; padding:18px 18px 16px; background:white;
+  }
+  .rec .head { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+  .rec .bubble {
+    width:34px; height:34px; border-radius:12px; display:grid; place-items:center; background:var(--accent); color:var(--blue); font-weight:900;
+  }
+  .rec h3 { margin:0; font-size:21px; letter-spacing:-.02em; }
+  .rec p { margin:0; font-size:14.5px; color:var(--muted); }
+  .owner {
+    margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;
+  }
+  .pill {
+    font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:#355279; background:#F1F6FD; border:1px solid #D9E6F5;
+    padding:6px 10px; border-radius:999px;
+  }
+  .micro {
+    color:var(--muted); font-size:13px;
+  }
+  .matrix {
+    display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-top:18px;
+  }
+  .insight {
+    border:1px solid var(--line); border-radius:20px; padding:18px; background:white;
+  }
+  .insight h4 { margin:0 0 10px; font-size:18px; }
+  .insight p { margin:0; color:var(--muted); font-size:14px; }
+  @media (max-width: 1280px) {
+    .shell { grid-template-columns: 1fr; }
+    .rail { position:relative; top:auto; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="rail">
+    <h1>April 2025 spike analysis</h1>
+    <div class="sub">IIMB 2001 Global WhatsApp • Boardroom-style summary</div>
+    <div class="thesis">
+      <div class="k">Thesis</div>
+      <div class="v">The biggest traffic spike was a short governance crisis, not a durable rise in engagement.</div>
+    </div>
+    <nav>
+      <a href="#s1" class="active"><div class="num">01</div><div class="label">The spike was abnormal and meaningfully different from normal group activity.</div></a>
+      <a href="#s2"><div class="num">02</div><div class="label">A six-day burst created almost the whole month.</div></a>
+      <a href="#s3"><div class="num">03</div><div class="label">One member’s posting and deletions disproportionately drove the surge.</div></a>
+      <a href="#s4"><div class="num">04</div><div class="label">The group escalated from soft requests to hard moderation.</div></a>
+      <a href="#s5"><div class="num">05</div><div class="label">The incident clarified what the group is for and what it is not for.</div></a>
+      <a href="#s6"><div class="num">06</div><div class="label">Simple guardrails would prevent a repeat without over-governing the group.</div></a>
+    </nav>
+  </aside>
+
+  <main class="deck">
+
+    <section class="slide" id="s1">
+      <div class="kicker">Executive summary</div>
+      <h2 class="title">The April 2025 message spike reflects a brief governance breakdown—not a healthy rise in engagement.</h2>
+      <div class="subtitle">The titles of this deck tell the whole story: an outlier month was created by a concentrated six-day disruption, amplified by deletions, and resolved through moderation that reasserted the group’s unwritten norms.</div>
+
+      <div class="hero">
+        <div>
+          <div class="statement">A <span>six-day disruption</span> created the group’s largest traffic month, forced moderator intervention, and ended with removal.</div>
+          <div class="metric-grid">
+            <div class="metric"><div class="n">357</div><div class="l">messages in April 2025, the highest month in the export</div></div>
+            <div class="metric"><div class="n">326</div><div class="l">messages from Apr 9–14, equal to 91% of the month</div></div>
+            <div class="metric"><div class="n">127</div><div class="l">messages from one member in April, equal to 36% of the month</div></div>
+            <div class="metric"><div class="n">73</div><div class="l">deleted messages in April, all during the same six-day episode</div></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="small">Why this matters</div>
+          <div class="big">6.8×</div>
+          <div class="small">April volume versus the prior 6-month average (52.8 messages/month)</div>
+
+          <div class="hero-grid">
+            <div class="mini"><div class="n">99</div><div class="l">messages on Apr 14 alone, the busiest day in the full export</div></div>
+            <div class="mini"><div class="n">5</div><div class="l">moderation milestones: removal, re-add, exit, rejoin, final removal</div></div>
+            <div class="mini"><div class="n">2</div><div class="l">other members left during the episode, showing collateral strain</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        <div>Source: WhatsApp export provided by the user. Export begins in Feb 2018 but visible conversation is essentially active from May 2022 onward.</div>
+        <div>1</div>
+      </div>
+    </section>
+
+    <section class="slide" id="s2">
+      <div class="kicker">Proof point 1</div>
+      <h2 class="title">April 2025 broke the long-run pattern: it was an abnormal one-off surge, not the continuation of a gradual growth trend.</h2>
+      <div class="two-col">
+        <div class="chart-card">
+          <div class="chart-title">Monthly volume from inception</div>
+          <div class="chart-sub">Traffic is modest through 2022–2024, then April 2025 sharply departs from the pattern before activity falls back.</div>
+          
+    <svg viewBox="0 0 980 360" class="chart-svg" aria-label="Monthly message volume chart">
+      <defs>
+        <linearGradient id="areaGrad" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#0F5BFF" stop-opacity="0.22"/>
+          <stop offset="100%" stop-color="#0F5BFF" stop-opacity="0.03"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="980" height="360" fill="white"/>
+      <line x1="54" y1="318.0" x2="960" y2="318.0" class="grid"/><text x="44" y="322.0" class="axis" text-anchor="end">0</text>
+<line x1="54" y1="241.2" x2="960" y2="241.2" class="grid"/><text x="44" y="245.2" class="axis" text-anchor="end">100</text>
+<line x1="54" y1="164.5" x2="960" y2="164.5" class="grid"/><text x="44" y="168.5" class="axis" text-anchor="end">200</text>
+<line x1="54" y1="87.7" x2="960" y2="87.7" class="grid"/><text x="44" y="91.7" class="axis" text-anchor="end">300</text>
+      <polygon points="54,318 54.0,316.5 72.9,291.9 91.8,304.9 110.6,314.9 129.5,273.5 148.4,312.6 167.2,285.0 186.1,295.0 205.0,272.7 223.9,312.6 242.8,295.7 261.6,295.7 280.5,293.4 299.4,314.9 318.2,299.6 337.1,299.6 356.0,299.6 374.9,304.2 393.8,218.2 412.6,298.8 431.5,257.4 450.4,252.7 469.2,301.9 488.1,267.3 507.0,288.8 525.9,305.7 544.8,303.4 563.6,312.6 582.5,309.6 601.4,317.2 620.2,283.5 639.1,285.0 658.0,265.8 676.9,260.4 695.8,317.2 714.6,252.7 733.5,43.9 752.4,267.3 771.2,288.1 790.1,190.6 809.0,288.8 827.9,260.4 846.8,291.1 865.6,254.3 884.5,230.5 903.4,278.1 922.2,276.5 941.1,209.0 960.0,316.5 960,318" fill="url(#areaGrad)"/>
+      <polyline points="54.0,316.5 72.9,291.9 91.8,304.9 110.6,314.9 129.5,273.5 148.4,312.6 167.2,285.0 186.1,295.0 205.0,272.7 223.9,312.6 242.8,295.7 261.6,295.7 280.5,293.4 299.4,314.9 318.2,299.6 337.1,299.6 356.0,299.6 374.9,304.2 393.8,218.2 412.6,298.8 431.5,257.4 450.4,252.7 469.2,301.9 488.1,267.3 507.0,288.8 525.9,305.7 544.8,303.4 563.6,312.6 582.5,309.6 601.4,317.2 620.2,283.5 639.1,285.0 658.0,265.8 676.9,260.4 695.8,317.2 714.6,252.7 733.5,43.9 752.4,267.3 771.2,288.1 790.1,190.6 809.0,288.8 827.9,260.4 846.8,291.1 865.6,254.3 884.5,230.5 903.4,278.1 922.2,276.5 941.1,209.0 960.0,316.5" fill="none" stroke="#0F5BFF" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <line x1="733.5" y1="22" x2="733.5" y2="318" stroke="#E67E22" stroke-dasharray="5 5" stroke-width="2"/>
+      <circle cx="733.5" cy="43.9" r="6.5" fill="#E67E22"/>
+      <rect x="745.5" y="28.0" rx="12" ry="12" width="190" height="34" fill="#0B1F3A"/>
+      <text x="757.5" y="50.0" fill="white" font-size="15" font-weight="700">Apr 2025 • 357 messages</text>
+      <text x="54.0" y="348" class="axis" text-anchor="middle">Feb 2018</text><text x="72.9" y="348" class="axis" text-anchor="middle">May 2022</text><text x="223.9" y="348" class="axis" text-anchor="middle">Jan 2023</text><text x="450.4" y="348" class="axis" text-anchor="middle">Jan 2024</text><text x="676.9" y="348" class="axis" text-anchor="middle">Jan 2025</text><text x="903.4" y="348" class="axis" text-anchor="middle">Jan 2026</text>
+    </svg>
+    
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:18px;">
+            <div class="icon">↗</div>
+            <h3>The spike was the highest month in the full export.</h3>
+            <div class="bullet">April 2025 recorded <b>357 messages</b>, versus a prior 6-month average of <b>52.8</b>.</div>
+            <div class="bullet">The next-largest months were materially lower: <b>Jul 2025 = 166</b> and <b>Mar 2026 = 142</b>.</div>
+            <div class="bullet">That shape matters: a healthy engagement trend would be broad-based and sustained; this was a single-month shock.</div>
+          </div>
+
+          <div class="card">
+            <div class="icon">⌁</div>
+            <h3>The series suggests a social group with episodic bursts, not a forum built for constant debate.</h3>
+            <div class="bullet">Normal activity clusters around reunion planning, congratulations, alumni events, and practical coordination.</div>
+            <div class="bullet">The spike therefore demands explanation from within the month, not from a long-run structural shift in engagement.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        <div>Interpretation: the long-run line is lumpy, but April 2025 is still a clear outlier against both the local baseline and the full-history distribution.</div>
+        <div>2</div>
+      </div>
+    </section>
+
+    <section class="slide" id="s3">
+      <div class="kicker">Proof point 2</div>
+      <h2 class="title">Traffic was concentrated into six days: Apr 9–14 generated 91% of the month, and Apr 14 alone generated the busiest day on record.</h2>
+
+      <div class="split">
+        <div class="chart-card">
+          <div class="chart-title">Daily messages during the burst</div>
+          <div class="chart-sub">The shape is not a month-long climb. It is a compressed incident with an end-game climax on Apr 14.</div>
+          
+    <svg viewBox="0 0 920 330" class="chart-svg" aria-label="Daily burst chart">
+      <line x1="40" y1="276.0" x2="900" y2="276.0" class="grid"/><text x="30" y="280.0" class="axis" text-anchor="end">0</text><line x1="40" y1="221.5" x2="900" y2="221.5" class="grid"/><text x="30" y="225.5" class="axis" text-anchor="end">25</text><line x1="40" y1="167.1" x2="900" y2="167.1" class="grid"/><text x="30" y="171.1" class="axis" text-anchor="end">50</text><line x1="40" y1="112.6" x2="900" y2="112.6" class="grid"/><text x="30" y="116.6" class="axis" text-anchor="end">75</text><line x1="40" y1="58.2" x2="900" y2="58.2" class="grid"/><text x="30" y="62.2" class="axis" text-anchor="end">100</text>
+      <rect x="40.0" y="208.5" width="92.5" height="67.5" rx="10" fill="#0F5BFF"/><text x="86.2" y="200.5" class="value" text-anchor="middle">31</text><text x="86.2" y="314.0" class="axis" text-anchor="middle">Apr 9</text><rect x="193.5" y="149.7" width="92.5" height="126.3" rx="10" fill="#0F5BFF"/><text x="239.7" y="141.7" class="value" text-anchor="middle">58</text><text x="239.7" y="314.0" class="axis" text-anchor="middle">Apr 10</text><rect x="347.0" y="114.8" width="92.5" height="161.2" rx="10" fill="#0F5BFF"/><text x="393.2" y="106.8" class="value" text-anchor="middle">74</text><text x="393.2" y="314.0" class="axis" text-anchor="middle">Apr 11</text><rect x="500.5" y="199.8" width="92.5" height="76.2" rx="10" fill="#0F5BFF"/><text x="546.8" y="191.8" class="value" text-anchor="middle">35</text><text x="546.8" y="314.0" class="axis" text-anchor="middle">Apr 12</text><rect x="654.0" y="212.8" width="92.5" height="63.2" rx="10" fill="#0F5BFF"/><text x="700.3" y="204.8" class="value" text-anchor="middle">29</text><text x="700.3" y="314.0" class="axis" text-anchor="middle">Apr 13</text><rect x="807.5" y="60.3" width="92.5" height="215.7" rx="10" fill="#E67E22"/><text x="853.8" y="52.3" class="value" text-anchor="middle">99</text><text x="853.8" y="314.0" class="axis" text-anchor="middle">Apr 14</text>
+    </svg>
+    
+        </div>
+
+        <div>
+          <div class="quote-box" style="margin-bottom:18px;">
+            <div class="q">The volume spike came from concentration, not diffusion.</div>
+            <div class="cap">Six days created 326 of April’s 357 messages. One day alone created 99 messages.</div>
+          </div>
+
+          <div class="grid-3">
+            <div class="card">
+              <div class="icon">91%</div>
+              <h3>Month concentration</h3>
+              <p>The burst window contributed 326 messages, or 91% of April traffic.</p>
+            </div>
+            <div class="card">
+              <div class="icon">99</div>
+              <h3>Peak day</h3>
+              <p>Apr 14, 2025 was the busiest day in the full export.</p>
+            </div>
+            <div class="card">
+              <div class="icon">6d</div>
+              <h3>Duration</h3>
+              <p>The episode was intense but finite, which is typical of moderation crises rather than durable engagement shifts.</p>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:18px;">
+            <div class="icon">⊕</div>
+            <h3>Second-order implication</h3>
+            <p>A short, high-volume burst can distort retrospective narratives. Looking only at monthly totals would overstate “engagement” and understate “disruption.” The daily pattern shows the opposite: most participants were reacting to the incident, not happily increasing participation.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        <div>Daily burst totals: Apr 9 = 31, Apr 10 = 58, Apr 11 = 74, Apr 12 = 35, Apr 13 = 29, Apr 14 = 99.</div>
+        <div>3</div>
+      </div>
+    </section>
+
+    <section class="slide" id="s4">
+      <div class="kicker">Proof point 3</div>
+      <h2 class="title">One member’s posting and deletions disproportionately drove the surge, pulling the rest of the group into a reactive argument about norms.</h2>
+
+      <div class="two-col">
+        <div class="chart-card">
+          <div class="chart-title">Contributor mix during Apr 9–14</div>
+          <div class="chart-sub">The spike is visibly concentrated. One member contributed 127 of 326 burst messages (39%).</div>
+          <svg viewBox="0 0 700 320" class="chart-svg" aria-label="Contributor chart"><text x="146" y="42.4" class="axis" text-anchor="end">Chidambaram P</text><rect x="160" y="24.0" width="520.0" height="26.9" rx="12" fill="#EEF2FA"/><rect x="160" y="24.0" width="202.6" height="26.9" rx="12" fill="#0F5BFF"/><text x="372.6" y="42.4" class="value">127</text><text x="146" y="90.4" class="axis" text-anchor="end">Gaurav Vohra</text><rect x="160" y="72.0" width="520.0" height="26.9" rx="12" fill="#EEF2FA"/><rect x="160" y="72.0" width="46.3" height="26.9" rx="12" fill="#8BB3FF"/><text x="216.3" y="90.4" class="value">29</text><text x="146" y="138.4" class="axis" text-anchor="end">Aditya Afzulpurkar</text><rect x="160" y="120.0" width="520.0" height="26.9" rx="12" fill="#EEF2FA"/><rect x="160" y="120.0" width="44.7" height="26.9" rx="12" fill="#8BB3FF"/><text x="214.7" y="138.4" class="value">28</text><text x="146" y="186.4" class="axis" text-anchor="end">Pawan Bhargava</text><rect x="160" y="168.0" width="520.0" height="26.9" rx="12" fill="#EEF2FA"/><rect x="160" y="168.0" width="27.1" height="26.9" rx="12" fill="#8BB3FF"/><text x="197.1" y="186.4" class="value">17</text><text x="146" y="234.4" class="axis" text-anchor="end">Somnath Manna</text><rect x="160" y="216.0" width="520.0" height="26.9" rx="12" fill="#EEF2FA"/><rect x="160" y="216.0" width="20.7" height="26.9" rx="12" fill="#8BB3FF"/><text x="190.7" y="234.4" class="value">13</text><text x="146" y="282.4" class="axis" text-anchor="end">Others</text><rect x="160" y="264.0" width="520.0" height="26.9" rx="12" fill="#EEF2FA"/><rect x="160" y="264.0" width="178.7" height="26.9" rx="12" fill="#D5DEEE"/><text x="348.7" y="282.4" class="value">112</text></svg>
+        </div>
+
+        <div>
+          <div class="metric-grid" style="grid-template-columns: repeat(2,1fr); margin-top:0;">
+            <div class="metric"><div class="n">127</div><div class="l">messages from Chidambaram P in April, equal to 36% of the month</div></div>
+            <div class="metric"><div class="n">73</div><div class="l">deleted messages in April, equal to 20% of the month</div></div>
+          </div>
+
+          <div class="card" style="margin-bottom:18px;">
+            <div class="icon">!</div>
+            <h3>Deletion amplified, rather than reduced, the disruption.</h3>
+            <div class="bullet">73 deleted messages created a visible pattern of posting, deleting, and reposting.</div>
+            <div class="bullet">That pattern raised attention, invited commentary, and converted passive members into active responders.</div>
+            <div class="bullet">In group dynamics terms, the traffic became meta-traffic: people were no longer discussing topics; they were discussing the act of posting itself.</div>
+          </div>
+
+          <div class="card">
+            <div class="icon">⇄</div>
+            <h3>The rest of the traffic was largely reactive.</h3>
+            <p>Other visible contributors stepped in as admins, norm-enforcers, or mediators. That is why the surge should be read as a governance loop—disruptive posting → deletion → pushback → moderation—not as broad-based enthusiasm.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        <div>Privacy note: the slide rolls up unnamed numbers into “Others” and focuses only on clearly discussed named participants relevant to the spike narrative.</div>
+        <div>4</div>
+      </div>
+    </section>
+
+    <section class="slide" id="s5">
+      <div class="kicker">Proof point 4</div>
+      <h2 class="title">The group escalated from gentle requests to hard moderation, showing that informal norms were eventually enforced even without formal rules.</h2>
+
+      <div class="timeline">
+        <div class="step">
+          <div class="dot"></div>
+          <div class="day">Apr 9–10</div>
+          <div class="head">Disruptive posting begins</div>
+          <div class="desc">Long, frequent posts and repeated deletions increase the message rate and make the conversation about the behavior itself.</div>
+        </div>
+        <div class="step">
+          <div class="dot"></div>
+          <div class="day">Apr 11</div>
+          <div class="head">First hard stop</div>
+          <div class="desc">An admin removes Chidambaram P. He is later re-added, then exits, showing both uncertainty and resistance in the response.</div>
+        </div>
+        <div class="step">
+          <div class="dot"></div>
+          <div class="day">Apr 12</div>
+          <div class="head">Re-entry keeps the issue alive</div>
+          <div class="desc">Rejoining through a group link extends the episode instead of closing it, which increases admin burden and group fatigue.</div>
+        </div>
+        <div class="step">
+          <div class="dot"></div>
+          <div class="day">Apr 13</div>
+          <div class="head">Collateral strain becomes visible</div>
+          <div class="desc">Two other members leave, revealing that the cost of disruption is not just noise—it is relationship damage and potential disengagement.</div>
+        </div>
+        <div class="step">
+          <div class="dot"></div>
+          <div class="day">Apr 14</div>
+          <div class="head">Final removal restores control</div>
+          <div class="desc">A second admin removes Chidambaram P, and the group begins shifting from irritation to cleanup and concern.</div>
+        </div>
+      </div>
+
+      <div class="compare">
+        <div class="lane good">
+          <div class="tag">What the group tried first</div>
+          <h3>Soft containment</h3>
+          <div class="bullet">Requests to reduce message volume</div>
+          <div class="bullet">Suggestions to create a separate channel</div>
+          <div class="bullet">Attempts to re-add and de-escalate</div>
+        </div>
+        <div class="lane bad">
+          <div class="tag">What the episode forced</div>
+          <h3>Hard containment</h3>
+          <div class="bullet">Admin removal and final removal</div>
+          <div class="bullet">Members leaving in frustration</div>
+          <div class="bullet">Post-incident concern about the individual’s wellbeing</div>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        <div>System events captured in the export: removal, re-add, self-exit, rejoin by link, two collateral exits, final removal.</div>
+        <div>5</div>
+      </div>
+    </section>
+
+    <section class="slide" id="s6">
+      <div class="kicker">Implication</div>
+      <h2 class="title">The incident clarified the group’s job-to-be-done: light social bonding and coordination—not open-ended broadcasting, ideology, or high-frequency monologue.</h2>
+
+      <div class="compare">
+        <div class="lane good">
+          <div class="tag">What normally works</div>
+          <h3>The group’s natural equilibrium</h3>
+          <div class="bullet">Celebrating batchmates’ achievements</div>
+          <div class="bullet">Reunion planning and batch logistics</div>
+          <div class="bullet">Alumni updates, quick advice, and helpful coordination</div>
+          <div class="bullet">Low-friction, low-ego participation that keeps weak ties warm</div>
+        </div>
+        <div class="lane bad">
+          <div class="tag">What triggered rejection</div>
+          <h3>The mismatch exposed by the spike</h3>
+          <div class="bullet">Sustained personal broadcasting overwhelms a social channel</div>
+          <div class="bullet">Deletion/reposting erodes trust and increases attention</div>
+          <div class="bullet">Ideological or highly specialized discourse changes the group’s purpose without consent</div>
+          <div class="bullet">When that happens, even tolerant groups defend their identity</div>
+        </div>
+      </div>
+
+      <div class="matrix">
+        <div class="insight">
+          <h4>First-order lesson</h4>
+          <p>The spike was not “more engagement.” It was a group spending energy to repair itself.</p>
+        </div>
+        <div class="insight">
+          <h4>Second-order lesson</h4>
+          <p>Without simple norms, social groups outsource moderation to ad hoc public conflict—which is noisy, emotionally costly, and reputationally awkward.</p>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        <div>Interpretive summary: the incident did not create a new norm; it surfaced and enforced an old one that had remained implicit until challenged.</div>
+        <div>6</div>
+      </div>
+    </section>
+
+    <section class="slide" id="s7">
+      <div class="kicker">Recommendation</div>
+      <h2 class="title">Simple guardrails would prevent a repeat without over-governing the group.</h2>
+      <div class="subtitle">The goal is not bureaucracy. It is to preserve the group’s utility while providing a humane, early path for off-topic overflow and unusual behavior.</div>
+
+      <div class="rec-grid">
+        <div class="rec">
+          <div class="head"><div class="bubble">1</div><h3>Pin the group purpose</h3></div>
+          <p>Write one sentence at the top: this group exists for batch bonding, congratulations, reunion logistics, and lightweight coordination. Long-form debates and deep-topic streams go elsewhere.</p>
+          <div class="owner"><span class="pill">Owner: admins</span><span class="pill">Benefit: shared expectations</span></div>
+        </div>
+
+        <div class="rec">
+          <div class="head"><div class="bubble">2</div><h3>Create an overflow channel</h3></div>
+          <p>When a member genuinely wants to post at length, redirect the energy instead of shaming it. A side group or shared document preserves dignity and reduces main-group disruption.</p>
+          <div class="owner"><span class="pill">Owner: volunteers</span><span class="pill">Benefit: lowers friction</span></div>
+        </div>
+
+        <div class="rec">
+          <div class="head"><div class="bubble">3</div><h3>Intervene privately and early</h3></div>
+          <p>Do not wait for public backlash. If someone posts in a burst or begins deleting/reposting repeatedly, one admin should DM first, then escalate only if behavior persists.</p>
+          <div class="owner"><span class="pill">Owner: first available admin</span><span class="pill">Benefit: avoids public pile-on</span></div>
+        </div>
+
+        <div class="rec">
+          <div class="head"><div class="bubble">4</div><h3>Add a human safety check</h3></div>
+          <p>When behavior looks unusually intense, pair moderation with care. One trusted classmate should check in offline so the group responds as a community, not just as a control system.</p>
+          <div class="owner"><span class="pill">Owner: trusted peer</span><span class="pill">Benefit: humane response</span></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:18px;">
+        <div class="icon">✓</div>
+        <h3>The net effect of these guardrails is not more control—it is less drama.</h3>
+        <p>Clear norms reduce the chance that an isolated behavior problem escalates into a visible governance crisis, member exits, and reputational discomfort for everyone involved.</p>
+      </div>
+
+      <div class="footer-note">
+        <div>7</div>
+        <div>Prepared as a single-file HTML slide deck from the uploaded WhatsApp export.</div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  const links = [...document.querySelectorAll('.rail nav a')];
+  const sections = links.map(a => document.querySelector(a.getAttribute('href')));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`.rail nav a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.55 });
+  sections.forEach(s => s && io.observe(s));
+</script>
+</body>
+</html>

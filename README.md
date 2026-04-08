@@ -2,6 +2,7 @@
 
 <!-- Use ":ignore" on non-Markdown links, e.g. HTML, .opus -->
 
+- 08 Apr 2026. **[A Thousand Professors In Your Pocket](2026-04-08-ai-workshop-lbsnaa/ ":ignore")** — AI Workshop at [LBSNAA](https://www.lbsnaa.gov.in/), Mussoorie. [💬 Transcript](2026-04-08-ai-workshop-lbsnaa/transcript.md) [🎧 Audio](https://github.com/sanand0/talks/releases/download/talks/2026-04-08-ai-workshop-lbsnaa.opus)
 - 06 Apr 2026. **[Innovation as a Frontier](2026-04-06-innovation-as-a-frontier-straive/ ":ignore")** — [Straive](https://straive.com/), Remote. [💬 Transcript](2026-04-06-innovation-as-a-frontier-straive/transcript.md) [🎧 Audio](https://github.com/sanand0/talks/releases/download/talks/2026-04-06-innovation-as-a-frontier-straive.opus)
 - 26 Mar 2026. **[The Journalist and the Machine](2026-03-26-hack-of-the-day-toi/ ":ignore")** — How Anand worked with [Times of India](https://timesofindia.indiatimes.com/) on the [#hackoftheday](https://x.com/search?q=%23hackoftheday&src=typed_query&f=live) series.
 - 21 Mar 2026. **[The McKinsey in Your Pocket](2026-03-21-faculty-ai-transformation-nie/ ":ignore")** at [NIE, Mysore](https://nie.ac.in/) Faculty Session, with [Srikanth Nadhamuni](https://www.linkedin.com/in/srikanthnadhamuni/). [💬 Transcript](2026-03-21-faculty-ai-transformation-nie/transcript.md)

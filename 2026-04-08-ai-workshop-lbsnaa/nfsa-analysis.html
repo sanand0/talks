@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NFSA Food Security Analysis - Interactive Slides</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      min-height: 100vh;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .presentation {
+      padding: 40px;
+      min-height: 700px;
+    }
+
+    .slide {
+      display: none;
+      animation: fadeIn 0.6s ease-in;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .slide h1 {
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #1a1a1a;
+    }
+
+    .slide h2 {
+      font-size: 24px;
+      font-weight: 600;
+      margin: 1.5rem 0 1rem;
+      color: #1a1a1a;
+    }
+
+    .slide h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #1a1a1a;
+    }
+
+    .slide p {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #555;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin: 1.5rem 0;
+    }
+
+    .metric-card {
+      background: #f8f8f8;
+      border-radius: 8px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 0.5px solid #e0e0e0;
+    }
+
+    .metric-card:hover {
+      background: #f0f0f0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .metric-value {
+      font-size: 28px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .metric-subtext {
+      font-size: 11px;
+      color: #aaa;
+      margin-top: 6px;
+    }
+
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 320px;
+      margin: 1.5rem 0;
+      background: white;
+      border: 0.5px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    canvas {
+      max-width: 100%;
+    }
+
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: help;
+      border-bottom: 1px dotted #888;
+    }
+
+    .tooltip-text {
+      visibility: hidden;
+      background-color: rgba(0,0,0,0.8);
+      color: #fff;
+      text-align: center;
+      padding: 8px 12px;
+      border-radius: 4px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 12px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .tooltip-text::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: rgba(0,0,0,0.8) transparent transparent transparent;
+    }
+
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 2rem 0;
+      padding: 20px;
+      background: #f8f8f8;
+      border-radius: 8px;
+    }
+
+    button {
+      background: white;
+      border: 0.5px solid #ddd;
+      color: #333;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    button:hover {
+      background: #f0f0f0;
+      border-color: #999;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .slide-counter {
+      font-size: 14px;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .progress-bar {
+      height: 3px;
+      background: #e0e0e0;
+      border-radius: 2px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #2563eb;
+      transition: width 0.4s ease;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      animation: fadeIn 0.3s;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      font-size: 24px;
+      cursor: pointer;
+      color: #888;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .close-btn:hover {
+      color: #333;
+    }
+
+    .finding-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .finding-1 { background: rgba(226, 75, 74, 0.15); color: #a32d2d; }
+    .finding-2 { background: rgba(99, 153, 34, 0.15); color: #3b6d11; }
+    .finding-3 { background: rgba(218, 90, 48, 0.15); color: #993c1d; }
+    .finding-4 { background: rgba(255, 165, 0, 0.15); color: #854f0b; }
+    .finding-5 { background: rgba(79, 172, 254, 0.15); color: #185fa5; }
+
+    .highlight {
+      background: rgba(255, 193, 7, 0.3);
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+    }
+
+    .action-list {
+      margin: 1rem 0;
+    }
+
+    .action-item {
+      padding: 12px;
+      margin-bottom: 8px;
+      background: #f8f8f8;
+      border-left: 3px solid #2563eb;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .action-item strong {
+      color: #1a1a1a;
+    }
+
+    .stat-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 1rem 0;
+    }
+
+    .stat-box {
+      background: #f8f8f8;
+      padding: 12px;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .stat-box .label {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 4px;
+    }
+
+    .stat-box .value {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .intro-box {
+      margin: 3rem 0;
+      padding: 2rem;
+      background: #f8f8f8;
+      border-radius: 8px;
+      border: 0.5px solid #e0e0e0;
+    }
+
+    .intro-box p {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin: 1.5rem 0;
+    }
+
+    .intro-grid div {
+      font-size: 13px;
+    }
+
+    .intro-grid strong {
+      display: block;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+
+    table {
+      width: 100%;
+      font-size: 13px;
+      margin: 1rem 0;
+      border-collapse: collapse;
+    }
+
+    tr {
+      border-bottom: 0.5px solid #e0e0e0;
+    }
+
+    td {
+      padding: 8px;
+    }
+
+    ul {
+      margin: 1rem 0;
+      padding-left: 1.5rem;
+      color: #555;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="presentation">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+      <!-- SLIDE 1 -->
+      <div class="slide active" id="slide1">
+        <h1>NFSA Food Security Analysis</h1>
+        <p style="font-size: 18px; color: #333; margin: 1rem 0;">5 High-Impact Findings from 2,357 Monthly Records (2017–2024)</p>
+        
+        <div class="intro-box">
+          <p>The crisis isn't scarcity. It's execution and digitization misalignment.</p>
+          <div class="intro-grid">
+            <div><strong>Data scope</strong><p style="margin: 4px 0 0;">34 Indian states<br/>7 years of monthly tracking</p></div>
+            <div><strong>Population impact</strong><p style="margin: 4px 0 0;">40M+ beneficiaries<br/>affected annually</p></div>
+          </div>
+        </div>
+
+        <p style="text-align: center; margin-top: 2rem; font-size: 14px; color: #888;">↓ Click "Next" to explore →</p>
+      </div>
+
+      <!-- SLIDE 2: Finding 1 -->
+      <div class="slide" id="slide2">
+        <span class="finding-badge finding-1">Finding 1</span>
+        <h2>The Ghost Food Crisis</h2>
+        <p>10.5M metric tons of food allocated annually never reach beneficiaries.</p>
+
+        <div class="metric-grid">
+          <div class="metric-card" onclick="showModal('modal1')">
+            <div class="metric-label">Allocated</div>
+            <div class="metric-value">319.5M</div>
+            <div class="metric-subtext">MT (7 years)</div>
+          </div>
+          <div class="metric-card" onclick="showModal('modal1')">
+            <div class="metric-label">Distributed</div>
+            <div class="metric-value">282.5M</div>
+            <div class="metric-subtext">MT (7 years)</div>
+          </div>
+          <div class="metric-card" onclick="showModal('modal1')">
+            <div class="metric-label">Annual Shortfall</div>
+            <div class="metric-value">10.5M</div>
+            <div class="metric-subtext">MT (11.6%)</div>
+          </div>
+          <div class="metric-card" onclick="showModal('modal1')">
+            <div class="metric-label">Affected People</div>
+            <div class="metric-value">40M+</div>
+            <div class="metric-subtext">monthly</div>
+          </div>
+        </div>
+
+        <p><strong>What's happening:</strong> Food allocated to states sits in warehouses. State/district supply chains fail to complete last-mile distribution to all beneficiaries within the allocation period.</p>
+
+        <div class="chart-container">
+          <canvas id="chart1" role="img" aria-label="Annual allocation vs distribution trend, 2017-2023"></canvas>
+        </div>
+
+        <p style="margin-top: 1.5rem;"><strong>Why it matters:</strong> This is a <span class="highlight">coverage problem</span>, not a logistics problem. Nobody tracks reach rates, so allocation-to-beneficiary visibility is zero.</p>
+
+        <div class="action-list">
+          <div class="action-item"><strong>Action:</strong> Audit allocation-to-distribution cycle. Set public 95% reach target.</div>
+        </div>
+      </div>
+
+      <!-- SLIDE 3: Finding 2 -->
+      <div class="slide" id="slide3">
+        <span class="finding-badge finding-2">Finding 2</span>
+        <h2>The Digitization Trap</h2>
+        <p>EPOS systems deployed, but <span class="tooltip">Aadhaar<span class="tooltip-text">Identity verification using biometric data</span></span> authentication lags by 30 percentage points.</p>
+
+        <div class="metric-grid">
+          <div class="metric-card" onclick="showModal('modal2')">
+            <div class="metric-label">EPOS Adoption</div>
+            <div class="metric-value">75.8%</div>
+            <div class="metric-subtext">National avg</div>
+          </div>
+          <div class="metric-card" onclick="showModal('modal2')">
+            <div class="metric-label">Aadhaar Auth</div>
+            <div class="metric-value">59.6%</div>
+            <div class="metric-subtext">National avg</div>
+          </div>
+          <div class="metric-card" onclick="showModal('modal2')">
+            <div class="metric-label">Gap</div>
+            <div class="metric-value">16pp</div>
+            <div class="metric-subtext">percentage points</div>
+          </div>
+          <div class="metric-card" onclick="showModal('modal2')">
+            <div class="metric-label">Worst Case</div>
+            <div class="metric-value">89.2pp</div>
+            <div class="metric-subtext">Chhattisgarh</div>
+          </div>
+        </div>
+
+        <p><strong>The problem:</strong> You have electronic delivery infrastructure without identity verification. Creates two risks:</p>
+        <div class="action-list">
+          <div class="action-item">🔴 <strong>Duplicate claims:</strong> Same person claims at multiple shops</div>
+          <div class="action-item">🔴 <strong>Ineligible inclusion:</strong> No verification = anyone with a card can claim</div>
+        </div>
+
+        <div class="chart-container">
+          <canvas id="chart2" role="img" aria-label="EPOS vs Aadhaar decoupling by state"></canvas>
+        </div>
+
+        <div class="action-list">
+          <div class="action-item"><strong>Action:</strong> Mandate Aadhaar verification on all new EPOS transactions. Target 95%+ within 12 months.</div>
+        </div>
+      </div>
+
+      <!-- SLIDE 4: Finding 3 -->
+      <div class="slide" id="slide4">
+        <span class="finding-badge finding-3">Finding 3</span>
+        <h2>The Phantom Card Syndrome</h2>
+        <p>Monthly distributions exceed allocations in <strong>20% of all records</strong>. States drawing down strategic reserves.</p>
+
+        <div class="metric-grid">
+          <div class="metric-card" onclick="showModal('modal3')">
+            <div class="metric-label">Over-Distribution</div>
+            <div class="metric-value">466</div>
+            <div class="metric-subtext">out of 2,357</div>
+          </div>
+          <div class="metric-card" onclick="showModal('modal3')">
+            <div class="metric-label">Frequency</div>
+            <div class="metric-value">19.8%</div>
+            <div class="metric-subtext">of records</div>
+          </div>
+          <div class="metric-card" onclick="showModal('modal3')">
+            <div class="metric-label">States Affected</div>
+            <div class="metric-value">31/34</div>
+            <div class="metric-subtext">system-wide</div>
+          </div>
+          <div class="metric-card" onclick="showModal('modal3')">
+            <div class="metric-label">Worst Case</div>
+            <div class="metric-value">205K MT</div>
+            <div class="metric-subtext">Assam Jan 2018</div>
+          </div>
+        </div>
+
+        <p><strong>What's happening:</strong> States use carryover stock from previous months. Operationally OK, but creates <span class="highlight">hidden reserve depletion risk</span>.</p>
+
+        <div class="chart-container">
+          <canvas id="chart3" role="img" aria-label="Frequency of over-distribution incidents by state"></canvas>
+        </div>
+
+        <p style="margin-top: 1.5rem;"><strong>Risk:</strong> If over-distribution becomes permanent, state supply is vulnerable. Monthly reports look fine; cumulative picture reveals problems.</p>
+
+        <div class="action-list">
+          <div class="action-item"><strong>Action:</strong> Track rolling 3-month cumulative allocation. Flag any state <90% for emergency support.</div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5: Finding 4 -->
+      <div class="slide" id="slide5">
+        <span class="finding-badge finding-4">Finding 4</span>
+        <h2>The Seasonality Signal</h2>
+        <p>Transaction volume swings <strong>18%</strong> predictably. March lowest (68% of avg), September highest (86%).</p>
+
+        <div class="metric-grid">
+          <div class="metric-card" onclick="showModal('modal4')">
+            <div class="metric-label">Seasonal Swing</div>
+            <div class="metric-value">18%</div>
+            <div class="metric-subtext">March to Sept</div>
+          </div>
+          <div class="metric-card" onclick="showModal('modal4')">
+            <div class="metric-label">Lowest Month</div>
+            <div class="metric-value">March</div>
+            <div class="metric-subtext">68% avg vol</div>
+          </div>
+          <div class="metric-card" onclick="showModal('modal4')">
+            <div class="metric-label">Highest Month</div>
+            <div class="metric-value">September</div>
+            <div class="metric-subtext">86% avg vol</div>
+          </div>
+          <div class="metric-card" onclick="showModal('modal4')">
+            <div class="metric-label">Pattern Stability</div>
+            <div class="metric-value">±2%</div>
+            <div class="metric-subtext">year-to-year</div>
+          </div>
+        </div>
+
+        <p><strong>Why:</strong> Follows harvest cycles and monsoon patterns. Post-harvest (Jan–Apr) = low demand. Pre-harvest (Aug–Oct) = peak demand.</p>
+
+        <div class="chart-container">
+          <canvas id="chart4" role="img" aria-label="Monthly transaction volume seasonality pattern"></canvas>
+        </div>
+
+        <p style="margin-top: 1.5rem;"><strong>Opportunity:</strong> Current flat allocation wastes <span class="highlight">25% buffer in slow months</span>. Rebalance to seasonality = 10–15% working capital recovery.</p>
+
+        <div class="action-list">
+          <div class="action-item"><strong>Action:</strong> Rebase allocation: Jan–Mar 85%, Aug–Oct 115% of average. Predictable, no equity impact.</div>
+        </div>
+      </div>
+
+      <!-- SLIDE 6: Finding 5 -->
+      <div class="slide" id="slide6">
+        <span class="finding-badge finding-5">Finding 5</span>
+        <h2>The North-Northeast Execution Gap</h2>
+        <p>While most states crossed 90%+ Aadhaar auth by 2024, a geographic cluster remains stuck at 0–50%.</p>
+
+        <div class="metric-grid">
+          <div class="metric-card" onclick="showModal('modal5')">
+            <div class="metric-label">Laggard States</div>
+            <div class="metric-value">10</div>
+            <div class="metric-subtext">below 50%</div>
+          </div>
+          <div class="metric-card" onclick="showModal('modal5')">
+            <div class="metric-label">Worst Case</div>
+            <div class="metric-value">0.1%</div>
+            <div class="metric-subtext">Meghalaya median</div>
+          </div>
+          <div class="metric-card" onclick="showModal('modal5')">
+            <div class="metric-label">Digitization Gap</div>
+            <div class="metric-value">50pp+</div>
+            <div class="metric-subtext">vs leaders</div>
+          </div>
+          <div class="metric-card" onclick="showModal('modal5')">
+            <div class="metric-label">Years Stalled</div>
+            <div class="metric-value">7+</div>
+            <div class="metric-subtext">no progress</div>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <canvas id="chart5" role="img" aria-label="Aadhaar authentication rate by state"></canvas>
+        </div>
+
+        <p style="margin-top: 1.5rem;"><strong>Root causes:</strong> Low internet penetration, weaker state capacity, high population growth, tribal/remote regions.</p>
+
+        <p><strong>Paradox:</strong> These states receive 7+ years of allocation yet lag 50+ points on digitization.</p>
+
+        <div class="action-list">
+          <div class="action-item"><strong>Action:</strong> Capacity audit. Deploy "digital extension" teams. <strong>Tie bonus allocation to Aadhaar progress.</strong></div>
+        </div>
+      </div>
+
+      <!-- SLIDE 7: Summary -->
+      <div class="slide" id="slide7">
+        <h2>Impact Summary & Next Steps</h2>
+
+        <p style="margin: 1.5rem 0;"><strong>Quick wins (0–3 months)</strong></p>
+        <div class="action-list">
+          <div class="action-item">🔴 <strong>Finding 1:</strong> Audit allocation-to-distribution. Set 95% reach target.</div>
+          <div class="action-item">🔴 <strong>Finding 2:</strong> Mandate Aadhaar verification on all new EPOS transactions.</div>
+          <div class="action-item">🔴 <strong>Finding 3:</strong> Monitor rolling 3-month cumulative allocation.</div>
+        </div>
+
+        <p style="margin: 1.5rem 0;"><strong>High-impact actions (3–6 months)</strong></p>
+        <div class="action-list">
+          <div class="action-item">🟡 <strong>Finding 4:</strong> Rebase allocation to seasonal pattern. Recover 10–15% working capital.</div>
+          <div class="action-item">🟡 <strong>Finding 5:</strong> Deploy capacity support to laggard states. Tie bonus allocation to Aadhaar progress.</div>
+        </div>
+
+        <div style="margin: 2rem 0; padding: 1.5rem; background: #f8f8f8; border-radius: 8px; border: 0.5px solid #e0e0e0;">
+          <p style="font-size: 14px; color: #1a1a1a;"><strong>Quantified impact</strong></p>
+          <div class="stat-compare">
+            <div class="stat-box">
+              <div class="label">Missing food fix</div>
+              <div class="value" style="color: #a32d2d;">40M people</div>
+            </div>
+            <div class="stat-box">
+              <div class="label">Fraud prevention</div>
+              <div class="value" style="color: #3b6d11;">500K–1.25M MT</div>
+            </div>
+            <div class="stat-box">
+              <div class="label">Working capital gain</div>
+              <div class="value" style="color: #993c1d;">10–15%</div>
+            </div>
+            <div class="stat-box">
+              <div class="label">Compliance + equity</div>
+              <div class="value" style="color: #185fa5;">Systemic</div>
+            </div>
+          </div>
+        </div>
+
+        <p style="margin-top: 2rem; font-size: 14px; color: #666;"><strong>Key insight:</strong> The crisis isn't supply or policy. It's execution and digitization misalignment. Better systems + accountability = real impact.</p>
+      </div>
+
+      <div class="controls">
+        <button onclick="prevSlide()">← Previous</button>
+        <span class="slide-counter"><span id="currentSlide">1</span> / 7</span>
+        <button onclick="nextSlide()">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALS -->
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal('modal1')">×</button>
+      <h3>The Allocation-Distribution Gap</h3>
+      <p>Over 7 years (2017–2024), India allocated 319.5 million metric tons of food grains nationally through NFSA, but only 282.5 million MT reached beneficiaries—an 11.6% annual shortfall.</p>
+      <p><strong>Why this matters:</strong> The missing food isn't lost to spoilage or theft. It never leaves state warehouses. This is a coverage problem where state/district supply chains fail to complete last-mile distribution to all eligible beneficiaries within the allocation period.</p>
+      <p><strong>Affected population:</strong> ~40 million people who should receive 5kg/month go without. This structural gap means some regions systematically receive less than allocated.</p>
+    </div>
+  </div>
+
+  <div id="modal2" class="modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal('modal2')">×</button>
+      <h3>EPOS Without Verification Risk</h3>
+      <p>Electronic Point of Sale (EPOS) systems are deployed for 75.8% of distribution nationally, but only 59.6% of transactions have Aadhaar (biometric ID) verification. In worst-case states like Chhattisgarh, you have 98.7% EPOS but only 9.5% Aadhaar authentication.</p>
+      <p><strong>The risk:</strong> You've built the delivery infrastructure but skipped identity verification. This creates:</p>
+      <ul>
+        <li>Duplicate claims: Same person claims at multiple shops</li>
+        <li>Ineligible inclusion: No verification = anyone with a card can claim</li>
+      </ul>
+      <p><strong>Recommended fix:</strong> Mandate Aadhaar verification on all new EPOS transactions immediately. Set 95%+ verified by end of year.</p>
+    </div>
+  </div>
+
+  <div id="modal3" class="modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal('modal3')">×</button>
+      <h3>Over-Distribution & Reserve Depletion</h3>
+      <p>In 20% of state-month observations, distributions exceed monthly allocations. This happens in 31 out of 34 states—not a single state's issue but a system-wide phenomenon.</p>
+      <p><strong>What's happening:</strong> States are using carryover stock from previous months, which is operationally acceptable. However, this creates a measurement problem and hidden risk.</p>
+      <p><strong>The risk:</strong> If distribution > allocation becomes permanent, it signals the state is drawing down strategic reserves unsustainably. Monthly reports look fine, but the cumulative picture over 3+ months reveals supply vulnerability.</p>
+      <p><strong>Recommended fix:</strong> Track rolling 3-month cumulative allocation vs distribution. Flag any state <90% for emergency supplementary allocation. Implement reserve adequacy requirements (maintain 20% buffer).</p>
+    </div>
+  </div>
+
+  <div id="modal4" class="modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal('modal4')">×</button>
+      <h3>Predictable Seasonal Demand</h3>
+      <p>Transaction volume varies 18% seasonally: March is lowest at 68% of average monthly volume, while September peaks at 86%. This pattern is consistent year-to-year with ±2% variance.</p>
+      <p><strong>Why:</strong> Rural consumption follows monsoon cycles and harvest patterns:</p>
+      <ul>
+        <li><strong>Jan–Apr (post-harvest):</strong> Rural incomes rise, dependence drops = low demand</li>
+        <li><strong>May–Jul (pre-monsoon):</strong> Agricultural gaps, demand rises</li>
+        <li><strong>Aug–Oct (peak):</strong> Food prices peak, incomes thin = peak demand</li>
+      </ul>
+      <p><strong>Opportunity:</strong> Current flat allocation wastes 25% buffer in slow months. Reallocating to match seasonality recovers 10–15% working capital with zero equity impact.</p>
+    </div>
+  </div>
+
+  <div id="modal5" class="modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal('modal5')">×</button>
+      <h3>Laggard States in Digitization</h3>
+      <p>While Rajasthan, Haryana, and Karnataka have crossed 99–100% Aadhaar authentication, 10 states remain stuck below 50%:</p>
+      <table>
+        <tr><td style="font-weight: 500;">State</td><td style="text-align: right; font-weight: 500;">Median %</td></tr>
+        <tr><td>Meghalaya</td><td style="text-align: right;">0.1%</td></tr>
+        <tr><td>Arunachal Pradesh</td><td style="text-align: right;">2.2%</td></tr>
+        <tr><td>Assam</td><td style="text-align: right;">0%</td></tr>
+        <tr><td>West Bengal</td><td style="text-align: right;">0.1%</td></tr>
+      </table>
+      <p><strong>Root causes:</strong> Low internet, weak state e-gov capacity, high population growth, tribal access barriers.</p>
+      <p><strong>Paradox:</strong> These states have received allocation for 7+ years yet lag 50+ points on digitization. This suggests capacity constraint, not technology unavailability.</p>
+    </div>
+  </div>
+
+  <script>
+    let currentSlideNum = 1;
+    const totalSlides = 7;
+    let charts = {};
+
+    function showSlide(n) {
+      const slides = document.querySelectorAll('.slide');
+      if (n > totalSlides) currentSlideNum = totalSlides;
+      if (n < 1) currentSlideNum = 1;
+      
+      slides.forEach(s => s.classList.remove('active'));
+      document.getElementById('slide' + currentSlideNum).classList.add('active');
+      document.getElementById('currentSlide').textContent = currentSlideNum;
+      document.getElementById('progressFill').style.width = (currentSlideNum / totalSlides * 100) + '%';
+      
+      if (currentSlideNum === 2 && !charts['chart1']) initChart1();
+      if (currentSlideNum === 3 && !charts['chart2']) initChart2();
+      if (currentSlideNum === 4 && !charts['chart3']) initChart3();
+      if (currentSlideNum === 5 && !charts['chart4']) initChart4();
+      if (currentSlideNum === 6 && !charts['chart5']) initChart5();
+    }
+
+    function nextSlide() { currentSlideNum++; showSlide(currentSlideNum); }
+    function prevSlide() { currentSlideNum--; showSlide(currentSlideNum); }
+
+    function showModal(id) { document.getElementById(id).classList.add('show'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+    window.onclick = function(e) {
+      const modals = document.querySelectorAll('.modal.show');
+      modals.forEach(m => { if (e.target === m) m.classList.remove('show'); });
+    };
+
+    function initChart1() {
+      charts['chart1'] = new Chart(document.getElementById('chart1'), {
+        type: 'bar',
+        data: {
+          labels: ['2017', '2018', '2019', '2020', '2021', '2022', '2023'],
+          datasets: [
+            { label: 'Allocated', data: [45.5, 45.1, 46.9, 47.1, 45.6, 45.9, 46.7], backgroundColor: '#185FA5', borderRadius: 4 },
+            { label: 'Distributed', data: [4.6, 51.1, 49.0, 49.8, 37.2, 43.7, 44.2], backgroundColor: '#E24B4A', borderRadius: 4 }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => v + 'M' } } } }
+      });
+    }
+
+    function initChart2() {
+      const states = ['Chhattisgarh', 'Tamil Nadu', 'Himachal', 'Andaman', 'Ladakh'];
+      const epos = [98.7, 100, 90.5, 88.1, 78.5];
+      const aadhaar = [9.5, 39.2, 32.9, 40, 34.6];
+      
+      charts['chart2'] = new Chart(document.getElementById('chart2'), {
+        type: 'bar',
+        data: {
+          labels: states,
+          datasets: [
+            { label: 'EPOS %', data: epos, backgroundColor: '#185FA5', borderRadius: 4 },
+            { label: 'Aadhaar %', data: aadhaar, backgroundColor: '#639922', borderRadius: 4 }
+          ]
+        },
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { max: 105, ticks: { callback: v => v + '%' } } } }
+      });
+    }
+
+    function initChart3() {
+      const states = ['Meghalaya', 'Mizoram', 'Dadra', 'Sikkim', 'Assam'];
+      const counts = [46, 42, 41, 36, 34];
+      
+      charts['chart3'] = new Chart(document.getElementById('chart3'), {
+        type: 'bar',
+        data: {
+          labels: states,
+          datasets: [{ label: 'Incidents', data: counts, backgroundColor: '#D85A30', borderRadius: 4 }]
+        },
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { callback: v => Math.round(v) } } } }
+      });
+    }
+
+    function initChart4() {
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const values = [97, 110, 68, 99, 99, 99, 100, 108, 101, 96, 95, 96];
+      const colors = values.map(v => v < 75 ? '#E24B4A' : (v > 105 ? '#639922' : '#BA7517'));
+      
+      charts['chart4'] = new Chart(document.getElementById('chart4'), {
+        type: 'bar',
+        data: {
+          labels: months,
+          datasets: [{ label: '% of average', data: values, backgroundColor: colors, borderRadius: 4 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } } }
+      });
+    }
+
+    function initChart5() {
+      const states = ['Rajasthan', 'Haryana', 'Andhra', 'Telangana', 'Karnataka', 'Arunachal', 'Meghalaya', 'Assam', 'Delhi', 'West Bengal'];
+      const values = [100, 100, 100, 100, 100, 2.2, 0.1, 0, 0, 0.1];
+      const colors = values.map(v => v >= 80 ? '#639922' : '#E24B4A');
+      
+      charts['chart5'] = new Chart(document.getElementById('chart5'), {
+        type: 'bar',
+        data: {
+          labels: states,
+          datasets: [{ label: 'Median %', data: values, backgroundColor: colors, borderRadius: 4 }]
+        },
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { max: 105, ticks: { callback: v => v + '%' } } } }
+      });
+    }
+
+    showSlide(currentSlideNum);
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+  </script>
+</body>
+</html>

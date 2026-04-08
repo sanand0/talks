@@ -1,0 +1,210 @@
+# Activities
+
+- Voice and spoken interaction
+  - `2025-01-18-how-to-use-ai-to-generate-code/activities.md` (during the talk): Use ChatGPT Voice Mode to answer a live audience question
+  - `2024-10-19-ai-in-education-webinar/activities.md` (during the talk): Use ChatGPT Voice Mode to answer a live audience question about a stock-trading app
+  - `2026-03-15-pyconf-ai-in-sdlc/activities.md` (during the talk): Record a call, transcribe it with Gemini, and turn it into code with Copilot/Codex/Claude
+  - `2025-09-13-duckdb-is-the-new-pandas/activities.md` (during the talk): Use `ask` to speak questions and have Gemini transcribe them into SQL
+  - `2026-03-18-iitm-office-of-institutional-advancement/activities.md` (during the talk): Use ChatGPT voice to research use cases for the IIT Madras team
+  - `2026-03-18-iitm-office-of-institutional-advancement/activities.md` (during the talk): Use ChatGPT for dictation and then Gemini Canvas to create a presentation
+  - `2026-01-20-agentic-ai-in-action-deloitte/activities.md` (before the talk): Dictate workshop material and mini-game ideas into ChatGPT
+  - `2026-01-20-agentic-ai-in-action-deloitte/activities.md` (during the talk): Dictate survey analysis prompts into ChatGPT and run them in Gemini
+  - `2026-01-11-nptel-vibe-coding-workshop/activities.md` (during the talk): Use ChatGPT voice dictation to generate prompts for Gemini
+  - `2026-01-11-nptel-vibe-coding-workshop/activities.md` (during the talk): Build a cyber-security training app with ChatGPT voice and Claude
+  - `2025-09-15-llm-ama-gale/activities.md` (during the talk): Use ChatGPT to answer audience questions live
+  - `2025-09-15-llm-ama-gale/activities.md` (during the talk): Use ChatGPT to draft and revisit AI questions during the Q&A
+  - `2025-10-23-vibe-coding/activities.md` (during the talk): Use voice prompting to select practice tasks
+  - `2026-02-11-amat-dt-day/activities.md` (during the talk): Ask ChatGPT Advanced Voice Mode to translate a Korean conversation in real time
+  - `2025-06-28-prompt-to-plot/activities.md` (during the talk): Use ChatGPT by voice to find a dataset for the workshop
+  - `2026-03-26-hack-of-the-day-toi/activities.md` (during the talk): Compare voice automation across models using a Dutch page and TTS voices
+  - `2026-02-26-vibe-coding-for-humanities-ashoka/activities.md` (during the talk): Use ChatGPT as a dictation engine for Gemini prompts
+
+- Prompting, model comparison, and verification
+  - `2025-12-05-scdm-keynote/activities.md` (during the talk): Double-check model outputs by passing one model's result to another
+  - `2026-04-06-innovation-as-a-frontier-straive/activities.md` (before the talk): Use LLMs to discover art styles and prompts, then render images with Gemini Nano Banana Pro 2
+  - `2026-04-06-innovation-as-a-frontier-straive/activities.md` (before the talk): Generate ImageMagick filters and code with a single prompt
+  - `2025-07-24-pugs-agent-loop/activities.md` (before the talk): Use Simon Willison's `llm` CLI for quick prompts
+  - `2025-01-18-how-to-use-ai-to-generate-code/activities.md` (during the talk): Prompt an AI coding tool to generate a demo election dashboard
+  - `2025-01-18-how-to-use-ai-to-generate-code/activities.md` (during the talk): Iteratively revise the generated dashboard with a follow-up prompt
+  - `2025-05-10-vibe-coding/activities.md` (during the talk): Switch to Gemini and keep prompting after Claude hit limits
+  - `2026-03-15-pyconf-ai-in-sdlc/activities.md` (during the talk): Use ChatGPT as a transcription and prompt engine for interns
+  - `2026-03-15-pyconf-ai-in-sdlc/activities.md` (during the talk): Use ChatGPT, Gemini, and Claude as delegated reviewers for prompt improvement
+  - `2025-11-06-llm-psychology/activities.md` (during the talk): Test emotional prompts and step-by-step prompting
+  - `2025-11-06-llm-psychology/activities.md` (during the talk): Cross-check models to reduce error rates
+  - `2026-03-18-iitm-academic-council/activities.md` (during the talk): Create animated interactive explainers in Gemini Canvas for projectile motion and adversarial validation
+  - `2025-08-21-ai-coding-guide/activities.md` (during the talk): Optimize the validation loop with property tests and evals
+  - `2026-01-20-agentic-ai-in-action-deloitte/activities.md` (before the talk): Turn a call transcript into a prompt with Claude
+  - `2026-01-20-agentic-ai-in-action-deloitte/activities.md` (during the talk): Use Claude, Gemini, and ChatGPT to fact-check AI claims
+  - `2026-01-20-agentic-ai-in-action-deloitte/activities.md` (during the talk): Meta-prompt ChatGPT to improve a prompt before running it
+  - `2025-09-22-llm-trends/activities.md` (during the talk): Use multiple prompts in parallel to explore a new chart
+  - `2025-12-06-mining-digital-exhaust/activities.md` (during the talk): Use ChatGPT to enable CDP and verify that browser automation is running
+  - `2026-03-21-design-in-the-age-of-infinite-generativity/activities.md` (before the talk): Ask LLMs to discover unfamiliar art styles and prompts
+  - `2025-06-pycon-sg/activities.md` (before the talk): Wrap `llm` in a `pyrun()` helper for repeatable prompt-to-code runs
+  - `2025-07-13-goodbye-mba-hello-ai/activities.md` (before the talk): Cross-check multiple models to reduce classification errors
+  - `2025-08-11-social-code-analysis/activities.md` (before the talk): Use an LLM to evaluate only carefully chosen analysis
+  - `2025-09-llm-workflows/activities.md` (during the talk): Write prompts as reusable products
+  - `2025-09-llm-workflows/activities.md` (during the talk): Use LLMs to automate evaluation and quality checks
+  - `2025-06-28-prompt-to-plot/activities.md` (during the talk): Use ChatGPT as a scratchpad to draft a refinement prompt
+  - `2026-03-26-hack-of-the-day-toi/activities.md` (during the talk): Ask ChatGPT to reverse-engineer prompts for Hack of the Day images
+  - `2026-02-26-vibe-coding-for-humanities-ashoka/activities.md` (during the talk): Run the same kind of prompt across multiple models in parallel
+  - `2026-03-18-verifiable-agents/activities.md` (during the talk): Run an API agent against FRED and let a validator self-correct the code
+  - `2026-03-18-verifiable-agents/activities.md` (during the talk): Use an LLM-as-a-judge over a golden dataset to verify agent output
+  - `2025-09-16-vibe-analysis/activities.md` (during the talk): Share prompts on WhatsApp and run the workshop live
+  - `2025-09-16-vibe-analysis/activities.md` (during the talk): Use ChatGPT to generate and evaluate prompts
+
+- Teaching, learning, and assessment
+  - `2025-12-05-scdm-keynote/activities.md` (during the talk): Extract a schedule of assessments from a protocol PDF
+  - `2026-04-06-innovation-as-a-frontier-straive/activities.md` (before the talk): Generate new product ideas from outlier examples by prompting AI for more like them
+  - `2024-10-19-ai-in-education-webinar/activities.md` (during the talk): Create a custom GPT virtual teaching assistant from course material
+  - `2026-03-18-iitm-academic-council/activities.md` (before the talk): Turn course material into prompt-driven explainer exercises that students can tweak themselves
+  - `2026-03-18-iitm-academic-council/activities.md` (before the talk): Replace exam and course content with AI-generated prompts and embedded material
+  - `2025-09-18-llm-ama-bi-worldwide/activities.md` (before the talk): Use AI for course policy and collaborative exams
+  - `2025-09-22-llm-trends/activities.md` (during the talk): Ask ChatGPT to find a classroom-friendly dataset
+  - `2026-03-21-design-in-the-age-of-infinite-generativity/activities.md` (before the talk): Ask AI to generate design ideas from inspirational examples
+  - `2025-07-13-goodbye-mba-hello-ai/activities.md` (during the talk): Use LLMs as study sparring partners and rehearsal tools
+  - `2025-08-11-social-code-analysis/activities.md` (before the talk): Have students write a Python script that uses an LLM to analyze and narrate data
+  - `2025-08-11-social-code-analysis/activities.md` (before the talk): Have students prove their AI output is high quality
+  - `2026-03-12-nie-ai-roadmap/activities.md` (during the talk): Use Gemini to create a theory-of-constraints slide deck and classroom discussion prompts
+  - `2026-03-12-nie-ai-roadmap/activities.md` (during the talk): Use LLMs to fill gaps in assessment and adaptive learning
+  - `2026-02-26-vibe-coding-for-humanities-ashoka/activities.md` (during the talk): Use ChatGPT to generate an online course prompt
+  - `2026-03-21-faculty-ai-transformation-nie/activities.md` (during the talk): Use ChatGPT and Claude Code to design AI-era testing topics and assessment questions
+  - `2026-03-21-faculty-ai-transformation-nie/activities.md` (during the talk): Use Codex and Claude Code to analyze and visualize student feedback into a website
+  - `2026-03-21-faculty-ai-transformation-nie/activities.md` (during the talk): Build a catalog of AI-in-education use cases from GitHub, course content, Google Drive, and transcripts
+
+- Data collection, extraction, and structuring
+  - `2026-04-06-innovation-as-a-frontier-straive/activities.md` (during the talk): Use Gemini OCR and translation on a Tamil movie screenshot
+  - `2025-10-16-vibe-analysis/activities.md` (before the talk): Ask the audience to bring personal or synthetic data
+  - `2025-10-16-vibe-analysis/activities.md` (during the talk): Use AI to synthesize analysis from WhatsApp exports
+  - `2025-07-24-pugs-agent-loop/activities.md` (before the talk): Use `pyrun` to generate data, visuals, and scraped outputs
+  - `2026-03-18-iitm-office-of-institutional-advancement/activities.md` (during the talk): Generate a synthetic attendance dataset in ChatGPT and export it as Excel
+  - `2025-09-21-making-open-data-useful/activities.md` (before the talk): Reverse-engineer censored film URLs into a dataset
+  - `2025-09-21-making-open-data-useful/activities.md` (before the talk): Use an LLM to generate a scraper from a HAR file
+  - `2025-12-03-vibe-analytics-iim-alumni-sg/activities.md` (during the talk): Use ChatGPT and Claude to analyze WhatsApp exports
+  - `2025-09-22-llm-trends/activities.md` (during the talk): Generate a small synthetic CSV for the demo
+  - `2025-12-06-mining-digital-exhaust/activities.md` (during the talk): Have a coding agent scrape LinkedIn invites through the browser
+  - `2025-12-06-mining-digital-exhaust/activities.md` (during the talk): Build a WhatsApp scraper bookmarklet with a coding agent
+  - `2025-12-06-mining-digital-exhaust/activities.md` (during the talk): Use an AI bookmarklet to convert a Hacker News thread into Markdown
+  - `2025-06-27-data-design-by-dialogue/activities.md` (during the talk): Use ChatGPT to scrape WhatsApp messages from the browser console
+  - `2025-06-27-data-design-by-dialogue/activities.md` (during the talk): Use ChatGPT to detect missing values and impute timestamps
+  - `2025-06-27-data-design-by-dialogue/activities.md` (during the talk): Use Claude Code to write a topic-modeling script for WhatsApp messages
+  - `2025-06-28-prompt-to-plot/activities.md` (during the talk): Ask ChatGPT to suggest visual story ideas from the Goodreads dataset
+  - `2026-03-26-hack-of-the-day-toi/activities.md` (during the talk): Use Gemini OCR and translation on a Tamil film screenshot
+  - `2025-07-23-supply-chain-automl/activities.md` (during the talk): Give an LLM agent an IoT dataset and an email-style analytics brief
+  - `2025-10-29-llm-data-visualization/activities.md` (during the talk): Ask multiple models to search for and generate SOM datasets
+  - `2025-10-29-llm-data-visualization/activities.md` (during the talk): Ask Claude to generate a CSV and code for SOM work
+  - `2025-09-16-vibe-analysis/activities.md` (during the talk): Have participants pick datasets and guide the agents themselves
+  - `2026-03-21-faculty-ai-transformation-nie/activities.md` (during the talk): Generate synthetic attendance data for the Office of Institutional Advancement
+  - `2025-08-21-rip-data-scientists/activities.md` (during the talk): Use ChatGPT to generate realistic synthetic data for anonymization
+
+- Analysis, modeling, and decision support
+  - `2025-12-05-scdm-keynote/activities.md` (during the talk): Find anomalies in lab data and narrate them as a data story
+  - `2025-12-05-scdm-keynote/activities.md` (during the talk): Filter patients for eligibility and rank enrollment likelihood
+  - `2025-12-05-scdm-keynote/activities.md` (during the talk): Predict enrollment failures from historical criteria
+  - `2025-10-16-vibe-analysis/activities.md` (during the talk): Ask AI for creative analysis ideas before running code
+  - `2025-05-10-vibe-coding/activities.md` (during the talk): Run a ChatGPT-based exploratory analysis and train three classifiers on IMDb reviews
+  - `2025-09-13-duckdb-is-the-new-pandas/activities.md` (during the talk): Use `llm` to learn DuckDB SQL during the talk
+  - `2025-09-13-duckdb-is-the-new-pandas/activities.md` (during the talk): Use ChatGPT code interpreter to run DuckDB inside ChatGPT
+  - `2025-09-21-making-open-data-useful/activities.md` (before the talk): Use LLMs for classification, not open-ended analysis
+  - `2026-01-20-agentic-ai-in-action-deloitte/activities.md` (during the talk): Generate a McKinsey-style slide deck from the survey data
+  - `2026-01-20-agentic-ai-in-action-deloitte/activities.md` (during the talk): Use Claude, Gemini, and ChatGPT to create a state-of-agentic-AI summary and data visualization
+  - `2025-12-06-mining-digital-exhaust/activities.md` (during the talk): Cluster YouTube search history with topic modeling
+  - `2025-12-06-mining-digital-exhaust/activities.md` (during the talk): Ask Claude to analyze bank statements as a narrative story
+  - `2025-12-06-mining-digital-exhaust/activities.md` (during the talk): Upload PDFs and ask an agent to run the analysis
+  - `2025-12-06-mining-digital-exhaust/activities.md` (during the talk): Analyze personal data with ChatGPT and then publish a story
+  - `2025-06-pycon-sg/activities.md` (before the talk): Present Hypothesis Forge as a one-click browser analysis app
+  - `2025-06-pycon-sg/activities.md` (before the talk): Use `pyrun` to generate, clean, transform, and analyze data
+  - `2025-06-27-data-design-by-dialogue/activities.md` (during the talk): Use ChatGPT to generate 10 quirky data stories and analysis code
+  - `2026-02-11-amat-dt-day/activities.md` (during the talk): Use Gemini and Claude to analyze a recorded conversation asynchronously
+  - `2026-02-11-amat-dt-day/activities.md` (during the talk): Ask ChatGPT to classify repetitive tasks from a survey and summarize them
+  - `2026-03-12-nie-ai-roadmap/activities.md` (during the talk): Use AI to find factual errors in an NCERT history textbook
+  - `2026-02-26-vibe-coding-for-humanities-ashoka/activities.md` (during the talk): Upload bank statements and ask Claude to track inflation
+  - `2025-07-23-supply-chain-automl/activities.md` (during the talk): Use an LLM agent with code execution to analyze fleet data
+  - `2025-07-23-supply-chain-automl/activities.md` (during the talk): Chain business analyst, coder, and deployer agents
+  - `2025-08-21-rip-data-scientists/activities.md` (during the talk): Use ChatGPT to generate and test hypotheses from airline data
+  - `2025-08-21-rip-data-scientists/activities.md` (during the talk): Use ChatGPT to write and run analysis code
+  - `2025-08-21-rip-data-scientists/activities.md` (during the talk): Use ChatGPT to do vibe analysis on airline data and write the results as poetry
+
+- Visualization, storytelling, and presentation design
+  - `2026-04-06-innovation-as-a-frontier-straive/activities.md` (before the talk): Build a chart-style gallery from publication embeddings for inspiration
+  - `2026-04-06-innovation-as-a-frontier-straive/activities.md` (before the talk): Upload a chart to Claude for critique and feedback
+  - `2025-10-16-vibe-analysis/activities.md` (during the talk): Use AI to generate a visual data story
+  - `2026-01-11-nptel-vibe-coding-workshop/activities.md` (during the talk): Build an interactive scrollable Mughal timeline in Gemini Canvas
+  - `2026-01-11-nptel-vibe-coding-workshop/activities.md` (during the talk): Use Gemini Canvas to build Einstein's visual biography website
+  - `2025-09-22-llm-trends/activities.md` (during the talk): Use Claude and ChatGPT to create and rank novel visualizations
+  - `2026-03-21-design-in-the-age-of-infinite-generativity/activities.md` (before the talk): Create the opening interactive visualization in Claude
+  - `2026-03-21-design-in-the-age-of-infinite-generativity/activities.md` (before the talk): Generate an ImageMagick filter gallery and code with AI
+  - `2025-06-27-data-design-by-dialogue/activities.md` (during the talk): Use O3 to turn the WhatsApp data into charts and story narratives
+  - `2026-02-11-amat-dt-day/activities.md` (before the talk): Write an education slide deck with ChatGPT during a morning walk
+  - `2025-06-28-prompt-to-plot/activities.md` (before the talk): Write the slide deck using LLMs
+  - `2025-06-28-prompt-to-plot/activities.md` (during the talk): Switch to Claude Code locally to improve the generated story and design
+  - `2026-03-12-nie-ai-roadmap/activities.md` (during the talk): Use ChatGPT and Gemini to create a logistics slide deck from current events
+  - `2026-03-26-hack-of-the-day-toi/activities.md` (during the talk): Record a retractions discussion and pass it to Claude to create a data story
+  - `2026-02-26-vibe-coding-for-humanities-ashoka/activities.md` (during the talk): Use Gemini Canvas to build a scrollable Mughal timeline
+  - `2026-02-26-vibe-coding-for-humanities-ashoka/activities.md` (during the talk): Build an Einstein biography website with Gemini Canvas
+  - `2025-10-29-llm-data-visualization/activities.md` (during the talk): Use ChatGPT to generate a SOM and a novel chart
+  - `2025-10-29-llm-data-visualization/activities.md` (during the talk): Ask models to explain their own charts
+  - `2025-08-21-rip-data-scientists/activities.md` (during the talk): Use Codex, Jules, and Claude Code to build data visualizations and deployment artifacts
+
+- App building, coding, agents, and automation
+  - `2026-04-06-innovation-as-a-frontier-straive/activities.md` (before the talk): Use Claude with Blender MCP, via an intern, to build a campus from one building
+  - `2025-07-24-pugs-agent-loop/activities.md` (before the talk): Wrap `llm` in a `pyrun()` helper to generate and execute Python
+  - `2025-05-10-vibe-coding/activities.md` (during the talk): Use Claude 3.1 Sonic to build a PDF upload-and-viewer app
+  - `2025-05-10-vibe-coding/activities.md` (during the talk): Use LLM Foundry to build a webcam image-description app
+  - `2026-03-15-pyconf-ai-in-sdlc/activities.md` (during the talk): Use agents to test, deploy, and email results automatically
+  - `2026-03-15-pyconf-ai-in-sdlc/activities.md` (during the talk): Use Claude and Gemini to generate code and UI for rapid prototypes
+  - `2025-11-06-llm-psychology/activities.md` (before the talk): Use AI to automate notes, lesson summaries, and prototypes
+  - `2025-08-21-ai-coding-guide/activities.md` (during the talk): Parallel-prototype with `k` variants before sharing outcomes
+  - `2026-01-11-nptel-vibe-coding-workshop/activities.md` (during the talk): Use Gemini AI mode to define vibe coding and suggest projects
+  - `2026-01-11-nptel-vibe-coding-workshop/activities.md` (during the talk): Build a habit tracker in Base44 from a Gemini-generated idea
+  - `2026-01-11-nptel-vibe-coding-workshop/activities.md` (during the talk): Use multiple agents in parallel to compare outputs
+  - `2026-01-11-nptel-vibe-coding-workshop/activities.md` (during the talk): Let ChatGPT generate and open a local HTML Unicode-to-ASCII converter
+  - `2026-01-11-nptel-vibe-coding-workshop/activities.md` (during the talk): Ask ChatGPT and Gemini for app ideas, then build a music generator with Claude
+  - `2025-10-23-vibe-coding/activities.md` (before the talk): Choose Codex as the primary coding agent
+  - `2025-10-23-vibe-coding/activities.md` (before the talk): Ask participants to install the toolchain and track status
+  - `2025-10-23-vibe-coding/activities.md` (during the talk): Use Codex with agent full access to convert files
+  - `2025-11-15-applied-vibe-coding/activities.md` (during the talk): Use online coding agents for vibe coding
+  - `2025-11-15-applied-vibe-coding/activities.md` (during the talk): Let participants build apps with AI from their own ideas
+  - `2025-11-15-applied-vibe-coding/activities.md` (during the talk): Use agent full access to let the system run autonomously
+  - `2025-11-15-applied-vibe-coding/activities.md` (during the talk): Ask an agent to find and run PDFs on its own
+  - `2026-03-21-design-in-the-age-of-infinite-generativity/activities.md` (before the talk): Use Claude with Blender MCP, via an intern, to build a campus from one building
+  - `2025-06-pycon-sg/activities.md` (before the talk): Use `llm` CLI to generate executable Python code
+  - `2025-09-llm-workflows/activities.md` (during the talk): Turn workflows into machine-readable specs
+  - `2025-06-28-prompt-to-plot/activities.md` (during the talk): Run Jules and Codex in parallel on the same repo
+  - `2025-06-28-prompt-to-plot/activities.md` (during the talk): Use Codex and Jules to debug generated output from error messages
+  - `2026-03-26-hack-of-the-day-toi/activities.md` (during the talk): Use a coding agent to search online for hacks and generate the Hack of the Day page
+  - `2026-03-18-verifiable-agents/activities.md` (during the talk): Build claim-verification checks that explain why an insurance claim is rejected
+  - `2025-07-23-supply-chain-automl/activities.md` (during the talk): Build a webcam-safety web app with Bedrock Claude 3.5 Sonnet
+
+- Personal productivity and everyday workflows
+  - `2025-12-03-vibe-analytics-iim-alumni-sg/activities.md` (during the talk): Use Perplexity to summarize slides with ELI5
+  - `2025-09-18-llm-ama-bi-worldwide/activities.md` (during the talk): Use ChatGPT as the default collaborator for work and learning
+  - `2025-12-06-mining-digital-exhaust/activities.md` (during the talk): Run style transfer on personal data with Claude
+  - `2026-02-11-amat-dt-day/activities.md` (during the talk): Use ChatGPT to identify food in restaurant photos
+  - `2026-02-11-amat-dt-day/activities.md` (during the talk): Use ChatGPT to summarize a bookshelf and recommend books
+  - `2026-02-11-amat-dt-day/activities.md` (during the talk): Ask ChatGPT for personal financial advice after reading GDPval
+  - `2026-02-11-amat-dt-day/activities.md` (before the talk): Use ChatGPT to design a personalized T-shirt while on a walk
+  - `2025-09-16-vibe-analysis/activities.md` (during the talk): Use ChatGPT to generate ideas from personal notes
+  - `2025-08-21-rip-data-scientists/activities.md` (during the talk): Use ChatGPT to summarize Git commits into a weekly podcast
+
+- Ideation and creative exploration
+  - `2025-12-05-scdm-keynote/activities.md` (during the talk): Validate informed consent forms with ChatGPT against the ICH E6 guideline
+  - `2025-12-05-scdm-keynote/activities.md` (during the talk): Generate a checklist from a protocol document with Claude, Gemini, or ChatGPT
+  - `2026-04-06-innovation-as-a-frontier-straive/activities.md` (before the talk): Ask Claude to answer the host’s question using past chats, blog posts, and GitHub
+  - `2025-10-16-vibe-analysis/activities.md` (before the talk): Upload slide snapshots into Perplexity for instant explanation
+  - `2025-11-06-llm-psychology/activities.md` (during the talk): Probe models like subjects in an experiment
+  - `2025-12-03-vibe-analytics-iim-alumni-sg/activities.md` (during the talk): Use AI as a brainstorming partner
+  - `2025-08-21-ai-coding-guide/activities.md` (during the talk): Treat specs and tests as the product
+  - `2025-08-21-ai-coding-guide/activities.md` (during the talk): Make repos LLM-friendly
+  - `2025-08-21-ai-coding-guide/activities.md` (during the talk): Prefer typed languages and DSLs
+  - `2025-08-21-ai-coding-guide/activities.md` (during the talk): Run short feedback loops and many small PRs
+  - `2025-09-18-llm-ama-bi-worldwide/activities.md` (during the talk): Let the audience drive the agenda through questions
+  - `2026-03-21-design-in-the-age-of-infinite-generativity/activities.md` (before the talk): Generate styled images with Gemini Nano Banana Pro 2
+  - `2025-07-13-goodbye-mba-hello-ai/activities.md` (before the talk): Benchmark LLM arithmetic on multiplication tasks
+  - `2025-06-27-data-design-by-dialogue/activities.md` (during the talk): Rerun the topic-modeling script until cluster names improve
+  - `2025-06-28-prompt-to-plot/activities.md` (during the talk): Have the audience create and publish data stories using only LLMs
+  - `2025-06-28-prompt-to-plot/activities.md` (during the talk): Ask ChatGPT how to work around GitHub’s upload limit
+  - `2025-06-28-prompt-to-plot/activities.md` (during the talk): Have participants generate and publish their own AI-made stories
+  - `2025-08-21-rip-data-scientists/activities.md` (during the talk): Use ChatGPT to solve a data-science task end-to-end instead of doing it manually
+  - `2025-08-21-rip-data-scientists/activities.md` (during the talk): Use ChatGPT to identify data-quality problems and auto-fix ideas
+  - `2025-08-21-rip-data-scientists/activities.md` (during the talk): Use ChatGPT to generate a future traffic model, pickle files, and an API
+

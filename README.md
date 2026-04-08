@@ -219,6 +219,7 @@ I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtu
 
 ## Others' Talks
 
+- 08 Apr 2026. [Debjani Ghosh](https://www.linkedin.com/in/debjani-ghosh-48298b1/). **[Frontiers in Technology](2026-04-08-frontiers-in-technology-debjani-lbsnaa/ ":ignore")**, [LBSNAA](https://lbsnaa.gov.in/), Mussoorie. [💬 Transcript](2026-04-08-frontiers-in-technology-debjani-lbsnaa/transcript.md) [🎧 Audio](https://github.com/sanand0/talks/releases/download/talks/2026-04-08-frontiers-in-technology-debjani-lbsnaa.opus ":ignore")
 - 18 Jul 2025. [Rob Schrauwen](https://www.linkedin.com/in/robschrauwen/). **[True but Irrelevant](2025-07-18-tug-true-but-irrelevant-rob-schrauwen/ ":ignore")** at [TeX User Group 2025](https://tug.org/tug2025), Thiruvananthapuram. [⏯️ Video](https://youtu.be/XGO5ushzXMA) [💬 Transcript](2025-07-18-tug-true-but-irrelevant-rob-schrauwen/transcript.md)
 - 13 Nov 2025. [Nirmal Palaparthi](https://www.linkedin.com/in/aprilsystems). **[AI First Thinking for HR Professionals](2025-11-13-nirmal-impress-ai-hr/ ":ignore")** at [Impress AI](https://www.linkedin.com/posts/impress.ai_hiringblueprint2026-savos-aiinhr-activity-7397135743879413760-QCDt/), Singapore
 - 21 Sep 2025. [Vivek Matthew](https://github.com/Vonter) and [Aman Bhargava](https://aman.bh/). [Making Open Data Useful: Lessons from Diagram Chasing](2025-09-21-making-open-data-useful/ ":ignore") at [IndiaFOSS](https://fossunited.org/c/indiafoss/2025/cfp/1hutna15uj), Bangalore

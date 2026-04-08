@@ -67,7 +67,7 @@ for SRC in "$TMPDIR"/slide-*."$EXT"; do
   "$RESIZE_CMD" "$SRC" -resize '1280x>' "$RESIZED"
 
   if command -v avifenc &>/dev/null; then
-    avifenc --quality 55 --speed 6 "$RESIZED" "$DEST_AVIF" &>/dev/null
+    avifenc -q 55 --speed 6 "$RESIZED" "$DEST_AVIF" &>/dev/null
     echo "  slide-$N.avif"
   else
     # ImageMagick WebP fallback

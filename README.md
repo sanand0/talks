@@ -2,6 +2,7 @@
 
 <!-- Use ":ignore" on non-Markdown links, e.g. HTML, .opus -->
 
+- 22 Apr 2026. **[The Dinner Table Theory of AI Skills](2026-04-22-the-dinner-table-theory-of-ai-skills/ ":ignore")** — A dinner conversation that became a panel discussion at Edison, New Jersey.
 - 08 Apr 2026. **[A Thousand Professors In Your Pocket](2026-04-08-ai-workshop-lbsnaa/ ":ignore")** — AI Workshop at [LBSNAA](https://www.lbsnaa.gov.in/), Mussoorie. [💬 Transcript](2026-04-08-ai-workshop-lbsnaa/transcript.md) [🎧 Audio](https://github.com/sanand0/talks/releases/download/talks/2026-04-08-ai-workshop-lbsnaa.opus)
 - 06 Apr 2026. **[Innovation as a Frontier](2026-04-06-innovation-as-a-frontier-straive/ ":ignore")** — [Straive](https://straive.com/), Remote. [💬 Transcript](2026-04-06-innovation-as-a-frontier-straive/transcript.md) [🎧 Audio](https://github.com/sanand0/talks/releases/download/talks/2026-04-06-innovation-as-a-frontier-straive.opus)
 - 26 Mar 2026. **[The Journalist and the Machine](2026-03-26-hack-of-the-day-toi/ ":ignore")** — How Anand worked with [Times of India](https://timesofindia.indiatimes.com/) on the [#hackoftheday](https://x.com/search?q=%23hackoftheday&src=typed_query&f=live) series.

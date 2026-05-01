@@ -72,7 +72,11 @@ IMPORTANT: Because Claude will almost certainly stall when generating such a lar
 
 Update README.md to include this talk in the list of talks.
 
-<!-- claude --resume 36de7859-65fa-4457-81c2-cadfaaf69e43 --yolo -->
+---
+
+Update the index.html to prominently embed the video at https://youtu.be/shaC4I-dco0 in a full width container.
+
+<!-- claude --resume 36de7859-65fa-4457-81c2-cadfaaf69e43 --dangerously-skip-permissions -->
 
 ## Sketchnote
 

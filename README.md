@@ -2,6 +2,7 @@
 
 <!-- Use ":ignore" on non-Markdown links, e.g. HTML, .opus -->
 
+- 30 Apr 2026. **[Inventing the Future of Learning](2026-04-30-harvard-education/ ":ignore")** — Panel at [Harvard Graduate School of Education](https://www.gse.harvard.edu/) with [LearningMate](https://www.learningmate.com/). [💬 Transcript](2026-04-30-harvard-education/transcript.md) [🎧 Audio](https://github.com/sanand0/talks/releases/download/talks/2026-04-30-harvard-education.opus)
 - 22 Apr 2026. **[The Dinner Table Theory of AI Skills](2026-04-22-the-dinner-table-theory-of-ai-skills/ ":ignore")** — A dinner conversation that became a panel discussion at Edison, New Jersey.
 - 08 Apr 2026. **[A Thousand Professors In Your Pocket](2026-04-08-ai-workshop-lbsnaa/ ":ignore")** — AI Workshop at [LBSNAA](https://www.lbsnaa.gov.in/), Mussoorie. [💬 Transcript](2026-04-08-ai-workshop-lbsnaa/transcript.md) [🎧 Audio](https://github.com/sanand0/talks/releases/download/talks/2026-04-08-ai-workshop-lbsnaa.opus)
 - 06 Apr 2026. **[Innovation as a Frontier](2026-04-06-innovation-as-a-frontier-straive/ ":ignore")** — [Straive](https://straive.com/), Remote. [💬 Transcript](2026-04-06-innovation-as-a-frontier-straive/transcript.md) [🎧 Audio](https://github.com/sanand0/talks/releases/download/talks/2026-04-06-innovation-as-a-frontier-straive.opus)

@@ -1,5 +1,7 @@
 # Anand's Talks
 
+Slides, stories, transcripts, video and audio from talks, workshops, and panels - mostly by [Anand](https://www.s-anand.net/).
+
 <!-- Use ":ignore" on non-Markdown links, e.g. HTML, .opus -->
 
 - 30 Apr 2026. **[Inventing the Future of Learning](2026-04-30-harvard-education/ ":ignore")** — Panel at [Harvard Graduate School of Education](https://www.gse.harvard.edu/) with [LearningMate](https://www.learningmate.com/). [⏯️ Video](https://youtu.be/shaC4I-dco0) [💬 Transcript](2026-04-30-harvard-education/transcript.md) [🎧 Audio](https://github.com/sanand0/talks/releases/download/talks/2026-04-30-harvard-education.opus)

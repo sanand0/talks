@@ -4,6 +4,7 @@ Slides, stories, transcripts, video and audio from talks, workshops, and panels 
 
 <!-- Use ":ignore" on non-Markdown links, e.g. HTML, .opus -->
 
+- 15 May 2026. **[Agents are the New Software](2026-05-15-gramener-all-hands/ ":ignore")** — [Gramener](https://gramener.com/) All Hands, Remote. How AI agents shift bottlenecks, why verifiability and context are the new scarce assets, and what each role should do next.
 - 30 Apr 2026. **[Inventing the Future of Learning](2026-04-30-harvard-education/ ":ignore")** — Panel at [Harvard Graduate School of Education](https://www.gse.harvard.edu/) with [LearningMate](https://www.learningmate.com/). [⏯️ Video](https://youtu.be/shaC4I-dco0) [💬 Transcript](2026-04-30-harvard-education/transcript.md) [🎧 Audio](https://github.com/sanand0/talks/releases/download/talks/2026-04-30-harvard-education.opus)
 - 22 Apr 2026. **[The Dinner Table Theory of AI Skills](2026-04-22-the-dinner-table-theory-of-ai-skills/ ":ignore")** — A dinner conversation that became a panel discussion at Edison, New Jersey.
 - 08 Apr 2026. **[A Thousand Professors In Your Pocket](2026-04-08-ai-workshop-lbsnaa/ ":ignore")** — AI Workshop at [LBSNAA](https://www.lbsnaa.gov.in/), Mussoorie. [💬 Transcript](2026-04-08-ai-workshop-lbsnaa/transcript.md) [🎧 Audio](https://github.com/sanand0/talks/releases/download/talks/2026-04-08-ai-workshop-lbsnaa.opus)

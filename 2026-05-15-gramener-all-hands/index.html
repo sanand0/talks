@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agents are the New Software | Gramener All Hands, May 2026</title>
+  <meta name="description" content="A Gramener all-hands talk on how AI agents shift bottlenecks, why verifiability and context are the new scarce assets, and what each role should do next.">
+  <meta name="author" content="Anand S">
+  <link rel="canonical" href="https://sanand0.github.io/talks/2026-05-15-gramener-all-hands/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Agents are the New Software | Gramener All Hands, May 2026">
+  <meta property="og:description" content="How AI agents shift bottlenecks, why verifiability and context are the new scarce assets, and what each role should do next.">
+  <meta property="og:url" content="https://sanand0.github.io/talks/2026-05-15-gramener-all-hands/">
+  <meta property="og:image" content="./sketchnote.avif">
+  <meta property="og:image:alt" content="Sketchnote — Agents are the New Software">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Agents are the New Software | Gramener All Hands, May 2026">
+  <meta name="twitter:image" content="./sketchnote.avif">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
+  <style>
+    :root {
+      --ink:    #0f0f0f;
+      --paper:  #f8f6f1;
+      --accent: #1a56a0;
+      --navy:   #1a1a2e;
+      --gold:   #c49b2a;
+      --muted:  #5e5e5e;
+      --faint:  #9a9a9a;
+      --border: #d9d5cc;
+      --hi-bg:  #eef3fb;
+      --funny-bg: #fdf5e6;
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'Libre Baskerville', Georgia, serif;
+      --font-mono:    'IBM Plex Mono', monospace;
+      --col: 720px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.8;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── Progress bar ── */
+    #progress {
+      position: fixed; top: 0; left: 0;
+      width: 0%; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      z-index: 1000; transition: width 0.1s linear;
+    }
+
+    /* ── Masthead ── */
+    .masthead {
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 2rem;
+      position: sticky; top: 0;
+      background: rgba(248,246,241,0.96);
+      z-index: 100; backdrop-filter: blur(8px);
+    }
+    .masthead-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .masthead-brand {
+      font-family: var(--font-display); font-size: 0.92rem;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+      text-decoration: none;
+    }
+    .masthead-brand:hover { color: var(--accent); }
+    .masthead-date { font-size: 0.78rem; color: var(--faint); font-family: var(--font-mono); }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 5rem 2rem 3rem; max-width: 760px; margin: 0 auto; text-align: center;
+    }
+    .hero-kicker {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 7vw, 5rem);
+      font-weight: 700; line-height: 1.05;
+      margin-bottom: 1.2rem; letter-spacing: -0.02em; color: var(--ink);
+    }
+    .hero-title em { font-style: italic; color: var(--accent); }
+    .hero-subtitle {
+      font-family: var(--font-display); font-size: 1.35rem;
+      font-weight: 400; font-style: italic; color: var(--muted);
+      max-width: 620px; margin: 0 auto 2rem; line-height: 1.5;
+    }
+    .hero-meta {
+      display: flex; justify-content: center; gap: 1.5rem;
+      font-size: 0.85rem; color: var(--muted); flex-wrap: wrap; margin-bottom: 2.5rem;
+    }
+    .hero-meta a { color: var(--accent); text-decoration: none; }
+    .hero-meta a:hover { text-decoration: underline; }
+    .hero-meta .sep { color: var(--faint); }
+
+    /* ── Quick nav ── */
+    .quick-nav {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      background: var(--navy); padding: 0.85rem 2rem;
+    }
+    .quick-nav-inner {
+      max-width: var(--col); margin: 0 auto;
+      display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center;
+    }
+    .quick-nav a {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: #a0b8d8; text-decoration: none;
+      border: 1px solid rgba(160,184,216,0.3); padding: 0.3rem 0.7rem;
+      border-radius: 2px; transition: all 0.2s;
+    }
+    .quick-nav a:hover { background: rgba(160,184,216,0.15); color: #c8d8ee; }
+
+    /* ── Article ── */
+    .article {
+      max-width: var(--col); margin: 0 auto;
+      padding: 3.5rem 1.5rem 5rem;
+    }
+    .article h2 {
+      font-family: var(--font-display); font-size: 2.2rem; font-weight: 700;
+      line-height: 1.12; margin: 4rem 0 1.2rem; letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .article h2 em { font-style: italic; color: var(--accent); }
+    .article h3 {
+      font-family: var(--font-display); font-size: 1.5rem; font-weight: 600;
+      margin: 2.5rem 0 0.8rem;
+    }
+    .article p { margin-bottom: 1.4rem; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article ul, .article ol { margin: 0.8rem 0 1.4rem 1.6rem; }
+    .article li { margin: 0.45rem 0; }
+    .article strong { font-weight: 700; }
+
+    /* Drop cap on first paragraph */
+    .drop-cap::first-letter {
+      font-family: var(--font-display); font-size: 4.5rem; font-weight: 700;
+      line-height: 0.8; float: left; margin: 0.12rem 0.18rem 0 0;
+      color: var(--accent);
+    }
+
+    /* ── Full-width sketchnote ── */
+    .sketchnote-wrap {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      background: var(--navy); padding: 3rem 2rem; text-align: center;
+    }
+    .sketchnote-wrap a { display: inline-block; max-width: 1120px; width: 100%; }
+    .sketchnote-wrap img {
+      width: 100%; height: auto; border-radius: 4px;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.5); transition: opacity 0.2s;
+    }
+    .sketchnote-wrap img:hover { opacity: 0.92; }
+    .sketchnote-caption {
+      margin-top: 0.9rem; font-size: 0.8rem; color: #7a8ba8;
+      font-family: var(--font-mono); letter-spacing: 0.06em;
+    }
+
+    /* ── Full-width iframe embed ── */
+    .embed-wrap {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      background: #11121f; padding: 2.5rem 1.5rem;
+    }
+    .embed-inner {
+      max-width: 1100px; margin: 0 auto;
+    }
+    .embed-label {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: #7a8ba8; margin-bottom: 0.8rem; text-align: center;
+    }
+    .embed-wrap iframe {
+      width: 100%; border: none; border-radius: 4px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      background: #fff;
+    }
+    .embed-caption {
+      margin-top: 0.7rem; text-align: center;
+      font-size: 0.8rem; color: #7a8ba8; font-style: italic;
+      font-family: var(--font-mono);
+    }
+    .embed-caption a { color: #a0b8d8; }
+    .embed-caption a:hover { color: #c8d8ee; }
+
+    /* ── Pull quote / insight highlight ── */
+    .insight {
+      border-left: 4px solid var(--accent);
+      background: var(--hi-bg); padding: 1.25rem 1.6rem;
+      margin: 2rem 0; border-radius: 0 4px 4px 0;
+    }
+    .insight p { margin: 0; font-style: italic; font-size: 1.08rem; line-height: 1.65; }
+    .insight-label {
+      font-family: var(--font-mono); font-size: 0.64rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.4rem;
+    }
+
+    /* ── Funny / witty highlight ── */
+    .funny {
+      border-left: 4px solid var(--gold);
+      background: var(--funny-bg); padding: 1.25rem 1.6rem;
+      margin: 2rem 0; border-radius: 0 4px 4px 0;
+    }
+    .funny p { margin: 0; font-size: 1.05rem; line-height: 1.65; }
+    .funny-label {
+      font-family: var(--font-mono); font-size: 0.64rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.4rem;
+    }
+
+    /* ── Dark band quote ── */
+    .band {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      background: var(--navy); color: #e8edf5;
+      padding: 3rem 2rem; text-align: center;
+    }
+    .band p {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+      font-style: italic; line-height: 1.35;
+      max-width: 800px; margin: 0 auto 0.8rem;
+    }
+    .band cite {
+      font-family: var(--font-mono); font-size: 0.75rem;
+      color: #7a8ba8; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+
+    /* ── Chat prompt box ── */
+    .chat-prompt {
+      background: #e8edf5; border-radius: 8px;
+      padding: 1rem 1.4rem; margin: 1.5rem 0;
+      font-family: var(--font-mono); font-size: 0.86rem;
+      line-height: 1.6; color: #1a1a3e;
+      border-left: 3px solid var(--accent);
+    }
+    .chat-label {
+      font-size: 0.62rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 0.5rem; font-weight: 500;
+    }
+
+    /* ── Bottleneck table ── */
+    .table-wrap {
+      margin: 2rem 0; overflow-x: auto;
+    }
+    .table-wrap table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+    .table-wrap th {
+      font-family: var(--font-mono); font-size: 0.72rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      background: var(--navy); color: #a0b8d8;
+      padding: 0.6rem 1rem; text-align: left;
+    }
+    .table-wrap td {
+      padding: 0.55rem 1rem; border-bottom: 1px solid var(--border);
+    }
+    .table-wrap tr:last-child td { border-bottom: none; }
+    .table-wrap tr:nth-child(even) td { background: rgba(26,86,160,0.04); }
+
+    /* ── Roles grid (What Should I Do Next) ── */
+    .roles-grid {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      background: #f0ede6; padding: 3rem 2rem;
+    }
+    .roles-grid-inner {
+      max-width: 1100px; margin: 0 auto;
+    }
+    .roles-grid-title {
+      font-family: var(--font-display); font-size: 1.8rem; font-weight: 700;
+      text-align: center; margin-bottom: 2rem; color: var(--ink);
+    }
+    .roles {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.2rem;
+    }
+    .role-card {
+      background: #fff; border-radius: 6px;
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.6rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .role-title {
+      font-family: var(--font-mono); font-size: 0.72rem;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--accent); font-weight: 500;
+      margin-bottom: 0.7rem;
+    }
+    .role-card p {
+      font-size: 0.95rem; line-height: 1.65; color: var(--muted);
+      margin: 0;
+    }
+    .role-card em { font-style: italic; color: var(--ink); }
+
+    /* ── Takeaways section ── */
+    .takeaways {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      background: var(--navy); color: #e8edf5;
+      padding: 4rem 2rem;
+    }
+    .takeaways-inner { max-width: var(--col); margin: 0 auto; }
+    .takeaways h2 {
+      font-family: var(--font-display); font-size: 2rem; font-weight: 700;
+      margin-bottom: 2rem; color: #fff;
+      letter-spacing: -0.01em;
+    }
+    .takeaway-item {
+      display: flex; gap: 1.2rem; align-items: flex-start;
+      margin-bottom: 1.6rem;
+    }
+    .takeaway-num {
+      font-family: var(--font-mono); font-size: 0.8rem;
+      color: var(--gold); font-weight: 500;
+      min-width: 1.8rem; padding-top: 0.1rem;
+    }
+    .takeaway-text {
+      font-size: 1.05rem; line-height: 1.65; color: #c8d8ee;
+    }
+    .takeaway-text strong { color: #e8edf5; }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center; padding: 2.5rem 1.5rem;
+      font-size: 0.82rem; color: var(--faint); font-family: var(--font-mono);
+    }
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    /* ── Horizontal rule ── */
+    .article hr {
+      border: none; border-top: 1px solid var(--border); margin: 3rem 0;
+    }
+
+    @media (max-width: 600px) {
+      body { font-size: 16px; }
+      .hero-title { font-size: 2.4rem; }
+      .article { padding: 2.5rem 1rem 4rem; }
+      .embed-wrap iframe { min-height: 320px; }
+    }
+
+    /* ── Rendered Markdown blocks ── */
+    .md-block {
+      background: #fff; border-radius: 4px;
+      padding: 2rem 2.5rem; max-height: 560px; overflow-y: auto;
+      font-family: var(--font-body); font-size: 0.92rem; line-height: 1.75;
+      color: var(--ink); box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .md-block h1, .md-block h2, .md-block h3 {
+      font-family: var(--font-display); margin: 1.5rem 0 0.5rem;
+      line-height: 1.2;
+    }
+    .md-block h1 { font-size: 1.5rem; }
+    .md-block h2 { font-size: 1.2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.25rem; }
+    .md-block h3 { font-size: 1rem; }
+    .md-block p { margin-bottom: 0.9rem; }
+    .md-block ul, .md-block ol { margin: 0.5rem 0 0.9rem 1.4rem; }
+    .md-block li { margin: 0.3rem 0; }
+    .md-block a { color: var(--accent); }
+    .md-block code {
+      font-family: var(--font-mono); font-size: 0.82rem;
+      background: #f0ede6; padding: 0.15em 0.35em; border-radius: 3px;
+    }
+    .md-block pre {
+      background: #f0ede6; padding: 1rem; border-radius: 4px;
+      overflow-x: auto; margin: 0.8rem 0; font-size: 0.8rem;
+    }
+    .md-block pre code { background: none; padding: 0; }
+    .md-block blockquote {
+      border-left: 3px solid var(--accent);
+      margin: 1rem 0; padding: 0.2rem 1rem;
+      color: var(--muted); font-style: italic;
+    }
+    .md-block blockquote p { margin: 0.3rem 0; }
+
+    /* ── Link card (non-embeddable) ── */
+    .link-card-wrap {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      background: #11121f; padding: 2rem 2rem;
+    }
+    .link-card-wrap .embed-inner { text-align: center; }
+    .link-card-anchor {
+      display: inline-flex; align-items: center; gap: 0.8rem;
+      background: rgba(160,184,216,0.1);
+      border: 1px solid rgba(160,184,216,0.3);
+      border-radius: 6px; padding: 1.2rem 2rem;
+      text-decoration: none; transition: all 0.2s;
+      max-width: 500px;
+    }
+    .link-card-anchor:hover { background: rgba(160,184,216,0.2); border-color: #a0b8d8; }
+    .link-card-icon { font-size: 2rem; flex-shrink: 0; }
+    .link-card-text { text-align: left; }
+    .link-card-title {
+      font-family: var(--font-mono); font-size: 0.9rem; font-weight: 500;
+      color: #c8d8ee; display: block; margin-bottom: 0.3rem;
+    }
+    .link-card-desc { font-size: 0.82rem; color: #7a8ba8; font-style: italic; }
+  </style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- Masthead -->
+<header class="masthead">
+  <div class="masthead-inner">
+    <a href="https://sanand0.github.io/talks/" class="masthead-brand">Anand's Talks</a>
+    <span class="masthead-date">15 May 2026 &nbsp;·&nbsp; Gramener All Hands</span>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <p class="hero-kicker">Gramener All Hands · May 2026</p>
+  <h1 class="hero-title">Agents <em>are</em> the<br>New Software</h1>
+  <p class="hero-subtitle">How AI shifts bottlenecks, why verifiability and context are the new scarce assets, and what each role should do next.</p>
+  <div class="hero-meta">
+    <span><a href="https://www.s-anand.net/">Anand S</a></span>
+    <span class="sep">·</span>
+    <span>Head of Innovation, <a href="https://gramener.com/">Gramener</a></span>
+    <span class="sep">·</span>
+    <span>15 May 2026</span>
+  </div>
+</section>
+
+<!-- Quick navigation -->
+<nav class="quick-nav" aria-label="Sections">
+  <div class="quick-nav-inner">
+    <a href="#agents">Agents are Software</a>
+    <a href="#verifiability">Verifiability</a>
+    <a href="#context">Context</a>
+    <a href="#next">What Next?</a>
+    <a href="#takeaways">Takeaways</a>
+  </div>
+</nav>
+
+<!-- Sketchnote (full-width) -->
+<div class="sketchnote-wrap">
+  <a href="sketchnote.avif" target="_blank" rel="noopener" title="Open full-size sketchnote">
+    <img src="sketchnote.avif" alt="Sketchnote — Agents are the New Software" loading="eager">
+  </a>
+  <p class="sketchnote-caption">Sketchnote · Click to open full size</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     ARTICLE BODY
+════════════════════════════════════════════════ -->
+<article class="article">
+
+  <!-- ── Section 1: Agents are the New Software ── -->
+  <h2 id="agents">Agents <em>are</em> the New Software</h2>
+
+  <p class="drop-cap">We don't need any other software, really. If we just have an AI agent run, <a href="https://metr.org/time-horizons/">it can operate for 16 hours without mistakes</a>. GPT-3.5 could manage that for about 30 seconds. That is the pace at which things are moving.</p>
+
+</article><!-- end .article; embed next -->
+
+<!-- METR time horizons iframe -->
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <p class="embed-label">Task-Completion Time Horizons of Frontier AI — METR</p>
+    <iframe src="https://metr.org/time-horizons/" height="550" title="METR Task-Completion Time Horizons" loading="lazy" allowfullscreen></iframe>
+    <p class="embed-caption"><a href="https://metr.org/time-horizons/" target="_blank" rel="noopener">metr.org/time-horizons</a> — The benchmark tracking how long AI agents can work autonomously</p>
+  </div>
+</div>
+
+<article class="article">
+
+  <p>Recently, a financial research client said: <em>"Can we create a CIM?"</em> — a Confidential Information Memorandum, the kind of heavyweight document banks and investors use to evaluate acquisitions.</p>
+
+  <p>We took an earlier CIM as a reference and <a href="https://claude.ai/share/dba7aa5f-d300-42e0-95fc-e9f4c91f3210" target="_blank" rel="noopener">gave the AI a single prompt</a>:</p>
+
+  <div class="chat-prompt">
+    <div class="chat-label">Prompt given to Claude</div>
+    Create a similar presentation including details on the industry, company overview, management overview and product overview for Koch Industries (https://www.kochinc.com/)
+  </div>
+
+  <div class="insight">
+    <div class="insight-label">💡 Insightful</div>
+    <p><a href="https://docs.google.com/presentation/d/1lQx2Xa_vjVQohvAvht2SWgj2KcuWXH3K/edit?usp=sharing&ouid=105685292426632572114&rtpof=true&sd=true" target="_blank" rel="noopener">This entire slide deck was created based on research in approximately five minutes</a> — and there didn't appear to be a single factual error in it. A task that once required days of analyst work.</p>
+  </div>
+
+</article>
+
+<!-- Koch Industries CIM — Google Slides iframe -->
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <p class="embed-label">AI-generated CIM — Koch Industries (example)</p>
+    <iframe src="https://docs.google.com/presentation/d/1lQx2Xa_vjVQohvAvht2SWgj2KcuWXH3K/embed?start=false&loop=false&delayms=3000" height="480" title="AI-generated CIM for Koch Industries" loading="lazy" allowfullscreen></iframe>
+    <p class="embed-caption"><a href="https://docs.google.com/presentation/d/1lQx2Xa_vjVQohvAvht2SWgj2KcuWXH3K/edit?usp=sharing&ouid=105685292426632572114&rtpof=true&sd=true" target="_blank" rel="noopener">View full presentation →</a></p>
+  </div>
+</div>
+
+<article class="article">
+
+  <p>Or consider teacher-coaching. A client said: <em>"We have teachers conducting classes. We want to give them feedback. What should we tell the coach?"</em> In a few hours, we processed hundreds of videos, telling coaches things like: <em>this teacher was frequently reminding the student about upcoming assessments because of urgency, and should instead let the student come to their own conclusions.</em></p>
+
+  <p>Another client — Cengage — said: <em>"From textbooks, we want to build test banks, instruction manuals, study guides, explainers, and so on."</em> <a href="https://files.s-anand.net/pages/ed-content-pipeline/" target="_blank" rel="noopener">We put it into an agent pipeline</a> and said: "For each chapter, create a test bank." It builds them one after another. All it takes is one instruction.</p>
+
+</article>
+
+<!-- HE Content Pipeline iframe -->
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <p class="embed-label">Higher Education Content Pipeline — live demo</p>
+    <iframe src="https://files.s-anand.net/pages/ed-content-pipeline/" height="500" title="HE Content Pipeline" loading="lazy"></iframe>
+    <p class="embed-caption"><a href="https://files.s-anand.net/pages/ed-content-pipeline/" target="_blank" rel="noopener">files.s-anand.net/pages/ed-content-pipeline</a> — Generating test banks, study guides, and explainers from textbook chapters</p>
+  </div>
+</div>
+
+<article class="article">
+
+  <p>In other words, generation has become easy. <strong>But if generation has become easy, something else downstream becomes hard.</strong></p>
+
+  <p>When research becomes easy, the new question is: how about the private data that specific teams have? What does it take to integrate and provide connectors to private data? Data stories have become easy to generate — but who is going to verify them?</p>
+
+  <p>Times of India reached out and said: <em>"Can you create data stories for one of our features called Statoistics?"</em> I said, <em>"Okay, <a href="https://sanand0.github.io/journalists/statnostics/" target="_blank" rel="noopener">here are 30 data stories</a>"</em> — and that took half an hour. But then, for them to verify those 30 stories is a nightmare. Or take dashboards: a minute is all it takes to produce one. But that has to be integrated both upstream and downstream. Pipelines can be created extremely easily. But how do they fall into the production process?</p>
+
+  <p><strong>The bottlenecks are constantly shifting.</strong></p>
+
+</article>
+
+<!-- Statnostics iframe -->
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <p class="embed-label">Statoistics — 30 AI-generated data stories</p>
+    <iframe src="https://sanand0.github.io/journalists/statnostics/" height="500" title="Statoistics Data Cards Gallery" loading="lazy"></iframe>
+    <p class="embed-caption"><a href="https://sanand0.github.io/journalists/statnostics/" target="_blank" rel="noopener">sanand0.github.io/journalists/statnostics</a> — 30 data story cards, generated in ~30 minutes. The hard part? Verifying them.</p>
+  </div>
+</div>
+
+<article class="article">
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Before AI</th><th>What's hard now</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Research</td><td>Private data access</td></tr>
+        <tr><td>Data stories</td><td>Verification</td></tr>
+        <tr><td>Dashboards</td><td>Integration</td></tr>
+        <tr><td>Pipelines</td><td>Workflows</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="insight">
+    <div class="insight-label">💡 The Core Idea</div>
+    <p><strong>Use AI for everything.</strong> That will help you find the new bottleneck. And where there are new bottlenecks, that's where there is scarcity — build your assets there.</p>
+  </div>
+
+  <hr>
+
+  <!-- ── Section 2: Verifiability ── -->
+  <h2 id="verifiability">Verifiability is an Asset</h2>
+
+  <p>This is one of the most common questions I get. Everywhere I go, people are asking versions of the same thing:</p>
+
+  <ul>
+    <li>A trainee at <strong>Straive</strong>: <em>AI hallucinates during analysis. How can we ensure accuracy?</em></li>
+    <li>An analyst at <strong>AmEx</strong>: <em>Will the data be right on my terabyte-scale dataset?</em></li>
+    <li>A data analyst at <strong>P&amp;G</strong>: <em>Will it know what cross-sell means, or just search for the string "cross-sell"?</em></li>
+    <li>A researcher at <strong>Harvard</strong>: <em>How do I judge AI quality without expert knowledge?</em></li>
+    <li>A manager at <strong>J&amp;J</strong>: <em>My team doesn't know what questions to ask AI.</em></li>
+    <li>A leader at <strong>PGIM</strong>: <em>How do we judge the quality of a prompt?</em></li>
+  </ul>
+
+  <p>Ankor Rai and I <a href="https://sanand0.github.io/talks/2026-03-18-verifiable-agents/" target="_blank" rel="noopener">delivered a talk at Prudential on verifiability</a>. There are different ways to verify AI output:</p>
+
+  <ul>
+    <li><strong>Human expert in the loop.</strong> We as an organization are fantastic at that.</li>
+    <li><strong>LLM as a judge.</strong> Several techniques exist — scoring, pairwise comparison, rubric-based evaluation.</li>
+    <li><strong>Cross-referencing with citations.</strong> Provide sources so a human can verify easily.</li>
+    <li><strong>Rules and executable logic.</strong> This is one of the most powerful approaches.</li>
+  </ul>
+
+</article>
+
+<!-- Verifiable Agents talk iframe -->
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <p class="embed-label">Talk: The Trust Problem — Verifiable Agents</p>
+    <iframe src="https://sanand0.github.io/talks/2026-03-18-verifiable-agents/" height="560" title="Verifiable Agents — Ankor Rai & Anand S" loading="lazy"></iframe>
+    <p class="embed-caption"><a href="https://sanand0.github.io/talks/2026-03-18-verifiable-agents/" target="_blank" rel="noopener">The Trust Problem | Verifiable Agents</a> — Ankor Rai &amp; Anand S, Straive</p>
+  </div>
+</div>
+
+<article class="article">
+
+  <div class="insight">
+    <div class="insight-label">💡 Counterintuitive insight</div>
+    <p>When you tell an LLM to calculate a bunch of numbers, it might make a mistake. <strong>When you tell it to write code to solve the same problem, it won't make a mistake.</strong> First, LLMs are very good at code. Second, code either works or it doesn't — and if it's working, it has almost certainly done the job right.</p>
+  </div>
+
+  <p>This rule-based approach can extend to many domains. For instance, there is <a href="https://mynkpdr.github.io/insurle-demo/" target="_blank" rel="noopener">a language called InsurLE</a>. You can take an insurance claim and convert it into a set of rules. Then you have two pieces of code: "Here is my policy" and "Here is the claim." The question — <em>Does this claim match the policy?</em> — gets a verifiable yes or no. No hallucination. No ambiguity.</p>
+
+</article>
+
+<!-- InsurLE demo iframe -->
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <p class="embed-label">InsurLE — Insurance Logic Engine demo</p>
+    <iframe src="https://mynkpdr.github.io/insurle-demo/" height="520" title="InsurLE — Insurance Logic Engine" loading="lazy"></iframe>
+    <p class="embed-caption"><a href="https://mynkpdr.github.io/insurle-demo/" target="_blank" rel="noopener">mynkpdr.github.io/insurle-demo</a> — Insurance claims converted to executable logic = verifiable outcomes</p>
+  </div>
+</div>
+
+<article class="article">
+
+  <p>When AI starts generating content at scale, people will generate ten times the volume. <em>You</em> can be the person who comes in and starts verifying it. <strong>The ability to figure out the various ways of checking if AI output is good is power. Building that skill is an asset.</strong></p>
+
+  <hr>
+
+  <!-- ── Section 3: Context ── -->
+  <h2 id="context">Context is an Asset</h2>
+
+  <p>Save all your prompts. <a href="https://www.s-anand.net/blog/prompts/" target="_blank" rel="noopener">My prompts are in a public repository</a>. Convert them into what are called <a href="https://agentskills.io/" target="_blank" rel="noopener">skills</a> — instructions that the agent can use when needed.</p>
+
+  <p>For instance, everything I've learned over the last 15 years about data storytelling is in one <a href="https://github.com/sanand0/scripts/blob/main/agents/data-story/SKILL.md" target="_blank" rel="noopener">"Narrative Data Story" skill file</a>. It's a long document capturing everything I know. What that means is that we have encapsulated intelligence.</p>
+
+</article>
+
+<!-- AgentSkills.io — link only (not embeddable) -->
+<div class="link-card-wrap">
+  <div class="embed-inner">
+    <p class="embed-label">AgentSkills.io — reusable instructions for AI agents</p>
+    <a href="https://agentskills.io/" target="_blank" rel="noopener" class="link-card-anchor">
+      <span class="link-card-icon">🧠</span>
+      <span class="link-card-text">
+        <span class="link-card-title">agentskills.io</span>
+        <span class="link-card-desc">Type instructions once; the agent uses them whenever needed</span>
+      </span>
+    </a>
+  </div>
+</div>
+
+<!-- Data Story SKILL — rendered markdown -->
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <p class="embed-label">Example: "Narrative Data Story" skill — 15 years of storytelling knowledge in one file</p>
+    <div id="skill-md" class="md-block"><em>Loading…</em></div>
+    <p class="embed-caption"><a href="https://github.com/sanand0/scripts/blob/main/agents/data-story/SKILL.md" target="_blank" rel="noopener">scripts/agents/data-story/SKILL.md</a></p>
+  </div>
+</div>
+
+<article class="article">
+
+  <p>Every conversation you have with your team in a meeting, every process you execute, every operational method you know — these are the kinds of things you can extract and save, and start using.</p>
+
+  <p>Here is an example. I asked the AI:</p>
+
+  <div class="chat-prompt">
+    <div class="chat-label">Prompt</div>
+    What meetings am I not setting up that I should be? Help me find contacts. Here are all my LinkedIn contacts, people that I have emailed, my transcripts, people that I've written notes for. Research them and let me know who I should meet and why.
+  </div>
+
+  <p>It came back with a prioritised list — IAS officers from a recent training session, leaders from government think tanks, clients from past engagements — a series of people I should be in touch with. Imagine using this to set up client meetings, finding from your network who you should be talking to. Or preparing for those meetings.</p>
+
+  <p><a href="https://www.s-anand.net/blog/prompts/fragments/#meeting-preparation" target="_blank" rel="noopener">This is the prompt I use to prepare every day for meetings.</a> I give it a standard prompt with historical context <em>and</em> live context — today's agenda, recent updates. This morning, for instance, it said in one sentence exactly what frame of mind I needed to go into a particular meeting with, what the counterpart needed to know, and what the agreed next steps were.</p>
+
+  <div class="insight">
+    <div class="insight-label">💡 Small things, big difference</div>
+    <p>It's a small thing — one sentence of prep. But even for personal productivity, it makes a huge difference when you're moving between six meetings a day.</p>
+  </div>
+
+</article>
+
+<!-- Prompts repository iframe -->
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <p class="embed-label">Anand's public prompt repository</p>
+    <iframe src="https://www.s-anand.net/blog/prompts/" height="480" title="Anand's Prompts" loading="lazy"></iframe>
+    <p class="embed-caption"><a href="https://www.s-anand.net/blog/prompts/" target="_blank" rel="noopener">s-anand.net/blog/prompts</a> — Save prompts like code. Version them. Reuse them.</p>
+  </div>
+</div>
+
+<!-- Meeting prep fragments iframe -->
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <p class="embed-label">Meeting preparation fragment — daily context prompt</p>
+    <iframe src="https://www.s-anand.net/blog/prompts/fragments/#meeting-preparation" height="480" title="Meeting Preparation Fragment" loading="lazy"></iframe>
+    <p class="embed-caption"><a href="https://www.s-anand.net/blog/prompts/fragments/#meeting-preparation" target="_blank" rel="noopener">Meeting Preparation prompt</a></p>
+  </div>
+</div>
+
+<!-- Prompt fragments — rendered markdown -->
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <p class="embed-label">All prompt fragments — reusable building blocks</p>
+    <div id="fragments-md" class="md-block"><em>Loading…</em></div>
+    <p class="embed-caption"><a href="https://github.com/sanand0/blog/blob/live/pages/prompts/fragments.md" target="_blank" rel="noopener">blog/pages/prompts/fragments.md</a></p>
+  </div>
+</div>
+
+<article class="article">
+
+  <p>You can create several <a href="https://www.s-anand.net/blog/derived-formats-with-gemini/" target="_blank" rel="noopener">derived formats</a> from a single piece of content too. A colleague mentioned we created a report for a consumer goods client — and then converted it into a rap song.</p>
+
+  <div class="funny">
+    <div class="funny-label">😄 True story</div>
+    <p>We took a dry business report and converted it into a rap song. Very different format, very engaging — and it got a fair bit of interest. The same content, multiple formats: video, sketchnote, report, data story, dashboard. Stop shipping one thing.</p>
+  </div>
+
+</article>
+
+<!-- Derived Formats iframe -->
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <p class="embed-label">Derived Formats with Gemini — one source, many outputs</p>
+    <iframe src="https://www.s-anand.net/blog/derived-formats-with-gemini/" height="500" title="Derived Formats with Gemini" loading="lazy"></iframe>
+    <p class="embed-caption"><a href="https://www.s-anand.net/blog/derived-formats-with-gemini/" target="_blank" rel="noopener">Derived Formats with Gemini</a> — a single document spawning a podcast, sketchnote, video, and quiz</p>
+  </div>
+</div>
+
+<article class="article">
+
+  <div class="insight">
+    <div class="insight-label">💡 The Asset Principle</div>
+    <p>When you have more context that you save — any kind of text, any kind of process, any kind of operational method, any knowledge — just put it into a document, text file, save it, and you will start building assets that become reusable in a variety of ways.</p>
+  </div>
+
+  <hr>
+
+  <!-- ── Section 4: What Should I Do Next? ── -->
+  <h2 id="next">What Should I Do Next?</h2>
+
+  <p>So, what does that mean for you practically?</p>
+
+</article>
+
+<!-- Roles grid (full-width) -->
+<div class="roles-grid">
+  <div class="roles-grid-inner">
+    <p class="roles-grid-title">Your role is changing. Here's how.</p>
+    <div class="roles">
+      <div class="role-card">
+        <div class="role-title">Data Scientists &amp; Engineers</div>
+        <p>Stop delivering models &amp; notebooks. Build agent-verifiable analytical workflows. Your value is no longer the model. <em>It's knowing what to verify and how.</em></p>
+      </div>
+      <div class="role-card">
+        <div class="role-title">Developers</div>
+        <p>Learn agent harness engineering — Git checkpoints, Docker isolation, MCP connectors, CLI-friendly tools, AGENTS.md. The agent writes the code. <em>You own the architecture it runs inside.</em></p>
+      </div>
+      <div class="role-card">
+        <div class="role-title">Business Analysts</div>
+        <p>Become excellent at examples, exclusions, acceptance criteria, and failure cases. These are what agents need to do your work well. <em>You're writing their job description now.</em></p>
+      </div>
+      <div class="role-card">
+        <div class="role-title">Account Managers &amp; Sales</div>
+        <p>Stop selling AI features. Sell verified outcomes. "We built it" is table stakes. <em>"We can prove it works, and we'll own it if it doesn't"</em> is the pitch.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-title">Project Managers</div>
+        <p>Treat prompts, rubrics, validation rules, and postmortems as project assets. Version-controlled, reusable, owned. <em>Not email threads.</em></p>
+      </div>
+      <div class="role-card">
+        <div class="role-title">Marketing</div>
+        <p>Shift from case studies to living demos. Every document you publish can now spawn a podcast, a sketchnote, a video, a quiz. <em>Stop shipping one thing.</em></p>
+      </div>
+      <div class="role-card">
+        <div class="role-title">HR</div>
+        <p>Train through games and agent-native challenges, not slide decks. If someone can't complete a task with an agent within a time limit, that's the signal. <em>Not whether they passed a module.</em></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Final band quote -->
+<div class="band">
+  <p>"Use AI for everything. You will find the next bottleneck. The bottleneck is where scarcity lies, and that is where you need to build assets."</p>
+  <cite>— Anand S, Gramener All Hands, May 2026</cite>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     TAKEAWAYS
+════════════════════════════════════════════════ -->
+<section class="takeaways" id="takeaways">
+  <div class="takeaways-inner">
+    <h2>Top Takeaways</h2>
+
+    <div class="takeaway-item">
+      <span class="takeaway-num">01</span>
+      <p class="takeaway-text"><strong>AI agents can now run for hours autonomously</strong> — what GPT-3.5 managed for 30 seconds, frontier models can sustain for 16 hours. The pace of capability improvement is non-linear. What's impossible today will be trivial next quarter.</p>
+    </div>
+
+    <div class="takeaway-item">
+      <span class="takeaway-num">02</span>
+      <p class="takeaway-text"><strong>Generation is no longer the bottleneck.</strong> Research, data stories, dashboards, and pipelines are all easy to generate. The bottleneck has shifted to private data access, verification, integration, and workflows. That's where the scarce value now lives.</p>
+    </div>
+
+    <div class="takeaway-item">
+      <span class="takeaway-num">03</span>
+      <p class="takeaway-text"><strong>Verifiability is a competitive asset.</strong> The most common client concern is not capability — it's trust. LLM-as-judge, human-in-the-loop, citations, and executable code/rules are the four verification strategies. The ability to pick the right one is rare and valuable.</p>
+    </div>
+
+    <div class="takeaway-item">
+      <span class="takeaway-num">04</span>
+      <p class="takeaway-text"><strong>Code beats arithmetic.</strong> When an LLM writes code to solve a numerical problem rather than computing directly, accuracy is dramatically higher — because code either works or it doesn't.</p>
+    </div>
+
+    <div class="takeaway-item">
+      <span class="takeaway-num">05</span>
+      <p class="takeaway-text"><strong>Context is the new moat.</strong> Save your prompts, processes, and domain expertise in reusable documents and skills. Every conversation, postmortem, and meeting transcript is raw material for an asset. The people who systematically capture and reuse context will compound their advantage.</p>
+    </div>
+
+    <div class="takeaway-item">
+      <span class="takeaway-num">06</span>
+      <p class="takeaway-text"><strong>One piece of content, ten formats.</strong> Documents, reports, and data can now spawn podcasts, sketchnotes, videos, quizzes, and dashboards automatically. The teams that publish multiple derived formats from a single source will vastly out-reach those who ship one thing.</p>
+    </div>
+
+    <div class="takeaway-item">
+      <span class="takeaway-num">07</span>
+      <p class="takeaway-text"><strong>Every role has a specific pivot.</strong> Data scientists: shift from models to verifiable workflows. Developers: own the architecture agents run inside. Business analysts: master examples and acceptance criteria. Sales: sell verified outcomes, not AI features. PM: version-control your prompts and rubrics.</p>
+    </div>
+
+    <div class="takeaway-item">
+      <span class="takeaway-num">08</span>
+      <p class="takeaway-text"><strong>The one-sentence summary:</strong> <em>Use AI for everything. Find the new bottleneck. Build assets there.</em></p>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>
+    <a href="https://sanand0.github.io/talks/">← All talks</a>
+    &nbsp;·&nbsp;
+    <a href="https://www.s-anand.net/">Anand S</a>
+    &nbsp;·&nbsp;
+    Gramener All Hands, 15 May 2026
+  </p>
+</footer>
+
+<script>
+  // Reading progress bar
+  const bar = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const s = document.documentElement;
+    const pct = (s.scrollTop / (s.scrollHeight - s.clientHeight)) * 100;
+    bar.style.width = Math.min(pct, 100) + '%';
+  }, { passive: true });
+
+  // Render remote markdown files
+  async function renderMd(url, targetId) {
+    try {
+      const res = await fetch(url);
+      const text = await res.text();
+      // Strip YAML front matter if present
+      const body = text.replace(/^---[\s\S]*?---\n/, '');
+      document.getElementById(targetId).innerHTML = marked.parse(body);
+    } catch (e) {
+      document.getElementById(targetId).innerHTML = `<em>Could not load content. <a href="${url}" target="_blank">View on GitHub</a>.</em>`;
+    }
+  }
+
+  renderMd('https://raw.githubusercontent.com/sanand0/scripts/refs/heads/main/agents/data-story/SKILL.md', 'skill-md');
+  renderMd('https://raw.githubusercontent.com/sanand0/blog/refs/heads/live/pages/prompts/fragments.md', 'fragments-md');
+</script>
+</body>
+</html>

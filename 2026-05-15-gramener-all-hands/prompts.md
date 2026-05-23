@@ -59,3 +59,5 @@ agentskills.io is not embeddable. Just link to it.
 github.com links are not embeddable. Instead, render the Markdown version of the raw content for https://raw.githubusercontent.com/sanand0/blog/refs/heads/live/pages/prompts/fragments.md and https://raw.githubusercontent.com/sanand0/scripts/refs/heads/main/agents/data-story/SKILL.md
 
 The content may be a bit different from my transcript? Align it with the original perfectly.
+
+<!-- copilot --resume=023b9d0f-533c-4ab5-9f25-24a9191754e5 --yolo -->

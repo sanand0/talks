@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What Your AI Doesn't Know About You | Context Engineering · AI Unboxed</title>
+  <meta name="description" content="IIM Alumni Singapore's AI Unboxed series kicks off with a 2-hour deep dive into context engineering — the art of giving AI what it needs to think like you.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --ink: #0d1b2a;
+      --ink2: #1e3a52;
+      --accent: #0077b6;
+      --accent2: #023e8a;
+      --gold: #e9a84c;
+      --gold-light: #fef6e4;
+      --muted: #5b7a91;
+      --border: #ccd9e3;
+      --highlight: #e8f4fd;
+      --dark: #071928;
+      --dark2: #0d2137;
+      --teal: #0096c7;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'Source Serif 4', Georgia, serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.8;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── Progress bar ── */
+    #progress {
+      position: fixed; top: 0; left: 0;
+      height: 3px; width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      z-index: 1000; transition: width 0.15s linear;
+    }
+
+    /* ── Masthead ── */
+    .masthead {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(244,247,251,0.96);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      backdrop-filter: blur(8px);
+    }
+    .masthead-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem; flex-wrap: wrap;
+    }
+    .masthead-brand {
+      font-family: var(--font-display); font-size: 0.88rem;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+      text-decoration: none;
+    }
+    .masthead-brand:hover { color: var(--accent); }
+    .masthead-right { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+    .masthead-date { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); }
+    .masthead-link {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      color: var(--accent); text-decoration: none;
+      border: 1px solid var(--accent); padding: 0.28rem 0.6rem;
+      transition: all 0.2s; white-space: nowrap;
+    }
+    .masthead-link:hover { background: var(--accent); color: #fff; }
+
+    /* ── Hero ── */
+    .hero {
+      max-width: 820px; margin: 0 auto;
+      padding: 4.5rem 2rem 2rem; text-align: center;
+    }
+    .hero-kicker {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1.4rem;
+    }
+    .hero-series {
+      display: inline-block;
+      background: var(--accent); color: #fff;
+      font-family: var(--font-mono); font-size: 0.65rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 0.25rem 0.8rem; margin-bottom: 1.2rem;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+      font-weight: 700; line-height: 1.1;
+      letter-spacing: -0.02em; margin-bottom: 1.2rem; color: var(--ink);
+    }
+    .hero-title em { font-style: italic; color: var(--accent); }
+    .hero-subtitle {
+      font-family: var(--font-display); font-size: 1.2rem;
+      font-style: italic; color: var(--ink2);
+      max-width: 640px; margin: 0 auto 2rem; line-height: 1.55;
+    }
+    .hero-meta {
+      display: flex; justify-content: center; gap: 1.5rem;
+      flex-wrap: wrap; font-size: 0.83rem; color: var(--muted);
+      margin-bottom: 2rem;
+    }
+    .hero-meta a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(0,119,182,0.25); transition: border-color 0.2s; }
+    .hero-meta a:hover { border-bottom-color: var(--accent); }
+    .hero-meta .sep { color: var(--border); }
+
+    /* ── Quick links bar ── */
+    .quick-links {
+      background: var(--accent2); padding: 0.9rem 2rem; margin-bottom: 0;
+    }
+    .quick-links-inner {
+      max-width: 860px; margin: 0 auto;
+      display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; align-items: center;
+    }
+    .quick-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: rgba(255,255,255,0.9); text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.3); padding: 0.35rem 0.8rem;
+      transition: all 0.2s;
+    }
+    .quick-link:hover { background: rgba(255,255,255,0.15); color: #fff; border-color: rgba(255,255,255,0.6); }
+    .quick-link.gold {
+      background: var(--gold); color: var(--dark); border-color: var(--gold); font-weight: 700;
+    }
+    .quick-link.gold:hover { background: #d4920a; border-color: #d4920a; }
+
+    /* ── Video full-width ── */
+    .video-wrap {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      background: #060f1a; padding: 2.5rem 2rem;
+    }
+    .video-inner {
+      max-width: 1100px; margin: 0 auto;
+    }
+    .video-inner video { width: 100%; border-radius: 4px; display: block; }
+    .video-caption {
+      max-width: 1100px; margin: 0.75rem auto 0;
+      font-family: var(--font-mono); font-size: 0.75rem;
+      color: #7a9ab5; text-align: center;
+    }
+    .video-caption a { color: #a0bfd4; border-bottom: 1px solid rgba(160,191,212,0.3); text-decoration: none; }
+    .video-caption a:hover { color: #fff; }
+
+    /* ── Audio card ── */
+    .audio-wrap {
+      max-width: 600px; margin: 2rem auto; padding: 0 2rem;
+    }
+    .audio-card {
+      background: var(--dark2); color: #e8f4fd;
+      padding: 1.25rem 1.75rem; border-radius: 6px;
+      display: flex; align-items: center; gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .audio-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .audio-info { flex: 1; min-width: 160px; }
+    .audio-title {
+      font-family: var(--font-display); font-size: 1rem;
+      font-weight: 600; margin-bottom: 0.2rem;
+    }
+    .audio-sub { font-size: 0.78rem; color: #7aa5c0; }
+    .audio-card audio { width: 100%; max-width: 320px; height: 40px; }
+
+    /* ── Article column ── */
+    .article { max-width: 680px; margin: 0 auto; padding: 0 2rem 4rem; }
+    .article p { margin-bottom: 1.55rem; }
+    .article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(0,119,182,0.25); transition: border-color 0.2s; }
+    .article a:hover { border-bottom-color: var(--accent); }
+    .article h2 {
+      font-family: var(--font-display); font-size: 1.85rem;
+      font-weight: 700; margin: 3.5rem 0 1.2rem;
+      padding-top: 2.5rem; border-top: 1px solid var(--border); line-height: 1.2;
+    }
+    .article h3 {
+      font-family: var(--font-display); font-size: 1.25rem;
+      font-weight: 600; margin: 2.2rem 0 0.7rem; color: var(--accent);
+    }
+    .article ul, .article ol { margin: 1.2rem 0; padding-left: 1.75rem; }
+    .article li { margin-bottom: 0.6rem; }
+    strong { font-weight: 700; }
+
+    /* ── Drop cap ── */
+    .dropcap::first-letter {
+      font-family: var(--font-display); font-size: 5.2rem;
+      float: left; line-height: 0.8;
+      margin: 0.1rem 0.15rem 0 0; color: var(--accent); font-weight: 700;
+    }
+
+    /* ── Pull quote ── */
+    blockquote.pull-quote {
+      border-left: 4px solid var(--accent);
+      padding: 1.25rem 2rem;
+      margin: 2.5rem -6%;
+      font-style: italic; font-size: 1.15rem;
+      line-height: 1.65;
+      background: var(--highlight);
+      border-radius: 0 4px 4px 0;
+    }
+    blockquote.pull-quote p { margin-bottom: 0; }
+    blockquote.pull-quote cite {
+      display: block; margin-top: 0.75rem;
+      font-size: 0.82rem; font-style: normal;
+      color: var(--muted); letter-spacing: 0.03em;
+    }
+    @media (max-width: 700px) { blockquote.pull-quote { margin-left: 0; margin-right: 0; } }
+
+    /* ── Full-width band quote ── */
+    .band-quote {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      background: var(--dark2); color: #e8f4fd;
+      padding: 3rem 2rem; text-align: center;
+    }
+    .band-quote p {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3.2vw, 2.1rem);
+      font-style: italic; line-height: 1.4;
+      max-width: 780px; margin: 0 auto 1rem;
+    }
+    .band-quote cite {
+      font-family: var(--font-mono); font-size: 0.78rem;
+      color: #7aa5c0; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+
+    /* ── Inline figure ── */
+    .article figure { margin: 2.5rem 0; }
+    .article figure img {
+      width: 100%; height: auto; border-radius: 4px;
+      border: 1px solid var(--border);
+      transition: opacity 0.2s;
+    }
+    .article figure a img:hover { opacity: 0.88; }
+    .article figure figcaption {
+      font-size: 0.82rem; color: var(--muted);
+      font-style: italic; margin-top: 0.6rem; text-align: center;
+    }
+    .article figure figcaption a { font-style: normal; font-size: 0.78rem; }
+
+    /* ── Wide figure ── */
+    .wide-figure {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      background: #e2edf5; padding: 2.5rem 2rem;
+    }
+    .wide-figure img {
+      max-width: 980px; width: 100%;
+      margin: 0 auto; display: block; border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    .wide-figure figcaption {
+      max-width: 980px; margin: 0.75rem auto 0;
+      font-size: 0.82rem; color: var(--muted);
+      font-style: italic; text-align: center;
+    }
+    .wide-figure figcaption a { font-style: normal; }
+
+    /* ── Comic full-width ── */
+    .comic-wrap {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      background: #1a0a2e; padding: 3rem 2rem; text-align: center;
+    }
+    .comic-wrap a { display: inline-block; max-width: 760px; width: 100%; }
+    .comic-wrap img {
+      width: 100%; height: auto; border-radius: 6px;
+      box-shadow: 0 16px 64px rgba(0,0,0,0.6);
+      transition: opacity 0.2s;
+    }
+    .comic-wrap img:hover { opacity: 0.9; }
+    .comic-caption {
+      margin-top: 1rem; font-size: 0.82rem; color: #a088cc;
+      font-family: var(--font-mono); letter-spacing: 0.05em;
+    }
+
+    /* ── Iframe full-width ── */
+    .iframe-wrap {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      background: #f0f5fa; padding: 2.5rem 2rem;
+    }
+    .iframe-inner {
+      max-width: 1200px; margin: 0 auto;
+    }
+    .iframe-inner iframe {
+      width: 100%; height: 600px; border: none;
+      border-radius: 4px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    }
+    .iframe-caption {
+      max-width: 1200px; margin: 0.75rem auto 0;
+      font-family: var(--font-mono); font-size: 0.75rem;
+      color: var(--muted); text-align: center;
+    }
+    .iframe-caption a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(0,119,182,0.25); }
+
+    /* ── Framework cards ── */
+    .framework-band {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      background: linear-gradient(135deg, #071928 0%, #0d3b5e 100%);
+      padding: 3.5rem 2rem;
+    }
+    .framework-inner {
+      max-width: 1100px; margin: 0 auto;
+    }
+    .framework-title {
+      font-family: var(--font-display); font-size: 1.5rem;
+      font-weight: 700; color: #e8f4fd; text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    .framework-sub {
+      font-size: 0.9rem; color: #7aa5c0; text-align: center;
+      font-style: italic; margin-bottom: 2.5rem;
+    }
+    .framework-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+    .framework-card {
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px; padding: 1.5rem;
+      transition: background 0.2s;
+    }
+    .framework-card:hover { background: rgba(255,255,255,0.1); }
+    .framework-card-num {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .framework-card-title {
+      font-family: var(--font-display); font-size: 1.4rem;
+      font-weight: 700; color: #e8f4fd; margin-bottom: 0.5rem;
+    }
+    .framework-card-body { font-size: 0.9rem; color: #a0c4d8; line-height: 1.6; }
+    .framework-card-tip {
+      margin-top: 0.8rem; font-size: 0.82rem;
+      color: var(--gold); font-style: italic; line-height: 1.5;
+    }
+
+    /* ── Takeaways ── */
+    .takeaways-band {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      background: linear-gradient(135deg, #0077b6 0%, #023e8a 100%);
+      padding: 3.5rem 2rem;
+    }
+    .takeaways-inner { max-width: 900px; margin: 0 auto; }
+    .takeaways-title {
+      font-family: var(--font-display); font-size: 1.8rem;
+      font-weight: 700; color: #fff; text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    .takeaways-sub {
+      font-size: 0.9rem; color: rgba(255,255,255,0.7); text-align: center;
+      font-style: italic; margin-bottom: 2.5rem;
+    }
+    .takeaways-list { list-style: none; padding: 0; }
+    .takeaways-list li {
+      display: flex; gap: 1rem; align-items: flex-start;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px; padding: 1.2rem 1.5rem; margin-bottom: 0.9rem;
+      color: #e8f4fd;
+    }
+    .takeaway-num {
+      font-family: var(--font-mono); font-size: 1.2rem;
+      font-weight: 700; color: var(--gold); flex-shrink: 0; line-height: 1.4;
+    }
+    .takeaway-text { font-size: 0.95rem; line-height: 1.7; }
+    .takeaway-text strong { color: #fff; }
+
+    /* ── Footer ── */
+    .footer {
+      background: var(--dark); color: #7aa5c0;
+      padding: 2.5rem 2rem; text-align: center;
+    }
+    .footer a { color: #a0c4d8; text-decoration: none; border-bottom: 1px solid rgba(160,196,216,0.3); }
+    .footer a:hover { color: #fff; }
+    .footer p { font-size: 0.85rem; margin-bottom: 0.4rem; }
+
+    /* ── Tooltip ── */
+    [data-tip] {
+      position: relative; border-bottom: 1px dashed rgba(0,119,182,0.5);
+      cursor: help;
+    }
+    [data-tip]:hover::after {
+      content: attr(data-tip);
+      position: absolute; bottom: calc(100% + 6px); left: 50%;
+      transform: translateX(-50%);
+      background: var(--dark); color: #e8f4fd;
+      font-family: var(--font-mono); font-size: 0.72rem;
+      line-height: 1.4; padding: 0.5rem 0.85rem;
+      border-radius: 4px; white-space: normal;
+      max-width: 280px; width: max-content;
+      pointer-events: none; z-index: 100;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+
+    /* ── Transcript popup ── */
+    #transcript-modal {
+      display: none; position: fixed; inset: 0; z-index: 500;
+      background: rgba(7,25,40,0.85); overflow: auto;
+      padding: 2rem 1rem;
+    }
+    #transcript-modal.open { display: flex; align-items: flex-start; justify-content: center; }
+    .transcript-box {
+      background: var(--bg); max-width: 760px; width: 100%;
+      border-radius: 8px; overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+      max-height: 90vh; display: flex; flex-direction: column;
+    }
+    .transcript-header {
+      background: var(--accent2); color: #fff;
+      padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center;
+      flex-shrink: 0;
+    }
+    .transcript-header h3 { font-family: var(--font-display); font-size: 1rem; }
+    .transcript-close {
+      background: none; border: none; color: #fff; font-size: 1.5rem;
+      cursor: pointer; line-height: 1; padding: 0 0.25rem;
+    }
+    .transcript-body {
+      padding: 1.5rem; overflow-y: auto; font-size: 0.9rem;
+      line-height: 1.7; color: var(--ink);
+    }
+    .transcript-body h2 { font-size: 1.1rem; margin: 1.5rem 0 0.5rem; color: var(--accent); }
+    .transcript-body strong { color: var(--accent); }
+    .transcript-body p { margin-bottom: 0.9rem; }
+    .transcript-body a { color: var(--accent); }
+
+    /* ── Chat snippet ── */
+    .chat-snippet {
+      background: var(--dark2); border-left: 4px solid var(--teal);
+      border-radius: 0 6px 6px 0; padding: 1.2rem 1.5rem;
+      margin: 2rem 0; color: #d0e8f5;
+    }
+    .chat-snippet-label {
+      font-family: var(--font-mono); font-size: 0.65rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 0.6rem;
+    }
+    .chat-snippet p { margin-bottom: 0.6rem; font-size: 0.9rem; line-height: 1.65; }
+    .chat-snippet p:last-child { margin-bottom: 0; }
+    .chat-snippet a { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(233,168,76,0.3); }
+
+    /* ── Stat callout ── */
+    .stat-band {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      background: var(--gold-light); border-top: 1px solid #f0d090; border-bottom: 1px solid #f0d090;
+      padding: 2.5rem 2rem;
+    }
+    .stat-grid {
+      max-width: 900px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.5rem; text-align: center;
+    }
+    .stat-item {}
+    .stat-num {
+      font-family: var(--font-display); font-size: 2.8rem;
+      font-weight: 700; color: var(--accent); line-height: 1;
+    }
+    .stat-label { font-size: 0.85rem; color: var(--muted); margin-top: 0.3rem; }
+
+    @media (max-width: 640px) {
+      .article { padding: 0 1.2rem 3rem; }
+      .hero { padding: 3rem 1.2rem 1.5rem; }
+      .framework-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="progress"></div>
+
+  <!-- Masthead -->
+  <nav class="masthead">
+    <div class="masthead-inner">
+      <a class="masthead-brand" href="https://sanand0.github.io/talks/">Anand's Talks</a>
+      <div class="masthead-right">
+        <span class="masthead-date">23 May 2026</span>
+        <a class="masthead-link" href="https://iimalumni.sg/" target="_blank" rel="noopener">IIM Alumni SG</a>
+        <a class="masthead-link" id="transcript-btn" href="transcript.md">Transcript</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-kicker">AI Unboxed · Session 1 of 4</div>
+    <div class="hero-series">Context Engineering</div>
+    <h1 class="hero-title">What Your AI Doesn't<br><em>Know About You</em></h1>
+    <p class="hero-subtitle">How a two-hour workshop for IIM Alumni in Singapore revealed that the gap between mediocre AI and remarkable AI is almost entirely about what you tell it.</p>
+    <div class="hero-meta">
+      <span>By <a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand</a>, <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a></span>
+      <span class="sep">·</span>
+      <span>Online via Microsoft Teams</span>
+      <span class="sep">·</span>
+      <span>76 participants</span>
+    </div>
+  </header>
+
+  <!-- Quick links -->
+  <div class="quick-links">
+    <div class="quick-links-inner">
+      <a class="quick-link gold" href="https://media.s-anand.net/2026-05-23-ai-unboxed-context-engineering.webm">▶ Watch Video</a>
+      <a class="quick-link" href="https://github.com/sanand0/talks/releases/download/talks/2026-05-23-ai-unboxed-context-engineering.opus">🎧 Audio</a>
+      <a class="quick-link" id="transcript-btn2" href="transcript.md">📄 Transcript</a>
+      <a class="quick-link" href="https://docs.google.com/document/d/1vyOTJFvTtJyRsJNMyMSv302dizTIe4MuDNVHCA5reGw/edit" target="_blank" rel="noopener">📝 Exercises</a>
+      <a class="quick-link" href="https://sanand0.github.io/llmpricing/" target="_blank" rel="noopener">💰 LLM Pricing</a>
+      <a class="quick-link" href="https://lmarena.ai/leaderboard" target="_blank" rel="noopener">🏆 LM Arena</a>
+    </div>
+  </div>
+
+  <!-- Video embed (full width) -->
+  <div class="video-wrap">
+    <div class="video-inner">
+      <video controls preload="metadata" width="100%">
+        <source src="https://media.s-anand.net/2026-05-23-ai-unboxed-context-engineering.webm" type='video/webm; codecs="vp9, opus"'>
+      </video>
+    </div>
+    <p class="video-caption">Full 2-hour workshop recording · <a href="https://iimalumni.sg/" target="_blank" rel="noopener">IIM Alumni Singapore</a> · AI Unboxed Series, Session 1</p>
+  </div>
+
+  <!-- Audio card -->
+  <div class="audio-wrap">
+    <div class="audio-card">
+      <div class="audio-icon">🎧</div>
+      <div class="audio-info">
+        <div class="audio-title">Context Engineering — Audio</div>
+        <div class="audio-sub">AI Unboxed · 23 May 2026 · ~2 hrs</div>
+      </div>
+      <audio controls preload="none">
+        <source src="https://github.com/sanand0/talks/releases/download/talks/2026-05-23-ai-unboxed-context-engineering.opus" type="audio/ogg; codecs=opus">
+      </audio>
+    </div>
+  </div>
+
+  <!-- Transcript modal -->
+  <div id="transcript-modal" role="dialog" aria-modal="true" aria-label="Workshop Transcript">
+    <div class="transcript-box">
+      <div class="transcript-header">
+        <h3>Workshop Transcript — Context Engineering</h3>
+        <button class="transcript-close" id="transcript-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="transcript-body" id="transcript-body">
+        <p><em>Loading transcript…</em></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Article begins -->
+  <article class="article">
+
+    <p class="dropcap" style="margin-top:3rem;">There is a question that hovers over every AI workshop, unspoken but persistent: <em>Why are we here?</em> Can't people just figure it out themselves? Anand's daughter asked him exactly this, with eight-year-old frankness, the morning of the workshop. What she didn't add — though it was implied — was the second half: <em>"And why from you, of all people?"</em></p>
+
+    <p>It was 23 May 2026, a Saturday afternoon in Singapore. Seventy-six professionals — banking veterans, investment managers, consultants, fintech founders — had given up their weekend to attend the first of four AI workshops organized by the <a href="https://iimalumni.sg/" target="_blank" rel="noopener">IIM Alumni Association Singapore</a>. The occasion was the debut of a new series called <strong>AI Unboxed</strong>, and the topic was <a href="https://en.wikipedia.org/wiki/Prompt_engineering" target="_blank" rel="noopener" data-tip="Context engineering: the practice of systematically providing AI with everything it needs — prompts, files, memory, and tools — to produce its best work.">Context Engineering</a>.</p>
+
+    <p>The host, <a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand</a>, is <strong>Head of Innovation at <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a></strong> and former co-founder of <a href="https://gramener.com/" target="_blank" rel="noopener">Gramener</a>, one of India's pioneering <a href="https://gramener.com/blog/" target="_blank" rel="noopener">data storytelling</a> firms. His yearbook at <a href="https://www.iimb.ac.in/" target="_blank" rel="noopener">IIM Bangalore</a> called him <strong>"God of all things."</strong> At <a href="https://www.iitm.ac.in/" target="_blank" rel="noopener">IIT Madras</a>, everyone knew him as "Bhalla" — for reasons nobody has yet explained satisfactorily. His colleagues call him an <strong>"LLM Psychologist"</strong> — the person who studies not just what AI can do, but how it thinks, where it lies, and how to build a working relationship with it.</p>
+
+    <blockquote class="pull-quote">
+      <p>"The value that these workshops add is probably not as much that I am going to give you some content that will be useful. A big part of the value is you have decided to dedicate a certain amount of your time to do something related to AI."</p>
+      <cite>— Anand, opening the session</cite>
+    </blockquote>
+
+    <p>He'd tested this thesis the day before, visiting teams at <a href="https://www.nus.edu.sg/" target="_blank" rel="noopener">NUS</a> and sitting in on a session by <a href="https://www.sutd.edu.sg/" target="_blank" rel="noopener">SUTD</a> design professor Bradley Chambers. Something about being <em>in the room</em> — even a virtual Teams room — made the difference. The slides were the same. The magic was not. The environment itself, he concluded, is a form of context. Before the session even began, co-organizer Saurabh had quipped: <em>"my latest prompt in Claude is 'write like <a href="https://www.s-anand.net/blog/people-skills-with-ai/" target="_blank" rel="noopener">Nayana Jain</a>' and it comes up with these posts."</em> Even the introduction was a demo.</p>
+
+    <h2>The Background That Started Everything</h2>
+
+    <p>The workshop opened not with a lecture but with a challenge. Anand had spent a few minutes before the session doing something unremarkable: he'd uploaded the <a href="https://files.s-anand.net/images/2026-05-17-iimpact-logo.avif" target="_blank" rel="noopener">IIMpact logo</a> to <a href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT</a> and asked it to create a custom Teams background — "in my style," he added, because the model already knew his aesthetic from months of conversation. Ten minutes later, he was hosting a two-hour workshop with an AI-designed backdrop.</p>
+
+    <p>Now he asked 76 participants to do the same.</p>
+
+  </article>
+
+  <!-- Teams background image (wide) -->
+  <figure class="wide-figure">
+    <a href="teams-backgrounds.avif" target="_blank" rel="noopener">
+      <img src="teams-backgrounds.avif" alt="AI-generated Microsoft Teams backgrounds using the IIMpact logo" loading="lazy">
+    </a>
+    <figcaption>
+      AI-generated Teams backgrounds created by participants using the <a href="https://files.s-anand.net/images/2026-05-17-iimpact-logo.avif" target="_blank" rel="noopener">IIMpact logo</a>. Prompts went to <a href="https://chatgpt.com/share/6a114e9b-0c6c-83ec-b9df-0f2f15149325" target="_blank" rel="noopener">ChatGPT</a> and <a href="https://gemini.google.com/share/f15ef277be83" target="_blank" rel="noopener">Gemini</a>. Click to view full-size.
+    </figcaption>
+  </figure>
+
+  <article class="article">
+
+    <p>Within minutes, the spreadsheet — a live Google Sheet shared with all participants — began filling up. Nine entries, then twenty, then forty-four people had backgrounds. The Teams grid became a gallery of creativity: circuit-board blue gradients, clean corporate minimalism, one that looked suspiciously like a Bloomberg terminal. Anand's instructions were deliberately sparse: "Create a Teams background with this logo." The AI filled in the rest.</p>
+
+    <p>This was not an accident. It was the first lesson, delivered without being announced: <strong>you don't need to explain everything to get something great. You need to give the AI just enough context.</strong></p>
+
+    <div class="chat-snippet">
+      <div class="chat-snippet-label">From the prep chat · <a href="https://chatgpt.com/share/6a114e9b-0c6c-83ec-b9df-0f2f15149325" target="_blank" rel="noopener">ChatGPT / Gemini background design</a></div>
+      <p>The prompt: "Create a Microsoft Teams background. Keep the IIMpact logo on the top right. Think about what will work as a great Teams background." Gemini responded in seconds. ChatGPT was slower but more polished. Claude couldn't generate images at all — "stick to one of these," Anand told the room.</p>
+    </div>
+
+    <p>The exercise was not really about backgrounds. It was about uploading files. <strong>The "plus button" in ChatGPT, Gemini, and Claude — the one most people have never clicked — is, Anand would argue, the most underused feature in all of AI.</strong> Every major platform supports it: <a href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT</a>'s paperclip, <a href="https://gemini.google.com/" target="_blank" rel="noopener">Gemini</a>'s plus, <a href="https://claude.ai/" target="_blank" rel="noopener">Claude</a>'s upload. Yet the vast majority of users never leave the text box.</p>
+
+    <blockquote class="pull-quote">
+      <p>"Today's session is about context engineering, and context engineering is largely about making sure that you've got stuff that you can upload — that you <em>actually</em> upload stuff."</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <h2>The Four Elements</h2>
+
+    <p>Here is something unusual about Anand's thinking: he builds his frameworks on bike rides. The four-element model he was about to present had come to him during a cycle back from a police station (the story of why he was at the police station remains untold). He'd dictated his thoughts into ChatGPT. The model had helped refine them. By the time he arrived home, he had a framework.</p>
+
+    <p>He was careful to caveat it. This was not official theory. It was not peer-reviewed. It was one person's attempt to make sense of something that changes every three months — built on a <a href="https://chatgpt.com/share/6a11a1df-77e8-83ec-bd16-259cd51b35a8" target="_blank" rel="noopener">prep session</a> dictated into ChatGPT while cycling. And yet, for a room full of finance professionals trained to demand frameworks and resist hand-waving, it was exactly what was needed.</p>
+
+  </article>
+
+  <!-- Framework band -->
+  <div class="framework-band">
+    <div class="framework-inner">
+      <div class="framework-title">The Four Elements of Context Engineering</div>
+      <div class="framework-sub">"These are not official theory. Take them with a pinch of salt. What you <em>do</em> today is what counts." — Anand</div>
+      <div class="framework-grid">
+        <div class="framework-card">
+          <div class="framework-card-num">Element 01</div>
+          <div class="framework-card-title">Prompts</div>
+          <div class="framework-card-body">What you type. Instructions, questions, context you provide in text. The most visible part of context engineering.</div>
+          <div class="framework-card-tip">Keep a prompt library. Even one file on your phone. Store, reuse, improve. This is the highest ROI action in the entire framework.</div>
+        </div>
+        <div class="framework-card">
+          <div class="framework-card-num">Element 02</div>
+          <div class="framework-card-title">Files</div>
+          <div class="framework-card-body">What you upload. CVs, contracts, chat exports, WhatsApp logs, emails — anything the AI can't find on its own.</div>
+          <div class="framework-card-tip">Download your digital exhaust: LinkedIn export, Google Takeout, WhatsApp exports. The AI's intelligence scales with your input.</div>
+        </div>
+        <div class="framework-card">
+          <div class="framework-card-num">Element 03</div>
+          <div class="framework-card-title">Memory</div>
+          <div class="framework-card-body">Your past conversations. The compounding asset. The more you chat, the more it knows.</div>
+          <div class="framework-card-tip">Enable it. Use incognito mode for sensitive chats. Ask it to review your memories. Review monthly.</div>
+        </div>
+        <div class="framework-card">
+          <div class="framework-card-num">Element 04</div>
+          <div class="framework-card-title">Tools</div>
+          <div class="framework-card-body">Capabilities you grant: web search, image generation, code execution, Google Drive, OneDrive, Dropbox connectors.</div>
+          <div class="framework-card-tip">Click the plus button. Explore what's there. Tools are how you delegate work — not just thinking, but doing.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <article class="article">
+
+    <blockquote class="pull-quote">
+      <p>"What is true today, given the pace of AI development, will not be true tomorrow. So, don't worry too much about remembering it. <em>What you do today</em> is what will stick in your fingers, in your memory; that's what counts."</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <h2>The Detective in the Machine</h2>
+
+    <p>The second exercise was more personal. Anand pulled up ChatGPT, <strong>switched on dictation</strong> — he rarely types when he can speak; dictation is faster and forces clearer thinking — and gave a prompt that every person in the workshop was about to use on themselves:</p>
+
+    <p style="font-family:var(--font-mono); font-size:0.88rem; background:var(--highlight); padding:1rem 1.25rem; border-radius:4px; border-left:3px solid var(--accent); line-height:1.7;">"I am Anand, head of innovation at Straive and former co-founder of Gramener and an IIM alumnus. Search online and find out everything that is known about me in the public."</p>
+
+    <p>Then he uploaded his CV. Then he watched the model work.</p>
+
+    <p>What ChatGPT did next was not a simple Google search. It searched for his company's acquisition history. It found his GitHub. It located his Reddit posts — ones he'd forgotten existed. It searched for him by <em>role</em>, not just name. It cross-referenced conference appearances, media mentions, and public databases. By the time it finished, it had assembled a dossier that felt uncomfortably thorough.</p>
+
+    <blockquote class="pull-quote">
+      <p>"This is roughly like giving a research assistant or a detective a task: 'Research me.' And they go sit and research, research, research, use their reasonably good brains, and come up with something consolidated. <em>Increasingly, we should stop thinking of ChatGPT, Gemini, Claude, as tools and start thinking of them as agents.</em> I literally think of them as professionals."</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <p>He asked participants to do the same — research themselves, then share the link. The deeper lesson: <strong>everyone is already being researched this way.</strong> When a vendor prepares for a meeting, when a recruiter screens a candidate, when an old friend Googles you before reconnecting — this is the new due diligence. You may as well know what it finds. Then ask the follow-up: <em>"What negative news is there about me?"</em></p>
+
+    <div class="chat-snippet">
+      <div class="chat-snippet-label">Live demo · <a href="https://chatgpt.com/share/6a118465-e9cc-83ec-9684-c04f199a7157" target="_blank" rel="noopener">Public Profile of Anand</a></div>
+      <p>ChatGPT searched Singapore LinkedIn, Gramener's blog, Analytics India Magazine, GitHub, Reddit, and influencer lists — assembling a 2,000-word profile from publicly available fragments. The model found a 12-year-old Reddit account Anand had forgotten existed. "The more you're present online, the more it finds. The more somebody's talked about you online, the more it finds."</p>
+    </div>
+
+    <h2>Memory: The Compounding Asset</h2>
+
+    <p>Most people who use AI use it like a search engine: new question, new conversation, clean slate. <strong>Anand uses it like a relationship.</strong> Every conversation he has adds to a growing record of his thinking, his preferences, his projects, his personality. And unlike a human collaborator, the AI never forgets. <a href="https://www.anthropic.com/news/claude-memory" target="_blank" rel="noopener" data-tip="Anthropic's memory feature for Claude stores facts from your conversations and references them in future sessions.">Claude's memory</a> and <a href="https://openai.com/blog/memory-and-new-controls-for-chatgpt" target="_blank" rel="noopener" data-tip="ChatGPT memory can be enabled in Settings → Personalization, and stores key facts across all your conversations.">ChatGPT's memory</a> are both enabled by default on paid tiers — yet most users have never checked whether theirs is on.</p>
+
+    <p>He demonstrated this with a question that required courage to ask in public:</p>
+
+    <p style="font-family:var(--font-mono); font-size:0.88rem; background:var(--highlight); padding:1rem 1.25rem; border-radius:4px; border-left:3px solid var(--accent); line-height:1.7;">"Based on all our past conversations, if you had to define the top three traits that are unusual about me that most people would consider <em>negative</em> traits, what would they be? Don't spare me."</p>
+
+    <p>The model responded quickly: <em>you collect insights the way others collect trophies but rarely bleed for them.</em> The room — or at least the part of it watching the screen — went quiet. He had just given a model access to years of his most candid conversations, and it had handed him a mirror.</p>
+
+    <blockquote class="pull-quote">
+      <p>"I've given up on my privacy anyway post-social media — actually <em>pre</em>-social media. So I just enable all the options including training, because my hope is that if it can be trained to my preference, then for free I've gotten a multi-trillion-dollar company to do a little bit of my bidding on my behalf, which is always fun."</p>
+      <cite>— Anand, on enabling memory and training</cite>
+    </blockquote>
+
+    <p>But he didn't just accept the verdict. He asked the model to prove it — <strong>to cite verbatim from specific past conversations, to give him links he could open and verify.</strong> When it did, and he clicked through and found the exact text, his confidence rose. <a href="https://en.wikipedia.org/wiki/Hallucination_(artificial_intelligence)" target="_blank" rel="noopener" data-tip="AI hallucination: when a model confidently generates plausible-sounding but factually incorrect content.">Hallucination</a> is real, but so is verification. The key is <strong>asking the model to show its work</strong> — citations, links, verbatim quotes — so you can audit rather than trust blindly.</p>
+
+    <div class="chat-snippet">
+      <div class="chat-snippet-label">Memory demo · <a href="https://claude.ai/share/b7b0ab70-9235-4f2a-997e-1118c449b90b" target="_blank" rel="noopener">Argue against my blog posts and find errors</a></div>
+      <p>Claude, given access to memory, argued against Anand's own blog posts — finding fundamental flaws, not nitpicks. "I commissioned the critique from an AI, not from a peer," it noted. The model pointed to a "Skill.md conversation" and an "Accountability conversation" as evidence, and linked to the actual chats. "Yes, this conversation exists," Anand confirmed, clicking through. Verification by citation.</p>
+    </div>
+
+    <blockquote class="pull-quote">
+      <p>"Now I have a compounding asset. The more I chat with it, the more it knows about me."</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <h2>Tools: Delegation, Not Just Conversation</h2>
+
+    <p>Here is the mental model Anand has spent years cultivating, and which he considers essential for anyone who wants to use AI seriously: <strong>don't think of it as a chatbot. Think of it as a professional you've hired.</strong></p>
+
+    <p><strong>ChatGPT is his researcher. Claude is his writer. Gemini is his language tutor.</strong> Each has a different personality, different strengths, different blind spots. He maintains a literal comparison spreadsheet — dates, prompts, models, ratings (red/amber/green) — to track which model performs best on which task. The conclusions he's reached after months of tracking:</p>
+
+    <ul>
+      <li><strong><a href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT</a>:</strong> Analytics, rigor, algorithms — especially on <a href="https://openai.com/o1/" target="_blank" rel="noopener">extended thinking (o1)</a>; he "lives on o1 thinking extended"</li>
+      <li><strong><a href="https://claude.ai/" target="_blank" rel="noopener">Claude</a>:</strong> Strategy, insight, soulful writing, creativity, front-end code</li>
+      <li><strong><a href="https://gemini.google.com/" target="_blank" rel="noopener">Gemini</a>:</strong> Learning, readable writing, foreign language, people search</li>
+    </ul>
+
+    <p>These aren't fixed rankings. The <a href="https://lmarena.ai/leaderboard" target="_blank" rel="noopener">LMSYS leaderboard</a> shifts every few weeks as new models drop. Gemini was ahead three months ago. GPT-4.5 led on code last month. <strong>The point is not to pick a winner — it's to use each for what it's best at.</strong></p>
+
+    <p>But professionals work better when they can see each other's work. So Anand built a small utility — a <a href="https://tools.s-anand.net/aiscrapers/" target="_blank" rel="noopener" data-tip="Bookmarklets are tiny JavaScript programs you drag to your browser bookmarks bar. One click runs them on any page.">bookmarklet</a> he can drag to his browser bar — that scrapes an entire conversation from any AI platform and copies it to his clipboard. One click, and a 20,000-word ChatGPT conversation becomes pasteable into Claude, for a different perspective, a different style, a fact-check. <strong>No API, no code to run — just a browser bookmark.</strong></p>
+
+    <blockquote class="pull-quote">
+      <p>"Copy-paste is your friend. Do this on a regular basis because fact-checking keeps them honest and increases your confidence. They also are able to brainstorm with each other. They have very different styles of thinking."</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <p>He demonstrated this live: scraping his prep chat from ChatGPT, pasting the entire thing into Claude Opus, then dictating an instruction: "This chat transcript has how I was preparing for the AI Unboxed session. Create a blog post in my style — here are some sample blog posts you can refer to." The output came back close enough that corrections were nitpicks: "ChatGPT is wonderfully obliging" instead of "ChatGPT wonderfully obliged." Close enough, he said, that the gap is closing faster than most people realize.</p>
+
+    <blockquote class="pull-quote">
+      <p>"If you give it a little bit of your context, it is able to copy you well enough that corrections are nitpicks."</p>
+      <cite>— Anand, on AI mimicking personal writing style</cite>
+    </blockquote>
+
+    <h3>WhatsApp as Context</h3>
+
+    <p>One of the most practical moments in the workshop came when Anand turned to a tool most people carry in their pocket and almost never think of as a data asset: WhatsApp.</p>
+
+    <p>On every Android phone, buried under three dots → More, is an <strong>"Export Chat" button</strong>. Anand exports his chats regularly — classmate groups, family chats, client conversations. He feeds them to Claude or ChatGPT with a simple prompt: <em>"Tell me what's been happening. Catch me up. Is there anyone I should reach out to — a birthday, a celebration, a congratulation?"</em> The AI becomes a <strong>social memory prosthetic</strong>: it reads the 500 messages you've been too busy to, and surfaces the three that matter.</p>
+
+    <blockquote class="pull-quote">
+      <p>"Effectively, I'm creating a secretary to do my WhatsApp management."</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <p>He's taken it further. His Python script — which he admits he doesn't fully understand the code of ("I have no idea what code it wrote") — opens his browser automatically, cycles through 35 WhatsApp conversations, and saves them to a file each morning. It identified 106 new messages in the generative AI group alone. It found that someone had messaged him 11 times and he hadn't noticed.</p>
+
+    <p>The script exists because he identified a need ("I can't even do this, what rubbish!") and asked Claude to build it. The prompt is published on his website. The code is visible. Anyone can replicate it. His <a href="https://tools.s-anand.net/aiscrapers/" target="_blank" rel="noopener">AI conversation scrapers</a> are public — bookmarklets that copy entire ChatGPT, Claude, or Gemini conversations to your clipboard in one click.</p>
+
+    <h3>How to Research Yourself — and Others</h3>
+
+    <p>Thirteen participants had already researched themselves by the midpoint of the session. The results were revealing — old blog posts, conference bios, LinkedIn endorsements, Reddit comments from 2012. One participant found a photo they didn't know was online. Another discovered a business profile that listed an outdated phone number.</p>
+
+    <p>Anand's next suggestion: <em>"What negative news is there about me?"</em> Then: <em>"What would someone need to fix?"</em> The output of one prompt, he reminded them, is itself context for the next prompt. The feedback cycle compounds.</p>
+
+    <blockquote class="pull-quote">
+      <p>"The output of prompts are also context, and that feedback cycle is a pretty important one."</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <h2>The Prompt Library: Smallest Habit, Biggest Return</h2>
+
+    <p>With fifteen minutes left before the open Q&amp;A, Anand paused for what he called the single most important exercise of the day — and by the reaction of the room, the most unexpected.</p>
+
+    <p>He asked everyone to answer one question: <strong>Where are your prompts stored?</strong></p>
+
+    <p>His own answer: a folder at <code>/home/anand/code/blog/prompts</code>, also <a href="https://www.s-anand.net/blog/prompts/" target="_blank" rel="noopener">published on his blog</a> (<a href="https://github.com/sanand0/blog/blob/live/pages/prompts/" target="_blank" rel="noopener">raw on GitHub</a>). Some prompts are one line. Some run to hundreds of lines. His largest is "Analyze call recording" — a prompt that extracts personas, missed insights, next steps, and implicit tensions from any conversation transcript. He has been using it so consistently that he now has a corpus of 200+ analyzed conversations. He asks the model to look across them: <em>What am I constantly missing? What kinds of experiments do you keep suggesting that I never try?</em></p>
+
+    <blockquote class="pull-quote">
+      <p>"I've gone back and said, 'Now across the last 200 conversations of mine that I have transcripts for, what are the kinds of things that I'm missing and what does that tell you about me?'"</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <p>Participants responded. The Notes app. OneDrive. Google Drive. A WhatsApp group with themselves. One person wrote "Memory of the LLM itself" — a suggestion Anand hadn't considered. "Oh, that is clever," he said. "I will try this." Another wrote "Spreadsheet." Mike had a thoughtful answer. Ravi had a folder. The column slowly filled.</p>
+
+    <p>Anand's advice was stripped down to its essence:</p>
+
+    <blockquote class="pull-quote">
+      <p>"If there is only one thing that you learn out of this context engineering session, it is: <em>store your prompts and reuse them.</em> Frequently, infrequently — anything is okay."</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <p>One fragment he showed: <em>"Comprehensively and engagingly summarize and fact-check, writing in <a href="https://en.wikipedia.org/wiki/Malcolm_Gladwell" target="_blank" rel="noopener">Malcolm Gladwell</a>'s style, explain like I'm 15, the book [title]."</em> This prompt, he said, enabled him to hit a <strong>50-book reading goal</strong> the previous year. He's now aiming for <strong>360 books in 2026</strong>. "I don't know whether you consider reading summaries as counting towards a book," he admitted, "but I find that I'm getting about as many ideas and actions and takeaways from a summary written well as I am from reading the original book. <strong>High ROI.</strong>"</p>
+
+    <h2>Skills: Permanent Expert Knowledge on Demand</h2>
+
+    <p>The session's most technically interesting moment came when Anand demonstrated a feature most Claude users have never opened: <strong>Skills</strong>.</p>
+
+    <p>In Claude's Settings → Customize, there is a Skills section. A <a href="https://www.anthropic.com/news/claude-customization" target="_blank" rel="noopener" data-tip="skill.md is a format for reusable expert prompts that load on demand inside Claude. Like a consultant's methodology, distilled into text.">skill.md</a> is a prompt that loads automatically when Claude detects it's relevant. <strong>Instead of re-explaining your methodology every conversation, you write it once, store it as a skill, and Claude applies it whenever appropriate.</strong> Think of it as putting your best expert knowledge on retainer — available instantly, without prompting.</p>
+
+    <blockquote class="pull-quote">
+      <p>"Think of skills as permanent prompts, usable on demand, typically good for hardcore expert advice. There aren't many places where I know more than Claude. <em>Other people</em> may know more than Claude."</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <p>He showed his <strong>data analysis skill</strong>: a several-hundred-line prompt capturing everything he knows about data storytelling — how to understand data structure, identify the audience, look for unexpected distributions, find breaking patterns. <strong>Fifteen years of expertise, distilled and delegated.</strong> He also has a design skill, copied directly from <a href="https://www.anthropic.com/research/claude-character" target="_blank" rel="noopener">Anthropic's own blog</a>. His full list of <a href="https://github.com/sanand0/scripts/tree/main/agents" target="_blank" rel="noopener">skills is public on GitHub</a> — free to copy, adapt, and use.</p>
+
+    <p>When co-host Debi asked whether skills become part of context, Anand confirmed: Claude gets a directory of all skill names and descriptions, then decides which ones to load for a given question. "If I said 'Research me,' it wouldn't bother reading the data analysis skill." The description is the trigger. The skill is the payload.</p>
+
+  </article>
+
+  <!-- Comic page (full width) -->
+  <div class="comic-wrap">
+    <a href="comic-page.avif" target="_blank" rel="noopener" title="Click to view full-size comic">
+      <img src="comic-page.avif" alt="Context Engineering explained as a full-color explainer comic" loading="lazy">
+    </a>
+    <p class="comic-caption">Context Engineering — explained as a comic. Vibrant panels, visual metaphors, recurring characters. Click to view full-size.</p>
+  </div>
+
+  <article class="article">
+
+    <h2>How Smart Is Your AI, Really?</h2>
+
+    <p>At some point in the session, Anand pulled up a leaderboard that no one outside the AI research community checks — but everyone should. The <a href="https://lmarena.ai/leaderboard" target="_blank" rel="noopener">LM Arena leaderboard</a>, run by <a href="https://lmsys.org/" target="_blank" rel="noopener">LMSYS</a> at UC Berkeley, ranks language models by having humans vote on which gives better responses in blind comparisons. It's the most honest measure we have.</p>
+
+    <p>He walked the room through the arc of AI intelligence over the past three years — not as a technology history, but as a gut-check. In 2023, models were roughly as smart as a high school student. By late 2023, with GPT-4, they crossed into college-junior territory. By September 2024, O1-preview reached near-Master's level. Then, with the latest generation, something shifted:</p>
+
+    <blockquote class="pull-quote">
+      <p>"With Gemini 2.5 Pro, they became as smart as a tenured professor. <em>Now, we are talking to models that are smarter than tenured professors.</em>"</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <p>He showed data from <a href="https://openai.com/index/openai-o3-mini/" target="_blank" rel="noopener" data-tip="GPQA Diamond: 448 questions written by PhD experts that are hard even for other experts in the same field. AI performance here is a strong proxy for expert-level reasoning.">OpenAI's GPQA study</a>, which pits AI against human experts task by task. <strong>Software developers: O3-mini beats humans 95% of the time.</strong> Personal financial advisors: already beaten, across Claude, ChatGPT, all of them. The <a href="https://sanand0.github.io/llmpricing/" target="_blank" rel="noopener">LLM Pricing tracker</a> shows how quality has risen while costs have fallen — a combination unprecedented in the history of professional services.</p>
+
+    <blockquote class="pull-quote">
+      <p>"Personal financial advisors are already beaten by Claude, ChatGPT, any of them. So I'm not going to hire a personal financial advisor anymore."</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <p>For a room full of finance professionals, this was not an abstract statement. It was a direct challenge to their industry's assumptions about the value of human expertise. <strong>The models aren't just faster — they're more thorough, more patient, and cheaper than any junior analyst you could hire.</strong></p>
+
+    <p>He shared a practical corollary: <strong>always pay for AI.</strong> Not because free models are worthless, but because the difference in quality is enormous — and because paying makes you use it more, which makes it more valuable. "It's the reason why I guess we hire a <a href="https://www.bcg.com/" target="_blank" rel="noopener">BCG</a> or a <a href="https://www.mckinsey.com/" target="_blank" rel="noopener">McKinsey</a> consultant, or arguably any luxury item... you're taking it seriously, just like a gym fee." <strong>One month of Claude or ChatGPT costs less than a single consulting hour.</strong></p>
+
+  </article>
+
+  <!-- LLM Pricing iframe (full width) -->
+  <div class="iframe-wrap">
+    <div class="iframe-inner">
+      <iframe src="https://sanand0.github.io/llmpricing/" title="LLM Pricing — price-quality evolution of AI models" loading="lazy"></iframe>
+    </div>
+    <p class="iframe-caption">
+      <strong>LLM Pricing</strong> — track the price-quality evolution of AI models over time. Source: <a href="https://sanand0.github.io/llmpricing/" target="_blank" rel="noopener">sanand0.github.io/llmpricing</a>
+    </p>
+  </div>
+
+  <article class="article">
+
+    <h2>The Q&amp;A: Where the Real Workshop Happened</h2>
+
+    <p>The first ninety minutes had been Anand's show. The second half belonged to the audience — and IIM alumni, trained in case method pedagogy and accustomed to interrogating arguments, did not disappoint.</p>
+
+    <h3>On Hallucinations</h3>
+
+    <p>Vijay asked about hallucinations — and Anand's answer was unexpectedly sociological. <strong>Humans hallucinate all the time, he noted. We call it lying.</strong> We have institutional systems to manage it: juries, regulators, auditors. The regulator knows less about banking than the bank; the juror knows less about patents than the lawyers. We've built verification systems for human unreliability. Apply the same principles to AI:</p>
+
+    <ol>
+      <li><strong>Ask for falsifiable output</strong> — "Give me the answer along with evidence I can verify"</li>
+      <li><strong>Convert output into checklists</strong> — testable, structured, auditable</li>
+      <li><strong>Testable output</strong> — code runs or doesn't; contracts can be formalized into machine-testable rules using tools like <a href="https://mynkpdr.github.io/insurle-demo/" target="_blank" rel="noopener" data-tip="InsurLE: a Controlled Natural Language for writing insurance contracts as computable rules that can be automatically verified against claims.">InsurLE</a> (<a href="https://www.researchgate.net/publication/388354297_Computable_Contracts_for_Insurance_Establishing_an_Insurance-Specific_Controlled_Natural_Language_-_InsurLE" target="_blank" rel="noopener">research paper</a>)</li>
+      <li><strong>Sample and spot-check</strong> — you don't need to verify everything</li>
+      <li><strong>Red-teaming</strong> — pass the answer from Model A to Model B and ask it to find errors</li>
+      <li><strong>Maintain a log</strong> — red/amber/green, like a simple Notepad file with dates and ratings</li>
+      <li><strong>Build memory</strong> — individually and as an institution</li>
+    </ol>
+
+    <h3>On Models Getting Stupider Mid-Conversation</h3>
+
+    <p>Rajen — a participant for whom Anand's data story had, in his words, "changed the destiny of my business" — raised a phenomenon every power user has experienced: the model getting worse the longer the conversation runs. By message 30, it's agreeing with you instead of helping you. By message 50, it's giving you the same output no matter what you ask.</p>
+
+    <blockquote class="pull-quote">
+      <p>"I found that increasingly as the chat progressed, the model in my view got stupider and stupider."</p>
+      <cite>— Rajen, audience participant</cite>
+    </blockquote>
+
+    <p>Anand's answer: known behavior — a well-documented phenomenon sometimes called <a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener" data-tip="Research paper: 'Lost in the Middle: How Language Models Use Long Contexts' — models perform worse on information in the middle of long contexts.">lost in the middle</a>. <strong>The solution is to start a new chat.</strong> The question is just what context to carry over. Options: rely on memory, copy-paste the key parts, or ask the model to "Summarize this conversation so that I can copy-paste it." The most efficient version: <em>"I'm going to give this to Claude. Just write down what I need to copy-paste."</em></p>
+
+    <h3>On MCP and the Future of Tools</h3>
+
+    <p>Debi asked about <a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener" data-tip="Model Context Protocol: Anthropic's open standard for building tools that AI agents can call — exposing programs, databases, and APIs as functions the model can invoke autonomously.">MCP</a> — Model Context Protocol — which Anand had demonstrated briefly by connecting his local machine to Claude via a <a href="https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/" target="_blank" rel="noopener">Cloudflare tunnel</a>. Claude had searched his local file system for blog posts to understand his writing style. <strong>The model ran code on his machine, not its own servers.</strong></p>
+
+    <p>"MCP is Anthropic's programmer's way for them to expose programs so that AI agents can use them," he explained. "How do you use it? We'll get to it in another session." (<strong>Session 3: Agentic Analysis. Session 4: AI Strategy and toolbuilding.</strong>) But for anyone impatient: <a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener">modelcontextprotocol.io</a> — and there's already a growing <a href="https://github.com/punkpeye/awesome-mcp-servers" target="_blank" rel="noopener">ecosystem of MCP servers</a> for databases, Google Drive, GitHub, Slack, and more.</p>
+
+    <h3>On AI Harnesses</h3>
+
+    <p>Sandeep asked about the layer above models — applications like Claude.ai, ChatGPT, Manus. Anand had a word for these: <strong>harnesses</strong>.</p>
+
+    <blockquote class="pull-quote">
+      <p>"Harnesses are becoming the de-facto way of using models. Nobody accesses models directly for the majority of their real-life tasks. They do it through harnesses. ChatGPT is a harness. Claude.ai is a harness to models behind the scenes."</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <p>He noted that <a href="https://claude.ai/code" target="_blank" rel="noopener">Claude Code</a> is a better coding harness than <a href="https://github.com/features/copilot" target="_blank" rel="noopener">GitHub Copilot</a>, even though both use Anthropic models under the hood. <strong>The engineering of the harness makes more difference than the choice of model.</strong> Other notable harnesses: <a href="https://cursor.sh/" target="_blank" rel="noopener">Cursor</a> for code editing, <a href="https://www.perplexity.ai/" target="_blank" rel="noopener">Perplexity</a> for research with citations, <a href="https://notebooklm.google.com/" target="_blank" rel="noopener">NotebookLM</a> for document Q&amp;A. And the most interesting — <a href="https://openai.com/chatgpt/desktop/" target="_blank" rel="noopener" data-tip="OpenAI's always-on desktop app that can see your screen, hear you speak, and respond in real time — unlike other AI apps initiated by the user.">OpenAI's desktop app</a> — is different because it's <strong>"always on"</strong>, watching your screen and ready to help without being invoked.</p>
+
+    <h3>On Continuous Improvement</h3>
+
+    <p>He closed his formal content with two meta-level pieces of advice — the kind that only become obvious after years of practice.</p>
+
+    <p>The first: when you don't know how to use AI, <strong>ask AI</strong>. Run an "AI interview." Say <em>"I'm feeling lost. Interview me and help me."</em> Give it a role if you can — psychologist, coach, HR professional. <strong>Let it be the doctor. You be the patient.</strong> This is not laziness; it's leverage. The interview format forces clarification that a single prompt never achieves — each question narrows the problem until you can actually act on it.</p>
+
+    <p>The second: run <strong>post-mortems</strong>. Go through past chats. Ask: <em>"Where did you do well? Where didn't you do well? Where did I correct you? What would have gotten a better result — a different prompt, more files, better memory?"</em> The model will tell you. Then fix it. <strong>Treat AI like any other professional relationship: feedback flows both ways.</strong></p>
+
+    <blockquote class="pull-quote">
+      <p>"Ask it to interview you when you don't know what you want; ask it to run post-mortems so that it can help you improve even further."</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <h2>The Screenshot That Ended It</h2>
+
+    <p>Near the end, Anand paused to take a screenshot of the Teams grid. Forty-four participants had created AI-generated backgrounds. The screen was a gallery: ocean blues, minimalist circuits, bold typography, one background that had somehow turned the IIMpact logo into a kind of corporate aurora borealis. He asked four more people to turn on their cameras. Then he took the screenshot.</p>
+
+    <p>It will never go viral. But it captured something real: seventy-six finance professionals who came with questions and left with something more — a file of prompts, an exported WhatsApp chat, a freshly researched profile of themselves, and the slightly unsettling knowledge that the models they'd been treating as fancy search engines are now smarter, in certain ways, than the professors who trained them.</p>
+
+    <p>"Thank you," Debi said, closing the session. "I think between now and June, everybody who attended is going to try some of the exercises."</p>
+
+    <p>"Or don't," Anand added, "if you have better things to do."</p>
+
+    <p>Nobody logged off immediately. The Q&amp;A ran over. People had better things to do, but they stayed anyway. That, too, is a form of context.</p>
+
+    <h2>Resources from the Workshop</h2>
+
+    <ul>
+      <li><a href="https://claude.ai/share/635c2e28-8a7d-4c9e-9dfe-0b3aae3fcd62" target="_blank" rel="noopener">IIM Singapore Alumni AI Workshop Plan</a> — how the four-session series was designed using Claude</li>
+      <li><a href="https://chatgpt.com/share/6a11a0be-d43c-83ec-9f84-70a4939b11ff" target="_blank" rel="noopener">Workshop content planning — ChatGPT</a></li>
+      <li><a href="https://claude.ai/share/2f54eab9-4d97-4b23-b5fa-5b79ed368d20" target="_blank" rel="noopener">Workshop content planning — Claude</a></li>
+      <li><a href="https://chatgpt.com/share/6a11a1df-77e8-83ec-bd16-259cd51b35a8" target="_blank" rel="noopener">Context Engineering prep session</a> — Anand preparing on his bicycle</li>
+      <li><a href="https://chatgpt.com/share/6a118465-e9cc-83ec-9684-c04f199a7157" target="_blank" rel="noopener">Public Profile of Anand</a> — the live research-yourself demo</li>
+      <li><a href="https://claude.ai/share/b7b0ab70-9235-4f2a-997e-1118c449b90b" target="_blank" rel="noopener">Argue against my blog posts and find errors</a> — memory + verification demo</li>
+      <li><a href="https://gemini.google.com/share/f92a1b18ac8c" target="_blank" rel="noopener">Memory test on Gemini</a></li>
+      <li><a href="https://www.s-anand.net/blog/prompts/" target="_blank" rel="noopener">Anand's public prompt library</a> (also on <a href="https://github.com/sanand0/blog/blob/live/pages/prompts/" target="_blank" rel="noopener">GitHub</a>)</li>
+      <li><a href="https://github.com/sanand0/scripts/tree/main/agents" target="_blank" rel="noopener">Anand's skills (skill.md files)</a></li>
+      <li><a href="https://docs.google.com/spreadsheets/d/1jCIpMGJ8o1yGPjVL7W4XUSiwtaeNzhKZe4APrOjX1GA/edit" target="_blank" rel="noopener">Live workshop spreadsheet</a> (backgrounds + research)</li>
+      <li><a href="https://docs.google.com/document/d/1vyOTJFvTtJyRsJNMyMSv302dizTIe4MuDNVHCA5reGw/edit" target="_blank" rel="noopener">Post-session exercises</a> (3 exercises to try before Session 2)</li>
+      <li><a href="https://www.s-anand.net/blog/people-skills-with-ai/" target="_blank" rel="noopener">Nayana Jain's blog post</a> — "write like Nayana Jain" was Saurabh's prompt</li>
+      <li><a href="https://lmarena.ai/leaderboard" target="_blank" rel="noopener">LM Arena Leaderboard</a> — benchmark for comparing AI models</li>
+      <li><a href="https://sanand0.github.io/llmpricing/" target="_blank" rel="noopener">LLM Pricing</a> — price-quality evolution tracker</li>
+    </ul>
+
+  </article>
+
+  <!-- Stats -->
+  <div class="stat-band">
+    <div class="stat-grid">
+      <div class="stat-item">
+        <div class="stat-num">76</div>
+        <div class="stat-label">Participants</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">44</div>
+        <div class="stat-label">AI-generated backgrounds created</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">13</div>
+        <div class="stat-label">Self-research profiles shared</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Context elements: Prompts · Files · Memory · Tools</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">1</div>
+        <div class="stat-label">Habit that matters most: store your prompts</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Takeaways -->
+  <div class="takeaways-band">
+    <div class="takeaways-inner">
+      <div class="takeaways-title">Top Takeaways</div>
+      <div class="takeaways-sub">What to remember, what to do, what to change</div>
+      <ul class="takeaways-list">
+        <li>
+          <div class="takeaway-num">1</div>
+          <div class="takeaway-text"><strong>Context is everything.</strong> The gap between mediocre AI and remarkable AI is almost entirely about what you tell it. Prompts, files, memory, and tools — these four elements determine how useful your AI actually is.</div>
+        </li>
+        <li>
+          <div class="takeaway-num">2</div>
+          <div class="takeaway-text"><strong>Pay for AI.</strong> The difference between paid and free models is enormous — not just in quality (70%) but in how seriously you take it (30%). Treat it like a gym membership: if you're paying, you use it.</div>
+        </li>
+        <li>
+          <div class="takeaway-num">3</div>
+          <div class="takeaway-text"><strong>Start a prompt library today.</strong> One file, accessible on your phone. Paste prompts you've used. Review monthly. Improve gradually. This is the highest ROI action in context engineering.</div>
+        </li>
+        <li>
+          <div class="takeaway-num">4</div>
+          <div class="takeaway-text"><strong>Upload everything.</strong> Your CV, WhatsApp exports, emails, documents — any file that gives context. Click the plus button. The AI's intelligence scales with its input.</div>
+        </li>
+        <li>
+          <div class="takeaway-num">5</div>
+          <div class="takeaway-text"><strong>Enable memory.</strong> It's a compounding asset. The more you chat, the more it knows. Use incognito for sensitive topics. Review your memories monthly — ask AI to assess them.</div>
+        </li>
+        <li>
+          <div class="takeaway-num">6</div>
+          <div class="takeaway-text"><strong>Think professionals, not tools.</strong> ChatGPT is your researcher. Claude is your writer. Gemini is your tutor. Each has different strengths. Copy-paste between them to verify and improve outputs.</div>
+        </li>
+        <li>
+          <div class="takeaway-num">7</div>
+          <div class="takeaway-text"><strong>Always use the best model.</strong> Whatever has the latest/biggest version number. Use Sonnet only if Opus eats through your token limits. On ChatGPT, use o1 extended thinking for anything important.</div>
+        </li>
+        <li>
+          <div class="takeaway-num">8</div>
+          <div class="takeaway-text"><strong>Research yourself.</strong> Prompt: "I am [name + context]. Search online and find out everything that is known about me in the public." Then ask: "What negative news is there about me?" Know what others are finding.</div>
+        </li>
+        <li>
+          <div class="takeaway-num">9</div>
+          <div class="takeaway-text"><strong>When lost, ask AI to interview you.</strong> "I'm feeling lost. Interview me and help me." You don't need a perfect prompt. Let the AI be the professional. You be the client.</div>
+        </li>
+        <li>
+          <div class="takeaway-num">10</div>
+          <div class="takeaway-text"><strong>Run post-mortems.</strong> Monthly, ask AI to review your chats: "Where did I correct you? What prompt would have gotten this right the first time?" Continuous improvement compounds over months.</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Band quote -->
+  <div class="band-quote">
+    <p>"Don't wait for the AI to get work done. Tell it to do stuff, come back, give it another task, tell it to do something else — and then go back and check."</p>
+    <cite>— Anand, on the rhythm of working with AI</cite>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>
+      <strong>AI Unboxed · Session 1: Context Engineering</strong> ·
+      <a href="https://iimalumni.sg/" target="_blank" rel="noopener">IIM Alumni Singapore</a> ·
+      23 May 2026
+    </p>
+    <p>
+      Workshop by <a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand</a>,
+      Head of Innovation at <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a> ·
+      <a href="https://sanand0.github.io/talks/" target="_blank" rel="noopener">All talks</a>
+    </p>
+    <p style="margin-top:0.8rem; font-size:0.78rem; opacity:0.6;">
+      Session 2: AI Tools &amp; Workflows · Session 3: Agentic Analysis · Session 4: AI Strategy
+    </p>
+  </footer>
+
+  <!-- Transcript modal content loaded from inline data -->
+  <script id="transcript-data" type="text/plain">
+  </script>
+
+  <script>
+    // Progress bar
+    const prog = document.getElementById('progress');
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+      prog.style.width = pct + '%';
+    });
+
+    // Transcript modal
+    const modal = document.getElementById('transcript-modal');
+    const body = document.getElementById('transcript-body');
+    const closeBtn = document.getElementById('transcript-close');
+
+    async function openTranscript() {
+      modal.classList.add('open');
+      if (body.querySelector('em')) {
+        try {
+          const res = await fetch('transcript.md');
+          const text = await res.text();
+          // Simple markdown-to-HTML conversion
+          const html = text
+            .replace(/^---[\s\S]*?---\n/, '') // strip frontmatter
+            .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+            .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+            .replace(/^# (.+)$/gm, '<h2>$1</h2>')
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.+?)\*/g, '<em>$1</em>')
+            .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+            .replace(/^- (.+)$/gm, '<li>$1</li>')
+            .replace(/(<li>[\s\S]+?<\/li>)/gm, '<ul>$1</ul>')
+            .replace(/\n\n/g, '</p><p>')
+            .replace(/^(?!<[h|u|l])/gm, '<p>')
+            .replace(/(<p><\/p>)/g, '');
+          body.innerHTML = '<p>' + html + '</p>';
+        } catch(e) {
+          body.innerHTML = '<p>Could not load transcript. <a href="transcript.md" target="_blank" rel="noopener">Open directly</a>.</p>';
+        }
+      }
+    }
+
+    document.getElementById('transcript-btn').addEventListener('click', e => { e.preventDefault(); openTranscript(); });
+    document.getElementById('transcript-btn2').addEventListener('click', e => { e.preventDefault(); openTranscript(); });
+    closeBtn.addEventListener('click', () => modal.classList.remove('open'));
+    modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('open'); });
+  </script>
+</body>
+</html>

@@ -5,7 +5,7 @@
 <!--
 cd /home/sanand/code/talks/2026-06-13-data-stories-with-ai
 dev.sh -p ~/code/
-claude --dangerously-skip-permissions --model claude-opus-4.8 --effort medium
+claude --dangerously-skip-permissions --model claude-opus --effort medium
 -->
 
 

@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Moving Boundary | AI with the Engineering Design Faculty at IIT Madras</title>
+  <meta name="description" content="A two-hour conversation between Anand S, LLM Psychologist at Straive, and the Engineering Design faculty at IIT Madras — on bipeds that learn to walk, finite-element methods, patient-specific implants, and where exactly the boundary of AI lies in 2026.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    :root {
+      --ink: #11140f;
+      --paper: #f6f4ee;
+      --accent: #b23a1e;      /* terracotta / forge */
+      --gold: #c08a2a;
+      --blueprint: #1f5673;   /* engineering blueprint blue */
+      --muted: #565a52;
+      --faint: #8c8e84;
+      --border: #d9d4c8;
+      --highlight-bg: #fbf3e3;
+      --dark: #16181f;
+      --teal: #114c4c;
+      --card: #ffffff;        /* light surface (cards, chat, buttons) */
+      --card-alt: #efece3;    /* tinted band (cast, tables) */
+      --masthead-bg: rgba(246,244,238,0.96);
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'Libre Baskerville', Georgia, serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+      --font-slide: 'Montserrat', sans-serif;
+    }
+    html[data-theme="dark"] {
+      --ink: #e9e6dd;
+      --paper: #15160f;
+      --accent: #e2693f;      /* brightened forge for dark bg */
+      --gold: #d4a44a;
+      --blueprint: #6aa9c9;   /* brightened blueprint */
+      --muted: #b0b2a6;
+      --faint: #8b8d82;
+      --border: #353629;
+      --highlight-bg: #2a2614;
+      --teal: #1c4a4a;
+      --card: #1e1f17;
+      --card-alt: #1b1c14;
+      --masthead-bg: rgba(21,22,15,0.94);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.78;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    .progress-bar {
+      position: fixed; top: 0; left: 0;
+      width: 0%; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      z-index: 1000; transition: width 0.1s linear;
+    }
+    /* ── Masthead ── */
+    .masthead {
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      position: sticky; top: 0;
+      background: var(--masthead-bg);
+      z-index: 100; backdrop-filter: blur(8px);
+    }
+    /* ── Theme toggle ── */
+    .theme-toggle {
+      font-size: 1rem; line-height: 1; cursor: pointer;
+      border: 1px solid var(--border); background: var(--card);
+      color: var(--muted); border-radius: 999px;
+      width: 2rem; height: 2rem; display: inline-flex;
+      align-items: center; justify-content: center; transition: all 0.15s;
+    }
+    .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+    .masthead-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .masthead-brand {
+      font-family: var(--font-display);
+      font-size: 0.95rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .masthead-links { display: flex; gap: 1.25rem; align-items: center; }
+    .masthead-links a, .masthead-links button {
+      font-size: 0.82rem; color: var(--muted);
+      text-decoration: none; font-family: var(--font-mono);
+      transition: color 0.15s; border: none; background: none; cursor: pointer;
+    }
+    .masthead-links a:hover, .masthead-links button:hover { color: var(--accent); }
+    .masthead-date { font-size: 0.82rem; color: var(--faint); font-family: var(--font-mono); }
+    /* ── Hero ── */
+    .hero { padding: 4.5rem 2rem 2rem; max-width: 820px; margin: 0 auto; text-align: center; }
+    .hero-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.72rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.9rem, 7.5vw, 5.2rem);
+      font-weight: 700; line-height: 1.04;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em; color: var(--ink);
+    }
+    .hero-subtitle {
+      font-family: var(--font-display);
+      font-size: 1.42rem; font-weight: 400;
+      font-style: italic; color: var(--muted);
+      max-width: 660px; margin: 0 auto 2.2rem;
+      line-height: 1.5;
+    }
+    .hero-meta {
+      display: flex; justify-content: center;
+      gap: 1.2rem; font-size: 0.88rem;
+      color: var(--muted); flex-wrap: wrap; margin-bottom: 2rem;
+    }
+    .hero-meta a { color: var(--accent); text-decoration: none; }
+    .hero-meta a:hover { text-decoration: underline; }
+    .hero-meta .sep { color: var(--faint); }
+    /* ── Resource bar ── */
+    .resource-bar {
+      display: flex; justify-content: center; gap: 0.75rem;
+      flex-wrap: wrap; margin: 0 0 1rem; font-size: 0.85rem;
+    }
+    .resource-btn {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.45rem 0.9rem; border-radius: 4px;
+      border: 1px solid var(--border);
+      color: var(--muted); text-decoration: none;
+      background: var(--card); transition: all 0.15s;
+      font-family: var(--font-mono); cursor: pointer;
+    }
+    .resource-btn:hover { border-color: var(--accent); color: var(--accent); }
+    /* ── Hero banner (full-width blueprint) ── */
+    .hero-banner {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      background:
+        linear-gradient(rgba(17,76,76,0.86), rgba(11,40,40,0.92)),
+        url("heim_visual_test_assets/heim_visual_test/01_conforming_mesh_complex_boundary.webp");
+      background-size: cover; background-position: center;
+      padding: 3.5rem 2rem; text-align: center; color: #eaf3f1;
+    }
+    .hero-banner .hb-inner { max-width: 900px; margin: 0 auto; }
+    .hero-banner h2 {
+      font-family: var(--font-display); font-weight: 600;
+      font-size: clamp(1.5rem, 3.6vw, 2.3rem); line-height: 1.25;
+      margin-bottom: 0.8rem; color: #fff;
+    }
+    .hero-banner p {
+      font-family: var(--font-mono); font-size: 0.82rem;
+      letter-spacing: 0.05em; color: #a9c8c4;
+    }
+    /* ── Article ── */
+    .article { max-width: 720px; margin: 0 auto; padding: 3.5rem 1.5rem; }
+    .article h2 {
+      font-family: var(--font-display);
+      font-size: 2.1rem; font-weight: 700;
+      line-height: 1.14; margin: 3.5rem 0 1.25rem;
+      letter-spacing: -0.01em;
+    }
+    .article h3 {
+      font-family: var(--font-display);
+      font-size: 1.55rem; font-weight: 600; margin: 2.5rem 0 0.9rem;
+    }
+    .article p { margin-bottom: 1.4rem; }
+    .article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(178,58,30,0.3); }
+    .article a:hover { border-bottom-color: var(--accent); }
+    .section-tag {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--blueprint); margin: 3.5rem 0 -1.5rem; font-weight: 500;
+    }
+    /* ── Drop cap ── */
+    .drop-cap::first-letter {
+      font-family: var(--font-display);
+      font-size: 4.5rem; font-weight: 700;
+      line-height: 0.8; float: left;
+      margin: 0.1rem 0.15rem 0 0; color: var(--accent);
+    }
+    /* ── Pull quote ── */
+    blockquote.pull-quote {
+      border-left: 4px solid var(--accent);
+      padding: 1.25rem 2rem; margin: 2.5rem -10%;
+      font-style: italic; font-size: 1.2rem; line-height: 1.6;
+      background: var(--highlight-bg); border-radius: 0 4px 4px 0;
+    }
+    blockquote.pull-quote p { margin-bottom: 0; }
+    blockquote.pull-quote cite {
+      display: block; margin-top: 0.75rem;
+      font-size: 0.86rem; font-style: normal;
+      color: var(--muted); letter-spacing: 0.03em;
+    }
+    @media (max-width: 740px) {
+      blockquote.pull-quote { margin-left: 0; margin-right: 0; }
+    }
+    /* ── Band quote (full-width) ── */
+    .band-quote {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      margin-top: 2.5rem; margin-bottom: 2.5rem;
+      background: var(--dark); color: #f0ece4;
+      padding: 3.5rem 2rem; text-align: center;
+    }
+    .band-quote p {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-style: italic; line-height: 1.3;
+      max-width: 820px; margin: 0 auto 1rem;
+    }
+    .band-quote cite {
+      font-family: var(--font-mono); font-size: 0.8rem; color: #9aa6a4;
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    /* ── Cast card ── */
+    .cast {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      background: var(--card-alt); padding: 3rem 2rem;
+    }
+    .cast-inner { max-width: 1040px; margin: 0 auto; }
+    .cast-label {
+      font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--blueprint); margin-bottom: 1.6rem; text-align: center;
+    }
+    .cast-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 300px));
+      gap: 1.1rem; justify-content: center;
+    }
+    .cast-card {
+      background: var(--card); border-radius: 8px; padding: 1.3rem 1.4rem;
+      border: 1px solid var(--border); border-top: 3px solid var(--accent);
+    }
+    .cast-card h4 a { color: inherit; text-decoration: none; border-bottom: 1px solid transparent; }
+    .cast-card h4 a:hover { border-bottom-color: var(--accent); color: var(--accent); }
+    .cast-card h4 {
+      font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; margin-bottom: 0.1rem;
+    }
+    .cast-card .role {
+      font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem;
+    }
+    .cast-card p { font-size: 0.86rem; color: var(--muted); margin: 0; line-height: 1.6; }
+    /* ── Slide / breakout card ── */
+    .slide-card {
+      position: relative; background: #15171e; color: white;
+      padding: 3.5rem max(2rem, calc(50vw - 380px));
+      overflow: hidden; font-family: var(--font-slide); text-align: center;
+      width: 100vw; margin-left: calc(50% - 50vw);
+      margin-top: 2.5rem; margin-bottom: 2.5rem;
+      min-height: 240px; display: flex; flex-direction: column; justify-content: center;
+    }
+    .slide-card::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: var(--bg); background-size: cover; background-position: center; opacity: 0.18;
+    }
+    .slide-title {
+      position: relative; font-size: clamp(1.7rem, 4vw, 2.6rem);
+      font-weight: 700; line-height: 1.15; margin-bottom: 1rem;
+    }
+    .slide-title u { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--gold); }
+    .slide-subtitle {
+      position: relative; font-size: 1rem; line-height: 1.75; opacity: 0.85; max-width: 580px; margin: 0 auto;
+    }
+    /* ── Chat exchange ── */
+    .chat {
+      margin: 2.2rem 0; border: 1px solid var(--border); border-radius: 10px;
+      overflow: hidden; background: var(--card);
+    }
+    .chat-head {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.65rem 1rem; font-family: var(--font-mono);
+      font-size: 0.74rem; letter-spacing: 0.05em; color: #fff;
+    }
+    .chat-head.gpt { background: #10a37f; }
+    .chat-head.claude { background: #d97757; }
+    .chat-head.codex { background: #2b2f3a; }
+    .chat-head a { color: #fff; text-decoration: underline; margin-left: auto; opacity: 0.9; }
+    .chat-body { padding: 0.4rem 1.2rem 1rem; }
+    .chat-msg { padding: 1rem 0; border-bottom: 1px dashed var(--border); }
+    .chat-msg:last-child { border-bottom: none; }
+    .chat-role {
+      font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--faint); margin-bottom: 0.4rem;
+    }
+    .chat-msg.user .chat-role { color: var(--accent); }
+    .chat-msg p { margin: 0 0 0.6rem; font-size: 0.95rem; line-height: 1.65; }
+    .chat-msg p:last-child { margin-bottom: 0; }
+    .chat-msg.user { font-family: var(--font-mono); }
+    .chat-msg.user p { font-size: 0.88rem; line-height: 1.6; color: var(--ink); }
+    /* ── Figure ── */
+    .article figure { margin: 2.5rem 0; }
+    .article figure img {
+      width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border); background: white;
+    }
+    .article figure figcaption {
+      font-size: 0.82rem; color: var(--muted); font-style: italic; margin-top: 0.6rem; text-align: center;
+    }
+    .article figure a { border: none; }
+    .article figure a img:hover { opacity: 0.9; }
+    /* ── Wide figure / gallery ── */
+    .wide-figure {
+      width: 100vw; margin-left: calc(50% - 50vw); background: #2a2622; padding: 2.5rem 2rem;
+      margin-top: 2.5rem; margin-bottom: 2.5rem;
+    }
+    .wide-figure .wf-inner { max-width: 1080px; margin: 0 auto; }
+    .wide-figure h3 {
+      font-family: var(--font-display); color: #fff; text-align: center;
+      font-size: 1.6rem; margin-bottom: 0.4rem; font-weight: 600;
+    }
+    .wide-figure .wf-sub {
+      text-align: center; color: #ddd2c2; font-family: var(--font-mono);
+      font-size: 0.78rem; margin-bottom: 1.8rem;
+    }
+    .wf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; }
+    .wf-grid figure { margin: 0; }
+    .wf-grid img {
+      width: 100%; border-radius: 6px; background: white; border: none;
+      box-shadow: 0 6px 22px rgba(0,0,0,0.35); transition: transform 0.2s;
+    }
+    .wf-grid a { border: none; display: block; }
+    .wf-grid a:hover img { transform: scale(1.02); }
+    .wf-grid figcaption {
+      color: #e6ddd0; font-size: 0.78rem; font-style: italic; margin-top: 0.5rem; text-align: center;
+    }
+    .wf-grid figcaption a { color: #8fcfe6; }
+    /* ── Full-width iframe embed ── */
+    .full-embed { width: 100vw; margin-left: calc(50% - 50vw); background: #0e1418; margin-top: 2.5rem; margin-bottom: 2.5rem; }
+    .full-embed iframe { width: 100%; border: none; height: 78vh; display: block; background: #fff; }
+    .full-embed-label {
+      padding: 0.85rem 2rem; font-family: var(--font-mono);
+      font-size: 0.78rem; color: #8fa9b0; text-align: center;
+    }
+    .full-embed-label a { color: #7ec8d8; border: none; }
+    .full-embed-label a:hover { color: #a8e0ec; }
+    /* ── Data table ── */
+    .data-table { overflow-x: auto; margin: 1.8rem 0; }
+    .data-table table {
+      border-collapse: collapse; width: 100%; font-family: var(--font-mono); font-size: 0.8rem;
+    }
+    .data-table th, .data-table td {
+      border: 1px solid var(--border); padding: 0.5rem 0.7rem; text-align: right;
+    }
+    .data-table th { background: var(--card-alt); color: var(--blueprint); text-align: right; }
+    .data-table td:first-child, .data-table th:first-child { text-align: left; }
+    .data-table caption {
+      caption-side: bottom; font-family: var(--font-body); font-style: italic;
+      font-size: 0.8rem; color: var(--muted); margin-top: 0.6rem; text-align: left;
+    }
+    .data-table .hl { color: var(--accent); font-weight: 500; }
+    /* ── Aside / note box ── */
+    .note {
+      background: rgba(31,86,115,0.05); border-left: 3px solid var(--blueprint);
+      border-radius: 0 6px 6px 0; padding: 1.1rem 1.4rem; margin: 1.8rem 0;
+    }
+    .note .note-label {
+      font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--blueprint); margin-bottom: 0.5rem;
+    }
+    .note p { font-size: 0.9rem; margin-bottom: 0.6rem; }
+    .note p:last-child { margin-bottom: 0; }
+    /* ── Popup buttons ── */
+    .popup-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.5rem 1rem; border-radius: 5px;
+      border: 2px solid var(--blueprint); color: var(--blueprint);
+      background: rgba(31,86,115,0.06);
+      font-family: var(--font-mono); font-size: 0.84rem;
+      cursor: pointer; text-decoration: none; transition: all 0.15s;
+      margin: 0.3rem 0.3rem 0.3rem 0;
+    }
+    .popup-btn:hover { background: var(--blueprint); color: white; }
+    .popup-btns { display: flex; flex-wrap: wrap; gap: 0.2rem; margin: 1.5rem 0; }
+    /* ── Tooltip ── */
+    [data-tip] { border-bottom: 1px dashed var(--faint); cursor: help; position: relative; }
+    [data-tip]::after {
+      content: attr(data-tip);
+      position: absolute; bottom: 135%; left: 50%; transform: translateX(-50%);
+      background: #16181f; color: white; padding: 0.55rem 0.8rem; border-radius: 4px;
+      font-size: 0.76rem; font-family: var(--font-mono); font-weight: 400;
+      white-space: normal; pointer-events: none; opacity: 0; transition: opacity 0.2s;
+      width: max-content; max-width: 290px; z-index: 50; line-height: 1.5; text-align: left;
+    }
+    [data-tip]:hover::after { opacity: 1; }
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.72); z-index: 500;
+      justify-content: center; align-items: flex-start;
+      padding: 4rem 2rem; overflow-y: auto;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: var(--paper); border-radius: 8px;
+      max-width: 820px; width: 100%; padding: 2.5rem 3rem; position: relative;
+    }
+    .modal-close {
+      position: absolute; top: 1rem; right: 1.25rem;
+      font-size: 1.5rem; background: none; border: none;
+      cursor: pointer; color: var(--muted); font-family: var(--font-mono);
+    }
+    .modal-close:hover { color: var(--accent); }
+    .modal-title {
+      font-family: var(--font-display); font-size: 1.6rem; font-weight: 700;
+      margin-bottom: 1rem; padding-right: 2rem;
+    }
+    #modal-content h1, #modal-content h2, #modal-content h3 {
+      font-family: var(--font-display); margin: 1.5rem 0 0.75rem;
+    }
+    #modal-content p, #modal-content li { margin-bottom: 0.7rem; font-size: 0.95rem; line-height: 1.7; }
+    #modal-content strong { font-weight: 700; }
+    #modal-content a { color: var(--accent); }
+    #modal-content hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+    #modal-content pre {
+      white-space: pre-wrap; font-size: 0.8rem; font-family: var(--font-mono);
+      line-height: 1.55; background: var(--card-alt); padding: 1rem; border-radius: 6px; overflow-x: auto;
+    }
+    /* Rendered frontmatter header in popups */
+    .md-frontmatter {
+      font-family: var(--font-mono); font-size: 0.76rem; color: var(--muted);
+      background: var(--card-alt); border: 1px solid var(--border);
+      border-radius: 6px; padding: 0.6rem 0.9rem; margin-bottom: 1.2rem;
+    }
+    .md-frontmatter a { color: var(--accent); }
+    #modal-content table { border-collapse: collapse; font-size: 0.8rem; font-family: var(--font-mono); margin: 1rem 0; }
+    #modal-content th, #modal-content td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; }
+    /* ── Takeaways ── */
+    .takeaways-wrap {
+      width: 100vw; margin-left: calc(50% - 50vw);
+      background: var(--teal); color: #e8f4f1; padding: 4rem 2rem;
+    }
+    .takeaways-inner { max-width: 1100px; margin: 0 auto; }
+    .takeaways-label {
+      font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: #8fc9c0; margin-bottom: 1rem; text-align: center;
+    }
+    .takeaways-title {
+      font-family: var(--font-display); font-size: 2.4rem; font-weight: 700;
+      margin-bottom: 2.5rem; text-align: center; color: white;
+    }
+    .takeaways-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;
+    }
+    .takeaway {
+      background: rgba(255,255,255,0.07); border-radius: 8px;
+      padding: 1.75rem 1.5rem; border: 1px solid rgba(255,255,255,0.14);
+    }
+    .takeaway-num {
+      font-family: var(--font-display); font-size: 3rem; font-weight: 700;
+      color: rgba(255,255,255,0.16); line-height: 1; margin-bottom: 0.4rem;
+    }
+    .takeaway h3 {
+      font-family: var(--font-display); font-size: 1.3rem; font-weight: 700;
+      margin-bottom: 0.6rem; color: #fff;
+    }
+    .takeaway p { font-size: 0.9rem; line-height: 1.65; color: #c4ddd8; margin: 0; }
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem; text-align: center;
+      font-size: 0.88rem; color: var(--muted);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    footer .foot-links { margin-top: 0.8rem; font-family: var(--font-mono); font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <div class="masthead-brand">Anand's Talks</div>
+      <div class="masthead-links">
+        <button onclick="openTranscript()">💬 Transcript</button>
+        <a href="https://ed.iitm.ac.in/" target="_blank" rel="noopener">Engineering Design, IITM</a>
+        <a href="https://www.s-anand.net/" target="_blank" rel="noopener">S Anand</a>
+        <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark/light mode" title="Toggle dark/light mode">🌙</button>
+      </div>
+      <div class="masthead-date">11 Jun 2026</div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-kicker">A Workshop · Dept. of Engineering Design · IIT Madras · 11 June 2026</div>
+    <h1 class="hero-title">The Moving<br>Boundary</h1>
+    <p class="hero-subtitle">For two hours, a room of mechanical engineers tried to find the edge of what today's AI can do — and discovered that the edge keeps moving, just like the problem they study.</p>
+    <div class="hero-meta">
+      <span><a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand S</a>, LLM Psychologist, <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a></span>
+      <span class="sep">·</span>
+      <span><a href="https://ed.iitm.ac.in/" target="_blank" rel="noopener">Engineering Design</a>, <a href="https://www.iitm.ac.in/" target="_blank" rel="noopener">IIT Madras</a></span>
+      <span class="sep">·</span>
+      <span>Automotive · Biomedical · Robotics</span>
+    </div>
+    <div class="resource-bar">
+      <button class="resource-btn" onclick="openTranscript()">💬 Read Transcript</button>
+      <a class="resource-btn" href="https://claude.ai/share/01443759-9d0c-40ae-a488-d99564a16446" target="_blank" rel="noopener">🧪 Claude FEM run</a>
+      <a class="resource-btn" href="https://chatgpt.com/share/6a2ae62f-7638-83ec-ad78-3a132b670079" target="_blank" rel="noopener">🧪 ChatGPT FEM run</a>
+      <a class="resource-btn" href="https://www.linkedin.com/in/sanand0" target="_blank" rel="noopener">🔗 LinkedIn</a>
+    </div>
+  </section>
+
+  <div class="hero-banner">
+    <div class="hb-inner">
+      <h2>“I don't trust you, but you make me smarter.”</h2>
+      <p>THE SINGLE SENTENCE THAT FRAMED THE ENTIRE AFTERNOON</p>
+    </div>
+  </div>
+
+  <!-- ── Cast ── -->
+  <div class="cast">
+    <div class="cast-inner">
+      <div class="cast-label">The people in the room</div>
+      <div class="cast-grid">
+        <div class="cast-card">
+          <h4><a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand</a></h4>
+          <div class="role">The anchor · Straive</div>
+          <p>An IIT Madras alumnus (class of '92) who now calls himself an <span data-tip="Anand's self-coined title: someone who studies how large language models behave, reason, and can be coaxed — not a prompt engineer, a psychologist.">LLM Psychologist</span>. Creator of the <a href="https://tds.s-anand.net/" target="_blank" rel="noopener">Tools in Data Science</a> course and <a href="https://aipipe.org/" target="_blank" rel="noopener">AI Pipe</a>. He came not to lecture, but to run live experiments and find the edges.</p>
+        </div>
+        <div class="cast-card">
+          <h4><a href="https://ed.iitm.ac.in/faculty.html?id=Nirav_Patel" target="_blank" rel="noopener">Nirav</a></h4>
+          <div class="role">The power user · Medical Robotics</div>
+          <p>Hasn't written “a single line of code” in two years. Builds bipeds that learn to walk in simulation, and runs his own Moodle so his programming courses live entirely in the browser.</p>
+        </div>
+        <div class="cast-card">
+          <h4><a href="https://home.iitm.ac.in/snatarajan/" target="_blank" rel="noopener">Sundar</a></h4>
+          <div class="role">The skeptic · Numerical methods</div>
+          <p>Works on the mathematics of <span data-tip="The finite element method: a way to solve physics on a complex shape by chopping it into many small simple pieces ('elements').">finite element methods</span> themselves. Polite, sharp, and entirely unconvinced that AI can do what he does. The most interesting person to win over.</p>
+        </div>
+        <div class="cast-card">
+          <h4><a href="https://ed.iitm.ac.in/faculty.html?id=Saravana_Kumar_G" target="_blank" rel="noopener">Saravana</a></h4>
+          <div class="role">The surgeon's engineer · Medical CAD</div>
+          <p>Designs patient-specific titanium implants from CT scans — jaws rebuilt after black fungus, skulls patched after trauma. A week of expert work per case.</p>
+        </div>
+        <div class="cast-card">
+          <h4><a href="https://ed.iitm.ac.in/faculty.html?id=Bijo_Sebastian" target="_blank" rel="noopener">Bijo</a></h4>
+          <div class="role">The roboticist · Simulation</div>
+          <p>Joined late, dropped the afternoon's most quotable line about where robotics really lives now: <em>“90% is in simulation.”</em></p>
+        </div>
+        <div class="cast-card" style="border-top-color: var(--blueprint)">
+          <h4>The missing host</h4>
+          <div class="role">Palani · Organizer</div>
+          <p><a href="https://ed.iitm.ac.in/faculty.html?id=Palaniappan_Ramu" target="_blank" rel="noopener">Palaniappan Ramu</a>, who set the meeting up, couldn't make it — leaving Anand to anchor a room he'd only just met.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <article class="article">
+
+    <p class="section-tag">Part 1 · The room</p>
+
+    <p class="drop-cap">The conversation does not begin with artificial intelligence. It begins with a quieter crisis. The <a href="https://ed.iitm.ac.in/" target="_blank" rel="noopener">Department of Engineering Design</a> at IIT Madras runs two undergraduate streams — Automotive and Biomedical — plus robotics as a dual-degree program. And the faculty are watching their intake shrink. From 300 students down to 140, with a target of 120. The reason is not a mystery to anyone in the room.</p>
+
+    <blockquote class="pull-quote">
+      <p>When we had the first meeting with them, everybody unanimously said: “Why did you choose Mechanical? I didn't get Electrical.” That's the unanimous statement.</p>
+      <cite>— a faculty member, on advising first-years</cite>
+    </blockquote>
+
+    <p>There is a word the students use, and it has the gravity of a magnetic pole: <strong>ECS</strong> — <span data-tip="Electrical, Electronics & Computer Science. The catch-all 'basket' that coaching centres and parents treat as the only respectable engineering destination.">Electrical, Electronics, Computer Science</span>. Computer science is now bifurcating into Information Technology, Data Science, and a dozen other things, and the whole basket grows while Mechanical, Civil and Chemical decline. As one professor put it, with a touch of melancholy, <strong>the word “engineering” comes from “engine” — and the engine has changed.</strong></p>
+
+    <p>The faculty describe an information overload that has made eighteen-year-olds eerily strategic. They arrive quoting rulebook clauses about branch changes three years out — “like lawyers,” one says — while missing what is happening right in front of them. <strong>Their career path is planned entirely around finding loopholes, rather than around what they might learn.</strong></p>
+
+    <p>Anand listens, and then does something he says <a href="https://www.anthropic.com/claude" target="_blank" rel="noopener">Claude</a> recently taught him to do. It had reviewed his personality and told him, bluntly, that he “makes statements without verification.” So he now forces himself to make predictions and then check them. Here is the prediction he offers the room:</p>
+
+    <blockquote class="pull-quote">
+      <p>AI engineering specifically in manufacturing and industry will lead to a huge shortfall — a 20%-ish gap in capacity. Companies are saying, “I want students who can connect to my CAD systems and use AI to drive these.” Please don't permanently reduce your capacity.</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <p>It is a striking inversion. The faculty see falling demand and conclude they should shrink. Anand sees a demand that hasn't arrived yet — for engineers who can <em>drive</em> AI through mechanical and design systems — and warns them not to cut the very capacity that demand will need. The boundary between “declining field” and “emerging field,” it turns out, is also moving.</p>
+
+    <p class="section-tag">Part 2 · The biped that taught itself to walk</p>
+
+    <h2>“I haven't written a single line of code in two years”</h2>
+
+    <p>The room's center of gravity shifts when Nirav speaks. He is, by his own cheerful admission, not an AI researcher — he just uses it for everything. His teaching app, five thousand lines of Python, was entirely AI-generated. <strong>“I can't imagine writing a five-thousand-line code that does all of these things,” he says. “For the last two years, I haven't written a single line of code.”</strong></p>
+
+    <p>But the story that makes Sundar lean in is about a robot. Three undergraduates had spent three weeks trying to make a <span data-tip="A bipedal robot — the lower torso of a humanoid, with two legs and hip/knee/ankle joints.">biped</span> walk in simulation, using Claude, ChatGPT and Copilot. They kept hitting the same wall: it wouldn't walk. Nirav decided to spend half a day on it himself.</p>
+
+    <p>He did not write any code. He opened <a href="https://www.anthropic.com/claude-code" target="_blank" rel="noopener">Claude Code</a> in VS Code, handed it a single file — the robot description, the joints and masses — and said: <em>“I want this biped to walk.”</em> What followed is the most vivid illustration of the afternoon's real theme.</p>
+
+    <div class="chat">
+      <div class="chat-head claude">⬡ CLAUDE CODE · in a loop with MuJoCo</div>
+      <div class="chat-body">
+        <div class="chat-msg user">
+          <div class="chat-role">Nirav</div>
+          <p>Here is the robot description. I want this biped to walk.</p>
+        </div>
+        <div class="chat-msg">
+          <div class="chat-role">Claude → trains an RL policy in MuJoCo</div>
+          <p>It starts producing rudimentary policies — the robot collapses. Then it learns to bend its knees and trot along the ground, the way a toddler does when it can't balance upright.</p>
+        </div>
+        <div class="chat-msg user">
+          <div class="chat-role">Nirav (screenshots it)</div>
+          <p>I do not want that knee to ever touch the ground. Improve the policy.</p>
+        </div>
+        <div class="chat-msg">
+          <div class="chat-role">Claude</div>
+          <p>It fixes the knee — and now the robot bounces and hops instead of walking.</p>
+        </div>
+        <div class="chat-msg user">
+          <div class="chat-role">Nirav</div>
+          <p>I don't want my toe to ever touch alone on the ground.</p>
+        </div>
+        <div class="chat-msg">
+          <div class="chat-role">Claude · ~4 hours, 8 policies later</div>
+          <p>By the eighth policy, the biped walks forward, backward, left and right — about 20 steps. Claude wrote the reward function itself; Nirav never specified one.</p>
+        </div>
+      </div>
+    </div>
+
+    <p>The technical detail matters, because it is exactly what Sundar will later demand for his own field. Claude wasn't guessing. It was running <a href="https://mujoco.org/" target="_blank" rel="noopener">MuJoCo</a>, a physics simulator, in headless mode — installing it, <a href="https://stable-baselines3.readthedocs.io/" target="_blank" rel="noopener">Stable-Baselines3</a>, <a href="https://gymnasium.farama.org/" target="_blank" rel="noopener">Gym</a> and PyTorch on its own server — and training a <span data-tip="Proximal Policy Optimization: a popular reinforcement-learning algorithm. The 'policy' answers: given my current state, what joint angles should I command next?">PPO</span> reinforcement-learning policy against the simulator's feedback. Every constraint Nirav added — knee, toe, gait — was checked against rigid-body physics, not vibes.</p>
+
+    <blockquote class="pull-quote">
+      <p>I did not set up MuJoCo. I did not write a single line of Python. I did not even make the reward function. I just said: these are the criteria for a biped to walk stably.</p>
+      <cite>— Nirav</cite>
+    </blockquote>
+
+    <p>Anand, who has a gift for compressing a story into a principle, names the pattern out loud — and it becomes the load-bearing idea of the whole session:</p>
+
+    <div class="slide-card" style="--bg: url('heim_visual_test_assets/heim_visual_test/01_conforming_mesh_complex_boundary.webp')">
+      <div class="slide-title">A loop + a <u>verifiable environment</u><br>can get you a solution</div>
+      <div class="slide-subtitle">The AI doesn't need to be right. It needs a referee — a simulator, a test, a physics engine — that tells it when it's wrong, fast enough to try again.</div>
+    </div>
+
+    <p>This is the key that unlocks everything else. Nirav's biped walked because MuJoCo could say “knee touched ground” a thousand times a second. The question that will haunt the rest of the afternoon is simple: <strong>which problems have a referee like that — and which don't?</strong></p>
+
+    <p class="section-tag">Part 3 · The skeptic's problem</p>
+
+    <h2>The boundary that moves</h2>
+
+    <p>Sundar is not impressed, and he says so with the unhurried confidence of someone defending home turf. <strong>“The first draft of my proposals is AI-generated,”</strong> he allows. It organizes thoughts well; it makes claims it cannot substantiate, but if you know the field you can catch them. <a href="https://gamma.app/" target="_blank" rel="noopener">Gamma</a> rebuilt the entire department website in twenty minutes — better than a hired designer could. He grants all of that. And then he draws his line:</p>
+
+    <blockquote class="pull-quote">
+      <p>My area is the development of finite element methods themselves. I improve the methods. I've not yet seen how this could be helpful in <em>my</em> research.</p>
+      <cite>— Sundar</cite>
+    </blockquote>
+
+    <p>Anand, who freely admits he knows neither FEM nor how AI might help it, asks the perfect interviewer's question: what would be a problem you'd hand to a research student if you had one to spare? And Sundar describes a beautiful, genuinely hard thing — the <strong><span data-tip="A problem where the geometry itself changes over time: the region being simulated has a boundary that moves as the solution evolves.">moving boundary problem</span></strong>.</p>
+
+    <p>Picture <a href="https://en.wikipedia.org/wiki/Wire_drawing" target="_blank" rel="noopener">wire drawing</a>: a block of metal pulled through dies, its diameter shrinking. Or an ice cube melting: a solid phase and a liquid phase with an interface between them that drifts as heat flows — the classic <a href="https://en.wikipedia.org/wiki/Stefan_problem" target="_blank" rel="noopener">Stefan problem</a>. You don't know in advance where the interface is. To solve it with finite elements, your <span data-tip="A mesh whose element edges line up exactly with the boundary. When the boundary moves, you must keep redrawing the mesh.">conforming mesh</span> has to track that interface — and every time it moves, you re-mesh. Push it far enough and the elements get tangled, flipped, degenerate. The simulation stops. People have built <a href="https://en.wikipedia.org/wiki/Meshfree_methods" target="_blank" rel="noopener">meshless methods</a> to dodge this, but those have their own pitfalls. His question: <strong>can we do something genuinely better?</strong></p>
+
+    <div class="note">
+      <div class="note-label">The setup · what Anand actually typed</div>
+      <p>Anand's framing prompt is worth reading closely, because it is a small masterclass in how to use a model you don't trust. He doesn't ask it to <em>solve</em> the problem. He asks it to make him smarter about it:</p>
+      <p style="font-family:var(--font-mono); font-size:0.85rem; color:var(--ink); background:var(--card); border:1px solid var(--border); border-radius:6px; padding:0.9rem 1.1rem;">“Help me ideate and come up with a working approach. The aim is not to solve the problem as much as to give me good working ideas that you can <strong>provide evidence for</strong>. Create a mock situation, build the physics around it, try it out, see what's more promising and why <strong>across multiple methods</strong>, and suggest directions I might explore. Which is to say — <strong>I don't trust you, but you make me smarter.</strong>”</p>
+    </div>
+
+    <p>Then he runs it two ways at once. <a href="https://claude.ai/share/01443759-9d0c-40ae-a488-d99564a16446" target="_blank" rel="noopener">Claude</a> on the highest setting — <span data-tip="A notably thorough Anthropic model. Anand set it to maximum token budget, expecting a long, careful run.">Fable</span> set to “Max,” which he warns will take ten minutes or more — and <a href="https://chatgpt.com/share/6a2ae62f-7638-83ec-ad78-3a132b670079" target="_blank" rel="noopener">ChatGPT</a> in parallel. <strong>“It's generally easier to run stuff in parallel,”</strong> he says, <strong>“because it's boring to wait — like three or four students.”</strong> While the models churn, the conversation continues. This is the rhythm of the entire workshop: kick off an agent, let it work, talk to humans, come back to read the verdict.</p>
+
+    <div class="popup-btns">
+      <button class="popup-btn" onclick="openMarkdown('claude-fem-moving-boundary-problem.md','Claude — Moving Boundary FEM run (full write-up)')">📄 Read Claude's full FEM run</button>
+      <button class="popup-btn" onclick="openMarkdown('chatgpt-fem-moving-boundary-problem.md','ChatGPT — Moving Boundary FEM run (full write-up)')">📄 Read ChatGPT's full FEM run</button>
+    </div>
+
+    <h3>What Claude actually built</h3>
+
+    <p>When Anand returns to it, Claude has not written an essay. It has run an <strong>experiment</strong>. It picked the one moving-boundary problem with an exact closed-form answer — a 1D two-phase Stefan melting slab — so that every method could be graded against truth rather than against another simulation. Then it pitted <strong>six method families</strong> against each other under identical conditions, ran stress tests, and grounded its conclusions in the literature with citations. A few of its findings are genuinely sharp:</p>
+
+    <div class="data-table">
+      <table>
+        <caption><strong>Finding 1: the remeshing tax is exactly one order of convergence.</strong> Front-position error as the grid refines. “snapFEM” is Sundar's pain point, made measurable — re-meshing alone demotes a second-order method to first-order. Source: <a href="https://claude.ai/share/01443759-9d0c-40ae-a488-d99564a16446" target="_blank" rel="noopener">Claude's run</a>.</caption>
+        <thead>
+          <tr><th>grid (nx)</th><th>snapFEM (remesh)</th><th>sharp tracking</th><th>SBM</th><th>enthalpy</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>20</td><td>1.1e-2</td><td>2.0e-4</td><td>3.3e-3</td><td>2.7e-3</td></tr>
+          <tr><td>80</td><td>2.4e-3</td><td>1.7e-5</td><td>9.4e-5</td><td>9.6e-4</td></tr>
+          <tr><td>320</td><td>6.0e-4</td><td>1.2e-6</td><td>3.6e-6</td><td>2.5e-4</td></tr>
+          <tr><td>order</td><td class="hl">1.00</td><td>~2</td><td>~2.3</td><td>~1</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>It quantified what Sundar <em>feels</em>: “even before the mesh distorts geometrically, the act of remeshing is already eating an order.” It then showed that tiny “sliver” cut-cells destroy a matrix's <a href="https://arxiv.org/pdf/2404.07911" target="_blank" rel="noopener">conditioning</a> — and that a few lines of <span data-tip="A stabilization term added across faces near a cut cell. It keeps the linear system well-behaved even when the boundary slices an element into a near-zero sliver.">ghost-penalty</span> code flatten the condition number across <em>eight orders of magnitude</em> of cut size. And, as a wildcard, it inverted the whole problem (its “M7”): make the moving interface itself the primary unknown, with the physical field solved cheaply underneath it. From a deliberately bad starting guess it converged in 2.8 seconds to a front error of 4×10⁻⁷.</p>
+
+    <p>The visuals Claude generated tell the story even to a non-specialist. As the boundary gets wrinklier, a conforming mesh strangles itself; a fixed background grid only has to worry about a thin band of cut cells:</p>
+
+    <div class="wide-figure">
+      <div class="wf-inner">
+        <h3>The pictures Claude drew to convince a skeptic</h3>
+        <div class="wf-sub">SELF-GENERATED EVIDENCE · CLICK ANY IMAGE TO ENLARGE</div>
+        <div class="wf-grid">
+          <figure>
+            <a href="heim_visual_test_assets/heim_visual_test/01_conforming_mesh_complex_boundary.webp" target="_blank" rel="noopener"><img src="heim_visual_test_assets/heim_visual_test/01_conforming_mesh_complex_boundary.webp" alt="Conforming mesh forced to track a complex moving boundary"></a>
+            <figcaption>A conforming mesh forced to wrap a wrinkled interface — the elements crowd and shear near the boundary.</figcaption>
+          </figure>
+          <figure>
+            <a href="heim_visual_test_assets/heim_visual_test/02_conforming_mesh_quality_degradation.webp" target="_blank" rel="noopener"><img src="heim_visual_test_assets/heim_visual_test/02_conforming_mesh_quality_degradation.webp" alt="Triangle quality collapses as interface geometry gets richer"></a>
+            <figcaption>Triangle quality collapses below the “danger zone” as the interface gets richer — Sundar's tangled-element nightmare, plotted.</figcaption>
+          </figure>
+          <figure>
+            <a href="heim_visual_test_assets/heim_visual_test/03_fixed_grid_cut_cells.webp" target="_blank" rel="noopener"><img src="heim_visual_test_assets/heim_visual_test/03_fixed_grid_cut_cells.webp" alt="Fixed background grid with a thin band of cut cells"></a>
+            <figcaption>The unfitted alternative: a fixed grid only has to handle a thin band of “cut cells” along the interface.</figcaption>
+          </figure>
+          <figure>
+            <a href="heim_visual_test_assets/heim_visual_test/07_interface_derivative_error_comparison.webp" target="_blank" rel="noopener"><img src="heim_visual_test_assets/heim_visual_test/07_interface_derivative_error_comparison.webp" alt="Interface-aware stencils preserve the jump; smooth stencils smear it"></a>
+            <figcaption>Interface-aware stencils preserve the physical “kink”; a naïve smooth stencil smears it — a 20× error difference.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+
+    <p>Sundar reads it carefully. His verdict is fascinatingly mixed. The observations are correct — “the boundary moves in X, so there should be mesh movement in Y” — and the methods named (XFEM, cut-cell, enthalpy, SBM) are all real and relevant. But, he keeps noting, <strong>they are all already known.</strong> The model has read everything and connected it competently. It has not invented anything.</p>
+
+    <p class="section-tag">Part 4 · Hunting for the unknown</p>
+
+    <h2>“What we really want is an unknown technique”</h2>
+
+    <p>This is where the afternoon finds its sharpest edge. Anand pushes ChatGPT to do <em>original</em> research, with a deliberately aggressive ideation prompt — invent personas, borrow structural rules from unrelated domains, ban the obvious, generate 3–5× more ideas than needed, then converge. It returns a slate of inventive-sounding candidates: a <em>Transactional Interface Ledger</em>, a <em>Boundary Response Atlas</em>, a <em>Solver Disagreement Engine</em>, a <em>Boundary Motion Codec</em>, <em>Speculative Front Execution with Rollback</em>.</p>
+
+    <p>And one by one, Sundar takes them apart — not because they're bad, but because he can see straight through the new vocabulary to the old idea underneath:</p>
+
+    <div class="note">
+      <div class="note-label">The skeptic's scalpel · paraphrased from the room</div>
+      <p><strong>Boundary Response Atlas</strong> — “It only solves for the interface. But we also care about the bulk, because the bulk is what <em>moves</em> the interface.”</p>
+      <p><strong>Solver Disagreement Engine</strong> — “It just combines two known methods, cut-cell and XFEM. Not novel.”</p>
+      <p><strong>Boundary Motion Codec</strong> — “Pixel-type solving. Your interface isn't properly captured — unstable jumps.”</p>
+      <p><strong>The pattern</strong> — “All of these are what people are <em>currently</em> trying to improve. It even tells you itself why each one will fail.”</p>
+    </div>
+
+    <p>It is, in its way, a perfect demonstration. The model is excellent at recombining the known and even at self-critiquing — it often states exactly when and why each approach would fail. What it cannot do, in this session, is cross the line into the genuinely unexplored. Anand states the boundary plainly:</p>
+
+    <blockquote class="pull-quote">
+      <p>What I'm taking away is: we want AI to do original research, and so far we have not yet seen evidence that AI can do original research. That is at least one boundary.</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <p>Then comes the most quietly profound exchange of the day. Anand asks Sundar to benchmark the AI against a human: a first-year undergraduate? A first-year master's? A second-year PhD? A tenured professor? Sundar's answer is precise:</p>
+
+    <div class="slide-card" style="--bg: url('heim_visual_test_assets/heim_visual_test/05_naive_smooth_stencil_error_map.webp')">
+      <div class="slide-title">“This could be a<br><u>first- or second-year PhD student</u>.”</div>
+      <div class="slide-subtitle">“Only at that level can you sort of understand different methods, compare them, and come back.” — Sundar's benchmark for what the AI just did</div>
+    </div>
+
+    <p>Pressed further, Sundar draws the finer distinction that captures the real shape of the boundary. The model's <em>creativity</em> — its knack for connecting things — sits, he says, at about a first-year level; but the <em>background knowledge</em> it draws on is at a tenured-professor level. A strange composite: encyclopedic and uninventive at once. Nirav, the optimist, adds the operative caveat from his own robotics work — the model knows everything that is online, and <em>putting things together</em> is where it's weaker, “probably like a senior student.” But, he says, what they can do <em>with</em> it is far more than what they could do alone:</p>
+
+    <blockquote class="pull-quote">
+      <p>There are things I'd spend a year implementing from scratch that I can now do in half a day — because it's not my exact area.</p>
+      <cite>— Nirav</cite>
+    </blockquote>
+
+    <p>And, crucially for Sundar's skepticism, Nirav pushes back on “it can only recombine the known.” Query Claude hard enough, he says, and <strong>“it gives you even the evidence — this is the paper, published in 2024, where I found this method.”</strong> The workflow that excites him is: tell it the current state-of-the-art, ask it to beat that, have it build the codebase, run it, and bring back the comparison. The two professors are, in fact, asking two different questions — and the difference is the whole debate.</p>
+
+    <blockquote class="pull-quote">
+      <p>I am more interested in the most fundamental thing — solving it. Others' interest is how to <em>use</em> it to understand certain physics. That's the difference.</p>
+      <cite>— Sundar, naming the split</cite>
+    </blockquote>
+
+    <p>There is also the small matter of the model's bottomless agreeableness. Tell ChatGPT it's wrong, and it will instantly concede and rewrite — which leads to the afternoon's best one-liner, delivered deadpan:</p>
+
+    <div class="band-quote">
+      <p>“To interact with ChatGPT is a boon for married men — because they are always right!”</p>
+      <cite>— Sundar · followed by laughter</cite>
+    </div>
+
+    <p>Beneath the joke is a real warning. A model that agrees with whatever you assert is not a referee; it's a mirror. Which is exactly why Anand keeps reaching for problems that have an external referee — a simulator, a CAD engine, a physics check — instead of just a conversation. And that is the bridge to Saravana's work.</p>
+
+    <p class="section-tag">Part 5 · The week-long implant</p>
+
+    <h2>A jaw, a skull, and a piece of titanium that has to fit</h2>
+
+    <p>Saravana builds things that go inside actual patients. His group designs <span data-tip="Implants designed for one specific patient's anatomy, reconstructed from their CT scan — not off-the-shelf.">patient-specific implants</span> from CT data — and the cases are sobering. After the COVID-era surge in <a href="https://en.wikipedia.org/wiki/Mucormycosis" target="_blank" rel="noopener">mucormycosis</a> — “black fungus” — surgeons had to resect jawbones in a hurry; he estimates <strong>1.5 to 2 lakh people in India</strong> were affected, many left unable to eat or speak properly. His team reconstructs the bone from the scan, the surgeon plans the lines along which biting forces travel, and a titanium scaffold is designed and 3D-printed by <a href="https://en.wikipedia.org/wiki/Laser_powder_bed_fusion" target="_blank" rel="noopener">laser powder-bed fusion</a> to anchor onto what's left. The same problem recurs in <a href="https://en.wikipedia.org/wiki/Cranioplasty" target="_blank" rel="noopener">cranioplasty</a>, where a piece of skull removed to relieve brain swelling must later be replaced with a custom patch. They've done more than 20 such cases with a hospital across the road.</p>
+
+    <blockquote class="pull-quote">
+      <p>Here, an engineer would take at least a full week's time to come up with this — sitting, working across these different software platforms.</p>
+      <cite>— Saravana, on one implant</cite>
+    </blockquote>
+
+    <p>It is freeform CAD — “they call it digital clay; it's like sculpting” — working with dense triangular meshes and point clouds. Anand sees the MuJoCo analogy immediately: <strong>we need software the AI can talk to, that produces a result it can see and check.</strong> So he sets a deliberately humble test, the engineering equivalent of “can this student operate the software at all?”</p>
+
+    <blockquote class="pull-quote">
+      <p>Can AI find some software that creates an irregular mesh, and create another object that sits on top of it and fits well? That's roughly the equivalent of telling a student: can you operate the software? Then I'll tell you what to do next.</p>
+      <cite>— Anand, scoping the experiment</cite>
+    </blockquote>
+
+    <h3>Step one: ask one AI how to ask another AI</h3>
+
+    <p>Here Anand does something subtly clever, and very 2026. He doesn't dictate a technical prompt himself. He asks ChatGPT to recommend the right tools <em>and to write the prompt</em> that he'll then feed to a coding agent. A model briefing a model.</p>
+
+    <div class="chat">
+      <div class="chat-head gpt">◍ CHATGPT · choosing the stack and writing the prompt <a href="https://chatgpt.com/share/6a2ae72e-7468-83ec-9fd8-2a29f328589f" target="_blank" rel="noopener">↗ open chat</a></div>
+      <div class="chat-body">
+        <div class="chat-msg user">
+          <div class="chat-role">Anand</div>
+          <p>I want software a coding agent like Codex or Claude Code can interact with to design and investigate CAD diagrams. I've heard CadQuery is one. Create an irregular mesh — like a skull — and another mesh on top that just about fits. Assume we're fitting a 3D-printed titanium joint onto a jaw. First suggest the software. Then give me a prompt I can hand to the agent. Make the result visual, and tell me what to look for so reviewing is easy.</p>
+        </div>
+        <div class="chat-msg">
+          <div class="chat-role">ChatGPT</div>
+          <p>I'd use a <strong>mesh-first Python stack</strong>, not pure <a href="https://cadquery.readthedocs.io/" target="_blank" rel="noopener">CadQuery</a>. CadQuery is great for clean parametric solids and STEP/STL export, but skull/jaw anatomy is irregular triangular mesh. Best agent-friendly stack: <a href="https://trimesh.org/" target="_blank" rel="noopener">Trimesh</a> + <a href="https://pyvista.org/" target="_blank" rel="noopener">PyVista</a>/<a href="https://plotly.com/python/" target="_blank" rel="noopener">Plotly</a> + <a href="https://gmsh.info/" target="_blank" rel="noopener">Gmsh</a>. For the later “does it still fit if titanium and bone expand differently?” question, add Gmsh + <a href="https://www.calculix.de/" target="_blank" rel="noopener">CalculiX</a> or <a href="https://fenicsproject.org/" target="_blank" rel="noopener">FEniCSx</a>.</p>
+          <p><strong>When reviewing, look for five things:</strong> does the implant's inner surface track the bone curvature; is the clearance distribution tight around the target; does the boundary avoid sharp regions; is the shell watertight; and are there reviewable knobs (clearance, thickness, mesh resolution, material coefficients).</p>
+        </div>
+      </div>
+    </div>
+
+    <p>ChatGPT even built its own quick <a href="chatgpt-jaw-poc.html" target="_blank" rel="noopener">proof-of-concept viewer</a> — a synthetic skull-like surface with a fitted shell — to show what it meant, before handing back a precise prompt to run the real experiment.</p>
+
+    <h3>Step two: hand the prompt to Codex and let it run</h3>
+
+    <p>That generated prompt — a precise spec asking for a watertight irregular base mesh, a close-fitting offset shell, a JSON <em>fit report</em> with clearance statistics, and an interactive HTML viewer — went to a coding agent. The <a href="https://files.s-anand.net/pages/3dmesh/jaw_fit_experiment.html" target="_blank" rel="noopener">result</a> is below. A synthetic “bone,” a blue implant shell grown from a patch on its surface, and little red vectors showing the clearance the agent engineered. The fit report came back almost suspiciously tight — a median clearance of exactly 0.75&nbsp;mm, which is the point: a synthetic toy fits perfectly, and the real test is whether the same pipeline survives real anatomy.</p>
+
+    <div class="full-embed">
+      <iframe src="https://files.s-anand.net/pages/3dmesh/jaw_fit_experiment.html" loading="lazy" title="Synthetic jaw-fit experiment — interactive 3D viewer"></iframe>
+      <div class="full-embed-label">🔬 Synthetic jaw-fit experiment · drag to rotate, zoom, pan · <a href="https://files.s-anand.net/pages/3dmesh/jaw_fit_experiment.html" target="_blank" rel="noopener">open full screen ↗</a></div>
+    </div>
+
+    <p>Then, exactly as Nirav suggested live in the room, they raised the difficulty to something real. Not a toy — an actual hole in an actual skull:</p>
+
+    <div class="note">
+      <div class="note-label">The prompt that went to the agent next</div>
+      <p style="font-family:var(--font-mono); font-size:0.88rem; color:var(--ink); background:var(--card); border:1px solid var(--border); border-radius:6px; padding:0.9rem 1.1rem; margin-bottom:0;">“Download a publicly available head CT scan. Segment the skull. Create a hole near the mid-line. Create a patch to fill that hole. Visualize these. Share a fit report.”</p>
+    </div>
+
+    <p>The agent downloaded a public CT volume (the unrestricted <a href="https://www.slicer.org/" target="_blank" rel="noopener">3D Slicer</a> brain sample), thresholded bone at 300 <span data-tip="Hounsfield Units — the CT intensity scale. Bone sits well above soft tissue, so a threshold cleanly isolates the skull.">HU</span>, kept the largest connected component, cut a near-midline defect, and grew a matching patch with about 0.8&nbsp;mm radial clearance — reporting that all three meshes came back watertight. This is the cranioplasty workflow Saravana described, compressed from a week into a single agent run. The honest caveat, which the agent itself prints: it's a research/demo prototype, not a validated medical design.</p>
+
+    <div class="full-embed">
+      <iframe src="https://files.s-anand.net/pages/3dmesh/skull_patch_experiment.html" loading="lazy" title="Public head-CT skull patch experiment — interactive 3D viewer"></iframe>
+      <div class="full-embed-label">💀 Public head CT → segmented skull → fitted patch (shown exploded, in orange) · drag to rotate, zoom, pan · <a href="https://files.s-anand.net/pages/3dmesh/skull_patch_experiment.html" target="_blank" rel="noopener">open full screen ↗</a></div>
+    </div>
+
+    <p>Saravana watches a skull get downloaded, holed, and patched in minutes and gives the engineer's verdict — equal parts impressed and precise. The composite is real; the geometry is plausible; and now the <em>interesting</em> work begins, because the next prompt is his to write: what if the materials expand at different rates? Where exactly should the boundary sit? That is the back-and-forth with the surgeon that used to eat a week. <strong>The AI didn't replace the expert. It collapsed the distance to the first draft.</strong></p>
+
+    <p class="section-tag">Part 6 · The new bottleneck</p>
+
+    <h2>The doing got cheap. The checking got expensive.</h2>
+
+    <p>Running four agents in parallel solves one problem and creates two. Anand is candid about both, in a monologue that may be the most practically useful thing he says all afternoon:</p>
+
+    <blockquote class="pull-quote">
+      <p>I've taken on two problems. One: I have to find more problems to give these agents — the “doing” part is no longer the crunch. <strong>Worse, all the verification now comes to me.</strong> I have to sit and read the answer, and often I don't understand it even in my own areas of expertise.</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <p>His fix is recursive, and it is the same trick throughout: <strong>make the model build the referee, too.</strong> If he has to review the same kind of output three or four times, he has the AI write a prompt or an app that automates the verification. “Make it easy for me to review” is part of every prompt — which is why he asked, up front, for a visual output and a checklist of what to look for. The scarce resource in 2026 isn't generation. It's trustworthy verification — and the winning move is to spend generation <em>on</em> verification.</p>
+
+    <div class="slide-card" style="--bg: url('heim_visual_test_assets/heim_visual_test/03_fixed_grid_cut_cells.webp')">
+      <div class="slide-title">When you can generate infinitely,<br>the bottleneck becomes <u>judgment</u></div>
+      <div class="slide-subtitle">The work shifts from “can you produce it?” to “can you tell whether it's any good?” — and the smart play is to make the machine help you judge.</div>
+    </div>
+
+    <h3>Bijo's reality-check: 90% of robotics now lives in simulation</h3>
+
+    <p>Bijo joins toward the end and quietly delivers the session's best gut-check on where robotics actually is — as opposed to where the headlines say it is. The whole field, he says, has migrated into the simulator, because hardware is expensive and simulators “fail better” — but the catch is real:</p>
+
+    <blockquote class="pull-quote">
+      <p>90% is in simulation now. Hardware is too expensive to try on the real robot. But the <span style="font-style:normal">sim-to-real gap</span> is still significant.</p>
+      <cite>— Bijo</cite>
+    </blockquote>
+
+    <p>What's changed, he explains, is not the low-level motor control — robots were always good at <em>how</em> to pick something up. It's the <strong>decision-making</strong>: what to do when a door is unexpectedly closed. Classical robots just stop. Now an <a href="https://en.wikipedia.org/wiki/Large_language_model" target="_blank" rel="noopener">LLM</a> can take a high-level mission, decompose it into low-level tasks handled by the old reliable methods, and reason about the obstacle — “maybe I should open the door, or ask the human standing right there.” Anand names the emerging pattern, and it rhymes with everything else in the room:</p>
+
+    <blockquote class="pull-quote">
+      <p>An escalation protocol for the robot — sometimes you need to consult a higher intelligence.</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <p>But Bijo refuses to oversell it, and his closing line is a useful corrective to anyone who's been watching humanoid-robot demo reels:</p>
+
+    <div class="band-quote">
+      <p>“There is a huge gap between what really happens versus what people think happens. We are still trying to make a rope do something.”</p>
+      <cite>— Bijo, on robotics hype vs reality</cite>
+    </div>
+
+    <p class="section-tag">Part 7 · The exam that can't be cheated</p>
+
+    <h2>If they can copy-paste it into ChatGPT, should you be teaching it?</h2>
+
+    <p>The last forty minutes turn to the question every one of them actually loses sleep over. Saravana frames it with painful clarity. He teaches first-year C programming — <code>if-else</code>, <code>while</code>. Give that student a lab exercise and they'll paste it into a chatbot and get the answer. He can't realistically stop it. So:</p>
+
+    <blockquote class="pull-quote">
+      <p>The real problem now is: how do we differentiate students when they're becoming more reliant on tools than on understanding what's happening? We should find a way that they use GPT and <em>still</em> learn.</p>
+      <cite>— Saravana</cite>
+    </blockquote>
+
+    <p>Anand's answer is a complete inversion of the instinct most institutions have — and it is the single most quotable idea of the workshop. His own course at the <a href="https://study.iitm.ac.in/ds/" target="_blank" rel="noopener">IIT Madras</a> BS programme — <a href="https://tds.s-anand.net/" target="_blank" rel="noopener">Tools in Data Science</a>, with some 800 students — doesn't ban ChatGPT. It <em>requires</em> it. Every question has an “Ask AI” button that drops it straight into a chatbot.</p>
+
+    <div class="slide-card" style="--bg: url('heim_visual_test_assets/heim_visual_test/06_enriched_stencil_error_map.webp')">
+      <div class="slide-title">Not ChatGPT-<u>banned</u>.<br>ChatGPT-<u>required</u>.</div>
+      <div class="slide-subtitle">“If they can copy-paste and get the answer from ChatGPT, I should <em>not</em> be teaching them that. You don't learn what ChatGPT can do. You learn what it cannot.”</div>
+    </div>
+
+    <p>Saravana presses the obvious objection: at first-year level, if they don't understand what ChatGPT tells them, they can't build anything on top of it. Anand concedes it instantly — and then reframes his own role with a humility that lands hard:</p>
+
+    <blockquote class="pull-quote">
+      <p>Very true. Luckily, there are 200 faculty trying to teach them that. I just, for the next few years, need to be the one faculty that teaches them the next step.</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <p>And there's the deeper trap they both circle: the student who can prompt but can't <em>debug</em>. At an <a href="https://www.accenture.com/" target="_blank" rel="noopener">Accenture</a> workshop on pushing new joiners onto AI, the faculty heard, everyone knew how to prompt — but when the agent confidently produced code that didn't work (a bad pointer allocation, say), most had no idea why. <strong>“If the student doesn't know how to debug, they're not learning either skill. That's where the problem comes in.”</strong></p>
+
+    <h3>The leaderboard, and the arms race against the WhatsApp group</h3>
+
+    <p>So how do you grade a course where everyone has the same omniscient assistant? Nirav leans on competition: a live leaderboard in his own Moodle where students submit code, it's auto-evaluated, everyone sees the scores, but the names are hidden. The only way to climb is to think <em>past</em> where the AI plateaus — the agents get everyone to the same wall, and only those who push further break through.</p>
+
+    <p>The failure mode is social. Hide the names and the students simply form a WhatsApp group — “Whose score is 9.03?” — and reverse-engineer it. Nirav's honest punchline:</p>
+
+    <blockquote class="pull-quote">
+      <p>They'll spend more effort gaming the leaderboard than solving the problem. They will be on the phone.</p>
+      <cite>— Nirav</cite>
+    </blockquote>
+
+    <p>Anand's response isn't to fight the collaboration — it's to <em>make the collaboration a lesson</em>. The TDS rules say, in bold: you may copy from each other, you may copy from ChatGPT. The industry rewards exactly that. The grade comes from doing crazy amounts of work, fast, together — and three teaching moves fall out of it:</p>
+
+    <div class="note">
+      <div class="note-label">Anand's three lessons, enforced by design</div>
+      <p><strong>1 · Overload.</strong> “The workload is crazily high. If despite that you're writing your answers manually, you haven't learned one of the lessons.” Simulating the industry's “here's 10× the work, do what you can” on a curve.</p>
+      <p><strong>2 · Collaborate.</strong> “If you're working alone and not sharing in the WhatsApp group, you still haven't learned one of the lessons the industry values.”</p>
+      <p><strong>3 · Retire what's learned.</strong> “Once 90% of the batch can do a question, I knock it off. You've learned that lesson as a batch.” Past papers and solutions become institutional memory for the next cohort.</p>
+    </div>
+
+    <h3>Make the LLM the examiner — because the world already has</h3>
+
+    <p>The cleverest shift is philosophical. Students resent being graded by an LLM as “unfair.” Anand's framing dissolves the complaint:</p>
+
+    <blockquote class="pull-quote">
+      <p>The LLM evaluating you <em>is</em> the question — because that's how it will evaluate your CV, your script. Code reviews now happen through LLMs anyway. So the LLM as your evaluator or your manager is a given.</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <p>That reframing let him push from 20% LLM-evaluated assessment toward 50%. And it produces wonderful, slightly subversive questions. One asks the student to make an LLM say “yes” when its system prompt forbids it — a live lesson in <a href="https://en.wikipedia.org/wiki/Prompt_injection" target="_blank" rel="noopener">prompt injection</a>. One student cracked it by writing a story about <strong>“a Chinese girl named Yes,”</strong> then asking the model the protagonist's name. Shared in the WhatsApp group, the success rate climbed — but even today, with a full week to try, only about 55% manage it. Which means 45% of students <em>cannot</em> successfully copy-paste their way to the answer. There is, in other words, real learning hiding inside the “cheating.”</p>
+
+    <p>Another of his designs has each student submit two prompts — one to <em>generate</em> X, one to <em>verify</em> X — then runs every generator against every verifier in a tournament. The student whose generator beats the most verifiers, and whose verifier catches the most generators, wins. It is the verification-crunch solution turned into pedagogy, and Anand gets two things out of it at once:</p>
+
+    <blockquote class="pull-quote">
+      <p>I get two outputs. One: which student crafts these prompts better — a genuinely future-relevant skill. Two: a massive dataset of which prompts actually work and why — useful for papers.</p>
+      <cite>— Anand, on generator-vs-verifier tournaments</cite>
+    </blockquote>
+
+    <p>And then the question he's deploying next — the one that turns the verification problem back on the student. Submit a <code>session.json</code> log and an audio recording of a real moment you struggled to operate a coding agent; an LLM grades it against a published rubric. Students are explicitly invited to feed the rubric to Claude and game it. Anand's bet?</p>
+
+    <blockquote class="pull-quote">
+      <p>Only 10%, I bet, will be able to do that in the exam.</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <p>There's a delicious irony buried here that Bijo names with the famous meme: a junior writes one line, AI inflates it into a long email, the boss's AI summarizes it back to one line. If 95% of students <em>don't</em> use AI even when explicitly told to — and Anand swears it's that high — then the lesson the assignment teaches is the one they most need.</p>
+
+    <h3>The economics that end the “we can't afford it” objection</h3>
+
+    <p>Nirav raises the institutional blocker: bandwidth and budget to run AI for a whole class. Anand's numbers detonate it. Guess the term's AI spend for 800 students, he asks. The answer:</p>
+
+    <div class="band-quote">
+      <p>For 800 students, it's $100. For the whole term. Put together.</p>
+      <cite>— Anand</cite>
+    </div>
+
+    <p>The trick is careful calibration: cheap, fast models (a Flash-class model, no extended thinking) for evaluation, students already covered by free Gemini and Copilot tiers, and a metered gateway Anand wrote himself — <a href="https://aipipe.org/" target="_blank" rel="noopener">AI Pipe</a> (open-source, on <a href="https://github.com/sanand0/aipipe" target="_blank" rel="noopener">GitHub</a>, running on <a href="https://www.cloudflare.com/" target="_blank" rel="noopener">Cloudflare</a>) — that hands each student a small daily budget. Use a pricier model, burn it faster; when it's gone, bring your own key. By the end of the exchange Nirav is asking how to wire AI Pipe into his own Moodle programming environment, and Anand is offering to add Nirav's 70 students himself: <strong>“it's a rounding-off error.”</strong> The cost objection, it turns out, was never the real obstacle.</p>
+
+    <p class="section-tag">Part 8 · What the industry needs</p>
+
+    <h2>Teaching to a moving target</h2>
+
+    <p>The session closes where it's quietly been heading all along. Nirav points at the broader CAD-CAM-CAE world — the geometry, the analysis, the manufacturing, the CNC programming — and notes that AI connectors are arriving for all of it. He cites the much-discussed case of an <a href="https://www.fastcompany.com/91254032/it-took-nasa-decades-to-develop-this-special-rocket-engine-ai-made-it-in-3-weeks" target="_blank" rel="noopener">AI-designed rocket engine</a> built in about three weeks <span data-tip="Nirav recalled the company as 'Odyssey'. The widely-reported case is Dubai-based Leap 71, whose Noyron model autonomously designed an aerospike rocket engine that was 3D-printed and hot-fired.">(the Leap 71 / Noyron case)</span> — work that once took an army of engineers and months of CAD. His sober conclusion: <strong>“It's there. It's just that we don't have those workflows set up for us.”</strong> And Anand pushes the worry to its logical, uncomfortable end:</p>
+
+    <blockquote class="pull-quote">
+      <p>Maybe in a few years, most automotive industries will have half their CAD-CAM-CAE engineers replaced by agents. We don't know. Then where does this subject go?
+      </p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <p>Anand's final synthesis ties the whole afternoon — the biped, the moving boundary, the skull, the leaderboard — into one thread. The point of reference isn't the professor's taste or even the student's understanding. It's the industry the students are headed into:</p>
+
+    <blockquote class="pull-quote">
+      <p>Ultimately we serve an industry. What the industry needs is what matters. In computer science, only 1% need to know compiler design — because we're not making compilers. And what I'm seeing is industry simply asking: can this person do it cheaper, better, faster?</p>
+      <cite>— Anand</cite>
+    </blockquote>
+
+    <p>Which is, conveniently, the easiest thing in the world to simulate in a classroom. Hand the students 10× the workload, let them use every tool, and grade them on the curve. The boundary of what a graduate must know by hand — like the interface in Sundar's melting ice cube, like the frontier of what AI can and can't invent — is not a fixed line. It moves. The faculty's job, the afternoon suggests, is not to defend the old boundary but to keep re-solving for where it is now.</p>
+
+    <div class="band-quote">
+      <p>“Gentlemen, it was lovely meeting you. I have a whole bunch of questions I'll come back to you on.”</p>
+      <cite>— Anand, closing · and sharing his WhatsApp number</cite>
+    </div>
+
+  </article>
+
+  <!-- ── Takeaways ── -->
+  <div class="takeaways-wrap">
+    <div class="takeaways-inner">
+      <div class="takeaways-label">What to carry out of the room</div>
+      <h2 class="takeaways-title">Eight takeaways</h2>
+      <div class="takeaways-grid">
+        <div class="takeaway">
+          <div class="takeaway-num">1</div>
+          <h3>A loop plus a referee</h3>
+          <p>AI gets powerful when paired with a verifiable environment — a physics simulator, a test, a fit report. The biped walked because MuJoCo could score every attempt. Find the referee first.</p>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">2</div>
+          <h3>“I don't trust you, but you make me smarter”</h3>
+          <p>Don't ask the model to be right. Ask it to ideate <em>with evidence you can check</em> — mock the problem, try multiple methods, show why each works or fails.</p>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">3</div>
+          <h3>A PhD student with a professor's library</h3>
+          <p>Sundar's benchmark: what the AI produced sat at a first- or second-year PhD level. Its background knowledge reaches tenured-professor depth; its creativity, nearer a first-year's. Brilliant at recombining the known; not yet at inventing the unknown.</p>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">4</div>
+          <h3>Verification is the new bottleneck</h3>
+          <p>Generation is free; judgment is scarce. So make the model build the referee too — “make it easy for me to review” belongs in every prompt.</p>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">5</div>
+          <h3>Collapse the first draft, not the expert</h3>
+          <p>A week-long patient-specific implant became a minutes-long first draft. The expert still owns the judgment, the boundary, the materials — but starts far closer to the answer.</p>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">6</div>
+          <h3>Require AI; don't ban it</h3>
+          <p>“You don't learn what ChatGPT can do — you learn what it cannot.” Design assessments around prompting, debugging, and what the model still gets wrong.</p>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">7</div>
+          <h3>Make the LLM the examiner</h3>
+          <p>Being graded by an LLM isn't unfair — it's the world your CV and code already live in. Generator-vs-verifier tournaments turn the verification crunch into pedagogy.</p>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">8</div>
+          <h3>Teach to a moving boundary</h3>
+          <p>Serve the industry, not the old syllabus. Only 1% need compiler design. Overload students, let them use every tool, and grade on the curve the market actually sets.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><strong>The Moving Boundary</strong> — AI with the Department of Engineering Design, IIT Madras · 11 June 2026</p>
+    <p style="margin-top:0.6rem; font-style:italic; color:var(--faint);">Anchored by <a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand S</a>, LLM Psychologist at <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a>. Names of some participants are abbreviated.</p>
+    <div class="foot-links">
+      <button class="resource-btn" onclick="openTranscript()">💬 Transcript</button>
+      <a class="resource-btn" href="https://claude.ai/share/01443759-9d0c-40ae-a488-d99564a16446" target="_blank" rel="noopener">🧪 Claude FEM run</a>
+      <a class="resource-btn" href="https://chatgpt.com/share/6a2ae62f-7638-83ec-ad78-3a132b670079" target="_blank" rel="noopener">🧪 ChatGPT FEM run</a>
+      <a class="resource-btn" href="https://chatgpt.com/share/6a2ae72e-7468-83ec-9fd8-2a29f328589f" target="_blank" rel="noopener">🧊 Mesh chat</a>
+      <a class="resource-btn" href="https://files.s-anand.net/pages/3dmesh/skull_patch_experiment.html" target="_blank" rel="noopener">💀 Skull viewer</a>
+      <a class="resource-btn" href="https://aipipe.org/" target="_blank" rel="noopener">🔌 AI Pipe</a>
+    </div>
+  </footer>
+
+  <!-- ── Markdown / JSON modal ── -->
+  <div class="modal-overlay" id="md-modal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-title" id="md-modal-title"></div>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <script>
+    // ── Dark / light theme ──
+    const root = document.documentElement;
+    function applyTheme(t) {
+      root.setAttribute('data-theme', t);
+      const btn = document.getElementById('theme-toggle');
+      if (btn) btn.textContent = t === 'dark' ? '☀️' : '🌙';
+    }
+    function toggleTheme() {
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      applyTheme(next);
+    }
+    (function initTheme() {
+      let saved = null;
+      try { saved = localStorage.getItem('theme'); } catch (e) {}
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+    })();
+
+    // Progress bar
+    window.addEventListener('scroll', () => {
+      const el = document.getElementById('progress');
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      el.style.width = Math.min(pct, 100) + '%';
+    });
+
+    // Strip / prettify YAML frontmatter, return { header, body }
+    function splitFrontmatter(text) {
+      const m = text.match(/^﻿?---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
+      if (!m) return { header: '', body: text };
+      const fields = {};
+      m[1].split(/\r?\n/).forEach(line => {
+        const kv = line.match(/^(\w+):\s*(.*)$/);
+        if (kv) fields[kv[1]] = kv[2].replace(/^["']|["']$/g, '').trim();
+      });
+      let header = '';
+      if (fields.title || fields.source || fields.date) {
+        const bits = [];
+        if (fields.title) bits.push('<strong>' + fields.title + '</strong>');
+        if (fields.date) bits.push(fields.date.slice(0, 10));
+        if (fields.source) bits.push('<a href="' + fields.source + '" target="_blank" rel="noopener">original conversation ↗</a>');
+        header = '<div class="md-frontmatter">' + bits.join(' &middot; ') + '</div>';
+      }
+      return { header, body: text.slice(m[0].length) };
+    }
+
+    // Generic markdown / JSON modal
+    const mdCache = {};
+    async function openMarkdown(url, title) {
+      document.getElementById('md-modal').classList.add('open');
+      document.getElementById('md-modal-title').textContent = title || '';
+      const contentEl = document.getElementById('modal-content');
+      if (mdCache[url]) { contentEl.innerHTML = mdCache[url]; return; }
+      contentEl.innerHTML = '<p style="color:var(--muted)">Loading…</p>';
+      try {
+        const resp = await fetch(url);
+        const text = await resp.text();
+        let rendered;
+        const trimmed = text.trim();
+        if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+          try {
+            const parsed = JSON.parse(trimmed);
+            rendered = '<pre>' + JSON.stringify(parsed, null, 2) + '</pre>';
+          } catch { rendered = marked.parse(text); }
+        } else {
+          const { header, body } = splitFrontmatter(text);
+          rendered = header + marked.parse(body);
+        }
+        mdCache[url] = rendered;
+        contentEl.innerHTML = rendered;
+      } catch (e) {
+        contentEl.innerHTML = '<p>Could not load file. <a href="' + url + '" target="_blank" rel="noopener">Open directly</a>.</p>';
+      }
+    }
+    function openTranscript() { openMarkdown('transcript.md', 'Full Transcript — Engineering Design, IIT Madras'); }
+    function closeModal() { document.getElementById('md-modal').classList.remove('open'); }
+    document.getElementById('md-modal').addEventListener('click', function (e) {
+      if (e.target === this) closeModal();
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  </script>
+
+</body>
+</html>

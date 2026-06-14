@@ -472,11 +472,346 @@ Here's another answer from ChatGPT. Fact-check and critically evaluate yours and
 
 ---
 
-Here is a workshop-ready catalogue. I’d teach it as a pipeline: find → frame → clean → analyze → verify → visualize → narrate → publish → govern. Your local corpus contributes the core moves: Hypothesis Forge, Schema Forge, vibe analysis, prompt-to-plot, Statnostics, FLAPS, evidence packs, robustness checks, and prompt-to-spec. The current newsroom pattern is controlled augmentation: Guardian describes in-house AI for alt text, archive search, parliamentary document analysis and transcription; Reuters permits GenAI across reporting/editing/production/publishing with disclosure when content is primarily AI-produced; AP’s guidance stresses vetting and does not treat AI-generated copy/images as publishable as-is. ([The Guardian][1]) Recent research also supports three useful workshop themes: trend-to-brief ideation, automation for monitoring/scraping/summarization/preliminary exploration, and local document-RAG pipelines with explicit search planning, evaluation, synthesis and citations. ([arXiv][2]) **1. Story Radar** — _turn a beat into ranked data-story leads_ `Find` · Works best on: Gemini / ChatGPT **The move** — > You are an investigative data editor. Find 20 data-led story leads at the intersection of: > Audience: [who] > Beat: [topic] > Geography: [place] > Time period: [now / recent / historical] > > For each lead, return: reader question, claim to test, likely dataset, source owner, why readers care, chart idea, verification risk, and a 1–5 score on BIG / USEFUL / SURPRISING / DEFENSIBLE. **Why it works** — It converts “find me a topic” into testable editorial bets. **Try it** — Ask for 10 India data-story ideas from PLFS, NFHS, NCRB, RBI or UN data. **Watch for** — Models invent datasets; demand source links and field names. **2. Data Hunt Brief** — _make AI find the evidence before it tells the story_ `Find` · Works best on: Gemini / ChatGPT **The move** — > Find public datasets for this question: [question]. > Return a table with: source owner, URL, update frequency, fields, geography, granularity, file format, licence/restrictions, caveats, and 3 possible story angles. > Prefer primary sources. Mark anything you are unsure about. **Why it works** — Provenance comes before persuasion. **Try it** — “Where can I get district-level data on women’s labour-force participation in India?” **Watch for** — Dashboards often show data but do not expose clean downloadable files. **3. Hypothesis Forge** — _replace open-ended EDA with falsifiable bets_ `Frame` · Works best on: ChatGPT / Claude **The move** — > Given these column names, sample rows, and summary statistics, act as a data editor for [audience]. > Generate 12 sharply testable hypotheses. For each: > > 1. hypothesis > 2. exact test > 3. columns needed > 4. expected direction > 5. confounders > 6. chart idea > 7. headline if true > 8. headline if false > Rank by surprising + defensible. **Why it works** — It moves analysis from “describe everything” to “test what might matter.” **Try it** — Upload a small airline, election, PLFS, cricket or finance dataset and generate hypotheses. **Watch for** — Some hypotheses sound clever but cannot be tested with the data. **4. Three Models, One Question** — _triangulate, then rank and merge_ `Orchestrate` · Works best on: ChatGPT + Claude + Gemini together **The move** — > 1. Optional: sharpen the prompt first. Ask one model: “How would an expert editor brief this assignment?” > 2. Run the same research or analysis prompt on ChatGPT, Claude and Gemini. > 3. Paste all answers into a fourth chat: “Rank these responses by quality, with reasons. Then rewrite the best combined version. Say which model was strongest and why.” **Why it works** — Different models fail differently; comparison exposes the overconfident answer. **Try it** — Run one data-story ideation prompt across all three, then have Claude rank and merge. **Watch for** — The most fluent answer is often not the most reliable. **5. Spec Before Code** — _turn rough intent into a developer-ready brief_ `Build` · Works best on: Claude → Codex / ChatGPT **The move** — > Rewrite my rough request as a developer-ready specification. Include: goal, audience, inputs, outputs, visual style, interactions, acceptance tests, edge cases, assumptions, and a “do not do” list. > > Rough request: [paste messy idea] Then paste the spec into Codex, Claude Artifacts, ChatGPT or Gemini. **Why it works** — LLMs execute better when ambiguity is resolved upstream. **Try it** — “Create a media-friendly election dashboard that looks real but uses dummy data.” **Watch for** — A polished spec can still encode the wrong goal; review the problem before building. **6. Schema Forge** — _make AI map the data before cleaning it_ `Clean` · Works best on: ChatGPT / Claude **The move** — > Inspect this dataset. Infer: column meaning, type, unit, allowed range, missingness, primary keys, foreign keys, joins, PII/sensitive fields, and likely data quality checks. > Then produce a data dictionary and validation rules. **Why it works** — Data understanding becomes a reviewable artifact instead of tacit analyst memory. **Try it** — Upload a messy multi-sheet government Excel file. **Watch for** — Inferred joins and meanings can be wrong; verify with counts and sample rows. **7. Dirty Data Treasure Hunt** — _find the anomalies that become either fixes or stories_ `Clean` · Works best on: ChatGPT Code Execution **The move** — > Run an advanced data-quality investigation. Find: impossible values, duplicate identities, unit mixups, date inconsistencies, monotonicity breaks, denominator shifts, name/geography mismatches, outlier clusters, and aggregation leaks. > For each issue, show: evidence, example rows, severity, likely cause, fix/exclude rule, and whether it might itself be a story. **Why it works** — Errors reveal both data risk and institutional behaviour. **Try it** — Ask it to find “one impossible row and one systemic issue.” **Watch for** — Do not publish an anomaly before checking the official data definition. **8. Test Them All** — _turn every hypothesis into code and results_ `Analyze` · Works best on: ChatGPT / Codex **The move** — > Convert these hypotheses into executable tests. For each, write code, run it, return the result, confidence, caveat, and a simple chart. > If code fails, debug and retry. > End with a table: hypothesis, supported/rejected/mixed, evidence, chart, story potential. **Why it works** — It converts editorial curiosity into a repeatable analysis loop. **Try it** — Generate 10 hypotheses, then ask the model to test all 10. **Watch for** — The code may run correctly while testing the wrong thing; inspect the test definition. **9. Placebo Shuffle** — _make robustness visible_ `Verify` · Works best on: ChatGPT / Codex **The move** — > Stress-test this finding. Run placebo tests: shuffled target, minimum-sample sensitivity, segment-wise analysis, bootstrap intervals, outlier removal, denominator alternatives, and Simpson’s-paradox checks. > Return: claim, test, pass/fail, changed result, caveat. **Why it works** — A good data story must survive easy ways of being wrong. **Try it** — Test whether a “hidden champion” metric survives after removing tiny samples. **Watch for** — Robustness does not prove causality; it only reduces fragility. **10. Hostile Data Editor** — _ask AI to attack its own story_ `Verify` · Works best on: Claude / ChatGPT **The move** — > Act as a hostile data editor. Find every reason this conclusion may be wrong: wrong denominator, missing base rate, survivorship bias, selection bias, confounders, cherry-picking, Simpson’s paradox, stale data, data-entry errors, and alternative explanations. > Mark each as: kill / weaken / check / ignore. **Why it works** — Critique prompts activate a different behaviour than storytelling prompts. **Try it** — Run this on the strongest insight from the room. **Watch for** — Models may produce generic objections; force them to cite the exact row/chart/claim. **11. Evidence Packet** — _every claim gets a receipt_ `Verify` · Works best on: Claude / ChatGPT **The move** — > For every claim in this draft, attach: source table/file, row/filter, calculation, chart ID, caveat, and confidence. > Flag any sentence that is unsupported, overstated, or missing a denominator. **Why it works** — It separates writing quality from evidentiary quality. **Try it** — Annotate a 300-word data brief. **Watch for** — A citation to a report is not enough for a numerical claim; cite the table and calculation. **12. BIG-USEFUL-SURPRISING Ranker** — _choose the story, not the chart_ `Frame` · Works best on: Claude / ChatGPT **The move** — > Score these candidate insights 1–5 on: Big, Useful, Surprising, Defensible, Visual, Emotional, Actionable. > Rank them. Explain why the top 3 should be pursued and why the bottom 3 should be dropped. **Why it works** — Editorial judgment becomes explicit and teachable. **Try it** — Generate 12 findings from one dataset, then rank them. **Watch for** — AI overvalues novelty; humans must judge reader usefulness. **13. Statistical Nut Graf** — _make one number carry the story_ `Narrate` · Works best on: Claude / ChatGPT **The move** — > Write a 5-sentence nut graf from these findings. Each sentence must answer one of these: > > 1. What changed? > 2. By how much? > 3. Compared to what? > 4. Who is affected? > 5. Why now? > No generic adjectives. Every sentence must contain a number, entity, place, or concrete comparison. **Why it works** — It prevents “interesting analysis” from becoming vague prose. **Try it** — Turn one Statnostics-style insight into a short opening. **Watch for** — Do not bury caveats after making a strong claim. **14. Chart Menu with Reasons** — _pick the visual by reader task_ `Visualize` · Works best on: ChatGPT / Claude **The move** — > Suggest 8 visual treatments for this claim. For each: chart type, encoding, interaction, reader question answered, why it fits, why it may fail, and what data shape it requires. > Then pick the best one and explain why it beats the alternatives. **Why it works** — It turns chart choice into an editorial decision, not decoration. **Try it** — One claim, three groups, three different charts. **Watch for** — Models love maps; geography must matter. **15. Prompt-to-Plot Sprint** — _build the first visual story before you overthink it_ `Visualize` · Works best on: Codex / Claude Artifacts / ChatGPT **The move** — > Build a one-page interactive visual story from this CSV. Use browser-native HTML, CSS and JS. > Sections: hook, method, main chart, outlier drilldown, caveats. > Keep data local. Add comments explaining each calculation and design choice. **Why it works** — A working prototype reveals story structure faster than a slide deck. **Try it** — 30 minutes: each group builds one visual story from the same data. **Watch for** — Pretty prototypes can hide wrong transforms; inspect calculations. **16. Novel Viz Generator** — _force the model out of bar-line-scatter autopilot_ `Visualize` · Works best on: Claude / Gemini / ChatGPT **The move** — > Invent 10 non-standard visual metaphors for this dataset. Avoid bar, line, scatter and map. > For each: metaphor, data encoding, interaction, reader task, likely confusion, and implementation complexity. > Then build the simplest credible one. **Why it works** — AI is useful for design-space exploration, especially before feasibility filtering. **Try it** — Ask for “bad but interesting” visuals, then salvage one. **Watch for** — Novelty that reduces comprehension is decoration, not storytelling. **17. Data Story Spine** — _turn analysis into a scroll narrative_ `Narrate` · Works best on: Claude / ChatGPT **The move** — > Create a 7-beat visual story: > > 1. hook > 2. why readers care > 3. main evidence > 4. counterintuitive twist > 5. human implication > 6. caveat/method > 7. action/question > > For each beat, provide: headline, one sentence, chart/visual, transition, and data needed. **Why it works** — Sequence is what converts a chart dump into a story. **Try it** — Convert an analysis notebook into seven cards. **Watch for** — The story must follow the evidence, not the other way around. **18. Persona Style Transfer** — _same evidence, different audience_ `Narrate` · Works best on: Claude **The move** — > Rewrite this verified finding in five styles: Reuters wire, The Pudding visual essay, policy brief, business memo, and social media thread. > Preserve facts, numbers and caveats. Change only structure, tone and examples. **Why it works** — Style is separable from evidence if the facts are locked. **Try it** — One PLFS insight: write for a minister, a college student, and a newsroom editor. **Watch for** — Voice imitation can distort claims; freeze the evidence table first. **19. Local Document RAG Investigation** — _interrogate a corpus with page-level receipts_ `Find / Verify` · Works best on: Claude Projects / NotebookLM / ChatGPT uploads **The move** — > Ingest these documents. First summarize the corpus. Then plan searches across people, places, money, dates, contradictions and missing records. > Run each thread separately. For every answer, cite document/page/section. > End with: confirmed facts, open questions, contradictions, and follow-up reporting tasks. **Why it works** — The strongest AI investigation workflows separate corpus understanding, search planning, parallel retrieval, evaluation and synthesis. ([arXiv][3]) **Try it** — Use 10 annual reports, court orders, filings or policy PDFs. **Watch for** — Never trust uncited synthesis. **20. Trend-to-Assignment Loop** — _turn live signals into reporting briefs_ `Find` · Works best on: Gemini **The move** — > Track unusual spikes in [Google Trends / search / social / public dashboard]. > For each spike, produce: why it may matter, what data to fetch, who to call, one chart idea, one headline, and one reason it may be a non-story. **Why it works** — Trend-monitoring plus AI-generated editorial suggestions can reduce the ideation burden, but the output still needs editorial verification. ([arXiv][2]) **Try it** — Pick one trending public issue and convert it into a data assignment. **Watch for** — Trend spikes are often memes, outrage cycles or bot activity, not durable stories. **21. Format Transformer** — _one verified story, many reader formats_ `Publish` · Works best on: ChatGPT / Claude / Gemini **The move** — > Convert this verified story into: > > 1. 60-second audio script > 2. 5 social cards > 3. FAQ > 4. newsletter intro > 5. quote cards > 6. SEO headline options > Use only facts in the evidence table. Do not add new claims. **Why it works** — Newsrooms are using AI for constrained transformations such as audio briefings, summaries, SEO, quizzes, quote cards and FAQs, but the source reporting remains the anchor. ([Time][4]) **Try it** — Convert one workshop story into a 90-second podcast dialogue. **Watch for** — Repurposing often smuggles in unsupported context. **22. Synthetic but Faithful Data** — _demo safely without destroying the signal_ `Prepare` · Works best on: ChatGPT **The move** — > Generate realistic synthetic data for [domain]. > First list fields, distributions and relationships. > Then define 5 embedded hypotheses. > Generate rows that preserve those hypotheses. > Run tests proving the hypotheses are present. > Explain what this synthetic data cannot be used to claim. **Why it works** — Demo data should preserve relationships, not just column names. **Try it** — Create a fake airline, hospital, school or election dataset and story it. **Watch for** — Synthetic data can teach false domain intuition if participants forget it is fake. **23. Human-in-the-Loop Publishing Gate** — _decide what AI may do before publishing_ `Govern` · Works best on: Any model **The move** — > Fill this release card before publishing: > AI role: research / data cleaning / analysis / code / drafting / editing / visualization / repackaging. > Human checks completed: source, calculation, quotes, named people, legal/ethics, chart accuracy, caveats. > Disclosure needed? yes/no. If yes, write the disclosure note. **Why it works** — Current newsroom guidance emphasizes human accountability, vetting and disclosure for significant AI use; audits also show disclosure is often rare, which is itself a trust risk. ([The Guardian][1]) **Try it** — Classify three workshop outputs: no disclosure, light disclosure, clear disclosure. **Watch for** — “AI only helped a little” is not a policy; define the threshold. **24. Private Data Safety Split** — _avoid the dangerous workflow triangle_ `Govern` · Works best on: Any model **The move** — > Before using AI, label the task: > > 1. Does it include private/sensitive data? > 2. Does it read untrusted content? > 3. Can it communicate externally or publish? > If all three are true, redesign. Remove one: anonymize data, restrict inputs, or sandbox outputs. **Why it works** — The riskiest agent workflows combine private data, untrusted instructions and external action. **Try it** — Classify five workshop ideas by risk. **Watch for** — Prompt injection can hide in webpages, PDFs, emails, CSV cells and comments. **25. Build the Reusable Skill** — _turn repeated editorial judgment into a prompt asset_ `Orchestrate` · Works best on: Claude / Codex / ChatGPT **The move** — > From these transcripts, reviews and prompts, extract every instruction I repeated at least 3 times. > Turn them into a reusable `SKILL.md` with: principles, examples, anti-patterns, checklist, and a 5-minute exercise. > Keep it short enough to paste into a future chat. **Why it works** — AI workflows compound when tacit judgment becomes reusable context. **Try it** — Build a “Statnostics one-card insight” skill or “FLAPS headline” skill. **Watch for** — Stale skills become dogma; review after every few workshops. [1]:_ [https://www.theguardian.com/help/insideguardian/2026/mar/04/how-the-guardian-is-using-genai?utm_source=chatgpt.com](https://www.theguardian.com/help/insideguardian/2026/mar/04/how-the-guardian-is-using-genai?utm_source=chatgpt.com)
-"How the Guardian is using GenAI" [2]:_ [https://arxiv.org/abs/2506.07278?utm_source=chatgpt.com](https://arxiv.org/abs/2506.07278?utm_source=chatgpt.com)
-"IDEIA: A Generative AI-Based System for Real-Time Editorial Ideation in Digital Journalism" [3]:_ [https://arxiv.org/abs/2509.25494?utm_source=chatgpt.com](https://arxiv.org/abs/2509.25494?utm_source=chatgpt.com)
-"On-Premise AI for the Newsroom: Evaluating Small Language Models for Investigative Document Search" [4]:_ [https://time.com/7294142/time-ai-audio-brief/?utm_source=chatgpt.com](https://time.com/7294142/time-ai-audio-brief/?utm_source=chatgpt.com)
-"How the TIME AI Audio Brief Was Built"
+Here is a workshop-ready catalogue. I’d teach it as a pipeline: find → frame → clean → analyze → verify → visualize → narrate → publish → govern. Your local corpus contributes the core moves: Hypothesis Forge, Schema Forge, vibe analysis, prompt-to-plot, Statnostics, FLAPS, evidence packs, robustness checks, and prompt-to-spec. The current newsroom pattern is controlled augmentation: Guardian describes in-house AI for alt text, archive search, parliamentary document analysis and transcription; Reuters permits GenAI across reporting/editing/production/publishing with disclosure when content is primarily AI-produced; AP’s guidance stresses vetting and does not treat AI-generated copy/images as publishable as-is. ([The Guardian][1])
+
+Recent research also supports three useful workshop themes: trend-to-brief ideation, automation for monitoring/scraping/summarization/preliminary exploration, and local document-RAG pipelines with explicit search planning, evaluation, synthesis and citations. ([arXiv][2])
+
+**1. Story Radar** — *turn a beat into ranked data-story leads* `Find` · Works best on: Gemini / ChatGPT
+
+**The move** —
+
+> You are an investigative data editor. Find 20 data-led story leads at the intersection of:
+> Audience: [who]
+> Beat: [topic]
+> Geography: [place]
+> Time period: [now / recent / historical]
+>
+> For each lead, return: reader question, claim to test, likely dataset, source owner, why readers care, chart idea, verification risk, and a 1–5 score on BIG / USEFUL / SURPRISING / DEFENSIBLE.
+
+**Why it works** — It converts “find me a topic” into testable editorial bets.
+**Try it** — Ask for 10 India data-story ideas from PLFS, NFHS, NCRB, RBI or UN data.
+**Watch for** — Models invent datasets; demand source links and field names.
+
+**2. Data Hunt Brief** — *make AI find the evidence before it tells the story* `Find` · Works best on: Gemini / ChatGPT
+
+**The move** —
+
+> Find public datasets for this question: [question].
+> Return a table with: source owner, URL, update frequency, fields, geography, granularity, file format, licence/restrictions, caveats, and 3 possible story angles.
+> Prefer primary sources. Mark anything you are unsure about.
+
+**Why it works** — Provenance comes before persuasion.
+**Try it** — “Where can I get district-level data on women’s labour-force participation in India?”
+**Watch for** — Dashboards often show data but do not expose clean downloadable files.
+
+**3. Hypothesis Forge** — *replace open-ended EDA with falsifiable bets* `Frame` · Works best on: ChatGPT / Claude
+
+**The move** —
+
+> Given these column names, sample rows, and summary statistics, act as a data editor for [audience].
+> Generate 12 sharply testable hypotheses. For each:
+>
+> 1. hypothesis
+> 2. exact test
+> 3. columns needed
+> 4. expected direction
+> 5. confounders
+> 6. chart idea
+> 7. headline if true
+> 8. headline if false
+>    Rank by surprising + defensible.
+
+**Why it works** — It moves analysis from “describe everything” to “test what might matter.”
+**Try it** — Upload a small airline, election, PLFS, cricket or finance dataset and generate hypotheses.
+**Watch for** — Some hypotheses sound clever but cannot be tested with the data.
+
+**4. Three Models, One Question** — *triangulate, then rank and merge* `Orchestrate` · Works best on: ChatGPT + Claude + Gemini together
+
+**The move** —
+
+> 1. Optional: sharpen the prompt first. Ask one model: “How would an expert editor brief this assignment?”
+> 2. Run the same research or analysis prompt on ChatGPT, Claude and Gemini.
+> 3. Paste all answers into a fourth chat: “Rank these responses by quality, with reasons. Then rewrite the best combined version. Say which model was strongest and why.”
+
+**Why it works** — Different models fail differently; comparison exposes the overconfident answer.
+**Try it** — Run one data-story ideation prompt across all three, then have Claude rank and merge.
+**Watch for** — The most fluent answer is often not the most reliable.
+
+**5. Spec Before Code** — *turn rough intent into a developer-ready brief* `Build` · Works best on: Claude → Codex / ChatGPT
+
+**The move** —
+
+> Rewrite my rough request as a developer-ready specification. Include: goal, audience, inputs, outputs, visual style, interactions, acceptance tests, edge cases, assumptions, and a “do not do” list.
+>
+> Rough request: [paste messy idea]
+
+Then paste the spec into Codex, Claude Artifacts, ChatGPT or Gemini.
+
+**Why it works** — LLMs execute better when ambiguity is resolved upstream.
+**Try it** — “Create a media-friendly election dashboard that looks real but uses dummy data.”
+**Watch for** — A polished spec can still encode the wrong goal; review the problem before building.
+
+**6. Schema Forge** — *make AI map the data before cleaning it* `Clean` · Works best on: ChatGPT / Claude
+
+**The move** —
+
+> Inspect this dataset. Infer: column meaning, type, unit, allowed range, missingness, primary keys, foreign keys, joins, PII/sensitive fields, and likely data quality checks.
+> Then produce a data dictionary and validation rules.
+
+**Why it works** — Data understanding becomes a reviewable artifact instead of tacit analyst memory.
+**Try it** — Upload a messy multi-sheet government Excel file.
+**Watch for** — Inferred joins and meanings can be wrong; verify with counts and sample rows.
+
+**7. Dirty Data Treasure Hunt** — *find the anomalies that become either fixes or stories* `Clean` · Works best on: ChatGPT Code Execution
+
+**The move** —
+
+> Run an advanced data-quality investigation. Find: impossible values, duplicate identities, unit mixups, date inconsistencies, monotonicity breaks, denominator shifts, name/geography mismatches, outlier clusters, and aggregation leaks.
+> For each issue, show: evidence, example rows, severity, likely cause, fix/exclude rule, and whether it might itself be a story.
+
+**Why it works** — Errors reveal both data risk and institutional behaviour.
+**Try it** — Ask it to find “one impossible row and one systemic issue.”
+**Watch for** — Do not publish an anomaly before checking the official data definition.
+
+**8. Test Them All** — *turn every hypothesis into code and results* `Analyze` · Works best on: ChatGPT / Codex
+
+**The move** —
+
+> Convert these hypotheses into executable tests. For each, write code, run it, return the result, confidence, caveat, and a simple chart.
+> If code fails, debug and retry.
+> End with a table: hypothesis, supported/rejected/mixed, evidence, chart, story potential.
+
+**Why it works** — It converts editorial curiosity into a repeatable analysis loop.
+**Try it** — Generate 10 hypotheses, then ask the model to test all 10.
+**Watch for** — The code may run correctly while testing the wrong thing; inspect the test definition.
+
+**9. Placebo Shuffle** — *make robustness visible* `Verify` · Works best on: ChatGPT / Codex
+
+**The move** —
+
+> Stress-test this finding. Run placebo tests: shuffled target, minimum-sample sensitivity, segment-wise analysis, bootstrap intervals, outlier removal, denominator alternatives, and Simpson’s-paradox checks.
+> Return: claim, test, pass/fail, changed result, caveat.
+
+**Why it works** — A good data story must survive easy ways of being wrong.
+**Try it** — Test whether a “hidden champion” metric survives after removing tiny samples.
+**Watch for** — Robustness does not prove causality; it only reduces fragility.
+
+**10. Hostile Data Editor** — *ask AI to attack its own story* `Verify` · Works best on: Claude / ChatGPT
+
+**The move** —
+
+> Act as a hostile data editor. Find every reason this conclusion may be wrong: wrong denominator, missing base rate, survivorship bias, selection bias, confounders, cherry-picking, Simpson’s paradox, stale data, data-entry errors, and alternative explanations.
+> Mark each as: kill / weaken / check / ignore.
+
+**Why it works** — Critique prompts activate a different behaviour than storytelling prompts.
+**Try it** — Run this on the strongest insight from the room.
+**Watch for** — Models may produce generic objections; force them to cite the exact row/chart/claim.
+
+**11. Evidence Packet** — *every claim gets a receipt* `Verify` · Works best on: Claude / ChatGPT
+
+**The move** —
+
+> For every claim in this draft, attach: source table/file, row/filter, calculation, chart ID, caveat, and confidence.
+> Flag any sentence that is unsupported, overstated, or missing a denominator.
+
+**Why it works** — It separates writing quality from evidentiary quality.
+**Try it** — Annotate a 300-word data brief.
+**Watch for** — A citation to a report is not enough for a numerical claim; cite the table and calculation.
+
+**12. BIG-USEFUL-SURPRISING Ranker** — *choose the story, not the chart* `Frame` · Works best on: Claude / ChatGPT
+
+**The move** —
+
+> Score these candidate insights 1–5 on: Big, Useful, Surprising, Defensible, Visual, Emotional, Actionable.
+> Rank them. Explain why the top 3 should be pursued and why the bottom 3 should be dropped.
+
+**Why it works** — Editorial judgment becomes explicit and teachable.
+**Try it** — Generate 12 findings from one dataset, then rank them.
+**Watch for** — AI overvalues novelty; humans must judge reader usefulness.
+
+**13. Statistical Nut Graf** — *make one number carry the story* `Narrate` · Works best on: Claude / ChatGPT
+
+**The move** —
+
+> Write a 5-sentence nut graf from these findings. Each sentence must answer one of these:
+>
+> 1. What changed?
+> 2. By how much?
+> 3. Compared to what?
+> 4. Who is affected?
+> 5. Why now?
+>    No generic adjectives. Every sentence must contain a number, entity, place, or concrete comparison.
+
+**Why it works** — It prevents “interesting analysis” from becoming vague prose.
+**Try it** — Turn one Statnostics-style insight into a short opening.
+**Watch for** — Do not bury caveats after making a strong claim.
+
+**14. Chart Menu with Reasons** — *pick the visual by reader task* `Visualize` · Works best on: ChatGPT / Claude
+
+**The move** —
+
+> Suggest 8 visual treatments for this claim. For each: chart type, encoding, interaction, reader question answered, why it fits, why it may fail, and what data shape it requires.
+> Then pick the best one and explain why it beats the alternatives.
+
+**Why it works** — It turns chart choice into an editorial decision, not decoration.
+**Try it** — One claim, three groups, three different charts.
+**Watch for** — Models love maps; geography must matter.
+
+**15. Prompt-to-Plot Sprint** — *build the first visual story before you overthink it* `Visualize` · Works best on: Codex / Claude Artifacts / ChatGPT
+
+**The move** —
+
+> Build a one-page interactive visual story from this CSV. Use browser-native HTML, CSS and JS.
+> Sections: hook, method, main chart, outlier drilldown, caveats.
+> Keep data local. Add comments explaining each calculation and design choice.
+
+**Why it works** — A working prototype reveals story structure faster than a slide deck.
+**Try it** — 30 minutes: each group builds one visual story from the same data.
+**Watch for** — Pretty prototypes can hide wrong transforms; inspect calculations.
+
+**16. Novel Viz Generator** — *force the model out of bar-line-scatter autopilot* `Visualize` · Works best on: Claude / Gemini / ChatGPT
+
+**The move** —
+
+> Invent 10 non-standard visual metaphors for this dataset. Avoid bar, line, scatter and map.
+> For each: metaphor, data encoding, interaction, reader task, likely confusion, and implementation complexity.
+> Then build the simplest credible one.
+
+**Why it works** — AI is useful for design-space exploration, especially before feasibility filtering.
+**Try it** — Ask for “bad but interesting” visuals, then salvage one.
+**Watch for** — Novelty that reduces comprehension is decoration, not storytelling.
+
+**17. Data Story Spine** — *turn analysis into a scroll narrative* `Narrate` · Works best on: Claude / ChatGPT
+
+**The move** —
+
+> Create a 7-beat visual story:
+>
+> 1. hook
+> 2. why readers care
+> 3. main evidence
+> 4. counterintuitive twist
+> 5. human implication
+> 6. caveat/method
+> 7. action/question
+>
+> For each beat, provide: headline, one sentence, chart/visual, transition, and data needed.
+
+**Why it works** — Sequence is what converts a chart dump into a story.
+**Try it** — Convert an analysis notebook into seven cards.
+**Watch for** — The story must follow the evidence, not the other way around.
+
+**18. Persona Style Transfer** — *same evidence, different audience* `Narrate` · Works best on: Claude
+
+**The move** —
+
+> Rewrite this verified finding in five styles: Reuters wire, The Pudding visual essay, policy brief, business memo, and social media thread.
+> Preserve facts, numbers and caveats. Change only structure, tone and examples.
+
+**Why it works** — Style is separable from evidence if the facts are locked.
+**Try it** — One PLFS insight: write for a minister, a college student, and a newsroom editor.
+**Watch for** — Voice imitation can distort claims; freeze the evidence table first.
+
+**19. Local Document RAG Investigation** — *interrogate a corpus with page-level receipts* `Find / Verify` · Works best on: Claude Projects / NotebookLM / ChatGPT uploads
+
+**The move** —
+
+> Ingest these documents. First summarize the corpus. Then plan searches across people, places, money, dates, contradictions and missing records.
+> Run each thread separately. For every answer, cite document/page/section.
+> End with: confirmed facts, open questions, contradictions, and follow-up reporting tasks.
+
+**Why it works** — The strongest AI investigation workflows separate corpus understanding, search planning, parallel retrieval, evaluation and synthesis. ([arXiv][3])
+**Try it** — Use 10 annual reports, court orders, filings or policy PDFs.
+**Watch for** — Never trust uncited synthesis.
+
+**20. Trend-to-Assignment Loop** — *turn live signals into reporting briefs* `Find` · Works best on: Gemini
+
+**The move** —
+
+> Track unusual spikes in [Google Trends / search / social / public dashboard].
+> For each spike, produce: why it may matter, what data to fetch, who to call, one chart idea, one headline, and one reason it may be a non-story.
+
+**Why it works** — Trend-monitoring plus AI-generated editorial suggestions can reduce the ideation burden, but the output still needs editorial verification. ([arXiv][2])
+**Try it** — Pick one trending public issue and convert it into a data assignment.
+**Watch for** — Trend spikes are often memes, outrage cycles or bot activity, not durable stories.
+
+**21. Format Transformer** — *one verified story, many reader formats* `Publish` · Works best on: ChatGPT / Claude / Gemini
+
+**The move** —
+
+> Convert this verified story into:
+>
+> 1. 60-second audio script
+> 2. 5 social cards
+> 3. FAQ
+> 4. newsletter intro
+> 5. quote cards
+> 6. SEO headline options
+>    Use only facts in the evidence table. Do not add new claims.
+
+**Why it works** — Newsrooms are using AI for constrained transformations such as audio briefings, summaries, SEO, quizzes, quote cards and FAQs, but the source reporting remains the anchor. ([Time][4])
+**Try it** — Convert one workshop story into a 90-second podcast dialogue.
+**Watch for** — Repurposing often smuggles in unsupported context.
+
+**22. Synthetic but Faithful Data** — *demo safely without destroying the signal* `Prepare` · Works best on: ChatGPT
+
+**The move** —
+
+> Generate realistic synthetic data for [domain].
+> First list fields, distributions and relationships.
+> Then define 5 embedded hypotheses.
+> Generate rows that preserve those hypotheses.
+> Run tests proving the hypotheses are present.
+> Explain what this synthetic data cannot be used to claim.
+
+**Why it works** — Demo data should preserve relationships, not just column names.
+**Try it** — Create a fake airline, hospital, school or election dataset and story it.
+**Watch for** — Synthetic data can teach false domain intuition if participants forget it is fake.
+
+**23. Human-in-the-Loop Publishing Gate** — *decide what AI may do before publishing* `Govern` · Works best on: Any model
+
+**The move** —
+
+> Fill this release card before publishing:
+> AI role: research / data cleaning / analysis / code / drafting / editing / visualization / repackaging.
+> Human checks completed: source, calculation, quotes, named people, legal/ethics, chart accuracy, caveats.
+> Disclosure needed? yes/no. If yes, write the disclosure note.
+
+**Why it works** — Current newsroom guidance emphasizes human accountability, vetting and disclosure for significant AI use; audits also show disclosure is often rare, which is itself a trust risk. ([The Guardian][1])
+**Try it** — Classify three workshop outputs: no disclosure, light disclosure, clear disclosure.
+**Watch for** — “AI only helped a little” is not a policy; define the threshold.
+
+**24. Private Data Safety Split** — *avoid the dangerous workflow triangle* `Govern` · Works best on: Any model
+
+**The move** —
+
+> Before using AI, label the task:
+>
+> 1. Does it include private/sensitive data?
+> 2. Does it read untrusted content?
+> 3. Can it communicate externally or publish?
+>    If all three are true, redesign. Remove one: anonymize data, restrict inputs, or sandbox outputs.
+
+**Why it works** — The riskiest agent workflows combine private data, untrusted instructions and external action.
+**Try it** — Classify five workshop ideas by risk.
+**Watch for** — Prompt injection can hide in webpages, PDFs, emails, CSV cells and comments.
+
+**25. Build the Reusable Skill** — *turn repeated editorial judgment into a prompt asset* `Orchestrate` · Works best on: Claude / Codex / ChatGPT
+
+**The move** —
+
+> From these transcripts, reviews and prompts, extract every instruction I repeated at least 3 times.
+> Turn them into a reusable `SKILL.md` with: principles, examples, anti-patterns, checklist, and a 5-minute exercise.
+> Keep it short enough to paste into a future chat.
+
+**Why it works** — AI workflows compound when tacit judgment becomes reusable context.
+**Try it** — Build a “Statnostics one-card insight” skill or “FLAPS headline” skill.
+**Watch for** — Stale skills become dogma; review after every few workshops.
+
+[1]: https://www.theguardian.com/help/insideguardian/2026/mar/04/how-the-guardian-is-using-genai?utm_source=chatgpt.com "How the Guardian is using GenAI"
+[2]: https://arxiv.org/abs/2506.07278?utm_source=chatgpt.com "IDEIA: A Generative AI-Based System for Real-Time Editorial Ideation in Digital Journalism"
+[3]: https://arxiv.org/abs/2509.25494?utm_source=chatgpt.com "On-Premise AI for the Newsroom: Evaluating Small Language Models for Investigative Document Search"
+[4]: https://time.com/7294142/time-ai-audio-brief/?utm_source=chatgpt.com "How the TIME AI Audio Brief Was Built"
 
 ---
 

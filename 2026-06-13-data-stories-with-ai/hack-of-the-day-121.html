@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hack of the Day</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <style>
+    @font-face {
+      font-family: 'PoynterAgate';
+      src: url('../assets/PAOBDCN.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'PoynterAgate';
+      src: url('../assets/PAOCN_.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+    }
+    :root {
+      --title-font: 'PoynterAgate', sans-serif;
+      --body-font: 'PoynterAgate', sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #6a7a8a;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    /* =========================================
+       CARD
+    ========================================= */
+    .card {
+      width: 800px;
+      background: #d2ddf2;
+      font-family: var(--body-font);
+    }
+
+    /* =========================================
+       HEADER
+    ========================================= */
+    .card-header {
+      display: flex;
+      align-items: stretch;
+    }
+
+    /* Red badge: pentagon arrow-right shape */
+    .badge {
+      background: #ec1b22;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 36px 12px 20px;
+      flex-shrink: 0;
+      /* Arrow-right chevron using clip-path */
+      clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 50%, calc(100% - 24px) 100%, 0 100%);
+    }
+
+    .badge-hack {
+      font-family: var(--title-font);
+      font-size: 54px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .badge-ofthe {
+      font-family: var(--title-font);
+      font-size: 15.5px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    /* Title area */
+    .card-title {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding: 14px 22px;
+      font-family: var(--title-font);
+      font-size: 34px;
+      font-weight: 1000;
+      color: #0e1628;
+      text-transform: uppercase;
+      line-height: 1.2;
+    }
+
+    /* =========================================
+       BODY (WHAT IT SOLVES / WHAT TO DO)
+    ========================================= */
+    .card-body {
+      padding: 13px 22px 0;
+    }
+
+    .section {
+      margin-bottom: 9px;
+      font-size: 24px;
+      color: #0e1628;
+      line-height: 1.45;
+    }
+
+    .section-label {
+      font-weight: 1000;
+      text-transform: uppercase;
+      color: #ec1b22;
+    }
+
+    /* Heading when what_to_do is absent */
+    .steps-heading {
+      font-size: 24px;
+      font-weight: 1000;
+      text-transform: uppercase;
+      color: #ec1b22;
+      margin-bottom: 7px;
+    }
+
+    /* "STEPS:" label in red italic (shown when what_to_do has text) */
+    .steps-label {
+      font-family: var(--title-font);
+      font-size: 19px;
+      font-weight: 1000;
+      font-style: italic;
+      color: #ec1b22;
+      margin: 4px 0 3px;
+    }
+
+    /* =========================================
+       STEP CARDS — FOLDER / STACKED EFFECT
+    ========================================= */
+    .steps {
+      counter-reset: step-counter;
+      padding-bottom: 20px;
+    }
+
+    .step {
+      counter-increment: step-counter;
+      position: relative;
+      background: #fff;
+      border: 1.5px solid #b0bfce;
+      display: flex;
+      align-items: center;
+      margin-top: -10px;          /* overlap = folder stacking */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.16);
+      padding: 20px 16px 20px 0;  /* extra bottom padding ensures number fits */
+    }
+
+    .step:first-child {
+      margin-top: 0;
+    }
+
+    /* Stacking order: first step on top (front of stack) */
+    .step:nth-child(1) { z-index: 15; }
+    .step:nth-child(2) { z-index: 14; }
+    .step:nth-child(3) { z-index: 13; }
+    .step:nth-child(4) { z-index: 12; }
+    .step:nth-child(5) { z-index: 11; }
+
+    /* Large serif italic number via CSS counter — acts as flex item */
+    .step::before {
+      content: counter(step-counter);
+      font-size: 48px;
+      font-style: italic;
+      line-height: 0.85;
+      min-width: 56px;
+      padding: 0 5px 0 10px;
+      flex-shrink: 0;
+      color: #396ce1;
+      display: block;             /* participates as flex item */
+    }
+
+    .step-content {
+      font-size: 24px;
+      color: #0e1628;
+      line-height: 1.45;
+      padding-top: 0;
+      flex: 1;
+    }
+
+    .step-content strong {
+      font-weight: 700;
+    }
+
+    /* =========================================
+       NOTE / CAREFUL SECTION
+    ========================================= */
+    .card-note {
+      padding: 9px 22px 11px;
+      font-size: 24px;
+      color: #0e1628;
+      line-height: 1.5;
+    }
+
+    .note-label {
+      color: #ec1b22;
+      font-weight: 1000;
+    }
+
+    .note-text {
+      font-weight: 1000;
+    }
+
+    /* =========================================
+       FOOTER
+    ========================================= */
+    .card-footer {
+      display: flex;
+      align-items: center;
+      padding: 9px 22px 14px;
+      gap: 14px;
+    }
+
+    .disclaimer {
+      flex: 1;
+      font-size: 18px;
+      color: #3a4558;
+      line-height: 1.55;
+      font-style: italic;
+    }
+
+    .tip-line {
+      font-style: normal;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .tip-name {
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    .qr-block {
+      flex-shrink: 0;
+      text-align: center;
+    }
+
+    .qr-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #0e1628;
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+
+    #qr-code canvas,
+    #qr-code img {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- ===== HEADER ===== -->
+  <header class="card-header">
+    <div class="badge">
+      <span class="badge-hack">HACK</span>
+      <span class="badge-ofthe">OF THE DAY</span>
+    </div>
+    <h1 class="card-title">MAKE UPI PAYMENTS FROM A FEATURE PHONE</h1>
+  </header>
+
+  <!-- ===== BODY ===== -->
+  <div class="card-body">
+
+    <!-- WHAT IT SOLVES -->
+    <p class="section">
+      <strong class="section-label">WHAT IT SOLVES:</strong> Lets people without smartphones or mobile internet make UPI payments through supported feature-phone methods.
+    </p>
+
+    <!-- WHAT TO DO — two variants:
+         (a) has intro text  → show "WHAT TO DO:" + text + red "STEPS:"
+         (b) no intro text   → show "WHAT TO DO (QUICK STEPS):" directly  -->
+    <p class="section">
+      <strong class="section-label">WHAT TO DO:</strong> Use UPI 123PAY if your bank and number are set up for UPI.
+    </p>
+    <p class="steps-label">STEPS:</p>
+
+    <!-- STEP CARDS (overlapping folder effect) -->
+    <div class="steps">
+      <div class="step">
+        <div class="step-content"><strong>Check</strong> whether your bank account and mobile number support UPI.</div>
+      </div>
+      <div class="step">
+        <div class="step-content"><strong>Set</strong> or remember your UPI PIN securely.</div>
+      </div>
+      <div class="step">
+        <div class="step-content"><strong>Use</strong> a supported UPI 123PAY method such as IVR, missed call, feature-phone app, or sound-based payment.</div>
+      </div>
+      <div class="step">
+        <div class="step-content"><strong>Enter</strong> the payee and amount details carefully.</div>
+      </div>
+      <div class="step">
+        <div class="step-content"><strong>Confirm</strong> the payment only with your own UPI PIN.</div>
+      </div>
+    </div>
+
+  </div><!-- /card-body -->
+
+  <!-- ===== NOTE / CAREFUL ===== -->
+  <div class="card-note">
+    <span class="note-label">CAREFUL:</span>
+    <strong class="note-text">Never share your UPI PIN on a call. UPI PIN is used to send money, not to receive it.</strong>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="card-footer">
+    <div class="disclaimer">
+      <em>Hacks are based on verified public sources. Readers are advised to follow official websites &amp; updated rules</em>
+      <span class="tip-line">Tip from <strong class="tip-name">editorial.desk</strong>@timesinternet.com</span>
+    </div>
+    <div class="qr-block">
+      <div class="qr-label">Scan for<br>more hacks</div>
+      <div id="qr-code" data-url="https:&#x2F;&#x2F;timesinternet.com&#x2F;hackoftheday"></div>
+    </div>
+  </footer>
+
+</div><!-- /card -->
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+  var qrEl = document.getElementById('qr-code');
+  var url = qrEl.getAttribute('data-url') || 'https://timesinternet.com';
+  new QRCode(qrEl, {
+    text: url,
+    width: 80,
+    height: 80,
+    correctLevel: QRCode.CorrectLevel.M
+  });
+</script>
+</body>
+</html>

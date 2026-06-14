@@ -3,7 +3,7 @@
 ## Talk summary, 14 Jun 2026
 
 <!--
-cd /home/sanand/code/talks/2026-06-12-let-ai-take-your-exams/
+cd ~/code/talks/
 dev.sh -p ~/code/,~/r2/media
 claude --dangerously-skip-permissions --model opus --effort high
 -->
@@ -94,6 +94,10 @@ Create a landing page for this talk at 2026-06-12-let-ai-take-your-exam/index.ht
 
 Update README.md to include this talk in the list of talks.
 
+---
+
+I'm emailing the attendees (and some non-attendees). I want to link to the talk page(s) and briefly mention the most important thing(s) they should remember and practice. Draft the email for me in my writing style.
+
 <!-- claude --resume d21905c8-9be6-44c4-929b-1d6765387b40 --dangerously-skip-permissions -->
 
 ## Codex Analysis, 14 Jun 2026
@@ -130,6 +134,8 @@ Calculate and prominently mention the API cost.
 ---
 
 Make the .qcard elements collapsible. They are too detailed. By default, they're collapsed, and show just the .qcard-head and .verdict but clicking anywhere on the cards toggles them and it's clear that they're toggle-able.
+
+<!-- claude --resume c0ce9366-e339-404c-a2f8-84821465fb33 --dangerously-skip-permissions -->
 
 ## Techniques, 08 Jun 2026
 

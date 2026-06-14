@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AQI insight slide — winter shock with Ghaziabad</title>
+<style>
+  :root {
+    --bg: #f7f3ea;
+    --ink: #171717;
+    --muted: #5e574c;
+    --hair: rgba(23,23,23,.14);
+    --monsoon: #2a9d8f;
+    --winter: #d1493f;
+    --ghaz: #7c3aed;
+    --card: rgba(255,255,255,.68);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 100%; min-height: 100%; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  .slide {
+    width: 100vw;
+    min-height: 100vh;
+    aspect-ratio: 16 / 9;
+    padding: clamp(28px, 4vw, 72px);
+    display: grid;
+    grid-template-columns: 1.04fr 1.56fr;
+    gap: clamp(24px, 4vw, 64px);
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .slide::before {
+    content: "";
+    position: absolute;
+    width: 720px;
+    height: 720px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(209,73,63,.17), rgba(209,73,63,0) 66%);
+    top: -260px;
+    right: -180px;
+    z-index: 0;
+  }
+  .slide::after {
+    content: "";
+    position: absolute;
+    width: 620px;
+    height: 620px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(42,157,143,.14), rgba(42,157,143,0) 68%);
+    bottom: -280px;
+    left: -160px;
+    z-index: 0;
+  }
+  .left, .right { position: relative; z-index: 1; }
+  .eyebrow {
+    display: inline-block;
+    font-size: clamp(13px, 1.1vw, 18px);
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-size: clamp(48px, 6.2vw, 102px);
+    line-height: .92;
+    letter-spacing: -0.07em;
+    margin: 0 0 28px;
+    max-width: 820px;
+  }
+  .red { color: var(--winter); }
+  .purple { color: var(--ghaz); }
+  .dek {
+    font-size: clamp(21px, 2.05vw, 35px);
+    line-height: 1.14;
+    letter-spacing: -0.035em;
+    margin: 0 0 30px;
+    color: #25221d;
+    max-width: 760px;
+  }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    max-width: 750px;
+  }
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--hair);
+    border-radius: 22px;
+    padding: 18px 18px 16px;
+    box-shadow: 0 18px 60px rgba(17,24,39,.06);
+    backdrop-filter: blur(8px);
+  }
+  .stat.ghaz { border-color: rgba(124,58,237,.35); }
+  .num {
+    display: block;
+    font-size: clamp(28px, 3vw, 50px);
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: -0.06em;
+  }
+  .label {
+    display: block;
+    color: var(--muted);
+    font-size: clamp(12px, 1vw, 16px);
+    line-height: 1.18;
+    margin-top: 8px;
+    font-weight: 650;
+  }
+  .card {
+    background: rgba(255,255,255,.72);
+    border: 1px solid var(--hair);
+    border-radius: 34px;
+    padding: clamp(20px, 2.3vw, 38px);
+    box-shadow: 0 24px 90px rgba(17,24,39,.10);
+  }
+  .chart-title {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: flex-end;
+    margin-bottom: 8px;
+  }
+  h2 {
+    margin: 0;
+    font-size: clamp(24px, 2.1vw, 38px);
+    line-height: 1.05;
+    letter-spacing: -0.045em;
+  }
+  .legend-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--muted);
+    font-weight: 750;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+    vertical-align: -1px;
+  }
+  .dot.m { background: var(--monsoon); }
+  .dot.w { background: var(--winter); }
+  .dot.g { background: var(--ghaz); }
+  svg { width: 100%; height: auto; display: block; }
+  .grid { stroke: rgba(23,23,23,.12); stroke-width: 1; }
+  .tick, .axis-label, .small, .legend {
+    fill: var(--muted);
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .axis-label { font-size: 17px; }
+  .city {
+    fill: var(--ink);
+    font-size: 24px;
+    font-weight: 850;
+    letter-spacing: -0.02em;
+  }
+  .city.ref { fill: var(--ghaz); }
+  .range {
+    stroke: rgba(23,23,23,.22);
+    stroke-width: 8;
+    stroke-linecap: round;
+  }
+  .range.ref { stroke: rgba(124,58,237,.30); }
+  .monsoon { fill: var(--monsoon); stroke: white; stroke-width: 4; }
+  .winter { fill: var(--winter); stroke: white; stroke-width: 4; }
+  .winter.ref { fill: var(--ghaz); }
+  .small { font-size: 17px; }
+  .strong { fill: var(--winter); font-weight: 900; }
+  .winter.ref + .small, .ref { }
+  .shock {
+    fill: var(--winter);
+    font-size: 25px;
+    font-weight: 950;
+    letter-spacing: -0.04em;
+  }
+  .shock.ref { fill: var(--ghaz); }
+  .footer {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: clamp(12px, .9vw, 15px);
+    line-height: 1.32;
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    border-top: 1px solid var(--hair);
+    padding-top: 12px;
+  }
+  .callout {
+    margin-top: 18px;
+    font-size: clamp(16px, 1.35vw, 22px);
+    line-height: 1.22;
+    font-weight: 780;
+    letter-spacing: -0.025em;
+  }
+  @media print {
+    body { width: 16in; height: 9in; }
+    .slide { width: 16in; height: 9in; min-height: auto; }
+  }
+  @media (max-aspect-ratio: 4/3) {
+    .slide { grid-template-columns: 1fr; aspect-ratio: auto; }
+    h1 { font-size: clamp(46px, 12vw, 88px); }
+  }
+</style>
+</head>
+<body>
+<main class="slide">
+  <section class="left">
+    <div class="eyebrow">India AQI · 299,972 city-days · 2023</div>
+    <h1>Delhi is the headline.<br><span class="red">Winter is the story.</span></h1>
+    <p class="dek">Add <span class="purple">Ghaziabad</span> as the audience’s reference point: it is slightly lower than Delhi on annual AQI, but its winter shock is smaller than the biggest Bihar spikes.</p>
+    <div class="stat-grid">
+      <div class="stat">
+        <span class="num">+219</span>
+        <span class="label">largest winter jump: Purnia</span>
+      </div>
+      <div class="stat ghaz">
+        <span class="num">181</span>
+        <span class="label">Ghaziabad avg AQI 2023, rank #22</span>
+      </div>
+      <div class="stat">
+        <span class="num">6.7×</span>
+        <span class="label">AQI gap: Byrnihat vs Silchar</span>
+      </div>
+    </div>
+    <p class="callout">The workshop hook: famous places make the chart relatable; lesser-known spikes make it surprising.</p>
+  </section>
+
+  <section class="right">
+    <div class="card">
+      <div class="chart-title">
+        <h2>Winter pollution shock, with Ghaziabad as anchor</h2>
+        <div class="legend-wrap">
+          <span><i class="dot m"></i>Monsoon</span>
+          <span><i class="dot w"></i>Winter</span>
+          <span><i class="dot g"></i>Reference</span>
+        </div>
+      </div>
+
+<svg viewBox="0 0 1120 590" role="img" aria-label="Winter versus monsoon AQI shock in Indian cities, 2023, including Ghaziabad as a reference city">
+  <text x="250" y="20" class="axis-label">AQI</text>
+  <line x1="275.0" y1="30" x2="275.0" y2="542" class="grid"/><text x="275.0" y="572" class="tick" text-anchor="middle">50</text><line x1="400.0" y1="30" x2="400.0" y2="542" class="grid"/><text x="400.0" y="572" class="tick" text-anchor="middle">100</text><line x1="525.0" y1="30" x2="525.0" y2="542" class="grid"/><text x="525.0" y="572" class="tick" text-anchor="middle">150</text><line x1="650.0" y1="30" x2="650.0" y2="542" class="grid"/><text x="650.0" y="572" class="tick" text-anchor="middle">200</text><line x1="775.0" y1="30" x2="775.0" y2="542" class="grid"/><text x="775.0" y="572" class="tick" text-anchor="middle">250</text><line x1="900.0" y1="30" x2="900.0" y2="542" class="grid"/><text x="900.0" y="572" class="tick" text-anchor="middle">300</text><text x="16" y="61" class="city">Purnia</text><line x1="340.0" y1="56" x2="890.0" y2="56" class="range"/><circle cx="340.0" cy="56" r="9" class="monsoon"/><circle cx="890.0" cy="56" r="11" class="winter"/><text x="340.0" y="39" class="small" text-anchor="middle">76</text><text x="890.0" y="39" class="small strong" text-anchor="middle">296</text><text x="1038" y="62" class="shock">+219</text><text x="16" y="129" class="city">Delhi</text><line x1="407.5" y1="124" x2="947.5" y2="124" class="range"/><circle cx="407.5" cy="124" r="9" class="monsoon"/><circle cx="947.5" cy="124" r="11" class="winter"/><text x="407.5" y="107" class="small" text-anchor="middle">103</text><text x="947.5" y="107" class="small strong" text-anchor="middle">319</text><text x="1038" y="130" class="shock">+216</text><text x="16" y="197" class="city ref">Ghaziabad ★</text><line x1="395.0" y1="192" x2="825.0" y2="192" class="range ref"/><circle cx="395.0" cy="192" r="9" class="monsoon"/><circle cx="825.0" cy="192" r="11" class="winter ref"/><text x="395.0" y="175" class="small" text-anchor="middle">98</text><text x="825.0" y="175" class="small strong" text-anchor="middle">270</text><text x="1038" y="198" class="shock ref">+172</text><text x="16" y="265" class="city">Bhagalpur</text><line x1="362.5" y1="260" x2="900.0" y2="260" class="range"/><circle cx="362.5" cy="260" r="9" class="monsoon"/><circle cx="900.0" cy="260" r="11" class="winter"/><text x="362.5" y="243" class="small" text-anchor="middle">85</text><text x="900.0" y="243" class="small strong" text-anchor="middle">300</text><text x="1038" y="266" class="shock">+215</text><text x="16" y="333" class="city">Katihar</text><line x1="387.5" y1="328" x2="925.0" y2="328" class="range"/><circle cx="387.5" cy="328" r="9" class="monsoon"/><circle cx="925.0" cy="328" r="11" class="winter"/><text x="387.5" y="311" class="small" text-anchor="middle">95</text><text x="925.0" y="311" class="small strong" text-anchor="middle">310</text><text x="1038" y="334" class="shock">+215</text><text x="16" y="401" class="city">Saharsa</text><line x1="390.0" y1="396" x2="912.5" y2="396" class="range"/><circle cx="390.0" cy="396" r="9" class="monsoon"/><circle cx="912.5" cy="396" r="11" class="winter"/><text x="390.0" y="379" class="small" text-anchor="middle">96</text><text x="912.5" y="379" class="small strong" text-anchor="middle">305</text><text x="1038" y="402" class="shock">+209</text><text x="16" y="469" class="city">Patna</text><line x1="365.0" y1="464" x2="872.5" y2="464" class="range"/><circle cx="365.0" cy="464" r="9" class="monsoon"/><circle cx="872.5" cy="464" r="11" class="winter"/><text x="365.0" y="447" class="small" text-anchor="middle">86</text><text x="872.5" y="447" class="small strong" text-anchor="middle">289</text><text x="1038" y="470" class="shock">+202</text>
+  <text x="387.5" y="572" class="legend" text-anchor="middle">Monsoon</text>
+  <text x="912.5" y="572" class="legend winter-label" text-anchor="middle">Winter</text>
+</svg>
+
+      <div class="footer">
+        <span>Average AQI: monsoon = Jul–Sep 2023; winter = Jan, Feb, Nov, Dec 2023. ★ marks Ghaziabad.</span>
+        <span>Ghaziabad: 181 avg AQI, rank #22; Delhi: 204, rank #4</span>
+      </div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

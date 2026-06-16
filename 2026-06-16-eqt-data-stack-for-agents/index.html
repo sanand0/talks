@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Data Stack for an Agentic World · EQT India AI & Cyber Summit</title>
+<meta name="description" content="Anand stood in front of a room of private-equity data leaders and reconciled three messy customer masters in six minutes — work they'd estimated at a week to a month. A story about why the bottleneck just moved from the model to your data stack.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20fill='%230f5132'%20width='64'%20height='64'%20rx='12'/%3E%3Cpath%20d='M18 40 L30 20 L34 20 L46 40 L40 40 L37 34 L27 34 L24 40 Z M29 29 L35 29 L32 23 Z' fill='%23f2c14e'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f3ec;
+  --paper:#fffdf8;
+  --ink:#1a221d;
+  --ink2:#3c4842;
+  --accent:#0f5132;       /* EQT forest green */
+  --accent2:#0a3a24;
+  --gold:#b8862b;
+  --gold-light:#f7eccf;
+  --muted:#76817a;
+  --border:#e2ddd0;
+  --highlight:#eaf0ea;
+  --dark:#0c130f;         /* near-black green */
+  --dark2:#13201a;
+  --font-display:'Fraunces',Georgia,serif;
+  --font-body:'Source Serif 4',Georgia,serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--font-body);background:var(--bg);color:var(--ink);
+  line-height:1.78;font-size:18px;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+
+/* ── Progress bar ── */
+#progress{position:fixed;top:0;left:0;height:3px;width:0%;
+  background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .15s linear;}
+
+/* ── Masthead ── */
+.masthead{position:sticky;top:0;z-index:200;background:rgba(245,243,236,.95);
+  border-bottom:1px solid var(--border);padding:.7rem 2rem;backdrop-filter:blur(8px);}
+.masthead-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;
+  align-items:center;gap:1rem;flex-wrap:wrap;}
+.masthead-brand{font-family:var(--font-display);font-size:.95rem;font-weight:700;
+  letter-spacing:.02em;color:var(--ink);text-decoration:none;}
+.masthead-brand:hover{color:var(--accent);}
+.masthead-brand span{color:var(--accent);}
+.masthead-right{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;}
+.masthead-date{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);}
+.masthead-link{font-family:var(--font-mono);font-size:.7rem;color:var(--accent);
+  text-decoration:none;border:1px solid var(--accent);padding:.28rem .6rem;border-radius:3px;
+  transition:all .2s;white-space:nowrap;cursor:pointer;}
+.masthead-link:hover{background:var(--accent);color:#fff;}
+
+/* ── Hero ── */
+.hero{max-width:880px;margin:0 auto;padding:4.5rem 2rem 2rem;text-align:center;}
+.hero-kicker{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:1.4rem;}
+.hero-series{display:inline-block;background:var(--accent);color:#fff;font-family:var(--font-mono);
+  font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;padding:.28rem .85rem;
+  margin-bottom:1.3rem;border-radius:2px;}
+.hero-title{font-family:var(--font-display);font-size:clamp(2.4rem,6.2vw,4.4rem);
+  font-weight:900;line-height:1.02;letter-spacing:-.02em;margin-bottom:1.3rem;color:var(--ink);}
+.hero-title em{font-style:italic;color:var(--accent);}
+.hero-subtitle{font-family:var(--font-display);font-size:1.3rem;font-style:italic;
+  font-weight:400;color:var(--ink2);max-width:680px;margin:0 auto 2rem;line-height:1.5;}
+.hero-meta{display:flex;justify-content:center;gap:1.2rem;flex-wrap:wrap;font-size:.84rem;
+  color:var(--muted);margin-bottom:.5rem;}
+.hero-meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(15,81,50,.25);}
+.hero-meta a:hover{border-bottom-color:var(--accent);}
+.hero-meta .sep{color:var(--border);}
+
+/* ── Quick links bar ── */
+.quick-links{background:var(--accent2);padding:.9rem 2rem;}
+.quick-links-inner{max-width:980px;margin:0 auto;display:flex;gap:.7rem;flex-wrap:wrap;
+  justify-content:center;align-items:center;}
+.quick-link{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--font-mono);
+  font-size:.7rem;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.9);
+  text-decoration:none;border:1px solid rgba(255,255,255,.28);padding:.35rem .8rem;border-radius:3px;
+  transition:all .2s;cursor:pointer;}
+.quick-link:hover{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.6);}
+.quick-link.gold{background:var(--gold);color:var(--dark);border-color:var(--gold);font-weight:700;}
+.quick-link.gold:hover{background:#cf9a36;border-color:#cf9a36;}
+
+/* ── Audio card ── */
+.audio-wrap{max-width:640px;margin:2.4rem auto 1rem;padding:0 2rem;}
+.audio-card{background:var(--dark2);color:#ede6d6;padding:1.25rem 1.7rem;border-radius:8px;
+  display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;box-shadow:0 8px 30px rgba(12,19,15,.18);}
+.audio-icon{font-size:1.8rem;flex-shrink:0;}
+.audio-info{flex:1;min-width:160px;}
+.audio-title{font-family:var(--font-display);font-size:1rem;font-weight:600;margin-bottom:.2rem;}
+.audio-sub{font-size:.78rem;color:#a9b3a8;font-family:var(--font-mono);}
+.audio-card audio{width:100%;max-width:340px;height:40px;}
+
+/* ── Visual summary ── */
+.summary-wrap{width:100vw;margin-left:calc(50% - 50vw);background:var(--dark);
+  padding:3rem 2rem;text-align:center;margin-bottom:2rem;}
+.summary-inner{max-width:760px;margin:0 auto;}
+.summary-inner img{max-width:100%;height:auto;border-radius:6px;cursor:zoom-in;
+  box-shadow:0 18px 60px rgba(0,0,0,.45);}
+.summary-label{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:1.4rem;}
+.summary-cap{font-family:var(--font-mono);font-size:.74rem;color:#9aa69c;margin-top:1rem;}
+.summary-cap a{color:#d9c89a;text-decoration:none;border-bottom:1px solid rgba(217,200,154,.3);}
+.summary-cap a:hover{color:#fff;}
+
+/* ── Article column ── */
+.article{max-width:700px;margin:0 auto;padding:0 2rem 3rem;}
+.article p{margin-bottom:1.5rem;}
+.article a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(15,81,50,.28);transition:border-color .2s;}
+.article a:hover{border-bottom-color:var(--accent);}
+.article h2{font-family:var(--font-display);font-size:2rem;font-weight:700;
+  margin:3.4rem 0 1.2rem;padding-top:2.4rem;border-top:1px solid var(--border);line-height:1.15;}
+.article h3{font-family:var(--font-display);font-size:1.32rem;font-weight:600;
+  margin:2.2rem 0 .7rem;color:var(--accent);}
+.article em{font-style:italic;}
+.article strong{font-weight:600;color:var(--ink);}
+.section-num{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.5rem;}
+.dropcap::first-letter{font-family:var(--font-display);font-size:3.6rem;font-weight:900;
+  float:left;line-height:.8;padding:.3rem .6rem .1rem 0;color:var(--accent);}
+
+/* ── Pull blockquote ── */
+.pull{font-family:var(--font-display);font-size:1.5rem;font-weight:600;font-style:italic;
+  line-height:1.32;color:var(--accent2);border-left:4px solid var(--gold);
+  padding:.3rem 0 .3rem 1.6rem;margin:2.2rem 0;}
+blockquote{background:var(--paper);border:1px solid var(--border);border-left:4px solid var(--accent);
+  padding:1.3rem 1.6rem;margin:2rem 0;border-radius:0 6px 6px 0;box-shadow:0 4px 18px rgba(26,34,29,.05);}
+blockquote p{margin:0 0 .6rem;font-size:1.08rem;line-height:1.6;}
+blockquote p:last-child{margin:0;}
+blockquote cite{display:block;font-family:var(--font-mono);font-size:.74rem;font-style:normal;
+  color:var(--muted);text-transform:uppercase;letter-spacing:.05em;}
+.q-big{font-family:var(--font-display);font-style:italic;font-weight:600;}
+
+/* ── Tooltip ── */
+.tip{border-bottom:1px dotted var(--accent);cursor:help;position:relative;}
+.tip .tip-body{visibility:hidden;opacity:0;position:absolute;bottom:140%;left:50%;
+  transform:translateX(-50%);background:var(--dark);color:#eee;font-family:var(--font-body);
+  font-size:.82rem;line-height:1.45;font-style:normal;width:min(20rem,76vw);padding:.7rem .9rem;
+  border-radius:6px;z-index:50;transition:opacity .2s;box-shadow:0 10px 30px rgba(0,0,0,.3);}
+.tip .tip-body::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:7px solid transparent;border-top-color:var(--dark);}
+.tip:hover .tip-body,.tip:focus .tip-body{visibility:visible;opacity:1;}
+
+/* ── Popup citation button ── */
+.cite{display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-mono);
+  font-size:.62rem;font-weight:700;color:#fff;background:var(--gold);border-radius:4px;
+  padding:.04rem .34rem;margin:0 .12rem;cursor:pointer;vertical-align:super;line-height:1.4;
+  border:none;text-decoration:none;}
+.cite:hover{background:var(--accent);}
+
+/* ── Stat band ── */
+.stat-band{width:100vw;margin-left:calc(50% - 50vw);background:var(--accent);color:#fff;
+  padding:2.6rem 2rem;margin-bottom:2rem;}
+.stat-inner{max-width:1000px;margin:0 auto;display:flex;gap:2rem;flex-wrap:wrap;justify-content:space-around;text-align:center;}
+.stat{flex:1;min-width:160px;}
+.stat-num{font-family:var(--font-display);font-size:clamp(2.4rem,5vw,3.4rem);font-weight:900;
+  line-height:1;color:var(--gold-light);}
+.stat-label{font-family:var(--font-mono);font-size:.74rem;letter-spacing:.04em;
+  margin-top:.6rem;color:rgba(255,255,255,.85);}
+
+/* ── Embeds ── */
+.embed-wrap{width:100vw;margin-left:calc(50% - 50vw);background:var(--dark);padding:2.6rem 2rem 2rem;margin-bottom:2rem;}
+.embed-inner{max-width:1180px;margin:0 auto;}
+.embed-label{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--gold);text-align:center;margin-bottom:1.2rem;}
+.embed-frame{position:relative;width:100%;border-radius:6px;overflow:hidden;
+  box-shadow:0 18px 60px rgba(0,0,0,.4);background:#fff;}
+.embed-frame iframe{width:100%;border:0;display:block;}
+.embed-caption{max-width:1180px;margin:1rem auto 0;font-family:var(--font-mono);font-size:.74rem;
+  color:#9aa69c;text-align:center;line-height:1.6;}
+.embed-caption a{color:#d9c89a;text-decoration:none;border-bottom:1px solid rgba(217,200,154,.3);}
+.embed-caption a:hover{color:#fff;}
+
+/* ── Note / callout card ── */
+.note{background:var(--gold-light);border:1px solid #e6d2a0;border-radius:8px;
+  padding:1.4rem 1.6rem;margin:2.2rem 0;}
+.note-title{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:.5rem;font-weight:700;}
+.note p{margin-bottom:.7rem;}.note p:last-child{margin-bottom:0;}
+
+/* ── Cards row (breaks out wider than the article column) ── */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;
+  margin:2.4rem 0;width:min(1060px,92vw);margin-left:50%;transform:translateX(-50%);}
+.card{background:var(--paper);border:1px solid var(--border);border-radius:8px;padding:1.3rem;
+  box-shadow:0 4px 18px rgba(26,34,29,.05);}
+.card-icon{font-size:1.5rem;margin-bottom:.5rem;}
+.card h4{font-family:var(--font-display);font-size:1.05rem;margin-bottom:.4rem;color:var(--accent);}
+.card p{font-size:.92rem;margin:0;color:var(--ink2);line-height:1.55;}
+
+/* ── Takeaways ── */
+.takeaways{width:100vw;margin-left:calc(50% - 50vw);background:var(--dark);color:#ece5d6;
+  padding:4rem 2rem;}
+.takeaways-inner{max-width:1100px;margin:0 auto;}
+.takeaways h2{font-family:var(--font-display);font-size:2.2rem;font-weight:700;color:#fff;
+  text-align:center;margin-bottom:.6rem;}
+.takeaways-sub{text-align:center;font-family:var(--font-mono);font-size:.74rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:2.6rem;}
+.takeaway-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.1rem;}
+.takeaway{display:flex;flex-direction:column;gap:.7rem;padding:1.4rem 1.5rem;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  border-top:3px solid var(--gold);border-radius:10px;
+  transition:transform .2s,background .2s,box-shadow .2s;}
+.takeaway:hover{transform:translateY(-4px);background:rgba(255,255,255,.07);
+  box-shadow:0 14px 40px rgba(0,0,0,.35);}
+.takeaway-num{font-family:var(--font-display);font-size:2rem;font-weight:900;color:var(--gold);
+  line-height:.9;}
+.takeaway-text{font-size:1rem;line-height:1.55;color:#cfd6cd;}
+.takeaway-text strong{color:#fff;}
+
+/* ── Footer ── */
+.footer{background:var(--accent2);color:rgba(255,255,255,.8);padding:3rem 2rem;text-align:center;}
+.footer-inner{max-width:760px;margin:0 auto;}
+.footer a{color:var(--gold-light);text-decoration:none;border-bottom:1px solid rgba(247,236,207,.3);}
+.footer p{font-size:.9rem;margin-bottom:1rem;}
+.footer-meta{font-family:var(--font-mono);font-size:.72rem;color:rgba(255,255,255,.5);margin-top:1.5rem;}
+
+/* ── Modal ── */
+.modal{display:none;position:fixed;inset:0;z-index:1000;background:rgba(12,19,15,.72);
+  backdrop-filter:blur(4px);padding:3vh 2vw;}
+.modal.open{display:block;}
+.modal-box{background:var(--paper);max-width:860px;margin:0 auto;border-radius:8px;
+  max-height:94vh;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.5);}
+.modal-head{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.5rem;
+  border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--paper);border-radius:8px 8px 0 0;}
+.modal-head h3{font-family:var(--font-display);font-size:1.1rem;margin:0;color:var(--ink);}
+.modal-close{background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;
+  font-size:1.1rem;color:var(--muted);padding:.1rem .6rem;line-height:1.4;}
+.modal-close:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+.modal-body{overflow-y:auto;padding:1.6rem 2rem;font-size:.94rem;line-height:1.7;}
+.modal-body h1,.modal-body h2,.modal-body h3{font-family:var(--font-display);margin:1.3rem 0 .6rem;line-height:1.25;}
+.modal-body h1{font-size:1.5rem;}.modal-body h2{font-size:1.25rem;}.modal-body h3{font-size:1.08rem;color:var(--accent);}
+.modal-body p{margin-bottom:1rem;}
+.modal-body code{font-family:var(--font-mono);font-size:.85em;background:var(--highlight);padding:.1rem .3rem;border-radius:3px;}
+.modal-body table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.84rem;}
+.modal-body th,.modal-body td{border:1px solid var(--border);padding:.4rem .6rem;text-align:left;vertical-align:top;}
+.modal-body th{background:var(--highlight);font-family:var(--font-mono);font-size:.78rem;}
+.modal-body ul,.modal-body ol{margin:0 0 1rem 1.4rem;}
+.modal-body li{margin-bottom:.4rem;}
+.modal-body hr{border:none;border-top:1px solid var(--border);margin:1.5rem 0;}
+.modal-body a{color:var(--accent);}
+.modal-body details{margin:1rem 0;background:var(--highlight);border-radius:6px;padding:.6rem 1rem;}
+.modal-body summary{cursor:pointer;font-family:var(--font-mono);font-size:.82rem;color:var(--muted);}
+.modal-body blockquote{background:var(--bg);border-left:3px solid var(--gold);margin:.8rem 0;}
+
+@media(max-width:600px){
+  body{font-size:17px;}
+  .article{padding:0 1.3rem 3rem;}
+  .pull{font-size:1.25rem;}
+  .hero{padding:3rem 1.3rem 1.5rem;}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <a href="../" class="masthead-brand">Anand<span>·</span>Talks</a>
+    <div class="masthead-right">
+      <span class="masthead-date">16 Jun 2026 · EQT India AI &amp; Cyber Summit</span>
+      <a class="masthead-link" id="transcript-btn">📄 Transcript</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-series">EQT India AI &amp; Cyber Summit · Mumbai</div>
+  <div class="hero-kicker">A One-Hour Session on Data, Agents &amp; the Vanishing Backlog</div>
+  <h1 class="hero-title">The Data Stack for an <em>Agentic</em> World</h1>
+  <p class="hero-subtitle">A room of private-equity data leaders estimated a job at a week to a month. Then they watched it finish in six minutes — and discovered the bottleneck had quietly moved out of the model and into their own data.</p>
+  <div class="hero-meta">
+    <span>By <a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand S</a>, LLM Psychologist at <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a></span>
+    <span class="sep">·</span>
+    <span>Hosted by <a href="https://eqtgroup.com/" target="_blank" rel="noopener">EQT Group</a></span>
+    <span class="sep">·</span>
+    <span>16 June 2026 · 3:30–4:30 pm IST</span>
+  </div>
+</section>
+
+<div class="quick-links">
+  <div class="quick-links-inner">
+    <a class="quick-link gold" href="#wager">▶ Read the Story</a>
+    <a class="quick-link" id="transcript-btn2">📄 Full Transcript</a>
+    <a class="quick-link" href="https://files.s-anand.net/pages/customer-masters-data/" target="_blank" rel="noopener">📊 The Dataset</a>
+    <a class="quick-link" id="chatgpt-btn">💬 ChatGPT Run</a>
+    <a class="quick-link" id="survey-btn">📈 Survey Analysis</a>
+    <a class="quick-link" href="https://github.com/sanand0/talks/releases/download/talks/2026-06-16-eqt-data-stack-for-agents.opus" target="_blank" rel="noopener">🎧 Audio</a>
+  </div>
+</div>
+
+<div class="audio-wrap">
+  <div class="audio-card">
+    <div class="audio-icon">🎧</div>
+    <div class="audio-info">
+      <div class="audio-title">Listen to the full session</div>
+      <div class="audio-sub">~58 min · recorded live in Mumbai</div>
+    </div>
+    <audio controls preload="none">
+      <source src="https://github.com/sanand0/talks/releases/download/talks/2026-06-16-eqt-data-stack-for-agents.opus" type="audio/ogg">
+      Your browser does not support audio. <a href="https://github.com/sanand0/talks/releases/download/talks/2026-06-16-eqt-data-stack-for-agents.opus">Download the audio</a>.
+    </audio>
+  </div>
+</div>
+
+<div class="summary-wrap">
+  <div class="summary-inner">
+    <div class="summary-label">The Whole Hour, On One Page</div>
+    <a href="summary.avif" target="_blank" rel="noopener" title="Open full-size visual summary in a new window">
+      <img src="summary.avif" alt="Visual summary of the session: dashboards are for humans, data is for agents; reconciling customer masters in minutes; discovery, organize, analyze, verify, present.">
+    </a>
+    <div class="summary-cap">Visual summary of the session. <a href="summary.avif" target="_blank" rel="noopener">Open full size ↗</a></div>
+  </div>
+</div>
+
+<article class="article">
+
+<p class="dropcap"><span class="section-num">The Pre-Read</span>The instruction in <a href="https://eqtgroup.com/" target="_blank" rel="noopener">Vivek</a>'s pre-read had been four short lines, and Anand began by reading them back to a room that — he gently noted — may or may not have done the homework themselves. <span class="q-big">"You may have read it, of course,"</span> he said, <span class="q-big">"or your agents may have read it."</span> The joke landed because it was already half true. The whole hour would turn on that small inversion: the audience was no longer the only reader in the room.</p>
+
+<p>The four lines were deceptively quiet:</p>
+
+<div class="cards">
+  <div class="card"><div class="card-icon">📊</div><h4>Dashboards are for humans</h4><p>Data, increasingly, is for agents. Everything we learned about designing data for people may need a rethink.</p></div>
+  <div class="card"><div class="card-icon">❓</div><h4>The question sets the shape</h4><p>The <em>question</em> determines the aggregation — not the data <em>type</em>. So stop pre-building joins the agent can assemble on the fly.</p></div>
+  <div class="card"><div class="card-icon">🗂️</div><h4>Unstructured is an asset</h4><p>Code reviews, meeting minutes, chat logs — newly processable at scale, and newly valuable.</p></div>
+  <div class="card"><div class="card-icon">🧭</div><h4>Provenance is critical</h4><p>Old computers failed in known ways. AI fails in new ones. If we decide with data, we need to trace it.</p></div>
+</div>
+
+<p>It is worth pausing on the second line, because it quietly demolishes a decade of received wisdom. We used to take raw data and lovingly pre-build aggregates, joins, and star schemas — making certain questions cheap to ask and most others impossible. The bet was on <em>anticipation</em>. But if an agent can construct whatever shape it needs for whatever question arrives, the bet changes.</p>
+
+<blockquote>
+  <p>We can tell the agent: <strong>structure it how you need to answer that question.</strong> And therefore, for every question, it can on the fly create whatever aggregation structure it needs.</p>
+  <cite>— Anand, on why pre-built schemas are becoming optional</cite>
+</blockquote>
+
+<h2 id="wager"><span class="section-num">Section 01 · The Wager</span>How long does a week-long job take?</h2>
+
+<p>Before any demo, before any argument, Anand did something a salesman would never do: he asked the room to commit to a number, in writing, on their phones. A <span class="tip">QR code<span class="tip-body">A live poll built on Anand's own form tool. The form — <code>forms.s-anand.net/datastack</code> — was switched off after the session, so the numbers below are the only record of what the room actually believed.</span></span> went up. Three questions appeared.</p>
+
+<p>The first was a trap dressed as a project-scoping exercise. <em>A client hands you three customer masters. Each list has its own IDs, its own column names, its own spellings of the same people. Turn it into one clean, queryable dataset. A few tens of thousands of rows each — under 100,000. How many days?</em></p>
+
+<p>The second: <em>what percentage of your company's data could your agents actually use today?</em> The third, open-ended: <em>what's blocking you from putting agents on real workflows on top of your data?</em></p>
+
+<p>He waited, narrating the trickle like a cricket scorer — <span class="q-big">"nine responses, ten… I'll just wait till we have a baker's dozen… ah, thirteen, great! Thank you, thirteenth person."</span> Then he asked for a show of hands. Less than a day? Less than a week? Less than a month? Less than a year?</p>
+
+<blockquote>
+  <p>A week to a month seems to be the median effort. <strong>Let's see if we can do it in minutes.</strong></p>
+  <cite>— Anand, setting the over/under</cite>
+</blockquote>
+
+<p>What the phones recorded was sharper than any show of hands. Fifteen people answered. Their estimates ranged from <strong>1 day to 60 days</strong> — a <span class="tip">sixty-fold spread<span class="tip-body">From the live poll: estimates were 1, 1, 1, 2, 3, 4, 5, 6, 7, 10, 10, 10, 14, 20, 60 days. Median 6; mean dragged to ~10 by two outliers.</span></span>. The median was six days. And that, as we will see at the very end of the hour, was the real story — not the height of the estimates but their <em>scatter</em>.</p>
+
+<div class="stat-band">
+  <div class="stat-inner">
+    <div class="stat"><div class="stat-num">60×</div><div class="stat-label">Spread in the room's estimates<br>(1 day → 60 days)</div></div>
+    <div class="stat"><div class="stat-num">6</div><div class="stat-label">Median estimate, in days</div></div>
+    <div class="stat"><div class="stat-num">6:32</div><div class="stat-label">What it actually took, in minutes</div></div>
+  </div>
+</div>
+
+<h2><span class="section-num">Section 02 · The Demo</span>Three systems, no common key, one prompt</h2>
+
+<p>The dataset was deliberately, lovingly messy — the kind of thing every bank in the room recognised instantly. Three CSVs from three teams, plus a fourth file to trip people up. <a href="https://files.s-anand.net/pages/customer-masters-data/" target="_blank" rel="noopener">You can download all of it yourself</a>; the room did, live, on their phones.</p>
+
+<div class="cards">
+  <div class="card"><div class="card-icon">🏦</div><h4>Origination</h4><p>Loan applicants. Full names, DOB, masked PAN, email, phone, loan amount, a university code. "Amit Kumar Gupta," born 1998-03-14.</p></div>
+  <div class="card"><div class="card-icon">📞</div><h4>Collections</h4><p>"Amit K. Gupta," 45 days past due, ₹412,000 outstanding, phone ending 2210. Same person? The phone says yes.</p></div>
+  <div class="card"><div class="card-icon">💬</div><h4>CRM</h4><p>"A.K. Gupta," same WhatsApp number — and, lurking nearby, an "A. Gupta" who might be someone else entirely.</p></div>
+  <div class="card"><div class="card-icon">🎓</div><h4>University master</h4><p>The hidden fourth file. "University of Texas at Austin" and "Univ. of Texas Austin" under two different codes. Not deduplicated.</p></div>
+</div>
+
+<p>This is the work. It is unglamorous, it is endless, and it is exactly the work a team would scope at "a week to a month, if they automate reasonably." Anand's twist was to do it badly on purpose — with a prompt he admitted "isn't a particularly intelligent prompt," typed into a <span class="tip">$20 ChatGPT<span class="tip-body">No enterprise agent, no fine-tuning, no orchestration framework. "Something that every single employee is able to" run. The whole point: this is the floor, not the ceiling.</span></span> account that "every single employee is able to" use.</p>
+
+<blockquote>
+  <p>These three CSVs come from three systems — loan origination, collections, and CRM, plus a university master. They share no common key, names are inconsistent, and IDs changed across systems. Reconcile them into a single customer master. For each match, give a <strong>confidence score</strong>, the fields you matched on, and a one-line reason. <strong>Tell me if anything has a score of less than 0.8</strong> so I can review as a human. <strong>Don't merge records that only share a similar name.</strong> Also reconcile the university codes… Give the reconciliation table plus a list of any exceptions and suggested fixes.</p>
+  <cite>— The entire "engineering spec," spoken aloud into ChatGPT</cite>
+</blockquote>
+
+<p>Notice what's hidden in that ramble. There's a human-review threshold (0.8). There's a safety rule (no name-only merges). There's a request for provenance (matched fields + a reason). It reads less like a query and more like the instructions you'd give a careful junior analyst — which is precisely Anand's point about why he prefers to <em>talk</em> to the model:</p>
+
+<blockquote>
+  <p>I find it so much easier to just talk to it, because that way I can also think while I'm speaking. <strong>If I ramble, it does a good job of picking stuff.</strong></p>
+  <cite>— Anand, on dictation as a thinking tool</cite>
+</blockquote>
+
+
+<p>Six minutes and thirty-two seconds later, ChatGPT was done. It had turned 500 source records into <strong>201 reconciled customer entities</strong>, with 691 accepted record-pair matches and 82 candidates flagged below the 0.8 line for a human to review. It did exactly what the prompt asked — and, crucially, it showed its work.</p>
+
+<blockquote>
+  <p>I identify [these six records] as the same person and have given them the master customer ID of 21. It is reasonably confident — <strong>99% sure</strong> — because the phone number is matching, the masked PAN is matching, and the email is matching.</p>
+  <cite>— ChatGPT, narrating its own evidence for Amit Kumar Gupta</cite>
+</blockquote>
+
+<p>Then came the moment the room actually taught <em>Anand</em> something. On the screen sat a borderline case: an "Arjun R" and an "A.D. Rao" sharing a single phone number. The names conflicted; the phone agreed. ChatGPT had scored it <strong>0.7</strong> and kicked it to human review. Anand turned it into a vote.</p>
+
+<blockquote>
+  <p>If two people have the same number, one is an Arjun R. and the other is an A.D. Rao — would you pass it? … <strong>Interesting. I'm not an SME. I would have happily passed this — but I'm learning something today: you'd want a second round of review.</strong></p>
+  <cite>— Anand, discovering the model's 0.7 was wiser than his gut</cite>
+</blockquote>
+
+<p>That is the quiet inversion again. The machine was <em>more</em> conservative than the human expert's instinct — and it was conservative <em>because the prompt told it to be</em>. The intelligence wasn't in a clever algorithm. It was in a model that had "read literally everything one can in the world" and then been handed a sensible rule about when to stop trusting itself.</p>
+
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <div class="embed-label">The Input · Three Messy Masters + A University File</div>
+    <div class="embed-frame">
+      <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=https://files.s-anand.net/pages/customer-masters-data/customer-masters.xlsx" height="560" title="Customer masters source data"></iframe>
+    </div>
+    <div class="embed-caption">The raw dataset, exactly as the room received it. <a href="https://files.s-anand.net/pages/customer-masters-data/" target="_blank" rel="noopener">Download the files and prompt ↗</a> · <a href="https://view.officeapps.live.com/op/embed.aspx?src=https://files.s-anand.net/pages/customer-masters-data/customer-masters.xlsx" target="_blank" rel="noopener">Open the workbook ↗</a></div>
+  </div>
+</div>
+
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <div class="embed-label">The Output · A Reconciliation Report, In 6m 32s</div>
+    <div class="embed-frame">
+      <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=https://files.s-anand.net/pages/customer-masters-data/reconciliation.xlsx" height="560" title="Reconciliation report"></iframe>
+    </div>
+    <div class="embed-caption">Summary, master, accepted matches, a human-review queue, university dedupe, and suggested master-data fixes — seven sheets. <a href="https://view.officeapps.live.com/op/embed.aspx?src=https://files.s-anand.net/pages/customer-masters-data/reconciliation.xlsx" target="_blank" rel="noopener">Open the report ↗</a> · See the full <span class="cite" id="chatgpt-btn3">CHAT</span> conversation.</div>
+  </div>
+</div>
+
+<p>The university file got the same treatment: "University of Texas at Austin" and "Univ. of Texas Austin" collapsed into one, "National University of Singapore" and "NUS" into another, IIT Madras, IISc, Stanford — five duplicate-code groups caught and a canonical ID suggested for each. And, tellingly, the report ended not with an answer but with a <em>process</em>: store irreversible hashes of identifiers, make at least one stable ID mandatory per source, keep blocking name-only merges. It had quietly written the room a better data-governance policy as a free side effect.</p>
+
+<div class="note">
+  <div class="note-title">The Insight That Reframed The Hour</div>
+  <p>Everyone expected acceleration. What Anand insisted on was something subtler:</p>
+  <p class="pull" style="margin:.6rem 0;">The power is not in the acceleration; it is in the <em>enablement</em> of stuff that people would otherwise have not tried.</p>
+  <p>A one-person "is this the same customer across all three systems?" check used to be impractical — you'd have to fund a whole data-lake clean-up to justify it. A "what percentage of my CRM is actually clean?" audit was never worth a project. Now both are one prompt. The cost of a question fell low enough that questions nobody bothered to ask become routine.</p>
+</div>
+
+<h2><span class="section-num">Section 03 · The Two ROIs</span>"Cortex is allowed"</h2>
+
+<p>The first kind of return is the obvious one: a task that existed gets compressed. Anand quoted his colleague Thanoj verbatim — a man four days deep into using agents inside a client's environment:</p>
+
+<blockquote>
+  <p>The reconciliation would have taken me <strong>three to four weeks</strong> of work — and now it's been crunched to <strong>two or three days.</strong></p>
+  <cite>— Thanoj, almost exactly matching the room's median guess</cite>
+</blockquote>
+
+<p>But the <em>how</em> is the best small comedy of the talk. Thanoj was inside a regulated client. The conversation went like a customs interrogation:</p>
+
+<blockquote>
+  <p>"Why don't you play around with <a href="https://openai.com/index/introducing-codex/" target="_blank" rel="noopener">Codex</a>?" — "Sorry, Codex is not allowed." — "Okay, <a href="https://www.anthropic.com/claude-code" target="_blank" rel="noopener">Claude Code</a>?" — "Not allowed." — "Copilot?" — "Not allowed." — "Okay, what <em>is</em> allowed?" — <strong>"<a href="https://www.snowflake.com/en/product/features/cortex-ai/" target="_blank" rel="noopener">Cortex in Snowflake</a> is allowed."</strong> — "Okay. Use Cortex. Just ask it the same questions."</p>
+  <cite>— Anand, on finding the one unlocked door</cite>
+</blockquote>
+
+<p>And it worked beautifully — precisely because Cortex already lived <em>next to the data</em>. No exfiltration, no approvals, no new vendor. The lesson isn't "use Snowflake." It's that the agent only has to be wherever the data already is allowed to be. Which leads directly into the objection that a sharp audience member raised next.</p>
+
+
+<h2><span class="section-num">Section 04 · The Objection</span>"I can't send the data"</h2>
+
+<p>An audience member from a regulated industry raised the obvious hand. He was already doing this with Claude Code — but cleverly: <span class="q-big">"I'm not really uploading the data… I'm just sharing the metadata of my own data structure."</span> Smart, safe, and slow. Because metadata-only means the model writes you a program, you run it, you find it missed twenty things, you go back, you re-run. The loop has a human stuck in the middle of it.</p>
+
+<blockquote>
+  <p>I want that loop to be automatic. And <strong><a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener">MCPs — Model Context Protocol</a></strong> can come in pretty handy in such a scenario.</p>
+  <cite>— Anand, reaching for his laptop</cite>
+</blockquote>
+
+<p>Then he did the thing that makes a demo memorable: he built the fix, live. A small <span class="tip">MCP server<span class="tip-body">An open protocol (originally from Anthropic, now widely adopted) that lets an AI agent call tools and read resources on a system through a controlled interface. The agent gets capabilities, not raw access.</span></span> running on his own laptop, connected to ChatGPT. It could do two things, and — critically — only two: write and run scripts locally, and read <em>metadata</em>. It could never see the actual records. Why? <span class="q-big">"Because I told the MCP server that way."</span></p>
+
+<blockquote>
+  <p>Because the local MCP server is doing the <strong>hard restriction</strong>, I don't have to worry about data leakage. On the other hand, the analysis is verifiable, because ultimately it gives me a program that is deterministic — and an error report I can cross-check.</p>
+  <cite>— Anand, on privacy and verifiability as the same move</cite>
+</blockquote>
+
+<p>The instruction he gave it was a small masterclass in delegation. Reconcile the masters by writing programs that run locally. Do it <em>two different ways</em> and tell me which is better, so I'm informed for next time. And write it as a rerunnable script, so tomorrow's new records need no agent at all — <em>"just running the program ideally should solve the problem."</em> Privacy preserved, acceleration kept, and a deterministic artifact at the end.</p>
+
+<p>Why ask for two approaches? Because the economics have flipped:</p>
+
+<blockquote>
+  <p>It's cheap — not in the token sense, but in the human-versus-machine sense. So asking for multiple options generally makes sense. Take a sample, try half a dozen different models, see which works, and get the job done.</p>
+  <cite>— Anand, on portfolio thinking at the prompt level</cite>
+</blockquote>
+
+<p class="pull">It is not just the coder who is getting replaced; it is the data scientist who is also getting replaced.</p>
+
+<p>And from there, the sentence the room would remember. If software people can "vibe code," then —</p>
+
+<blockquote>
+  <p>People can now do <strong>"<a href="https://en.wikipedia.org/wiki/Vibe_coding" target="_blank" rel="noopener">vibe data analysis</a>."</strong> The business user can just randomly take a dataset and start playing around with it — and that is powerful.</p>
+  <cite>— Anand, naming the next wave</cite>
+</blockquote>
+
+<h2><span class="section-num">Section 05 · The 47,000 Documents</span>Discovery is now a solved problem</h2>
+
+<p>The reconciliation showed agents <em>cleaning</em> data. The next story showed something stranger: an agent <em>discovering what's even there</em>. Straive has a shared Google Drive of HR data — a "people" folder containing, by the agent's own count, <strong>47,000 documents</strong>. Anand's honest starting position:</p>
+
+<blockquote>
+  <p>I have no idea what's sitting in these documents. So my ask was: can we, just by talking to it, <strong>find something that the HR team doesn't know?</strong></p>
+  <cite>— Anand, on auditing his own ignorance</cite>
+</blockquote>
+
+<p>He pointed a command-line tool (think "MCP for Google Drive") at the folder and gave it three deliberately lazy prompts. <em>Explore the datasets I can access. Write a repeatable script that incrementally pulls new or modified files. Then tell me what's relevant</em> — by recency, by size, by whether it's transactional or static, by richness — <em>and prioritise.</em> No cleaning. No schema. No subject-matter expert.</p>
+
+<p>The crucial point he kept returning to: access governance was already solved. <span class="q-big">"What I have access to, I have access to; no additional layer of governance is required."</span> The agent simply inherits the permissions its human already has.</p>
+
+<blockquote>
+  <p>ETL is a solved problem — that you know. <strong>Discovery is also becoming a solved problem.</strong> And the discovery part is something not many teams are recognising.</p>
+  <cite>— Anand, on the part everyone skips</cite>
+</blockquote>
+
+<p>Left to choose its own structure, the agent didn't pick a single flat table or a time series. It realised the natural unit was the <em>state of an employee</em> over time — and mapped each person against their state, their previous company, their location, building what was, in effect, a knowledge graph nobody asked for.</p>
+
+<blockquote>
+  <p>It effectively, implicitly, created a <strong>knowledge graph on the fly.</strong></p>
+  <cite>— Anand, watching the schema design itself</cite>
+</blockquote>
+
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <div class="embed-label">The HR Discovery Run · Discover → Organize → Analyze</div>
+    <div class="embed-frame">
+      <iframe src="hr-analysis.html" style="aspect-ratio:16/9;height:auto;" title="HR analysis deck"></iframe>
+    </div>
+    <div class="embed-caption">How an agent catalogued 47,000 HR documents and surfaced actionable findings — start to finish. <a href="hr-analysis.html" target="_blank" rel="noopener">Open the deck ↗</a></div>
+  </div>
+</div>
+
+<p>And it found things. Real, awkward, useful things — the sort that no dashboard would ever have surfaced because no one knew to build it:</p>
+
+<div class="cards">
+  <div class="card"><div class="card-icon">📋</div><h4>The bottleneck isn't hiring</h4><p>It's the <em>paperwork after the offer</em> — laptop allocation, ID setup. Two teams kept duplicate hiring lists, and just two projects drove the bulk of the delay.</p></div>
+  <div class="card"><div class="card-icon">🪦</div><h4>A dead dashboard</h4><p>KYC wasn't the payroll problem. One dashboard had quietly gone stale — the updating process had been broken for weeks. Finance didn't know.</p></div>
+</div>
+
+<blockquote>
+  <p>Total duration: about <strong>two and a half hours.</strong> My attention span: <strong>two and a half minutes.</strong></p>
+  <cite>— Anand, on the new ratio of machine work to human attention</cite>
+</blockquote>
+
+<h2><span class="section-num">Section 06 · Ephemeral Software</span>Why fight for a depreciating asset?</h2>
+
+<p>Here Anand made his most quietly radical observation. We're used to software as the product — built carefully, maintained, and incidentally producing a report or a dataset. That order, he argued, is flipping. In these runs he never saw the code. He often doesn't know where it is.</p>
+
+<blockquote>
+  <p>It writes an inline Python script, doesn't save it anywhere because it doesn't need to — it's testing things — and then produces an output. <strong>"Ephemeral software" is now part of the reality of the data-science lifecycle.</strong> We get the answers; software is there, by the way.</p>
+  <cite>— Anand, on code as exhaust</cite>
+</blockquote>
+
+<p>Which led to an uncomfortable but liberating business conclusion. Clients increasingly say, "my niece uses Claude Code, why should I pay you?" The honest answer:</p>
+
+<blockquote>
+  <p>I'm fighting for a depreciating asset: software. Why bother? Software is getting built on the fly — I may as well <strong>price the output</strong> and tell you: I'll get you insights instead. Who cares about the software?</p>
+  <cite>— Anand, on what's actually worth selling</cite>
+</blockquote>
+
+
+<h2><span class="section-num">Section 07 · The Consultant in the Machine</span>15 use cases, and a $117M email</h2>
+
+<p>Back to Thanoj — who, armed only with the allowed tool, asked Cortex not just to clean data but to <em>find use cases</em>. Same lazy prompts: score the datasets for relevance; tell me what problems they could solve; estimate the value, the timeline, and who'd care. Cortex came back with 15 ranked use cases, complete with named stakeholders to take each one to.</p>
+
+<p>Then the punchline that made the room sit up:</p>
+
+<blockquote>
+  <p>He went to their head of data analytics. The man said: <em>"In November, we hired a consultant. That consultant did a two-and-a-half-month strategy exercise. <strong>12 of these 15 are what they recommended.</strong>"</em></p>
+  <cite>— Anand, on a quarter of consulting reproduced in an afternoon</cite>
+</blockquote>
+
+<p class="pull">It's not just the SDLC we can augment. It's not just the data scientist. It is the strategy consultant we can augment.</p>
+
+<p>And if a consulting exercise has fallen from a few hundred thousand dollars to a few hundred dollars in tokens, the math on <em>trying</em> changes completely:</p>
+
+<blockquote>
+  <p>Do a few consulting exercises. Ten go into the trash can — big deal. One clicks, good enough. <strong>One in a thousand clicks, that's ROI. Huge ROI.</strong></p>
+  <cite>— Anand, on the new economics of the speculative</cite>
+</blockquote>
+
+<p>So Thanoj asked: should we <em>pitch</em> for these cases? Anand's answer reframed the whole consulting model: <span class="q-big">"Why pitch, then build? Build, then pitch."</span> Two weeks later, all 15 were done — by prompting. One of them, customer churn, ended not in a dashboard but in an <em>email addressed to the stakeholder</em>:</p>
+
+<blockquote>
+  <p>2,217 customers have either left or are about to leave. That's a <strong>$117 million</strong> impact — and you can act on about <strong>$37.5 million</strong> of it. Here are the customers slipping now. By the way, you don't have an early-warning system; building one might be worthwhile.</p>
+  <cite>— The agent's churn email, written for a human to simply act on</cite>
+</blockquote>
+
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <div class="embed-label">Cortex's Strategy Document · 15 Ranked Use Cases (anonymized)</div>
+    <div class="embed-frame">
+      <iframe src="https://files.s-anand.net/pages/ai-use-cases-commercial-data/" height="640" title="AI use cases generated by Cortex"></iframe>
+    </div>
+    <div class="embed-caption">An executive strategy report — objectives, approach, financial cases, a 24-week roadmap, and ready-to-send socialization emails — produced by an agent sitting on commercial data. <a href="https://files.s-anand.net/pages/ai-use-cases-commercial-data/" target="_blank" rel="noopener">Open the full report ↗</a></div>
+  </div>
+</div>
+
+<p>The pattern beneath all three stories — reconciliation, HR discovery, the strategy report — is a single pipeline Anand named explicitly. Agents can now let anyone <strong>find</strong> datasets, <strong>clean</strong> them, <strong>organize</strong> them, <strong>analyze</strong> them — in a loop, without human intervention, even with metadata only — then <strong>verify</strong> and <strong>present</strong>. And "present" does not mean a dashboard.</p>
+
+<blockquote>
+  <p>What is a person going to do with a dashboard? They're going to think and figure out what actions to take. <strong>Tell them the actions.</strong> An email saying "do this, here's the benefit, here's the evidence" is all we need.</p>
+  <cite>— Anand, on the death of the dashboard as a deliverable</cite>
+</blockquote>
+
+<p>This, he argued, is what <a href="https://www.palantir.com/" target="_blank" rel="noopener">"forward-deployed engineers"</a> are really for — except you don't need them only at clients. Point one internally and you have an <em>internally-deployed engineer</em>: "somebody saying, 'I have data, let's solve problems with it.'"</p>
+
+<h2><span class="section-num">Section 08 · One Box or Three?</span>The instinct an agentic stack punishes</h2>
+
+<p>Midway, Anand slipped in a teaching question disguised as a poll. You have 10,000 documents and three needs: find documents <em>similar</em> to this one; <em>correlate</em> sales with marketing spend; <em>trace</em> investor lineage across a chain of holdings. One storage choice for all three — or a different one per question?</p>
+
+<div class="cards">
+  <div class="card"><div class="card-icon">🧲</div><h4>Similar →</h4><p><a href="https://en.wikipedia.org/wiki/Vector_database" target="_blank" rel="noopener">Vector embeddings.</a> "Find another RFP like this RFP."</p></div>
+  <div class="card"><div class="card-icon">📐</div><h4>Correlate →</h4><p>A tabular / relational store. "Is marketing actually moving the number?"</p></div>
+  <div class="card"><div class="card-icon">🕸️</div><h4>Trace →</h4><p>A <a href="https://en.wikipedia.org/wiki/Knowledge_graph" target="_blank" rel="noopener">knowledge graph.</a> "Who invested in whom, two hops out?"</p></div>
+</div>
+
+<p>The room split almost exactly down the middle: three voted "one store," three "different per question," one "not sure." The framework answer is <em>three</em> — and the split itself was the lesson.</p>
+
+<blockquote>
+  <p>The instinct to put it all in one box is exactly the instinct an agentic stack <strong>punishes.</strong></p>
+  <cite>— from the survey analysis, handed back to the room</cite>
+</blockquote>
+
+<h2><span class="section-num">Section 09 · When It Doesn't Work</span>"We were not as lucky as you"</h2>
+
+<p>The most honest moment came from the audience. Someone had tried exactly this — merged documents into one CSV, built the PPT, showed the business team — and been told flatly: <em>"These are not matching. We're not interested."</em> His word for Anand's success was pointed: <span class="q-big">"lucky."</span></p>
+
+<p>Anand didn't flinch. He agreed. And then he gave the room his actual operating system for failure — three moves:</p>
+
+<div class="cards">
+  <div class="card"><div class="card-icon">🎲</div><h4>1 · Portfolio, not promise</h4><p>"If you commit and don't deliver, it's a problem. <em>Don't commit, deliver, and ask: what mistakes am I making?</em>" Spread it across twenty people; two say yes; ignore the rest.</p></div>
+  <div class="card"><div class="card-icon">🧑‍💼</div><h4>2 · Human as an Interface</h4><p>A teammate who "doesn't apply his brain" — just transcribes a leader, runs it through Claude, returns the output. The leader thinks he's brilliant.</p></div>
+  <div class="card"><div class="card-icon">📓</div><h4>3 · The impossibility list</h4><p>Log every failure with its prompt. Run a post-mortem; convert repeat failures into skills. Re-test in three months — the models keep improving.</p></div>
+</div>
+
+<p>The second move deserves its own spotlight, because it answers the "but executives won't type prompts" objection so neatly. Anand runs a small innovation team; one member, Pavan, has a job title Anand invented:</p>
+
+<blockquote>
+  <p>My instructions to him: <strong>"Do not apply your brain. You don't know sales, you don't know the clients — you're literally fresh out of college."</strong> Transcribe what the leader says. Put it into Claude. Take the output, give it back. A week later the leader says: "Anand, this guy is so good — where did you find him?"</p>
+  <cite>— Anand, on "Human as an Interface"</cite>
+</blockquote>
+
+<p>The trick: a person who can't second-guess the model is the perfect conduit. <span class="q-big">"He is very comfortable saying yes to everything; he has no idea what is possible."</span> Claude infers intent; the human carries the relationship. The agent is brought "to the table" without anyone having to type.</p>
+
+<p>Then two more audience stories arrived — and they pointed at the richest seam of all. One company asked: <em>are there employees who are also vendors?</em> Same phone numbers, same email IDs — caught in three days, not the month they'd feared. Another traced undeclared relatives via shared ZIP codes.</p>
+
+<blockquote>
+  <p>What people often don't explore is <strong>cross-domain</strong> stuff. Vendors — that's procurement. Employees — that's HR. Once you start connecting across, it becomes fantastic.</p>
+  <cite>— Anand, on where the gold is buried</cite>
+</blockquote>
+
+
+<h2><span class="section-num">Section 10 · The Mirror</span>The audience becomes the dataset</h2>
+
+<p>For the finale, Anand did the most recursive thing possible. He took the room's own poll responses — the numbers they'd typed minutes earlier — pasted them into Claude with almost no context, and ran a live analysis in front of them. <span class="q-big">"The survey responses are data. We are analyzing it live. I'm not preparing the data. I'm just telling it: get the job done."</span></p>
+
+<p>This, he noted, is the real meaning of "bringing agents to the table." Not a talking robot. Just one person — even someone who knows nothing — transcribing a meeting and feeding it through. <em>"Imagine doing this in a board meeting."</em></p>
+
+<p>The candor extended to the demo's own risk. When he asked Claude for punchy lines to read aloud, he warned the room first:</p>
+
+<blockquote>
+  <p>How often has it happened that Claude gives you stuff that — when you tell it to read out — it totally messes up? <em>[Audience: "All the time."]</em> Yeah. That's just what happened to me.</p>
+  <cite>— Anand, modelling how to fail in public gracefully</cite>
+</blockquote>
+
+<p>But then it found the thing. The real insight wasn't in any single answer — it was in a <strong>contradiction</strong> sitting across two questions.</p>
+
+<div class="stat-band">
+  <div class="stat-inner">
+    <div class="stat"><div class="stat-num">40%</div><div class="stat-label">Median guess: share of data<br>agents can use <em>today</em></div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Of the named blockers were<br><em>data-stack</em> problems</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label">People who said the<br><em>agents</em> weren't good enough</div></div>
+  </div>
+</div>
+
+<p>The room had guessed, on median, that 40% of their data was agent-ready. Then, asked what was blocking deployment, they listed: <em>broken data, data quality, unstructured data, siloed institutional knowledge, access issues, missing SOPs, data security.</em> Every single blocker was a data-stack problem. Not one person blamed the model.</p>
+
+<blockquote>
+  <p>Not one of you said the agents weren't good enough. <strong>Not one.</strong> The bottleneck didn't disappear — it <em>moved.</em> It moved into your data stack.</p>
+  <cite>— Claude's punch line, delivered by Anand</cite>
+</blockquote>
+
+<p>One respondent crystallised the paradox in a single person: he answered <strong>100% of our data is usable</strong> — then named <strong>"data security"</strong> as his blocker. As the analysis put it: <em>"the optimism and the pain are living in the same person. That person is every company in this room."</em></p>
+
+<p>And the spread — that 60× scatter from the opening — got its meaning at last. It wasn't that some people were right and some wrong. It was that nobody actually knows anymore:</p>
+
+<blockquote>
+  <p>The reconciliation isn't being estimated like an engineering task. It's a <strong>vibe.</strong> Half the room is quoting a sprint, the other half a quarter — and nobody flinched that someone was ten-X off.</p>
+  <cite>— from the live survey analysis</cite>
+</blockquote>
+
+<p>For the five people who answered the reconciliation question both before and after the demo, the total estimate fell 56% — from 25 days to 11. But the movement was one-directional and telling: the optimists didn't budge; the skeptics capitulated. <span class="tip">VD went from 10 days to 1<span class="tip-body">Of the before/after pairs: VD 10→1, VV 10→5, and three low estimators (1, 3, 1) held steady. The demo didn't persuade the believers — it converted the doubters down to where the believers already were.</span></span>. <em>"That's not persuasion — that's a floor dropping out."</em></p>
+
+<div class="embed-wrap" style="background:var(--accent2);">
+  <div class="embed-inner" style="max-width:760px;text-align:center;">
+    <div class="embed-label">Read The Live Analysis</div>
+    <p style="color:#dfe8df;font-family:var(--font-body);font-size:1.05rem;line-height:1.6;margin-bottom:1.4rem;">
+      Claude worked through all 62 responses (15 people, 7 questions) using Anand's <a href="https://github.com/sanand0/data-analysis" target="_blank" rel="noopener" style="color:#f7eccf;">data-analysis skill</a> — a long prompt that tells it how he likes data analyzed — and surfaced the spread, the collapse, and the paradox.
+    </p>
+    <a class="quick-link gold" id="survey-btn2" style="font-size:.8rem;">📈 Open the survey analysis</a>
+  </div>
+</div>
+
+<p>Anand chose not to re-poll the room on whether their "40%" had shifted. He left it as a question to carry home — alongside the closing questions on the form (which asked, again, how many days they'd now quote a team, and what no-risk move they'd try this week). His thesis, gently planted:</p>
+
+<blockquote>
+  <p>My thesis is maybe that percentage is not as high as you think. The model is no longer the hard part — you just proved it to yourselves. The hard part is the thing you've been deferring for ten years, and <strong>the agents have stopped letting you defer it.</strong></p>
+  <cite>— Anand, closing the loop</cite>
+</blockquote>
+
+</article>
+
+<div class="takeaways">
+  <div class="takeaways-inner">
+    <h2>Top Takeaways</h2>
+    <div class="takeaways-sub">What to carry out of the room</div>
+    <div class="takeaway-grid">
+    <div class="takeaway"><div class="takeaway-num">1</div><div class="takeaway-text"><strong>Dashboards are for humans; data is for agents.</strong> Stop pre-building joins and aggregates the agent can assemble on the fly. Let the <em>question</em> shape the data — not the data type.</div></div>
+    <div class="takeaway"><div class="takeaway-num">2</div><div class="takeaway-text"><strong>The week-to-a-month job is now a six-minute job.</strong> A $20 ChatGPT reconciled three messy customer masters — with confidence scores, a 0.8 human-review threshold, and provenance — in 6m 32s.</div></div>
+    <div class="takeaway"><div class="takeaway-num">3</div><div class="takeaway-text"><strong>The power isn't acceleration — it's enablement.</strong> The real win is the one-off checks and audits nobody bothered to attempt before, because they finally cost almost nothing.</div></div>
+    <div class="takeaway"><div class="takeaway-num">4</div><div class="takeaway-text"><strong>Privacy and verifiability are the same move.</strong> A local MCP server with a hard restriction lets agents loop on metadata, run deterministic scripts, and never touch the raw records. "Cortex is allowed" beats "Codex is not."</div></div>
+    <div class="takeaway"><div class="takeaway-num">5</div><div class="takeaway-text"><strong>Discovery is now a solved problem too.</strong> Point an agent at a 47,000-document catalog and ask it to find what you don't know. It builds the schema — even a knowledge graph — by itself.</div></div>
+    <div class="takeaway"><div class="takeaway-num">6</div><div class="takeaway-text"><strong>Software is a depreciating asset; price the output.</strong> Code is becoming ephemeral exhaust. Sell insights and actions — an email saying "do this, here's the benefit, here's the evidence" — not dashboards.</div></div>
+    <div class="takeaway"><div class="takeaway-num">7</div><div class="takeaway-text"><strong>Augment the whole chain — even the strategy consultant.</strong> An agent reproduced 12 of 15 recommendations from a two-and-a-half-month consulting engagement. At token cost, "build then pitch" beats "pitch then build."</div></div>
+    <div class="takeaway"><div class="takeaway-num">8</div><div class="takeaway-text"><strong>Use a portfolio, a human interface, and an impossibility list.</strong> Don't commit — deliver and ask for feedback. Let a "Human as an Interface" carry the relationship. Log failures and re-test in three months.</div></div>
+    <div class="takeaway"><div class="takeaway-num">9</div><div class="takeaway-text"><strong>The bottleneck moved from the model to your data.</strong> The room believed ~40% of its data was ready, yet every blocker named was a data-stack problem. Both beliefs can't be true.</div></div>
+    <div class="takeaway"><div class="takeaway-num">10</div><div class="takeaway-text"><strong>Try it — there's no harm.</strong> Toss agents at datasets. Out of a dozen people, two show interest and one converts. That's one more than zero, and it spreads. Run it in parallel with your SDLC.</div></div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <p><strong>The Data Stack for an Agentic World</strong> — a one-hour session by <a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand S</a>, LLM Psychologist at <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a>, for the <a href="https://eqtgroup.com/" target="_blank" rel="noopener">EQT</a> India AI &amp; Cyber Summit, Mumbai · 16 June 2026.</p>
+    <p>
+      <a id="transcript-btn3">📄 Transcript</a> ·
+      <a href="https://files.s-anand.net/pages/customer-masters-data/" target="_blank" rel="noopener">📊 Dataset &amp; prompt</a> ·
+      <a id="chatgpt-btn2">💬 ChatGPT run</a> ·
+      <a id="survey-btn3">📈 Survey analysis</a> ·
+      <a href="https://github.com/sanand0/talks/releases/download/talks/2026-06-16-eqt-data-stack-for-agents.opus" target="_blank" rel="noopener">🎧 Audio</a>
+    </p>
+    <p class="footer-meta">Live poll collected via a form at forms.s-anand.net/datastack (now closed). All numbers are from the session itself.</p>
+  </div>
+</footer>
+
+<!-- Modals -->
+<div class="modal" id="transcript-modal">
+  <div class="modal-box">
+    <div class="modal-head"><h3>📄 Full Transcript</h3><button class="modal-close" data-close="transcript-modal">✕ Close</button></div>
+    <div class="modal-body" id="transcript-body"><p>Loading…</p></div>
+  </div>
+</div>
+<div class="modal" id="chatgpt-modal">
+  <div class="modal-box">
+    <div class="modal-head"><h3>💬 The ChatGPT Reconciliation</h3><button class="modal-close" data-close="chatgpt-modal">✕ Close</button></div>
+    <div class="modal-body" id="chatgpt-body"><p>Loading…</p></div>
+  </div>
+</div>
+<div class="modal" id="survey-modal">
+  <div class="modal-box">
+    <div class="modal-head"><h3>📈 Live Survey Analysis (Claude)</h3><button class="modal-close" data-close="survey-modal">✕ Close</button></div>
+    <div class="modal-body" id="survey-body"><p>Loading…</p></div>
+  </div>
+</div>
+
+<script>
+// progress bar
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+});
+
+// minimal markdown -> html
+function mdToHtml(text){
+  text = text.replace(/^---\n[\s\S]*?\n---\n/, '');
+  const lines = text.split('\n');
+  let html = '', i = 0;
+  function inline(s){
+    return s
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/`([^`]+)`/g,'<code>$1</code>')
+      .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+      .replace(/\*([^*]+)\*/g,'<em>$1</em>')
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+  }
+  while(i < lines.length){
+    let line = lines[i];
+    if(/^\s*$/.test(line)){ i++; continue; }
+    if(/^<details/.test(line) || /^<\/details>/.test(line) || /^<summary/.test(line)){
+      html += line; i++; continue;
+    }
+    if(/^#{1,6}\s/.test(line)){
+      const level = line.match(/^#+/)[0].length;
+      html += '<h'+level+'>'+inline(line.replace(/^#+\s/,''))+'</h'+level+'>'; i++; continue;
+    }
+    if(/^>\s?/.test(line)){
+      let q=''; while(i<lines.length && /^>\s?/.test(lines[i])){ q+=' '+lines[i].replace(/^>\s?/,''); i++; }
+      html += '<blockquote><p>'+inline(q.trim())+'</p></blockquote>'; continue;
+    }
+    if(/^---+\s*$/.test(line)){ html += '<hr>'; i++; continue; }
+    if(line.includes('|') && i+1 < lines.length && /^\s*\|?[\s:|-]+\|?\s*$/.test(lines[i+1])){
+      const head = line.split('|').map(c=>c.trim()).filter(c=>c.length);
+      html += '<table><thead><tr>'+head.map(c=>'<th>'+inline(c)+'</th>').join('')+'</tr></thead><tbody>';
+      i += 2;
+      while(i<lines.length && lines[i].includes('|')){
+        const cells = lines[i].split('|').map(c=>c.trim());
+        if(cells.length && cells[0]==='') cells.shift();
+        if(cells.length && cells[cells.length-1]==='') cells.pop();
+        html += '<tr>'+cells.map(c=>'<td>'+inline(c)+'</td>').join('')+'</tr>'; i++;
+      }
+      html += '</tbody></table>'; continue;
+    }
+    if(/^\s*[-*]\s/.test(line)){
+      html += '<ul>';
+      while(i<lines.length && /^\s*[-*]\s/.test(lines[i])){ html += '<li>'+inline(lines[i].replace(/^\s*[-*]\s/,''))+'</li>'; i++; }
+      html += '</ul>'; continue;
+    }
+    if(/^\s*\d+\.\s/.test(line)){
+      html += '<ol>';
+      while(i<lines.length && /^\s*\d+\.\s/.test(lines[i])){ html += '<li>'+inline(lines[i].replace(/^\s*\d+\.\s/,''))+'</li>'; i++; }
+      html += '</ol>'; continue;
+    }
+    let para = line; i++;
+    while(i<lines.length && !/^\s*$/.test(lines[i]) && !/^#{1,6}\s/.test(lines[i]) && !/^\s*[-*]\s/.test(lines[i]) && !/^\s*\d+\.\s/.test(lines[i]) && !/^>\s?/.test(lines[i]) && !lines[i].includes('|') && !/^<details/.test(lines[i]) && !/^<\/details>/.test(lines[i])){ para += ' '+lines[i]; i++; }
+    html += '<p>'+inline(para)+'</p>';
+  }
+  return html;
+}
+
+function setupModal(modalId, bodyId, srcFile, btnIds){
+  const modal = document.getElementById(modalId);
+  const body = document.getElementById(bodyId);
+  let loaded = false;
+  async function open(){
+    modal.classList.add('open');
+    if(!loaded){
+      loaded = true;
+      try{
+        const res = await fetch(srcFile);
+        body.innerHTML = mdToHtml(await res.text());
+      }catch(e){
+        body.innerHTML = '<p>Could not load. <a href="'+srcFile+'" target="_blank" rel="noopener">Open directly</a>.</p>';
+        loaded = false;
+      }
+    }
+  }
+  btnIds.forEach(id => { const el = document.getElementById(id); if(el) el.addEventListener('click', e => { e.preventDefault(); open(); }); });
+}
+
+setupModal('transcript-modal','transcript-body','transcript.md',['transcript-btn','transcript-btn2','transcript-btn3']);
+setupModal('chatgpt-modal','chatgpt-body','reconciliation-chatgpt.md',['chatgpt-btn','chatgpt-btn2','chatgpt-btn3']);
+setupModal('survey-modal','survey-body','survey-analysis-claude.md',['survey-btn','survey-btn2','survey-btn3']);
+
+document.querySelectorAll('.modal-close').forEach(btn => {
+  btn.addEventListener('click', () => document.getElementById(btn.dataset.close).classList.remove('open'));
+});
+document.querySelectorAll('.modal').forEach(modal => {
+  modal.addEventListener('click', e => { if(e.target===modal) modal.classList.remove('open'); });
+});
+document.addEventListener('keydown', e => {
+  if(e.key==='Escape') document.querySelectorAll('.modal.open').forEach(m => m.classList.remove('open'));
+});
+</script>
+</body>
+</html>

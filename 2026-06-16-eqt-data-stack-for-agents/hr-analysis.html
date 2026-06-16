@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Coding Agents · Discover → Organize → Analyze</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20fill='%230E1A2B'%20width='64'%20height='64'%20rx='12'/%3E%3Cpath%20d='M36 8 L20 36 L31 36 L26 56 L46 26 L34 26 Z' fill='%23F15A22'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+:root{
+  --orange:#F15A22;--orange-d:#D6440F;--ink:#1A1D21;--muted:#5C636B;
+  --bg:#FFFFFF;--panel:#F5F6F8;--navy:#0E1A2B;--line:#E4E7EC;
+  --head:'Montserrat','Segoe UI',Arial,sans-serif;
+  --body:'Inter','Segoe UI',Arial,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --shadow:0 10px 40px rgba(14,26,43,.10);
+}
+[data-theme="dark"]{
+  --ink:#EAEDF2;--muted:#9AA4B0;--bg:#0B1320;--panel:#13203A;
+  --navy:#060D18;--line:#22304a;--shadow:0 10px 40px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--body);background:var(--navy);color:var(--ink);overflow:hidden}
+#deck{position:fixed;inset:0;display:grid;place-items:center;
+  background:radial-gradient(1200px 700px at 80% -10%, rgba(241,90,34,.10), transparent 60%),var(--navy);}
+.stage{position:relative;width:min(96vw,1280px);height:min(96vh,720px);aspect-ratio:16/9;
+  background:var(--bg);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;}
+.slide{position:absolute;inset:0;padding:50px 64px 60px;display:none;flex-direction:column;opacity:0;}
+.slide.active{display:flex;animation:fade .5s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide.active .reveal{animation:rise .55s cubic-bezier(.2,.7,.2,1) both}
+.slide.active .reveal:nth-child(1){animation-delay:.05s}
+.slide.active .reveal:nth-child(2){animation-delay:.13s}
+.slide.active .reveal:nth-child(3){animation-delay:.21s}
+.slide.active .reveal:nth-child(4){animation-delay:.29s}
+.slide.active .reveal:nth-child(5){animation-delay:.37s}
+.slide.active .reveal:nth-child(6){animation-delay:.45s}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.kicker{font-family:var(--head);font-weight:700;font-size:14px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--orange);display:flex;align-items:center;gap:9px}
+.kicker i{width:18px;height:18px}
+h1.title{font-family:var(--head);font-weight:800;letter-spacing:-.5px;line-height:1.08;font-size:32px;
+  color:var(--ink);margin-top:11px;max-width:1090px}
+.rule{height:4px;width:78px;background:var(--orange);border-radius:3px;margin:14px 0 18px}
+.subtitle{color:var(--muted);font-size:18px;font-weight:500;max-width:980px;line-height:1.4}
+.slide p{line-height:1.45}
+
+.body{flex:1;display:flex;flex-direction:column;min-height:0}
+.cols{display:grid;gap:20px;flex:1;min-height:0}
+.cols.c2{grid-template-columns:1fr 1fr}
+.cols.c3{grid-template-columns:repeat(3,1fr)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;
+  display:flex;flex-direction:column;gap:7px}
+.card h3{font-family:var(--head);font-size:16px;font-weight:700;display:flex;align-items:center;gap:9px;color:var(--ink)}
+.card h3 i{width:19px;height:19px;color:var(--orange);flex:none}
+.card p{font-size:14px;color:var(--muted)}
+.mono{font-family:var(--mono);font-size:12.5px}
+
+.stat{font-family:var(--head);font-weight:800;color:var(--ink);line-height:1}
+.stat .big{font-size:42px;display:block;color:var(--orange)}
+.stat .lbl{font-family:var(--body);font-weight:500;font-size:13px;color:var(--muted);margin-top:5px;display:block}
+
+/* prompt — given prominence */
+.prompt{background:var(--navy);color:#EAEDF2;border-radius:12px;padding:18px 22px;border-left:5px solid var(--orange);}
+[data-theme="dark"] .prompt{background:#04101f}
+.prompt .ptag{font-family:var(--head);font-size:11.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--orange);display:flex;align-items:center;gap:7px;margin-bottom:9px}
+.prompt .ptag i{width:15px;height:15px}
+.prompt .ptxt{font-family:var(--body);font-size:18.5px;line-height:1.5;color:#E6ECF4;font-style:italic}
+.prompt .ptxt b{color:#fff;font-style:normal}
+.prompt .ptxt code{font-family:var(--mono);font-size:16px;color:#f0a878;font-style:normal}
+
+.code{background:var(--navy);border-radius:11px;padding:16px 20px;overflow:auto;font-family:var(--mono);
+  font-size:12.5px;line-height:1.6;color:#cdd6e4;white-space:pre;tab-size:2}
+[data-theme="dark"] .code{background:#04101f}
+.code .k{color:#7fb1ff}.code .s{color:#f0a878}.code .n{color:#7fe3b0}.code .c{color:#69788c}.code .hl{color:var(--orange);font-weight:600}
+
+.tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--head);font-weight:700;font-size:12px;
+  background:rgba(241,90,34,.12);color:var(--orange-d);padding:5px 11px;border-radius:20px}
+[data-theme="dark"] .tag{background:rgba(241,90,34,.18);color:var(--orange)}
+.tag i{width:14px;height:14px}
+.tag.time{background:rgba(14,26,43,.07);color:var(--muted)}
+[data-theme="dark"] .tag.time{background:rgba(255,255,255,.06);color:var(--muted)}
+
+ul.clean{list-style:none;display:flex;flex-direction:column;gap:10px}
+ul.clean li{display:flex;gap:11px;font-size:15px;color:var(--ink);line-height:1.4}
+ul.clean li i{width:19px;height:19px;color:var(--orange);flex:none;margin-top:2px}
+
+.flow{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:8px 12px;
+  font-family:var(--head);font-weight:700;font-size:12.5px;color:var(--ink);display:flex;gap:7px;align-items:center}
+.chip .v{color:var(--orange);font-size:15px}
+.chip i{width:15px;height:15px;color:var(--muted)}
+.flow .ar{color:var(--orange)}.flow .ar i{width:18px;height:18px}
+
+.pipe{display:flex;align-items:stretch;gap:0}
+.pstep{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;
+  display:flex;flex-direction:column;gap:8px}
+.pstep .num{font-family:var(--head);font-weight:800;font-size:13px;color:#fff;background:var(--orange);
+  width:28px;height:28px;border-radius:8px;display:grid;place-items:center}
+.pstep h3{font-family:var(--head);font-size:18px;font-weight:800}
+.pstep p{font-size:13px;color:var(--muted)}
+.parrow{display:grid;place-items:center;width:38px;color:var(--orange)}
+.parrow i{width:24px;height:24px}
+
+.bar{height:9px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar > i{display:block;height:100%;background:linear-gradient(90deg,var(--orange),var(--orange-d));border-radius:6px}
+.barrow{display:grid;grid-template-columns:130px 1fr 52px;gap:11px;align-items:center;font-size:13px}
+.barrow .nm{font-family:var(--head);font-weight:700;color:var(--ink)}
+.barrow .pc{font-family:var(--mono);text-align:right;color:var(--orange-d);font-weight:600}
+[data-theme="dark"] .barrow .pc{color:var(--orange)}
+
+.glegend{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:6px}
+.gl{display:flex;align-items:center;gap:8px;font-family:var(--head);font-weight:600;font-size:13px;color:var(--ink)}
+.gl b{color:var(--orange)}
+.gl .dot{width:14px;height:14px;border-radius:50%;flex:none}
+.gl .edge{width:24px;height:0;border-top:2px solid var(--orange);opacity:.55;display:inline-block}
+.gwrap{flex:1;min-height:0;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px;display:flex}
+.note{font-size:12.5px;color:var(--muted);font-style:italic}
+.big-quote{font-family:var(--head);font-weight:700;font-size:18px;line-height:1.35;color:var(--ink)}
+.big-quote .hl{color:var(--orange)}
+
+/* schema-on-the-fly */
+.schema{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:center;flex:1}
+.heap{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}
+.fcard{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-family:var(--mono);
+  font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:3px;transform:rotate(var(--r,0deg))}
+.fcard b{font-family:var(--head);font-size:11px;color:var(--ink)}
+.picker{display:flex;flex-direction:column;gap:9px}
+.opt{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:10px;padding:10px 13px;
+  font-family:var(--head);font-weight:700;font-size:13.5px;color:var(--muted);background:var(--bg)}
+.opt i{width:18px;height:18px;flex:none}
+.opt.pick{border-color:var(--orange);color:var(--ink);background:rgba(241,90,34,.07);box-shadow:0 4px 16px rgba(241,90,34,.14)}
+.opt.pick i{color:var(--orange)}
+.opt small{font-family:var(--body);font-weight:500;font-size:11.5px;color:var(--muted);display:block;margin-top:1px}
+
+.foot{position:absolute;left:64px;right:64px;bottom:20px;display:flex;justify-content:space-between;align-items:center;
+  font-size:11.5px;color:var(--muted);font-family:var(--head);font-weight:600;letter-spacing:.3px}
+.foot .logo{display:flex;align-items:center;gap:6px;color:var(--ink);font-weight:800;font-size:14px}
+.foot .logo svg{width:16px;height:16px}
+.pageno{position:absolute;top:46px;right:64px;font-family:var(--head);font-weight:800;font-size:13px;color:var(--line)}
+[data-theme="dark"] .pageno{color:#2c3c58}
+.pageno b{color:var(--orange)}
+
+.cover{justify-content:center;background:radial-gradient(900px 600px at 88% 12%, rgba(241,90,34,.16), transparent 55%),
+  linear-gradient(160deg,var(--navy),#0a1626);color:#fff}
+.cover *{color:#fff}.cover .kicker{color:var(--orange)}
+.cover h1{font-size:50px;max-width:1000px;letter-spacing:-1px}
+.cover .subtitle{color:#b9c4d2;font-size:21px;max-width:880px}
+.cover .meta{display:flex;gap:26px;margin-top:32px;font-family:var(--head);font-weight:600;font-size:14px;color:#9fb0c4}
+.cover .meta b{color:#fff}
+.cover .brand{position:absolute;top:46px;left:64px;display:flex;align-items:center;gap:9px;font-family:var(--head);font-weight:800;font-size:22px}
+.cover .brand .tm{font-size:11px;vertical-align:top;color:#9fb0c4}
+.spark{width:26px;height:30px}
+
+#ctrl{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;align-items:center;
+  background:rgba(10,18,30,.7);backdrop-filter:blur(8px);padding:7px 12px;border-radius:30px;z-index:20;border:1px solid rgba(255,255,255,.08)}
+#ctrl button{background:transparent;border:none;color:#cdd6e4;cursor:pointer;width:30px;height:30px;border-radius:50%;display:grid;place-items:center}
+#ctrl button:hover{background:rgba(255,255,255,.12);color:#fff}
+#ctrl button i{width:17px;height:17px}
+#counter{font-family:var(--mono);font-size:12px;color:#cdd6e4;min-width:48px;text-align:center}
+#progress{position:fixed;top:0;left:0;height:3px;background:var(--orange);z-index:30;transition:width .35s}
+.navzone{position:absolute;top:0;bottom:60px;width:16%;cursor:pointer;z-index:5}
+.navzone.left{left:0}.navzone.right{right:0}
+.hint{position:fixed;bottom:16px;right:18px;font-family:var(--head);font-size:11px;color:#7c8aa0;z-index:20}
+@media (max-width:680px){
+  .slide{padding:28px 24px 54px}.foot{left:24px;right:24px}.pageno{right:24px}
+  h1.title{font-size:23px}.cover h1{font-size:30px}.cols.c2,.cols.c3{grid-template-columns:1fr;overflow:auto}
+  .pipe{flex-direction:column}.parrow{transform:rotate(90deg);width:auto;height:28px}.schema{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="deck"><div class="stage" id="stage">
+
+  <!-- ===== 1 · COVER ===== -->
+  <section class="slide cover active">
+    <div class="kicker reveal"><i data-lucide="sparkles"></i>AI Coding Agents · Live Demonstration</div>
+    <h1 class="reveal">AI coding agents discover, organize, and analyze enterprise data&nbsp;&mdash; on the fly</h1>
+    <div class="rule reveal"></div>
+    <p class="subtitle reveal">From a chaotic Google Drive to board-ready people-operations insights in one conversation &mdash; no pre-built pipelines, schemas, or warehouses.</p>
+    <div class="meta reveal">
+      <span>Presenter&nbsp; <b>Anand S</b></span>
+      <span>Agent&nbsp; <b>Codex · GPT-5.4</b></span>
+      <span>Date&nbsp; <b>16 July 2026</b></span>
+    </div>
+    <div class="foot"><span></span><span>Anonymized</span></div>
+  </section>
+
+  <!-- ===== 2 · BIG PICTURE (merged) ===== -->
+  <section class="slide">
+    <div class="kicker reveal"><i data-lucide="git-commit-horizontal"></i>The story in one line</div>
+    <h1 class="title reveal">Four plain-English prompts turned 45,547 scattered files into board-ready insights &mdash; by discovering, organizing, then analyzing on the fly</h1>
+    <div class="rule reveal"></div>
+    <div class="body">
+      <div class="flow reveal" style="margin-bottom:18px;justify-content:center">
+        <div class="chip"><i data-lucide="hard-drive"></i><span class="v">45,547</span> files</div>
+        <span class="ar"><i data-lucide="arrow-right"></i></span>
+        <div class="chip"><i data-lucide="boxes"></i><span class="v">1,011</span> auto-clusters</div>
+        <span class="ar"><i data-lucide="arrow-right"></i></span>
+        <div class="chip"><i data-lucide="filter"></i><span class="v">25</span> Q1 datasets</div>
+        <span class="ar"><i data-lucide="arrow-right"></i></span>
+        <div class="chip"><i data-lucide="folder-check"></i><span class="v">49</span> files · 1 chosen</div>
+        <span class="ar"><i data-lucide="arrow-right"></i></span>
+        <div class="chip"><i data-lucide="lightbulb"></i><span class="v">3</span> insight stories</div>
+      </div>
+      <div class="pipe reveal">
+        <div class="pstep"><span class="num">1</span><h3>Discover</h3>
+          <p>Wrote its own crawler, inventoried every Drive file, self-clustered them &mdash; nothing pre-catalogued.</p></div>
+        <div class="parrow"><i data-lucide="chevron-right"></i></div>
+        <div class="pstep"><span class="num">2</span><h3>Organize</h3>
+          <p>Read the workbooks and built the right data model for the question. No tables pre-created.</p></div>
+        <div class="parrow"><i data-lucide="chevron-right"></i></div>
+        <div class="pstep"><span class="num">3</span><h3>Analyze</h3>
+          <p>Proposed the questions worth asking, then delivered non-obvious, actionable findings with evidence.</p></div>
+      </div>
+      <p class="note reveal" style="margin-top:16px;text-align:center">Every step is code the agent wrote during the conversation &mdash; so the whole path is repeatable, auditable, and re-runnable in under a minute.</p>
+    </div>
+    <div class="pageno reveal">02 / 08</div>
+  </section>
+
+  <!-- ===== 3 · DISCOVER ===== -->
+  <section class="slide">
+    <div class="kicker reveal"><i data-lucide="search"></i>Prompt 1 · Discover</div>
+    <h1 class="title reveal">A single prompt produced a self-organizing catalog of every accessible Drive file</h1>
+    <div class="rule reveal"></div>
+    <div class="body cols c2" style="align-items:stretch">
+      <div class="reveal" style="display:flex;flex-direction:column;gap:14px;min-height:0">
+        <div class="prompt"><div class="ptag"><i data-lucide="message-square"></i>What I prompted</div>
+          <div class="ptxt">"Using <code>gws drive</code> explore datasets accessible to me, with metadata. Write a <b>repeatable script</b> that updates <b>incrementally</b> &mdash; only new / modified files &mdash; and stores the output in a structured <code>datasets.json</code>."</div></div>
+        <ul class="clean">
+          <li><i data-lucide="check"></i><span>Codex wrote <span class="mono">inventory_drive_datasets.py</span>, then ran it &mdash; resumable, checkpointing into <span class="mono">.datasets-state.json</span> after each page.</span></li>
+          <li><i data-lucide="check"></i><span>It chose what metadata mattered &mdash; ownership, recency, type, access path &mdash; and grouped files into datasets itself.</span></li>
+        </ul>
+        <div style="display:flex;gap:9px;flex-wrap:wrap">
+          <span class="tag time"><i data-lucide="cloud-download"></i>First run: Drive crawl, API-bound (one-time)</span>
+          <span class="tag time"><i data-lucide="repeat"></i>Cached re-run: ~7.2s</span>
+        </div>
+      </div>
+      <div class="reveal" style="display:flex;flex-direction:column;gap:9px;min-height:0">
+        <div class="tag" style="align-self:flex-start"><i data-lucide="braces"></i>What Codex produced &mdash; one file record in datasets.json</div>
+        <div class="code" style="flex:1">{
+  <span class="k">"name"</span>: <span class="s">"demo-sites-mgn"</span>,
+  <span class="k">"mime_type"</span>: <span class="s">"…google-apps.spreadsheet"</span>,
+  <span class="k">"size"</span>: <span class="n">87892</span>,
+  <span class="k">"modified_time"</span>: <span class="s">"2026-03-24T08:37:26Z"</span>,
+  <span class="k">"owners"</span>: [
+    { <span class="k">"email"</span>: <span class="s">"…@domain.com"</span> }
+  ],
+  <span class="k">"accessible_via"</span>: [
+    <span class="s">"shared_with_me"</span>
+  ],
+  <span class="k">"web_view_link"</span>: <span class="s">"https://docs.google.com/…"</span>
+}
+<span class="c">// + a "datasets" array grouping files into clusters</span></div>
+      </div>
+    </div>
+    <div class="pageno reveal">03 / 08</div>
+  </section>
+
+  <!-- ===== 4 · SCORE ===== -->
+  <section class="slide">
+    <div class="kicker reveal"><i data-lucide="sliders-horizontal"></i>Prompt 2 · Score &amp; rank</div>
+    <h1 class="title reveal">"Which are promising?" made the agent invent its own relevance formula and rank the top datasets</h1>
+    <div class="rule reveal"></div>
+    <div class="body cols c2">
+      <div class="reveal" style="display:flex;flex-direction:column;gap:14px;min-height:0">
+        <div class="prompt"><div class="ptag"><i data-lucide="message-square"></i>What I prompted</div>
+          <div class="ptxt">"Add a <b>relevance score</b> using these rules of thumb &mdash; recency, size, transactional vs. static, project richness. A dataset is a <b>logical collection</b>, not one row. Re-run without re-fetching."</div></div>
+        <div class="card">
+          <h3><i data-lucide="function-square"></i>The weighting Codex chose itself</h3>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:5px">
+            <div class="barrow"><span class="nm">Recency</span><div class="bar"><i style="width:30%"></i></div><span class="pc">0.30</span></div>
+            <div class="barrow"><span class="nm">Transactional</span><div class="bar"><i style="width:25%"></i></div><span class="pc">0.25</span></div>
+            <div class="barrow"><span class="nm">Size proxy</span><div class="bar"><i style="width:20%"></i></div><span class="pc">0.20</span></div>
+            <div class="barrow"><span class="nm">Project richness</span><div class="bar"><i style="width:15%"></i></div><span class="pc">0.15</span></div>
+            <div class="barrow"><span class="nm">Data density</span><div class="bar"><i style="width:10%"></i></div><span class="pc">0.10</span></div>
+          </div>
+          <p class="note" style="margin-top:7px">Recomputed from cache &mdash; <span class="mono">--skip-refresh</span>, no second Drive call. A later filter (domain · 2026) narrowed 1,011 clusters to 25.</p>
+        </div>
+      </div>
+      <div class="reveal" style="display:flex;flex-direction:column;gap:9px;min-height:0">
+        <div class="tag" style="align-self:flex-start"><i data-lucide="braces"></i>One scored dataset in datasets_detailed.json</div>
+        <div class="code" style="flex:1">{
+  <span class="k">"label"</span>: <span class="s">"employee + exit mastersheet"</span>,
+  <span class="k">"relevance_score"</span>: <span class="hl">82.7</span>,
+  <span class="k">"score_breakdown"</span>: {
+    <span class="k">"recency"</span>: <span class="n">100.0</span>,
+    <span class="k">"transactional_signal"</span>: <span class="n">41.0</span>,
+    <span class="k">"data_density"</span>: <span class="n">100.0</span>,
+    <span class="k">"size_proxy"</span>: <span class="n">61.7</span>
+  },
+  <span class="k">"suggested_analyses"</span>: [
+    {
+      <span class="k">"analysis"</span>: <span class="s">"Build an offer→joining funnel…"</span>,
+      <span class="k">"why_useful"</span>: <span class="s">"Reveals where attrition happens"</span>
+    }
+  ]
+}</div>
+      </div>
+    </div>
+    <div class="pageno reveal">04 / 08</div>
+  </section>
+
+  <!-- ===== 5 · ORGANIZE — SCHEMA ON THE FLY ===== -->
+  <section class="slide">
+    <div class="kicker reveal"><i data-lucide="layers"></i>Organize · Schema on the fly</div>
+    <h1 class="title reveal">The agent read 49 messy workbooks and built the right data model itself &mdash; choosing the structure that fit the question</h1>
+    <div class="rule reveal"></div>
+    <div class="body">
+      <div class="schema reveal">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span class="tag" style="align-self:flex-start"><i data-lucide="files"></i>49 files · 5 clusters · no common schema</span>
+          <div class="heap">
+            <div class="fcard" style="--r:-2deg"><b>KYC Jan</b>emp id · status<br>doj · leave</div>
+            <div class="fcard" style="--r:1deg"><b>Payroll Feb</b>name · PF<br>bank · ctc</div>
+            <div class="fcard" style="--r:-1deg"><b>F&amp;F input</b>lwd · notice<br>shortfall</div>
+            <div class="fcard" style="--r:2deg"><b>Exit master</b>emp id<br>resignation</div>
+            <div class="fcard" style="--r:-1deg"><b>Onboarding</b>doj · location<br>recruiter</div>
+            <div class="fcard" style="--r:1deg"><b>SPI tracker</b>emp id · dept<br>cost code</div>
+          </div>
+          <p class="note">Different headers, different grain, different layouts in every file.</p>
+        </div>
+        <div class="parrow"><i data-lucide="chevrons-right"></i></div>
+        <div class="picker">
+          <p style="font-family:var(--head);font-weight:700;font-size:13px;color:var(--ink);margin-bottom:2px">Codex weighed candidate structures &hellip;</p>
+          <div class="opt"><i data-lucide="table"></i>One flat table<small>loses the process steps</small></div>
+          <div class="opt"><i data-lucide="line-chart"></i>Time-series<small>wrong grain — these are people, not metrics</small></div>
+          <div class="opt pick"><i data-lucide="share-2"></i>Employee-grain process graph ✓<small>joins files on <b>emp&nbsp;id</b> across intake → admin → exit</small></div>
+        </div>
+      </div>
+      <div class="flow reveal" style="margin-top:14px;gap:10px">
+        <span style="font-family:var(--head);font-weight:700;font-size:13px;color:var(--ink)">Join keys it inferred:</span>
+        <span class="chip"><span class="v">emp&nbsp;id</span> 97</span>
+        <span class="chip"><span class="v">doj</span> 94</span>
+        <span class="chip"><span class="v">location</span> 88</span>
+        <span class="chip"><span class="v">dept</span> 46</span>
+        <span class="tag time" style="margin-left:auto"><i data-lucide="timer"></i>Profiled all 49 books in ~33s</span>
+      </div>
+      <p class="note reveal" style="margin-top:10px;text-align:center">The key point: nobody handed it a schema. It picked <b>emp id</b> as the spine and modelled an employee journey &mdash; a different question would have led it to a different structure.</p>
+    </div>
+    <div class="pageno reveal">05 / 08</div>
+  </section>
+
+  <!-- ===== 6 · THE KNOWLEDGE GRAPH ===== -->
+  <section class="slide">
+    <div class="kicker reveal"><i data-lucide="share-2"></i>The model it built · a knowledge graph</div>
+    <h1 class="title reveal">Modelled as a knowledge graph, each employee is one node that links all their records across every workbook</h1>
+    <div class="rule reveal"></div>
+    <div class="body">
+      <div class="glegend reveal">
+        <span class="gl"><i class="dot" style="background:#0E1A2B;border:2px solid #F15A22"></i>Employee &mdash; join key <b>emp id</b></span>
+        <span class="gl"><i class="dot" style="background:#F15A22"></i>Process record (a file)</span>
+        <span class="gl"><i class="dot" style="background:#2F6E8F"></i>Shared attribute</span>
+        <span class="gl"><span class="edge"></span>= a row that links on emp id</span>
+        <span class="tag" style="margin-left:auto"><i data-lucide="eye-off"></i>IDs &amp; names anonymized</span>
+      </div>
+      <div class="gwrap reveal">
+        <svg viewBox="0 0 1000 470" preserveAspectRatio="xMidYMid meet" width="100%" height="100%" font-family="'Montserrat','Segoe UI',sans-serif">
+          <!-- ===== edges ===== -->
+          <g stroke-width="2" fill="none">
+            <g stroke="#F15A22" opacity="0.32">
+              <line x1="500" y1="140" x2="170" y2="80"/><line x1="500" y1="140" x2="170" y2="165"/><line x1="500" y1="140" x2="170" y2="250"/>
+              <line x1="500" y1="250" x2="170" y2="80"/><line x1="500" y1="250" x2="170" y2="165"/><line x1="500" y1="250" x2="170" y2="250"/><line x1="500" y1="250" x2="170" y2="335"/>
+              <line x1="500" y1="360" x2="170" y2="165"/><line x1="500" y1="360" x2="170" y2="250"/><line x1="500" y1="360" x2="170" y2="420"/>
+            </g>
+            <g stroke="#2F6E8F" opacity="0.34">
+              <line x1="500" y1="140" x2="830" y2="110"/><line x1="500" y1="140" x2="830" y2="200"/>
+              <line x1="500" y1="250" x2="830" y2="110"/><line x1="500" y1="250" x2="830" y2="200"/>
+              <line x1="500" y1="360" x2="830" y2="300"/><line x1="500" y1="360" x2="830" y2="390"/>
+            </g>
+          </g>
+          <!-- ===== edge data labels ===== -->
+          <g font-size="12" font-weight="600" text-anchor="middle" style="paint-order:stroke" stroke="var(--bg)" stroke-width="5" fill="var(--muted)">
+            <text x="332" y="150">Completed</text>
+            <text x="330" y="305">leave 2d</text>
+            <text x="330" y="398">F&amp;F batch</text>
+          </g>
+          <!-- ===== process nodes (orange) ===== -->
+          <g fill="#fff" font-size="14" font-weight="700" text-anchor="middle">
+            <g><rect x="40" y="61" width="130" height="38" rx="9" fill="#F15A22"/><text x="105" y="85">Onboarding</text></g>
+            <g><rect x="40" y="146" width="130" height="38" rx="9" fill="#F15A22"/><text x="105" y="170">KYC</text></g>
+            <g><rect x="40" y="231" width="130" height="38" rx="9" fill="#F15A22"/><text x="105" y="255">Payroll</text></g>
+            <g><rect x="40" y="316" width="130" height="38" rx="9" fill="#F15A22"/><text x="105" y="340">Leave</text></g>
+            <g><rect x="40" y="401" width="130" height="38" rx="9" fill="#F15A22"/><text x="105" y="425">Exit / F&amp;F</text></g>
+          </g>
+          <!-- ===== attribute nodes (steel) ===== -->
+          <g fill="#fff" font-size="13.5" font-weight="700" text-anchor="middle">
+            <g><rect x="765" y="91" width="130" height="38" rx="9" fill="#2F6E8F"/><text x="830" y="115">Client 1</text></g>
+            <g><rect x="765" y="181" width="130" height="38" rx="9" fill="#2F6E8F"/><text x="830" y="205">Hyderabad</text></g>
+            <g><rect x="765" y="281" width="130" height="38" rx="9" fill="#2F6E8F"/><text x="830" y="305">Client 2</text></g>
+            <g><rect x="765" y="371" width="130" height="38" rx="9" fill="#2F6E8F"/><text x="830" y="395">Bangalore</text></g>
+          </g>
+          <!-- ===== employee nodes (navy hub) ===== -->
+          <g text-anchor="middle">
+            <g><rect x="420" y="115" width="160" height="50" rx="11" fill="#0E1A2B" stroke="#F15A22" stroke-width="2.5"/>
+              <text x="500" y="138" fill="#fff" font-size="16" font-weight="800">EMP · A-1042</text>
+              <text x="500" y="156" fill="#F4A07C" font-size="11.5" font-weight="600">DOJ 12 Jan · joined</text></g>
+            <g><rect x="420" y="225" width="160" height="50" rx="11" fill="#0E1A2B" stroke="#F15A22" stroke-width="2.5"/>
+              <text x="500" y="248" fill="#fff" font-size="16" font-weight="800">EMP · A-1108</text>
+              <text x="500" y="266" fill="#F4A07C" font-size="11.5" font-weight="600">DOJ 19 Feb · late cut-off</text></g>
+            <g><rect x="420" y="335" width="160" height="50" rx="11" fill="#0E1A2B" stroke="#F15A22" stroke-width="2.5"/>
+              <text x="500" y="358" fill="#fff" font-size="16" font-weight="800">EMP · A-1196</text>
+              <text x="500" y="376" fill="#F4A07C" font-size="11.5" font-weight="600">LWD 03 Oct · exiting</text></g>
+          </g>
+        </svg>
+      </div>
+      <p class="note reveal" style="margin-top:8px;text-align:center">No table was pre-built. The agent stitched <b>97 sheets</b> into this graph on <b>emp id</b> &mdash; so one query can walk an employee from onboarding through payroll to exit, and shared nodes (Client 1, Hyderabad) reveal where delays cluster.</p>
+    </div>
+    <div class="pageno reveal">06 / 08</div>
+  </section>
+
+  <!-- ===== 7 · INSIGHTS (combined) ===== -->
+  <section class="slide">
+    <div class="kicker reveal"><i data-lucide="lightbulb"></i>The insights · in plain English</div>
+    <h1 class="title reveal">Three findings a leader can act on this week &mdash; the real problems were hidden behind duplicate, out-of-date spreadsheets</h1>
+    <div class="rule reveal"></div>
+    <div class="body cols c3">
+      <div class="card reveal"><h3><i data-lucide="user-plus"></i>Hiring</h3>
+        <p style="color:var(--ink);font-weight:600;font-size:14.5px">The hold-up isn't recruiting &mdash; it's paperwork after the offer.</p>
+        <p>Two teams keep the <b>same hiring list twice</b> (132 identical records). Most delay comes <b>after</b> the hire is decided &mdash; laptops, IDs, setup &mdash; and just <b>4 recruiters and the Client 1 &amp; Client 2 accounts</b> drive most of it.</p>
+        <p class="note"><i data-lucide="zap" style="width:12px;height:12px;vertical-align:middle"></i> Fix one tracker; run a 2-week sprint on those pockets.</p></div>
+      <div class="card reveal"><h3><i data-lucide="banknote"></i>Payroll</h3>
+        <p style="color:var(--ink);font-weight:600;font-size:14.5px">KYC isn't blocking pay &mdash; it's just a stale dashboard.</p>
+        <p>People were <b>paid and set up</b> while the KYC sheet still showed them missing &mdash; like a departures board that hasn't refreshed. The real risk is joiners who start <b>too close to the payroll cut-off</b>.</p>
+        <p class="note"><i data-lucide="zap" style="width:12px;height:12px;vertical-align:middle"></i> Stop trusting KYC as the readiness view; flag late joiners.</p></div>
+      <div class="card reveal"><h3><i data-lucide="door-open"></i>Exit</h3>
+        <p style="color:var(--ink);font-weight:600;font-size:14.5px">The work is happening &mdash; the tracker just went dark.</p>
+        <p>The official exit sheet <b>stopped updating in October</b>, yet 21 settlements kept moving in side files. Final settlements take a <b>median 41 days</b>, and most cases are <b>special exceptions</b>, not standard exits.</p>
+        <p class="note"><i data-lucide="zap" style="width:12px;height:12px;vertical-align:middle"></i> One live queue; separate exception cases with their own owners.</p></div>
+    </div>
+    <p class="note reveal" style="margin-top:12px;text-align:center">Each focused analysis ran in seconds once built &mdash; hiring ~2s · payroll ~3s · exit ~11s &mdash; and every claim traces back to the source workbooks.</p>
+    <div class="pageno reveal">07 / 08</div>
+  </section>
+
+  <!-- ===== 8 · TAKEAWAY ===== -->
+  <section class="slide cover">
+    <div class="kicker reveal"><i data-lucide="flag"></i>The takeaway for CIOs</div>
+    <h1 class="reveal" style="font-size:38px;max-width:1040px">AI coding agents collapse data discovery, modelling, and analysis from weeks to minutes &mdash; repeatably</h1>
+    <div class="rule reveal"></div>
+    <div class="body" style="flex:none">
+      <div class="cols c3 reveal" style="flex:none;margin-top:4px">
+        <div class="card" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12)">
+          <h3 style="color:#fff"><i data-lucide="unplug"></i>No pipeline tax</h3>
+          <p style="color:#b9c4d2">No warehouse or schema built in advance. The agent built exactly the structure each question needed.</p></div>
+        <div class="card" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12)">
+          <h3 style="color:#fff"><i data-lucide="brain"></i>Asks the right questions</h3>
+          <p style="color:#b9c4d2">It surfaced the analyses worth doing and found non-obvious, actionable findings.</p></div>
+        <div class="card" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12)">
+          <h3 style="color:#fff"><i data-lucide="rocket"></i>Idea to insight, today</h3>
+          <p style="color:#b9c4d2">Four prompts. Under an hour the first time, under a minute every time after.</p></div>
+      </div>
+      <p class="reveal" style="margin-top:26px;font-family:var(--head);font-weight:700;font-size:20px;color:#fff">The question is no longer "can we analyze this data?" &mdash; it's <span style="color:var(--orange)">"which conversation do we want to have first?"</span></p>
+    </div>
+    <div class="pageno reveal" style="color:rgba(255,255,255,.25)">08 / 08</div>
+  </section>
+
+  <div class="navzone left" onclick="go(-1)"></div>
+  <div class="navzone right" onclick="go(1)"></div>
+</div></div>
+
+<div id="ctrl">
+  <button onclick="go(-1)" title="Previous (←)"><i data-lucide="chevron-left"></i></button>
+  <span id="counter">1 / 8</span>
+  <button onclick="go(1)" title="Next (→)"><i data-lucide="chevron-right"></i></button>
+  <button onclick="toggleTheme()" title="Toggle theme (T)"><i data-lucide="moon" id="themeIcon"></i></button>
+  <button onclick="toggleFull()" title="Fullscreen (F)"><i data-lucide="maximize"></i></button>
+</div>
+<div class="hint">← → navigate · T theme · F fullscreen</div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let cur=0;
+const clamp=n=>Math.max(0,Math.min(slides.length-1,n));
+function show(n){
+  cur=clamp(n);
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  document.getElementById('counter').textContent=(cur+1)+' / '+slides.length;
+  document.getElementById('progress').style.width=((cur+1)/slides.length*100)+'%';
+  history.replaceState(null,'','#'+(cur+1));
+  if(window.lucide) lucide.createIcons();
+}
+const go=d=>show(cur+d);
+function toggleTheme(){
+  const h=document.documentElement, dark=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme',dark?'light':'dark');
+  document.getElementById('themeIcon').setAttribute('data-lucide',dark?'moon':'sun');
+  localStorage.setItem('deckTheme',dark?'light':'dark'); lucide.createIcons();
+}
+function toggleFull(){ if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen(); }
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){go(1);e.preventDefault();}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){go(-1);}
+  else if(e.key==='Home'){show(0);}else if(e.key==='End'){show(slides.length-1);}
+  else if(e.key.toLowerCase()==='t'){toggleTheme();}
+  else if(e.key.toLowerCase()==='f'){toggleFull();}
+});
+if(localStorage.getItem('deckTheme')==='dark'){document.documentElement.setAttribute('data-theme','dark');document.getElementById('themeIcon')?.setAttribute('data-lucide','sun');}
+const start=parseInt(location.hash.replace('#',''))||1;
+lucide.createIcons(); show(start-1);
+</script>
+</body>
+</html>

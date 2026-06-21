@@ -40,7 +40,7 @@ Include links from the transcript at the appropriate places as follows:
 - ChatGPT conversation for reconciliation
   - Link to ./reconciliation-chatgpt.md - it should open in a popup and render as HTML. (This is a temporary chat and there is no shareable link)
   - Include relevant quotes and snippets and summaries from the chat in the narrative.
-  - Embed the reconciliation report Excel: https://view.officeapps.live.com/op/embed.aspx?src=https://files.s-anand.net/pages/customer-masters-data/reconciliation.xlsx (full-width)
+  - Embed the reconciliation report Excel: https://view.officeapps.live.com/op/embed.aspx?src=https://files.s-anand.net/pages/customer-masters-data/reconciliation.xlsx (full-width) <!-- https://chatgpt.com/c/6a31238d-1ee4-83ec-94c9-bfcbb5d91979 -->
 - HR Analysis: Embed ./hr-analysis.html (full-width, appropriate aspect ratio - inspect its contents).
 - Cortex-generated AI use cases and analyses: Embed https://files.s-anand.net/pages/ai-use-cases-commercial-data/ (full-width, appropriate aspect ratio - inspect its contents).
 - Claude survey analysis:

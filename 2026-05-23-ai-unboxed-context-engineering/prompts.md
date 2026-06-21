@@ -1,11 +1,9 @@
 # Prompts
 
 <!--
-
 cd ~/code/talks/
 dev.sh
 claude --dangerously-skip-permissions
-
 -->
 
 Generate a beautiful narrative story about this 2-hour AI Workshop [Anand](https://www.s-anand.net/), LLM Psychologist at Straive, conducted for the [IIM Alumni in Singapore](https://iimalumni.sg/) on 23 May 2026 as part of the "AI Unboxed" series. This is the first of four workshops and the topic was "Context Engineering". The workshop was held online via Microsoft Teams.

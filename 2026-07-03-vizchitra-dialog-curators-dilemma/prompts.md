@@ -1,4 +1,4 @@
-#
+# VizChitra Dialog - The Curator's Dilemma
 
 # A3 printouts
 
@@ -38,5 +38,13 @@ Create them as .html files in this directory.
 - 04-popularity-paradox.html - the title and subtitle need better formatting.
 - 05-llm-pricing.html - add a title "LLM Model Pricing"
 - 06-gdpval.html - include the title, subtitle, etc. and the footer. Effectively, I want the entire page, fit to an A3.
+
+---
+
+I deleted assets/ - can you recreate it?
+
+--- <!-- steering -->
+
+Also, please center 01-statnostics.html vertically AND horizontally
 
 <!-- codex resume 019f264d-9448-75a0-906c-5bc9af7077a2 --yolo -->

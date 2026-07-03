@@ -89,4 +89,11 @@ Include the chats where possible as snippets with a link that pops the chat tran
 GPT Image 2 - https://chatgpt.com/c/6a375ebd-bd6c-83ee-8926-1e8354848f82
 -->
 
-Draw this as a full-color explainer comic page (portrait) - sequential explanation, friendly narrator, diagrams embedded inside panels, visual metaphors, self-aware captions, and clear cause-and-effect storytelling. Style: expressive characters, comic-style ALL CAPS, vibrant modern colors, clear visual hierarchy. Prefer pictures over words. Use recurring visual metaphors so the reader understands the idea even while skimming. Think about the most important points, structure it as a memorable story.
+Draw this as a full-color explainer comic page (portrait) - sequential explanation, friendly narrator, diagrams embedded inside panels, visual metaphors, self-aware captions, and clear cause-and-effect storytelling.
+Style: expressive characters, comic-style ALL CAPS, vibrant modern colors, clear visual hierarchy.
+Prefer pictures over words. Use recurring visual metaphors so the reader understands the idea even while skimming.
+
+First, write a memorable storyline that captures the most important points to convey.
+Just reading the storyline should communicate the entire message unambiguously.
+Draw each storyline element (typically a sentence, but sometimes a continued phrase, or multiple sentences) as a panel's caption. (If there are 8 panels, there must be 8 storyline elements)
+Each panel's image should support and strengthen its caption - and reinforcing past panels / anticipating future panels where helpful.

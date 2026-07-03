@@ -180,13 +180,22 @@ async def absolutize_fragment(page, selector: str, inline_images: bool = False) 
     )
 
 
-async def svg_page(context, url: str, output: str, title: str, orientation: str, padding: str = "0") -> dict:
+async def svg_page(
+    context,
+    url: str,
+    output: str,
+    title: str,
+    orientation: str,
+    padding: str = "0",
+    fit_class: str = "fit",
+    extra_css: str = "",
+) -> dict:
     page = await context.new_page()
     await page.goto(url, wait_until="networkidle")
     svg = await page.locator("svg").first.evaluate("node => node.outerHTML")
     await page.close()
     (ROOT / output).write_text(
-        page_html(title, orientation, f'<section class="fit">{svg}</section>', padding),
+        page_html(title, orientation, f'<section class="{fit_class}">{svg}</section>', padding, extra_css),
         encoding="utf-8",
     )
     return {"file": output, "selector": "svg", "orientation": orientation}
@@ -285,6 +294,14 @@ async def main() -> None:
                 "01-statnostics.html",
                 "Statnostics",
                 "portrait",
+                fit_class="fit statnostics-page",
+                extra_css="""
+.statnostics-page > svg {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 100% !important;
+}
+""",
             )
         )
 

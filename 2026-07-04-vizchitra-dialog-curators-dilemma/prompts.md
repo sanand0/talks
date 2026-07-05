@@ -1,8 +1,9 @@
 # VizChitra Dialog - The Curator's Dilemma
 
-# A3 printouts
+# A3 printouts, 03 Jul 2026
 
 <!--
+# Note: This directory was renamed from 2026-07-03-* to 2026-07-04-*
 cd /home/sanand/code/talks/2026-07-03-vizchitra-dialog-curators-dilemma
 dev.sh -- codex --yolo --model gpt-5.5 --config model_reasoning_effort=medium
 -->

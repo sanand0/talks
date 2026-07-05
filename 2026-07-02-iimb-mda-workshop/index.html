@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Methods, Priced Judgment · IIM Bangalore Multivariate Data Analysis Workshop</title>
+<meta name="description" content="In three hours with the PGP-BA Term 4 class at IIM Bangalore, Anand turned a Multivariate Data Analysis session into a live experiment: if AI can run every method from a one-line prompt, what exactly are humans still for? The answer — judgment — measured on the spot with a survey the class filled, and the AI, out-judged.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20fill='%23a01f2e'%20width='64'%20height='64'%20rx='12'/%3E%3Ctext%20x='32'%20y='45'%20font-size='38'%20text-anchor='middle'%20fill='%23f3d27a'%20font-family='Georgia,serif'%20font-weight='700'%3E%3D%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f2e9;
+  --paper:#fffdf7;
+  --ink:#1c1a17;
+  --ink2:#403a33;
+  --accent:#a01f2e;        /* crimson, echoing the red talk slides */
+  --accent2:#7a1522;
+  --gold:#b5892a;
+  --gold-light:#f5e9c9;
+  --muted:#7a7268;
+  --border:#e3dccb;
+  --highlight:#f3ece0;
+  --dark:#1b1512;          /* near-black warm */
+  --dark2:#25201b;
+  --font-display:'Fraunces',Georgia,serif;
+  --font-body:'Source Serif 4',Georgia,serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--font-body);background:var(--bg);color:var(--ink);
+  line-height:1.78;font-size:18px;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+
+/* ── Progress bar ── */
+#progress{position:fixed;top:0;left:0;height:3px;width:0%;
+  background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1000;transition:width .15s linear;}
+
+/* ── Masthead ── */
+.masthead{position:sticky;top:0;z-index:200;background:rgba(246,242,233,.95);
+  border-bottom:1px solid var(--border);padding:.7rem 2rem;backdrop-filter:blur(8px);}
+.masthead-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;
+  align-items:center;gap:1rem;flex-wrap:wrap;}
+.masthead-brand{font-family:var(--font-display);font-size:.95rem;font-weight:700;
+  letter-spacing:.02em;color:var(--ink);text-decoration:none;}
+.masthead-brand:hover{color:var(--accent);}
+.masthead-brand span{color:var(--accent);}
+.masthead-right{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;}
+.masthead-date{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);}
+.masthead-link{font-family:var(--font-mono);font-size:.7rem;color:var(--accent);
+  text-decoration:none;border:1px solid var(--accent);padding:.28rem .6rem;border-radius:3px;
+  transition:all .2s;white-space:nowrap;cursor:pointer;background:none;}
+.masthead-link:hover{background:var(--accent);color:#fff;}
+
+/* ── Hero ── */
+.hero{max-width:880px;margin:0 auto;padding:4.5rem 2rem 2rem;text-align:center;}
+.hero-kicker{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:1.4rem;}
+.hero-series{display:inline-block;background:var(--accent);color:#fff;font-family:var(--font-mono);
+  font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;padding:.28rem .85rem;
+  margin-bottom:1.3rem;border-radius:2px;}
+.hero-title{font-family:var(--font-display);font-size:clamp(2.4rem,6.2vw,4.4rem);
+  font-weight:900;line-height:1.02;letter-spacing:-.02em;margin-bottom:1.3rem;color:var(--ink);}
+.hero-title em{font-style:italic;color:var(--accent);}
+.hero-subtitle{font-family:var(--font-display);font-size:1.3rem;font-style:italic;
+  font-weight:400;color:var(--ink2);max-width:680px;margin:0 auto 2rem;line-height:1.5;}
+.hero-meta{display:flex;justify-content:center;gap:1.2rem;flex-wrap:wrap;font-size:.84rem;
+  color:var(--muted);margin-bottom:.5rem;}
+.hero-meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(160,31,46,.25);}
+.hero-meta a:hover{border-bottom-color:var(--accent);}
+.hero-meta .sep{color:var(--border);}
+
+/* ── Quick links bar ── */
+.quick-links{background:var(--accent2);padding:.9rem 2rem;}
+.quick-links-inner{max-width:1000px;margin:0 auto;display:flex;gap:.7rem;flex-wrap:wrap;
+  justify-content:center;align-items:center;}
+.quick-link{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--font-mono);
+  font-size:.7rem;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.9);
+  text-decoration:none;border:1px solid rgba(255,255,255,.28);padding:.35rem .8rem;border-radius:3px;
+  transition:all .2s;cursor:pointer;background:none;}
+.quick-link:hover{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.6);}
+.quick-link.gold{background:var(--gold);color:var(--dark);border-color:var(--gold);font-weight:700;}
+.quick-link.gold:hover{background:#cf9a36;border-color:#cf9a36;}
+
+/* ── Audio card ── */
+.audio-wrap{max-width:660px;margin:2.4rem auto 1rem;padding:0 2rem;}
+.audio-card{background:var(--dark2);color:#ede6d6;padding:1.25rem 1.7rem;border-radius:8px;
+  display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;box-shadow:0 8px 30px rgba(27,21,18,.18);}
+.audio-icon{font-size:1.8rem;flex-shrink:0;}
+.audio-info{flex:1;min-width:160px;}
+.audio-title{font-family:var(--font-display);font-size:1rem;font-weight:600;margin-bottom:.2rem;}
+.audio-sub{font-size:.78rem;color:#b3a893;font-family:var(--font-mono);}
+.audio-card audio{width:100%;max-width:340px;height:40px;}
+
+/* ── Visual summary ── */
+.summary-wrap{width:100vw;margin-left:calc(50% - 50vw);background:var(--dark);
+  padding:3rem 2rem;text-align:center;margin-bottom:2.5rem;}
+.summary-inner{max-width:900px;margin:0 auto;}
+.summary-inner img{max-width:100%;height:auto;border-radius:6px;cursor:zoom-in;
+  box-shadow:0 18px 60px rgba(0,0,0,.45);}
+.summary-label{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:1.4rem;}
+.summary-cap{font-family:var(--font-mono);font-size:.74rem;color:#a99e8c;margin-top:1rem;}
+.summary-cap a{color:#e0cf9e;text-decoration:none;border-bottom:1px solid rgba(224,207,158,.3);}
+.summary-cap a:hover{color:#fff;}
+
+/* ── Article column ── */
+.article{max-width:700px;margin:0 auto;padding:0 2rem 3rem;}
+.article p{margin-bottom:1.5rem;}
+.article a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(160,31,46,.28);transition:border-color .2s;}
+.article a:hover{border-bottom-color:var(--accent);}
+.article h2{font-family:var(--font-display);font-size:2rem;font-weight:700;
+  margin:3.4rem 0 1.2rem;padding-top:2.4rem;border-top:1px solid var(--border);line-height:1.15;}
+.article h3{font-family:var(--font-display);font-size:1.32rem;font-weight:600;
+  margin:2.2rem 0 .7rem;color:var(--accent);}
+.article em{font-style:italic;}
+.article strong{font-weight:600;color:var(--ink);}
+.section-num{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.5rem;}
+.dropcap::first-letter{font-family:var(--font-display);font-size:3.6rem;font-weight:900;
+  float:left;line-height:.8;padding:.3rem .6rem .1rem 0;color:var(--accent);}
+
+/* ── Pull blockquote ── */
+.pull{font-family:var(--font-display);font-size:1.5rem;font-weight:600;font-style:italic;
+  line-height:1.32;color:var(--accent2);border-left:4px solid var(--gold);
+  padding:.3rem 0 .3rem 1.6rem;margin:2.2rem 0;}
+blockquote.pull-quote{background:var(--paper);border:1px solid var(--border);border-left:4px solid var(--accent);
+  padding:1.4rem 1.9rem;margin:2.5rem -8%;border-radius:0 6px 6px 0;box-shadow:0 6px 22px rgba(27,21,18,.06);}
+blockquote.pull-quote p{font-family:var(--font-display);font-size:1.3rem;font-style:italic;
+  font-weight:500;line-height:1.4;color:var(--ink);margin-bottom:.6rem;}
+blockquote.pull-quote cite{display:block;font-style:normal;font-family:var(--font-mono);
+  font-size:.74rem;color:var(--muted);letter-spacing:.03em;}
+@media(max-width:640px){blockquote.pull-quote{margin-left:0;margin-right:0;}}
+
+/* ── Full-width bands ── */
+.band{width:100vw;margin-left:calc(50% - 50vw);padding:3.2rem 2rem;margin-bottom:2.5rem;}
+.band-dark{background:var(--dark);color:#ece4d5;}
+.band-crimson{background:linear-gradient(160deg,var(--accent2),var(--accent));color:#fdeee0;}
+.band-cream{background:var(--highlight);}
+.band-inner{max-width:940px;margin:0 auto;}
+.band-inner.wide{max-width:1120px;}
+.band h2{font-family:var(--font-display);font-size:1.9rem;font-weight:700;margin-bottom:1rem;line-height:1.15;}
+.band-dark h2,.band-crimson h2{color:#fff;}
+.band-label{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
+  margin-bottom:1rem;display:block;}
+.band-dark .band-label,.band-cream .band-label{color:var(--gold);}
+.band-crimson .band-label{color:var(--gold-light);}
+
+/* ── Embed cards ── */
+.embed-wrap{width:100vw;margin-left:calc(50% - 50vw);background:var(--dark2);
+  padding:2.6rem 2rem;margin-bottom:2.5rem;}
+.embed-inner{max-width:1080px;margin:0 auto;}
+.embed-frame{width:100%;border:1px solid rgba(255,255,255,.12);border-radius:8px;background:#fff;
+  box-shadow:0 14px 44px rgba(0,0,0,.32);overflow:hidden;}
+.embed-frame iframe{width:100%;display:block;border:0;}
+.embed-cap{font-family:var(--font-mono);font-size:.75rem;color:#b3a893;margin-top:1rem;text-align:center;line-height:1.6;}
+.embed-cap a{color:#e0cf9e;text-decoration:none;border-bottom:1px solid rgba(224,207,158,.3);}
+.embed-cap a:hover{color:#fff;}
+.embed-title{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1rem;text-align:center;}
+
+/* ── Figure / image ── */
+figure.fig{width:100vw;margin-left:calc(50% - 50vw);background:var(--dark2);padding:2.6rem 2rem;margin-bottom:2.5rem;text-align:center;}
+figure.fig img{max-width:100%;height:auto;border-radius:8px;cursor:zoom-in;box-shadow:0 14px 44px rgba(0,0,0,.32);}
+figure.fig figcaption{font-family:var(--font-mono);font-size:.75rem;color:#b3a893;margin-top:1rem;line-height:1.6;max-width:820px;margin-left:auto;margin-right:auto;}
+figure.fig figcaption a{color:#e0cf9e;text-decoration:none;border-bottom:1px solid rgba(224,207,158,.3);}
+figure.fig figcaption a:hover{color:#fff;}
+.fig-duo{display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:940px;margin:0 auto;}
+.fig-duo img{width:100%;border-radius:8px;cursor:zoom-in;box-shadow:0 14px 44px rgba(0,0,0,.32);}
+@media(max-width:620px){.fig-duo{grid-template-columns:1fr;}}
+
+/* ── Stat row ── */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1.4rem;margin:1.6rem 0 .5rem;}
+.stat b{font-family:var(--font-display);font-size:2.6rem;font-weight:900;line-height:1;display:block;color:#fff;}
+.band-cream .stat b{color:var(--accent);}
+.stat span{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.02em;display:block;margin-top:.5rem;opacity:.85;line-height:1.5;}
+
+/* ── Cards ── */
+.cards-wrap{width:100vw;margin-left:calc(50% - 50vw);padding:3rem 2rem;margin-bottom:2.5rem;background:var(--highlight);}
+.cards-inner{max-width:1160px;margin:0 auto;}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem;}
+.card{background:var(--paper);border:1px solid var(--border);border-top:3px solid var(--accent);
+  border-radius:6px;padding:1.5rem 1.4rem;box-shadow:0 4px 16px rgba(27,21,18,.05);}
+.card .k{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;}
+.card h4{font-family:var(--font-display);font-size:1.2rem;font-weight:700;margin-bottom:.5rem;line-height:1.2;}
+.card p{font-size:.92rem;line-height:1.6;color:var(--ink2);margin:0;}
+
+/* ── Link card ── */
+.linkcard{display:flex;flex-direction:column;border:1px solid var(--border);border-radius:8px;
+  overflow:hidden;text-decoration:none;color:inherit;transition:box-shadow .2s,transform .2s;background:var(--paper);}
+.linkcard:hover{box-shadow:0 10px 30px rgba(27,21,18,.14);transform:translateY(-2px);}
+.linkcard img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border-bottom:1px solid var(--border);}
+.linkcard .b{padding:.9rem 1.1rem;}
+.linkcard .b strong{font-family:var(--font-display);font-size:1.05rem;display:block;margin-bottom:.2rem;color:var(--ink);border:0;}
+.linkcard .b span{font-size:.8rem;color:var(--muted);}
+
+/* ── Tooltip ── */
+.tip{border-bottom:1px dotted var(--accent);cursor:help;position:relative;}
+.tip::after{content:attr(data-tip);position:absolute;bottom:135%;left:50%;transform:translateX(-50%);
+  background:var(--dark);color:#f3ece0;padding:.6rem .8rem;border-radius:5px;font-size:.8rem;
+  font-family:var(--font-body);font-style:normal;white-space:normal;width:250px;line-height:1.5;
+  pointer-events:none;opacity:0;transition:opacity .2s;z-index:50;box-shadow:0 8px 26px rgba(0,0,0,.3);}
+.tip:hover::after{opacity:1;}
+
+/* ── Cite button ── */
+.cite-btn{background:none;border:1px solid var(--accent);color:var(--accent);padding:.02rem .32rem;
+  border-radius:3px;font-size:.68rem;cursor:pointer;font-family:var(--font-mono);line-height:1;vertical-align:baseline;}
+.cite-btn:hover{background:var(--accent);color:#fff;}
+
+/* ── Lightbox & popup ── */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(15,12,10,.94);z-index:900;
+  align-items:center;justify-content:center;padding:2rem;cursor:zoom-out;}
+.lightbox.on{display:flex;}
+.lightbox img{max-width:96%;max-height:94%;border-radius:6px;box-shadow:0 20px 70px rgba(0,0,0,.6);}
+.popup-overlay{display:none;position:fixed;inset:0;background:rgba(15,12,10,.6);z-index:950;
+  align-items:center;justify-content:center;padding:1.5rem;}
+.popup-overlay.on{display:flex;}
+.popup-box{background:var(--paper);max-width:560px;width:100%;max-height:82vh;overflow-y:auto;
+  border-radius:10px;padding:2rem 2.1rem;position:relative;box-shadow:0 24px 80px rgba(0,0,0,.5);border-top:4px solid var(--accent);}
+.popup-box h3{font-family:var(--font-display);font-size:1.4rem;margin-bottom:.8rem;color:var(--accent);line-height:1.2;}
+.popup-box p{font-size:.95rem;line-height:1.65;margin-bottom:1rem;}
+.popup-box a{color:var(--accent);font-family:var(--font-mono);font-size:.82rem;}
+.popup-close{position:absolute;top:.8rem;right:1rem;background:none;border:none;font-size:1.7rem;
+  cursor:pointer;color:var(--muted);line-height:1;}
+.popup-close:hover{color:var(--accent);}
+.popup-data{display:none;}
+
+/* ── Footer ── */
+footer{background:var(--dark);color:#c8bfae;padding:3.5rem 2rem;text-align:center;}
+footer .f-inner{max-width:720px;margin:0 auto;}
+footer a{color:var(--gold);text-decoration:none;}
+footer a:hover{color:#fff;}
+footer .f-title{font-family:var(--font-display);font-size:1.5rem;color:#fff;margin-bottom:1rem;font-style:italic;}
+footer .f-links{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;margin:1.4rem 0;font-family:var(--font-mono);font-size:.76rem;}
+footer .f-note{font-size:.76rem;color:#8a8173;margin-top:1.5rem;font-family:var(--font-mono);line-height:1.7;}
+
+.aside{background:var(--gold-light);border:1px solid #e6d296;border-radius:8px;padding:1.2rem 1.5rem;margin:2rem 0;font-size:.94rem;line-height:1.6;}
+.aside .k{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent2);margin-bottom:.4rem;display:block;}
+code{font-family:var(--font-mono);font-size:.86em;background:var(--highlight);padding:.1rem .35rem;border-radius:3px;color:var(--accent2);}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <a class="masthead-brand" href="https://sanand0.github.io/talks/">TALKS · <span>S ANAND</span></a>
+    <div class="masthead-right">
+      <span class="masthead-date">2 Jul 2026 · IIM Bangalore</span>
+      <button class="masthead-link" onclick="openTranscript()">📄 Transcript</button>
+      <a class="masthead-link" href="#takeaways">Takeaways ↓</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-series">PGP-BA · Multivariate Data Analysis · Term 4</div>
+  <h1 class="hero-title">Free Methods,<br><em>Priced Judgment</em></h1>
+  <p class="hero-subtitle">If an AI can run clustering, PCA, or a conjoint analysis from a single sentence, what exactly is a data analyst still <em>for</em>? One afternoon at IIM Bangalore, the class found out — by being measured, live, against the machine.</p>
+  <div class="hero-meta">
+    <span><a href="https://www.s-anand.net/" target="_blank">S Anand</a>, LLM Psychologist, Straive</span>
+    <span class="sep">·</span>
+    <span>Guest of <span class="tip" data-tip="Professor of Quantitative Methods & Information Systems at IIM Bangalore, who taught the Multivariate Data Analysis course.">Prof. Shubhabrata Das</span></span>
+    <span class="sep">·</span>
+    <span>2 Jul 2026 · 2:30–5:45 pm IST</span>
+  </div>
+</section>
+
+<div class="quick-links">
+  <div class="quick-links-inner">
+    <button class="quick-link gold" onclick="openTranscript()">📄 Full transcript</button>
+    <a class="quick-link" href="#classify">1 · Classify</a>
+    <a class="quick-link" href="#hallucinate">2 · Hallucination</a>
+    <a class="quick-link" href="#cluster">3 · Cluster</a>
+    <a class="quick-link" href="#embeddings">4 · Embeddings</a>
+    <a class="quick-link" href="#images">5 · Images & Earth</a>
+    <a class="quick-link" href="#survey">6 · The Survey</a>
+    <a class="quick-link" href="#takeaways">Takeaways</a>
+  </div>
+</div>
+
+<div class="audio-wrap">
+  <div class="audio-card">
+    <span class="audio-icon">🎧</span>
+    <div class="audio-info">
+      <div class="audio-title">Listen to the full 3-hour session</div>
+      <div class="audio-sub">Recorded live · IIM Bangalore</div>
+    </div>
+    <audio controls preload="none">
+      <source src="https://github.com/sanand0/talks/releases/download/talks/2026-07-02-iimb-mda-workshop.opus" type="audio/ogg; codecs=opus">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+</div>
+
+<div class="summary-wrap">
+  <div class="summary-inner">
+    <div class="summary-label">The whole afternoon, on one page</div>
+    <a href="summary.avif" target="_blank" title="Open full-size visual summary in a new window">
+      <img src="summary.avif" alt="Visual summary of the IIM Bangalore Multivariate Data Analysis AI workshop">
+    </a>
+    <p class="summary-cap">A visual summary of the session. <a href="summary.avif" target="_blank">Open full size ↗</a></p>
+  </div>
+</div>
+
+<article class="article">
+
+<p class="dropcap"><strong>The room went quiet in the wrong way.</strong> Anand had just asked sixty-odd of IIM Bangalore's brightest business-analytics students a simple question — <em>"How many of you have used the <code>=AI</code> function on Google Sheets?"</em> — and not a single hand went up. He tried again, gentler: <em>How many of you have used Google Sheets at all?</em> A forest of hands. So the tool they had all used for years had, sometime in the last few months, quietly grown a new function, and none of them had noticed.</p>
+
+<p>That gap — between what our tools can now do and what we <em>think</em> they can do — is the whole story of the afternoon. It was a Multivariate Data Analysis class, part of the <a href="https://www.iimb.ac.in/programmes/pgpba" target="_blank">PGP in Business Analytics</a>, and by rights it should have been about eigenvalues and factor loadings. Instead, the guest — an IIMB alumnus his old professor introduced, with visible pride, as <em>"the only person I know who was the gold medalist in academic rank <strong>and</strong> the all-rounder"</em> — spent three hours dismantling a comfortable assumption: that knowing <em>how</em> to run a method is the valuable part of the job.</p>
+
+<p>He typed <code>=AI()</code> into a cell and turned it over to the class. Someone suggested <em>"generate a list of numbers."</em> Out came a markdown list. Someone else — closer to the point — suggested bucketing company revenues into small, medium, large. <em>"Instead of big formulas,"</em> they said, <em>"we can use this."</em> And there it was: a spreadsheet function that could <strong>classify text</strong>, something forty years of business analytics had mostly left alone.</p>
+
+<blockquote class="pull-quote">
+  <p>"Our strategy is very simple. Make sure you can't use AI. Make sure we can use AI. Our life becomes easy, and we like torturing you."</p>
+  <cite>— Anand, on why this was the one class where students were <em>required</em> to use AI</cite>
+</blockquote>
+
+<h2 id="classify"><span class="section-num">Act 1 · Classification</span>Twenty-five companies, five different answers</h2>
+
+<p>To make it real, he needed data — so he made some, live, in the middle of class. He asked ChatGPT to <a href="https://chatgpt.com/c/6a462982-e3fc-83ec-8b0f-65094a9a8b82" target="_blank">generate a small public-looking dataset</a> of company revenues, downloaded it as <a href="companies.csv" target="_blank"><code>companies.csv</code></a> — twenty-five fictional firms like <em>CloudHarbor</em> and <em>FreightBridge</em>, each with a one-line description — and threw it to the room. <strong>Your task:</strong> classify each company into SaaS, Marketplace, Services, Manufacturing, Consumer Brand, or Fintech, and tell me the counts.</p>
+
+<p>This is where a normal class would have gotten a single, tidy answer. This class got a small riot of them. One student, on <span class="tip" data-tip="Google's fast, low-cost model — the default in many free tiers.">Gemini Flash</span>, reported exactly four per category. Another, on ChatGPT, got 5-5-5 and 3-3-3. A third got 4-3-4-4-4-5. A fourth ran Claude Sonnet against Claude Opus and watched the two models disagree with each other. Same twenty-five companies. Same six buckets. Different tallies from every seat in the room.</p>
+
+<p>Anand let the discomfort sit, then named it:</p>
+
+<blockquote class="pull-quote">
+  <p>"If you ask two people, they won't necessarily say the same thing. For humans, we call that lying, we call that loss of memory, we call that absent-mindedness. For AI, we call it hallucination. Not that much of a difference."</p>
+  <cite>— Anand</cite>
+</blockquote>
+
+<p>Here is the pivot the whole session turns on. The students had been taught to distrust indeterminism — a good model should give one answer. But Anand's point was subtler: text classification used to be an <em>intern's</em> job, a slow human process riddled with exactly this kind of variation, and management has known how to handle wobbly humans <em>for centuries</em>. If AI wobbles the same way, maybe the same management tricks apply. One student had already stumbled onto the first trick without being told: they fed one model's answer to another and asked it to find the misclassification. <em>MetricNest, ClinicFlow, BuildPulse</em> — the second model flagged the three it thought were wrong. <span class="tip" data-tip="The =AI function is available in Google Sheets. Excel Online and Snowflake have equivalents. You can also just upload a CSV to ChatGPT.">Cross-examination between agents</span>, invented on the spot.</p>
+
+<div class="aside">
+  <span class="k">Try it yourself</span>
+  Anand's live demo sheet is public. On cell <code>B1</code> he typed <code>=AI("Categorize into fruit, country, or sport: " &amp; A1)</code> and dragged it down. <a href="https://docs.google.com/spreadsheets/d/1zsT-JGucMygf04W0zgQ17wKhKMeL-GRVqWsoOPt7cZs/edit?usp=sharing" target="_blank">Open the Google Sheet ↗</a> — or explore the embedded copy below.
+</div>
+
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <div class="embed-title">Live · The <code>=AI()</code> classification sheet</div>
+    <div class="embed-frame">
+      <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQCKFT5KZDrl9VVN-LlbzsPaf_19wvaDBb9xEQO_QGrrmaQYrddn5SX6EgPEtMH7OxHwxNckgWPLKUn/pubhtml?widget=true&amp;headers=false" style="height:420px;" loading="lazy"></iframe>
+    </div>
+    <p class="embed-cap">Apple → Fruit, Jamaica → Country, Football → Sport. One formula, dragged down a column, turns unstructured text into a new categorical variable. <a href="https://docs.google.com/spreadsheets/d/1zsT-JGucMygf04W0zgQ17wKhKMeL-GRVqWsoOPt7cZs/edit?usp=sharing" target="_blank">Open in Google Sheets ↗</a></p>
+  </div>
+</div>
+
+<p>Classification, Anand argued, had quietly become easy — and that mattered more than it sounds. <em>"Largely for the last forty–fifty years, people have not been analyzing text, but we have lots of text."</em> Anything you can now do with all that dormant text is, almost by definition, new — and therefore insightful.</p>
+
+<h2 id="hallucinate"><span class="section-num">Act 2 · Handling hallucination</span>Ask five models. Fire seventy-two people.</h2>
+
+<p>But if models disagree, how do you trust any of them? This is not a rhetorical question at Straive — it is a production problem. Anand pulled up a real one: a logistics client's inbound service center, where messages like <em>"When will I receive my order?"</em> and <em>"What do I need to do to register?"</em> have to be routed to the right queue. They had the correct labels. They ran a fleet of models against them. And the results were a beautiful mess: <span class="tip" data-tip="A small, inexpensive Amazon model — generally weaker, but occasionally right where stronger models miss.">Nova-Lite</span> nailed a question that GPT-4.1 Mini and Gemini 2.5 both fluffed.</p>
+
+<p>Then came the twist that turns a technical talk into a management lesson. <em>Every</em> model insisted that "Help registering" belonged in "Create Account" — but the client swore it was "Registration Problems." Anand went back. And back again, to the client's boss. <em>"Absolutely should be Registration Problems,"</em> they said. And the team learned something uncomfortable.</p>
+
+<blockquote class="pull-quote">
+  <p>"When people say 'classifying it correctly,' they mean 'classified the way I have been classifying it.' It does not mean classified correctly — because they could be wrong."</p>
+  <cite>— Anand, on the day every model agreed and the client was the one hallucinating</cite>
+</blockquote>
+
+<p>If every model consistently disagrees with the "right" answer, that is itself a signal — a good chance the source labels are wrong. But the deeper find was mathematical, and Anand walked the room through it slowly, because it is the kind of thing that quietly changes a P&amp;L. The errors different models make <strong>are barely correlated</strong> — Llama 3 and Amazon Micro agree with each other maybe 20% of the time when they're wrong. So you can stack them.</p>
+
+<div class="band band-crimson">
+  <div class="band-inner">
+    <span class="band-label">The ensemble arithmetic</span>
+    <h2>One model is a coin toss. Five models are a near-certainty.</h2>
+    <div class="stats">
+      <div class="stat"><b>14%</b><span>error from a single random model</span></div>
+      <div class="stat"><b>3.7%</b><span>if two models must agree</span></div>
+      <div class="stat"><b>2.2%</b><span>if three agree</span></div>
+      <div class="stat"><b>0.7%</b><span>if five agree — <strong>99.3% correct</strong></span></div>
+    </div>
+    <p style="margin-top:1.4rem;font-size:.96rem;">And the disagreements — the cases a human still has to arbitrate — happen only ~12% of the time for two models, ~28% for five. <em>"My call center workforce of 100 people can become 28 people, and I still have 99.3% accuracy. I'll take it."</em></p>
+  </div>
+</div>
+
+<p>When a student asked the obvious question — <em>what happens when the models disagree?</em> — Anand's answer was almost old-fashioned. <em>"I send it to an agent. A human agent. Not an AI agent. And say, 'These two agents are disagreeing. You've been doing this for donkey's years. What do you think?'"</em> The word <em>agent</em> doing double duty was the joke and the point at once.</p>
+
+<p>Why not just trust the model to do arithmetic itself? Because it can't — reliably. Anand had built a little demo precisely to humiliate the models on this, and it's worth playing with: ask an LLM in plain chat mode to do mental math or count letters, and it stumbles; give it the ability to <em>write and run code</em>, and it's flawless. The lesson isn't "AI is dumb." It's "know which mode you're in."</p>
+
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <div class="embed-title">Interactive · When does an LLM's mental math fail?</div>
+    <div class="embed-frame">
+      <iframe src="https://sanand0.github.io/llmevals/double-checking/" style="height:600px;" loading="lazy"></iframe>
+    </div>
+    <p class="embed-cap">Anand's own eval. The survey the class filled asked whether AI could count how many times <code>"ana"</code> appears in <code>"banananas"</code> — in chat mode vs. agent mode. <strong>53 of the class said the chatbot would nail it; a third said it'd be certain.</strong> Chat-mode models famously miscount. <a href="https://sanand0.github.io/llmevals/double-checking/" target="_blank">Open the eval ↗</a></p>
+  </div>
+</div>
+
+<p>This was the moment Anand broke for the survey — the day's secret spine, which we'll come back to. <em>"Take a guess,"</em> he told them about its trickier questions. <em>"It's absolutely not evaluated. The point is what is the first answer that comes to your mind."</em> The questions weren't really testing the students. They were testing whether the students <em>knew when the AI would be right or wrong</em> — the single most useful thing to know about any tool.</p>
+
+<p>A student raised the philosophical version of the whole afternoon's problem: <em>"Is it easier for us to judge AI, or for AI to judge us?"</em> — because in the logistics story, the humans had been the ones who were wrong. How, if the AI might know more than you, can you ever check it? Anand's answer was a list of institutions that have solved exactly this for centuries:</p>
+
+<blockquote class="pull-quote">
+  <p>"How does an auditor, who knows nothing about the business, audit a company? How does a jury, who know nothing about science, rule on patents? People with low expertise have figured out a variety of mechanisms to manage the veracity of smarter systems."</p>
+  <cite>— Anand</cite>
+</blockquote>
+
+<p>Cross-question it. Ask a second AI. Tell it <em>"my friend said something different."</em> Or — his favourite — the <span class="tip" data-tip="Henry Kissinger, US Secretary of State, reportedly returned reports unread, repeatedly asking 'Is this your best work?' until the author swore it was.">Kissinger gambit</span>: hand it back with nothing but <em>"Is this your best work?"</em> and let it find its own mistakes. <em>"How do I know all this? Because I asked Claude a few days ago,"</em> Anand admitted. <em>"A big part of what is the counter to AI is: learn from AI."</em> <button class="cite-btn" onclick="openPopup('pop-mollick')" title="Source">1</button></p>
+
+<h2><span class="section-num">Act 2½ · A mirror</span>What four years of my Google searches say about me</h2>
+
+<p>The most personal demo was also the most quietly radical. Anand had taken <em>his own</em> Google search history — everything since January 2021, pulled via <a href="https://takeout.google.com/" target="_blank">Google Takeout</a> — dropped it into a sheet, added an <code>=AI</code> column, and asked: <em>what am I searching for, and how is it trending?</em> The result was an uncomfortably honest self-portrait.</p>
+
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <div class="embed-title">Data story · Four years of one person's Google searches</div>
+    <div class="embed-frame">
+      <iframe src="https://sanand0.github.io/datastories/google-searches/" style="height:640px;" loading="lazy"></iframe>
+    </div>
+    <p class="embed-cap">Bar length = how much he searched; colour = growing or shrinking. <strong>#1 category: Indian celebrities and directors</strong> (slightly declining). JavaScript and DOM libraries collapsed as AI took over his coding; "AI models and ChatGPT" and "APIs and tokens" surged. <a href="https://sanand0.github.io/datastories/google-searches/" target="_blank">Explore the searches ↗</a></p>
+  </div>
+</div>
+
+<blockquote class="pull-quote">
+  <p>"I was able to get a mirror into myself. I had implicitly gathered survey data about myself — by looking at my Google search history."</p>
+  <cite>— Anand</cite>
+</blockquote>
+
+<p>And the leap is obvious the moment you see it: you could do this for <em>anybody</em>. Customer transactions, UPI flows, bank statements, card spends — <em>"tell me the categories, the trends, for every customer or category of customer. Are Chennai customers buying differently from Bangalore customers?"</em> Each <code>=AI</code> call is a brand-new column of insight bolted onto data you already own.</p>
+
+<p>Straive is already selling this. A waste-management client had invoice line-items scattered across three ERP systems and a couple of legacy billing platforms, all flowing into Snowflake, with humans hand-categorizing each line. Anand's colleague Manoj pointed Snowflake's built-in <span class="tip" data-tip="Snowflake Cortex — AI functions that run directly inside the database, so data never leaves it. The =AI function of the data-warehouse world.">Cortex AI</span> at it — <em>"just like the AI function in Google Sheets"</em> — and classified whether each line was standard, emergency, spot, or one-time at <strong>over 90% accuracy</strong>. About as good as the humans. <em>"I'm giving you an extra column. You don't want to use it, don't use it. It's there for free."</em></p>
+
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <div class="embed-title">Case study · AI use cases mined from commercial data</div>
+    <div class="embed-frame">
+      <iframe src="https://files.s-anand.net/pages/fde/waste-management-commercial.html" style="height:560px;" loading="lazy"></iframe>
+    </div>
+    <p class="embed-cap">The commercial-data use cases Straive surfaced for the waste-management client. We'll return to this deck later — because how it was <em>made</em> is the punchline of the whole talk. <a href="https://files.s-anand.net/pages/fde/waste-management-commercial.html" target="_blank">Open the use cases ↗</a></p>
+  </div>
+</div>
+
+<h2 id="cluster"><span class="section-num">Act 3 · Clustering</span>The exam where copying is encouraged — and half refuse</h2>
+
+<p>So far, so tidy: you tell the AI the buckets, it sorts things into them. That's classification. But what if you <em>don't</em> know the buckets? What if you want the data to reveal its own natural groups? That's clustering — and to explain it, Anand told a story that made the room laugh, then think.</p>
+
+<p>He teaches <a href="https://tds.s-anand.net/" target="_blank">Tools in Data Science</a>, a course at IIT Madras, where — right at the top of an exam — it says: <em>you may copy from each other. Sit in a group. Pay somebody to take the exam for you. I don't care. Score high.</em> Then he asked the class to guess: what fraction of students, given explicit permission to cheat, still refuse?</p>
+
+<blockquote class="pull-quote">
+  <p>"Fifty percent of the class is not copying. I'm begging, I'm pleading — 'Please copy, score higher marks.' 'No, we are ethical. We don't have any friends. We are independent-minded.'"</p>
+  <cite>— Anand, on the stubborn honesty of half his students</cite>
+</blockquote>
+
+<p>The point wasn't the ethics. It was that he could <em>see</em> the copying — as structure. Every student's submission is a dot; connect the dots whose code is nearly identical, and clusters bloom: a leader (roll number 23F10050), a first follower in yellow, a crowd of red copiers, and — off to the side, unconnected — the grey islands of the genuinely independent. You can even watch one cluster merge into another at 99% similarity, the tell-tale of a student who copied, changed one line, and passed it on.</p>
+
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <div class="embed-title">Live · Code-similarity graph from a real IITM exam</div>
+    <div class="embed-frame">
+      <iframe src="https://sanand0.github.io/tds-2024-sep-project-2-results/similar.html#?similarity=0.37" style="height:620px;" loading="lazy"></iframe>
+    </div>
+    <p class="embed-cap">Drag the similarity threshold. Tight knots = groups who copied; grey dots = the independents. Built by asking ChatGPT to compute <span class="tip" data-tip="Jaccard similarity: chop each program into overlapping 5-word windows, then measure what fraction of windows two programs share.">Jaccard similarity</span> between every pair of submissions, then to draw the network. <a href="https://sanand0.github.io/tds-2024-sep-project-2-results/similar.html#?similarity=0.37" target="_blank">Open the graph ↗</a></p>
+  </div>
+</div>
+
+<p>How did he get a distance between two <em>programs</em>? He didn't know either — so he asked. ChatGPT proposed Jaccard similarity, an ugly-looking formula that turns out to be intuitive: slice each program into overlapping five-word phrases and count how many phrases two programs share. <em>"'Boss, I don't understand what Jaccard similarity is.' 'No, I know you can solve it.'"</em> Two rounds of <em>"is this your best approach?"</em> later, he had his metric and his clusters — none of which he wrote himself.</p>
+
+<p>But word-overlap has a fatal weakness, and Anand caught himself red-handed demonstrating it. He'd been asked to write an article for <em>Built In</em> magazine, AI-free, and run it through <a href="https://www.pangram.com/" target="_blank">Pangram</a>, an AI-detector. His AI draft scored 100% AI. His "rewrite in my style" scored 100% AI. So he <em>read the article aloud</em>, transcribed his own slightly-reworded speech, and — <em>100% human.</em> Same ideas, different words, and every surface-level similarity metric was fooled.</p>
+
+<blockquote class="pull-quote">
+  <p>"Copying takes many different forms. People will smartly change a few words. You can't just take the word similarity — you have to do something different. And that is what leads us to the concept of embeddings."</p>
+  <cite>— Anand</cite>
+</blockquote>
+
+<h2 id="embeddings"><span class="section-num">Act 4 · Embeddings</span>1,500 principal components of language</h2>
+
+<p>Only about 10% of the room had heard the word "embeddings," so Anand built the idea from a place they knew — <span class="tip" data-tip="PCA finds the axes along which data varies most, compressing many correlated variables into a few independent components.">Principal Component Analysis</span>, which the course had already covered. Picture a dictionary of 40,000 words as 40,000 columns; mark a 1 wherever a sentence uses a word. Now you've turned language into numbers. But swap the words for <em>concepts</em>, and compress those 40,000 columns into ~1,500 independent dimensions, and you have an embedding.</p>
+
+<blockquote class="pull-quote">
+  <p>"Imagine that there are 1,500 principal components that break all of language down. That is what embeddings effectively are."</p>
+  <cite>— Anand, translating a deep-learning concept into a stats-class one</cite>
+</blockquote>
+
+<p>Then, instead of explaining further, he did the thing that makes his classes unusual: he asked the students to <strong>build the tool themselves, live.</strong> <em>"I'd like you to vibe-code an app where I type in two phrases and it calculates the embedding similarity. Do I personally know if this is possible? I don't. I've never asked for one."</em> He gave them a form, a six-minute clock, and permission to fail.</p>
+
+<div class="aside">
+  <span class="k">On the economics of asking</span>
+  <em>"Don't bother asking one friend — ask three. Save yourself time. Generation used to be expensive, so we would rationalize, we would plan. Now it is cheap. What is the point of conserving something that is cheap?"</em> The abundance mindset ran through everything he did that afternoon.
+</div>
+
+<p>What came back was a gallery of near-misses that taught more than a success would have. One student's app (Saurabh's) downloaded an entire LLM <em>into the browser</em> to compare two phrases — <em>"a remarkable feat of engineering… running an LLM in my browser itself, in six minutes. However, it is not what I want for this class."</em> Others computed cosine similarity between numbers you typed in (correct, but skipping the text-to-numbers step). Some — like <a href="https://gemini.google.com/share/c3972626cb96?skid=1a296fc3-364d-4f6e-8b19-0bb92c63d78b" target="_blank">this Gemini build</a> and <a href="https://pkulkarni245test20230210--devchannel-0a0ywgnb.web.app/" target="_blank">EmbedAlign, a local embedding calculator</a> — got genuinely close. Pawan's finally did the real thing.</p>
+
+<blockquote class="pull-quote">
+  <p>"A big part of this exercise is teaching you how to vibe-code on the fly, how to share. The fact that I'm pointing out all these little nitty-gritties, despite you having accomplished something pretty significant, is to take you to that next level. Please don't worry that you haven't gotten there."</p>
+  <cite>— Anand</cite>
+</blockquote>
+
+<p>With Pawan's calculator, he typed six words — <em>Apple, Orange, Jamaica, Football, Jordan</em> — and the numbers told the truth without being told the categories. <strong>Apple↔Orange: 37%. Jamaica↔Jordan: high.</strong> Fruits clustered with fruits, countries with countries, and the exact <em>distance</em> between any two phrases was now just a number he could compute, store, and reuse for free.</p>
+
+<p>That's the leap from classification to something more powerful. Classification puts things in <em>your</em> buckets. Embeddings give you the raw geometry — <em>"the exact distance between two documents"</em> — from which clusters, classifications, and maps can all be derived. And crucially, unlike an <code>=AI</code> call, it's <strong>cheap, deterministic, and stays on your data.</strong></p>
+
+<p>Then Anand showed what it looks like at scale, on data he actually cared about: Gramener's 2020 employee survey. Two hundred employees, asked "what's good?" and "what's bad?" — two free-text columns that <em>"nobody has the patience to read,"</em> and which had sat unanalyzed for years behind a tidy NPS score. He clicked <em>Cluster documents.</em></p>
+
+<figure class="fig">
+  <img src="screenshot-classify.webp" alt="Classify tool clustering Gramener employee survey responses, with a dense work-life-balance cluster highlighted" onclick="openLightbox(this.src, this.alt)">
+  <figcaption><strong>Straive's Classify tool</strong> clustering the real Gramener employee survey. A dense knot of "work-life balance" comments emerges on its own; identical entries ("I am satisfied while working at Gramener," full-stop and all) connect at 100%; a long tail of outliers — "recently joined, still exploring" — juts out. Click to enlarge. <span class="tip" data-tip="Not shown here as a link. The Classify tool is a Straive/Gramener internal demo at llmfoundry.straivedemo.com/classify.">(An internal Straive demo.)</span></figcaption>
+</figure>
+
+<p>The power, he explained, comes from three things stacked together: <strong>embeddings</strong> (making the text comparable), a <strong>clustering algorithm</strong> (or, here, something simpler — just connect the similar dots), and a <strong>force-directed layout</strong> — electrons repelling each other but tethered by springs, a physics simulation nobody has to code because the libraries already exist. <em>"You just say 'vibe-code a force-directed layout,' and it will do it."</em> Add a brushing interface to inspect any region, and exploration becomes possible.</p>
+
+<blockquote class="pull-quote">
+  <p>"Exploration is fantastic when you are trying to figure out something you don't know you want."</p>
+  <cite>— Anand, on exploratory clustering</cite>
+</blockquote>
+
+<p>And if you'd rather not do even that work, there's <strong>topic modeling</strong> — <em>"I want IT to figure out what the clusters are."</em> Run K-means, ask a model to name each cluster in two-to-four words, and out come "Office amenities and IT," "Project planning and delivery," "Team collaboration and quality." A student, Saksham, asked the sharp question: <em>wasn't ChatGPT already doing embeddings when it classified?</em> This unlocked the cleanest explanation of the day:</p>
+
+<blockquote class="pull-quote">
+  <p>"LLMs predict the next word. Embedding models do something different — they say, 'I'll do the equivalent of a PCA and give you all the concepts this represents as a 1,500-long vector.' They're a lot less popular. Advantage: very cheap, deterministic, and reliably on your data."</p>
+  <cite>— Anand</cite>
+</blockquote>
+
+<p>Once you've named the clusters, you can turn <em>back</em> to classification — but on <em>your</em> terms. Anand split "Office amenities" from "IT infra" because Girish the office admin and Sagar the IT admin have different jobs; merged "Gratitude" and "No feedback" because neither is actionable. <em>Discovery</em> gives you the map; <em>classification</em> lets you route it to whoever has to act. That round trip — text → numbers → clusters → named topics → actionable buckets — was, quietly, an entire multivariate pipeline, run without anyone touching a formula.</p>
+
+<h2 id="images"><span class="section-num">Act 5 · Beyond text</span>Long-lost twins, a dying lake, and Calvin's bully</h2>
+
+<p><em>"The incredible power of this is we have moved from numbers to text. But from text to images, code, video, audio, DNA sequences, food recipes — is only a small step."</em> And so the afternoon widened. The trick — <strong>embeddings exist for images too</strong> — and once they do, everything you did with text you can do with pictures.</p>
+
+<p>He showed a grid of Bollywood actors, arranged by facial similarity. The uncanny result: <em>Shreyas Talpade looks closer to Riteish Deshmukh than many actors look to photos of themselves.</em> Casting a long-lost brother for Nana Patekar? The embeddings nominate Anil Kapoor. It's a party trick — until you remember the client who actually paid for it: a real-estate firm that wanted <em>"I've seen this bedroom — show me other properties that look similar,"</em> and Times of India, who wanted to search a photo archive for "Rajiv Gandhi, smiling vs. sad."</p>
+
+<figure class="fig">
+  <img src="screenshot-imageexplore.avif" alt="ImageExplore tool showing a grid of Bollywood actor faces clustered by visual similarity, with outliers separated" onclick="openLightbox(this.src, this.alt)">
+  <figcaption><strong>ImageExplore</strong> — each face compared to every other face by embedding similarity; drag the slider to isolate outliers or find near-twins. The same tool can search images by a <em>text</em> phrase — plotting actors by how "African" (Morgan Freeman, most) or "Chinese" (Jackie Chan, most) they look. That cross-modal move — text distance to an image — is <span class="tip" data-tip="Multimodal embeddings place text and images in the same vector space, so a word and a picture can be compared directly.">multimodal embedding</span>. <span class="tip" data-tip="Not linked here — an internal Straive demo at imageexplore.straivedemo.com.">(A Straive demo.)</span></figcaption>
+</figure>
+
+<p>Then the scale jumped again — to the whole planet. Times of India asked whether AI could read <em>geospatial</em> data and hand back stories. Anand's colleague Varun (still in college) tossed a model called <a href="https://allenai.org/olmo" target="_blank">OlmoEarth</a> — <em>"he doesn't really know what this is, nor do I"</em> — into Claude Code and asked: what has changed in Bangalore over ten years? The method was pure embeddings-and-cosine: take the word <em>"vegetation,"</em> measure its similarity to a satellite tile in 2015 and again in 2025, and subtract. Do it over a 100m × 100m grid across the city.</p>
+
+<div class="band band-cream">
+  <div class="band-inner">
+    <span class="band-label">Same place, same word, ten years apart</span>
+    <h2 style="color:var(--accent);">Bellandur Lake, found by a falling vegetation score</h2>
+    <p>The heatmap glowed red where vegetation had dropped. One of the biggest drops pointed straight at a lake that had retreated behind new construction — <strong>Bellandur</strong> — a story the data surfaced on its own. <em>"I don't have to sit and search; the data itself gives me stories."</em></p>
+  </div>
+</div>
+
+<figure class="fig">
+  <div class="fig-duo">
+    <img src="https://pythonicvarun.github.io/olmoearth-change-insights/outputs/bengaluru/bellandur_lake/2015.png" alt="Satellite view of Bellandur Lake area, Bengaluru, in 2015" onclick="openLightbox(this.src, this.alt)">
+    <img src="https://pythonicvarun.github.io/olmoearth-change-insights/outputs/bengaluru/bellandur_lake/2025.png" alt="Satellite view of the same Bellandur Lake area in 2025, showing retreat and construction" onclick="openLightbox(this.src, this.alt)">
+  </div>
+  <figcaption><strong>2015 (left) vs 2025 (right)</strong> — the Bellandur Lake area, the exact spot the embedding-change map flagged as a vegetation collapse. Explore the live <a href="https://pythonicvarun.github.io/olmoearth-change-insights/outputs/bengaluru/?basemap=esri_imagery&amp;metric=embedding_change&amp;renderMode=variation&amp;unit=cells&amp;period=10y&amp;opacity=0.00&amp;historical=timeline&amp;speed=1200&amp;lat=12.93879&amp;lng=77.65666&amp;zoom=15.14&amp;historicalDate=2025-10-23" target="_blank">change overlay ↗</a> or the full <a href="https://pythonicvarun.github.io/olmoearth-change-insights/" target="_blank">OlmoEarth insights library ↗</a>. Live use cases: where should a retailer open a store? Where is crop health failing? Where is deforestation happening?</figcaption>
+</figure>
+
+<p>The same idea powers stranger things: <a href="https://huggingface.co/spaces/Kaikaku/epicure-explorer" target="_blank">Epicure Explorer</a>, an embedding model for <em>recipes</em>, telling you which dishes and ingredients sit near each other. Embeddings, Anand kept repeating, are not just a way to analyze — they're a way to <strong>manufacture new columns</strong>: a long vector of concept-scores you can then cluster, classify, and map.</p>
+
+<p>And mapping is where he lingered longest — because a map of a space lets you spot both outliers and <em>motion.</em> He'd spent seven years typing up 3,700 <em>Calvin and Hobbes</em> strips, embedded the text and images, and laid them out with <span class="tip" data-tip="UMAP: a technique like PCA that spreads high-dimensional data onto 2D, tending to separate distinct groups more cleanly.">UMAP</span>. Distinct islands appeared — and they had <em>meaning</em>: one was all Moe the bully, one all Rosalyn the babysitter, one Calvin's superhero fantasies. Characters the algorithm had never been told about, surfacing as geography.</p>
+
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <div class="embed-title">Interactive · A UMAP of every Calvin &amp; Hobbes strip</div>
+    <div class="embed-frame">
+      <iframe src="https://files.s-anand.net/blog/calvinmap/" style="height:640px;" loading="lazy"></iframe>
+    </div>
+    <p class="embed-cap">3,700 strips embedded and mapped. The clusters aren't labeled by hand — they <em>emerge.</em> Moe, Rosalyn, and superhero Calvin each form their own island. <a href="https://files.s-anand.net/blog/calvinmap/" target="_blank">Explore the map ↗</a></p>
+  </div>
+</div>
+
+<p>Which brings us to the most consequential map of the day. The <a href="https://en.wikipedia.org/wiki/National_Institute_of_Engineering" target="_blank">National Institute of Engineering</a>, Mysore came to Straive with a problem: their <span class="tip" data-tip="NIRF — India's National Institutional Ranking Framework, a government ranking of colleges.">NIRF ranking</span> had slid from ~100 to ~200. Claude's research said the biggest lever was <strong>research output.</strong> So Straive embedded every paper NIE had published, embedded the whole surrounding research landscape, and asked where NIE sat against it.</p>
+
+<div class="embed-wrap">
+  <div class="embed-inner">
+    <div class="embed-title">Live · NIE's papers against the OpenAlex research landscape</div>
+    <div class="embed-frame">
+      <iframe src="https://files.s-anand.net/blog/nie-research/map.html" style="height:620px;" loading="lazy"></iframe>
+    </div>
+    <p class="embed-cap">Blue = the global research background; orange = where NIE has published. The gaps — no maths, no medicine, thin chemistry — are as informative as the clusters. <a href="https://files.s-anand.net/blog/nie-research/" target="_blank">Read the full NIE research map &amp; stories ↗</a></p>
+  </div>
+</div>
+
+<p>Watching it evolve year by year told a history: almost no research in 2021, a burst in 2023 <em>"triggered by ChatGPT,"</em> then a spread into safety, remote sensing, materials. But the real insight came from tracking each <em>field's centre of gravity</em> as it drifted across the map.</p>
+
+<figure class="fig">
+  <img src="screenshot-nie-evolution.webp" alt="Trajectory chart of research fields moving across two interpreted axes from 2021 to 2025" onclick="openLightbox(this.src, this.alt)">
+  <figcaption><strong>The map after the shock.</strong> Each field's average position, traced 2021→2025. <strong>Mathematics moves dramatically</strong> — from "living systems / biology" toward "equations / formal systems" — pushed by Covid receding and AI rising. Engineering barely budges. AI then had the axes interpreted for it: horizontal = <em>AI/vision/perception ↔ materials/energy/devices</em>; vertical = <em>formal systems ↔ biology.</em> <a href="https://files.s-anand.net/blog/nie-research/evolution.html" target="_blank">Open the evolution view ↗</a></figcaption>
+</figure>
+
+<p>From a map to a <em>strategy.</em> "Formal systems" was a white space NIE could target. And because overlapping embeddings reveal who works alike, the analysis could name collaborators: <em>Ramya Jayachandran in ECE writes papers that overlap Imran Jamadar's in Mechanical — why not co-author?</em> It could even point outward, to the Chinese Academy of Sciences and named external researchers already working the gaps NIE wanted to enter.</p>
+
+<blockquote class="pull-quote">
+  <p>"Now you have a list of names and universities you can start reaching out to — which makes it ultra-actionable."</p>
+  <cite>— Anand, on turning an embedding map into a research plan</cite>
+</blockquote>
+
+<p>The plan wrote itself: raise NIRF → lever is research → find the gaps and the drift → then find who to collaborate with, inside and out. All of it — Anand stressed — powered by two things only: embeddings, and the interpretation of the axes. <em>"Read the</em> <a href="https://files.s-anand.net/blog/nie-research/strategy.html" target="_blank">full research-strategy story</a>," he offered, and moved to the part he'd been building toward all along.</p>
+
+<h2 id="survey"><span class="section-num">Act 6 · The Judgment Index</span>"I misjudged the room badly"</h2>
+
+<p>Two hours earlier, Anand had asked the class to fill out a survey called <em>The Judgment Index — Can You Out-Judge the AI?</em> He never linked it here, but you can picture its questions: how much of a project would you let an AI run unsupervised? Which critique of a flawed analysis is best? Roughly what's the chance you have a disease after a positive test? Will an AI count "ana" in "banananas" correctly? <span class="tip" data-tip="Liveform survey at forms.s-anand.net/iimb2026july — a reusable instrument with a frozen core for cross-cohort norms.">A Liveform survey</span> — and here is the reveal that made the whole afternoon click into place.</p>
+
+<blockquote class="pull-quote">
+  <p>"This survey was created entirely by Claude, which I prompted late last night with the professor's email. It also knows why it asked each question. I do not know the reason."</p>
+  <cite>— Anand, inverting the entire premise of a data project</cite>
+</blockquote>
+
+<p>This was the mirror-image of everything before. All afternoon the students had done <em>purpose-driven</em> analysis: here's a problem, solve it with data. Now Anand demonstrated <em>data-driven</em> discovery: here's some data — <em>you</em> find something worth knowing. He opened ChatGPT, and instead of typing, he <strong>dictated.</strong></p>
+
+<blockquote class="pull-quote">
+  <p>"Dictation is like a superpower. When we type, our ability to think reduces a little. When we speak, we brainstorm and come up with stuff on the fly. With AI, we have stenographers in our pockets."</p>
+  <cite>— Anand</cite>
+</blockquote>
+
+<p>He flagged three things in flight: dictation; the fork between purpose-driven and data-driven analysis; and <strong>skills</strong> — his codified, reusable prompts. Over years he'd condensed "how I do data analysis" and "how to write a meeting readout I can read aloud" into short documents he pastes in as <span class="tip" data-tip="System prompts / custom instructions — a stored block of guidance the model applies to every request.">system prompts</span>. <em>"We're codifying what we know as a skill, and what we want as a skill — both intent and ability — into prompts we can re-leverage."</em> Then the machine's readout landed on screen, and Anand read it out cold. The first line stung.</p>
+
+<div class="band band-dark">
+  <div class="band-inner">
+    <span class="band-label">The AI's readout of the class — verified against the raw responses</span>
+    <h2>The crowd is bad at reading the crowd.</h2>
+    <div class="stats">
+      <div class="stat"><b>~70%</b><span>the class's average guess for how many peers would let AI run most work unchecked</span></div>
+      <div class="stat"><b>26%</b><span>who <em>actually</em> would (picked "75%" or "100%" trust)</span></div>
+      <div class="stat"><b>1 in 4</b><span>caught the real flaw: income is right-skewed, so normality may not apply</span></div>
+      <div class="stat"><b>0</b><span>dominant "AI-savviness" axis — PCA found no single score</span></div>
+    </div>
+    <p style="margin-top:1.4rem;font-size:.96rem;">Our own recount of the 68 responses confirms it: average predicted "high-trust" share ≈ 69%, actual ≈ 26.5%. <em>"Every one of you thought you were the careful one and everyone else was reckless. You're wrong about each other."</em> <button class="cite-btn" onclick="openPopup('pop-pluralistic')" title="Source">2</button></p>
+  </div>
+</div>
+
+<p>The survey had caught the class in a textbook case of <span class="tip" data-tip="Pluralistic ignorance: when most members of a group privately reject a norm but wrongly assume most others accept it.">pluralistic ignorance</span> — each student cautious, each convinced everyone else was cavalier, the average collapsing to the same middle. And it went further. Only ~28% caught that the strongest critique of "we assumed a normal distribution of monthly income" is that income is <em>right-skewed</em> <button class="cite-btn" onclick="openPopup('pop-skew')" title="Source">3</button> — the kind of buried assumption you'll be delegating to AI and won't catch.</p>
+
+<blockquote class="pull-quote">
+  <p>"People who trust AI the most are the worst at checking it. High-trust folks caught the flaw 11% of the time; skeptics, 26%. The more favorable you are to AI, the less critical you are of it. Watch that."</p>
+  <cite>— the AI's own analysis, read aloud by Anand</cite>
+</blockquote>
+
+<p>Then the finding that doubles as the course's thesis: <strong>there is no single "AI-savviness" score.</strong> PCA couldn't find one dominant axis; being good at catching one kind of error told you almost nothing about catching another. <em>"Don't trust anyone who sells you one number for how good someone is with AI."</em></p>
+
+<p>But the survey wasn't the climax. What the <em>students</em> did with it was. Anand handed them an anonymized copy — asking the AI to strip the PII, because <em>"what I don't know is what I don't know; is there a text field where someone typed their name?"</em> — and set them loose. Within minutes, insights he hadn't found came flying back:</p>
+
+<div class="cards-wrap">
+  <div class="cards-inner">
+    <div class="cards">
+      <div class="card">
+        <div class="k">Student insight</div>
+        <h4>The skepticism paradox</h4>
+        <p>"People who say they <em>don't</em> trust AI end up using more AI tools." Daily users were the most skeptical of all. Do they distrust it <em>because</em> they see its failures up close?</p>
+      </div>
+      <div class="card">
+        <div class="k">Student insight</div>
+        <h4>Projection bias</h4>
+        <p>"My estimate of how much others use AI is proportional to how much <em>I</em> use it." The six who said they rely 100% on AI guessed 80% of the class does too.</p>
+      </div>
+      <div class="card">
+        <div class="k">Method in action</div>
+        <h4>Adversarial cross-check</h4>
+        <p>Each claim went into a <em>second</em> model to be falsified. "A good way of doing pair programming or adversarial red-teaming, depending on your context."</p>
+      </div>
+      <div class="card">
+        <div class="k">Honest caveat</div>
+        <h4>n = 6, p = 0.2</h4>
+        <p>Directionally real, not significant — "59 of 67 are daily users, so there's nobody light to compare to." The class learned to <em>size</em> its own confidence.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p>This was the multivariate class turned inside out. The students weren't computing correlations — they were <em>debating</em> them, cross-examining each other's models, and catching each other's interpretation errors. When one student's finding collapsed because ChatGPT had misread a variable name (<code>predict_room</code> → "a room session"), Anand owned it instantly: <em>"I did the mistake, not the AI — I didn't give you enough data."</em> The failure was a feature. It showed exactly where a human still has to stand.</p>
+
+<blockquote class="pull-quote">
+  <p>"We're not very good at critiquing our own work; we're not particularly good at critiquing AI either. But we seem to be reasonably good at critiquing each other as people. So AI can serve as an assistant, and we can cross-verify."</p>
+  <cite>— Anand</cite>
+</blockquote>
+
+<p>Which is where he named the arc the industry is on. First there was <strong>human-in-the-loop</strong> — AI generates, a human checks each output. But AI generates so much that the humans drown. So the human steps up to <strong>human-on-the-loop</strong> — another AI verifies, deterministic tests catch errors, and the human only reviews the exceptions the verifier flags. And beyond that, <strong>loop engineering</strong>: let the agents design the generate-verify-improve cycle itself. <button class="cite-btn" onclick="openPopup('pop-loop')" title="Source">4</button></p>
+
+<blockquote class="pull-quote">
+  <p>"Because generation has become cheap, and what is cheap increases ROI, volume increases — which means human effort becomes the expensive part. We are increasingly moving ourselves out of the loop."</p>
+  <cite>— Anand</cite>
+</blockquote>
+
+<p>The payoff of the data-driven approach came from a story about that same waste-management client. Anand's colleague Tanuj was boxed in — <em>"we don't have notebooks, we can't use Gemini, what do we do?"</em> — with only Snowflake and Cortex. So they fed it every document about the client and asked it to <em>find the use cases.</em> It generated fifteen. The head of analytics looked at them and went pale:</p>
+
+<div class="band band-crimson">
+  <div class="band-inner">
+    <span class="band-label">Data-driven discovery, in production</span>
+    <h2>Half a day of prompting reproduced 80% of a month-long strategy engagement.</h2>
+    <p style="font-size:1rem;">"In November we did a strategic consulting exercise — one to three months, fairly expensive — and 80% of that matches this." Then Tanuj didn't just <em>propose</em> the fifteen use cases; he told the AI to <em>solve</em> all fifteen, in a week. One of them surfaced this, in an email that actually went to the client:</p>
+    <blockquote style="border-left:3px solid var(--gold-light);padding-left:1.2rem;margin-top:1.2rem;font-style:italic;font-size:1.02rem;">"There are 105,000 transactions charging the client 16 cents when the service costs $175–$179. Either this is a data error — or you are leaking money like crazy. And 84,000 transactions where customers pay 6 to 14 times the median rate…"</blockquote>
+  </div>
+</div>
+
+<p>A student asked whether hallucinations would ever fully vanish. Anand's answer reframed the word itself. Ask "was Rajiv Gandhi a good Prime Minister?" and no answer will satisfy everyone — <em>"subjectivity can be seen as hallucination."</em> And flipped around: <em>"hallucination is creativity. If I want a model to come up with powerful new ideas, the more diverse its thought process, the better."</em></p>
+
+<blockquote class="pull-quote">
+  <p>"If a document has ten categories that any human would agree is ten, that kind of hallucination is steadily reducing. If five humans would disagree between five and ten, that hallucination won't reduce — because we don't even know the answer. AI reflects human preferences. If humans are divided, AI will also be divided."</p>
+  <cite>— Anand</cite>
+</blockquote>
+
+<p>He closed the loop with two last questions on the form — a small controlled experiment. <em>"Finish this: 'AI is like a ____, because ____.'"</em> and <em>"Type any random word."</em> The design behind them is mischievous: metaphors, embedded, cluster by <em>meaning</em> not spelling — "intern," "junior analyst," "eager grad" all land together — while the "random" words, embedded and clustered, form tidy-looking groups too, exposing how eagerly any clustering method invents structure from noise. Even an AI-authored survey can teach you not to over-trust an AI-authored analysis. (Curious how far this goes? Agents can now <em>fill out</em> surveys like people — see <a href="https://nitin399-maker.github.io/personagen/" target="_blank">PersonaGen</a>.)</p>
+
+<h2><span class="section-num">The exit</span>Learn what AI can't do</h2>
+
+<p>With ten minutes left, Anand stopped demoing and told the class what he actually wanted them to leave with — not as a lesson, but as an experience. Three things.</p>
+
+<p><strong>First: build skills in what AI <em>cannot</em> do.</strong> His method is almost provocatively lazy: <em>"Give every task to AI. What it cannot do, I will learn — by necessity."</em> If it writes the R code, don't bother learning R. If it can't physically walk down the hall and mend a relationship, learn <em>that.</em></p>
+
+<blockquote class="pull-quote">
+  <p>"There is merit in learning what AI cannot do, rather than learning what AI can do."</p>
+  <cite>— Anand</cite>
+</blockquote>
+
+<p><strong>Second: treat AI like people.</strong> Every chat window, he argued, is a subordinate — <em>"possibly much smarter than you, but still reporting to you, because you have the accountability."</em> Which means even an entry-level analyst is really in a management role, and the skills that make you good at AI are the skills that make you good at managing a team: specifying, delegating, feeding one person's output to another, giving feedback. He cited Wharton's <a href="https://www.oneusefulthing.org/" target="_blank">Ethan Mollick</a>, who finds exactly this. <button class="cite-btn" onclick="openPopup('pop-mollick')" title="Source">1</button></p>
+
+<p><strong>Third: it's complementary, not a replacement.</strong> <em>"Using AI will make you more efficient as long as you know how to use it well. You need to know how the fundamentals work. You need to know how to execute effectively. Both will come in handy."</em></p>
+
+<p>And then Prof. Das rose to close — and gently, expertly, put the afternoon back inside his course. Everything Anand showed, he noted, had been <em>"almost nothing to do with what we are doing, but everything to do with why we need to do it."</em> He'd noticed something about the questions the students asked of the survey data:</p>
+
+<blockquote class="pull-quote">
+  <p>"Look at the questions you all asked. There were interesting things — but they were all univariate, mostly. A little correlation. We did not see the multivariate questions. The heart of this course is how you look at <em>all</em> the questions together."</p>
+  <cite>— Prof. Shubhabrata Das, reclaiming the multivariate high ground</cite>
+</blockquote>
+
+<p>It was the perfect ending, because it proved Anand's own thesis from the other side. The AI made the methods free. But knowing <em>which</em> question is worth asking of a dataset — the multivariate one, the one that looks at everything at once — that judgment is exactly the priced, human, un-automatable thing the whole afternoon had been about.</p>
+
+</article>
+
+<section id="takeaways" class="cards-wrap" style="background:var(--dark);">
+  <div class="cards-inner">
+    <h2 style="font-family:var(--font-display);color:#fff;font-size:2.1rem;text-align:center;margin-bottom:.5rem;">Top Takeaways</h2>
+    <p style="text-align:center;color:#b3a893;font-family:var(--font-mono);font-size:.78rem;letter-spacing:.04em;margin-bottom:2rem;">Six things to carry out of the room</p>
+    <div class="cards">
+      <div class="card">
+        <div class="k">01 · Classify</div>
+        <h4>Text is now a variable</h4>
+        <p>An <code>=AI</code> cell, ChatGPT, or Snowflake Cortex turns free text into a new column — categories, sentiment, type — at ~90% human accuracy. Forty years of unread text just became analyzable.</p>
+      </div>
+      <div class="card">
+        <div class="k">02 · Ensemble</div>
+        <h4>Ask five models, not one</h4>
+        <p>Model errors barely correlate. One model ≈ 14% wrong; five that agree ≈ 0.7% wrong. Route the rare disagreements to a human. A 100-person team becomes 28 — at 99.3% accuracy.</p>
+      </div>
+      <div class="card">
+        <div class="k">03 · Embed</div>
+        <h4>Distance beats keywords</h4>
+        <p>Embeddings = ~1,500 principal components of meaning. Cheap, deterministic, on your data — and they work on text, images, satellites, recipes. Cluster, classify, and map from the same vectors.</p>
+      </div>
+      <div class="card">
+        <div class="k">04 · Verify</div>
+        <h4>Judgment is the scarce skill</h4>
+        <p>Only 1 in 4 caught the buried assumption; those who trusted AI most caught it least. Cross-question, ask a second AI, or just say "Is this your best work?" There's no single AI-savviness score.</p>
+      </div>
+      <div class="card">
+        <div class="k">05 · Discover</div>
+        <h4>Run both kinds of analysis</h4>
+        <p>Purpose-driven gets the answer you planned; data-driven finds what you didn't know to ask. Generation is cheap — make many, keep what works. Half a day matched 80% of a month-long consulting job.</p>
+      </div>
+      <div class="card">
+        <div class="k">06 · Manage</div>
+        <h4>Every chat reports to you</h4>
+        <p>Learn what AI <em>can't</em> do — and lead the rest. Management skills are AI skills. Move from human-<em>in</em>-the-loop to human-<em>on</em>-the-loop to loop engineering as generation gets cheaper.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="f-inner">
+    <div class="f-title">"Free methods. Priced judgment."</div>
+    <p>A 3-hour in-person session for the PGP-BA Term 4 Multivariate Data Analysis class at IIM Bangalore, 2 July 2026, by <a href="https://www.s-anand.net/" target="_blank">S Anand</a>, LLM Psychologist at Straive — hosted by Prof. Shubhabrata Das.</p>
+    <div class="f-links">
+      <a onclick="openTranscript()" style="cursor:pointer;">📄 Full transcript</a>
+      <a href="https://github.com/sanand0/talks/releases/download/talks/2026-07-02-iimb-mda-workshop.opus" target="_blank">🎧 Audio</a>
+      <a href="https://tds.s-anand.net/" target="_blank">Tools in Data Science (IITM)</a>
+      <a href="https://sanand0.github.io/talks/" target="_blank">More talks</a>
+    </div>
+    <p class="f-note">Every link, embed, and number on this page comes from the live session. Survey statistics were re-verified against the 68 anonymized responses. Deployed at sanand0.github.io/talks/2026-07-02-iimb-mda-workshop/</p>
+  </div>
+</footer>
+
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<!-- Popup overlay -->
+<div id="popup-overlay" class="popup-overlay" onclick="closePopup()">
+  <div class="popup-box" onclick="event.stopPropagation()">
+    <button class="popup-close" onclick="closePopup()">×</button>
+    <div id="popup-content"></div>
+  </div>
+</div>
+
+<!-- Transcript popup -->
+<div id="transcript-overlay" class="popup-overlay" onclick="closeTranscript()">
+  <div class="popup-box" onclick="event.stopPropagation()" style="max-width:820px;">
+    <button class="popup-close" onclick="closeTranscript()">×</button>
+    <div id="transcript-content" style="line-height:1.7;"><p style="font-family:var(--font-mono);color:var(--muted);">Loading transcript…</p></div>
+  </div>
+</div>
+
+<!-- Popup data -->
+<div id="pop-mollick" class="popup-data">
+  <h3>Management skills are AI skills</h3>
+  <p>Ethan Mollick, professor at Wharton and author of <em>Co-Intelligence</em>, argues that working well with AI resembles managing people: you delegate, set context, give feedback, and stay accountable for the result. He frames expertise as a "shield" for catching AI errors, not just an accelerator.</p>
+  <p>Anand's twist: he asked Claude itself how low-expertise institutions (auditors, juries, regulators) verify smarter systems — then applied those methods to AI.</p>
+  <a href="https://www.oneusefulthing.org/" target="_blank">Ethan Mollick · One Useful Thing ↗</a>
+</div>
+<div id="pop-pluralistic" class="popup-data">
+  <h3>Pluralistic ignorance</h3>
+  <p>A social-psychology term for when most members of a group privately hold one view but wrongly believe most others hold the opposite — so the group misreads itself. Here, each student was personally cautious about AI autonomy (average trust ≈ 47%, only 26.5% high-trust) yet predicted ~70% of peers would delegate heavily.</p>
+  <p>The gap between the prediction and the reality is the finding — and it only shows up when you compare a second-order belief ("predict the room") against the first-order answers.</p>
+  <a href="https://en.wikipedia.org/wiki/Pluralistic_ignorance" target="_blank">Pluralistic ignorance ↗</a>
+</div>
+<div id="pop-skew" class="popup-data">
+  <h3>Why "right-skewed" is the best critique</h3>
+  <p>Income distributions have a long right tail — a few very high earners pull the mean above the median. Many statistical models assume normality (a symmetric bell curve). Assuming a normal distribution of income can therefore distort estimates and confidence intervals.</p>
+  <p>The other survey options (small sample, bad data) aren't wrong in general, but they don't target the <em>specific</em> flaw in "we assumed a normal distribution of monthly income." Only ~28% of the class picked it.</p>
+  <a href="https://en.wikipedia.org/wiki/Skewness" target="_blank">Skewness ↗</a>
+</div>
+<div id="pop-loop" class="popup-data">
+  <h3>In the loop → on the loop → loop engineering</h3>
+  <p><strong>Human-in-the-loop:</strong> a person checks each AI output. Works until volume overwhelms them.</p>
+  <p><strong>Human-on-the-loop:</strong> a second AI verifies, deterministic tests catch failures, and the human only reviews the ~10% of exceptions the verifier flags.</p>
+  <p><strong>Loop engineering:</strong> agents design the generate → verify → improve cycle itself, and the human monitors whether the system keeps improving. As generation gets cheaper, humans move progressively out of the loop.</p>
+</div>
+
+<script>
+// Progress bar
+const bar = document.getElementById('progress');
+addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - innerHeight;
+  bar.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + '%';
+}, {passive:true});
+
+// Lightbox
+function openLightbox(src, alt){
+  const lb = document.getElementById('lightbox');
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox-img').alt = alt || '';
+  lb.classList.add('on');
+}
+function closeLightbox(){ document.getElementById('lightbox').classList.remove('on'); }
+
+// Popup
+function openPopup(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  document.getElementById('popup-content').innerHTML = el.innerHTML;
+  document.getElementById('popup-overlay').classList.add('on');
+}
+function closePopup(){ document.getElementById('popup-overlay').classList.remove('on'); }
+
+// Transcript popup — fetch + minimal markdown render
+let transcriptLoaded = false;
+function mdToHtml(md){
+  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const lines = md.split('\n');
+  let html = '', para = [];
+  const flush = () => { if(para.length){ html += '<p>' + para.join(' ') + '</p>'; para = []; } };
+  const inline = s => esc(s)
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/`([^`]+?)`/g,'<code>$1</code>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank">$1</a>')
+    .replace(/(^|[^\*])\*([^*]+?)\*/g,'$1<em>$2</em>');
+  for(let raw of lines){
+    const line = raw.trimEnd();
+    if(!line.trim()){ flush(); continue; }
+    if(/^#{1,6}\s/.test(line)){ flush(); const lvl = line.match(/^#+/)[0].length; html += '<h'+lvl+' style="font-family:var(--font-display);color:var(--accent);margin:1.2rem 0 .5rem;">'+inline(line.replace(/^#+\s/,''))+'</h'+lvl+'>'; continue; }
+    if(/^---+$/.test(line)){ flush(); html += '<hr style="border:none;border-top:1px solid var(--border);margin:1.4rem 0;">'; continue; }
+    para.push(inline(line));
+  }
+  flush();
+  return html;
+}
+function openTranscript(){
+  const ov = document.getElementById('transcript-overlay');
+  ov.classList.add('on');
+  if(transcriptLoaded) return;
+  fetch('transcript.md').then(r => r.text()).then(t => {
+    document.getElementById('transcript-content').innerHTML =
+      '<h2 style="font-family:var(--font-display);color:var(--accent);margin-bottom:.3rem;">Full Transcript</h2>' +
+      '<p style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-bottom:1.2rem;">IIM Bangalore · Multivariate Data Analysis · 2 Jul 2026</p>' +
+      mdToHtml(t);
+    transcriptLoaded = true;
+  }).catch(() => {
+    document.getElementById('transcript-content').innerHTML =
+      '<p>Could not load the transcript inline. <a href="transcript.md" target="_blank">Open transcript.md ↗</a></p>';
+  });
+}
+function closeTranscript(){ document.getElementById('transcript-overlay').classList.remove('on'); }
+
+// Esc closes everything
+addEventListener('keydown', e => {
+  if(e.key === 'Escape'){ closeLightbox(); closePopup(); closeTranscript(); }
+});
+</script>
+</body>
+</html>
+
+

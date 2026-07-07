@@ -1,6 +1,6 @@
 # Prompts
 
-## Data story, 16 Jun 2026
+## Data story, 5 Jul 2026
 
 <!--
 cd ~/code/talks/
@@ -8,7 +8,7 @@ dev.sh -p ~/code/liveform
 claude --dangerously-skip-permissions --model opus --effort high
 -->
 
-Generate a beautiful narrative story about this 3-hour session by [Anand](https://www.s-anand.net/), LLM Psychologist at Straive, conducted in-person for the Term 4 students of the Multivariate Data Analysis course for the [PGP BA](https://www.iimb.ac.in/programmes/pgpba) program at IIM Bangalore on 2 Jun 2026 (2:30-5:45 pm IST).
+Generate a beautiful narrative story about this 3-hour session by [Anand](https://www.s-anand.net/), LLM Psychologist at Straive, conducted in-person for the Term 4 students of the Multivariate Data Analysis course for the [PGP BA](https://www.iimb.ac.in/programmes/pgpba) program at IIM Bangalore on 2 Jul 2026 (2:30-5:45 pm IST).
 
 Create this as 2026-07-02-iimb-mda-workshop/index.html.
 
@@ -110,4 +110,4 @@ Replace screenshot-imageexplore.webp with screenshot-imageexplore.avif which I'v
 
 I added screenshot-nie-evolution.webp - you can use that.
 
-<!-- claude --resume --dangerously-skip-permissions -->
+<!-- claude --resume fbf26277-9cb6-411c-806c-74c7bed2e328 --dangerously-skip-permissions -->

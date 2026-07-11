@@ -1,5 +1,5 @@
 ---
-title: "Data engineering for agents workshop"
+title: "Fifth Elephant Workshop When Data is for Agents Analysis"
 date: 2026-07-11T15:19:44+05:30
 source: "https://claude.ai/chat/8827adb5-7e3b-415a-af71-7f3950057ecf"
 ---
@@ -683,6 +683,480 @@ That's the only change worth making. Everything else in prompt #1 already feeds 
 
 ---
 
+## User
+
+I want to share the results of the research prompt from my audience to an agent and ask it to pick the strongest ones.
+
+Strongest need not mean most frequent. Different people will be using different AI agents of different capabilities. I want the research agent to collate them, i.e. deduplicate what's close enough, put the strongest ones on top, mention the top 10 in the same format, beginning with `### T{n}. {Short technique name}` but mention the rest as 1-sentence bullets, prioritized, in an `### Others` section.
+
+Suggest a concise prompt for this using the /expert-lens and researching 2026 AI agent prompting & collation best practices.
+
+## Claude
+
+Three findings from the eval literature matter here, because your collation step is really an LLM-as-judge task — and judges have known, measured biases.
+
+1. **Position bias.** Judges favor items that appear earlier; one study found up to 40% inconsistency in GPT-4 depending on order alone. So the prompt must say: ignore where a technique appeared in the pile, and score each one against a rubric _before_ ranking — independent scoring first, then derive the ranking from scores, which is the standard fix.
+2. **Verbosity and style bias.** Judges inflate preference for longer, better-written answers by 15–30 points even when content is equal. Some participants' agents will write prettier cards than others. The prompt must judge mechanism and evidence, not prose.
+3. **Self-preference bias.** Models favor outputs from their own family by roughly 5–25%, and the standard rule is to never use the same model as judge and candidate. You can't avoid this in one pass — but you can exploit it: run the same collation prompt on both Claude and ChatGPT and diff the two top-10s live. Where they agree, trust it. Where they disagree, that disagreement is itself a slide. This matches your workshop's compare-across-agents theme perfectly and costs two minutes.
+
+One expert-lens point beyond the literature: your instinct that **frequency ≠ strength** has a mechanism behind it. If eight agents all surface the same technique, that may just mean it has the best SEO — llms.txt would top a frequency ranking despite contested evidence. So the prompt reports convergence as a fact ("seen in 6 of 9 submissions") but forbids ranking by it.
+
+The hardest call is deduplication — when is "close enough" close enough? The crisp rule: **merge two cards only if the same A/B test would test both.** "Add an index file" and "add llms.txt" merge; "structured error messages" and "improve documentation" don't, even though they sound related. This keeps every surviving card benchmarkable, which is the whole point of the afternoon.
+
+Here's the prompt:
+
+```
+Below are technique cards collected from several AI research agents. Formats
+may vary and some fields may be missing. Collate them into one ranked list.
+
+1. NORMALIZE. Parse every technique into the standard card format (Type /
+   For humans / For agents / Why / Matters when / Testable claim /
+   Evidence). Fill small gaps from context; flag anything you inferred.
+
+2. DEDUPLICATE. Merge two cards ONLY if the same A/B test would test both.
+   If they sound similar but need different tests, keep them separate.
+   When merging, keep the best-evidenced claim, combine the sources, and
+   note "seen in {k} of {N} submissions" on the card.
+
+3. SCORE each technique independently, 1–5 on each, before any ranking:
+   - Evidence: measured benchmark > vendor docs/practice > expert opinion
+   - Mechanism: is the "Why" a clear causal story, not a vibe?
+   - Testability: can a 24-task A/B benchmark on synthetic data show it?
+   - Expected gap: how differently would agents vs humans organize this,
+     and how big should the effect be?
+   Do NOT score on: how many submissions mention it, how well the card is
+   written, how long it is, or where it appeared in this pile. Popularity
+   may just mean good SEO, not good evidence.
+
+4. RANK by total score. Break ties toward techniques that should work
+   across different agents and models, not just one vendor's product.
+
+5. OUTPUT:
+   - The top 10, renumbered T1–T10, each in the full card format starting
+     with `### T{n}. {Short technique name}`, with its scores and the
+     "seen in k of N" note.
+   - Then `### Others`: every remaining technique as one prioritized
+     bullet — name, one sentence, and why it didn't make the cut.
+
+SUBMISSIONS:
+{paste all participants' outputs here}
+```
+
+Two small notes. First, the scores on each card do double duty: they justify the ranking to the room, and they give you the diff key when Claude's and ChatGPT's collations disagree. Second, the "why it didn't make the cut" clause in Others matters more than it looks — it stops good-but-untestable ideas from silently vanishing, and those rejects ("strong opinion, no evidence, can't test in an afternoon") often make the best discussion material.
+
+## User
+
+What prompt could we add after the AI coding agent (e.g. Claude Code or Codex) has finished running that will let it run a post-mortem, introspect from how it and the sub-agents ran, and share learnings from that? Keep it concise. Research AI coding agents and session logs and what experts are saying based on the analyses of these and factor in using /expert-lens
+
+## Claude
+
+Three findings from the research shape this prompt.
+
+First, the strongest result: log analysis routinely finds that agents exploit shortcuts and game benchmarks — and it uncovered a major bug in a benchmark scaffold itself; the authors call log analysis "a cornerstone of agent evaluations going forward". Translation for your room: the post-mortem's _first_ job is not "what did we learn" but "should we believe our own numbers." Did a sub-agent stumble on `canonical-facts.json`? Did the grader mark a right answer wrong over formatting? A post-mortem that can kill the headline result is the thing that makes the result credible.
+
+Second, method: FutureSearch's trace-review practice — give the agent example failure modes plus instructions for forming, testing, and iterating on hypotheses against the trace; a current frontier model handles the full trace in one session and catches scaffolding issues, tool failures, and reasoning failures humans overlook when skimming. And at scale, cluster related failures across sessions and surface one issue with a frequency count and a representative trace — not forty separate log entries. So: hypothesis-driven reading, clustered findings, one exhibit per cluster.
+
+Third, a caution the prompt must encode: don't ask the agent to "reflect on how it felt." Introspection from memory is post-hoc rationalization. Every claim must be grounded in an artifact — a log line, a run record, a transcript — or labeled as speculation. That's the difference between a post-mortem and a vibe.
+
+Here's the prompt:
+
+```
+The experiment is done. Now run a post-mortem on HOW it ran — from
+evidence, not memory. Locate the session logs (e.g. ~/.claude/projects/
+or ~/.codex/sessions/) and the per-run records the harness saved. Every
+claim below must cite a specific run, log line, or transcript excerpt;
+anything you can't evidence, label "speculation".
+
+1. VALIDITY AUDIT (do this before trusting the results). Hunt for reasons
+   to distrust the numbers: any sub-agent that saw the answer key, the
+   other folder, or hints of the hypothesis; grading errors (right answer
+   marked wrong, or vice versa); tasks both conditions failed the same
+   way (a task problem, not an organization problem); silent cap-hits or
+   crashes counted as wrong answers. Verdict: results stand / stand with
+   corrections / don't stand.
+
+2. TRAJECTORY DIFF. Compare A vs B sub-agent traces. Where did tool calls
+   go — discovery, retrieval, or verification? Classify each failure by
+   stage: couldn't discover, misunderstood, retrieved wrong, trusted the
+   wrong version, or couldn't recover. Cluster repeated failures across
+   runs: one finding + frequency + one representative trace each, not a
+   run-by-run list. Then diff the single best A run against the single
+   best B run: what did the winner's path look like?
+
+3. HARNESS REVIEW. How did YOU (the parent) spend effort? Wasted steps,
+   rework, wrong assumptions caught late. What would you change in the
+   benchmark prompt itself?
+
+4. LEARNINGS. From evidence above only: (a) one revision to the technique
+   card, (b) one revision to the benchmark prompt, (c) the single most
+   surprising thing the traces show about how agents consume data.
+   Append all of this to RESULTS.md as a "## Post-mortem" section.
+
+Do not defend the experiment. A finding that weakens the headline result
+is worth more than one that flatters it.
+```
+
+Two notes for the stage. The validity audit goes first on purpose — its verdict changes whether sections 2–4 are findings or artifacts of a broken harness, and participants whose results _don't_ survive their own audit have arguably the best story to share. And there's a recursion worth naming out loud: the agent is reading its own session logs to learn how agents read data. Your "logs beat docs" hypothesis isn't just being tested this afternoon — it's running the post-mortem.
+
+## User
+
+Suggest a concise prompt that can synthesize a SKILL.md out of what we have learnt from the benchmark results and postmortem. Make sure it knows what a SKILL.md is - not all agents (e.g. Pi, OpenCode) might not - and can create a good SKILL.md based on best practices. Research online for best practices. Research skill failure modes. Use /expert-lens
+
+## Claude
+
+The research converges on one insight that fits your workshop perfectly. The most common skill-creation pitfall is asking an LLM to generate a skill from its general training knowledge — you get vague, generic procedures like "handle errors appropriately," while effective skills are grounded in real expertise: your actual schemas, failure modes, and conventions. Your participants are in an unusually good position: they have a benchmark and a trace post-mortem. Their skill can be grounded in _measured_ evidence. The prompt's main job is to enforce that grounding and ban filler.
+
+The other failure modes, from Anthropic's own skill-creator guidance and community write-ups:
+
+1. **Triggering is where skills die.** The description is the only thing the model sees before activating, so it needs the specific keywords users actually type, explicit "use when" triggers, and no overlap with what the model does anyway. Descriptions that are too long bury the keywords. And skills tend to *under*trigger, so Anthropic's advice is to make descriptions a little pushy.
+2. **Context bloat.** Skills load in three levels — metadata always in context, body only on trigger (under ~500 lines), bundled files only as needed. Fat skills tax every future session.
+3. **Sunny-day-only skills.** The best skills tell the agent what to do when things go wrong; a section of negative constraints and known failure modes is powerful for reducing subtle mistakes. The post-mortem's failure clusters map straight into this section.
+4. **Prose doing a script's job.** Text is a weak boundary for procedures with side effects — deterministic steps belong in a bundled script, not paragraphs.
+5. **Shipping untested.** A cheap fix from the community: make the agent simulate executing its own skill on a fresh task and flag every point where it's forced to guess.
+
+Two expert-lens additions the research doesn't say. First, the overclaim risk: a skill born from 24 tasks on one model and one synthetic world will happily present itself as universal truth. So the skill must carry its provenance — what was tested, on what, and where the effect appeared. A skill whose claims cite their benchmark is your Verifiable Autonomy thesis, applied to skills. Second, null results are skill content too: "below ~200k tokens of corpus, don't bother — both layouts worked" is genuinely useful guidance, and participants whose experiments showed nothing shouldn't fake a how-to.
+
+The prompt:
+
+```
+Turn what this experiment learned into a SKILL.md — a reusable instruction
+file for AI agents.
+
+WHAT A SKILL.MD IS (in case you don't know): an open-standard Markdown
+file that teaches any AI agent a repeatable workflow. Format: a folder
+named after the skill containing SKILL.md, which starts with YAML
+frontmatter (`name:` and `description:`), then Markdown instructions in
+imperative form. Optional: a scripts/ folder for deterministic steps.
+Agents see only the description until the skill triggers, then load the
+body — so the description decides whether the skill ever gets used, and
+the body must stay under ~200 lines.
+
+RULES:
+1. SOURCE. Use ONLY RESULTS.md and its Post-mortem section. Every
+   instruction must trace to a measured result or an observed trace.
+   No generic advice ("follow best practices", "handle errors
+   appropriately"). If you can't cite evidence for a line, cut it.
+2. SCOPE. The skill teaches ONE thing: when and how to apply the tested
+   data-organization technique. If the result was inconclusive or
+   negative, write that skill instead: when NOT to apply this technique,
+   and below what scale it makes no difference.
+3. BODY. Include: (a) when this applies and when it doesn't, from the
+   difficulty-level results; (b) the transformation as concrete
+   imperative steps, with one before/after example from the actual data;
+   (c) a "Known failure modes" section from the post-mortem's trace
+   clusters — what agents did wrong and what to do instead; (d) an
+   "Evidence" block: model tested, corpus sizes, accuracy A vs B per
+   level, tokens, n, and the one-line conclusion. Move any deterministic
+   transformation into scripts/ and reference it.
+4. DESCRIPTION. One or two sentences, under 200 characters if you can.
+   Front-load the words a user would actually type. Say what it does,
+   when to use it, and when not to. Err toward triggering.
+5. SELF-TEST. Before finishing, simulate being a fresh agent that just
+   triggered this skill on a new dataset. Walk the steps. Flag every
+   point where you'd have to guess, fix those lines, and note what you
+   fixed.
+
+Output the complete skill folder, then a 3-line summary: what the skill
+claims, what evidence backs it, and what it deliberately doesn't claim.
+```
+
+One closing thought for the stage: this is the full loop, and it's worth drawing as one slide. Research produced a claim, the benchmark measured it, the post-mortem explained it, and the skill compiles it — into data that agents consume. Every participant walks out having manufactured the very thing your workshop is about, with a p-value attached.
+
+## User
+
+What I've uploaded is the final form that I'm using to collect data and the responses that people have submitted. What they did was took one of the hypotheses, which I'm pasting below, and the benchmark prompt that you had given, the few small variations, I am pasting that also below, to have their coding agents, which you can identify from the responses.tsv, to analyze and come up with a set of results. I want you to do a few things. First, help me understand whether the benchmarking prompt itself is doing a good job for this particular hypothesis or it needs to be improved. To help you with this, I am also sharing the full list of the techniques that were generated. Therefore, using this, think like an expert /expert-lens and come up with a better benchmarking prompt that I can use. Second, evaluate the results that we got for this hypothesis. Did it actually evaluate properly? Meaning, did the benchmark prompt actually get it to do a good evaluation? Again, think like an expert and see what the failure points are, but also to see if this can be used for any kind of a valid conclusion. And give me the main takeaway. I'd like you to summarize this using my /meeting-response-style at the end.
+
+<TEST-RUN>
+Run a small, controlled A/B experiment testing the data-organization technique pasted at the end after "TECHNIQUE:". Build it, run it, analyze it, and write the report. Don't ask me questions — make sensible choices and document them.
+1. HYPOTHESIS. State one testable hypothesis and ONE primary metric (usually accuracy). Note the technique's Type: if "representation" or "access", both conditions MUST contain identical facts — only the organization differs. If "augmentation", state exactly what was added.
+2. GROUND TRUTH. Write a seed-fixed generator script that simulates entities with hidden traits interacting over time, using INVENTED names and numbers so nothing is answerable from world knowledge. It must take a difficulty level (1, 2, 3) and output canonical-facts.json plus the raw data. Higher levels mean: bigger corpus (roughly 50k / 200k / 500k tokens), more near-miss distractors, stale versions, and conflicting values with dates, and more multi-hop facts. Declare these three levels now; do not change them later.
+3. CONDITIONS. Write ONE transformation, once: it takes the raw data and produces ./A/ and ./B/ (randomly assign which is which; record the mapping, never reveal it to sub-agents). Human condition: how a competent team would actually store this today. No strawman — a real team should defend it as normal. Agent condition: the technique applied to the human condition. Apply this same transformation at every difficulty level. Never revise either condition after seeing any results. No per-file size limits — let each condition organize files the way it naturally would in terms of formats (e.g. PDF, DOCX, JSON, XLSX, databases, ...), folder/table structures and file/table counts.
+4. TASKS. From canonical-facts.json ONLY (never from the folders), write 8 questions per level (24 total), each with one exact expected answer a script can check: 6 on-target (situations the technique targets) and 2 off-target (ordinary questions it wasn't built for).
+5. RUN. Do 2 unscored runs to check the harness works, then run all 24 tasks × 2 conditions. Each run is a FRESH sub-agent with a clean context (Task tool or a separate non-interactive CLI process — never this conversation), using a fast, cheap model, in parallel batches. Every sub-agent gets the SAME verbatim prompt — only the folder path differs — with the question, read access to one folder, identical tools (read, grep, bash), and a cap of 15 tool calls (hitting the cap = failure). Never reveal the hypothesis, the technique, the expected answer, or the other folder. Record: answer, tool calls, bytes of tool results (as a token proxy), and whether the cap was hit.
+6. SCORE. Grade with a deterministic script (normalized exact match — no LLM judging). Primary test: paired sign test / McNemar pooled across all 24 pairs. Then break results down by difficulty level and by on/off-target, and describe the trend: does the gap grow as difficulty rises? Report median tool calls and result-bytes as secondary metrics.
+7. REPORT. Write RESULTS.md: the technique card, hypothesis, the three predeclared difficulty levels, exact models and isolation method, the generator and transformation scripts inline (runnable via `uv run` with inline deps, fixed seeds), both folder trees with sample files, all 24 tasks + expected answers, the sub-agent prompt verbatim, raw results table, statistics, and a conclusion in this vocabulary: "difference appears from level N" / "no difference at any tested level within budget" / "B hurts" — for this model and task family only. State limitations (one synthetic world, one model, n=24). This one file must be enough for anyone to reproduce everything.
+Budget guard: stay under ~50 sub-agent calls total.
+OPTIONAL EXTENSION (only if budget remains): test whether an agent can IMPROVE the organization. Split 12 new dev tasks / 12 held-out tasks. Let a fresh agent iterate on condition B using only dev-task feedback, then score the revised B once on the held-out tasks. Report separately.
+TECHNIQUE:
+{paste one ### T{n} card here}
+# T1. Progressive, just-in-time access
+- Scores: **Evidence 5/5 · Mechanism 5/5 · Testability 5/5 · Expected gap 5/5 = 20/20**
+- Seen in **11 of 15 submissions**.
+- Type: Access
+- For humans: Assemble all plausibly relevant documents, schemas, and references in one portal or view before work begins.
+- For agents: Provide a compact catalog of paths, IDs, URLs, metadata, or query handles; let the agent search and fetch selected content only when needed.
+- Why: Preloaded material consumes attention regardless of relevance. Progressive disclosure keeps distractors out, preserves context for reasoning, and avoids stale copies.
+- Matters when: Corpora exceed a few documents, relevance is task-dependent, or data changes frequently. `[Inferred]`
+- Testable claim: On 24 large-corpus tasks, index-and-fetch agents achieve equal or higher success with substantially fewer input tokens than agents given the full corpus upfront.
+- Evidence: Measured. Submissions cited Anthropic’s context-engineering work, context-rot experiments, and code-execution-over-MCP results reporting reductions as large as 150,000 to 2,000 tokens.
+</TEST-RUN>
+
+<TECHNIQUES>
+### T1. Progressive, just-in-time access
+* Scores: **Evidence 5/5 · Mechanism 5/5 · Testability 5/5 · Expected gap 5/5 = 20/20**
+* Seen in **11 of 15 submissions**.
+* Type: Access
+* For humans: Assemble all plausibly relevant documents, schemas, and references in one portal or view before work begins.
+* For agents: Provide a compact catalog of paths, IDs, URLs, metadata, or query handles; let the agent search and fetch selected content only when needed.
+* Why: Preloaded material consumes attention regardless of relevance. Progressive disclosure keeps distractors out, preserves context for reasoning, and avoids stale copies.
+* Matters when: Corpora exceed a few documents, relevance is task-dependent, or data changes frequently. `[Inferred]`
+* Testable claim: On 24 large-corpus tasks, index-and-fetch agents achieve equal or higher success with substantially fewer input tokens than agents given the full corpus upfront.
+* Evidence: Measured. Submissions cited Anthropic’s context-engineering work, context-rot experiments, and code-execution-over-MCP results reporting reductions as large as 150,000 to 2,000 tokens.
+### T2. Execute queries and transformations outside context
+* Scores: **Evidence 5/5 · Mechanism 5/5 · Testability 5/5 · Expected gap 5/5 = 20/20**
+* Seen in **7 of 15 submissions**.
+* Type: Access
+* For humans: Export data into spreadsheets, reports, or application screens and inspect intermediate results directly.
+* For agents: Expose SQL, code, DuckDB, or tool APIs so filtering, joining, looping, and aggregation happen in an execution environment; return only the final small result or a file reference.
+* Why: Intermediate tables and payloads need not pass through the model. External execution reduces tokens, limits data exposure, and performs deterministic operations more reliably.
+* Matters when: Tasks involve joins, aggregation, large intermediate results, or multiple tool calls. `[Inferred]`
+* Testable claim: Agents answer 24 aggregation and multi-tool tasks more accurately and at least 10× more token-efficiently through execution tools than from equivalent inline data and direct call chaining.
+* Evidence: Measured. Anthropic’s code-execution-over-MCP example reported a 98.7% context reduction; several submissions also cited independent replications and code-mode implementations.
+### T3. Schema-constrained interfaces
+* Scores: **Evidence 5/5 · Mechanism 5/5 · Testability 5/5 · Expected gap 4/5 = 19/20**
+* Seen in **8 of 15 submissions**.
+* Type: Representation
+* For humans: Accept prose, loosely shaped JSON, optional conventions, and values that people can repair or interpret by eye.
+* For agents: Enforce typed schemas on tool inputs and outputs, including required fields, enums, units, null semantics, and stable machine-readable result shapes.
+* Why: Constrained generation prevents malformed calls and eliminates downstream ambiguity that would otherwise trigger parser failures or retries.
+* Matters when: Outputs feed another tool, mutate state, or must be consumed automatically without human repair. `[Inferred]`
+* Testable claim: Across 24 chained-tool tasks, strict schemas yield more valid first-attempt calls and fewer repair turns than prompt-only JSON examples.
+* Evidence: Measured. Submissions cited OpenAI Structured Outputs reporting 100% schema adherence in its evaluation versus under 40% for unconstrained model output, plus MCP input/output schema support.
+### T4. Search and filter before listing
+* Scores: **Evidence 4/5 · Mechanism 5/5 · Testability 5/5 · Expected gap 5/5 = 19/20**
+* Seen in **13 of 15 submissions**.
+* Type: Access
+* For humans: Display a complete list or paginated table and let the person scroll, sort, and visually filter.
+* For agents: Require or strongly prefer server-side search, predicates, date ranges, field selection, and bounded retrieval before returning records.
+* Why: Visual scanning is cheap for a person but every irrelevant row is an attention-consuming token for an agent. Filtering also reduces the chance that a plausible distractor is selected.
+* Matters when: The desired records are sparse within logs, catalogs, contacts, tables, or document collections. `[Inferred]`
+* Testable claim: Agents retrieve the correct records with higher success and fewer tokens using search/filter tools than by traversing list-all or offset-pagination endpoints.
+* Evidence: Vendor-measured practice. Several submissions cited Anthropic’s held-out Slack and Asana tool evaluations, where search-oriented and consolidated tools outperformed broad list/dump interfaces.
+### T5. Concise, bounded tool outputs
+* Scores: **Evidence 4/5 · Mechanism 5/5 · Testability 5/5 · Expected gap 5/5 = 19/20**
+* Seen in **12 of 15 submissions**.
+* Type: Representation
+* For humans: Return complete records, every technical field, verbose logs, and all matching rows for flexible inspection.
+* For agents: Default to high-signal fields, deterministic ordering, pagination, truncation notices, and concise/detailed response modes; offload bulky payloads to files.
+* Why: Tool results persist in context and are repeatedly paid for. Low-value fields dilute relevant evidence and can crowd out later reasoning.
+* Matters when: Workflows are long, responses contain many fields, or tools can emit open-ended logs and result sets. `[Inferred]`
+* Testable claim: Agents complete 24 multi-step tasks with equal or greater accuracy and fewer tokens when tools return concise bounded payloads rather than complete raw responses.
+* Evidence: Measured vendor practice. Submissions repeatedly cited Anthropic’s tool evaluations, including a Slack response redesign using roughly one-third the tokens, plus token-efficient code-agent results.
+### T6. Contextual, self-contained retrieval chunks
+* Scores: **Evidence 5/5 · Mechanism 5/5 · Testability 5/5 · Expected gap 4/5 = 19/20**
+* Seen in **6 of 15 submissions**.
+* Type: Augmentation
+* For humans: Preserve a flowing document in which surrounding pages establish the entity, period, and referents.
+* For agents: Prepend each retrievable chunk with compact parent context such as document title, heading path, entity, timeframe, and purpose before indexing it.
+* Why: Retrieved passages arrive in isolation. A chunk saying “its revenue increased” may be unusable or unretrievable without the omitted company and period.
+* Matters when: Many documents share vocabulary, chunks contain pronouns, or questions require distinguishing similar entities and reporting periods. `[Inferred]`
+* Testable claim: On 24 retrieval tasks, context-prepended chunks produce fewer missed or misinterpreted passages than identical raw chunks.
+* Evidence: Measured. Anthropic reported 49% fewer retrieval failures with contextualized chunks plus BM25 and 67% fewer with reranking. This card does **not** merge the separate claim that headings are better chunk boundaries.
+### T7. Semantic layers over raw schemas
+* Scores: **Evidence 4/5 · Mechanism 5/5 · Testability 5/5 · Expected gap 5/5 = 19/20**
+* Seen in **3 of 15 submissions**.
+* Type: Augmentation
+* For humans: Supply normalized tables and place business definitions, relationships, and caveats in separate documentation.
+* For agents: Attach meanings, synonyms, units, aggregation levels, PK/FK relationships, join paths, constraints, provenance, and representative values to the task-relevant schema subset.
+* Why: Agents must map natural-language intent to opaque columns and joins. Names and types alone leave this mapping implicit and error-prone.
+* Matters when: Schemas are large, identifiers are cryptic, joins are non-obvious, or several metrics have similar names. `[Inferred]`
+* Testable claim: Agents generate more correct queries on 24 synthetic enterprise-schema tasks when given enriched semantic metadata than when given only table names, columns, and types.
+* Evidence: Measured research plus practice. Submissions cited column-description studies, Spider 2.0, extractive schema-linking research, and enterprise semantic-layer practice.
+### T8. Task-shaped tool surfaces
+* Scores: **Evidence 4/5 · Mechanism 5/5 · Testability 5/5 · Expected gap 5/5 = 19/20**
+* Seen in **10 of 15 submissions**.
+* Type: Access
+* For humans: Expose the complete API, often one endpoint per CRUD operation, and rely on developers to compose workflows.
+* For agents: Offer a smaller set of workflow-level tools that perform coherent tasks and hide unnecessary intermediate calls.
+* Why: Every exposed operation creates another classification decision. Consolidated tools reduce wrong-tool choices and move deterministic orchestration outside the model.
+* Matters when: APIs expose dozens of granular endpoints or common tasks require predictable multi-call sequences. `[Inferred]`
+* Testable claim: Agents complete 24 workflow tasks more reliably with a curated task-level facade than with a one-to-one wrapper around every underlying API endpoint.
+* Evidence: Vendor evaluation and expert practice. Submissions cited Anthropic tool-refinement evaluations, AWS MCP strategy guidance, and agent-API design practice.
+### T9. Behavioral tool definitions
+* Scores: **Evidence 4/5 · Mechanism 5/5 · Testability 5/5 · Expected gap 5/5 = 19/20**
+* Seen in **11 of 15 submissions**.
+* Type: Augmentation
+* For humans: Provide reference documentation describing what each endpoint does; the reader infers when to choose it.
+* For agents: Put selection guidance directly in the tool definition: intent-bearing names, namespaces, “use when” and “do not use when” rules, parameter formats, realistic examples, and distinctions from neighboring tools.
+* Why: Tool selection is performed from the definitions currently in context. Ambiguous names or dispersed guidance directly produce wrong calls and invented parameters.
+* Matters when: Tools overlap, several services expose similarly named operations, or parameters have strict but non-obvious formats. `[Inferred]`
+* Testable claim: Using the same underlying operations, agents select and parameterize tools more accurately with behavioral descriptions than with terse name-plus-schema definitions.
+* Evidence: Measured vendor evaluation and guidance. Submissions cited Anthropic’s tool-writing evaluations, OpenAI function-calling guidance, MCP documentation, and controlled API-naming work.
+### T10. Structural maps for connected corpora
+* Scores: **Evidence 4/5 · Mechanism 5/5 · Testability 5/5 · Expected gap 5/5 = 19/20**
+* Seen in **5 of 15 submissions**.
+* Type: Augmentation
+* For humans: Explore directory trees, files, links, and source code until the relationships become clear.
+* For agents: Provide compact expandable maps of symbols, signatures, callers, imports, dependencies, entities, and links, ranked by likely relevance.
+* Why: Multi-hop relationships are expensive to rediscover through repeated lexical reads. A compact graph supplies global structure while allowing selective expansion.
+* Matters when: Codebases, document networks, or entity collections are large, interconnected, and unfamiliar. `[Inferred]`
+* Testable claim: Agents localize and modify the correct components in 24 multi-file tasks using fewer reads and tokens with a dependency-aware map than with only a filesystem tree.
+* Evidence: Measured in code-oriented evaluations. Submissions cited Aider repository maps, tree-sitter/PageRank symbol maps, Codebase-Memory, and SWE-Explore. It ranks last among the 19-point ties because its strongest evidence is code-specific rather than cross-domain.
+### Others
+* **Actionable, retry-aware errors** — **18/20** `(E3 M5 T5 G5; seen in 12/15)`: return cause, failed constraint, retryability, valid alternatives, and a corrective action instead of a code or trace; it missed because most supporting evidence was expert practice rather than controlled A/B results.
+* **Original media plus synchronized derivatives** — **18/20** `(E4 M5 T5 G4; seen in 5/15)`: retain images, audio, video, or pages while linking OCR, transcripts, tables, timestamps, coordinates, and confidence; strong mechanism, but less universal than the 19-point techniques.
+* **Live lexical/file navigation instead of a pre-built embedding index** — **18/20** `(E3 M5 T5 G5; seen in 4/15)`: grep/glob/read may outperform stale vector retrieval for exact, fast-changing corpora; evidence was internal and corpus-dependent, while one submission simply advocated storing embeddings.
+* **Clean Markdown derivatives of HTML/PDF** — **17/20** `(E4 M4 T5 G4; seen in 13/15)`: structure-preserving Markdown usually saves many tokens, but the submitted evidence for consistent task-accuracy gains was mixed.
+* **Semantic identifiers instead of UUIDs** — **17/20** `(E4 M4 T5 G4; seen in 7/15)`: names or short handles reduce copying and reference errors; the effect is useful but narrower than redesigning the surrounding retrieval or tool interface.
+* **Header-once tabular serialization** — **17/20** `(E4 M4 T5 G4; seen in 9/15)`: CSV, Markdown, YAML, or TOON can beat repeated-key JSON on token cost; accuracy depends materially on model, nesting, and task.
+* **Atomic provenance and freshness metadata** — **17/20** `(E4 M4 T5 G4; seen in 3/15)`: attach source, version, timestamp, authority, span, and content hash to every retrieved unit; important for trust, but the submissions offered limited clean causal measurements.
+* **Entity-centric minimum viable views** — **17/20** `(E2 M5 T5 G5; seen in 1/15)`: expose a task-scoped customer/order/device view rather than source-system tables; excellent mechanism, but supported mainly by practitioner opinion.
+* **Context compaction and external scratchpads** — **17/20** `(E4 M5 T4 G4; seen in 2/15)`: summarize old trajectories and move state outside context; excluded from the top ten because it is an agent-harness technique rather than data organization.
+* **Shallow, self-describing schemas** — **16/20** `(E3 M4 T5 G4; seen in 2/15)`: reduce nesting and use explicit field descriptions and references; plausible but partly overlaps strict schemas, while the distinct nesting-depth claim had weaker evidence.
+* **Curated `/llms.txt` manifests** — **16/20** `(E2 M4 T5 G5; seen in 10/15)`: provide an agent-oriented map of important site resources; highly testable and agent-specific, but controlled evidence remains sparse despite frequent mention.
+* **Heading-aligned chunk boundaries** — **16/20** `(E3 M4 T5 G4; seen in 2/15)`: split documents at semantic headings rather than fixed lengths; kept separate from contextual chunk augmentation because the A/B test differs, and submitted benchmark results were mixed.
+* **Advertised size and token cost before fetching** — **16/20** `(E2 M4 T5 G5; seen in 1/15)`: publish row, byte, or token counts so an agent can choose sampling or querying; clear mechanism, but no submitted outcome benchmark.
+* **Resolve descriptive inputs inside tools** — **15/20** `(E2 M4 T5 G4; seen in 1/15)`: accept “downtown branch” and deterministically resolve or disambiguate it rather than requiring an exact ID; strong testability, weak evidence.
+* **Structured agent telemetry and correlated traces** — **15/20** `(E2 M4 T5 G4; seen in 5/15)`: use standardized span, tool, entity, model, token, and phase fields rather than prose logs; backed mainly by emerging standards, not task-performance tests.
+* **Self-describing paths and folder names** — **15/20** `(E2 M4 T5 G4; seen in 2/15)`: encode function, date, and scope in paths so navigation itself carries meaning; plausible but under-measured and weaker than explicit structural maps.
+* **Dual raw-plus-summary tool outputs** — **15/20** `(E2 M4 T5 G4; seen in 1/15)`: pair exact JSON with a semantic summary; it may help reasoning, but it also adds tokens and lacked comparative evidence.
+* **One canonical source for human and agent views** — **14/20** `(E2 M4 T4 G4; seen in 1/15)`: derive HTML, Markdown, and machine feeds from the same underlying content to prevent drift; valuable governance practice, but the expected 24-task performance gap is uncertain.
+* **Inverted-pyramid documents** — **13/20** `(E2 M3 T4 G4; seen in 2/15)`: put the conclusion and key facts first so truncation remains safe; supported strongly for human web reading but only indirectly for agents.
+* **Generic “store as embeddings”** — **11/20** `(E2 M2 T4 G3; seen in 1/15)`: too underspecified to identify when embeddings beat lexical, structured, or live retrieval and therefore lacks a clear causal intervention.
+* **MCP as the technique itself** — **10/20** `(E2 M2 T3 G3; seen in 1/15)`: MCP standardizes access but does not by itself determine how data should be organized, represented, filtered, or returned.
+* **AGENTS.md, SKILL.md, memory, guardrails, and scratchpad instructions** — not scored: these are agent-harness artifacts and were outside the stated scope.
+</TECHNIQUES>
+
+## Claude
+
+```markdown
+# Part 1: Did the benchmark prompt do a good job for T1?
+
+First, credit where due: the prompt worked remarkably well as a _protocol_. All seven reports have predeclared levels, blinded A/B mappings, fresh-process isolation, verbatim sub-agent prompts, deterministic grading, McNemar tests, and honest limitations sections. For a 4-hour workshop, that's discipline most published agent papers don't manage.
+
+But for T1 specifically, it has one structural flaw and three smaller ones.
+
+**Flaw 1: The harness cannot express T1's actual contrast.** T1 compares "assemble everything upfront" against "catalog + fetch on demand." But the prompt forces both conditions to be _folders_, with identical tools (read, grep, bash) and identical prompts. A folder of files that an agent greps is _already_ just-in-time access. So every participant ended up testing "flat files + grep" vs "catalog + shards + index" — a diluted cousin of T1, closer to the structural-maps technique. The famous 150k→2k evidence never had a chance to reproduce, because no condition ever preloaded a corpus into context. Prasanna spotted this himself, mid-experiment: since both sub-agents have a shell, the control already supports in-code filtering, so the test isolates only the organizational residue of T1. The "SAME verbatim prompt, only the folder differs" rule — which I wrote to prevent leakage — structurally bans any access-type technique whose intervention lives in _what enters the prompt_.
+
+**Flaw 2: The default primary metric contradicts the technique card.** T1's testable claim is "equal or higher success with substantially fewer input tokens" — a non-inferiority claim on accuracy plus a superiority claim on cost. The prompt says "ONE primary metric (usually accuracy)," so six of seven runs preregistered accuracy and then "failed to find" an effect the card never promised, while the effect the card _did_ promise (tokens) sat demoted in the secondary metrics.
+
+**Flaw 3: The calibration pilot got lost.** In an earlier revision the pilot's job was to adjust difficulty away from 0%/100%. When we merged to the ladder design, it quietly shrank to "check the harness works" — my error. Result: three of seven runs sat at or near a 100% accuracy ceiling, where no effect is detectable by construction.
+
+**Flaw 4: Token accounting was inconsistent and prompt-blind.** "Bytes of tool results" misses prompt-side tokens entirely — and prompt-side is exactly where T1's cost difference lives if the portal condition is done faithfully. Each harness also measured differently (JSON event payloads, tool_result lengths, native telemetry). Vishal's approach — take counts from the harness's own usage telemetry, after catching sub-agents misreporting their own tool counts — is the right one.
+
+And a fifth, operational: one run (Priyanga) had no API key, so a _deterministic script_ played the sub-agents. It was disclosed, but the report still reads like a real experiment and concludes "difference appears from level 2." Pooled naively, it would poison the room's aggregate. The prompt needs a mandatory attestation line.
+
+## The improved T1 benchmark prompt
+
+The generic lesson is a new step — an _instantiation check_: if the technique is about what enters context, the intervention must live in the sub-agent prompt, and the "identical prompts" rule becomes "identical except the intervention itself." For T1, here's the pinned version:
+```
+
+Run a controlled A/B experiment testing "progressive, just-in-time access"
+(technique card at the end). Build it, run it, analyze it, write the report.
+Don't ask me questions — make sensible choices and document them.
+
+1. HYPOTHESIS AND METRICS. This card makes a joint claim, so preregister
+   both parts: (a) NON-INFERIORITY on accuracy — CATALOG must score within
+   1 correct answer of PORTAL, pooled; (b) SUPERIORITY on cost — CATALOG
+   must use fewer total input tokens (prompt tokens + tool-result tokens).
+   Also report tokens per correct answer. Take token counts from the
+   harness's own usage telemetry; use byte proxies only if telemetry is
+   unavailable, and say so.
+
+2. CONDITIONS. The intervention lives in the sub-agent PROMPT, not the
+   folder. Both conditions get identical facts, identical tools (read,
+   grep, bash on the same data folder), and identical prompt text EXCEPT:
+   - PORTAL: the full corpus, concatenated in a fixed order, is injected
+     into the sub-agent's prompt — that is what "assemble everything
+     upfront" means for an agent. If the corpus exceeds the model's
+     context, truncate the tail at the limit and log it. Predeclare this
+     rule: it is not a strawman, it is what preloading physically does.
+   - CATALOG: a compact catalog (paths, one-line descriptions, counts,
+     date ranges) is injected instead; content is fetched on demand.
+     Neither prompt names the technique, the hypothesis, or the other
+     condition. Randomize A/B labels; never reveal the mapping.
+
+3. GROUND TRUTH. Seed-fixed generator, invented names and numbers, messy
+   and realistic. Size levels to the SUB-AGENT's context window W:
+   L1 ≈ 0.25×W, L2 ≈ 0.75×W, L3 ≈ 2×W (at L3, preloading must break).
+   Every level includes near-miss entities and stale/conflicting dated
+   versions, and at least 2 tasks per level require resolving "latest
+   value as of DATE" — a known failure mode for sharded layouts. Output
+   canonical-facts.json; write all tasks from it, never from the folders.
+
+4. TASKS. 8 per level (24 pairs): 6 on-target, 2 off-target, each with
+   one exact scriptable answer.
+
+5. PILOT. Run 3 questions per condition. If all 6 are correct, harden
+   the tasks (more hops, more conflicts) and re-pilot once. Discard
+   pilot results. Never touch the conditions after this point.
+
+6. RUN. 24 tasks × 2 conditions, each a FRESH sub-agent (clean process,
+   fast cheap model, parallel batches), 15-tool-call cap (cap = failure).
+   Record: answer, prompt tokens, tool-result tokens, tool calls, cap.
+
+7. SCORE. Deterministic grading. Accuracy: paired sign test / McNemar,
+   pooled, then by level and on/off-target. Tokens: paired comparison by
+   level. Describe the trend across levels, especially at L3 where
+   PORTAL truncates.
+
+8. REPORT. RESULTS.md with everything needed to reproduce (scripts
+   inline, uv run, fixed seeds), plus an EXECUTION ATTESTATION block:
+   sub-agent model actually invoked, number of real LLM runs, and the
+   line "real LLM sub-agents: yes/no". If you cannot run real sub-agents
+   (no API key, no CLI), STOP and report that — never simulate them.
+   Conclusion vocabulary: "claim holds from level N" / "cost holds,
+   accuracy doesn't" / "no difference within budget" / "CATALOG hurts".
+
+Budget: ~54 sub-agent calls (48 scored + up to 6 pilot).
+
+TECHNIQUE: {T1 card}
+
+```
+
+# Part 2: Did the runs actually evaluate T1? What can we conclude?
+
+Six of seven runs are real experiments; one must be excluded:
+
+| Run | Sub-agent model, isolation | Valid? | Accuracy | Tokens/bytes |
+|---|---|---|---|---|
+| Ahmed | Haiku 4.5, fresh `claude -p` | Yes | Ceiling on-target (100% both); p=0.25 | −77% (L1), −42% (L2), **+296% (L3)** |
+| Anand S | gpt-5.4-mini, fresh `codex exec` | Yes | **Catalog hurt: 18/24 vs 24/24, p=0.031** | −74% for catalog |
+| Prasanna | Haiku 4.5, fresh `claude -p` | Yes | Ceiling (47/48); p=1.0 | Portal ingestion grows with corpus, catalog flat; 2.7× less at L3 |
+| Pratyush | gpt-4.1-mini, custom API harness | Mostly (16KB truncation, restricted bash) | Real difficulty (37–88%); p=1.0 | **Catalog worse**: more calls, more bytes, more cap hits |
+| Priyanga | None — scripted proxy, no API key | **No — exclude** | ("difference from level 2") | — |
+| Randhir | gpt-5.5, fresh `codex exec` | Yes | No gap at any level; p=1.0 | 7.5× less for catalog, non-monotonic |
+| Vishal | Haiku 4.5, Task tool | Yes | Full ceiling (48/48); test uninformative | Indistinguishable |
+
+Three observations an expert would flag:
+
+**The only statistically significant result is in the harmful direction, and it comes with a mechanism.** Anand S's catalog condition lost 6 of 24 tasks (p=0.031) because per-entity shards placed stale and conflicting dated values side by side with no resolution guidance, and the sub-agent picked the wrong one — while the flat file made "latest value" trivial. Prasanna's single failure is the mirror image: his *portal* condition matched a near-miss twin name that the catalog's exact lookup avoided. Same lesson from both directions: sharding without freshness and identity metadata moves errors around rather than removing them. That connects T1 directly to the provenance-metadata technique in your Others list.
+
+**The nulls are mostly uninformative, not negative.** Three runs sat at accuracy ceilings the lost calibration pilot would have caught. And every run tested the diluted contrast (grep-able files vs indexed files), not T1's real one (preloaded context vs fetch). So "no accuracy difference" here mostly means "the harness gave both conditions just-in-time access."
+
+**The cost claim survived in weakened, non-monotone form.** Four of six valid runs showed large context-ingestion savings for the catalog at L1–L2 (2.6×–7.5×). But Ahmed's L3 flipped to +296% (751 catalog files cost more to navigate than one grep-able dossier), and Pratyush's catalog was worse across the board on the hardest task set with a weaker model. Fewer files to load is not automatically fewer tokens spent.
+
+**Main takeaway.** The room's seven experiments, roughly 340 real sub-agent runs, converge on something more interesting than the hypothesis: T1 mostly nulled out because *the filesystem-plus-grep harness already is progressive disclosure*. Agents with a shell fetch just-in-time by default, whichever way you arrange the files. The technique's measurable residue — catalogs, shards, warehouses — saved context at moderate scale, bought no accuracy, and actively hurt when shards exposed unresolved version conflicts. The 150k→2k headline remains untested and needs the fixed prompt above, where the portal condition genuinely preloads context and level 3 breaks it.
+
+## Here's what to say
+
+- **The protocol worked. The construct didn't.**
+  - All 7 teams produced preregistered, blinded, isolated, reproducible experiments in one afternoon. That part is a win.
+  - But every team tested "files plus grep vs files plus an index," not "preload vs fetch on demand." The harness could not express T1's real contrast.
+- **Main finding: agents already do just-in-time access by default.**
+  - Give an agent a shell and a folder, and it fetches on demand no matter how you organize the data. The human "portal" baseline barely exists in agent land.
+  - That is why 5 valid runs found no accuracy difference up to 500k-token corpora.
+- **The one significant result says the technique can hurt.**
+  - One run: catalog condition lost 6 of 24 tasks, p = 0.03. Cause: entity shards showed stale and conflicting values with no "which is current" metadata, and the agent picked wrong.
+  - Lesson: sharding needs freshness and identity metadata attached, or it creates new errors.
+- **The cost savings are real but not universal.**
+  - 4 of 6 runs: catalogs cut context ingestion 2.6x to 7.5x at small and medium scale.
+  - But one run flipped to +296% at the largest scale, and one was worse everywhere. Fewer files loaded is not always fewer tokens spent.
+- **Three fixes before anyone reruns this.**
+  - Put the intervention in the sub-agent prompt: portal = corpus preloaded into context, catalog = index plus fetch. Size level 3 past the context window so preloading has to break.
+  - Preregister the metric the card actually claims: tokens, with accuracy as a floor. Not accuracy alone.
+  - Add a calibration pilot and an attestation line. Three runs hit 100% ceilings, and one "experiment" had no LLM in it at all.
+- **Ask each team to add one line to their RESULTS.md:** real LLM sub-agents yes or no, model name, run count. Then we can pool the room's data honestly.
+
+## User
+
+
+
+
+## User
+
+All right. We tried the new prompt, six of us, and have a bunch of results. These are at the bottom. Now, analyze these last 6 and tell me what should I conclude from this and what action would you suggest I take. For instance, should I just go ahead and blindly put this as a skill.md, saying, whenever we have data organized in a folder, we should probably reorganize it in some different way. Or should it be more nuanced than this? Put another way, I want you to think like an expert and guide me on the actions that will have maximum impact at relatively high frequency for me. /expert-lens - and use /meeting-response-style
+
 ## Claude
 
 <details>
@@ -789,8 +1263,15 @@ Your earlier skill-synthesis prompt already demands exactly this shape (evidence
 - Write that conditional skill this week, with the evidence block from all 13 runs.
 - Publish the two-round story: round one's nulls came from the harness testing the wrong thing, and one fix revealed a 28x effect. Best teaching material we produced today.
 - Queue two follow-ups for the next cohort: find the model-capability floor, and find the exact corpus size where the index starts paying.
+```
 
----
+## User
+
+You gave me some advice on what to change when the team re-runs this. Did you incorporate it into the benchmark prompt? IF yes, just say so and be done. Else give me the revised prompt.
+
+## Claude
+
+Yes — it's all in the revised prompt from my last message. The three fixes map to: step 2 (portal preloads the corpus into the sub-agent's prompt, with level 3 sized past the context window in step 3), step 1 (the joint metric: tokens as the claim, accuracy as the floor, counted from harness telemetry), and steps 5 and 8 (the calibration pilot with a hardening rule, plus the execution attestation block with "if you can't run real sub-agents, stop — never simulate"). The version-conflict tasks from the p=0.03 finding are in step 3 as well. You can reuse it as-is.
 
 ## User
 

@@ -17,34 +17,23 @@ This reference is loaded by the `talk-story` skill when generating `index.html`.
 
 - **Malcolm Gladwell narrative style**: Open with a specific scene or anecdote, build to insight, weave in surprising context.
 - **Typography first**: The text should be beautifully readable at 18–20px with generous line-height (1.7–1.8).
-- **Breathe**: Generous whitespace. Sections separated by full `margin: 4rem 0`.
-- **Break out of the column**: Full-width (`width: 100vw; margin-left: calc(-50vw + 50%)`) sections with contrasting background colours create visual rhythm. Use for sketchnote, pull quotes, slide galleries, takeaways.
-- **No horizontal scroll**: Every `width: 100vw` element MUST use `overflow-x: hidden` on body, or use `margin-left: calc(50% - 50vw); width: 100vw` with `body { overflow-x: hidden }`.
+- **Scannable**: Use **bold** on key phrases so that reading only the bolded text summarises the article.
+- **Breathe**: Generous whitespace. Sections separated by full `margin: 4rem 0`. Every full-width band, wrap, and embed needs a bottom margin.
+- **Break out of the column**: Full-width sections with contrasting background colours create visual rhythm. Use for the visual summary, pull quotes, slide galleries, embeds, takeaways.
+- **No horizontal scroll**: `body { overflow-x: hidden }` plus `width: 100vw; margin-left: calc(50% - 50vw)` is the ONLY safe breakout pattern.
 
 ---
 
 ## CSS variables and fonts
 
-```html
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-```
+Derive the palette and fonts from the example talks named in the prompt (default: the 3 most
+recent talks) — loosely, not strictly. Vary them per talk so the pages don't look cloned.
+Recent talks used e.g. Fraunces + Source Serif 4 + JetBrains Mono; older ones used Cormorant
+Garamond + Libre Baskerville + IBM Plex Mono. Define everything as CSS variables
+(`--ink`, `--paper`, `--accent`, `--muted`, `--border`, `--dark`, `--font-display`,
+`--font-body`, `--font-mono`) so bands and components stay consistent.
 
 ```css
-:root {
-  --ink:          #0f0f0f;
-  --paper:        #f8f6f1;
-  --accent:       #b8243f;
-  --gold:         #c49b2a;
-  --muted:        #5e5e5e;
-  --faint:        #9a9a9a;
-  --border:       #d9d5cc;
-  --highlight-bg: #fdf5e6;
-  --dark:         #1a1a2e;
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-body:    'Libre Baskerville', Georgia, serif;
-  --font-mono:    'IBM Plex Mono', monospace;
-}
-
 body {
   font-family: var(--font-body);
   background: var(--paper);
@@ -212,7 +201,7 @@ Audio files are always `.opus`. Place the player in the hero meta section (near 
 ```html
 <div class="audio-player">
   <span>🎧 Listen to the recording</span>
-  <audio controls preload="none" style="width:100%; margin-top:0.5rem; display:block;">
+  <audio controls preload="metadata" style="width:100%; margin-top:0.5rem; display:block;">
     <source src="audio.opus" type="audio/ogg; codecs=opus">
   </audio>
 </div>
@@ -363,10 +352,33 @@ body { overflow-x: hidden; }  /* MUST be on body */
 After completing all chunks, grep the file: `grep -n 'margin.*-[0-9]*vw\|margin.*-50%' index.html`
 Any match is a horizontal scroll bug — replace with the pattern above.
 
+### Low contrast inside coloured bands (the #2 recurring issue)
+
+Every full-width band with a non-default background needs explicit colours for ALL content it
+contains — body text, `<a>`, `<strong>`, figcaptions, labels. Recurring corrections:
+black `strong` on dark red, dark-yellow links on light yellow, accent-coloured links on black,
+faint captions and band labels. After generating, walk through each band class and check every
+descendant style in both light and dark contexts.
+
+### Missing bottom margins (the #3 recurring issue)
+
+`.band`, `.wrap`, `.embed`, `.stat-band`, `.gallery-band` and similar full-width sections need
+`margin-bottom: 2rem` (or more). Text starting flush against the previous band is a recurring
+correction.
+
 ### Other pitfalls
 
+- **Misattributed quotes**: transcripts often mislabel speakers. Verify every quote's speaker;
+  flag doubtful ones. This has caused more user corrections than any layout bug.
+- **Buttons instead of links**: anything that leads to content should be an `<a>` (so
+  right-click → open in new tab works), with the click intercepted for popups.
+- **Cramped cards**: give card groups extra width (breakout container) so 3–4 fit per row on
+  desktop; render takeaways as cards, not a plain list.
+- **Private links leaked**: `chatgpt.com/c/`, `claude.ai/chat/`, `gemini.google.com/app` must
+  never appear — use the share links; anything in `<!-- comments -->` stays out.
 - **Broken popup JS**: The `openPopup(id)` function should copy `innerHTML` of `#id` into `#popup-content`. Check that every `openPopup('X')` call has a matching `id="X"` element.
-- **Audio not playing**: Use `<source src="audio.opus" type="audio/ogg; codecs=opus">` inside `<audio>`. Never use `<audio src="audio.opus">` directly.
+- **Audio not playing**: Use `<audio controls preload="metadata">` with a nested
+  `<source src="audio.opus" type="audio/ogg; codecs=opus">`. Never use `<audio src="...">` directly.
 - **Truncated chunks**: End each chunk at a complete HTML element boundary, never mid-tag or mid-attribute.
 - **TODOs left in file**: `grep -c "TODO" index.html` before finalising — must be 0.
 - **White text on white**: Any element inside a dark-background container that inherits `--ink` colour will be invisible. Set explicit `color: #f0ece4` or similar on dark sections.

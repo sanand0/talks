@@ -1,5 +1,27 @@
 # Prompts
 
+## Update skill, 11 Jul 2026
+
+<!--
+cd ~/code/talks/
+dev.sh -- claude --dangerously-skip-permissions --model fable --effort medium
+-->
+
+I created `.claude/skills/talk-story/` a few months ago. Since then, I've created several stories. You can check the talk directory filenames or git timestamps to understand this.
+
+I haven't looked at the skill. I have been creating `*/prompts.md` files based on past prompts, editing it myself.
+
+Some of my prompts overlap with the talk-story skill. Some might even contradict it.
+
+Go through the skill, my prompts.md, the way in which Claude Code session have used it (see ~/.claude/ and look up session IDs based on the `<!-- claude resume $ID ... -->` in the prompts.md files) - what's worked well, what hasn't, what corrections I've had to make, etc.
+
+Based on this, suggest two things:
+
+1. A revised skill (feel free to write it from scratch, editing the existing talk-story skill in-place) that I can use.
+2. A sample prompt or prompt template that I can copy paste and edit for future talk stories. This should cover the common variations. I mean, if there's something I've specified in two prompt.md files, it should probably be in the template. If it's in most prompt.md files, it should probably be in the skill. If it was in just one prompt.md, we can ignore it unless you think it important.
+
+<!-- claude --resume dbf91323-9f06-4dda-bcdc-e0bc2b961fc1 --dangerously-skip-permissions -->
+
 ## Talks skill, 26 Mar 2026 (Claude Code - Sonnet 4.6 medium)
 
 In many of my recent talks, I have used a prompts.md to generate interactive HTML using the inputs, which almost always includes a transcript, maybe slides as PDF converted to images, YouTube video links, audio recording, screenshots, links, etc.

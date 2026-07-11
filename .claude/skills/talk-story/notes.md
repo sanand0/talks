@@ -1,5 +1,28 @@
 # Talk Story Skill — Notes
 
+## Revision, 11 Jul 2026
+
+Reviewed all post-skill prompts.md files (Apr–Jul 2026) and their Claude Code session logs.
+Findings that drove the rewrite:
+
+- The skill auto-triggered in every session, but the context.md stop-and-generate flow was
+  never used once — every prompt carried the context inline and Claude explicitly skipped it.
+  Removed the flow and deleted context-template.md; the prompt is now the source of truth.
+- Design converges by copying the 3 most recent talks ("follow LOOSELY"), not a fixed palette.
+  Recent talks use Fraunces/Source Serif 4/JetBrains Mono, not the guide's Cormorant set.
+  Guide now says: derive palette from examples, vary per talk.
+- Recurring corrections promoted into the skill/guide as defaults and QA checks:
+  quote misattribution (the single biggest correction source — engineering-design had ~15),
+  low contrast inside coloured bands, missing bottom margins on bands/wraps/embeds,
+  card groups too narrow, buttons instead of links, private chat links vs share links,
+  `preload="metadata"` on audio, **bold** for scannability, takeaways as cards.
+- Stable conventions moved from prompts into the skill: transcript-popup link, full-width
+  video/audio near top, iframe embeds with caption links, .md-in-popup, LINK/EMBED/DO NOT
+  LINK directives, sub-agents for token efficiency, share-links-only rule.
+- Added prompt-template.md — a copy-paste prompts.md skeleton covering the variations that
+  appeared in 2+ prompts (landing page with cards, attendee email, corrections section,
+  visual-summary generation prompt for GPT Image/Gemini).
+
 ## Process
 
 ### What I studied

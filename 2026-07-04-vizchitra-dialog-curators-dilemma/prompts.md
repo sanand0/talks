@@ -1,14 +1,13 @@
 # VizChitra Dialog - The Curator's Dilemma
 
-## Data story, 6 Jul 2026
+## Data story, 11 Jul 2026
 
 <!--
 cd ~/code/talks/
-dev.sh -p ~/code/liveform
-claude --dangerously-skip-permissions --model opus --effort high
+dev.sh -- claude --dangerously-skip-permissions --model opus --effort high
 -->
 
-Generate a beautiful narrative story about this 1 hour workshop titled [The Curator's Dilemma](https://vizchitra.com/2026/sessions/curators-dilemma) by [Anand](https://www.s-anand.net/), LLM Psychologist at Straive, conducted in-person at [VizChitra 2026](https://vizchitra.com/2026) on 4 Jul 2026 (2:30-5:45 pm IST).
+Generate a beautiful narrative story about a group discussion, or "Dialogue" titled [The Curator's Dilemma](https://vizchitra.com/2026/sessions/curators-dilemma) by [Anand](https://www.s-anand.net/), LLM Psychologist at Straive, conducted in-person at [VizChitra 2026](https://vizchitra.com/2026) on 4 Jul 2026 (10:00-11:10 am IST - spilling well over the planned 45 min because Anand thought it was for 90 min instead of 45!).
 
 Create this as 2026-07-04-vizchitra-dialog-curators-dilemma/index.html.
 
@@ -21,13 +20,14 @@ Use the following as examples to follow LOOSELY, not strictly:
 
 Use the talk transcript and the main content source. It's at 2026-07-04-vizchitra-dialog-curators-dilemma/transcript.md.
 
-- Weave in plenty of memorable, funny, or insightful quotes from the transcript. Make these blockquotes stand out.
+- Weave in plenty of memorable, funny, or insightful quotes from the transcript / chats. Make these blockquotes stand out.
 - Highlight what was insightful or funny.
 
 Also read any other relevant content to weave into the narrative, such as:
 
 - 2026-07-04-vizchitra-dialog-curators-dilemma/claude-chat.md - used to plan this session.
 - 2026-07-04-vizchitra-dialog-curators-dilemma/chatgpt-chat.md - used to identify charts and run this session.
+- 2026-07-04-vizchitra-dialog-curators-dilemma/chatgpt-chat-2.md - used to analyze the feedback and responses.
 
 Here are the charts used. Read the audience and purpose from line 1056 of chatgpt-chat.md onwards.
 
@@ -82,12 +82,10 @@ Slides I showed as I talked through. This will give you a sense of the flow.
 
 Include links from the transcript at the appropriate places as follows:
 
-- Embed the audio near the top: https://github.com/sanand0/talks/releases/download/talks/2026-07-04-vizchitra-dialog-curators-dilemma.opus
-- Show this visual summary: summary.avif. max-width: 100%. Clicking on it should open the full-size image in a new window. <!-- Visual summary chat: https://chatgpt.com/c/6a4a52f6-5ff0-83ec-9cdd-012b7df576b7 -->
+- Show this visual summary: summary.avif (which I'll add later). max-width: 100%. Clicking on it should open the full-size image in a new window. <!-- Visual summary chat: https://chatgpt.com/c/6a51ca3c-e468-83ee-a4e2-16780ba0984c -->
 - LINK: transcript.md near the top - it should open in a popup and render as HTML.
-
-DO go through the analysis in 2026-07-04-vizchitra-dialog-curators-dilemma/claude-chat.md and weave all relevant insights into the narrative.
-The questions/responses are at `2026-07-04-vizchitra-dialog-curators-dilemma/{form.yaml,responses.tsv}` - you may use that for further analysis and include insights from it.
+- LINK: chats as required - open in a popup and render as HTML.
+- EMBED all the visuals.
 
 Here's how to include the links:
 
@@ -112,21 +110,21 @@ IMPORTANT: Because Claude will almost certainly stall when generating such a lar
 
 Update README.md to update relevant links.
 
---- <!-- steering -->
+---
 
-❯ Use the EXISTING tabs, don't open new tabs, for screenshots.
+`.band.band-crimson p strong` is black on dark red - not clearly readable.
+`#charts > div > div.gallery > figure > figcaption > p > a` is dark yellow on light yellow - not clearly readable.
+`.band.band-cream > div > p > a`, e.g. NIST AI Risk Management Framework, has an underline AND a border, which doesn't look nice.
+`.band-label` is too light against the background, too small for the prominence it might deserve.
+The first `.cards-wrap` needs a margin below it - "Sit with the top-left corner of..." begins too close to the end of the .cards-wrap.
 
---- <!-- steering -->
+Find similar issues and fix them.
 
-In case you didn't see a summary.avif earlier, I just added it.
+Feel free to research and include more relevant links / references.
 
---- <!-- steering -->
+Instead of just showing "13 votes", etc. against the charts, could you actually draw little post-it notes which, when clicked, pop up to show what people wrote? This can be reasonably prominent.
 
-Replace screenshot-imageexplore.webp with screenshot-imageexplore.avif which I've added.
-
---- <!-- steering -->
-
-I added screenshot-nie-evolution.webp - you can use that.
+Is there any other possibility of a data visualization based on the results.tsv data - e.g. a chord diagram showing directed movement of opinion with rich tooltips/popups with details of each row, colored based on human/AI/mixed generation and movement, and with any other details? Or any other better visualization that is apt for this data and audience?
 
 <!-- claude --resume fbf26277-9cb6-411c-806c-74c7bed2e328 --dangerously-skip-permissions -->
 

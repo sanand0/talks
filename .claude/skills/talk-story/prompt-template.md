@@ -8,15 +8,13 @@ don't repeat it unless you want to override it.
 
 ---
 
-# Prompts
+# Talk Title, DD Mon YYYY
 
 ## Data story, DD Mon YYYY
 
 <!--
 cd ~/code/talks/
-dev.sh -- claude --dangerously-skip-permissions --model opus --effort high
-# Add mounts if sources live outside the repo, e.g.:
-# dev.sh -p ~/code/liveform,~/Dropbox/notes/transcripts -- claude ...
+dev.sh -p ~/Documents/forms:ro,~/Dropbox/notes/transcripts:ro -- claude --dangerously-skip-permissions --model opus --effort high
 -->
 
 Generate a beautiful narrative story about this N-hour session/workshop/panel by

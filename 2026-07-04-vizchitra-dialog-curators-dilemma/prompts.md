@@ -1,5 +1,14 @@
 # VizChitra Dialog - The Curator's Dilemma
 
+## Update data story, 11 Jul 2026 #TODO
+
+<!--
+cd ~/code/talks/2026-07-04-vizchitra-dialog-curators-dilemma/
+dev.sh -- claude --dangerously-skip-permissions --model opus --effort high
+-->
+
+In `index.html`, results.tsv isn't rendering well in the popup. Render it as a sortable table.
+
 ## Data story, 11 Jul 2026
 
 <!--
@@ -126,7 +135,7 @@ Instead of just showing "13 votes", etc. against the charts, could you actually 
 
 Is there any other possibility of a data visualization based on the results.tsv data - e.g. a chord diagram showing directed movement of opinion with rich tooltips/popups with details of each row, colored based on human/AI/mixed generation and movement, and with any other details? Or any other better visualization that is apt for this data and audience?
 
-<!-- claude --resume fbf26277-9cb6-411c-806c-74c7bed2e328 --dangerously-skip-permissions -->
+<!-- claude --resume 49897412-0813-4bc6-b891-ee46e8df5f12 --dangerously-skip-permissions -->
 
 # A3 printouts, 03 Jul 2026
 

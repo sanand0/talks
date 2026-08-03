@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hire a Data Scientist for $100 | AI Unboxed Session 3 · Anand for IIM Alumni Singapore</title>
+<meta name="description" content="The third AI Unboxed workshop for IIM Alumni Singapore — Agentic Analysis. Finding public data, letting agents download it, running machine learning you never wrote, and the one schedule Anand actually runs every day.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fbf6ee;
+    --paper: #fffdf9;
+    --ink: #14202b;
+    --ink2: #2f4256;
+    --muted: #6d7f8f;
+    --accent: #c2410c;        /* burnt orange */
+    --accent-dk: #9a3412;
+    --teal: #0f766e;
+    --teal-dk: #0b544e;
+    --gold: #b45309;
+    --sand: #f4e7d3;
+    --border: #e4d8c6;
+    --night: #0d1b24;
+    --night2: #14303a;
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-body: 'Newsreader', Georgia, serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.78;
+    font-size: 18.5px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── Progress ── */
+  #progress {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--gold), var(--teal));
+    z-index: 1000; transition: width .15s linear;
+  }
+
+  /* ── Masthead ── */
+  .masthead {
+    position: sticky; top: 0; z-index: 200;
+    background: rgba(251,246,238,.95);
+    border-bottom: 1px solid var(--border);
+    padding: .7rem 1.5rem;
+    backdrop-filter: blur(8px);
+  }
+  .masthead-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: .8rem; flex-wrap: wrap;
+  }
+  .masthead-brand {
+    font-family: var(--font-display); font-size: .85rem; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase; color: var(--ink2);
+    text-decoration: none;
+  }
+  .masthead-brand:hover { color: var(--accent); }
+  .masthead-right { display: flex; gap: .55rem; align-items: center; flex-wrap: wrap; }
+  .masthead-date { font-family: var(--font-mono); font-size: .7rem; color: var(--muted); }
+  .masthead-link {
+    font-family: var(--font-mono); font-size: .68rem; letter-spacing: .04em;
+    color: var(--accent); text-decoration: none;
+    border: 1px solid var(--accent); border-radius: 3px;
+    padding: .26rem .55rem; transition: all .2s; white-space: nowrap;
+  }
+  .masthead-link:hover { background: var(--accent); color: #fff; }
+
+  /* ── Layout ── */
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 1.5rem; }
+  .wrap-wide { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ── Hero ── */
+  .hero { max-width: 800px; margin: 0 auto; padding: 4rem 1.5rem 1.5rem; text-align: center; }
+  .hero-kicker {
+    font-family: var(--font-mono); font-size: .66rem; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 1.2rem;
+  }
+  .hero-series {
+    display: inline-flex; gap: .3rem; align-items: center;
+    font-family: var(--font-mono); font-size: .62rem; letter-spacing: .12em;
+    background: var(--sand); color: var(--accent-dk);
+    padding: .3rem .7rem; border-radius: 99px; margin-bottom: 1.4rem;
+  }
+  .hero h1 {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(2.3rem, 6.5vw, 4.1rem); line-height: 1.03;
+    letter-spacing: -.025em; margin-bottom: 1.1rem;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero-sub {
+    font-size: 1.2rem; color: var(--ink2); line-height: 1.6;
+    max-width: 620px; margin: 0 auto 1.8rem;
+  }
+  .hero-meta {
+    font-family: var(--font-mono); font-size: .74rem; color: var(--muted);
+    letter-spacing: .03em; line-height: 2;
+  }
+  .hero-meta a { color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(15,118,110,.35); }
+  .hero-meta a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── Quick links row ── */
+  .quick-links { margin: 1.8rem auto 0; display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; }
+  .quick-links a {
+    font-family: var(--font-mono); font-size: .72rem; letter-spacing: .03em;
+    text-decoration: none; color: var(--ink2);
+    background: var(--paper); border: 1px solid var(--border);
+    border-radius: 99px; padding: .45rem .95rem; transition: all .2s;
+  }
+  .quick-links a:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+
+  /* ── Full-width bands ── */
+  .band { width: 100vw; margin-left: calc(50% - 50vw); }
+  .video-wrap { background: var(--night); padding: 2.5rem 1.5rem; }
+  .video-inner { max-width: 980px; margin: 0 auto; }
+  .video-inner video { width: 100%; display: block; border-radius: 6px; background: #000; }
+  .media-cap {
+    font-family: var(--font-mono); font-size: .72rem; color: #8fb0b6;
+    text-align: center; margin-top: 1rem; line-height: 1.7;
+  }
+  .media-cap a { color: #f0a868; text-decoration: none; border-bottom: 1px solid rgba(240,168,104,.4); }
+  .media-cap a:hover { color: #ffd9b0; border-bottom-color: #ffd9b0; }
+  .audio-row { max-width: 700px; margin: 1.5rem auto 0; }
+  .audio-row audio { width: 100%; }
+
+  /* ── Body text ── */
+  .wrap p { margin-bottom: 1.35rem; }
+  .wrap p a, .wrap li a {
+    color: var(--teal); text-decoration: none;
+    border-bottom: 1px solid rgba(15,118,110,.35);
+  }
+  .wrap p a:hover, .wrap li a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .wrap strong { font-weight: 600; color: var(--ink); background: linear-gradient(transparent 62%, rgba(244,231,211,.95) 62%); }
+  .wrap ul, .wrap ol { margin: 0 0 1.35rem 1.3rem; }
+  .wrap li { margin-bottom: .5rem; }
+
+  /* ── Section headers ── */
+  .sec-num {
+    font-family: var(--font-mono); font-size: .66rem; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: .5rem;
+  }
+  h2.sec {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: clamp(1.7rem, 4vw, 2.5rem); line-height: 1.12;
+    letter-spacing: -.02em; margin: 3.2rem 0 1.3rem;
+  }
+  h3.sub {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: 1.28rem; margin: 2.2rem 0 .8rem; color: var(--ink2);
+  }
+  .dinkus { text-align: center; color: var(--accent); letter-spacing: .8em; margin: 2.6rem 0; font-size: .8rem; }
+
+  /* ── Pull quotes ── */
+  blockquote.pull {
+    margin: 2.2rem 0; padding: 1.4rem 1.6rem;
+    background: var(--paper); border-left: 4px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    box-shadow: 0 2px 14px rgba(20,32,43,.06);
+  }
+  blockquote.pull p {
+    font-family: var(--font-display); font-size: 1.22rem; font-weight: 500;
+    line-height: 1.48; font-style: italic; margin-bottom: .6rem; letter-spacing: -.01em;
+  }
+  blockquote.pull cite {
+    font-family: var(--font-mono); font-style: normal; font-size: .72rem;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+  }
+  blockquote.pull.teal { border-left-color: var(--teal); }
+  blockquote.pull.big p { font-size: 1.45rem; }
+
+  /* ── Prompt / code boxes ── */
+  .prompt-box {
+    background: var(--night); color: #d6e6e4;
+    border-radius: 8px; padding: 1.2rem 1.35rem; margin: 1.8rem 0;
+    font-family: var(--font-mono); font-size: .82rem; line-height: 1.72;
+  }
+  .prompt-box .plabel {
+    display: block; font-size: .62rem; letter-spacing: .18em; text-transform: uppercase;
+    color: #f0a868; margin-bottom: .7rem;
+  }
+  .prompt-box a { color: #7fd1c7; word-break: break-all; }
+  .prompt-box em { color: #9fb8c4; font-style: italic; }
+
+  /* ── Chat snippet ── */
+  .chat-snippet {
+    background: #f2ece1; border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.1rem 1.3rem; margin: 1.8rem 0;
+  }
+  .chat-snippet-label {
+    font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--accent-dk); margin-bottom: .6rem;
+  }
+  .chat-snippet p { font-size: .96rem; margin-bottom: .7rem; }
+  .chat-snippet p:last-child { margin-bottom: 0; }
+  .chat-snippet a { color: var(--teal); }
+
+  /* ── Cite / tooltip ── */
+  .cite {
+    cursor: pointer; color: var(--accent); font-weight: 600;
+    border-bottom: 1px dotted var(--accent); text-decoration: none;
+  }
+  .cite::after { content: "†"; font-size: .7em; vertical-align: super; }
+  .tip { border-bottom: 1px dotted var(--muted); cursor: help; position: relative; }
+  .tip:hover::after {
+    content: attr(data-tip);
+    position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%);
+    background: var(--night); color: #eae2d4; font-family: var(--font-body);
+    font-size: .8rem; line-height: 1.5; font-style: normal;
+    padding: .6rem .8rem; border-radius: 6px; width: min(300px, 78vw);
+    z-index: 90; box-shadow: 0 6px 22px rgba(0,0,0,.25);
+  }
+
+  /* ── Stat band ── */
+  .stat-band { background: var(--sand); border-top: 1px solid #e8d6b8; border-bottom: 1px solid #e8d6b8; padding: 2.4rem 1.5rem; }
+  .stat-grid {
+    max-width: 950px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.6rem;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: var(--font-display); font-weight: 800; font-size: clamp(1.7rem, 4vw, 2.4rem);
+    color: var(--accent-dk); line-height: 1.05; letter-spacing: -.02em;
+  }
+  .stat-label {
+    font-family: var(--font-mono); font-size: .68rem; letter-spacing: .06em;
+    color: var(--ink2); margin-top: .5rem; line-height: 1.5;
+  }
+
+  /* ── Dark quote band ── */
+  .band-quote { background: var(--night2); padding: 3rem 1.5rem; }
+  .band-quote-inner { max-width: 820px; margin: 0 auto; text-align: center; }
+  .band-quote p {
+    font-family: var(--font-display); font-style: italic; font-weight: 500;
+    font-size: clamp(1.3rem, 3.2vw, 1.9rem); line-height: 1.4; color: #fdf3e3;
+    letter-spacing: -.015em;
+  }
+  .band-quote cite {
+    display: block; margin-top: 1.2rem; font-family: var(--font-mono); font-style: normal;
+    font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: #eaa871;
+  }
+
+  /* ── Cards ── */
+  .cards-band { background: var(--paper); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 2.8rem 1.5rem; }
+  .cards-inner { max-width: 1080px; margin: 0 auto; }
+  .cards-title {
+    font-family: var(--font-display); font-weight: 700; font-size: 1.55rem;
+    text-align: center; margin-bottom: .5rem;
+  }
+  .cards-sub { text-align: center; color: var(--muted); font-size: .95rem; margin-bottom: 2rem; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.1rem; }
+  .card {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.2rem 1.25rem;
+  }
+  .card-num {
+    font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em;
+    color: var(--accent); margin-bottom: .5rem;
+  }
+  .card-title { font-family: var(--font-display); font-weight: 600; font-size: 1.06rem; margin-bottom: .45rem; line-height: 1.3; }
+  .card-body { font-size: .92rem; line-height: 1.62; color: var(--ink2); }
+  .card-body a { color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(15,118,110,.35); }
+  .card-body a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── Images ── */
+  .fig-band { background: var(--night); padding: 2.6rem 1.5rem; }
+  .fig-band.light { background: #f2ece1; }
+  .fig-inner { max-width: 900px; margin: 0 auto; text-align: center; }
+  .fig-inner.narrow { max-width: 620px; }
+  .fig-inner img { max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 6px; }
+  .fig-cap {
+    font-family: var(--font-mono); font-size: .73rem; line-height: 1.7;
+    color: #93b2b8; margin-top: 1rem; text-align: center;
+  }
+  .fig-band.light .fig-cap { color: var(--muted); }
+  .fig-cap a { color: #f0a868; text-decoration: none; border-bottom: 1px solid rgba(240,168,104,.4); }
+  .fig-band.light .fig-cap a { color: var(--teal); border-bottom-color: rgba(15,118,110,.4); }
+  .fig-cap a:hover { color: #ffd9b0; }
+  .fig-band.light .fig-cap a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── Iframe embeds ── */
+  .iframe-wrap { background: #eee6d8; padding: 2.4rem 1.5rem; }
+  .iframe-wrap.dark { background: var(--night2); }
+  .iframe-inner { max-width: 1160px; margin: 0 auto; }
+  .iframe-inner iframe {
+    width: 100%; height: min(86vh, 780px); border: 1px solid var(--border);
+    border-radius: 8px; background: #fff; display: block;
+  }
+  .iframe-cap { font-family: var(--font-mono); font-size: .73rem; color: var(--muted); text-align: center; margin-top: 1rem; line-height: 1.7; }
+  .iframe-wrap.dark .iframe-cap { color: #93b2b8; }
+  .iframe-cap a { color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(15,118,110,.4); }
+  .iframe-wrap.dark .iframe-cap a { color: #f0a868; border-bottom-color: rgba(240,168,104,.4); }
+  .iframe-cap a:hover { color: var(--accent); }
+  .iframe-wrap.dark .iframe-cap a:hover { color: #ffd9b0; border-bottom-color: #ffd9b0; }
+
+  /* ── Bottom margins on all bands ── */
+  .band { margin-top: 3.4rem; margin-bottom: 3.4rem; }
+
+  /* ── Takeaways ── */
+  .takeaways-band {
+    background: linear-gradient(140deg, #9a3412 0%, #7c2d12 45%, #0b544e 100%);
+    padding: 3.4rem 1.5rem;
+  }
+  .takeaways-inner { max-width: 1080px; margin: 0 auto; }
+  .takeaways-title {
+    font-family: var(--font-display); font-weight: 800; font-size: clamp(1.7rem, 4vw, 2.4rem);
+    color: #fff; text-align: center; margin-bottom: .5rem; letter-spacing: -.02em;
+  }
+  .takeaways-sub { text-align: center; color: #f6d8bd; font-size: .95rem; margin-bottom: 2.2rem; }
+  .takeaway-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.1rem; }
+  .takeaway {
+    background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.2);
+    border-radius: 8px; padding: 1.3rem 1.35rem; backdrop-filter: blur(3px);
+  }
+  .takeaway-num {
+    font-family: var(--font-mono); font-size: .68rem; letter-spacing: .14em;
+    color: #ffcf9e; margin-bottom: .5rem;
+  }
+  .takeaway-title { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; color: #fff; margin-bottom: .5rem; line-height: 1.3; }
+  .takeaway-text { font-size: .93rem; line-height: 1.66; color: #f2e6da; }
+  .takeaway-text a { color: #ffd9a8; text-decoration: none; border-bottom: 1px solid rgba(255,217,168,.5); font-weight: 500; }
+  .takeaway-text a:hover { color: #fff; border-bottom-color: #fff; }
+
+  /* ── Footer ── */
+  .footer { background: var(--night); color: #8fa8b2; padding: 2.6rem 1.5rem; text-align: center; }
+  .footer p { margin-bottom: .7rem; font-size: .92rem; }
+  .footer a { color: #f0a868; text-decoration: none; border-bottom: 1px solid rgba(240,168,104,.4); }
+  .footer a:hover { color: #fff; border-bottom-color: #fff; }
+  .footer-mono { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .05em; color: #6c8792; }
+
+  /* ── Modals ── */
+  .modal {
+    position: fixed; inset: 0; background: rgba(13,27,36,.86);
+    display: none; align-items: center; justify-content: center; z-index: 900; padding: 1.5rem;
+  }
+  .modal.open { display: flex; }
+  .modal-box {
+    background: var(--paper); border-radius: 10px; max-width: 880px; width: 100%;
+    max-height: 88vh; display: flex; flex-direction: column; overflow: hidden;
+  }
+  .modal-head {
+    padding: 1rem 1.3rem; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  }
+  .modal-head h4 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; }
+  .modal-close {
+    background: none; border: none; font-size: 1.5rem; cursor: pointer;
+    color: var(--muted); line-height: 1; padding: 0 .3rem;
+  }
+  .modal-close:hover { color: var(--accent); }
+  .modal-body { padding: 1.3rem; overflow-y: auto; font-size: .93rem; line-height: 1.7; }
+  .modal-body h1, .modal-body h2, .modal-body h3 { font-family: var(--font-display); margin: 1.2rem 0 .6rem; line-height: 1.25; }
+  .modal-body h1 { font-size: 1.35rem; } .modal-body h2 { font-size: 1.15rem; } .modal-body h3 { font-size: 1.02rem; }
+  .modal-body p { margin-bottom: .8rem; }
+  .modal-body a { color: var(--teal); }
+  .modal-body blockquote { border-left: 3px solid var(--border); padding-left: .9rem; margin: .8rem 0; color: var(--ink2); }
+  .modal-body pre { background: #f0e9dd; padding: .8rem; border-radius: 6px; overflow-x: auto; font-size: .78rem; }
+  .modal-body code { font-family: var(--font-mono); font-size: .84em; }
+  .modal-body table { border-collapse: collapse; width: 100%; font-size: .85rem; margin: .8rem 0; display: block; overflow-x: auto; }
+  .modal-body th, .modal-body td { border: 1px solid var(--border); padding: .4rem .6rem; text-align: left; }
+  .modal-body img { max-width: 100%; height: auto; }
+  .modal-src { font-family: var(--font-mono); font-size: .72rem; padding: .3rem 1.3rem 0; }
+  .modal-src a { color: var(--accent); }
+
+  @media (max-width: 640px) {
+    body { font-size: 17.5px; }
+    .hero { padding-top: 2.6rem; }
+    .iframe-inner iframe { height: 70vh; }
+  }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<nav class="masthead">
+  <div class="masthead-inner">
+    <a class="masthead-brand" href="https://sanand0.github.io/talks/">Anand's Talks</a>
+    <div class="masthead-right">
+      <span class="masthead-date">25 July 2026 · Singapore</span>
+      <a class="masthead-link" href="https://iimalumni.sg/" target="_blank" rel="noopener">IIM Alumni SG</a>
+      <a class="masthead-link" id="transcript-btn" href="transcript.md">Transcript</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-series">AI UNBOXED · SESSION 3 OF 4 · AGENTIC ANALYSIS</div>
+  <div class="hero-kicker">A 2-hour workshop, held on Microsoft Teams</div>
+  <h1>Hire a Data Scientist<br>for <em>$100</em></h1>
+  <p class="hero-sub">A Gujarat power company saved ₹1.63 lakh in a single day by uploading one Excel sheet. Thirty IIM alumni then pointed the same trick at Singapore's housing data — and discovered that 13,330 flat sales end in the number 888.</p>
+  <div class="hero-meta">
+    <a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand S</a>, LLM Psychologist at <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a><br>
+    for the <a href="https://iimalumni.sg/" target="_blank" rel="noopener">IIM Alumni Association of Singapore</a> · hosted by Debi &amp; Sandeep
+  </div>
+  <div class="quick-links">
+    <a href="#gipcl">The ₹1.63 lakh Excel sheet</a>
+    <a href="#amuse">Amuse me</a>
+    <a href="#skill">The depreciating skill</a>
+    <a href="#model">The $20,000 error</a>
+    <a href="#takeaways">Takeaways</a>
+  </div>
+</header>
+
+<div class="band video-wrap">
+  <div class="video-inner">
+    <video controls preload="metadata" width="100%"><source src="https://media.s-anand.net/2026-07-25-ai-unboxed-agentic-analysis.webm" type='video/webm; codecs="vp9, opus"'></video>
+    <div class="audio-row">
+      <audio controls preload="metadata" style="width:100%">
+        <source src="https://github.com/sanand0/talks/releases/download/talks/2026-07-25-ai-unboxed-agentic-analysis.opus" type="audio/ogg; codecs=opus">
+        Your browser does not support audio. <a href="https://github.com/sanand0/talks/releases/download/talks/2026-07-25-ai-unboxed-agentic-analysis.opus">Download the audio</a>.
+      </audio>
+    </div>
+    <p class="media-cap">
+      The full 2 hour 15 minute workshop · <a href="transcript.md" id="transcript-btn2">📄 Read the transcript</a> ·
+      <a href="https://github.com/sanand0/talks/releases/download/talks/2026-07-25-ai-unboxed-agentic-analysis.opus">🎧 Download audio</a><br>
+      Previously in this series: <a href="../2026-05-23-ai-unboxed-context-engineering/">1 · What Your AI Doesn't Know About You</a> ·
+      <a href="../2026-06-20-ai-unboxed-tools-workflows/">2 · The Workshop That Made Itself</a>
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<p>The first thing that happened, before anyone said the word "data", was that <strong>Sonal appeared on screen as a portrait she had never posed for</strong>.</p>
+
+<blockquote class="pull">
+  <p>"This is what ChatGPT thought I looked like, which is not correct. But I'm not willing to correct it because it looks better than I do, so why not?"</p>
+  <cite>Sonal, on her AI-generated profile picture</cite>
+</blockquote>
+
+<p>She hadn't given it a photo. "I think it looked at my LinkedIn and my public profile or whatever and then just, yeah, decided this was me." It is a small moment, but it sets up the whole afternoon: <strong>a machine went and found data about her, drew a conclusion, and presented it with total confidence — and the conclusion was flattering enough that nobody wanted to check it.</strong></p>
+
+<p>Which is more or less the danger, and the promise, of what Anand had come to teach.</p>
+
+<h2 class="sec">The rapid fire that was written by AI</h2>
+
+<p>Sandeep opened with a two-minute rapid fire. One-word answers.</p>
+
+<div class="chat-snippet">
+  <div class="chat-snippet-label">Rapid fire — Sandeep Dhingra × Anand</div>
+  <p><strong>ChatGPT or Claude?</strong> — ChatGPT.<br>
+  <strong>Type or talk?</strong> — Type.<br>
+  <strong>Agents or tools?</strong> — Agents.<br>
+  <strong>AI hype or real?</strong> — Real.<br>
+  <strong>Most overrated AI skill people waste time on?</strong> — Prompt engineering.<br>
+  <strong>The last time you used Google instead of AI?</strong> — Today.<br>
+  <strong>Who knows you better, your wife or AI?</strong> — AI.<br>
+  <strong>AI bubble or no?</strong> — No.<br>
+  <strong>One AI stock you would buy?</strong> — Nvidia, still.<br>
+  <strong>One job in the room AI will kill first?</strong> — Personal financial advisor.<br>
+  <strong>Will you be replaceable by AI within the next three years?</strong> — Yes, I already have been.</p>
+</div>
+
+<p>Then Anand asked the counter-question that turned a party game into a lesson: <em>"Did you use AI for preparing these questions?"</em></p>
+
+<p>Sandeep had. And — this is the part worth stealing — <strong>he had prompted it four times</strong>. First: "Anand's done this AI session, give me 10 amazing questions which will fox him or maybe also regale the participants." Then "this is not interesting enough, I want shorter questions, one-line questions." Then "talk about jobs and the one AI stock to buy." Then "reorder them, to start slowly and build it up."</p>
+
+<blockquote class="pull teal">
+  <p>"So it started warming up, the money round, spicy finish, close."</p>
+  <cite>Sandeep, describing the run-sheet his AI produced</cite>
+</blockquote>
+
+<p><strong>Nobody wrote a clever prompt. Someone had a conversation with four turns in it</strong> — which, as it happens, is exactly the shape of every good analysis that followed.</p>
+
+<h3 class="sub">The carbon footprint that was suspiciously comforting</h3>
+
+<p>Before that, in the waiting-room chatter, Sonal had dropped the session's first genuine data problem into the room without meaning to:</p>
+
+<blockquote class="pull">
+  <p>"I did ask ChatGPT a few weeks ago, 'What is my carbon footprint of using ChatGPT based on the last 15 months?' It did a huge calculation and told me it's one business class flight within Southeast Asia, which is something you would do in any case in a year. So don't worry about it. It was very convincing."</p>
+  <cite>Sonal</cite>
+</blockquote>
+
+<p>The chat window <span class="tip" data-tip="The Teams chat ran a parallel, faster, funnier conversation all afternoon — 63 messages of it. Several of the best insights in this story came from there, not from the microphone.">immediately did what a good room does</span>. Shankar: <em>"the frontier models will never admit you are irresponsible on carbon ??? they have to sell tokens.."</em> Michael, doing the arithmetic nobody asked for: <em>"do note 1 biz class return is about 3600 km of driving or 940 hours of AC usage… GPT seems to have chosen the smallest possible 'equivalent'!"</em></p>
+
+<p>And Sonal's own defence of why she hadn't checked the sources is the most honest sentence anyone said all afternoon:</p>
+
+<blockquote class="pull">
+  <p>"The thing with ChatGPT is it's so verbose. Like it talks so much that you just run out of cognitive bandwidth… If you really needed to get into every source it's citing, it's just going to take up too much time."</p>
+  <cite>Sonal, on why verification loses</cite>
+</blockquote>
+
+<p><strong>That is the real cost of AI analysis: not tokens, but attention.</strong> Anand parked all of it — VJ's question about token limits, Sonal's carbon footprint, Debi's question about verification — as themes to return to. He returned to every one.</p>
+
+<h2 class="sec">Homework check: what the room had actually been doing</h2>
+
+<p>Session two had ended on <strong>schedules</strong> — telling AI to do something useful every day or every week without waiting for you to remember. Anand opened by asking whether anyone had tried one. What came back was a small, unplanned survey of what thirty senior professionals do with an agent when nobody's watching.</p>
+
+<div class="chat-snippet">
+  <div class="chat-snippet-label">Schedules people are actually running</div>
+  <p><strong>Sonal:</strong> a work digest of "emails from the last one week that I need to respond to or where my inputs are required" — plus a personal one nudging her weekly on deepening her professional network.</p>
+  <p><strong>VJ:</strong> a daily and a weekly market sweep. "I learned over the week to keep re-tuning the prompt… pick one or two lines in terms of facts, and then three or four lines in terms of what people are doing in the market."</p>
+  <p><strong>rags:</strong> "i get chatgpt to do a saturday morning scan of stock nmarkets and give ideas for trading the week ahead."</p>
+  <p><strong>Bharath:</strong> "simple one - using it to do a internship job search weekly for my daughter."</p>
+  <p><strong>Shaibal:</strong> weekly competitive analysis across competitor websites, social media and news — releases, changes, incidents.</p>
+  <p><strong>Reynold:</strong> still trying — auto-filling SGAC and Air Suvidha forms. "Key issue is how to keep the passport data safe and not in the memory of the AI."</p>
+</div>
+
+<p>Reading back Anand's rapid-fire prediction, VJ extended it: <strong>"You said that financial advisors will disappear… in the market there's lots of sales people — they will all disappear, because I'm getting some very nice curated insights on markets through these schedules."</strong></p>
+
+<p>Then Shankar mentioned, almost in passing, that he'd negotiated an investment position without a lawyer. Anand, being generous, offered him an out — surely this was just cursory legal analysis?</p>
+
+<blockquote class="pull big">
+  <p>"It's not a cursory legal analysis. In fact, in this case, it has beaten a lawyer whom I also benchmarked against. So finally I had to tell the lawyer that, 'Look, Claude beat you.'"</p>
+  <cite>Shankar, after a two-week engagement</cite>
+</blockquote>
+
+<p>Sandeep runs all his NDAs and master service agreements through Claude now, and reported the kind of finding that makes the case better than any benchmark: <strong>"I just signed an NDA where people said, 'This company's based in Bangalore, I'm based in Singapore,' and it says the applicable law is UK. I said, 'Guys, why is this UK law?' They had no idea."</strong></p>
+
+<p>Anand's read on this is subtler than the triumphalism:</p>
+
+<blockquote class="pull teal">
+  <p>"Quite often it's an AI at this end and an AI at the other end — one's generating something and the other's verifying something. And not that either is doing a bad job, it ultimately then boils down to the person prompting, and what context, what questions they're providing."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>The counter-evidence arrived promptly and he read it out without flinching: <strong>"Tax advice from Claude was gibberish, which is a good counterpoint to have."</strong> Krishna's was better still — he ran the same 401(k) question in two ChatGPT chats, got two contradictory answers, showed each the other's reasoning, <em>"and they each insisted the other was wrong."</em></p>
+
+<p>VJ's version worked, though, and it's the one that pointed at the day's real subject: feeding it <strong>26AS, AIS and TIS statements and having it reconcile them into a dividend schedule</strong>. Reconciliation. Summarising a bank statement. Working out a carbon footprint. Comparing two 401(k) spreadsheets to find which is wrong.</p>
+
+<blockquote class="pull">
+  <p>"These are effectively forms of data analysis. The potential for analysis, however, is often a lot larger than many of us might think of — and a part of what I wanted to do in this session was open our minds to what else is possible."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<h2 class="sec" id="gipcl">The Excel sheet that paid for itself in one day</h2>
+
+<p>Two sessions had already covered <a href="../2026-05-23-ai-unboxed-context-engineering/">what AI knows about you</a> (prompts, files, memory, tools) and <a href="../2026-06-20-ai-unboxed-tools-workflows/">how to make it work for you repeatedly</a> (workflows, verification, skills, schedules). Session three was about <strong>analysis: how AI examines data and content, finds patterns, and helps you reach conclusions</strong>.</p>
+
+<p>Anand started not with a dataset but with a solar farm.</p>
+
+<p><a href="https://www.gipcl.com/" target="_blank" rel="noopener">Gujarat Industries Power Company Limited</a> has a problem with wind. Their contract requires them to forecast, in advance, how much solar energy they will push into the grid — and they are <span class="tip" data-tip="Deviation Settlement Mechanism: India's grid penalises generators whose actual output deviates from their day-ahead schedule, in either direction.">penalised for missing the forecast in either direction</span>. But on very windy days, solar panels have to be <em>stowed</em> — physically rotated flat so the wind doesn't tear them off their trackers. Generation collapses. The forecast is wrong. The penalty lands.</p>
+
+<p>They knew the wind schedules arrived each morning. They just couldn't turn that into a corrected forecast fast enough. So they asked Anand what it would cost to hire a data scientist.</p>
+
+<blockquote class="pull big">
+  <p>"I said, 'Look, how about you spend 100 dollars first and hire a data scientist as an agent?' … Now they no longer need to pay even that 100 dollars."</p>
+  <cite>Anand, on the GIPCL wind-stow model</cite>
+</blockquote>
+
+<p>What actually happened: <strong>they uploaded their existing Excel forecasting model, talked to ChatGPT for two or three minutes explaining the problem, and let it churn for the better part of an hour.</strong> It came back with a corrected Excel sheet — a "wind-stow correction layer" bolted onto the forecast they already had, rather than a replacement for it.</p>
+
+<div class="stat-band band">
+  <div class="stat-grid">
+    <div class="stat-item"><div class="stat-num">₹1,63,233</div><div class="stat-label">DSM penalty saved on a single high-wind day</div></div>
+    <div class="stat-item"><div class="stat-num">338.86</div><div class="stat-label">MWh of forecast gap closed — a 61.8% improvement</div></div>
+    <div class="stat-item"><div class="stat-num">31.6%</div><div class="stat-label">reduction in penalties versus the conventional method</div></div>
+    <div class="stat-item"><div class="stat-num">~$100</div><div class="stat-label">the entire cost of the "data scientist"</div></div>
+  </div>
+</div>
+
+<div class="band iframe-wrap">
+  <div class="iframe-inner">
+    <iframe src="https://files.s-anand.net/pages/fde/energy-utility-wind-stow-schedule-model.html" title="GIPCL Wind Stow-Aware Scheduling Model" loading="lazy"></iframe>
+    <p class="iframe-cap">GIPCL's own write-up of the wind stow-aware scheduling model — the numbers, the method, and the caveat that validation improves as more high-wind days accumulate. <a href="https://files.s-anand.net/pages/fde/energy-utility-wind-stow-schedule-model.html" target="_blank" rel="noopener">Open in a new window ↗</a></p>
+  </div>
+</div>
+
+<p>The punchline is better than the numbers. Anand asked them what else they'd like to solve.</p>
+
+<blockquote class="pull">
+  <p>"They thought for some time and said, 'No.'"</p>
+  <cite>Anand — the hardest problem in agentic analysis is not the analysis</cite>
+</blockquote>
+
+<p>The takeaway he drew was deliberately unglamorous: <strong>sometimes you can just give it an Excel sheet with a model — a financial model, any model — and ask it to improve the model.</strong> No pipeline, no data warehouse, no hire.</p>
+
+<p>The other Anand in the room (there were two) pushed back in the chat, and it was a good push: <em>"With ChatGPT, are we burning too many tokens to come to the output? In the old world, making a machine learning program to do an iteration could have given the same output."</em> Anand agreed completely.</p>
+
+<blockquote class="pull teal">
+  <p>"I don't think we should be using AI as a forecaster for every single thing, just as we probably don't want to use it for anything that a program can do. We don't need to… But if I wanted to multiply a large set of numbers, I would rather have it write a program that does it and keep running the program."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p><strong>The agent isn't the calculator. The agent is the person who writes the calculator.</strong></p>
+
+<h2 class="sec">The other direction: data looking for a story</h2>
+
+<p>GIPCL had a problem and needed data. The <a href="https://timesofindia.indiatimes.com/" target="_blank" rel="noopener">Times of India</a> had the opposite situation.</p>
+
+<p>They ran a property called <strong>Statoistics</strong> — "statistics with a TOI in the middle" — small cards carrying an interesting number from public data. They were about to shut it down. It took too much effort to make the cards.</p>
+
+<p>Same process, Anand said. Go to ChatGPT, ask it to search public data, create interesting cards. Over a day of iteration, it was <strong>scanning the data, choosing the analysis, judging what was interesting, validating it, and building the visual — end to end</strong>. Many of the cards ran in the paper.</p>
+
+<div class="band iframe-wrap dark">
+  <div class="iframe-inner">
+    <iframe src="https://sanand0.github.io/journalists/statnostics/" title="Statoistics — Data Cards Gallery" loading="lazy"></iframe>
+    <p class="iframe-cap">The Statoistics gallery: ~23 AI-built cards from the <a href="https://sanand0.github.io/journalists/statnostics/" target="_blank" rel="noopener">Lancet Citizens' Commission survey, UN SDG data and India's Periodic Labour Force Survey</a>. Anand's stories: people avoiding hospitals, the gap between government hospital insurance, why insurance won't help you whichever hospital you pick. <a href="https://sanand0.github.io/journalists/statnostics/" target="_blank" rel="noopener">Open the gallery ↗</a></p>
+  </div>
+</div>
+
+<div class="band fig-band light">
+  <div class="fig-inner narrow">
+    <a href="https://sanand0.github.io/journalists/statnostics/2026-04-27-citizen-survey/05-educated-waiting.svg" target="_blank" rel="noopener">
+      <img src="https://sanand0.github.io/journalists/statnostics/2026-04-27-citizen-survey/05-educated-waiting.svg" alt="Educated Waiting — a Statoistics data card">
+    </a>
+    <p class="fig-cap"><a href="https://sanand0.github.io/journalists/statnostics/2026-04-27-citizen-survey/05-educated-waiting.svg" target="_blank" rel="noopener">"Educated Waiting" — one card from the Citizen Survey set.</a> AI found the pattern, wrote the headline, drew the chart. Click to open full size.</p>
+  </div>
+</div>
+
+<p>Anand's framing of how this is possible is worth pinning to a wall:</p>
+
+<blockquote class="pull">
+  <p>"Like with most things in AI, the answer is simply: 'Oh, the process is very simple. We just tell one of these models to do it, it'll do it.' We just didn't know it was possible, or there may have been one or two nuances about it that we may not have known."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+</div>
+
+<div class="wrap">
+
+<h2 class="sec">Step one: stop looking for data</h2>
+
+<p>Anand put the whole afternoon on one axis — <strong>the chain of things people actually do with data</strong> — and started at the very first link, which almost nobody thinks of as an AI task.</p>
+
+<p>"I have a problem. I need data. Where can I get it?"</p>
+
+<p>He asked the room to type problems into the chat. Not questions about data. Just problems. Within ninety seconds:</p>
+
+<div class="chat-snippet">
+  <div class="chat-snippet-label">Teams chat — problems in search of data</div>
+  <p><strong>Sandeep:</strong> Electric car penetration in Asian markets.<br>
+  <strong>Sonal:</strong> Best use of credit card reward points.<br>
+  <strong>Michael Fernandes:</strong> Growth in rooftop solar capacity in Singapore vis-à-vis growth in electric car energy demand.<br>
+  <strong>Debi:</strong> "I am a 56 years old woman with no pre-existing health conditions. What coverage of health insurance should i buy looking at private healthcare inflation in Singapore."<br>
+  <strong>Sudeep Lahiri:</strong> "Is there any value of college education in 5 years from now. If yes what kind."<br>
+  Plus: higher education seats in Singapore by department, and the correlation between the SGD–INR rate and inward remittances to India.</p>
+</div>
+
+<p>Then the prompt. It is worth reading closely, because <strong>it delegates the judgement, not just the search</strong>:</p>
+
+<div class="prompt-box">
+  <span class="plabel">Anand's prompt — the "consultant" prompt</span>
+  I'm going to paste a series of tasks that I'm interested in researching. Which of these would best be supported by available public data? I want you to search online for the most relevant public data sets that could help with these tasks, and then rank order the tasks and supporting data sets that would have highest impact.
+</div>
+
+<blockquote class="pull teal">
+  <p>"My hypothesis still is that all activity can be delegated to agents."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>The verdict came back ranked. <strong><a href="https://data.gov.sg/datasets?query=coe&amp;resultId=d_69b3380ad7e51aff3a7dcc84eba52b8a" target="_blank" rel="noopener">COE prices</a>: excellent public data, high impact.</strong> Rooftop solar growth: strong, and here are the spreadsheets and the PDF report at <a href="https://www.ema.gov.sg/" target="_blank" rel="noopener">ema.gov.sg</a>. Electric car penetration: reasonably strong. And then the one that mattered most, because it was a <em>no</em>: <strong>best use of credit card reward points — weak and fragmented. Not much impact available here.</strong></p>
+
+<p>A search engine will never tell you your question is a bad one.</p>
+
+<blockquote class="pull">
+  <p>"Finding the data is just one prompt away. Use it… The other revelation is that there is a surprisingly large amount of public data available, and you just need to know that it's there so that you can start searching for it."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>He'd already run the same trick on <a href="https://data.gov.sg/" target="_blank" rel="noopener">data.gov.sg</a> itself — asking simply which datasets are most downloaded. The answer: <strong>ACRA's corporate entity register</strong>, then more ACRA, then COVID weekly stats, then <a href="https://data.gov.sg/datasets?query=hdb+resale&amp;resultId=d_8b84c4ee58e3cfc0ece0d773c8ca6abc" target="_blank" rel="noopener">resale flat prices</a>. You can browse the same way: <a href="https://data.gov.sg/datasets?sort=downloadsCount&amp;resultId=189" target="_blank" rel="noopener">by download count</a>, <a href="https://data.gov.sg/datasets?formats=CSV%7CGEOJSON%7CXLSX%7CPDF&amp;resultId=d_3f960c10fed6145404ca7b821f263b87" target="_blank" rel="noopener">by file format</a>, or — the one that matters for agents — <a href="https://data.gov.sg/datasets?formats=API&amp;resultId=d_e25662f1a062dd046453926aa284ba64" target="_blank" rel="noopener">by whether there's an API</a>.</p>
+
+<h3 class="sub">A detour into tokens, because VJ asked</h3>
+
+<p>VJ had opened the session worried that he burns through Claude Pro credits absurdly fast. Anand's response was the funniest reversal of the afternoon:</p>
+
+<blockquote class="pull">
+  <p>"Most certainly. Though I'll probably ask for tips on how you end up using that many tokens. I get worried that I'm not using anywhere near my $20 limit. So we should exchange notes."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>The real answer, delivered mid-analysis, is a piece of live arbitrage worth knowing:</p>
+
+<ul>
+  <li><strong>Almost everything is metered.</strong> ChatGPT has Chat and Work; Claude has Chat, Work and Code. Burn too many tokens and you get stopped.</li>
+  <li><strong>The exception, right now, is ChatGPT's plain Chat.</strong> "You're not likely, even on the 20-dollar plan, to run out of credits if you just stick to ChatGPT Chat." Gemini works the same way.</li>
+  <li><strong>Check your usage:</strong> in Claude, click your name, bottom left → Settings → Usage. Anand's showed 4% of his session used, resetting in five hours. ChatGPT's usage tab covers Codex, workspace agents and Excel — <em>not</em> chat conversations.</li>
+  <li>VJ's own discipline, from the chat: Krishna runs Claude on email folders at night "so i don't hit usage limits during the day." Anand's: <strong>use the cheapest model that can't get the task wrong.</strong> For a simple "can you even reach this website?" test, he reached for the smallest model available — "Haiku won't make such a basic mistake."</li>
+</ul>
+
+<p>"I don't know when this is going to change," he added, "but we have a reasonable window of opportunity."</p>
+
+<h3 class="sub">Why ChatGPT for this, and Claude for something else</h3>
+
+<p>Almost the entire session ran on ChatGPT, and Anand explained why in a single sentence that is probably the most useful model-selection advice in the whole series:</p>
+
+<blockquote class="pull big teal">
+  <p>"When the rigor of execution matters, it's hard to beat the OpenAI class of models. When it comes to taste, when it comes to strategy, Claude is hard to beat. If I didn't know what I wanted, I would go to Claude. It would correct me and say, 'Look, I'm going to do what I think you really need, not necessarily what you said.' ChatGPT will make sure that it does what you said to the letter without mistakes."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>Later, when Debi asked directly — Claude, Gemini or ChatGPT for building and refining forecast models? — the answer was one line: <strong>"For any analysis, I prefer ChatGPT. It makes far fewer mistakes."</strong></p>
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<h2 class="sec" id="amuse">"Amuse me."</h2>
+
+<p>Then he handed the room a 22.3 MB CSV and a two-word prompt.</p>
+
+<p>The instruction was simple: <strong>download <a href="https://data.gov.sg/datasets?query=hdb+resale&amp;resultId=d_8b84c4ee58e3cfc0ece0d773c8ca6abc" target="_blank" rel="noopener">the HDB resale flat prices dataset</a>, drag it into ChatGPT, and ask it absolutely any question.</strong> Including, he pointed out, this one:</p>
+
+<blockquote class="pull">
+  <p>"I have no idea what questions you can answer from this data. What interesting questions can you answer from this data? — is a perfectly valid question."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>His own prompt was two words. <em>Amuse me.</em></p>
+
+<p>What came back opened like a stand-up set: <strong>"The government data set enters a comedy club. It brought receipts, remaining lease, and an unexpected strong attachment to the number eight."</strong></p>
+
+<div class="stat-band band">
+  <div class="stat-grid">
+    <div class="stat-item"><div class="stat-num">13,330</div><div class="stat-label">transactions ending in 888 — roughly 1 in 18</div></div>
+    <div class="stat-item"><div class="stat-num">69</div><div class="stat-label">flats sold at exactly S$888,888<br>(one at S$888,888.88)</div></div>
+    <div class="stat-item"><div class="stat-num">78.9%</div><div class="stat-label">of prices end in $0,000, $5,000 or $8,000</div></div>
+    <div class="stat-item"><div class="stat-num">4</div><div class="stat-label">flats sold at exactly S$999,999</div></div>
+    <div class="stat-item"><div class="stat-num">366.7 m²</div><div class="stat-label">the largest "3-room" flat — an HDB terrace</div></div>
+    <div class="stat-item"><div class="stat-num">35×</div><div class="stat-label">growth in million-dollar sales, 2017 → 2025</div></div>
+  </div>
+</div>
+
+<p>The room lit up. <strong>Anand had assumed the 888 pattern was a data artefact and asked if anyone knew why.</strong> Sonal answered instantly: "It's the lucky — the Chinese lucky number. It's for wealth." VJ added the grim half: "They'll pay an arm and a leg for 8-8-8-8. Except four. Four is death."</p>
+
+<p>Shaibal's Claude run went straight at it as a hypothesis test — <strong>a superstition test on the last digit of the block number</strong>. Four sounds like death in several Chinese dialects; eight sounds like prosperity; eight clearly sold at a premium. It also flagged, correctly, that nine has no such association — which is exactly the kind of null result a human analyst would have quietly dropped.</p>
+
+<p>And then there were the S$999,999 sales. Four buyers, each paying one dollar less than a million.</p>
+
+<blockquote class="pull">
+  <p>"Presumably the seller said, 'Fine. But I refuse to appear in that newspaper article.'"</p>
+  <cite>ChatGPT, unprompted, in Anand's "Amuse me" output</cite>
+</blockquote>
+
+<p>The most expensive flat in the file — a 5-room on the 46th–48th floor of Henderson Road — went for <strong>S$1.728 million</strong>. Anand paused on the number. <em>"Does anyone know the significance of 1728? Possibly in the context of Ramanujan."</em> Sonal: "12 cubed, yeah." VJ typed "sum of 3 squares - ramanujam" into the chat.</p>
+
+<p>Nobody quite landed it live, so, for the record: <span class="cite" data-pop="ramanujan">1728 is 12³, and it is famous mainly for being one short of 1729</span> — the Hardy–Ramanujan taxicab number. The most expensive HDB flat ever sold missed being a mathematical legend by a thousand dollars.</p>
+
+</div>
+
+<div class="band cards-band">
+  <div class="cards-inner">
+    <div class="cards-title">Thirty people, one dataset, thirty different afternoons</div>
+    <p class="cards-sub">Everyone uploaded the same CSV. Almost nobody got the same analysis. Click through to the actual chats.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="card-num">SONAL</div>
+        <div class="card-title">The comedy club</div>
+        <div class="card-body">"Three rooms is apparently a philosophical concept." The 888 obsession, the S$999,999 dodge, and a median that rose 53% while the million-dollar club grew 35×. <a href="#" class="chatpop" data-doc="chats/chatgpt-1.md" data-title="ChatGPT — HDB Data Humor" data-source="https://chatgpt.com/s/t_6a64646fc6a4819183d8033ecfdb9dcf">Read the chat →</a> · <a href="https://chatgpt.com/s/t_6a64646fc6a4819183d8033ecfdb9dcf" target="_blank" rel="noopener">original ↗</a></div>
+      </div>
+      <div class="card">
+        <div class="card-num">ANAND</div>
+        <div class="card-title">The HDB Resale Awards</div>
+        <div class="card-body">The same prompt, taken further: ChatGPT wrote 16 KB of HTML with a "Negotiation Theatre" section, an "Eight Department", and a <em>Roast My Town</em> generator — "affectionate slander, statistically grounded." <a href="#" class="chatpop" data-doc="chats/chatgpt-2.md" data-title="Interactive HDB Awards — the full working" data-source="https://chatgpt.com/share/6a64657a-0324-83ec-89fb-f38df68b198b">See how it built it →</a> · <a href="https://chatgpt.com/share/6a64657a-0324-83ec-89fb-f38df68b198b" target="_blank" rel="noopener">original ↗</a></div>
+      </div>
+      <div class="card">
+        <div class="card-num">SONAL — FOLLOW-UP</div>
+        <div class="card-title">Singapore vs Hong Kong</div>
+        <div class="card-body">She asked it to go find comparable Hong Kong data. It did — and then refused to overclaim: "comparable-ish, not comparable." Verdict: HK flats less than half the size, ~65% dearer, ~4× the price per m². <a href="#" class="chatpop" data-doc="chats/chatgpt-3.md" data-title="SG vs HK public housing — the crude comparison" data-source="https://chatgpt.com/s/t_6a64668035648191bfa16f64908bf2fb">Read it →</a> · <a href="https://chatgpt.com/s/t_6a64668035648191bfa16f64908bf2fb" target="_blank" rel="noopener">original ↗</a></div>
+      </div>
+      <div class="card">
+        <div class="card-num">ARVIND</div>
+        <div class="card-title">The 1-room paradox</div>
+        <div class="card-body">Out of 291,587 HDB homes sold over 19 years, <strong>exactly zero</strong> standard 1-room flats were sold — yet 1-room flats are 49.4% of all public rental housing. Two entirely different markets wearing the same label.</div>
+      </div>
+      <div class="card">
+        <div class="card-num">MICHAEL</div>
+        <div class="card-title">"Figure out what the hell is going on"</div>
+        <div class="card-body">Three follow-up questions took him from "prices went up ridiculously post-COVID" to a supply-side explanation — <strong>interest rates made no difference</strong> — and then he asked for it as a comic "which I can use to impress AI experts."</div>
+      </div>
+      <div class="card">
+        <div class="card-num">SHAIBAL</div>
+        <div class="card-title">The superstition test</div>
+        <div class="card-body">Claude tested block-number last digits against price. Eight sells at a premium; four is death; nine has no folklore behind it and no effect — a null result reported honestly. He also had Claude build an interactive HTML page out of it.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<p>Sonal then asked the question that quietly reframed everything:</p>
+
+<blockquote class="pull big">
+  <p>"Is this your personality which gets them to choose these as the outputs through the memory they have of what you like?"</p>
+  <cite>Sonal</cite>
+</blockquote>
+
+<p>Anand's answer: "Possibly, might be. I have been feeding a fair bit of my personality into ChatGPT." He tried to test it live — temporary chat, memory off — and gave up honestly: <strong>"The most unpersonalized answer would be just creating a separate account."</strong> He also noted, ruefully, that <em>"these days ChatGPT doesn't seem to be sharing its thoughts as well as it used to."</em></p>
+
+<p>This is the through-line back to session one. <a href="../2026-05-23-ai-unboxed-context-engineering/">Context engineering</a> doesn't stop mattering when you switch to analysis. <strong>It decides which of the thousand true things in your data the model decides to tell you.</strong></p>
+
+</div>
+
+<div class="band fig-band light">
+  <div class="fig-inner narrow">
+    <a href="https://files.s-anand.net/images/2026-07-25-ai-unboxed-agentic-analysis-poster.avif" target="_blank" rel="noopener">
+      <img src="https://files.s-anand.net/images/2026-07-25-ai-unboxed-agentic-analysis-poster.avif" alt="AI Unboxed session 3 invitation poster — Agentic Analysis">
+    </a>
+    <p class="fig-cap"><a href="https://files.s-anand.net/images/2026-07-25-ai-unboxed-agentic-analysis-poster.avif" target="_blank" rel="noopener">The invitation that brought thirty-plus alumni onto a Saturday-afternoon Teams call</a> — one of them dialling in from Dubai. "I used to be in Singapore for many years… when I saw this course, I couldn't let go." Click to open full size.</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<h2 class="sec">The experiment that failed, live, in front of everyone</h2>
+
+<p>Downloading a 22 MB file and uploading it is, Anand admitted, "a lot of work" for someone as lazy as him. <strong>Why not just ask the model to fetch it?</strong></p>
+
+<p>So he set up a head-to-head. Same prompt to both, on purpose the least capable model he had:</p>
+
+<div class="prompt-box">
+  <span class="plabel">The download test</span>
+  Download and very cursorily analyze Singapore HDB data from data.gov.sg
+  <br><br><em>"My intent here is to verify whether Claude can access the site or not. Haiku won't make such a basic mistake."</em>
+</div>
+
+<p>His prediction: <strong>Claude can download it; ChatGPT can't.</strong> Claude duly went and got it — and then Anand did the thing he had spent the previous session teaching. He checked.</p>
+
+<div class="chat-snippet">
+  <div class="chat-snippet-label">Anand's verification follow-up · <a href="#" class="chatpop" data-doc="chats/claude-1.md" data-title="Claude — Singapore HDB data analysis (and the correction)">read the full Claude chat →</a></div>
+  <p><strong>Anand:</strong> "Is this the most recent data? What's the link you downloaded it from?"</p>
+  <p><strong>Claude:</strong> "Good catch! Looking back at my search results, the data is <strong>not the most recent</strong>… Why the gap? I only requested the first 1,000 records from the API, but there are 4,940 total records."</p>
+</div>
+
+<p>Claude had confidently reported a clean 24% growth in HDB units from 2008 to 2021, having silently truncated the dataset at the API's default page size. <strong>The analysis was fine. The data was a quarter missing.</strong> One follow-up question caught it. Sonal's earlier confession — that verification loses to cognitive bandwidth — had just been answered with a demonstration.</p>
+
+<p>Meanwhile Sanjay, running the same prompt on his own Claude, got the most beautifully candid failure message of the day:</p>
+
+<blockquote class="pull teal">
+  <p>"My sandbox has no network access… The web fetcher ignores query parameters on data.gov.sg's API. Both times I requested resource_id=d_8b84c4… it returned a cached response for a different dataset — the BCA registered-contractors list. Same 100 rows of aircon and renovation firms, twice. Not HDB data at all. <strong>So anything I told you about price trends right now would be invented.</strong>"</p>
+  <cite>Claude, pasted into the chat by Sanjay Jain</cite>
+</blockquote>
+
+<p>And then ChatGPT succeeded when Anand had bet it would fail — which turned out to be the most instructive moment of the workshop, because he immediately took it apart:</p>
+
+<blockquote class="pull">
+  <p>"Oh, okay, sorry. This was a false test. I must apologize. I have given ChatGPT access to my computer and it is downloading it to my local."</p>
+  <cite>Anand, invalidating his own demo in real time</cite>
+</blockquote>
+
+<p><strong>His browser ChatGPT couldn't have done it. His desktop ChatGPT could, because he had given it his machine.</strong> The capability wasn't in the model. It was in the harness around the model.</p>
+
+<h3 class="sub">Which is why the desktop app is not a convenience</h3>
+
+<p>This became the most actionable instruction of the session: <strong>go and install the actual app</strong> — <a href="https://chatgpt.com/download/" target="_blank" rel="noopener">chatgpt.com/download</a> or <a href="https://claude.com/download" target="_blank" rel="noopener">claude.com/download</a>. Not the Microsoft Store version (Michael found three variants there; Krishna warned that "ChatGPT Classic worked better on the Mac at least"). The real one.</p>
+
+<p>Two things change when you do:</p>
+
+<ul>
+  <li><strong>It can find your files without you uploading them.</strong> "Here's my folder; this contains my last 15-20 years of emails. Search and take what you need from the attachments."</li>
+  <li><strong>It can pull things off the internet through your machine</strong>, with your network access and your logins, instead of from inside a locked sandbox.</li>
+</ul>
+
+<p>Anand, who runs Linux, cheerfully noted he couldn't do either — "they've decided not to release the Linux clients" — though Claude Desktop for Linux had just landed. Sandeep added the Chrome extension trick, and the trade-off nobody advertises: <strong>"There is no LinkedIn connector. That's a disadvantage on Claude… And it doesn't have access to Outlook files, Outlook mails,"</strong> whereas Copilot has native connectivity into the Microsoft stack. (When Debi asked the room later whether <em>anyone</em> had a LinkedIn connector, the only working answer was Sandeep's: <a href="https://manus.im/" target="_blank" rel="noopener">Manus</a>, which drives your actual logged-in browser.)</p>
+
+<h3 class="sub">Chat versus Work — the distinction that decides what's possible</h3>
+
+<div class="chat-snippet">
+  <div class="chat-snippet-label">Anand's rule of thumb</div>
+  <p><strong>Chat</strong> is where you do your regular stuff. It's effectively unmetered — and, crucially, <strong>it lets you watch the code being written</strong>.</p>
+  <p><strong>Work</strong> (Claude calls it Co-work) is "slightly more powerful; it writes code and gets stuff done, but is metered" with fairly liberal limits. It gets its own machine with real internet access — which is the only reason the download prompts worked.</p>
+  <p>The catch, discovered live: <em>"I think what ChatGPT Work does is hides the details, and that is such a pity, because watching it code could have been so much more intuitive."</em></p>
+</div>
+
+</div>
+
+<div class="wrap">
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<h2 class="sec" id="skill">The skill that is deliberately going out of date</h2>
+
+<p>Everything Anand ran that afternoon carried one extra line at the end of the prompt:</p>
+
+<div class="prompt-box">
+  <span class="plabel">The line he appended to every analysis prompt</span>
+  Use <a href="https://raw.githubusercontent.com/sanand0/scripts/refs/heads/main/agents/data-analysis/SKILL.md" target="_blank" rel="noopener">https://raw.githubusercontent.com/sanand0/scripts/refs/heads/main/agents/data-analysis/SKILL.md</a> for analysis
+</div>
+
+<p>That file is <strong>fifteen years of what he has been learning and teaching about data analysis, compressed into a prompt</strong>. It tells the model to work out who the audience is, understand the data his way, hunt for what's interesting, check whether the interesting thing survives the standard logical fallacies, then pick what matters and narrate it well.</p>
+
+<blockquote class="pull">
+  <p>"So far, I haven't found ChatGPT or Claude doing analysis quite the way I want it to. I'm not convinced that that is necessarily the best way of doing it, but it produces results of the kind that I find useful."</p>
+  <cite>Anand, on why he wrote it</cite>
+</blockquote>
+
+<p>Pragati asked the commercial question — people are selling L&amp;D and talent skills online; should she buy them, or learn to build her own? Anand's answer was blunt in both directions, and then he explained the expiry date:</p>
+
+<blockquote class="pull big teal">
+  <p>"These skills are depreciating assets, not worth building unless you have a strong need… A year down the line, these will be doing analyses better than I can. So what's the point? … Skill writing is not a skill you want to invest in. It's <em>knowing what you want</em> that is the more important skill to invest in."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>He expects his own data-analysis skill to have a useful lifetime of <strong>one year, maybe eighteen months</strong>.</p>
+
+<h3 class="sub">How to actually make one (in ninety seconds)</h3>
+
+<ul>
+  <li><strong>In Claude:</strong> left sidebar → Customize → Skills. Write the instructions in. A "Market Analysis" skill might say <em>"prefer Singapore-related analysis"</em>, or <em>"when researching stocks, prefer prices from previous close rather than live prices; I don't do intraday trading."</em></li>
+  <li><strong>In ChatGPT:</strong> for most editions, you copy-paste. Anand has a keyboard shortcut that types his data-analysis skill into whatever browser he's in — <em>"simply a fancy copy-paste."</em></li>
+  <li><strong>Quickest way to write one:</strong> "Go to Claude and tell it, <em>'Create a skill for something. Here's everything that I know about it'</em> — and dictate." <span class="cite" data-pop="skills">Claude ships with a skill-creator skill</span>, and its output is easier to read back than ChatGPT's.</li>
+  <li><strong>The test for whether it should be a skill at all:</strong> "If I want some prompt to get automatically injected in the right context, and that happens at least <strong>5% of the time</strong> for my prompts, create it as a skill."</li>
+</ul>
+
+<p>He walked through <a href="https://github.com/sanand0/blog/tree/main/pages/skills" target="_blank" rel="noopener">his own live skills library</a>, and the useful part was the failures. <strong>"Talk Event Scan"</strong> was a skill until he realised it should be a weekly <em>schedule</em>. <strong>"Email Reply"</strong> was a skill until he realised that if he wants an email reply, he'll ask for one. What survives is the stuff that should fire without being asked: <strong>"Anand Objectives"</strong> (what he's actually trying to achieve, applied to everything), <strong>"Expert Lens"</strong>, and his favourite:</p>
+
+<blockquote class="pull">
+  <p>"'Question Reframe' is based on my understanding that I don't ask questions well… It says my question is a draft. There's something that I need and there's something that I've put in words; the two need not be the same. You take a guess on what that might be."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>Shaibal had reached the same place from a different direction, and posted his version in the chat: <em>"On Claude I use /improve my prompt and then write the prompt as i intend to, it works wonderfully."</em></p>
+
+<h3 class="sub">The moment the student taught the teacher</h3>
+
+<p>Mid-explanation, Sonal interrupted. She'd been poking around ChatGPT's plugins menu while Anand talked.</p>
+
+<blockquote class="pull">
+  <p><strong>Sonal:</strong> "In plugins on ChatGPT, I just saw that there is an option for skills at the top. So which means that you could store a skill on ChatGPT as well, right?"<br>
+  <strong>Anand:</strong> "I did not know this."</p>
+  <cite>Live, on Teams</cite>
+</blockquote>
+
+<p>He immediately copied his Expert Lens skill across and tested it. The verdict was characteristically unsentimental: <strong>"Even though I said 'as an expert I want you to answer', it didn't realize from the context that it should have picked it up. So it looks like it's still in the early days. But I'm sure it's not going to be long."</strong></p>
+
+<p>And when Sonal noticed the one skill conspicuously <em>absent</em> from his Claude library — the data-analysis one — the answer explained the whole two-tool split in five words:</p>
+
+<blockquote class="pull big">
+  <p>"What I use Claude chat for is thinking."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<h2 class="sec" id="model">The prompt that hires a data scientist</h2>
+
+<p>Everything so far had been description: what's in the data, what's funny, what correlates. The last hour was about the thing people still assume needs a specialist.</p>
+
+<p>Anand dictated this into ChatGPT live. It is long on purpose — <strong>notice how much of it is about verification, not modelling</strong>:</p>
+
+<div class="prompt-box">
+  <span class="plabel">The full modelling prompt, verbatim</span>
+  I want you to predict the resale price based on this data. I want you to build the most accurate model possible. If you need to build a machine learning model that is advanced, you may feel free to do so. In fact, what I'd like you to do is test out multiple models. Make an initial guess on which models you think will have the highest chance of predicting accurately and test the three best of those. Benchmark them on how accurate they are. I want you to think about what is a good measure of accuracy — define that. And hold out some of the data set so that you test the models or build the models on some initial, let's say, 80% of the data and then verify if they are accurate on the remaining 20%. Use this to report to me which model has the highest accuracy and how much it is. Explain this in intuitive terms so that I can understand what it means if I were making a resale transaction. In other words, what would it mean if I got this wrong? How far off could you be for different kinds of flats, etc., more as a layman rather than as a data scientist.
+</div>
+
+<p>He ran it in <strong>Chat rather than Work, specifically so the room could watch the Python appear.</strong> It inspected the data, considered features, and picked three <span class="tip" data-tip="Gradient-boosted decision tree libraries — the workhorses of tabular machine learning competitions since roughly 2016. All three are open source.">gradient-boosting</span> libraries to race against each other: <a href="https://catboost.ai/" target="_blank" rel="noopener">CatBoost</a>, <a href="https://lightgbm.readthedocs.io/" target="_blank" rel="noopener">LightGBM</a> and <a href="https://xgboost.readthedocs.io/" target="_blank" rel="noopener">XGBoost</a>.</p>
+
+<blockquote class="pull teal">
+  <p>"These are terms we absolutely should ignore; doesn't matter what they are… In any case, it is likely to be more well-versed with forecasting than we are, and certainly much better able to code than we are."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>Then the sentence that reframes twenty years of the analytics industry:</p>
+
+<blockquote class="pull big">
+  <p>"The realm of modeling used to be… we would use Excel to build models, more advanced Excel macros, we'd get somebody to write Python code. Then they'd start building neural net-based models, deep learning models. And then it got slightly beyond what many of us could understand, certainly do. <strong>That is no longer the case… We just need to know enough to get out of the way.</strong>"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>Half an hour later, the answer came back. <strong>CatBoost won.</strong> Typical error: <strong>just under S$20,000 on a flat price</strong> — a mean absolute percentage error of about 4.1%.</p>
+
+<div class="stat-band band">
+  <div class="stat-grid">
+    <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">models built, benchmarked and discarded without a human writing code</div></div>
+    <div class="stat-item"><div class="stat-num">S$20k</div><div class="stat-label">typical error on a resale flat price</div></div>
+    <div class="stat-item"><div class="stat-num">R² 0.964</div><div class="stat-label">on the parallel "what drives price" run</div></div>
+    <div class="stat-item"><div class="stat-num">234,303</div><div class="stat-label">transactions modelled, Jan 2017 – Jun 2026</div></div>
+  </div>
+</div>
+
+<p>And usefully, Anand made the output actionable rather than impressive: <strong>Option 1 — "now that you've built the model, give me the price for a particular flat," rebuilding it whenever new data arrives. Option 2 — "give me a program that I can download and run" that makes the same predictions.</strong> Sandeep spotted that HDB publishes on a fixed monthly schedule, so option 2 could just… run itself. "That can be on a schedule," said Anand.</p>
+
+<blockquote class="pull">
+  <p>"In short, use ChatGPT and Claude not just for simple analysis of the kind that we're used to, but also for the sophisticated kind of data analysis that you would give to a data scientist."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+</div>
+
+<div class="band iframe-wrap">
+  <div class="iframe-inner">
+    <iframe src="chatgpt-5-report.html" title="What impacts HDB resale prices most? — the report ChatGPT wrote" loading="lazy"></iframe>
+    <p class="iframe-cap">The report ChatGPT produced from the prompt Anand dictated to Pragati mid-session — "What impacts HDB's resale price the most. Download, model, and verify." It worked for 23 minutes and delivered an HTML report, charts, and a full reproducibility bundle. <a href="chatgpt-5-report.html" target="_blank" rel="noopener">Open it full-page ↗</a> · <a href="#" class="chatpop" data-doc="chats/chatgpt-5.md" data-title="HDB Resale Price Drivers — the full run" data-source="https://chatgpt.com/share/6a646f9f-7f68-83ec-a343-749698600e52">read the chat →</a> · <a href="https://chatgpt.com/share/6a646f9f-7f68-83ec-a343-749698600e52" target="_blank" rel="noopener">original ↗</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<p>Buried in that run is the single best argument for the verification half of the prompt. Twenty minutes in, the model stopped itself:</p>
+
+<blockquote class="pull teal">
+  <p>"A freshness check caught an important issue: data.gov.sg's bulk CSV snapshot stops at December 2025 even though its live datastore reaches July 2026. I'm appending the live 2026 tail, then rerunning everything… <strong>This is exactly why the verification step matters.</strong>"</p>
+  <cite>ChatGPT, mid-analysis, catching the same class of error Claude had made an hour earlier</cite>
+</blockquote>
+
+<p>The findings themselves were properly counter-intuitive. Location first, size second, market timing third — but <strong>actual floor area carried nearly five times as much predictive signal as the flat-type label</strong>. Buyers pay for square metres, not for the words "4-room". Among comparable flats: 10 extra m² is worth ~7.8%, ten more years of lease ~10.1%, three storeys higher ~2.0%. And it cited its work — <a href="https://data.gov.sg/datasets/d_14f63e595975691e7c24a27ae4c07c79/view" target="_blank" rel="noopener">HDB's official Resale Price Index</a> (up 51.5% since 2017), <a href="https://www.hdb.gov.sg/buying-a-flat/resale-flats/process-for-buying-a-resale-flat/resale-flat-planning/mode-of-financing" target="_blank" rel="noopener">HDB's CPF financing rules</a> to explain why remaining lease matters, and a <a href="https://sites.duke.edu/econhonors/files/2017/04/xu2017.pdf" target="_blank" rel="noopener">hedonic pricing study</a> to check its results against prior research.</p>
+
+<h2 class="sec">Meanwhile, Pragati just wanted a cheap flight</h2>
+
+<p>Anand had asked Pragati whether she had a data problem of her own. She did, and it was gloriously ordinary: <strong>she was planning her National Day long weekend and wanted to know when to book to Bangkok.</strong></p>
+
+<p>So he made it harder on purpose, and typed a prompt anyone in the room could paste:</p>
+
+<div class="prompt-box">
+  <span class="plabel">The flight prompt — run this one yourself</span>
+  I would like to explore patterns of flight prices out of Singapore. Search online for the most appropriate data sets and download what you consider as most relevant. Analyze these, tell me if there are any interesting insights on when prices go up or down.<br><br>
+  Use <a href="https://raw.githubusercontent.com/sanand0/scripts/refs/heads/main/agents/data-analysis/SKILL.md" target="_blank" rel="noopener">https://raw.githubusercontent.com/sanand0/scripts/refs/heads/main/agents/data-analysis/SKILL.md</a> for analysis
+</div>
+
+<p>Three people ran it at once, on different settings, and the comparison was the lesson. <strong>Pragati's "light" version finished fast and shallow. Her high-effort Work run took thirty minutes</strong> — searching 38 websites, scraping live fare calendars across 17 routes, pulling official Changi demand data, and cross-checking against a 300,000-row booking-window dataset before it would commit to anything.</p>
+
+<div class="cards-band band">
+  <div class="cards-inner">
+    <div class="cards-title">What three parallel runs found about Singapore airfares</div>
+    <p class="cards-sub">Same prompt. Different effort settings. Different — and complementary — answers.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="card-num">PRAGATI · LIGHT RUN</div>
+        <div class="card-title">Start earlier than you think</div>
+        <div class="card-body">Short-haul Asia: start checking <strong>4–6 weeks ahead</strong>. Long-haul: 8–12 weeks. Inside 14 days, waiting becomes speculation. Tuesday/Wednesday travel beats Friday/Saturday. <em>"Saturday was not something I would have guessed,"</em> said Anand.</div>
+      </div>
+      <div class="card">
+        <div class="card-num">SONAL</div>
+        <div class="card-title">Waiting is an asymmetric bet</div>
+        <div class="card-body">Across 99 tracked London–Singapore combinations, <strong>78% got more expensive and only 9% got meaningfully cheaper</strong>. The median rise was modest — the danger is the tail: the upper quartile jumped 23% in the final three days. <a href="#" class="chatpop" data-doc="chats/chatgpt-4.md" data-title="Flight fare patterns — Sonal's run" data-source="https://chatgpt.com/s/t_6a646bb0419081918bb74aaae41d8990">Read it →</a> · <a href="https://chatgpt.com/s/t_6a646bb0419081918bb74aaae41d8990" target="_blank" rel="noopener">original ↗</a></div>
+      </div>
+      <div class="card">
+        <div class="card-num">PRAGATI · WORK, HIGH EFFORT</div>
+        <div class="card-title">September is the sweet spot</div>
+        <div class="card-body">Sept–Oct minima ran ~5% below normal; <strong>even the cheapest December date was 13% above</strong>. Bangkok: S$95 in September vs S$179 in December. 72% of monthly minima fell Mon–Thu. <a href="#" class="chatpop" data-doc="chats/chatgpt-6.md" data-title="Flight Fare Trends — the 30-minute Work run" data-source="https://chatgpt.com/share/6a646fef-6ddc-83ec-b68b-c3040278bef9">Read it →</a> · <a href="https://chatgpt.com/share/6a646fef-6ddc-83ec-b68b-c3040278bef9" target="_blank" rel="noopener">original ↗</a></div>
+      </div>
+      <div class="card">
+        <div class="card-num">THE HONEST BIT</div>
+        <div class="card-title">What it refused to claim</div>
+        <div class="card-body">"There is insufficient evidence for a universal cheapest weekday to book." And: a fully public historical Singapore route-level fare panel <strong>does not appear to exist</strong> — the lead-time percentages came from an <a href="https://www.kaggle.com/datasets/shubhambathwal/flight-price-prediction" target="_blank" rel="noopener">Indian domestic dataset</a> and were explicitly flagged as not a Singapore forecast.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p>Shaibal's run turned up the line of the session — <em>"Singapore has the most predictable airfare calendars in the world"</em> — and a 4–5% bump around Chinese holidays. Vijay's verdict in the chat was shorter: <strong>"Airlines win."</strong></p>
+
+<p>Anand's own point, though, was about the shape of the answer rather than the answer: <strong>"That negative is also pretty useful."</strong> A tool that tells you there is no pattern is doing something a dashboard never does.</p>
+
+<h3 class="sub">Should you carry an umbrella? It depends entirely on which city you're in</h3>
+
+<p>Which led to Anand's favourite recent example — an analysis built purely by asking a model to go get weather data from <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> and work out <strong>where the time of day predicts rain</strong>. It became a published data story: <a href="https://sanand0.github.io/datastories/rainy-seasons/" target="_blank" rel="noopener">Where does it rain on schedule?</a> — an interactive atlas of <strong>150 cities × 12 months, built on ten years of hourly precipitation</strong>, scoring each city's "umbrella edge" in percentage points. Its own punchline is a null result of the kind Anand keeps praising: <strong>no city has a reliable all-day rain schedule</strong>. Los Angeles, Cairo and Shijiazhuang score around 1 pp — the clock tells you nothing.</p>
+
+<div class="stat-band band">
+  <div class="stat-grid">
+    <div class="stat-item"><div class="stat-num">Caracas</div><div class="stat-label">carry an umbrella 12pm–6pm and you cover 62% of the rain, every month</div></div>
+    <div class="stat-item"><div class="stat-num">⅛</div><div class="stat-label">the odds of needing it outside that window, relative to inside it</div></div>
+    <div class="stat-item"><div class="stat-num">Abidjan</div><div class="stat-label">equally predictable. Quito, mostly. Addis Ababa, some months</div></div>
+    <div class="stat-item"><div class="stat-num">Mumbai</div><div class="stat-label">"is hopeless… there is 100% chance of you getting wet"</div></div>
+  </div>
+</div>
+
+<p>And then the generalisation that is the real payload of the entire workshop:</p>
+
+<blockquote class="pull big teal">
+  <p>"Possibly the single most powerful capability that you now have, because you can do the analysis, is <strong>not single data set analysis, but multi-data set correlations</strong>. Do interest rates impact flat prices? Does rain impact flight schedules? Does construction schedule get impacted by who's in power or concrete prices?"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>Michael had already stumbled into this without planning to. His three-question conversation established that HDB resale prices kept rising even as interest rates rose — <strong>the correlation was clearly negative</strong> — which pushed the explanation onto supply. Two datasets, one insight, no analyst.</p>
+
+<p>Anand's summary of why he now does most work this way is a career strategy disguised as a technique:</p>
+
+<blockquote class="pull">
+  <p>"A lot of the work that I'm doing has shifted to having it write code and do analysis, because it's a relatively easy thing to differentiate on these days. A lot of people are using AI on search and coming up with stuff. <strong>If I'm able to give it data and show something that is data-backed, it increases the credibility a certain amount and also increases the reliability of the work.</strong>"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+</div>
+
+<div class="wrap">
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<h2 class="sec">"How do I know it won't wreck my laptop?"</h2>
+
+<p>Shaibal asked the question everyone in a room of senior professionals is actually thinking, and he asked it from experience:</p>
+
+<blockquote class="pull">
+  <p>"When we use Co-work in Claude, or Work in GPT — from a security perspective, how do we make sure that it's not messing up stuff on your local drive, deleting stuff, copying things which you don't need? Because just now experimenting, I gave it a specific folder, but then it went and created the file in some other folder."</p>
+  <cite>Shaibal</cite>
+</blockquote>
+
+<p>Anand's answer was to pull up something published <strong>four days earlier</strong>: <a href="https://simonwillison.net/2026/Jul/21/cat-and-thariq/" target="_blank" rel="noopener">Simon Willison's fireside chat with Cat Wu and Thariq Shihipar of the Claude Code team</a>. "This is the answer that I'm now taking as state-of-the-art."</p>
+
+<p>The relevant exchange: Willison admitted he mostly runs in <span class="tip" data-tip="YOLO mode: running an agent with all permission prompts disabled — it can execute anything without asking. Fast, and exactly as reckless as it sounds.">"YOLO mode"</span> and feels guilty about it. The Anthropic team asked why he wasn't using <strong>auto mode</strong> instead.</p>
+
+<blockquote class="pull big teal">
+  <p>"Within Anthropic, almost every single person uses auto mode. They've done some extensive testing, and what they're seeing is by and large we've pretty much mitigated every attack. Not 100%, but enough that the majority of the Anthropic team is comfortable just using Claude in auto mode."</p>
+  <cite>Anand, relaying the interview</cite>
+</blockquote>
+
+<p>The mechanism: in auto mode, every command the agent wants to run gets screened by a separate model before it executes. <strong>"Unless you are a cybersecurity expert, it is likely to do a better job than you are — significantly better. And because it is going to be doing it 100 times in an hour, whereas we will probably be doing it only once a day, that increased security might only translate to comparable safety."</strong></p>
+
+<p>Then he split Shaibal's worry into the two halves that actually behave differently:</p>
+
+<div class="cards-band band">
+  <div class="cards-inner">
+    <div class="cards-title">Two different fears, two different answers</div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-num">FEAR 1</div>
+        <div class="card-title">"What if the model does something malicious?"</div>
+        <div class="card-body">Largely handled. <strong>"More than 99% of people are not worried about it"</strong> — and by people, Anand means people inside the AI labs. On packages: registries track compromised npm and PyPI versions, and "the models are designed to check those, the harnesses, the Claude Code is designed to check those." It has been trained on the same hygiene humans are supposed to follow.</div>
+      </div>
+      <div class="card">
+        <div class="card-num">FEAR 2</div>
+        <div class="card-title">"What if <em>I</em> mess something up?"</div>
+        <div class="card-body">Entirely fair. Files get written to the wrong place and occasionally deleted — <strong>"because of ambiguous prompting, not because of security reasons."</strong> The fix is boring and effective: keep a folder it can work in, don't grant access outside it. <strong>"Your blast radius is contained."</strong></div>
+      </div>
+      <div class="card">
+        <div class="card-num">THE TREND</div>
+        <div class="card-title">The cost of the error keeps falling</div>
+        <div class="card-body">"A year ago we used to ask, what if it gives me a hallucinated case? <a href="https://www.nytimes.com/2023/06/22/nyregion/lawyer-chatgpt-sanctions.html" target="_blank" rel="noopener">A lawyer did that</a> and got fined. In the last one year, we have not heard of any such case." Security isn't vanishing as a concern — it's becoming <strong>a far more sophisticated one</strong>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p>Not every question got an answer. Arvind's — <em>"How do you deal with sycophancy and AI slop"</em> — went into the chat and stayed there, unclaimed, which is arguably the most honest outcome available. And Sudeep's "is there any value of college education in 5 years from now?" got deliberately deferred: <strong>"I will want to take that next session… because after you've seen what it can do with code, this question will probably be even more strongly on your mind."</strong></p>
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<h2 class="sec">The one schedule Anand actually runs</h2>
+
+<p>After two hours of showing what agents can do, the most revealing disclosure was about restraint. Sandeep asked whether all this could be automated as new data arrives. Of course, said Anand — and then:</p>
+
+<blockquote class="pull big">
+  <p>"I find it fairly useful to… in fact, I have only <strong>one</strong> schedule that I run on a regular basis, and that is my data set scan. This is just looking for interesting new data sets on a daily basis."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>Not a portfolio of automations. One. Every day it goes looking for public data that has newly become interesting, filtered by a single criterion — <em>"it should be of relevance, journalistic."</em></p>
+
+<p>What it had turned up that week made the case better than any argument:</p>
+
+<div class="cards-band band">
+  <div class="cards-inner">
+    <div class="cards-title">Two finds from the daily scan</div>
+    <p class="cards-sub">Both new. Both public. Both, as Anand put it, "fairly large, but I don't see why AI should have a problem analyzing it."</p>
+    <div class="cards">
+      <div class="card">
+        <div class="card-num">FOUND 5 DAYS EARLIER</div>
+        <div class="card-title">NISAR L-band radar</div>
+        <div class="card-body">NASA and ISRO's joint radar satellite images the same spot every 12 days, through cloud, detecting ground movement as small as <strong>4 mm a year</strong> — fresh land deformation, floods, forest loss, crop moisture anomalies. Its first L-band products went public on <strong>20 July 2026</strong>, five days before this workshop. <a href="https://www.earthdata.nasa.gov/data/alerts-outages/nisar-l-band-data-now-publicly-available" target="_blank" rel="noopener">NASA Earthdata →</a></div>
+      </div>
+      <div class="card">
+        <div class="card-num">64 GIGABYTES</div>
+        <div class="card-title">Norwegian school buildings</div>
+        <div class="card-body">Operational electricity and weather data from Norwegian schools. Anand's question, unprompted, in the same breath: <strong>"So how much energy can public buildings save by changing control schedules?"</strong> That reflex — dataset to question in under a second — is the actual skill being taught.</div>
+      </div>
+      <div class="card">
+        <div class="card-num">THE NEXT STEP</div>
+        <div class="card-title">Close the loop</div>
+        <div class="card-body">"At some point, I will just copy this entire thing, put it into a new prompt, and say, <strong>'now do the analysis as well.'</strong>" Search → find public data → work out what can be done → do it. The scan is the only human-shaped gap left, and it's shrinking.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<blockquote class="pull teal">
+  <p>"At which point <em>the doing it</em> becomes easier and <em>figuring out what to do</em> becomes tougher. I mean, there are so many possibilities — what else can I do?"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<h3 class="sub">And the answer to Pragati's RAG question, which is: don't build a RAG</h3>
+
+<p>Pragati asked the last technical question of the day, and it was a good one. She coaches people. She has a pile of transcripts. Could she combine a <span class="tip" data-tip="Retrieval-Augmented Generation: chunk your documents, embed them into a vector database, and retrieve the relevant chunks at query time. Until recently, the standard way to make an LLM answer from your own documents.">RAG</span> and some skills in ChatGPT, without writing code, and end up with a coaching tool?</p>
+
+<p>Anand's answer was to demonstrate what he actually does. He's written a small <strong>Local MCP</strong> plugin — a server on his own machine that ChatGPT can call. Its instructions point at everything: his skills, his transcripts, his notes, his emails, his talks, his data stories. He prefixes a prompt with <code>@LocalMCP</code> and asks a question no search box could answer:</p>
+
+<div class="prompt-box">
+  <span class="plabel">Live demo, on his own life</span>
+  What's your guess on the most mind-blowing discovery that I would have made in the last one week, based on all my emails and transcripts and whatever else?
+</div>
+
+<p>The room watched it work. It listed his skills, pulled seven days of activity logs, found <strong>18 meetings in 6 days</strong>, and then started hunting for the moment he changed his mind — searching for <em>"surprise," "realize," "discover," "mind-blow," "change my mind," "didn't know."</em> Then it checked his calendar. Then his browsing history for the last eight days.</p>
+
+<blockquote class="pull big">
+  <p>"So it doesn't need to do a RAG; it's able to do it by just running a search. And I can monitor what searches it's doing on my machine."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>The whole vector-database apparatus, for personal use, turns out to be optional — because <strong>an agent that can write and run code can just grep your life.</strong> And if you don't want to build an MCP server: "just put it on Dropbox or Google Drive or whatever and connect it, that's it." That's how his own inbox-zero trick works — <a href="https://support.google.com/mail/" target="_blank" rel="noopener">Gmail</a> and Dropbox connectors, answering emails from his own notes. It's what he'd named in the rapid fire as the best idea he'd ever stolen.</p>
+
+<p>The connector ecosystem came up too: VJ had found that <strong>Claude Pro can connect to Interactive Brokers and place orders that a human must approve</strong>. Anand hears good things about the <a href="https://www.figma.com/" target="_blank" rel="noopener">Figma</a> connector. And for anyone in finance, his read: "Claude seems to be the place to be; they are placing extensive focus on financial services." One thing he was firm about, though — ChatGPT's <strong>GPTs</strong> store: <em>"To the best of my knowledge, most of them do not add value. I'm just waiting for the time when these are going to get retired."</em></p>
+
+</div>
+
+<div class="band fig-band">
+  <div class="fig-inner">
+    <a href="comic-page.avif" target="_blank" rel="noopener">
+      <img src="comic-page.avif" alt="Comic-page visual summary of the Agentic Analysis workshop">
+    </a>
+    <p class="fig-cap"><a href="comic-page.avif" target="_blank" rel="noopener">The whole workshop as an explainer comic — drawn, of course, by asking for it.</a> Made the same way session two's outputs were: one prompt describing the storyline first, then a panel per beat. Click to open full size.</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<h2 class="sec">What's coming: the session where things break</h2>
+
+<p>Debi asked how people should prepare for session four. Anand's answer set an unusually humble agenda for a workshop on building software:</p>
+
+<blockquote class="pull">
+  <p>"The whiteboarding part is easy. There isn't much to cover there, unlike this session where people needed to know… the whiteboarding is just 'tell it to do it.' <strong>But what fails is what we need to discuss.</strong>"</p>
+  <cite>Anand, on the final session</cite>
+</blockquote>
+
+<p>Homework: <strong>install Claude Code or Codex before you arrive</strong>, and come with something you've already tried to build — ideally something that didn't work. The last session of the four is in person.</p>
+
+<p>Debi noted they had run two hours and fifteen minutes. Anand's reply closed the loop on a series that has grown each time:</p>
+
+<blockquote class="pull teal">
+  <p>"It's been longer and longer! It gets better and better."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>Michael, dropping off early to catch a flight, left the best review of the format anyone could ask for: <strong>"learn from both the guru and the class, which is always fun."</strong> On the evidence of an afternoon in which a participant taught the instructor where ChatGPT hides its skills, that was less a compliment than a description.</p>
+
+</div>
+
+<div class="band takeaways-band" id="takeaways">
+  <div class="takeaways-inner">
+    <div class="takeaways-title">Six things worth taking away</div>
+    <p class="takeaways-sub">From two hours, thirty-plus alumni, one 22 MB CSV, and three machine learning models nobody wrote.</p>
+    <div class="takeaway-grid">
+      <div class="takeaway">
+        <div class="takeaway-num">01</div>
+        <div class="takeaway-title">Start with the problem, not the dataset</div>
+        <div class="takeaway-text">Paste your list of open questions and ask which are <em>supportable by public data</em>, ranked by impact. It will tell you that credit-card reward points are a dead end and <a href="https://data.gov.sg/datasets?query=coe&amp;resultId=d_69b3380ad7e51aff3a7dcc84eba52b8a" target="_blank" rel="noopener">COE prices</a> are gold. "Finding the data is just one prompt away."</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">02</div>
+        <div class="takeaway-title">Install the desktop app</div>
+        <div class="takeaway-text">The single biggest capability jump of the session wasn't a model — it was <a href="https://chatgpt.com/download/" target="_blank" rel="noopener">chatgpt.com/download</a> or <a href="https://claude.com/download" target="_blank" rel="noopener">claude.com/download</a>. Browser chat can't fetch that CSV. The desktop app, with your machine and your network, can.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">03</div>
+        <div class="takeaway-title">Ask it to build the model, then benchmark it</div>
+        <div class="takeaway-text">Say "test three models, define a good accuracy measure yourself, hold out 20%, and explain the error to me as a layman." You get CatBoost vs LightGBM vs XGBoost and a ±S$20,000 answer. <strong>You just need to know enough to get out of the way.</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">04</div>
+        <div class="takeaway-title">The verification question is one line long</div>
+        <div class="takeaway-text">"Is this the most recent data? What's the link you downloaded it from?" caught Claude silently analysing a quarter of the dataset. The same class of bug — a stale bulk CSV — was caught by ChatGPT itself mid-run. Ask every time.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">05</div>
+        <div class="takeaway-title">Don't invest in writing skills. Invest in knowing what you want</div>
+        <div class="takeaway-text">Skills are <em>depreciating assets</em> with a one-to-eighteen-month shelf life. Build one only if it should fire automatically at least 5% of the time. Otherwise it's just a prompt — <a href="https://github.com/sanand0/blog/tree/main/pages/skills" target="_blank" rel="noopener">and Anand's are all public anyway</a>.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">06</div>
+        <div class="takeaway-title">The real unlock is two datasets, not one</div>
+        <div class="takeaway-text">Rain versus flight delays. Interest rates versus flat prices. Wind forecasts versus solar output. <strong>Single-dataset analysis is a report; multi-dataset correlation is an insight</strong> — and it's now one prompt, not one quarter.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <p><strong>AI Unboxed · Session 3 of 4 · Agentic Analysis</strong><br>
+  25 July 2026 · Microsoft Teams · <a href="https://iimalumni.sg/" target="_blank" rel="noopener">IIM Alumni Association of Singapore</a></p>
+  <p>By <a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand S</a>, LLM Psychologist at <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a>. Hosted by Debi and Sandeep Dhingra.</p>
+  <p><a href="#" id="transcript-btn3">📄 Full transcript</a> ·
+     <a href="https://media.s-anand.net/2026-07-25-ai-unboxed-agentic-analysis.webm">⏯️ Video</a> ·
+     <a href="https://github.com/sanand0/talks/releases/download/talks/2026-07-25-ai-unboxed-agentic-analysis.opus">🎧 Audio</a> ·
+     <a href="https://sanand0.github.io/talks/">📚 More talks</a></p>
+  <p class="footer-mono">Earlier: <a href="../2026-05-23-ai-unboxed-context-engineering/">1 · Context Engineering</a> · <a href="../2026-06-20-ai-unboxed-tools-workflows/">2 · Tools &amp; Workflows</a> · Next: 4 · Vibe Coding, in person</p>
+</footer>
+
+<!-- ── Document / chat modal ── -->
+<div class="modal" id="doc-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h4 id="doc-title">Transcript</h4>
+      <button class="modal-close" id="doc-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-src" id="doc-src"></div>
+    <div class="modal-body" id="doc-body"></div>
+  </div>
+</div>
+
+<!-- ── Citation popup ── -->
+<div class="modal" id="popup-overlay">
+  <div class="modal-box" style="max-width:560px">
+    <div class="modal-head">
+      <h4 id="popup-title"></h4>
+      <button class="modal-close" id="popup-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body" id="popup-content"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+<script>
+  // ── Progress bar ──
+  const prog = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    prog.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + '%';
+  });
+
+  // ── Markdown document modal ──
+  const modal = document.getElementById('doc-modal');
+  const dBody = document.getElementById('doc-body');
+  const dTitle = document.getElementById('doc-title');
+  const dSrc = document.getElementById('doc-src');
+  const cache = {};
+
+  function renderMarkdown(text) {
+    const body = text
+      .replace(/^---[\s\S]*?---\s*/, '')
+      .replace(/<summary>([\s\S]*?)<\/summary>/g, '\n\n**💭 $1**\n\n')
+      .replace(/<\/?details>/g, '\n\n');
+    const html = window.marked ? marked.parse(body) : body.replace(/\n/g, '<br>');
+    return html.replace(/<a /g, '<a target="_blank" rel="noopener" ');
+  }
+
+  async function openDoc(file, title, source) {
+    modal.classList.add('open');
+    dBody.scrollTop = 0;
+    dTitle.textContent = title;
+    dSrc.innerHTML = source ? `<a href="${source}" target="_blank" rel="noopener">↗ Open the original shared chat</a>` : '';
+    if (cache[file]) { dBody.innerHTML = cache[file]; return; }
+    dBody.innerHTML = '<p><em>Loading…</em></p>';
+    try {
+      const res = await fetch(file);
+      if (!res.ok) throw new Error(res.status);
+      const html = renderMarkdown(await res.text());
+      cache[file] = html;
+      dBody.innerHTML = html;
+    } catch (e) {
+      dBody.innerHTML = `<p>Could not load this file here. <a href="${file}" target="_blank" rel="noopener">Open it directly</a>${source ? ` or <a href="${source}" target="_blank" rel="noopener">view the original chat</a>` : ''}.</p>`;
+    }
+  }
+
+  const openTranscript = e => { e.preventDefault(); openDoc('transcript.md', 'Workshop Transcript — Agentic Analysis', ''); };
+  ['transcript-btn', 'transcript-btn2', 'transcript-btn3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', openTranscript);
+  });
+
+  document.querySelectorAll('.chatpop').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      openDoc(el.dataset.doc, el.dataset.title, el.dataset.source || '');
+    });
+  });
+  document.getElementById('doc-close').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+
+  // ── Citation popups ──
+  const POPUPS = {
+    ramanujan: {
+      title: "1728, 1729, and a near miss",
+      html: `<p>The most expensive flat in the dataset sold for <strong>S$1,728,000</strong>. Anand wondered aloud whether the number had a Ramanujan connection; Sonal correctly identified 1728 as 12³.</p>
+      <p>The famous number, though, is <strong>1729</strong> — the Hardy–Ramanujan "taxicab number", the smallest number expressible as the sum of two cubes in two different ways (1³+12³ and 9³+10³). G.H. Hardy mentioned he'd arrived in a cab numbered 1729 and called it dull; Ramanujan immediately disagreed.</p>
+      <p>So the priciest HDB flat ever recorded came within one thousand dollars of being a mathematical landmark.</p>
+      <p><a href="https://en.wikipedia.org/wiki/1729_(number)" target="_blank" rel="noopener">1729 — the taxicab number</a> · <a href="https://en.wikipedia.org/wiki/Srinivasa_Ramanujan" target="_blank" rel="noopener">Srinivasa Ramanujan</a></p>`
+    },
+    skills: {
+      title: "What exactly is a skill?",
+      html: `<p>Anthropic formalised what Anand demonstrated live:</p>
+      <blockquote>"Agent Skills are organized folders of instructions, scripts, and resources that agents can discover and load dynamically. A skill is just a folder with a SKILL.md file containing YAML frontmatter and instructions."</blockquote>
+      <p>The key property is the one Anand kept stressing: the agent loads only the skills whose <em>descriptions</em> look relevant to the current task, so they cost almost nothing until they're needed — and they fire without being asked.</p>
+      <p><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" target="_blank" rel="noopener">Anthropic — Equipping agents with Agent Skills</a> · <a href="https://github.com/anthropics/skills" target="_blank" rel="noopener">anthropics/skills on GitHub</a> · <a href="https://raw.githubusercontent.com/sanand0/scripts/refs/heads/main/agents/data-analysis/SKILL.md" target="_blank" rel="noopener">Anand's data-analysis SKILL.md</a></p>`
+    }
+  };
+  const overlay = document.getElementById('popup-overlay');
+  document.querySelectorAll('.cite').forEach(el => {
+    el.addEventListener('click', () => {
+      const data = POPUPS[el.dataset.pop];
+      if (!data) return;
+      document.getElementById('popup-title').textContent = data.title;
+      document.getElementById('popup-content').innerHTML = data.html;
+      overlay.classList.add('open');
+    });
+  });
+  document.getElementById('popup-close').addEventListener('click', () => overlay.classList.remove('open'));
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { modal.classList.remove('open'); overlay.classList.remove('open'); }
+  });
+</script>
+</body>
+</html>

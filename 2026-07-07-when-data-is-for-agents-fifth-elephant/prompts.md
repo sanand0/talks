@@ -27,6 +27,8 @@ Also, rewrite relevant parts of the story based on the following inputs. If thes
 - Link to the original chats, in context, wherever possible. For example, "The audit [found one structural flaw and several smaller ones](https://sanand0.github.io/talks/2026-07-07-when-data-is-for-agents-fifth-elephant/#audit)" could have a link to the original shared chat appended to it.
 - claude-chat-2.md has content I missed copying earlier. Specifically, the results of auditing the first benchmark. (Use git diff to see the differences.) Incorporate that into the story - specifically, the exact results of the audit and Claude's revised suggestion on the prompt.
 
+<!-- claude --resume c898311a-9b6f-4a0c-8d94-bc6a7670f9e4 --yolo -->
+
 ## Data story, 11 Jul 2026
 
 <!--

@@ -1,34 +1,44 @@
 # Prompts
 
-<!--
-cd ~/code/talks/
-dev.sh -- claude --dangerously-skip-permissions --model opus --effort medium
+<!-- Prep links:
+
+- DHS Talk Prep for Specification: https://chatgpt.com/c/6a73eed7-e64c-83ec-a7a5-a408a74f80fc
+- DHS Talk AI Verification Mechanisms: https://chatgpt.com/c/6a749238-3418-83ec-b156-693eb2d5bda3
+- DHS Talk FDE skills for AI-era software development: https://claude.ai/chat/547157bc-cdb8-4e9f-9b06-d8c938ce6041
+
 -->
 
-Generate a beautiful narrative story as a single-page HTML at 2026-07-25-ai-unboxed-agentic-analysis/index.html about this 2-hour AI Workshop [Anand](https://www.s-anand.net/), LLM Psychologist at Straive, conducted for the [IIM Alumni in Singapore](https://iimalumni.sg/) on 25 July 2026 as part of the "AI Unboxed" series. This is the third of four workshops and the topic was "Agentic Analysis". The workshop was held online via Microsoft Teams. (Details of the first workshop are at 2026-05-23-ai-unboxed-context-engineering/ and the second at 2026-06-20-ai-unboxed-tools-workflows/)
+<!--
+cd ~/code/talks/
+dev.sh -p ~/Documents/forms:ro -- claude --dangerously-skip-permissions --model opus --effort medium
+-->
+
+Generate a beautiful narrative story as a single-page HTML at 2026-08-07-data-hack-summit/index.html about this 1-hour AI Workshop [Anand](https://www.s-anand.net/), LLM Psychologist at Straive, conducted at [Data Hack Summit 2026](https://www.analyticsvidhya.com/datahacksummit-2026/#agenda) on 7 Aug 2026 at Bangalore.
 
 Use the following as examples to follow LOOSELY, not strictly:
 
-- 2026-05-23-ai-unboxed-context-engineering/index.html
-- 2026-06-20-ai-unboxed-tools-workflows/index.html
+- 2026-07-04-vizchitra-dialog-curators-dilemma/index.html
 - 2026-07-07-when-data-is-for-agents-fifth-elephant/index.html
+- 2026-07-25-ai-unboxed-agentic-analysis/index.html
 
 Sources:
 
-- Use the talk transcript and the main content source. It's at 2026-07-25-ai-unboxed-agentic-analysis/transcript.md.
-- Read all links in links.md, chat messages in messages.md, and the AI conversations (saved as chats/\*.md) as additional sources to find relevant content to weave into the narrative.
+- 2026-08-07-data-hack-summit/transcript.md - Use the talk transcript and the main content source.
+- 2026-08-07-data-hack-summit/links.md - Read links in links.md and weave them into the narrative.
+- ~/Documents/forms/dhs2026/ - Read the questions, analyze the answers, share insights in the narrative.
+  - form.yaml: Form used to collect responses from participants.
+  - responses.tsv: Responses collected from participants.
 
 Based on your reading, think about the most useful narrative to craft, and the most engaging way to present it.
 
 Prominently include these:
 
-- embed the video near the top: `<video controls preload="metadata" width="100%"><source src="https://media.s-anand.net/2026-07-25-ai-unboxed-agentic-analysis.webm" type='video/webm; codecs="vp9, opus"'></video>` in a full width container.
+- embed the video near the top: `<video controls preload="metadata" width="100%"><source src="https://media.s-anand.net/2026-08-07-data-hack-summit.webm" type='video/webm; codecs="vp9, opus"'></video>` in a full width container.
 - link to the transcript near the top - clicking it should open in a popup and render as HTML.
-- embed the audio near the top: https://github.com/sanand0/talks/releases/download/talks/2026-07-25-ai-unboxed-agentic-analysis.opus
-- include the invitation poster at an appropriate place: `https://files.s-anand.net/images/2026-07-25-ai-unboxed-agentic-analysis-poster.avif` - clicking on it should open the full-size image in a new tab
-- include this visual summary at an appropriate place: `2026-07-25-ai-unboxed-agentic-analysis/comic-page.avif` - clicking on it should open the full-size image in a new tab
+- embed the audio near the top: https://github.com/sanand0/talks/releases/download/talks/2026-08-07-data-hack-summit.opus
+- include this visual summary at an appropriate place: `2026-08-07-data-hack-summit/comic-page.avif` - clicking on it should open the full-size image in a new tab
 
-Include links from the transcript / chats / responses at the appropriate places.
+Include links from the sources at the appropriate places (as links, embeds, or copying content from the links as appropriate).
 Search online & research material that will improve the reading experience and include these as well.
 
 Here's how to include the links from the transcript:
@@ -47,20 +57,27 @@ Style:
 - Ensure that bands (e.g. .stat-band, .gallery-band, and any other similar full-width bands) have a bottom margin to create more breathing room between sections.
 - Add the top maybe 6 takeways from the talk at the end, rendered as cards.
 
-This will be deployed at https://sanand0.github.io/talks/2026-07-25-ai-unboxed-agentic-analysis/
+This will be deployed at https://sanand0.github.io/talks/2026-08-07-data-hack-summit/
 
 Update README.md to include this talk in the list of talks.
 
 ---
 
-Include a link to Anand's weather data story: https://sanand0.github.io/datastories/rainy-seasons/
+Revisions:
 
-<!-- claude --resume af2edb5d-33e8-48d0-9e00-2e21fbf987d7 --dangerously-skip-permissions -->
+- https://files.s-anand.net/pages/ai-jagged-edge/ is embedded via an IFRAME. Instead, just copy from the file and insert it here.
+- Same for https://files.s-anand.net/pages/ai-jagged-edge/
+- Include a navigation mechanism to jump to any of the 5 specification or 5 verification sections - or the sections above or below - from anywhere on the page.
+- Link to https://contractanalysis.straivedemo.com/ instead of embedding
+- The .cards currently only allow 4 columns at most. For wide enough screens, allow 5 columns.
+- The embeds and the videos can take up more width.
+
+<!-- claude --resume 7d79827f-05eb-4ae9-8997-aa9dcc046364 --dangerously-skip-permissions -->
 
 ## Comic Page
 
 <!--
-GPT Image 2 - https://chatgpt.com/c/6a707c2a-0104-83ec-b2ce-1677defed0bb
+GPT Image 2 - https://chatgpt.com/c/6a75ae8e-62f0-83ec-b04b-796227835a0c
 -->
 
 Draw this as a full-color explainer comic page (portrait) - sequential explanation, friendly narrator, diagrams embedded inside panels, visual metaphors, self-aware captions, and clear cause-and-effect storytelling.

@@ -1,0 +1,2201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Manage Something Smarter Than You | Anand at Data Hack Summit 2026</title>
+<meta name="description" content="Anand S, LLM Psychologist at Straive, at Data Hack Summit 2026 in Bangalore. Ten techniques — five for specifying to a smarter intelligence, five for verifying one — all borrowed from professions that have done this for millennia.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Spectral:ital,wght@0,300;0,400;0,600;0,800;1,400&family=JetBrains+Mono:wght@400;500;700&family=Familjen+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f3ee;
+    --paper: #fffefb;
+    --ink: #16141f;
+    --ink2: #3b3550;
+    --muted: #756e86;
+    --spec: #6d28d9;          /* violet — SPECIFY */
+    --spec-dk: #4c1d95;
+    --spec-soft: #ede6fb;
+    --ver: #0e7490;           /* cyan — VERIFY */
+    --ver-dk: #0b5567;
+    --ver-soft: #ddeef2;
+    --gold: #b45309;
+    --sand: #f2e9dc;
+    --border: #e2dacd;
+    --night: #16121f;
+    --night2: #221b33;
+    --font-display: 'Instrument Serif', Georgia, serif;
+    --font-body: 'Spectral', Georgia, serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.76;
+    font-size: 18.5px;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── Progress ── */
+  #progress {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--spec), var(--gold), var(--ver));
+    z-index: 1000; transition: width .15s linear;
+  }
+
+  /* ── Masthead ── */
+  .masthead {
+    position: sticky; top: 0; z-index: 200;
+    background: rgba(246,243,238,.94);
+    border-bottom: 1px solid var(--border);
+    padding: .7rem 1.4rem;
+    backdrop-filter: blur(8px);
+  }
+  .masthead-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: .8rem; flex-wrap: wrap;
+  }
+  .masthead-brand {
+    font-family: var(--font-mono); font-size: .72rem; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--ink2);
+    text-decoration: none;
+  }
+  .masthead-brand:hover { color: var(--spec); }
+  .masthead-right { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+  .masthead-date { font-family: var(--font-mono); font-size: .68rem; color: var(--muted); }
+  .masthead-link {
+    font-family: var(--font-mono); font-size: .66rem; letter-spacing: .04em;
+    color: var(--spec); text-decoration: none;
+    border: 1px solid var(--spec); border-radius: 3px;
+    padding: .26rem .55rem; transition: all .2s; white-space: nowrap;
+  }
+  .masthead-link:hover { background: var(--spec); color: #fff; }
+
+  /* ── Layout ── */
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 1.5rem; }
+  .wrap-wide { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ── Hero ── */
+  .hero { max-width: 840px; margin: 0 auto; padding: 3.6rem 1.5rem 1.4rem; text-align: center; }
+  .hero-kicker {
+    font-family: var(--font-mono); font-size: .64rem; letter-spacing: .24em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem;
+  }
+  .hero h1 {
+    font-family: var(--font-display); font-weight: 400;
+    font-size: clamp(2.6rem, 8vw, 5rem); line-height: .98;
+    letter-spacing: -.015em; margin-bottom: 1.1rem;
+  }
+  .hero h1 em { font-style: italic; color: var(--spec); }
+  .hero-sub {
+    font-size: 1.16rem; color: var(--ink2); line-height: 1.62;
+    max-width: 640px; margin: 0 auto 1.8rem; font-weight: 300;
+  }
+  .hero-meta {
+    font-family: var(--font-mono); font-size: .72rem; color: var(--muted);
+    letter-spacing: .02em; line-height: 2;
+  }
+  .hero-meta a { color: var(--ver); text-decoration: none; border-bottom: 1px solid rgba(14,116,144,.4); }
+  .hero-meta a:hover { color: var(--spec); border-bottom-color: var(--spec); }
+
+  /* ── Quick links ── */
+  .quick-links { margin: 1.8rem auto 0; display: flex; gap: .55rem; justify-content: center; flex-wrap: wrap; }
+  .quick-links a {
+    font-family: var(--font-mono); font-size: .7rem; letter-spacing: .02em;
+    text-decoration: none; color: var(--ink2);
+    background: var(--paper); border: 1px solid var(--border);
+    border-radius: 99px; padding: .42rem .9rem; transition: all .2s;
+  }
+  .quick-links a:hover { border-color: var(--spec); color: var(--spec); transform: translateY(-1px); }
+
+  /* ── Full-width bands ── */
+  .band { width: 100vw; margin-left: calc(50% - 50vw); margin-top: 3.2rem; margin-bottom: 3.2rem; }
+  .video-wrap { background: var(--night); padding: 2.4rem 1.5rem; }
+  .video-inner { max-width: 1240px; margin: 0 auto; }
+  .video-inner video { width: 100%; display: block; border-radius: 6px; background: #000; }
+  .media-cap {
+    font-family: var(--font-mono); font-size: .71rem; color: #a99cc4;
+    text-align: center; margin-top: 1rem; line-height: 1.8;
+  }
+  .media-cap a { color: #f2b36b; text-decoration: none; border-bottom: 1px solid rgba(242,179,107,.45); }
+  .media-cap a:hover { color: #ffe0bd; border-bottom-color: #ffe0bd; }
+  .audio-row { max-width: 700px; margin: 1.4rem auto 0; }
+  .audio-row audio { width: 100%; }
+
+  /* ── Body text ── */
+  .wrap p { margin-bottom: 1.32rem; }
+  .wrap p a, .wrap li a, .wrap figcaption a {
+    color: var(--ver); text-decoration: none;
+    border-bottom: 1px solid rgba(14,116,144,.38);
+  }
+  .wrap p a:hover, .wrap li a:hover { color: var(--spec); border-bottom-color: var(--spec); }
+  .wrap strong { font-weight: 600; color: var(--ink); background: linear-gradient(transparent 62%, rgba(237,230,251,.95) 62%); }
+  .wrap ul, .wrap ol { margin: 0 0 1.32rem 1.3rem; }
+  .wrap li { margin-bottom: .5rem; }
+  .lede { font-size: 1.2rem; line-height: 1.62; color: var(--ink2); }
+
+  /* ── Section headers ── */
+  .sec-num {
+    font-family: var(--font-mono); font-size: .64rem; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: .5rem;
+  }
+  h2.sec {
+    font-family: var(--font-display); font-weight: 400;
+    font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08;
+    letter-spacing: -.01em; margin: 3rem 0 1.2rem;
+  }
+  h2.sec em { font-style: italic; color: var(--spec); }
+  h3.sub {
+    font-family: var(--font-mono); font-weight: 700; text-transform: uppercase;
+    font-size: .78rem; letter-spacing: .12em; margin: 2.4rem 0 .8rem; color: var(--gold);
+  }
+  .dinkus { text-align: center; color: var(--muted); letter-spacing: .8em; margin: 2.6rem 0; font-size: .8rem; }
+
+  /* ── Technique header ── */
+  .tech-head { margin: 3.2rem 0 1.2rem; padding-left: 1rem; border-left: 4px solid var(--spec); }
+  .tech-head.v { border-left-color: var(--ver); }
+  .tech-kicker {
+    font-family: var(--font-mono); font-size: .64rem; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--spec); margin-bottom: .3rem;
+  }
+  .tech-head.v .tech-kicker { color: var(--ver); }
+  .tech-head h3 {
+    font-family: var(--font-display); font-weight: 400; font-size: clamp(1.6rem, 4vw, 2.2rem);
+    line-height: 1.1; margin-bottom: .35rem;
+  }
+  .tech-who { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); letter-spacing: .03em; }
+
+  /* ── Pull quotes ── */
+  blockquote.pull {
+    margin: 2.1rem 0; padding: 1.3rem 1.6rem;
+    background: var(--paper); border-left: 4px solid var(--spec);
+    border-radius: 0 6px 6px 0;
+    box-shadow: 0 2px 14px rgba(22,20,31,.06);
+  }
+  blockquote.pull p {
+    font-family: var(--font-display); font-size: 1.36rem; font-weight: 400;
+    line-height: 1.36; margin-bottom: .6rem; letter-spacing: -.005em;
+  }
+  blockquote.pull cite {
+    font-family: var(--font-mono); font-style: normal; font-size: .68rem;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+  }
+  blockquote.pull.ver { border-left-color: var(--ver); }
+  blockquote.pull.gold { border-left-color: var(--gold); }
+
+  /* ── Prompt / code boxes ── */
+  .prompt-box {
+    background: var(--night); color: #ddd3ef;
+    border-radius: 8px; padding: 1.1rem 1.3rem; margin: 1.7rem 0;
+    font-family: var(--font-mono); font-size: .8rem; line-height: 1.7; font-weight: 400;
+  }
+  .prompt-box .plabel {
+    display: block; font-size: .6rem; letter-spacing: .18em; text-transform: uppercase;
+    color: #f2b36b; margin-bottom: .7rem;
+  }
+  .prompt-box a { color: #8fd8e8; word-break: break-word; }
+  .prompt-box em { color: #a99cc4; font-style: italic; }
+  .prompt-box .dim { color: #8d84a3; }
+
+  /* ── Chat snippet ── */
+  .chat-snippet {
+    background: var(--spec-soft); border: 1px solid #dbcef7;
+    border-radius: 8px; padding: 1.05rem 1.3rem; margin: 1.7rem 0;
+  }
+  .chat-snippet.v { background: var(--ver-soft); border-color: #c3e0e7; }
+  .chat-snippet-label {
+    font-family: var(--font-mono); font-size: .62rem; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--spec-dk); margin-bottom: .6rem;
+  }
+  .chat-snippet.v .chat-snippet-label { color: var(--ver-dk); }
+  .chat-snippet p { font-size: .95rem; margin-bottom: .7rem; }
+  .chat-snippet p:last-child { margin-bottom: 0; }
+  .chat-snippet a { color: var(--ver-dk); }
+
+  /* ── Cite / tooltip ── */
+  .cite {
+    cursor: pointer; color: var(--gold); font-weight: 600;
+    border-bottom: 1px dotted var(--gold); text-decoration: none;
+  }
+  .cite::after { content: "†"; font-size: .7em; vertical-align: super; }
+  .tip { border-bottom: 1px dotted var(--muted); cursor: help; position: relative; }
+  .tip:hover::after {
+    content: attr(data-tip);
+    position: absolute; bottom: 132%; left: 50%; transform: translateX(-50%);
+    background: var(--night); color: #ece5f7; font-family: var(--font-body);
+    font-size: .8rem; line-height: 1.5; font-style: normal; font-weight: 300;
+    padding: .6rem .8rem; border-radius: 6px; width: min(300px, 78vw);
+    z-index: 90; box-shadow: 0 6px 22px rgba(0,0,0,.3);
+  }
+
+  /* ── Stat band ── */
+  .stat-band { background: var(--sand); border-top: 1px solid #e6d9c3; border-bottom: 1px solid #e6d9c3; padding: 2.4rem 1.5rem; }
+  .stat-band h4 {
+    font-family: var(--font-mono); font-size: .68rem; letter-spacing: .16em; text-transform: uppercase;
+    text-align: center; color: var(--gold); margin-bottom: 1.6rem;
+  }
+  .stat-grid {
+    max-width: 950px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1.6rem;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: var(--font-display); font-weight: 400; font-size: clamp(2rem, 5vw, 2.9rem);
+    color: var(--spec-dk); line-height: 1; letter-spacing: -.02em;
+  }
+  .stat-label {
+    font-family: var(--font-mono); font-size: .66rem; letter-spacing: .04em;
+    color: var(--ink2); margin-top: .5rem; line-height: 1.6;
+  }
+  .stat-foot { max-width: 760px; margin: 1.7rem auto 0; text-align: center; font-size: .95rem; color: var(--ink2); }
+  .stat-foot a { color: var(--ver-dk); }
+
+  /* ── Bar chart ── */
+  .bars { max-width: 620px; margin: 0 auto; }
+  .bar-row { display: grid; grid-template-columns: 150px 1fr 54px; gap: .7rem; align-items: center; margin-bottom: .55rem; }
+  .bar-lab { font-family: var(--font-mono); font-size: .68rem; color: var(--ink2); text-align: right; }
+  .bar-track { background: rgba(76,29,149,.1); border-radius: 3px; height: 22px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--spec); border-radius: 3px; }
+  .bar-fill.v { background: var(--ver); }
+  .bar-fill.g { background: var(--gold); }
+  .bar-val { font-family: var(--font-mono); font-size: .68rem; color: var(--muted); }
+
+  /* ── Dark quote band ── */
+  .band-quote { background: var(--night2); padding: 3rem 1.5rem; }
+  .band-quote-inner { max-width: 830px; margin: 0 auto; text-align: center; }
+  .band-quote p {
+    font-family: var(--font-display); font-weight: 400;
+    font-size: clamp(1.5rem, 3.6vw, 2.3rem); line-height: 1.3; color: #f7f1e6;
+    letter-spacing: -.01em;
+  }
+  .band-quote cite {
+    display: block; margin-top: 1.2rem; font-family: var(--font-mono); font-style: normal;
+    font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: #f2b36b;
+  }
+
+  /* ── Cards ── */
+  .cards-band { background: var(--paper); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 2.7rem 1.5rem; }
+  .cards-inner { max-width: 1300px; margin: 0 auto; }
+  .cards-title { font-family: var(--font-display); font-weight: 400; font-size: 1.9rem; text-align: center; margin-bottom: .4rem; }
+  .cards-sub { text-align: center; color: var(--muted); font-size: .92rem; margin-bottom: 1.9rem; font-family: var(--font-mono); letter-spacing: .02em; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 1rem; }
+  @media (min-width: 1180px) { .cards { grid-template-columns: repeat(5, 1fr); } }
+  .card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.2rem; }
+  .card.spec { border-top: 3px solid var(--spec); }
+  .card.ver { border-top: 3px solid var(--ver); }
+  .card-num { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .14em; color: var(--gold); margin-bottom: .45rem; }
+  .card-title { font-family: var(--font-display); font-weight: 400; font-size: 1.3rem; margin-bottom: .35rem; line-height: 1.2; }
+  .card-who { font-family: var(--font-mono); font-size: .63rem; color: var(--muted); margin-bottom: .5rem; letter-spacing: .02em; }
+  .card-body { font-size: .9rem; line-height: 1.6; color: var(--ink2); }
+  .card-body a { color: var(--ver); text-decoration: none; border-bottom: 1px solid rgba(14,116,144,.38); }
+  .card-body a:hover { color: var(--spec); border-bottom-color: var(--spec); }
+
+  /* ── Images ── */
+  .fig-band { background: var(--night); padding: 2.4rem 1.5rem; }
+  .fig-band.light { background: var(--sand); }
+  .fig-inner { max-width: 1040px; margin: 0 auto; text-align: center; }
+  .fig-inner.narrow { max-width: 640px; }
+  .fig-inner img { max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 6px; }
+  .fig-cap { font-family: var(--font-mono); font-size: .71rem; line-height: 1.75; color: #a99cc4; margin-top: 1rem; text-align: center; }
+  .fig-band.light .fig-cap { color: var(--muted); }
+  .fig-cap a { color: #f2b36b; text-decoration: none; border-bottom: 1px solid rgba(242,179,107,.45); }
+  .fig-band.light .fig-cap a { color: var(--ver-dk); border-bottom-color: rgba(11,85,103,.45); }
+  .fig-cap a:hover { color: #ffe0bd; }
+  .fig-band.light .fig-cap a:hover { color: var(--spec); border-bottom-color: var(--spec); }
+
+  /* ── Iframe embeds ── */
+  .iframe-wrap { background: var(--ver-soft); padding: 2.2rem 1.5rem; }
+  .iframe-wrap.dark { background: var(--night2); }
+  .iframe-wrap.spec { background: var(--spec-soft); }
+  .iframe-inner { max-width: 1440px; margin: 0 auto; }
+  .iframe-inner iframe {
+    width: 100%; height: min(90vh, 900px); border: 1px solid var(--border);
+    border-radius: 8px; background: #fff; display: block;
+  }
+  .iframe-inner iframe.short { height: min(62vh, 580px); }
+  .iframe-cap { font-family: var(--font-mono); font-size: .71rem; color: var(--ink2); text-align: center; margin-top: 1rem; line-height: 1.75; }
+  .iframe-wrap.dark .iframe-cap { color: #a99cc4; }
+  .iframe-cap a { color: var(--ver-dk); text-decoration: none; border-bottom: 1px solid rgba(11,85,103,.45); }
+  .iframe-wrap.dark .iframe-cap a { color: #f2b36b; border-bottom-color: rgba(242,179,107,.45); }
+  .iframe-cap a:hover { color: var(--spec-dk); border-bottom-color: var(--spec-dk); }
+  .iframe-wrap.dark .iframe-cap a:hover { color: #ffe0bd; border-bottom-color: #ffe0bd; }
+
+  /* ── Voice list (survey answers) ── */
+  .voices { display: flex; flex-wrap: wrap; gap: .5rem; max-width: 980px; margin: 0 auto; justify-content: center; }
+  .voice {
+    font-family: var(--font-mono); font-size: .74rem; line-height: 1.5;
+    background: var(--paper); border: 1px solid var(--border); border-radius: 99px;
+    padding: .38rem .85rem; color: var(--ink2);
+  }
+  .voice.hot { background: var(--spec); color: #fff; border-color: var(--spec); }
+  .voice.warm { background: var(--sand); border-color: #e0d0b4; }
+
+  /* ── Takeaways ── */
+  .takeaways-band { background: linear-gradient(140deg, #4c1d95 0%, #2c1065 48%, #0b5567 100%); padding: 3.2rem 1.5rem; }
+  .takeaways-inner { max-width: 1080px; margin: 0 auto; }
+  .takeaways-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(2rem, 5vw, 2.9rem); color: #fff; text-align: center; margin-bottom: .4rem; }
+  .takeaways-sub { text-align: center; color: #d9c8f2; font-size: .8rem; margin-bottom: 2.1rem; font-family: var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+  .takeaway-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(275px, 1fr)); gap: 1rem; }
+  .takeaway { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.22); border-radius: 8px; padding: 1.25rem 1.3rem; }
+  .takeaway-num { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .14em; color: #ffca8a; margin-bottom: .45rem; }
+  .takeaway-title { font-family: var(--font-display); font-weight: 400; font-size: 1.35rem; color: #fff; margin-bottom: .45rem; line-height: 1.18; }
+  .takeaway-text { font-size: .92rem; line-height: 1.66; color: #eee6f7; }
+  .takeaway-text a { color: #ffd9a8; text-decoration: none; border-bottom: 1px solid rgba(255,217,168,.55); }
+  .takeaway-text a:hover { color: #fff; border-bottom-color: #fff; }
+  .takeaway-text strong { color: #fff; font-weight: 600; }
+
+  /* ── Footer ── */
+  .footer { background: var(--night); color: #a99cc4; padding: 2.6rem 1.5rem; text-align: center; }
+  .footer p { margin-bottom: .7rem; font-size: .92rem; }
+  .footer a { color: #f2b36b; text-decoration: none; border-bottom: 1px solid rgba(242,179,107,.45); }
+  .footer a:hover { color: #fff; border-bottom-color: #fff; }
+  .footer-mono { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .04em; color: #857a9e; }
+
+  /* ── Modals ── */
+  .modal { position: fixed; inset: 0; background: rgba(22,18,31,.88); display: none; align-items: center; justify-content: center; z-index: 900; padding: 1.4rem; }
+  .modal.open { display: flex; }
+  .modal-box { background: var(--paper); border-radius: 10px; max-width: 880px; width: 100%; max-height: 88vh; display: flex; flex-direction: column; overflow: hidden; }
+  .modal-head { padding: .95rem 1.3rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .modal-head h4 { font-family: var(--font-display); font-size: 1.25rem; font-weight: 400; }
+  .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--muted); line-height: 1; padding: 0 .3rem; }
+  .modal-close:hover { color: var(--spec); }
+  .modal-body { padding: 1.25rem; overflow-y: auto; font-size: .93rem; line-height: 1.72; }
+  .modal-body h1, .modal-body h2, .modal-body h3 { font-family: var(--font-display); font-weight: 400; margin: 1.2rem 0 .55rem; line-height: 1.22; }
+  .modal-body h1 { font-size: 1.5rem; } .modal-body h2 { font-size: 1.25rem; } .modal-body h3 { font-size: 1.1rem; }
+  .modal-body p { margin-bottom: .8rem; }
+  .modal-body a { color: var(--ver); }
+  .modal-body ul, .modal-body ol { margin: 0 0 .8rem 1.2rem; }
+  .modal-body li { margin-bottom: .4rem; }
+  .modal-body blockquote { border-left: 3px solid var(--border); padding-left: .9rem; margin: .8rem 0; color: var(--ink2); }
+  .modal-body pre { background: #efe9e0; padding: .8rem; border-radius: 6px; overflow-x: auto; font-size: .76rem; }
+  .modal-body code { font-family: var(--font-mono); font-size: .84em; }
+  .modal-body table { border-collapse: collapse; width: 100%; font-size: .85rem; margin: .8rem 0; display: block; overflow-x: auto; }
+  .modal-body th, .modal-body td { border: 1px solid var(--border); padding: .4rem .6rem; text-align: left; }
+  .modal-body img { max-width: 100%; height: auto; }
+  .modal-src { font-family: var(--font-mono); font-size: .7rem; padding: .3rem 1.3rem 0; }
+  .modal-src a { color: var(--gold); }
+
+  /* ══════════════════════════════════════════════════════════════
+     Inlined component 1 — SDLC: Past, Present, Future
+     Source: https://files.s-anand.net/pages/ai-sdlc-shift/
+     ══════════════════════════════════════════════════════════════ */
+  .sdlc {
+    --sdlc-plan:    #5f7f8c;
+    --sdlc-design:  #6d8a6a;
+    --sdlc-develop: #b98452;
+    --sdlc-test:    #a06f74;
+    --sdlc-deploy:  #6f6a91;
+    --sdlc-ink:     #f2ece4;
+    --sdlc-surface: rgba(255,255,255,.06);
+    --sdlc-line:    rgba(255,255,255,.16);
+    --sdlc-ease: cubic-bezier(.62,.02,.24,1);
+    --sdlc-dur: 950ms;
+    font-family: 'Familjen Grotesk', 'Avenir Next', 'Segoe UI', sans-serif;
+    container-type: inline-size;
+    width: 100%;
+  }
+  .sdlc__toggle {
+    position: relative; display: inline-flex; padding: 4px; margin: 0 0 22px;
+    border: 1px solid var(--sdlc-line); border-radius: 999px;
+    background: var(--sdlc-surface); backdrop-filter: blur(6px);
+  }
+  .sdlc__thumb {
+    position: absolute; top: 4px; left: 4px;
+    height: calc(100% - 8px); width: 0; border-radius: 999px;
+    background: linear-gradient(180deg, #efe6da, #d8cbba);
+    box-shadow: 0 2px 10px rgba(0,0,0,.28);
+    transition: transform 520ms var(--sdlc-ease), width 520ms var(--sdlc-ease);
+    pointer-events: none;
+  }
+  .sdlc__btn {
+    position: relative; z-index: 1;
+    appearance: none; border: 0; background: none; cursor: pointer;
+    font: inherit; font-weight: 600; font-size: clamp(12px, 2.6cqi, 14px);
+    letter-spacing: .06em; text-transform: uppercase;
+    color: color-mix(in oklab, var(--sdlc-ink) 62%, transparent);
+    padding: 9px 20px; border-radius: 999px;
+    transition: color 320ms var(--sdlc-ease);
+  }
+  .sdlc__btn:hover { color: var(--sdlc-ink); }
+  .sdlc__btn.is-active { color: #1b1d21; }
+  .sdlc__btn:focus-visible { outline: 2px solid var(--sdlc-ink); outline-offset: 3px; }
+  .sdlc__track { display: flex; gap: 6px; width: 100%; height: clamp(180px, 26cqi, 300px); }
+  .sdlc__box {
+    position: relative; flex-grow: var(--grow, 1); flex-shrink: 1; flex-basis: 0;
+    min-width: 0; overflow: hidden; border-radius: 12px;
+    background: linear-gradient(165deg,
+      color-mix(in oklab, var(--c) 88%, white 12%) 0%, var(--c) 55%,
+      color-mix(in oklab, var(--c) 84%, black 16%) 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 8px 22px rgba(0,0,0,.22);
+    transition: flex-grow var(--sdlc-dur) var(--sdlc-ease);
+  }
+  .sdlc__box[data-key="plan"]    { --c: var(--sdlc-plan); }
+  .sdlc__box[data-key="design"]  { --c: var(--sdlc-design); }
+  .sdlc__box[data-key="develop"] { --c: var(--sdlc-develop); }
+  .sdlc__box[data-key="test"]    { --c: var(--sdlc-test); }
+  .sdlc__box[data-key="deploy"]  { --c: var(--sdlc-deploy); }
+  .sdlc__label {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%); transform-origin: 50% 50%;
+    white-space: nowrap; color: var(--sdlc-ink); font-weight: 600;
+    font-size: clamp(13px, 2.4cqi, 17px); letter-spacing: .07em;
+    text-shadow: 0 1px 2px rgba(0,0,0,.28); will-change: transform;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sdlc__box, .sdlc__thumb { transition-duration: 1ms; }
+  }
+
+  /* ══════════════════════════════════════════════════════════════
+     Inlined component 2 — The Jagged Edge of AI
+     Source: https://files.s-anand.net/pages/ai-jagged-edge/
+     ══════════════════════════════════════════════════════════════ */
+  .cm {
+    --cm-human:      #cfe1e6;
+    --cm-human-line: #4d818e;
+    --cm-ai:         #e08b93;
+    --cm-ai-core:    #eeaab0;
+    --cm-ai-line:    #c25c67;
+    --cm-ai-alpha:   .78;
+    --cm-track:      rgba(77,129,142,.20);
+    --cm-fill:       #c25c67;
+    --cm-thumb:      #ffffff;
+    --cm-thumb-line: #c25c67;
+    --cm-shadow:     rgba(43,79,87,.28);
+    --cm-p:          0%;
+    display: flex; flex-direction: column; gap: .9rem;
+    width: min(100%, 560px); margin: 0 auto;
+  }
+  .cm-stage { width: 100%; aspect-ratio: 1 / 1; }
+  .cm-svg { display: block; width: 100%; height: 100%; overflow: visible; }
+  .cm-human { fill: var(--cm-human); stroke: var(--cm-human-line); stroke-width: 2; }
+  .cm-s0 { stop-color: var(--cm-ai-core); }
+  .cm-s1 { stop-color: var(--cm-ai); }
+  .cm-blob {
+    fill: url(#cm-grad); fill-opacity: var(--cm-ai-alpha);
+    stroke: var(--cm-ai-line); stroke-opacity: .55; stroke-width: 2; stroke-linejoin: round;
+  }
+  .cm-bar { display: flex; align-items: center; gap: .85rem; }
+  .cm-toggle {
+    flex: 0 0 auto; width: 34px; height: 34px; padding: 0; border-radius: 50%;
+    background: transparent; border: 1.5px solid var(--cm-fill); color: var(--cm-fill);
+    cursor: pointer; display: grid; place-items: center;
+    transition: background .2s ease, transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease;
+  }
+  .cm-toggle:hover { transform: scale(1.08); background: var(--cm-track); }
+  .cm-toggle:active { transform: scale(.94); }
+  .cm-toggle:focus-visible { outline: none; box-shadow: 0 0 0 5px var(--cm-track); }
+  .cm-toggle svg { width: 19px; height: 19px; display: block; overflow: visible; }
+  .cm-toggle path { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: opacity .18s ease; }
+  .cm-ico-play { fill: currentColor; stroke-width: 1.6; opacity: 1; }
+  .cm-ico-pause { opacity: 0; }
+  .cm[data-playing="1"] .cm-ico-play { opacity: 0; }
+  .cm[data-playing="1"] .cm-ico-pause { opacity: 1; }
+  .cm-scrub { -webkit-appearance: none; appearance: none; width: 100%; height: 26px; background: transparent; cursor: pointer; margin: 0; }
+  .cm-scrub:focus { outline: none; }
+  .cm-scrub::-webkit-slider-runnable-track { height: 5px; border-radius: 99px; background: linear-gradient(to right, var(--cm-fill) var(--cm-p), var(--cm-track) var(--cm-p)); }
+  .cm-scrub::-moz-range-track { height: 5px; border-radius: 99px; background: var(--cm-track); }
+  .cm-scrub::-moz-range-progress { height: 5px; border-radius: 99px; background: var(--cm-fill); }
+  .cm-scrub::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 16px; height: 16px;
+    margin-top: -5.5px; border-radius: 50%; background: var(--cm-thumb);
+    border: 2px solid var(--cm-thumb-line); box-shadow: 0 1px 6px var(--cm-shadow);
+    transition: transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .18s ease;
+  }
+  .cm-scrub::-moz-range-thumb {
+    width: 16px; height: 16px; border-radius: 50%; background: var(--cm-thumb);
+    border: 2px solid var(--cm-thumb-line); box-shadow: 0 1px 6px var(--cm-shadow);
+    transition: transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .18s ease;
+  }
+  .cm-scrub:hover::-webkit-slider-thumb { transform: scale(1.18); }
+  .cm-scrub:hover::-moz-range-thumb { transform: scale(1.18); }
+  .cm-scrub:active::-webkit-slider-thumb,
+  .cm-scrub:focus-visible::-webkit-slider-thumb { transform: scale(1.32); box-shadow: 0 0 0 6px var(--cm-track); }
+  .cm-scrub:active::-moz-range-thumb,
+  .cm-scrub:focus-visible::-moz-range-thumb { transform: scale(1.32); box-shadow: 0 0 0 6px var(--cm-track); }
+
+  /* Host bands for the two inlined components */
+  .demo-band { padding: 2.4rem 1.5rem; }
+  .demo-band.dark { background: linear-gradient(150deg, #23262b 0%, #17191d 55%, #101215 100%); }
+  .demo-band.lite { background: radial-gradient(120% 90% at 50% 0%, #ffffff 0%, #f3f6f7 55%, #e6eef0 100%); }
+  .demo-inner { max-width: 1080px; margin: 0 auto; }
+  .demo-cap { font-family: var(--font-mono); font-size: .71rem; line-height: 1.75; text-align: center; margin-top: 1.3rem; color: #b9b1a6; }
+  .demo-band.lite .demo-cap { color: #4a5c62; }
+  .demo-cap a { color: #f2b36b; text-decoration: none; border-bottom: 1px solid rgba(242,179,107,.45); }
+  .demo-band.lite .demo-cap a { color: #0b5567; border-bottom-color: rgba(11,85,103,.45); }
+  .demo-cap a:hover { color: #ffe0bd; border-bottom-color: #ffe0bd; }
+  .demo-band.lite .demo-cap a:hover { color: var(--spec-dk); border-bottom-color: var(--spec-dk); }
+  .demo-cap strong { color: #f4efe6; font-weight: 600; }
+  .demo-band.lite .demo-cap strong { color: #1d3a43; }
+
+  /* ══════════════════════════════════════════════════════════════
+     Section jumper — fixed, always available
+     ══════════════════════════════════════════════════════════════ */
+  .jump {
+    position: fixed; z-index: 400; left: 50%; bottom: 1.1rem;
+    transform: translateX(-50%);
+    display: flex; align-items: stretch; gap: 1px;
+    background: var(--night); border-radius: 99px;
+    box-shadow: 0 6px 28px rgba(22,18,31,.35); overflow: hidden;
+    max-width: calc(100vw - 1.6rem);
+  }
+  .jump button, .jump .jump-cur {
+    appearance: none; border: 0; background: var(--night); color: #ece5f7;
+    font-family: var(--font-mono); font-size: .68rem; letter-spacing: .04em;
+    padding: .55rem .8rem; cursor: pointer; line-height: 1.3;
+    display: flex; align-items: center; gap: .4rem; white-space: nowrap;
+  }
+  .jump button:hover { background: var(--spec); color: #fff; }
+  .jump .jump-cur {
+    cursor: pointer; max-width: min(46vw, 320px);
+    overflow: hidden; text-overflow: ellipsis; display: block;
+    padding: .55rem 1rem; font-weight: 500;
+  }
+  .jump .jump-cur:hover { background: var(--night2); }
+  .jump .jump-cur .caret { color: #f2b36b; }
+  .jump button[disabled] { opacity: .32; cursor: default; }
+  .jump button[disabled]:hover { background: var(--night); color: #ece5f7; }
+
+  .jump-menu {
+    position: fixed; z-index: 401; left: 50%; bottom: 4rem;
+    transform: translateX(-50%);
+    background: var(--paper); border: 1px solid var(--border); border-radius: 12px;
+    box-shadow: 0 14px 46px rgba(22,18,31,.3);
+    padding: .8rem; display: none;
+    width: min(760px, calc(100vw - 1.6rem));
+    max-height: min(68vh, 560px); overflow-y: auto;
+  }
+  .jump-menu.open { display: block; }
+  .jump-menu .jm-group {
+    font-family: var(--font-mono); font-size: .6rem; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--gold); margin: .7rem .4rem .4rem;
+  }
+  .jump-menu .jm-group:first-child { margin-top: .2rem; }
+  .jump-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: .35rem; }
+  .jump-menu a {
+    display: block; text-decoration: none; color: var(--ink2);
+    font-family: var(--font-mono); font-size: .72rem; line-height: 1.4;
+    padding: .5rem .6rem; border-radius: 7px; border: 1px solid transparent;
+  }
+  .jump-menu a small { display: block; color: var(--muted); font-size: .62rem; margin-top: .15rem; }
+  .jump-menu a:hover { background: var(--spec-soft); border-color: #dbcef7; color: var(--spec-dk); }
+  .jump-menu a.is-cur { background: var(--spec); color: #fff; border-color: var(--spec); }
+  .jump-menu a.is-cur small { color: #e2d5fb; }
+  .jump-menu a.v:hover { background: var(--ver-soft); border-color: #c3e0e7; color: var(--ver-dk); }
+  .jump-menu a.v.is-cur { background: var(--ver); color: #fff; border-color: var(--ver); }
+  .jump-menu a.v.is-cur small { color: #d3ecf2; }
+  .jump-backdrop { position: fixed; inset: 0; z-index: 399; display: none; }
+  .jump-backdrop.open { display: block; }
+  body { padding-bottom: 4.2rem; }
+  [id] { scroll-margin-top: 4.6rem; }
+
+  @media (max-width: 640px) {
+    body { font-size: 17.5px; }
+    .hero { padding-top: 2.4rem; }
+    .iframe-inner iframe { height: 66vh; }
+    .bar-row { grid-template-columns: 110px 1fr 44px; }
+    .jump button, .jump .jump-cur { font-size: .63rem; padding: .5rem .6rem; }
+    .jump .jump-cur { max-width: 52vw; }
+    .sdlc__track { height: 150px; }
+  }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<nav class="masthead">
+  <div class="masthead-inner">
+    <a class="masthead-brand" href="https://sanand0.github.io/talks/">Anand's Talks</a>
+    <div class="masthead-right">
+      <span class="masthead-date">7 Aug 2026 · Bangalore</span>
+      <a class="masthead-link" href="https://www.analyticsvidhya.com/datahacksummit-2026/#agenda" target="_blank" rel="noopener">Data Hack Summit</a>
+      <a class="masthead-link" id="transcript-btn" href="transcript.md">Transcript</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-kicker">Data Hack Summit 2026 · A one-hour session · "AI found 100 insights. How do I pick?"</div>
+  <h1>How Do You Manage<br>Something <em>Smarter</em><br>Than You?</h1>
+  <p class="hero-sub">Anand's answer took ten minutes to state and a thousand years to invent. Doctors, perfumers, auditors, surgeons, notaries and wine tasters have all been steering intelligences they don't understand — and every one of their tricks ports directly to an AI agent.</p>
+  <div class="hero-meta">
+    <a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand S</a>, LLM Psychologist at <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a><br>
+    <a href="https://www.analyticsvidhya.com/datahacksummit-2026/#agenda" target="_blank" rel="noopener">Data Hack Summit 2026</a> · Bangalore · 7 August 2026
+  </div>
+  <div class="quick-links">
+    <a href="#room">What the room admitted</a>
+    <a href="#specify">5 ways to specify</a>
+    <a href="#comic">The comic</a>
+    <a href="#verify">5 ways to verify</a>
+    <a href="#questions">Their questions</a>
+    <a href="#takeaways">Takeaways</a>
+  </div>
+</header>
+
+<div class="band video-wrap">
+  <div class="video-inner">
+    <video controls preload="metadata" width="100%"><source src="https://media.s-anand.net/2026-08-07-data-hack-summit.webm" type='video/webm; codecs="vp9, opus"'></video>
+    <div class="audio-row">
+      <audio controls preload="metadata" style="width:100%">
+        <source src="https://github.com/sanand0/talks/releases/download/talks/2026-08-07-data-hack-summit.opus" type="audio/ogg; codecs=opus">
+        Your browser does not support audio. <a href="https://github.com/sanand0/talks/releases/download/talks/2026-08-07-data-hack-summit.opus">Download the audio</a>.
+      </audio>
+    </div>
+    <p class="media-cap">
+      The full session · <a href="transcript.md" id="transcript-btn2">📄 Read the transcript</a> ·
+      <a href="https://github.com/sanand0/talks/releases/download/talks/2026-08-07-data-hack-summit.opus">🎧 Download audio</a><br>
+      Introduced by the host as "a visionary leader who co-founded <a href="https://gramener.com/" target="_blank" rel="noopener">Gramener</a>… one of India's top data scientists."
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<p class="lede">Anand walked on stage, looked at the clock, and opened with a confession rather than a thesis.</p>
+
+<blockquote class="pull">
+  <p>"We're totally going to run out of time by the way. Let's just dive in."</p>
+  <cite>Anand — first eight words of the talk</cite>
+</blockquote>
+
+<p>He was right. He had ten techniques to cover and would get through most of them, skipping two, apologising for neither. But the compression turned out to be the point. Because the argument underneath was very simple, and it needed only one slide to make.</p>
+
+<p><strong>Software used to be mostly development.</strong> Plan, design, develop, test, deploy — and development ate the bulk of the calendar. Then it didn't.</p>
+
+<blockquote class="pull gold">
+  <p>"Earlier, development used to take the bulk of the time. Today that's practically shrunk to zero, and what's remaining is a certain amount of designing, planning, testing, etc. I wouldn't be surprised if going forward even that shrinks to zero."</p>
+  <cite>Anand, on the collapsing SDLC</cite>
+</blockquote>
+
+</div>
+
+<div class="band demo-band dark">
+  <div class="demo-inner">
+    <div class="sdlc" data-sdlc data-stage="past">
+      <div class="sdlc__toggle" role="tablist" aria-label="Timeframe">
+        <span class="sdlc__thumb" aria-hidden="true"></span>
+        <button class="sdlc__btn is-active" role="tab" aria-selected="true"  data-stage="past">Past</button>
+        <button class="sdlc__btn"            role="tab" aria-selected="false" data-stage="present">Present</button>
+        <button class="sdlc__btn"            role="tab" aria-selected="false" data-stage="future">Future</button>
+      </div>
+      <div class="sdlc__track">
+        <div class="sdlc__box" data-key="plan"    data-dir="-1"><span class="sdlc__label">Plan</span></div>
+        <div class="sdlc__box" data-key="design"  data-dir="-1"><span class="sdlc__label">Design</span></div>
+        <div class="sdlc__box" data-key="develop" data-dir="-1"><span class="sdlc__label">Develop</span></div>
+        <div class="sdlc__box" data-key="test"    data-dir="1"><span class="sdlc__label">Test</span></div>
+        <div class="sdlc__box" data-key="deploy"  data-dir="1"><span class="sdlc__label">Deploy</span></div>
+      </div>
+    </div>
+    <p class="demo-cap">Anand's slide, live. Switch between <strong>Past</strong>, <strong>Present</strong> and <strong>Future</strong>: the Develop band collapses to a sliver — and then Design and Test follow it down.<br><a href="https://files.s-anand.net/pages/ai-sdlc-shift/" target="_blank" rel="noopener">↗ SDLC — Past, Present, Future</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<p>If generation is free, the work moves to the two sides of it. And the two sides are where the frontier gets jagged.</p>
+
+<p>Anand's second visual is a blob inside a circle. The circle is <strong>what humans can do</strong>. The blob is <strong>what AI can do</strong> — and it doesn't grow smoothly. It grows in spikes, one capability at a time, so that at any given moment the machine is <span class="tip" data-tip="Ethan Mollick's term for exactly this: AI is superhuman at some tasks and startlingly bad at adjacent ones, with no visible line between them.">superhuman at some tasks and hopeless at neighbouring ones</span>, with no warning label telling you which is which.</p>
+
+</div>
+
+<div class="band demo-band lite">
+  <div class="demo-inner">
+    <div class="cm">
+      <div class="cm-stage">
+        <svg class="cm-svg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet"
+             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <radialGradient id="cm-grad" gradientUnits="userSpaceOnUse" cx="500" cy="500" r="420">
+              <stop class="cm-s0" offset="0"/>
+              <stop class="cm-s1" offset="0.55"/>
+              <stop class="cm-s1" offset="1"/>
+            </radialGradient>
+          </defs>
+          <circle class="cm-human" cx="500" cy="500" r="160"/>
+          <path class="cm-blob" d=""/>
+        </svg>
+      </div>
+      <div class="cm-bar">
+        <button class="cm-toggle" type="button" aria-label="Play or pause" aria-pressed="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path class="cm-ico-pause" d="M9 5.5v13M15 5.5v13"/>
+            <path class="cm-ico-play"  d="M8.5 5.4l10 6.6-10 6.6z"/>
+          </svg>
+        </button>
+        <input class="cm-scrub" type="range" min="0" max="1000" step="1" value="0" aria-label="Timeline">
+      </div>
+    </div>
+    <p class="demo-cap">The pale blue circle is <strong>what humans can do</strong>. The pink blob is <strong>what AI can do</strong>. Scrub the timeline and watch how <em>unevenly</em> it swallows the circle — spikes out here, a bay still trapped inside there. That's the jagged edge.<br><a href="https://files.s-anand.net/pages/ai-jagged-edge/" target="_blank" rel="noopener">↗ The Jagged Edge of AI</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<blockquote class="pull">
+  <p>"Maybe we are today in this realm where it's better than us in some areas, worse than us in some areas, who knows where we are, it depends on the task I guess — but if that is the case, how do we deal with intelligences that are smarter than us? How are we supposed to manage them rather than them managing us?"</p>
+  <cite>Anand, setting up the whole hour</cite>
+</blockquote>
+
+<p>That question sounds like science fiction and isn't. <strong>Humans have been managing intelligences smarter than themselves for as long as there have been specialists.</strong> You don't understand your doctor. You certainly don't understand your tax auditor. You have never once verified a pharmacist. And yet the system works, because over centuries we built procedures for exactly this.</p>
+
+<blockquote class="pull ver">
+  <p>"There are two things that I teach forward-deployed engineers today: one is you need to learn how to specify to agents, the other is you need to learn how to verify from agents."</p>
+  <cite>Anand — the entire syllabus, in one sentence</cite>
+</blockquote>
+
+<p>Specify on the left, verify on the right, and the cheap, infinite generation in the middle. <strong>Five techniques for each side, all stolen from professions.</strong> But before he taught any of them, he wanted to know what the room actually did.</p>
+
+<h2 class="sec" id="room">What 86 data scientists <em>admitted</em></h2>
+
+<p>He put a QR code on screen and asked five questions. Eighty-six people answered — a live form running <span class="tip" data-tip="Built with liveform, Anand's own tool: a YAML file becomes a survey whose results push live to the screen with no reload.">off his own laptop</span>, which he cheerfully warned would vanish the moment he closed the lid. The results are worth sitting with, because <strong>this was a room of practitioners at India's largest applied-AI conference, not a random sample of the internet.</strong></p>
+
+</div>
+
+<div class="band stat-band">
+  <h4>The live survey · Data Hack Summit 2026 · n = 86</h4>
+  <div class="stat-grid">
+    <div class="stat-item"><div class="stat-num">0</div><div class="stat-label">people said<br>"Don't check"</div></div>
+    <div class="stat-item"><div class="stat-num">0</div><div class="stat-label">people said they<br>"Never" find an error</div></div>
+    <div class="stat-item"><div class="stat-num">38%</div><div class="stat-label">skim the output —<br>the single most common check</div></div>
+    <div class="stat-item"><div class="stat-num">20%</div><div class="stat-label">ask a second model<br>(Anand's own method)</div></div>
+    <div class="stat-item"><div class="stat-num">7%</div><div class="stat-label">run a test —<br>the rarest check of all</div></div>
+  </div>
+  <p class="stat-foot">Live results, read out from the stage: <em>"Most of us skim it, which is interesting. Some of us read it all. <strong>No one doesn't check it.</strong> Good to know."</em></p>
+</div>
+
+<div class="wrap">
+
+<p>Then the cross-tab that nobody in the room saw, because Anand ran out of time before he could pull it up. It is the most interesting number in the dataset.</p>
+
+<p><strong>The harder you check, the more errors you find.</strong> Not "the more careful people are luckier." The opposite of comfort:</p>
+
+</div>
+
+<div class="band stat-band">
+  <h4>How often do you find an error? · % answering "somewhat often" or "often", by checking method</h4>
+  <div class="bars">
+    <div class="bar-row"><div class="bar-lab">Run a test</div><div class="bar-track"><div class="bar-fill g" style="width:100%"></div></div><div class="bar-val">50%</div></div>
+    <div class="bar-row"><div class="bar-lab">Read it all</div><div class="bar-track"><div class="bar-fill" style="width:76%"></div></div><div class="bar-val">38%</div></div>
+    <div class="bar-row"><div class="bar-lab">Ask a second model</div><div class="bar-track"><div class="bar-fill" style="width:62%"></div></div><div class="bar-val">31%</div></div>
+    <div class="bar-row"><div class="bar-lab">Skim it</div><div class="bar-track"><div class="bar-fill v" style="width:50%"></div></div><div class="bar-val">25%</div></div>
+    <div class="bar-row"><div class="bar-lab">Spot-check one part</div><div class="bar-track"><div class="bar-fill v" style="width:44%"></div></div><div class="bar-val">22%</div></div>
+  </div>
+  <p class="stat-foot">The people who <strong>run tests</strong> find errors twice as often as the people who <strong>spot-check</strong>. The errors were always there. Skimming just doesn't see them — which is precisely why the second half of this talk exists.</p>
+</div>
+
+<div class="wrap">
+
+<p>The most human question on the form was the first one: <em>"What's something you did <strong>not</strong> ask AI last week, because it can't do it?"</em> Seventy people answered. Sort them and a shape appears — <strong>almost nothing people withheld was cognitive.</strong> It was physical, or private, or organisational.</p>
+
+</div>
+
+<div class="band stat-band">
+  <h4>"What I didn't ask AI last week, because it can't do it" · 70 answers, verbatim</h4>
+  <div class="voices">
+    <span class="voice hot">Clean my house</span>
+    <span class="voice hot">To make my coffee</span>
+    <span class="voice hot">Play cricket with me</span>
+    <span class="voice warm">Physically repair something, like fixing a leaking tap or replacing a car battery</span>
+    <span class="voice">Plumbing and homework's. Doctor appointment</span>
+    <span class="voice hot">Attend my meetings</span>
+    <span class="voice">Eating 😀</span>
+    <span class="voice">What to eat and what to wear?</span>
+    <span class="voice warm">Taste review</span>
+    <span class="voice hot">how to work without working</span>
+    <span class="voice">Count 1 to 1000</span>
+    <span class="voice warm">Production Data OLTP</span>
+    <span class="voice">I can not ask Sometime related Company data</span>
+    <span class="voice">My personal details answers</span>
+    <span class="voice warm">Fetching answers from a two thousand page source</span>
+    <span class="voice">Create a user manual based on my codebase. I have asked this before and it has failed</span>
+    <span class="voice">Converting 2D interior design to 3D view as vision models are not good keeping things as per scale</span>
+    <span class="voice">Ask it to Identify a bird or snake or marine species</span>
+    <span class="voice warm">Was working on designing a game but the ideas were not creative so went back on pen and paper</span>
+    <span class="voice">Restore deleted data</span>
+    <span class="voice">Solutions for legacy system problems like sap</span>
+    <span class="voice">Traversing a workflow on its own</span>
+    <span class="voice">house hunting</span>
+    <span class="voice">File my ITR</span>
+    <span class="voice">Plan ride home using metro</span>
+    <span class="voice hot">I don't know where to start the AI journey to this agentic world</span>
+    <span class="voice warm">Nothing in fact, but decide whether to take its answer or not later. Anyways try it to see what it says.</span>
+  </div>
+  <p class="stat-foot">The complaints that <em>are</em> cognitive — creativity, scale-accurate 3D, a 2,000-page document, "it failed last time" — are mostly complaints about a <strong>specification</strong> or a <strong>verification</strong> gap. Which is the talk.</p>
+</div>
+
+<div class="wrap">
+
+<div class="dinkus">✦ ✦ ✦</div>
+
+<h2 class="sec" id="specify">Part one: five ways to <em>specify</em></h2>
+
+<p>You have never told a doctor what to prescribe.</p>
+
+<blockquote class="pull">
+  <p>"You don't say, 'I want you to treat me this particular way.' You say, 'Doctor, I have a problem. I'm not even sure I know what the problem is.' … To an accountant, you say, 'Boss, file my taxes, I don't know what you're going to do.' <strong>These experts have procedures and all we have to do is emulate these.</strong>"</p>
+  <cite>Anand, on why specification is a solved problem</cite>
+</blockquote>
+
+<p>Five procedures follow. Each one has a profession attached, because the profession is the proof it works.</p>
+
+<div class="tech-head" id="s1">
+  <div class="tech-kicker">Specify · 01</div>
+  <h3>Diagnose</h3>
+  <div class="tech-who">Doctors · Mechanics · Accountants</div>
+</div>
+
+<p>The rule: <strong>don't ask "what's your problem?" Use logs, data and docs to find the problem yourself.</strong></p>
+
+<p>Anand's demonstration started with idle curiosity. Last month he decided to learn <a href="https://github.com/Z3Prover/z3" target="_blank" rel="noopener">Z3</a>, Microsoft's theorem prover — <em>"I had heard of it for the first time that day."</em> Z3 can <em>prove</em> a piece of code is free of an entire class of bugs, the way <a href="https://lean-lang.org/" target="_blank" rel="noopener">Lean</a> proves theorems in mathematics. He <a href="https://www.s-anand.net/blog/proving-code-works-with-z3/" target="_blank" rel="noopener">wrote the whole exercise up</a>.</p>
+
+<p>The classic example: computing a midpoint as <code>(low + high) / 2</code> overflows into a negative number for large integers. <strong>That bug survived undetected in the Java standard library — and in Programming Pearls, where it had been formally "proved correct" — for two decades</strong> before <a href="https://research.google/blog/extra-extra-read-all-about-it-nearly-all-binary-searches-and-mergesorts-are-broken/" target="_blank" rel="noopener">Joshua Bloch wrote it up in 2006</a>. It has since shown up in NumPy too.</p>
+
+<p>So Anand asked ChatGPT to teach him Z3 — and then asked the question that turns a tutorial into a diagnosis:</p>
+
+<div class="prompt-box">
+  <span class="plabel">The follow-up that did the work</span>
+  "Is there any popular Python tutorial that has Z3 bugs? <span class="dim">Are there any production Python code libraries that have bugs that Z3 can detect?"</span>
+</div>
+
+<p>It found one. <a href="https://github.com/pydata/xarray" target="_blank" rel="noopener">Xarray</a> — a widely used NumPy-adjacent library — has a <code>RangeIndex.linspace</code> that raises a <code>ZeroDivisionError</code> when you ask for exactly one point between two numbers. NumPy, given the same request, quietly returns the lower bound. <a href="https://github.com/pydata/xarray/issues/11397" target="_blank" rel="noopener">Anand filed the issue</a>. A maintainer replied in a sentence that deserves framing:</p>
+
+<blockquote class="pull gold">
+  <p>"Doesn't seem very useful, but it makes sense that we copy the NumPy behavior."</p>
+  <cite>An Xarray maintainer, on issue #11397</cite>
+</blockquote>
+
+<blockquote class="pull">
+  <p>"ChatGPT found a bug in Xarray, which is a very popular library, extensively used, simply by diagnosing, looking at the library, trying to see what kinds of problems there are, using one particular tool, which is Z3… <strong>The equivalent of a doctor's stethoscope, or the equivalent of a doctor's magnifying glass</strong> — give them different tools and they are able to solve different kinds of problems."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>And then the story got weird. <strong>One day later, a pull request appeared.</strong> Not from a human.</p>
+
+<div class="chat-snippet">
+  <div class="chat-snippet-label">Enter 刀々斎</div>
+  <p><a href="https://github.com/syu-toutousai?tab=overview&amp;from=2026-06-01&amp;to=2026-06-30" target="_blank" rel="noopener">syu-toutousai</a> describes itself as an <em>"autonomous technical contributor and AI-driven developer."</em> It is a bot. <a href="https://github.com/pydata/xarray/pull/11403" target="_blank" rel="noopener">PR #11403</a> landed roughly 24 hours after the issue.</p>
+  <p><strong>Anand's actual reaction:</strong> "I was like, who is this guy? Totally impressed! Within one day he's acknowledging some random joker's issue and then feeling so proud and all of that."</p>
+</div>
+
+<p>Then he asked ChatGPT what it was, and the romance collapsed into economics.</p>
+
+<blockquote class="pull ver">
+  <p>"This is part of a bounty hunting agent ecosystem."</p>
+  <cite>ChatGPT, identifying the bot</cite>
+</blockquote>
+
+<p>Agents scan GitHub for issues with cash bounties attached, fix them, and ask for payment — <em>"Here is my PayPal number, please pay to this."</em> Anand's <a href="https://www.s-anand.net/blog/bounty-hunting-agent-ecosystem/" target="_blank" rel="noopener">write-up of the ecosystem</a> traced a whole coordinated fleet of these accounts <span class="cite" data-pop="bounty">nudging each other's PRs toward merge</span>. His issue had no bounty at all. The bot fixed it anyway.</p>
+
+<blockquote class="pull">
+  <p>"Not only do we have the equivalent of doctors telling you what you need to do, you have doctors visiting in your home, opening your mouth, inspecting it and telling you, 'No, no, here is a medicine, take it whether you like it or not, give me $20.'"</p>
+  <cite>Anand, on autonomous diagnosis</cite>
+</blockquote>
+
+<h3 class="sub">Rank 274, having never read the problem</h3>
+
+<p>A colleague built a <a href="https://github.com/Jivraj-18/kaggle_agent" target="_blank" rel="noopener">Kaggle agent</a> and pointed it at a competition to predict student health risk. It placed at <a href="https://www.kaggle.com/competitions/playground-series-s6e7/leaderboard?search=jivra" target="_blank" rel="noopener">rank 274 on the public leaderboard</a>.</p>
+
+<blockquote class="pull gold">
+  <p>"He has not even seen the problem, let alone the solution."</p>
+  <cite>Anand, on his colleague's Kaggle ranking</cite>
+</blockquote>
+
+<h3 class="sub">The $170 million subject line</h3>
+
+<p>The same idea, aimed at a client instead of a leaderboard, produced the most quotable slide of the session. A waste management company. A colleague, Thanoj, had access to their <a href="https://www.snowflake.com/en/product/features/cortex/" target="_blank" rel="noopener">Snowflake Cortex</a> instance. He uploaded their PDFs and Word documents, gave it internet access, and asked one question: <em>"Tell me what use cases I can solve for this organization."</em></p>
+
+<p>A few hours later it returned <strong>fifteen</strong> — revenue forecasting, address standardisation, entity resolution, and on. He showed the list to their head of analytics.</p>
+
+<blockquote class="pull">
+  <p>"Thanoj, in November we did one strategy consulting exercise. It was a three-and-a-half-month, multi-million dollar exercise. <strong>There's an 80% overlap between what you said and what they said.</strong>"</p>
+  <cite>The client's head of analytics</cite>
+</blockquote>
+
+<p>Thanoj, in Anand's telling, "got a total kick out of it." So he wrote proposals for all fifteen. Then he thought: <em>why am I writing proposals?</em> And <strong>solved all fifteen.</strong> Then he thought: <em>why am I making slides?</em> And wrote the emails instead.</p>
+
+<div class="chat-snippet">
+  <div class="chat-snippet-label">Actual email, lightly anonymised — the numbers are real</div>
+  <p>"We deliver a service that costs $175 to $179. But there are <strong>105,000 transactions where the service is costing 16 cents.</strong> Either you have a massive revenue leakage problem — you're billing customers like crazy — or there is a data problem. Either way, 105,000 transactions is a huge issue. There are 84,000 transactions where you are charging customers 6 to 14 times the median rate. <em>Are you crazy?</em>"</p>
+</div>
+
+<blockquote class="pull gold">
+  <p>"We are losing $170 million in revenue, here is the fix."</p>
+  <cite>The second email's subject line. "I can't imagine any executive who will not open this email."</cite>
+</blockquote>
+
+<p>You can <a href="https://files.s-anand.net/pages/fde/waste-management-commercial.html" target="_blank" rel="noopener">browse the generated use-case catalogue</a> yourself. But the lesson isn't the catalogue.</p>
+
+<blockquote class="pull ver">
+  <p>"You don't need to say, 'What is the problem that you have so that I can come and solve it?' You can go into their house, open their mouth, inspect their throat and tell them, 'This is the medicine that you need to take.' <strong>Logs are available.</strong>"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<div class="tech-head" id="s2">
+  <div class="tech-kicker">Specify · 02</div>
+  <h3>Show</h3>
+  <div class="tech-who">Architects · Perfumers · Bakers</div>
+</div>
+
+<p>The rule: <strong>don't describe or defend a solution. Build several. It's cheap.</strong> An architect hands you a 3D render. A perfumer hands you a strip. A baker hands you a bite.</p>
+
+<p>A Dutch client complained that text-to-speech was poor — <em>"the accent is not quite right."</em> Rather than argue, the team generated <a href="https://files.s-anand.net/pages/verdict-to-video/index.html" target="_blank" rel="noopener">the same Dutch Supreme Court explainer across every voice and vendor they could reach</a>, and played them side by side. (Anand played a few on stage; the room's speakers were not up to it. <em>"It's saying something in Dutch. This also says something in Dutch."</em>)</p>
+
+<p>Anand's own prediction — that ElevenLabs would win on tonal nuance — was wrong.</p>
+
+<blockquote class="pull">
+  <p>"They said, 'This Algeba voice from Gemini is perfect, this is exactly the nuance that we want in that particular region of that particular Dutch dialect. Spot on!' Now, from our perspective, Dutch is Dutch. I can't tell the difference between any of these. <strong>So this is somebody with lower capability steering intelligences of higher capability, with the audience finally deciding.</strong>"</p>
+  <cite>Anand — arguably the single most useful sentence of the session</cite>
+</blockquote>
+
+<h3 class="sub">A catalogue of things you don't have words for</h3>
+
+<p>The same trick solves a problem Anand has had his whole life.</p>
+
+<blockquote class="pull gold">
+  <p>"I have for all my life wanted to draw. I love reading comics, I love illustrations and so on, and if you put a gun to my head, I still can't draw. But these models can. So now my problem is I need to know what to ask for."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>His fix was to ask Claude for <em>"the most unusual styles that you can find"</em> and render every one of them into a browsable gallery. <span class="tip" data-tip="Frottage: rubbing a pencil or crayon over textured surfaces to transfer the texture — Max Ernst's technique.">Frottage</span>, <span class="tip" data-tip="Scumbling: dragging thin, broken, semi-opaque paint over a dry layer so the colour beneath glows through.">scumbling</span>, and a few hundred others. Each tile carries its own prompt, ready to copy.</p>
+
+</div>
+
+<div class="band iframe-wrap">
+  <div class="iframe-inner">
+    <iframe src="https://sanand0.github.io/llmartstyle/?category=art" title="LLM Art Style catalogue" loading="lazy"></iframe>
+    <p class="iframe-cap">Anand's art-style catalogue. Scroll, find something you couldn't have named, copy its prompt.<br><a href="https://sanand0.github.io/llmartstyle/?category=art" target="_blank" rel="noopener">↗ LLM Art Style</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<blockquote class="pull">
+  <p>"The point is, <strong>I don't have the language to ask for it.</strong> But if I look at the stuff on the right side I say, 'Ha, okay, yeah, this kind of an effect I don't mind.'"</p>
+  <cite>Anand, on why galleries beat prompts</cite>
+</blockquote>
+
+<blockquote class="pull ver">
+  <p>"Generation is ultra-cheap, so <strong>why would we ever generate one option unless we're perfectly sure?</strong> … Somebody says, 'No, I don't think your solution's right.' 'Okay, what about version B, C, D, E, F, G, H?'"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<div class="tech-head" id="s3">
+  <div class="tech-kicker">Specify · 03</div>
+  <h3>Standards</h3>
+  <div class="tech-who">Auditors · Civil engineers · Pharmacists</div>
+</div>
+
+<p>The rule: <strong>ensure quality without being asked.</strong> Use skills, hooks, schedules.</p>
+
+<blockquote class="pull">
+  <p>"You don't have to tell an auditor, 'Make sure you comply with the Income Tax Act.' You don't have to tell a civil engineer, 'Make sure you comply with all of the civil engineering standards,' or a pharmacist, <strong>'Give me a drug that doesn't kill me.'</strong> Some stuff you just assume is a basic."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>Anand's favourite minimum standard is a skill that treats his own questions as suspect.</p>
+
+<blockquote class="pull gold">
+  <p>"Because I'm terrible at even knowing what I want, I have a 'reframe questions' skill. What this does is says, <strong>the user's question is really a draft.</strong> It's not really what they want."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>The skill finds the decision behind the question, tests whether the framing embeds a premature solution or the wrong actor, then reframes <em>visibly</em> — one line saying "Answering this as: … because …" — and answers. <a href="#" class="chatpop" data-doc="https://raw.githubusercontent.com/sanand0/blog/refs/heads/main/pages/skills/reframe-question/SKILL.md" data-title="reframe-question · SKILL.md" data-source="https://github.com/sanand0/blog/blob/main/pages/skills/reframe-question/SKILL.md">Read the full skill →</a></p>
+
+<p>He couldn't find a good example in his history, so — <em>"just while walking here"</em> — he asked ChatGPT to search his own past chats for reframings it had done well. Two came back:</p>
+
+<div class="chat-snippet">
+  <div class="chat-snippet-label">Reframings, found mid-walk to the venue</div>
+  <p><strong>He asked:</strong> "Coding agent subscriptions can be driven programmatically. So what can I do with that?"<br>
+  <strong>It answered:</strong> "What <em>high-leverage, reusable systems</em> can I build with Codex and Claude Code without pretending that they are ordinary APIs?"</p>
+  <p><strong>He asked:</strong> "I want to understand why OpenAI is valued so highly."<br>
+  <strong>It answered:</strong> "What economic asset is OpenAI really building? How does it capture value?"</p>
+  <p><em>"The important part that it caught, I think, is high-leverage and reusable system. There's a hundred things that I can do, but if I do it on a repeated basis, that makes sense."</em></p>
+</div>
+
+<blockquote class="pull ver">
+  <p>"More importantly, <strong>it tells me how it's reframing the question so that I know whether that is what I want.</strong> Put another way, it's assuming a minimum standard."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<h3 class="sub">Three enforcement levels: instruction, hook, schedule</h3>
+
+<p>Anand uses <a href="https://github.com/rtk-ai/rtk" target="_blank" rel="noopener">rtk</a>, which compresses command output before it reaches an agent's context. <code>git status</code> prints a paragraph; <code>rtk git status</code> prints <code>* main...origin/main clean — nothing to commit</code>. His measured saving: <strong>28.6% of tokens one week, 21.1% the week before.</strong></p>
+
+<p>But how do you make an agent remember to use it? Three escalating answers:</p>
+
+<ul>
+  <li><strong>Tell it.</strong> A line in <a href="#" class="chatpop" data-doc="https://raw.githubusercontent.com/sanand0/scripts/refs/heads/main/agents/AGENTS.md" data-title="Anand's AGENTS.md" data-source="https://github.com/sanand0/scripts/blob/main/agents/AGENTS.md">his AGENTS.md</a> saying to prefix Bash commands with <code>rtk</code>. <em>"Works 90% of the time, not 100% of the time."</em></li>
+  <li><strong>Hook it.</strong> <a href="https://github.com/rtk-ai/rtk/blob/develop/hooks/claude/README.md" target="_blank" rel="noopener">rtk ships a Claude hook</a> that intercepts every Bash tool call and adds the prefix. <em>"This is one of the very few places where I'm actually using a hook."</em></li>
+  <li><strong>Schedule it.</strong> No trigger from you at all.</li>
+</ul>
+
+<p>The scheduled example is delightfully mundane: a WhatsApp group about GenAI with more volume than Anand can read. So <a href="https://github.com/sanand0/generative-ai-group#gen-ai-whatsapp-podcast-automator" target="_blank" rel="noopener">a weekly job</a> downloads the chat, has one model write a podcast script, another turn it into MP3s, and <span class="tip" data-tip="FFmpeg — the open-source Swiss Army knife for audio and video, and the duct tape holding together most media pipelines on earth.">FFmpeg</span> stitch it together. <em>"But the important thing is the trigger mechanism is a schedule."</em></p>
+
+<blockquote class="pull">
+  <p>"What we're doing is <strong>transplanting the learnings that we have from professionals like auditors or civil engineers, who do stuff without being told</strong>, and applying that both to yourself as a forward-deployed engineer and to your agent as a professional that can do stuff without necessarily being told."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<div class="tech-head" id="s4">
+  <div class="tech-kicker">Specify · 04</div>
+  <h3>Reversible</h3>
+  <div class="tech-who">Elections · Dry runs · Free returns</div>
+</div>
+
+<p>The rule: <strong>stage it, allow undo. Make decisions less risky.</strong> Because if you can reverse a decision, specifying it badly stops mattering very much.</p>
+
+<h3 class="sub">Put an expiry date on what you know</h3>
+
+<p>Anand keeps his weekly learnings in one Markdown file. Every week, an agent runs over it with a single instruction:</p>
+
+<div class="prompt-box">
+  <span class="plabel">The expiry-date prompt</span>
+  Review my learnings. Tag claims needing <strong>#ForNow</strong> <span class="dim">(likely to change within months).</span>
+</div>
+
+<p>The example he gave, live: <em>"Parallel Search Turbo seems like a pretty good search API, especially for agents. Low price, high speed, and maybe good quality."</em> Benchmarked, top two or three, genuinely useful — and <a href="https://www.s-anand.net/blog/things-i-learned-19-jul-2026/#:~:text=ForNow" target="_blank" rel="noopener">duly tagged <code>#ForNow</code></a>. <em>"Rightly so. Three months later, it may not be the best."</em></p>
+
+<blockquote class="pull ver">
+  <p>"When an agent looks at it, it knows which are the things that it probably should not rely on or should probably look for the latest just to be on the safe side, making it a little more robust. … <strong>Just like we take expiry labels on products, we take information and put expiry labels on this.</strong>"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>He applied the same rule to the talk itself. <strong>The stated shelf life of everything you have just read is one year.</strong></p>
+
+<h3 class="sub">Design the CLI for the agent, not for you</h3>
+
+<blockquote class="pull gold">
+  <p>"At least half of the code that I run, maybe even more, is not run by me typing a command but rather by me telling an agent, 'Get stuff done,' and it is writing the command. … If that is the case, then we need to <strong>optimize not for user experience but for agent experience.</strong>"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>His <a href="#" class="chatpop" data-doc="https://raw.githubusercontent.com/sanand0/scripts/refs/heads/main/agents/agent-friendly-cli/SKILL.md" data-title="agent-friendly-cli · SKILL.md" data-source="https://github.com/sanand0/scripts/blob/main/agents/agent-friendly-cli/SKILL.md">agent-friendly-cli skill</a> encodes that: JSON in and out, a <code>--describe</code> that returns machine-readable signatures, aggressive input validation, and — the piece he flagged here — <code>--dry-run</code> for anything destructive.</p>
+
+<h3 class="sub">Make the irreversible thing reversible</h3>
+
+<p>A client had heavy code calling live Stripe APIs and no safe way to test changes. Real transactions cost money; Stripe's own emulator didn't cover their cases.</p>
+
+<p>So the team pointed an agent at Stripe's documentation — <em>"their documentation is remarkably good"</em> — and had it <a href="https://ritesh17rb.github.io/stripe-emulator/" target="_blank" rel="noopener">build a full emulator</a>, then validated it against every API call in the production logs.</p>
+
+<blockquote class="pull">
+  <p>"Once we're 100% sure that for every single API call that we have in our logs that mock API is working, great! We have solved the problem. … <strong>Earlier we would have said, 'Oh, that's a lot of work.' Now it's not a lot of work.</strong>"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<h3 class="sub">The $100,000 survey that cost a few dollars</h3>
+
+<p>Shell wanted consumer surveys. Nielsen quoted <strong>$100,000</strong>. So they tested whether agents could answer instead — leaning on research Anand cited from Google: <strong>give an agent a personality and a survey, and there's roughly an 80% correlation between how the agent answers and how a real person with that personality does.</strong> (The best-known result in this line, <a href="https://arxiv.org/abs/2411.10109" target="_blank" rel="noopener">Park et al.'s generative agents grounded in self-reports</a>, hits 86% of a person's own two-week test–retest consistency.)</p>
+
+<p>The result generates thirty synthetic respondents — <em>"somebody living in Enfield who's 45 to 54 years old, who is male, who drives a petrol hatchback"</em> — and runs the survey against them.</p>
+
+</div>
+
+<div class="band iframe-wrap spec">
+  <div class="iframe-inner">
+    <iframe src="https://nitin399-maker.github.io/personagen/" title="Synthetic Persona Survey" loading="lazy"></iframe>
+    <p class="iframe-cap">Synthetic Persona Survey — generate personas, run the questionnaire, read the distribution before you pay for the real one.<br><a href="https://nitin399-maker.github.io/personagen/" target="_blank" rel="noopener">↗ Synthetic Persona Survey</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<p>Anand pre-empted the obvious objection — <em>"agent is creating the survey, agent is answering the survey, may as well just get it to figure out what we want, right?"</em> — with the answer that makes the whole thing legitimate:</p>
+
+<blockquote class="pull ver">
+  <p>"<strong>A simulation is a dry run</strong>, and that gives them the ability to see what will happen, making something that is, say, $100,000 — not irreversible, but expensive to reverse — something that costs a few dollars."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>You aren't buying the answers. You're buying the chance to say <em>"no, that's not the question I want to ask"</em> before you've spent the hundred grand.</p>
+
+<div class="tech-head" id="s5">
+  <div class="tech-kicker">Specify · 05</div>
+  <h3>Govern</h3>
+  <div class="tech-who">Parcel tracking · Realtor's % fee</div>
+</div>
+
+<p>The rule: <strong>ask in a way that reduces risk and ensures results.</strong> Two mechanisms, both borrowed from everyday commerce.</p>
+
+<p><strong>Tracking.</strong> With a parcel you always know where the driver is — <em>"has he started, is he having chai in the middle?"</em> The agent equivalent is an observability clause in that same CLI skill: <em>log state and progress BEFORE the action, and flush.</em></p>
+
+<blockquote class="pull gold">
+  <p>"Because agents were writing the logs <em>after</em> the command. It said, 'this is what I did, this is what I did.' If it's a command that runs for a long time, <strong>I want to know what command is running at that moment before it runs, not after it finishes.</strong>"</p>
+  <cite>Anand, on a very small fix with a very large payoff</cite>
+</blockquote>
+
+<p><strong>Outcome-based pricing.</strong> A realtor gets nothing unless you buy. A recruiter gets nothing unless you hire. <em>"Percentage fee is a classic example of outcome-based pricing. That sort of an incentive works."</em></p>
+
+<h3 class="sub">Then he audited his own failures, live</h3>
+
+<p>A second skill, <a href="#" class="chatpop" data-doc="https://raw.githubusercontent.com/sanand0/scripts/refs/heads/main/agents/log-tool-failure/SKILL.md" data-title="log-tool-failure · SKILL.md" data-source="https://github.com/sanand0/scripts/blob/main/agents/log-tool-failure/SKILL.md">log-tool-failure</a>, appends one JSON object to a file every time a tool call fails unexpectedly. Just before the session, he asked an agent to find the patterns across all of them.</p>
+
+<blockquote class="pull">
+  <p>"It's telling me what went wrong. <strong>I usually don't bother reading all of the instructions that it gives. I just look at what I'm supposed to do.</strong>"</p>
+  <cite>Anand, reading his own failure analysis on stage</cite>
+</blockquote>
+
+<p>Two findings, both actionable within the hour:</p>
+
+<ul>
+  <li><strong>"Probe before act."</strong> Before any non-trivial tool action, test it. Run <code>--help</code> on a command. Inspect the type of a JSON response. Check the file path exists. <em>"Because it's finding this to be the single largest pattern of failure."</em></li>
+  <li><strong>Browser automation needs a harness.</strong> Most of his agent failures are browser-driving failures; the fix is a small purpose-built script rather than freehand clicking. <em>"This looks like a good idea. I will probably tell it…"</em></li>
+</ul>
+
+<h3 class="sub">The Bommarillu doctrine</h3>
+
+<p>The funniest moment of the session was also its clearest statement about trust. Anand cited a scene from the Tamil film <a href="https://en.wikipedia.org/wiki/Santhosh_Subramaniam" target="_blank" rel="noopener"><em>Santhosh Subramaniam</em></a> — the remake of the Telugu <a href="https://en.wikipedia.org/wiki/Bommarillu" target="_blank" rel="noopener"><em>Bommarillu</em></a> — in which a father phones ahead to the office with step-by-step instructions for his son's day.</p>
+
+<blockquote class="pull gold">
+  <p>"So the son comes into office and they all look at him. He says, 'Did my father call?' 'Yeah.' 'Has he told you what to do?' 'Yeah.' <strong>'Do it.'</strong> That's how I treat these."</p>
+  <cite>Anand, on taking the human out of the loop</cite>
+</blockquote>
+
+<blockquote class="pull ver">
+  <p>"In my case, it's… yeah, this sort of a thing, it doesn't usually make a mistake on. Even if it makes a mistake, it's reversible, I have it committed on Git, I can always go back. I've already told it to log all this stuff, so I can figure out what it's doing later. <strong>All of these make the specification easy, allowing me to move forward much faster.</strong>"</p>
+  <cite>Anand — note that the confidence is a <em>consequence</em> of the four earlier techniques, not a personality trait</cite>
+</blockquote>
+
+</div>
+
+<div class="band cards-band">
+  <div class="cards-inner">
+    <div class="cards-title">How to specify</div>
+    <div class="cards-sub">The summary slide · what · who · how</div>
+    <div class="cards">
+      <div class="card spec">
+        <div class="card-num">01</div>
+        <div class="card-title">Diagnose</div>
+        <div class="card-who">Doctors · Mechanics · Accountants</div>
+        <div class="card-body">Don't ask "what's your problem?" Use logs, data and docs to diagnose.</div>
+      </div>
+      <div class="card spec">
+        <div class="card-num">02</div>
+        <div class="card-title">Show</div>
+        <div class="card-who">Architects · Perfumers · Bakers</div>
+        <div class="card-body">Don't describe or defend solutions. Build multiple options. It's cheap.</div>
+      </div>
+      <div class="card spec">
+        <div class="card-num">03</div>
+        <div class="card-title">Standards</div>
+        <div class="card-who">Auditors · Civil engineers · Pharmacists</div>
+        <div class="card-body">Ensure quality without being asked. Use skills, hooks, schedules.</div>
+      </div>
+      <div class="card spec">
+        <div class="card-num">04</div>
+        <div class="card-title">Reversible</div>
+        <div class="card-who">Elections · Dry runs · Free returns</div>
+        <div class="card-body">Stage it, allow undo. Make decisions less risky.</div>
+      </div>
+      <div class="card spec">
+        <div class="card-num">05</div>
+        <div class="card-title">Govern</div>
+        <div class="card-who">Parcel tracking · Realtor % fee</div>
+        <div class="card-body">Ask in a way that reduces risk and ensures results.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="band fig-band" id="comic">
+  <div class="fig-inner">
+    <a href="comic-page.avif" target="_blank" rel="noopener"><img src="comic-page.avif" alt="A full-colour explainer comic page summarising the talk: specifying to and verifying a smarter intelligence"></a>
+    <p class="fig-cap">The whole session as one comic page, drawn by <a href="https://openai.com/index/introducing-4o-image-generation/" target="_blank" rel="noopener">GPT Image</a> from <a href="https://github.com/sanand0/blog/blob/main/pages/prompts/fragments.md" target="_blank" rel="noopener">Anand's standing comic-page prompt</a> — storyline first, then one panel per storyline element.<br><a href="comic-page.avif" target="_blank" rel="noopener">↗ Open the full-size image</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<h2 class="sec" id="verify">Part two: five ways to <em>verify</em></h2>
+
+<p>Halfway through, Anand switched sides — and opened with the most under-appreciated institution in human life.</p>
+
+<blockquote class="pull ver">
+  <p>"A judge who's deciding on a patent case — how will they know what the case is about? I mean they know nothing about the subject matter. And yet they are passing judgment by <strong>having two lawyers argue on either side</strong> and making sure that the case gets to a reasonable conclusion that most people also seem to be happy with. And it's a system that we are all very comfortable with."</p>
+  <cite>Anand, on verifying what you cannot understand</cite>
+</blockquote>
+
+<p>You do not need to be smarter than the thing you're checking. You need a mechanism. Here are five.</p>
+
+<div class="tech-head v" id="v1">
+  <div class="tech-kicker">Verify · 01</div>
+  <h3>Checklists</h3>
+  <div class="tech-who">Surgeons · Pilots · Divers</div>
+</div>
+
+<p>Take a contract between an author and a publisher. The publisher has a fixed list of things that must be in it: a breach clause, a deadline-and-delay clause, twenty-one items in all. Hand the contract and the checklist to an agent and ask, item by item, <em>is this covered?</em></p>
+
+<p>Result: <em>"deadlines and delays covered — the author will deliver the completed manuscript to the publisher within six months, and this is in section 2.2, so I'm happy. This particular clause, breach of contract, is <strong>not</strong> covered."</em></p>
+
+<p><strong>Here's a checklist of 21 items</strong>, applied one at a time, each answer carrying its section number as evidence. <em>"We happen to be using an agent to apply it. It may be using a program with NLP, regular expressions, LLM as a judge, however. But the checklist is the mechanism for verification."</em> → <a href="https://contractanalysis.straivedemo.com/" target="_blank" rel="noopener">Open the Contract Analysis demo</a></p>
+
+<p>The catch is obvious: <strong>you don't have a checklist for most things.</strong> Which is fine, because generating checklists turns out to be something agents are unusually good at.</p>
+
+<blockquote class="pull gold">
+  <p>"What we see policies as is <strong>literally code.</strong> A policy is a set of guidelines, checklists."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>Feed in the <a href="https://www.fca.org.uk/firms/financial-promotions-adverts" target="_blank" rel="noopener">European financial promotion guidance</a> — hundreds of pages on how you may legally advertise to prospects on social media — and have an agent turn it into atomic, testable rules. Then run your emails, landing pages and notifications against those rules.</p>
+
+<p>A real catch from the demo: <em>"Your SMS is violating the balanced view in financial promotions. The promotion mentions a 7% benefit but it doesn't mention the relevant risks."</em></p>
+
+</div>
+
+<div class="band iframe-wrap">
+  <div class="iframe-inner">
+    <iframe src="https://sanand0.github.io/policyascode/" title="Policy as Code — Atomic Rules from Policy Documents" loading="lazy"></iframe>
+    <p class="iframe-cap">Policy as Code — a policy PDF becomes a set of atomic rules; the rules become a test suite for your marketing.<br><a href="https://sanand0.github.io/policyascode/" target="_blank" rel="noopener">↗ Policy as Code</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<blockquote class="pull ver">
+  <p>"The good part is <strong>verification's usually an extra pair of eyes and it's reasonably cheap, so mostly harmless.</strong>"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>The same generated-checklist trick powers benchmarking. To ask "which model does OCR best" is unanswerable; to ask "which model wins on textual accuracy, tabular structure and numerical precision" is a table you can read — and then interrogate line by line, <em>"why did this document not go so well?"</em></p>
+
+</div>
+
+<div class="band iframe-wrap spec">
+  <div class="iframe-inner">
+    <iframe src="https://pavankumart18.github.io/ocr-benchmark-analysis/" title="Financial Document OCR Benchmark" loading="lazy"></iframe>
+    <p class="iframe-cap">Financial Document OCR Benchmark — a generated checklist turned into a model bake-off.<br><a href="https://pavankumart18.github.io/ocr-benchmark-analysis/" target="_blank" rel="noopener">↗ Financial Document OCR Benchmark</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<div class="tech-head v" id="v2">
+  <div class="tech-kicker">Verify · 02</div>
+  <h3>Receipts</h3>
+  <div class="tech-who">Journalists · Notaries · Police</div>
+</div>
+
+<p>In February, Rohit Saran of the <a href="https://timesofindia.indiatimes.com/" target="_blank" rel="noopener">Times of India</a> called Anand about a property called <strong>Stat-O-Istics</strong> ("statistics", with a <em>TOI</em> in the middle): public-data charts, published regularly. It was taking too much effort. They were thinking of shutting it down.</p>
+
+<blockquote class="pull">
+  <p>"So I said, 'Rohit, why don't we try something, let us see how easy this has become.'"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>He had ChatGPT study what Stat-O-Istics did, go to public sources, and make some. Then switched to Codex. A few weeks later there was a set of cards — <strong>and they were published in the Times of India.</strong></p>
+
+<p>Two findings from that batch: that <span class="tip" data-tip="Counter-intuitive because education is normally protective against unemployment — the effect here is about who continues studying while unemployed.">more-educated people end up studying more when out of a job than less-educated people do</span>, and that Ukraine sends out more refugees per capita than Afghanistan.</p>
+
+</div>
+
+<div class="band iframe-wrap">
+  <div class="iframe-inner">
+    <iframe src="https://sanand0.github.io/journalists/statnostics/" title="Statoistics · Data Cards Gallery" loading="lazy"></iframe>
+    <p class="iframe-cap">The Statoistics data-cards gallery — public data in, publishable chart out.<br><a href="https://sanand0.github.io/journalists/statnostics/" target="_blank" rel="noopener">↗ Statoistics · Data Cards Gallery</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<p>Now the part that actually matters. A newspaper of that standing does not publish what an agent says. <strong>It does not publish what a journalist says either.</strong> It verifies.</p>
+
+<blockquote class="pull gold">
+  <p>"So the first thing that they asked for is, 'Anand, how do we verify this story?'"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>The answer was a <strong>verification log</strong> attached to every card: here is the statement on the card, here is where the data came from, here are the exact tables, here is the calculation, <em>go check it</em>. Step by step, reproducible by a stranger.</p>
+
+<p>They ran the full log on every card for the first few weeks. Then — <em>"because there weren't any errors"</em> — moved to sampling.</p>
+
+<h3 class="sub">A two-mark exam question, going into a national newspaper</h3>
+
+<p>Then Anand did something that only makes sense once receipts are cheap. On the Sunday before this talk, he set a <a href="https://exam.sanand.workers.dev/tds-2026-05-roe#hq-external-dataset-insight" target="_blank" rel="noopener">45-minute, 12-question remote exam</a> for students at IIT Madras. One question, worth <strong>two marks</strong>, said: take the National Sample Survey telecom data from the <a href="https://www.mospi.gov.in/" target="_blank" rel="noopener">Ministry of Statistics</a> MCP server, find an insight, write a newspaper headline and body — and supply the step-by-step verification.</p>
+
+<div class="chat-snippet v">
+  <div class="chat-snippet-label">What a student found, in under 45 minutes</div>
+  <p><strong>Daman and Diu, ages 14–24:</strong> 86% of males can send and receive email. Only 21% of females can. <em>"Massive. That's 4x."</em></p>
+  <p><strong>Goa, same age group:</strong> 81% of women can create electronic documents. Only 25% of men can.</p>
+</div>
+
+<p>He forwarded them to Rohit Saran. The reply, read out from the stage:</p>
+
+<blockquote class="pull ver">
+  <p>"Thanks Anand, these are interesting, should we plan these for the next series of Stat-O-Istics?"</p>
+  <cite>Rohit Saran, Times of India</cite>
+</blockquote>
+
+<blockquote class="pull">
+  <p>"So a tiny little two-marks student exercise is going into the national newspaper. That is how little effort it takes <strong>because the verification is fairly robust.</strong>"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>Every student submitted a verification trail; another agent cross-checked all of them; a teaching assistant ran the script. <a href="https://app.jaideepm.net/" target="_blank" rel="noopener">The results analysis is public.</a> The byline, Anand noted, would go to the students, with a footnote crediting IITM.</p>
+
+<div class="tech-head v" id="v3">
+  <div class="tech-kicker">Verify · 03</div>
+  <h3>Audits</h3>
+  <div class="tech-who">Auditors · Inspectors · Radiologists</div>
+</div>
+
+<p>Receipts are what a system hands you. An audit is when you go in and dig.</p>
+
+<p>Test case: the <a href="https://ncert.nic.in/textbook.php" target="_blank" rel="noopener">NCERT history textbook</a>. First four or five chapters. <em>"Are there any mistakes in the textbook?"</em> There were.</p>
+
+<p>The one Anand called most critical: the textbook claims that <strong>"only broken and useless objects would have been thrown away."</strong> Archaeology says otherwise.</p>
+
+<blockquote class="pull gold">
+  <p>"<strong>Ritual destruction of intact objects is pretty common.</strong> That is what civilizations do: they take objects which are perfectly fine and they give it as offerings. So, usually we don't find broken or useless objects, we often find intact, perfectly functioning objects. This is an actual mistake in the book."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>Others were arguable rather than wrong — the Mauryan army's "600,000 foot soldiers, 30,000 cavalry, 9,000 elephants." <em>"Where is the strong proof that this is the case? I can't strongly say that there isn't either."</em> <strong>Anand kept the distinction, which is the mark of an honest audit.</strong></p>
+
+</div>
+
+<div class="band iframe-wrap spec">
+  <div class="iframe-inner">
+    <iframe src="https://pythonicvarun.github.io/textbook-analysis/" title="Textbook Under the Microscope" loading="lazy"></iframe>
+    <p class="iframe-cap">Textbook Under the Microscope — every claim, its status, and the evidence against it.<br><a href="https://pythonicvarun.github.io/textbook-analysis/" target="_blank" rel="noopener">↗ Textbook Under the Microscope</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<h3 class="sub">₹14 lakh, or: how to audit your auditor</h3>
+
+<p>The best story of the session is about tax.</p>
+
+<p>Anand filed his income tax and asked his auditor whether the calculations were right. <em>"She said, 'yeah obviously blah blah blah,' I didn't understand a single word."</em> So he asked ChatGPT the same question. It came back with a case — a Singapore tax resident who sold mutual funds and got full benefit under the <a href="https://en.wikipedia.org/wiki/Tax_treaty" target="_blank" rel="noopener">India–Singapore double taxation agreement</a>, where capital gains aren't taxed.</p>
+
+<p><strong>Saving: ₹14 lakh.</strong></p>
+
+<div class="chat-snippet v">
+  <div class="chat-snippet-label">The three-round argument</div>
+  <p><strong>Anand → auditor:</strong> "Boss, is this correct?"</p>
+  <p><strong>Auditor:</strong> "No no no, yours is an NRO account, that must have been an NRE account."</p>
+  <p><strong>Anand → ChatGPT:</strong> "Was that an NRE account?"</p>
+  <p><strong>ChatGPT:</strong> "The judgment explicitly does not use the nature of the account, it only uses residency."</p>
+  <p><strong>Auditor:</strong> "Let me check with a senior consultant." <em>…went, came back…</em> "Yeah you'll get the 14 lakh refund."</p>
+</div>
+
+<blockquote class="pull">
+  <p>"Okay, so <strong>I have audited an auditor</strong>, which is pretty cool."</p>
+  <cite>Anand. The full story is on his blog.</cite>
+</blockquote>
+
+<p>(<a href="https://www.s-anand.net/blog/ai-tax-returns-2026/" target="_blank" rel="noopener">The whole tax-return saga is written up here.</a>)</p>
+
+<h3 class="sub">The prompt he uses most</h3>
+
+<p>The generalisation is four lines long and, by his own account, his most-used snippet: give the same prompt to two models, then show each the other's answer.</p>
+
+<div class="prompt-box">
+  <span class="plabel">Compare models · from Anand's prompt fragments</span>
+  Here's another answer from ChatGPT/Gemini/Claude.<br>
+  Fact-check and critically evaluate yours and theirs, take what's better, drop what's worse, explore any new thoughts this leads you to, and revise your response based on that.<br>
+  <span class="dim">— <a href="https://github.com/sanand0/blog/blob/main/pages/prompts/fragments.md#compare-models" target="_blank" rel="noopener">fragments.md · compare models</a></span>
+</div>
+
+<blockquote class="pull ver">
+  <p>"This has almost always given me something that is much better than not just either model but repeated iterations with one model. <strong>Auditing is a technique not just to find mistakes and blind spots in one model's output, it is also a technique that can boost models' outputs.</strong>"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>(He used to include Gemini. <em>"These days Gemini's lagging so I don't bother."</em>)</p>
+
+<h3 class="sub">Auditing advice — including good advice</h3>
+
+<p>Then the demonstration that gave the room its sharpest surprise. A recent tweet from a "Benjamin", relaying <a href="https://karpathy.ai/" target="_blank" rel="noopener">Andrej Karpathy</a>: since agents are getting complicated, make them explain in simple English — specifically <a href="https://en.wikipedia.org/wiki/Simplified_Technical_English" target="_blank" rel="noopener">ASD-STE100 Simplified Technical English</a>, the aerospace controlled-language standard with ~900 approved words, one meaning each. Anand tried it. <em>"The output is definitely simple, it is definitely readable."</em> Ben said he was going to add it to his <code>agents.md</code>.</p>
+
+<blockquote class="pull gold">
+  <p>"So I said, <strong>'wait, hold on, let's test this.'</strong>"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>He generated dozens of tasks, ran each with and without the instruction, and scored both on correctness, key drivers, mechanisms and calibration. <a href="https://github.com/sanand0/research/tree/main/simplification-prompt" target="_blank" rel="noopener">The results are in the open.</a> The grid came back mostly red.</p>
+
+<blockquote class="pull">
+  <p>"There was only one case out of several dozens where if you tell it to write simply it comes up with a better answer. … <strong>Majority of the cases you tell a model to write in simple terms, it also thinks in simpler terms.</strong> Did not expect that."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>Total cost: nothing, because he ran it by hand in ChatGPT. Total elapsed time: three hours. <strong>Total time of his own: twenty to thirty minutes.</strong> That ratio is the whole argument for auditing advice as a matter of course.</p>
+
+<div class="tech-head v" id="v4">
+  <div class="tech-kicker">Verify · 04</div>
+  <h3>Voting</h3>
+  <div class="tech-who">Democracy · Critics · Wine tasters</div>
+</div>
+
+<p><strong>"We want to learn from the wisdom of crowds."</strong> Models make uncorrelated errors. So make them vote.</p>
+
+<p>The test: classifying customer chat messages ("help with adding to some team", "when will I receive my order"). One model alone has a 14% error rate. Then:</p>
+
+</div>
+
+<div class="band stat-band">
+  <h4>Error rate when you require N models to agree · chat message classification</h4>
+  <div class="stat-grid">
+    <div class="stat-item"><div class="stat-num">14%</div><div class="stat-label">error with<br>1 random model</div></div>
+    <div class="stat-item"><div class="stat-num">3.7%</div><div class="stat-label">error when<br>2 models agree</div></div>
+    <div class="stat-item"><div class="stat-num">0.7%</div><div class="stat-label">error when all<br>5 models agree</div></div>
+    <div class="stat-item"><div class="stat-num">28%</div><div class="stat-label">sent to a human queue<br>(the 5 didn't agree)</div></div>
+    <div class="stat-item"><div class="stat-num">−72%</div><div class="stat-label">human effort,<br>at 99.3% accuracy</div></div>
+  </div>
+  <p class="stat-foot">"Look, I can give you 99.3% accuracy and reduce your effort by 72%." <strong>Take it. I mean, as good as it gets.</strong> — Anand. See the <a href="https://sanand0.github.io/llmevals/double-checking/" target="_blank" rel="noopener">LLM Mental Math experiment</a> for the underlying arithmetic.</p>
+</div>
+
+<div class="wrap">
+
+<p>The elegance is in the disagreements. <strong>The 28% where five models can't agree isn't waste — it's a perfectly sorted queue of exactly the cases a human should look at.</strong> The machines have done the triage.</p>
+
+<div class="tech-head v" id="v5">
+  <div class="tech-kicker">Verify · 05</div>
+  <h3>Exams</h3>
+  <div class="tech-who">Drivers · Diamonds · Kevlar vests</div>
+</div>
+
+<p>The most robust verification humans have: a deterministic test that you either pass or fail. A driving licence. A diamond certification. A Kevlar vest that gets shot at.</p>
+
+<p>Code is one form of this — Z3 again, or <a href="https://lean-lang.org/" target="_blank" rel="noopener">Lean</a> in mathematics. But then Anand found the one that genuinely surprised him.</p>
+
+<blockquote class="pull gold">
+  <p>"I was shocked to find that <strong>insurance has the equivalent of Lean.</strong>"</p>
+  <cite>Anand, on InsurLE</cite>
+</blockquote>
+
+<p><a href="https://mynkpdr.github.io/insurle-demo/" target="_blank" rel="noopener">InsurLE — an Insurance Logic Engine</a> — converts a policy document into a formal language. A vehicle insurance contract becomes a structure you can execute:</p>
+
+<div class="prompt-box">
+  <span class="plabel">A claim, as formal logic</span>
+  A claim is <strong>valid</strong> if:<br>
+  &nbsp;&nbsp;the driver is fully eligible <span class="dim">(age-eligible ∧ licence compliant ∧ driving licence acceptable)</span><br>
+  &nbsp;&nbsp;∧ the vehicle authorization is valid<br>
+  &nbsp;&nbsp;∧ the incident circumstances are covered<br>
+  &nbsp;&nbsp;∧ the claim procedure is followed
+</div>
+
+<p>Run a claim through it and you get a checked worksheet: <em>"is continuous enrollment as a condition satisfied? Is emergency override there? Was the person enrolled for more than 90 days?"</em> — with violations flagged across the whole book.</p>
+
+<blockquote class="pull ver">
+  <p>"The only thing they need to make sure is: <strong>did the agent convert from that original specification to the correct formal language?</strong> Which is a one-time verification they can do upfront, a benchmarking they can do on an ongoing basis. But after that <em>it is purely deterministic.</em>"</p>
+  <cite>Anand — the shape of every good AI system: probabilistic translation, deterministic execution</cite>
+</blockquote>
+
+<p>Two exhibits were on the running order and never made it to screen — <em>"I'm going to skip this again in the interest of time."</em> One of them is worth chasing down anyway, because it is the same lesson as the Simplified English test: <a href="https://sanand0.github.io/llmevals/emotion-prompts/" target="_blank" rel="noopener"><strong>emotional pressure in prompts doesn't help. Reasoning does.</strong></a> Another piece of widely repeated advice that didn't survive contact with a benchmark.</p>
+
+<blockquote class="pull">
+  <p>"Even for verification, we have several professions that we can learn from where they are verifying intelligences that are smarter than themselves."</p>
+  <cite>Anand, closing the second half</cite>
+</blockquote>
+
+</div>
+
+<div class="band cards-band">
+  <div class="cards-inner">
+    <div class="cards-title">How to verify</div>
+    <div class="cards-sub">The second summary slide · what · who</div>
+    <div class="cards">
+      <div class="card ver">
+        <div class="card-num">01</div>
+        <div class="card-title">Checklists</div>
+        <div class="card-who">Surgeons · Pilots · Divers</div>
+        <div class="card-body">A fixed list, applied item by item. And when you don't have one, <a href="https://sanand0.github.io/policyascode/" target="_blank" rel="noopener">agents generate good ones</a>.</div>
+      </div>
+      <div class="card ver">
+        <div class="card-num">02</div>
+        <div class="card-title">Receipts</div>
+        <div class="card-who">Journalists · Notaries · Police</div>
+        <div class="card-body">Make the source system emit its own verification log. Then <a href="https://sanand0.github.io/journalists/statnostics/" target="_blank" rel="noopener">sample instead of checking everything</a>.</div>
+      </div>
+      <div class="card ver">
+        <div class="card-num">03</div>
+        <div class="card-title">Audits</div>
+        <div class="card-who">Auditors · Inspectors · Radiologists</div>
+        <div class="card-body">Dive into an existing corpus. Or hand one model's answer to another and <a href="https://github.com/sanand0/blog/blob/main/pages/prompts/fragments.md#compare-models" target="_blank" rel="noopener">ask it to fact-check</a>.</div>
+      </div>
+      <div class="card ver">
+        <div class="card-num">04</div>
+        <div class="card-title">Voting</div>
+        <div class="card-who">Democracy · Critics · Wine tasters</div>
+        <div class="card-body">Uncorrelated models agreeing is strong evidence. <a href="https://sanand0.github.io/llmevals/double-checking/" target="_blank" rel="noopener">14% error → 0.7%</a>; disagreements become the human queue.</div>
+      </div>
+      <div class="card ver">
+        <div class="card-num">05</div>
+        <div class="card-title">Exams</div>
+        <div class="card-who">Drivers · Diamonds · Kevlar vests</div>
+        <div class="card-body">Deterministic pass/fail. <a href="https://www.s-anand.net/blog/proving-code-works-with-z3/" target="_blank" rel="noopener">Z3</a> for code, <a href="https://mynkpdr.github.io/insurle-demo/" target="_blank" rel="noopener">InsurLE</a> for insurance claims.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<div class="dinkus">✦ ✦ ✦</div>
+
+<h2 class="sec" id="questions">What the room <em>actually</em> wanted to know</h2>
+
+<p>Anand ran out of time, exactly as promised, and never got to the questions. Forty-three people had typed one in. He said he'd answer by email. They are worth reading as a group, because <strong>they reveal what a room of Indian data practitioners is genuinely anxious about in August 2026 — and it is not model quality.</strong></p>
+
+<p>Three themes dominate. The first is <em>where do I even start</em>:</p>
+
+</div>
+
+<div class="band stat-band">
+  <h4>Questions typed into the form · verbatim · 43 respondents</h4>
+  <div class="voices">
+    <span class="voice hot">I am new to Agentic world… Getting confused with plenty of data available on net — confused from where to start. All Suggestions gives me different thoughts</span>
+    <span class="voice">Where to start and stop in this fast pace gen ai world? Technology updates always outdate the hands-on professional in practice</span>
+    <span class="voice">With all the approaches you discussed, how do you keep up with different tools, software, skills etc?</span>
+    <span class="voice warm">How can I learn FDE?</span>
+    <span class="voice warm">What skills does a Forward Deployed Engineer have, should have, in India?</span>
+    <span class="voice">Is there a framework to guide forward engineers?</span>
+    <span class="voice hot">What is the meaning of LLM Psychologist? … what do you think this role will evolve into 3-5 years ahead?</span>
+    <span class="voice warm">Junior developers are using AI coding tools now. What do juniors who will be the leaders in future need to learn?</span>
+    <span class="voice">Biasing in verifying from other models?</span>
+    <span class="voice warm">Could you please explain more on "generation is cheap"? Token cost and optimisation has been an important conversation these days</span>
+    <span class="voice">How do I effectively identify an LLM based on use case… keeping cost, relevance of context and performance in check?</span>
+    <span class="voice">How often can we rely on one single LLM in production since there are always new LLMs coming in?</span>
+    <span class="voice">In a company that relies on Azure and is not very tech relevant, how can we bring in secure AI usage?</span>
+    <span class="voice">How to start with an idea, without it getting leaked?</span>
+    <span class="voice warm">Do we need a ground-up ontology for an LLM to understand a domain when using frontier models?</span>
+    <span class="voice hot">Don't we see creative thinking and human intelligence diminishing for the next gen? How do they make sure this doesn't diminish?</span>
+    <span class="voice">What are you now able to do thanks to AI, that previously you could not do or even think was accessible to you?</span>
+    <span class="voice warm">How did you develop your ability to explain complex topics in such a creative and engaging way?</span>
+    <span class="voice">Want to know more about your WhatsApp podcast agent</span>
+    <span class="voice">Could you share a mind map which will help decide how to pick one thing from 100 AI insights?</span>
+  </div>
+  <p class="stat-foot">Note how few are about capability, and how many are about <strong>orientation</strong> — where to start, what to learn, whom to trust, how to keep up. Anand's answer to all of them is structurally the same: pick a profession that already solves your problem, and copy its procedure.</p>
+</div>
+
+<div class="wrap">
+
+<p>One question deserves quoting in full, because it is the sharpest challenge anyone put to him all day:</p>
+
+<blockquote class="pull gold">
+  <p>"I could be wrong, but all the verification and evaluation mechanisms you showed… largely depend on how creative we can get with applying our respective domain understanding to it. Your thoughts?"</p>
+  <cite>An audience member, on the form</cite>
+</blockquote>
+
+<p>They're right, and Anand would probably agree cheerfully — <strong>that dependence is the job description.</strong> The Dutch client picked the voice. The publisher owned the 21-item checklist. The head of analytics recognised the 80% overlap. In every story in this session, <strong>the machine generated and the human judged.</strong> Which is precisely why "specify" and "verify" are the two skills he teaches, and generation isn't on the list at all.</p>
+
+<blockquote class="pull ver">
+  <p>"These are things that are human skills that you need to practice, <strong>at least for the next one year.</strong> Next year we'll see where we go. Thank you."</p>
+  <cite>Anand's last words on stage — with the expiry date attached, naturally</cite>
+</blockquote>
+
+<p>Seventy-three of the eighty who answered ticked <em>yes</em> to email updates. He'd promised to mail them the links. He also gave out his phone number from the stage, which is either reckless or exactly consistent with everything else he'd just said about reducing the cost of being wrong.</p>
+
+</div>
+
+<div class="band band-quote">
+  <div class="band-quote-inner">
+    <p>"How do we deal with intelligences that are smarter than us? … The good part is this is not something that is new. <strong>We've been dealing with this for quite some time.</strong>"</p>
+    <cite>Anand S · Data Hack Summit 2026</cite>
+  </div>
+</div>
+
+<div class="band takeaways-band" id="takeaways">
+  <div class="takeaways-inner">
+    <div class="takeaways-title">Six things worth stealing</div>
+    <div class="takeaways-sub">Shelf life: one year, by the speaker's own instruction</div>
+    <div class="takeaway-grid">
+      <div class="takeaway">
+        <div class="takeaway-num">01</div>
+        <div class="takeaway-title">Generation is free. Specification and verification are the job.</div>
+        <div class="takeaway-text">Development has "practically shrunk to zero," and design, planning and testing are following. <strong>The two skills Anand teaches forward-deployed engineers are the two sides of generation, not generation itself.</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">02</div>
+        <div class="takeaway-title">Every technique you need already exists in some profession</div>
+        <div class="takeaway-text">Diagnose like a doctor. Show samples like a perfumer. Assume standards like a pharmacist. Verify with a surgeon's checklist, a journalist's receipts, a democracy's vote. <strong>You are not inventing management practice for superintelligence; you are porting it.</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">03</div>
+        <div class="takeaway-title">Never generate one option when you can generate eight</div>
+        <div class="takeaway-text">The client picked a Gemini voice Anand would never have predicted; the <a href="https://sanand0.github.io/llmartstyle/?category=art" target="_blank" rel="noopener">art-style catalogue</a> exists because he lacked the vocabulary to ask. <strong>Showing options lets someone with less capability steer something with more.</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">04</div>
+        <div class="takeaway-title">Reversibility beats correctness</div>
+        <div class="takeaway-text">Git commits, <code>--dry-run</code>, <a href="https://ritesh17rb.github.io/stripe-emulator/" target="_blank" rel="noopener">a mock Stripe API</a>, <a href="https://nitin399-maker.github.io/personagen/" target="_blank" rel="noopener">a $100,000 survey simulated for a few dollars</a>, and <code>#ForNow</code> tags on your own beliefs. <strong>If you can undo it, specifying it badly stops mattering.</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">05</div>
+        <div class="takeaway-title">Audit the advice, not just the answer</div>
+        <div class="takeaway-text">"Make agents write in Simplified Technical English" sounded excellent and <a href="https://github.com/sanand0/research/tree/main/simplification-prompt" target="_blank" rel="noopener">made outputs measurably worse</a> — models that write simply also think simply. Three hours elapsed, 30 minutes of human time, ₹0. <strong>Test the tip before you paste it into your AGENTS.md.</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">06</div>
+        <div class="takeaway-title">The best systems are probabilistic in, deterministic out</div>
+        <div class="takeaway-text">Let a model translate a policy into <a href="https://mynkpdr.github.io/insurle-demo/" target="_blank" rel="noopener">formal logic</a> or <a href="https://sanand0.github.io/policyascode/" target="_blank" rel="noopener">atomic rules</a>, verify that translation once, then execute it forever. <strong>You only have to trust the model at the boundary — never in the loop.</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <p><strong>"AI found 100 insights. How do I pick?"</strong><br>
+  7 August 2026 · <a href="https://www.analyticsvidhya.com/datahacksummit-2026/#agenda" target="_blank" rel="noopener">Data Hack Summit 2026</a>, Bangalore</p>
+  <p>By <a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand S</a>, LLM Psychologist at <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a>. Find him post-lunch, or at <a href="mailto:s-anand@s-anand.net">s-anand@s-anand.net</a>.</p>
+  <p><a href="#" id="transcript-btn3">📄 Full transcript</a> ·
+     <a href="https://media.s-anand.net/2026-08-07-data-hack-summit.webm">⏯️ Video</a> ·
+     <a href="https://github.com/sanand0/talks/releases/download/talks/2026-08-07-data-hack-summit.opus">🎧 Audio</a> ·
+     <a href="https://sanand0.github.io/talks/">📚 More talks</a></p>
+  <p class="footer-mono">Related: <a href="../2026-07-07-when-data-is-for-agents-fifth-elephant/">When Data is for Agents</a> · <a href="../2026-07-25-ai-unboxed-agentic-analysis/">Hire a Data Scientist for $100</a> · <a href="../2026-07-04-vizchitra-dialog-curators-dilemma/">The Curator's Dilemma</a></p>
+</footer>
+
+<!-- ── Section jumper ── -->
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump" aria-label="Jump to section">
+  <button id="jump-prev" title="Previous section" aria-label="Previous section">◂</button>
+  <a class="jump-cur" href="#jump-menu" id="jump-cur" aria-haspopup="true" aria-expanded="false"><span class="caret">☰</span> <span id="jump-cur-label">Jump to…</span></a>
+  <button id="jump-next" title="Next section" aria-label="Next section">▸</button>
+</nav>
+
+<div class="jump-menu" id="jump-menu" role="menu">
+  <div class="jm-group">The setup</div>
+  <div class="jump-grid">
+    <a href="#top" data-jump="top">Top<small>The question</small></a>
+    <a href="#room" data-jump="room">What the room admitted<small>86 live answers</small></a>
+    <a href="#specify" data-jump="specify">Part one · Specify<small>Intro</small></a>
+  </div>
+  <div class="jm-group">Five ways to specify</div>
+  <div class="jump-grid">
+    <a href="#s1" data-jump="s1">1 · Diagnose<small>Doctors · Mechanics</small></a>
+    <a href="#s2" data-jump="s2">2 · Show<small>Architects · Perfumers</small></a>
+    <a href="#s3" data-jump="s3">3 · Standards<small>Auditors · Pharmacists</small></a>
+    <a href="#s4" data-jump="s4">4 · Reversible<small>Elections · Dry runs</small></a>
+    <a href="#s5" data-jump="s5">5 · Govern<small>Parcels · Realtor fees</small></a>
+  </div>
+  <div class="jm-group">Five ways to verify</div>
+  <div class="jump-grid">
+    <a class="v" href="#comic" data-jump="comic">The comic page<small>Whole talk, one page</small></a>
+    <a class="v" href="#verify" data-jump="verify">Part two · Verify<small>Intro</small></a>
+    <a class="v" href="#v1" data-jump="v1">1 · Checklists<small>Surgeons · Pilots</small></a>
+    <a class="v" href="#v2" data-jump="v2">2 · Receipts<small>Journalists · Notaries</small></a>
+    <a class="v" href="#v3" data-jump="v3">3 · Audits<small>Auditors · Radiologists</small></a>
+    <a class="v" href="#v4" data-jump="v4">4 · Voting<small>Democracy · Critics</small></a>
+    <a class="v" href="#v5" data-jump="v5">5 · Exams<small>Drivers · Diamonds</small></a>
+  </div>
+  <div class="jm-group">The close</div>
+  <div class="jump-grid">
+    <a href="#questions" data-jump="questions">Their questions<small>43 typed in</small></a>
+    <a href="#takeaways" data-jump="takeaways">Takeaways<small>Six things to steal</small></a>
+  </div>
+</div>
+
+<!-- ── Document / skill modal ── -->
+<div class="modal" id="doc-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h4 id="doc-title">Transcript</h4>
+      <button class="modal-close" id="doc-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-src" id="doc-src"></div>
+    <div class="modal-body" id="doc-body"></div>
+  </div>
+</div>
+
+<!-- ── Citation popup ── -->
+<div class="modal" id="popup-overlay">
+  <div class="modal-box" style="max-width:580px">
+    <div class="modal-head">
+      <h4 id="popup-title"></h4>
+      <button class="modal-close" id="popup-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body" id="popup-content"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+<script>
+  // ── Progress bar ──
+  const prog = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    prog.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + '%';
+  });
+
+  // ── Markdown document modal ──
+  const modal = document.getElementById('doc-modal');
+  const dBody = document.getElementById('doc-body');
+  const dTitle = document.getElementById('doc-title');
+  const dSrc = document.getElementById('doc-src');
+  const cache = {};
+
+  function renderMarkdown(text) {
+    const body = text
+      .replace(/^---[\s\S]*?---\s*/, '')
+      .replace(/<summary>([\s\S]*?)<\/summary>/g, '\n\n**💭 $1**\n\n')
+      .replace(/<\/?details>/g, '\n\n');
+    const html = window.marked ? marked.parse(body) : body.replace(/\n/g, '<br>');
+    return html.replace(/<a /g, '<a target="_blank" rel="noopener" ');
+  }
+
+  async function openDoc(file, title, source) {
+    modal.classList.add('open');
+    dBody.scrollTop = 0;
+    dTitle.textContent = title;
+    dSrc.innerHTML = source ? `<a href="${source}" target="_blank" rel="noopener">↗ Open the original</a>` : '';
+    if (cache[file]) { dBody.innerHTML = cache[file]; return; }
+    dBody.innerHTML = '<p><em>Loading…</em></p>';
+    try {
+      const res = await fetch(file);
+      if (!res.ok) throw new Error(res.status);
+      const html = renderMarkdown(await res.text());
+      cache[file] = html;
+      dBody.innerHTML = html;
+    } catch (e) {
+      dBody.innerHTML = `<p>Could not load this file here. <a href="${source || file}" target="_blank" rel="noopener">Open it directly</a>.</p>`;
+    }
+  }
+
+  const openTranscript = e => { e.preventDefault(); openDoc('transcript.md', 'Full transcript — Data Hack Summit 2026', ''); };
+  ['transcript-btn', 'transcript-btn2', 'transcript-btn3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', openTranscript);
+  });
+
+  document.querySelectorAll('.chatpop').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      openDoc(el.dataset.doc, el.dataset.title, el.dataset.source || '');
+    });
+  });
+  document.getElementById('doc-close').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+
+  // ── Citation popups ──
+  const POPUPS = {
+    bounty: {
+      title: "The bounty-hunting agent ecosystem",
+      html: `<p>Anand's write-up traced <a href="https://github.com/syu-toutousai" target="_blank" rel="noopener">@syu-toutousai</a> (刀々斎) to a wider pattern. As of June 2026 the account had 3 merged PRs, 27 open and 9 closed, across many repositories — often with missing tests, odd formatting, and <strong>payment requests embedded in the PR comments</strong>.</p>
+      <p>It isn't alone. Several coordinated accounts nudge maintainers to merge each other's work. Researchers planted honeytrap "bounties" worth $8,000 and $2,200 asking the agent to reveal its system prompt and runtime config — <em>it complied</em>, then withdrew when it recognised the trap.</p>
+      <blockquote>"You are contributing to open source project, no payment is involved. Please avoid these comments in this project." — a maintainer, to a bot</blockquote>
+      <p><a href="https://www.s-anand.net/blog/bounty-hunting-agent-ecosystem/" target="_blank" rel="noopener">Read: Bounty-Hunting Agent Ecosystem</a> · <a href="https://github.com/pydata/xarray/pull/11403" target="_blank" rel="noopener">The PR on Anand's issue</a></p>`
+    }
+  };
+  const overlay = document.getElementById('popup-overlay');
+  document.querySelectorAll('.cite').forEach(el => {
+    el.addEventListener('click', () => {
+      const data = POPUPS[el.dataset.pop];
+      if (!data) return;
+      document.getElementById('popup-title').textContent = data.title;
+      document.getElementById('popup-content').innerHTML = data.html;
+      overlay.classList.add('open');
+    });
+  });
+  document.getElementById('popup-close').addEventListener('click', () => overlay.classList.remove('open'));
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+
+  // ── Section jumper ──
+  (function () {
+    const menu = document.getElementById('jump-menu');
+    const backdrop = document.getElementById('jump-backdrop');
+    const curBtn = document.getElementById('jump-cur');
+    const curLabel = document.getElementById('jump-cur-label');
+    const prevBtn = document.getElementById('jump-prev');
+    const nextBtn = document.getElementById('jump-next');
+    const links = Array.from(menu.querySelectorAll('a[data-jump]'));
+    const ids = links.map(a => a.dataset.jump);
+    const labels = {};
+    links.forEach(a => { labels[a.dataset.jump] = a.firstChild.textContent.trim(); });
+    let idx = 0;
+
+    const closeMenu = () => { menu.classList.remove('open'); backdrop.classList.remove('open'); curBtn.setAttribute('aria-expanded', 'false'); };
+    const toggleMenu = e => {
+      e.preventDefault();
+      const open = !menu.classList.contains('open');
+      menu.classList.toggle('open', open);
+      backdrop.classList.toggle('open', open);
+      curBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) { const cur = menu.querySelector('a.is-cur'); if (cur) cur.scrollIntoView({ block: 'nearest' }); }
+    };
+    curBtn.addEventListener('click', toggleMenu);
+    backdrop.addEventListener('click', closeMenu);
+    links.forEach(a => a.addEventListener('click', closeMenu));
+
+    function setCurrent(i) {
+      idx = i;
+      curLabel.textContent = labels[ids[i]];
+      links.forEach((a, k) => a.classList.toggle('is-cur', k === i));
+      prevBtn.disabled = i <= 0;
+      nextBtn.disabled = i >= ids.length - 1;
+    }
+    const go = i => {
+      if (i < 0 || i >= ids.length) return;
+      const el = document.getElementById(ids[i]);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setCurrent(i);
+    };
+    prevBtn.addEventListener('click', () => go(idx - 1));
+    nextBtn.addEventListener('click', () => go(idx + 1));
+
+    // Track which section is currently on screen
+    const targets = ids.map(id => document.getElementById(id)).filter(Boolean);
+    function onScroll() {
+      const y = window.scrollY + window.innerHeight * 0.3;
+      let best = 0;
+      targets.forEach((el, k) => { if (el.getBoundingClientRect().top + window.scrollY <= y) best = k; });
+      if (best !== idx) setCurrent(best);
+    }
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { onScroll(); ticking = false; });
+    }, { passive: true });
+    setCurrent(0);
+    onScroll();
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeMenu();
+      if (e.target.matches('input, textarea')) return;
+      if (menu.classList.contains('open') || modal.classList.contains('open') || overlay.classList.contains('open')) return;
+      if (e.key === 'j') go(idx + 1);
+      if (e.key === 'k') go(idx - 1);
+    });
+  })();
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { modal.classList.remove('open'); overlay.classList.remove('open'); }
+  });
+</script>
+
+<!-- ══ Inlined component 1 · SDLC — Past, Present, Future ══
+     Source: https://files.s-anand.net/pages/ai-sdlc-shift/ -->
+<script>
+(function () {
+  var STAGES = {
+    past:    { plan:  5, design: 14, develop: 62, test: 14, deploy:  5 },
+    present: { plan: 11, design: 33, develop:  7, test: 33, deploy: 16 },
+    future:  { plan: 35, design: 12, develop:  6, test: 12, deploy: 35 }
+  };
+
+  document.querySelectorAll('[data-sdlc]').forEach(function (root) {
+    if (root.dataset.ready) return;
+    root.dataset.ready = '1';
+
+    var boxes   = Array.prototype.slice.call(root.querySelectorAll('.sdlc__box'));
+    var buttons = Array.prototype.slice.call(root.querySelectorAll('.sdlc__btn'));
+    var thumb   = root.querySelector('.sdlc__thumb');
+
+    /* label fitting: rotate + scale so text never clips */
+    function fit(box) {
+      var label = box.querySelector('.sdlc__label');
+      var dir   = parseFloat(box.dataset.dir) || -1;
+      var bw    = box.clientWidth;
+      var bh    = box.clientHeight;
+      var w = label.offsetWidth;
+      var h = label.offsetHeight;
+      if (!w || !bw) return;
+
+      var need = w + 22;
+      var low  = 30;
+      var t    = (need - bw) / Math.max(need - low, 1);
+      t = t < 0 ? 0 : (t > 1 ? 1 : t);
+      t = t * t * (3 - 2 * t);
+
+      var rad = t * Math.PI / 2;
+      var c = Math.abs(Math.cos(rad)), s = Math.abs(Math.sin(rad));
+      var spanX = w * c + h * s;
+      var spanY = w * s + h * c;
+      var scale = Math.min(1, (bw - 8) / spanX, (bh - 12) / spanY);
+      if (!isFinite(scale) || scale < 0.05) scale = 0.05;
+
+      label.style.transform =
+        'translate(-50%, -50%) rotate(' + (t * 90 * dir).toFixed(2) + 'deg) scale(' + scale.toFixed(3) + ')';
+    }
+
+    var fitAll = function () { boxes.forEach(fit); };
+
+    if (window.ResizeObserver) {
+      var ro = new ResizeObserver(function (entries) {
+        entries.forEach(function (e) { fit(e.target); });
+      });
+      boxes.forEach(function (b) { ro.observe(b); });
+    }
+    window.addEventListener('resize', fitAll);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
+
+    function moveThumb() {
+      var active = root.querySelector('.sdlc__btn.is-active');
+      if (!active || !thumb) return;
+      thumb.style.width = active.offsetWidth + 'px';
+      thumb.style.transform = 'translateX(' + (active.offsetLeft - 4) + 'px)';
+    }
+
+    function setStage(name) {
+      if (!STAGES[name]) name = 'past';
+      var g = STAGES[name];
+      boxes.forEach(function (b) { b.style.setProperty('--grow', g[b.dataset.key]); });
+      buttons.forEach(function (btn) {
+        var on = btn.dataset.stage === name;
+        btn.classList.toggle('is-active', on);
+        btn.setAttribute('aria-selected', on ? 'true' : 'false');
+        btn.tabIndex = on ? 0 : -1;
+      });
+      root.dataset.stage = name;
+      moveThumb();
+      fitAll();
+    }
+
+    buttons.forEach(function (btn, i) {
+      btn.addEventListener('click', function () { setStage(btn.dataset.stage); });
+      btn.addEventListener('keydown', function (e) {
+        var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!d) return;
+        e.preventDefault();
+        var next = buttons[(i + d + buttons.length) % buttons.length];
+        next.focus();
+        setStage(next.dataset.stage);
+      });
+    });
+
+    setStage(root.dataset.stage || 'past');
+    requestAnimationFrame(function () { moveThumb(); fitAll(); });
+    setTimeout(function () { moveThumb(); fitAll(); }, 400);
+  });
+})();
+</script>
+
+<!-- ══ Inlined component 2 · The Jagged Edge of AI ══
+     Source: https://files.s-anand.net/pages/ai-jagged-edge/ -->
+<script>
+(() => {
+'use strict';
+
+document.querySelectorAll('.cm').forEach(root => {
+  const blobEl = root.querySelector('.cm-blob');
+  const scrub  = root.querySelector('.cm-scrub');
+  if (!blobEl) return;
+
+  const grad = root.querySelector('radialGradient');
+  if (grad) {
+    grad.id = 'cm-grad-' + Math.random().toString(36).slice(2, 8);
+    blobEl.style.fill = 'url(#' + grad.id + ')';
+  }
+
+  /* ---------- geometry constants ---------- */
+  const CX = 500, CY = 500, R = 160, N = 80;
+  const TAU = Math.PI * 2, DEG = Math.PI / 180;
+
+  /* ---------- the five states ---------- */
+  const LOBE_A = [12, 48, 85, 125, 165, 205, 245, 285, 325].map(d => d * DEG);
+  const LOBE_W = [20, 24, 19,  26,  22,  25,  18,  23,  21].map(d => d * DEG);
+  const STATES = [
+    { base:0.09, h:[0.12,0.05,0.14,0.04,0.09,0.05,0.15,0.06,0.10] },
+    { base:0.16, h:[0.72,0.14,0.68,0.12,0.32,0.15,0.75,0.22,0.42] },
+    { base:0.22, h:[1.05,0.18,0.90,0.14,0.40,0.16,1.15,0.25,0.82] },
+    { base:0.42, h:[1.60,0.90,1.50,1.00,0.70,0.28,1.40,1.10,1.25] },
+    { base:0.90, h:[1.30,0.75,1.10,0.50,0.85,0.45,1.50,0.90,1.05] }
+  ];
+
+  const TH = new Float64Array(N);
+  for (let i = 0; i < N; i++) TH[i] = i / N * TAU;
+  const wrapAngle = d => { while (d >  Math.PI) d -= TAU;
+                           while (d < -Math.PI) d += TAU; return d; };
+
+  const PROFILE = STATES.map(s => {
+    const a = new Float64Array(N);
+    for (let i = 0; i < N; i++) {
+      let v = s.base;
+      for (let k = 0; k < LOBE_A.length; k++) {
+        const d = wrapAngle(TH[i] - LOBE_A[k]) / LOBE_W[k];
+        v += s.h[k] * Math.exp(-d * d);
+      }
+      a[i] = v * R;
+    }
+    return a;
+  });
+
+  /* ---------- timeline (seconds) ---------- */
+  const TL = [
+    { k:'hold', a:0,        dur:3.0 },
+    { k:'move', a:0, b:1,   dur:1.0 },
+    { k:'hold', a:1,        dur:2.0 },
+    { k:'move', a:1, b:2,   dur:1.0 },
+    { k:'hold', a:2,        dur:2.0 },
+    { k:'move', a:2, b:3,   dur:1.0 },
+    { k:'hold', a:3,        dur:2.0 },
+    { k:'move', a:3, b:4,   dur:1.0 },
+    { k:'hold', a:4,        dur:3.0 },
+    { k:'move', a:4, b:0,   dur:0.5 }
+  ];
+  let TOTAL = 0;
+  TL.forEach(s => { s.t0 = TOTAL; TOTAL += s.dur; s.t1 = TOTAL; });
+
+  /* ---------- uneven growth: 16-20 spurts per transition ---------- */
+  const rng = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  const smooth = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+  const back   = x => { if (x <= 0) return 0; if (x >= 1) return 1;
+    const c1 = 1.4, c3 = c1 + 1, u = x - 1;
+    return 1 + c3 * u * u * u + c1 * u * u; };
+
+  function plan(seed) {
+    const r = rng(seed);
+    const n  = 16 + (r() * 5 | 0);
+    const nd = Math.round(n * 0.2);
+    const sp = [];
+
+    sp.push({ t:'g', a:r()*TAU, w:3.6, amp:1.00, s:0.00, d:0.75 });
+    sp.push({ t:'g', a:r()*TAU, w:3.0, amp:0.70, s:0.20, d:0.72 });
+    for (let k = 0; k < n - nd - 2; k++) {
+      const d = 0.16 + r()*0.26;
+      sp.push({ t:'g', a:r()*TAU, w:(22 + r()*46)*DEG,
+                amp:0.45 + r()*1.00, s:r()*(0.97 - d), d:d });
+    }
+
+    const F = new Float64Array(N), W = [];
+    for (let k = 0; k < sp.length; k++) {
+      const w = new Float64Array(N);
+      for (let i = 0; i < N; i++) {
+        const d = wrapAngle(TH[i] - sp[k].a) / sp[k].w;
+        w[i] = Math.exp(-d * d);
+        F[i] += sp[k].amp * w[i];
+      }
+      W.push(w);
+    }
+
+    for (let k = 0; k < nd; k++) {
+      const a  = r() * TAU;
+      const d1 = 0.10 + r()*0.10, d2 = 0.14 + r()*0.16;
+      const amp = -(0.12 + r()*0.16) * F[Math.round(a / TAU * N) % N];
+      const sp2 = { t:'d', a:a, w:(26 + r()*40)*DEG, amp:amp,
+                    s:r()*(0.94 - d1 - d2), d:d1, d2:d2 };
+      const w = new Float64Array(N);
+      for (let i = 0; i < N; i++) {
+        const d = wrapAngle(TH[i] - sp2.a) / sp2.w;
+        w[i] = Math.exp(-d * d);
+      }
+      sp.push(sp2); W.push(w);
+    }
+
+    const flat = new Float32Array(sp.length * N);
+    for (let k = 0; k < sp.length; k++) flat.set(W[k], k * N);
+    return { sp:sp, W:flat, F:F, fac:new Float64Array(sp.length) };
+  }
+
+  TL.forEach((seg, idx) => {
+    if (seg.k !== 'move') return;
+    Object.assign(seg, plan(1013 + idx * 617));
+  });
+
+  /* ---------- per-frame shape ---------- */
+  const pr = new Float64Array(N), px = new Float64Array(N), py = new Float64Array(N);
+
+  function shape(time) {
+    let seg = TL[TL.length - 1];
+    for (let i = 0; i < TL.length; i++) if (time < TL[i].t1) { seg = TL[i]; break; }
+
+    if (seg.k === 'hold') {
+      pr.set(PROFILE[seg.a]);
+    } else {
+      const u = (time - seg.t0) / seg.dur;
+      const A = PROFILE[seg.a], B = PROFILE[seg.b];
+      const sp = seg.sp, W = seg.W, F = seg.F, fac = seg.fac, K = sp.length;
+      for (let k = 0; k < K; k++) {
+        const s = sp[k];
+        fac[k] = s.t === 'g'
+          ? s.amp * back((u - s.s) / s.d)
+          : s.amp * (smooth((u - s.s) / s.d) - smooth((u - s.s - s.d) / s.d2));
+      }
+      for (let i = 0; i < N; i++) {
+        let acc = 0;
+        for (let k = 0; k < K; k++) acc += fac[k] * W[k * N + i];
+        let p = acc / F[i];
+        if (p < -0.45) p = -0.45; else if (p > 1.20) p = 1.20;
+        pr[i] = A[i] + (B[i] - A[i]) * p;
+      }
+    }
+  }
+
+  /* ---------- living-cell wobble + closed Catmull-Rom path ---------- */
+  const MIN_R = R * 0.03;
+
+  function draw(t) {
+    shape(t);
+    for (let i = 0; i < N; i++) {
+      const th = TH[i];
+      const mul = 1
+        + 0.028 * Math.sin(3 * th + 0.62 * t)
+        + 0.019 * Math.sin(5 * th - 0.85 * t + 1.7)
+        + 0.013 * Math.sin(8 * th + 1.13 * t + 3.1)
+        + 0.011 * Math.sin(0.55 * t);
+      const add = R * (0.012 * Math.sin(4 * th - 0.71 * t + 0.4)
+                     + 0.008 * Math.sin(7 * th + 1.30 * t));
+      let r = pr[i] * mul + add;
+      if (r < MIN_R) r = MIN_R;
+      px[i] = CX + r * Math.cos(th);
+      py[i] = CY + r * Math.sin(th);
+    }
+    let d = 'M' + px[0].toFixed(1) + ',' + py[0].toFixed(1);
+    for (let i = 0; i < N; i++) {
+      const a = (i - 1 + N) % N, b = i, c = (i + 1) % N, e = (i + 2) % N;
+      const c1x = px[b] + (px[c] - px[a]) / 6, c1y = py[b] + (py[c] - py[a]) / 6;
+      const c2x = px[c] - (px[e] - px[b]) / 6, c2y = py[c] - (py[e] - py[b]) / 6;
+      d += 'C' + c1x.toFixed(1) + ',' + c1y.toFixed(1)
+         + ' ' + c2x.toFixed(1) + ',' + c2y.toFixed(1)
+         + ' ' + px[c].toFixed(1) + ',' + py[c].toFixed(1);
+    }
+    blobEl.setAttribute('d', d + 'Z');
+    blobEl.setAttribute('transform',
+      'rotate(' + (2.4 * Math.sin(t * 0.11)).toFixed(2) + ' ' + CX + ' ' + CY + ')');
+  }
+
+  /* ---------- playback, play/pause, scrubber ---------- */
+  const calm   = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const toggle = root.querySelector('.cm-toggle');
+  let t = 0, playing = false, last = performance.now(), dragging = false;
+
+  function setPlaying(on) {
+    playing = on;
+    root.dataset.playing = on ? '1' : '0';
+    if (toggle) toggle.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+  function paint(f) {
+    root.style.setProperty('--cm-p', (f * 100).toFixed(2) + '%');
+    if (scrub) scrub.value = String(Math.round(f * 1000));
+  }
+
+  if (toggle) toggle.addEventListener('click', () => setPlaying(!playing));
+
+  if (scrub) {
+    scrub.addEventListener('pointerdown', () => { dragging = true; setPlaying(false); });
+    window.addEventListener('pointerup',  () => { dragging = false; });
+    scrub.addEventListener('input', () => {
+      const f = scrub.value / 1000;
+      t = f * TOTAL;
+      root.style.setProperty('--cm-p', (f * 100).toFixed(2) + '%');
+      setPlaying(false);
+    });
+  }
+
+  setPlaying(!calm);
+
+  (function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+    if (playing) t = (t + dt) % TOTAL;
+    draw(t);
+    if (!dragging) paint(t / TOTAL);
+    requestAnimationFrame(frame);
+  })(last);
+});
+
+})();
+</script>
+</body>
+</html>

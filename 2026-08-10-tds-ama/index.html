@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is This Course Really Teaching? | Anand's TDS AMA</title>
+<meta name="description" content="Anand S, LLM Psychologist at Straive, ran an AMA for his Tools in Data Science students at IIT Madras — and turned it into a stress test of his own course. 68% of students named a different source for what taught them than for what got them marks.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f3f6f4;
+    --paper: #ffffff;
+    --ink: #12201d;
+    --ink2: #2f4540;
+    --muted: #5f7570;
+    --learn: #0f766e;          /* teal — LEARNING */
+    --learn-dk: #0a544e;
+    --learn-soft: #dcefec;
+    --marks: #c2410c;          /* rust — MARKS */
+    --marks-dk: #8c2d06;
+    --marks-soft: #fbe7dc;
+    --gold: #9a6300;
+    --sand: #f0ece2;
+    --border: #dde5e1;
+    --night: #0f1e1b;
+    --night2: #16302b;
+    --font-display: 'Newsreader', Georgia, serif;
+    --font-body: 'Source Serif 4', Georgia, serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.75;
+    font-size: 18.5px;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── Progress ── */
+  #progress {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--learn), var(--gold), var(--marks));
+    z-index: 1000; transition: width .15s linear;
+  }
+
+  /* ── Masthead ── */
+  .masthead {
+    position: sticky; top: 0; z-index: 200;
+    background: rgba(243,246,244,.94);
+    border-bottom: 1px solid var(--border);
+    padding: .7rem 1.4rem;
+    backdrop-filter: blur(8px);
+  }
+  .masthead-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: .8rem; flex-wrap: wrap;
+  }
+  .masthead-brand {
+    font-family: var(--font-mono); font-size: .72rem; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--ink2);
+    text-decoration: none;
+  }
+  .masthead-brand:hover { color: var(--learn); }
+  .masthead-right { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+  .masthead-date { font-family: var(--font-mono); font-size: .68rem; color: var(--muted); }
+  .masthead-link {
+    font-family: var(--font-mono); font-size: .66rem; letter-spacing: .04em;
+    color: var(--learn-dk); text-decoration: none;
+    border: 1px solid var(--learn); border-radius: 3px;
+    padding: .26rem .55rem; transition: all .2s; white-space: nowrap;
+  }
+  .masthead-link:hover { background: var(--learn); color: #fff; }
+
+  /* ── Layout ── */
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 1.5rem; }
+  .wrap-wide { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ── Hero ── */
+  .hero { max-width: 860px; margin: 0 auto; padding: 3.4rem 1.5rem 1.4rem; text-align: center; }
+  .hero-kicker {
+    font-family: var(--font-mono); font-size: .64rem; letter-spacing: .24em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem;
+  }
+  .hero h1 {
+    font-family: var(--font-display); font-weight: 300;
+    font-size: clamp(2.5rem, 7.6vw, 4.8rem); line-height: 1.0;
+    letter-spacing: -.02em; margin-bottom: 1.1rem;
+  }
+  .hero h1 em { font-style: italic; color: var(--learn); }
+  .hero-sub {
+    font-size: 1.16rem; color: var(--ink2); line-height: 1.62;
+    max-width: 660px; margin: 0 auto 1.8rem; font-weight: 300;
+  }
+  .hero-meta {
+    font-family: var(--font-mono); font-size: .72rem; color: var(--muted);
+    letter-spacing: .02em; line-height: 2;
+  }
+  .hero-meta a { color: var(--learn-dk); text-decoration: none; border-bottom: 1px solid rgba(15,118,110,.45); }
+  .hero-meta a:hover { color: var(--marks-dk); border-bottom-color: var(--marks); }
+
+  /* ── Quick links ── */
+  .quick-links { margin: 1.8rem auto 0; display: flex; gap: .55rem; justify-content: center; flex-wrap: wrap; }
+  .quick-links a {
+    font-family: var(--font-mono); font-size: .7rem; letter-spacing: .02em;
+    text-decoration: none; color: var(--ink2);
+    background: var(--paper); border: 1px solid var(--border);
+    border-radius: 99px; padding: .42rem .9rem; transition: all .2s;
+  }
+  .quick-links a:hover { border-color: var(--learn); color: var(--learn-dk); transform: translateY(-1px); }
+
+  /* ── Full-width bands ── */
+  .band { width: 100vw; margin-left: calc(50% - 50vw); margin-top: 3.2rem; margin-bottom: 3.4rem; }
+  .video-wrap { background: var(--night); padding: 2.4rem 1.5rem; }
+  .video-inner { max-width: 1240px; margin: 0 auto; }
+  .video-inner video { width: 100%; display: block; border-radius: 6px; background: #000; }
+  .media-cap {
+    font-family: var(--font-mono); font-size: .71rem; color: #a3bdb6;
+    text-align: center; margin-top: 1rem; line-height: 1.8;
+  }
+  .media-cap a { color: #f0b775; text-decoration: none; border-bottom: 1px solid rgba(240,183,117,.5); }
+  .media-cap a:hover { color: #ffe2c0; border-bottom-color: #ffe2c0; }
+  .audio-row { max-width: 700px; margin: 1.4rem auto 0; }
+  .audio-row audio { width: 100%; }
+
+  /* ── Body text ── */
+  .wrap p { margin-bottom: 1.3rem; }
+  .wrap p a, .wrap li a, .wrap figcaption a, .wrap dd a {
+    color: var(--learn-dk); text-decoration: none;
+    border-bottom: 1px solid rgba(15,118,110,.4);
+  }
+  .wrap p a:hover, .wrap li a:hover { color: var(--marks-dk); border-bottom-color: var(--marks); }
+  .wrap strong { font-weight: 600; color: var(--ink); background: linear-gradient(transparent 62%, rgba(220,239,236,.95) 62%); }
+  .wrap ul, .wrap ol { margin: 0 0 1.3rem 1.3rem; }
+  .wrap li { margin-bottom: .5rem; }
+  .lede { font-size: 1.2rem; line-height: 1.62; color: var(--ink2); }
+
+  /* ── Section headers ── */
+  .sec-num {
+    font-family: var(--font-mono); font-size: .64rem; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: .5rem;
+  }
+  h2.sec {
+    font-family: var(--font-display); font-weight: 300;
+    font-size: clamp(1.95rem, 5vw, 2.85rem); line-height: 1.1;
+    letter-spacing: -.018em; margin: 3rem 0 1.2rem;
+  }
+  h2.sec em { font-style: italic; color: var(--learn); }
+  h2.sec em.m { color: var(--marks); }
+  h3.sub {
+    font-family: var(--font-mono); font-weight: 700; text-transform: uppercase;
+    font-size: .76rem; letter-spacing: .12em; margin: 2.4rem 0 .8rem; color: var(--gold);
+  }
+  .dinkus { text-align: center; color: var(--muted); letter-spacing: .8em; margin: 2.6rem 0; font-size: .8rem; }
+
+  /* ── Pull quotes ── */
+  blockquote.pull {
+    margin: 2.1rem 0; padding: 1.3rem 1.6rem;
+    background: var(--paper); border-left: 4px solid var(--learn);
+    border-radius: 0 6px 6px 0;
+    box-shadow: 0 2px 14px rgba(18,32,29,.06);
+  }
+  blockquote.pull p {
+    font-family: var(--font-display); font-size: 1.34rem; font-weight: 300;
+    line-height: 1.4; margin-bottom: .6rem; letter-spacing: -.008em; color: var(--ink);
+  }
+  blockquote.pull p:last-of-type { margin-bottom: .6rem; }
+  blockquote.pull cite {
+    font-family: var(--font-mono); font-style: normal; font-size: .67rem;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+  }
+  blockquote.pull.m { border-left-color: var(--marks); }
+  blockquote.pull.g { border-left-color: var(--gold); }
+
+  /* ── Voice cards (student answers) ── */
+  .voices { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: .85rem; margin: 1.8rem 0 2rem; }
+  .voice {
+    background: var(--paper); border: 1px solid var(--border); border-radius: 8px;
+    padding: 1rem 1.15rem; box-shadow: 0 1px 6px rgba(18,32,29,.04);
+  }
+  .voice p { font-size: .96rem; line-height: 1.6; margin: 0 0 .55rem; color: var(--ink); }
+  .voice .who {
+    font-family: var(--font-mono); font-size: .62rem; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--learn-dk);
+  }
+  .voice.chat { background: var(--learn-soft); border-color: #bfdfda; }
+  .voice.chat .who { color: var(--learn-dk); }
+  .voice.chat .who::before { content: "💬 "; }
+  .voice.form { background: var(--sand); border-color: #e0d8c6; }
+  .voice.form .who { color: var(--gold); }
+  .voice.form .who::before { content: "📝 "; }
+
+  /* ── Chat log ── */
+  .chatlog {
+    background: var(--night); border-radius: 10px; padding: 1.2rem 1.35rem;
+    margin: 1.9rem 0; color: #d7e6e2;
+  }
+  .chatlog .cl-label {
+    font-family: var(--font-mono); font-size: .6rem; letter-spacing: .18em;
+    text-transform: uppercase; color: #f0b775; margin-bottom: .9rem;
+  }
+  .chatlog .msg { margin-bottom: .85rem; font-size: .93rem; line-height: 1.6; }
+  .chatlog .msg:last-child { margin-bottom: 0; }
+  .chatlog .nm {
+    font-family: var(--font-mono); font-size: .66rem; letter-spacing: .04em;
+    color: #7fd1c4; display: block; margin-bottom: .12rem;
+  }
+  .chatlog .nm.ta { color: #f0b775; }
+  .chatlog .tm { color: #6f8b85; font-size: .6rem; margin-left: .5rem; }
+  .chatlog a { color: #8fd8cc; }
+  .chatlog strong { color: #ffd9b0; background: none; font-weight: 600; }
+
+  /* ── Cite / tooltip ── */
+  .cite {
+    cursor: pointer; color: var(--gold); font-weight: 600;
+    border-bottom: 1px dotted var(--gold); text-decoration: none;
+  }
+  .cite::after { content: "†"; font-size: .7em; vertical-align: super; }
+  .tip { border-bottom: 1px dotted var(--muted); cursor: help; position: relative; }
+  .tip:hover::after {
+    content: attr(data-tip);
+    position: absolute; bottom: 132%; left: 50%; transform: translateX(-50%);
+    background: var(--night); color: #e6f0ed; font-family: var(--font-body);
+    font-size: .8rem; line-height: 1.5; font-style: normal; font-weight: 300;
+    padding: .6rem .8rem; border-radius: 6px; width: min(300px, 78vw);
+    z-index: 90; box-shadow: 0 6px 22px rgba(0,0,0,.3);
+  }
+
+  /* ── Stat band ── */
+  .stat-band { background: var(--sand); border-top: 1px solid #e3dac8; border-bottom: 1px solid #e3dac8; padding: 2.5rem 1.5rem; }
+  .stat-band h4 {
+    font-family: var(--font-mono); font-size: .68rem; letter-spacing: .16em; text-transform: uppercase;
+    text-align: center; color: var(--gold); margin-bottom: 1.7rem;
+  }
+  .stat-grid {
+    max-width: 1000px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1.5rem;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: var(--font-display); font-weight: 300; font-size: clamp(2rem, 5vw, 2.9rem);
+    color: var(--learn-dk); line-height: 1; letter-spacing: -.03em;
+  }
+  .stat-num.m { color: var(--marks-dk); }
+  .stat-label {
+    font-family: var(--font-mono); font-size: .64rem; letter-spacing: .03em;
+    color: var(--ink2); margin-top: .5rem; line-height: 1.6;
+  }
+  .stat-foot { max-width: 780px; margin: 1.8rem auto 0; text-align: center; font-size: .95rem; color: var(--ink2); }
+  .stat-foot a { color: var(--learn-dk); }
+
+  /* ── Split chart band ── */
+  .split-band { background: linear-gradient(115deg, #0f1e1b 0%, #16302b 55%, #1d2a24 100%); padding: 2.8rem 1.5rem; }
+  .split-inner { max-width: 1000px; margin: 0 auto; }
+  .split-title {
+    font-family: var(--font-display); font-weight: 300; font-size: clamp(1.5rem, 4vw, 2.2rem);
+    color: #fff; text-align: center; margin-bottom: .4rem; line-height: 1.2;
+  }
+  .split-sub {
+    font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;
+    color: #8fb3ac; text-align: center; margin-bottom: 2.2rem;
+  }
+  .split-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+  .split-col h5 {
+    font-family: var(--font-mono); font-size: .7rem; letter-spacing: .14em; text-transform: uppercase;
+    margin-bottom: 1.1rem; padding-bottom: .5rem; border-bottom: 1px solid rgba(255,255,255,.16);
+  }
+  .split-col.l h5 { color: #6ee0cf; }
+  .split-col.r h5 { color: #ffa768; }
+  .bar-row { display: grid; grid-template-columns: 1fr; gap: .2rem; margin-bottom: .7rem; }
+  .bar-head { display: flex; justify-content: space-between; align-items: baseline; gap: .6rem; }
+  .bar-lab { font-family: var(--font-mono); font-size: .68rem; color: #cfe0dc; }
+  .bar-val { font-family: var(--font-mono); font-size: .68rem; color: #fff; font-weight: 600; }
+  .bar-track { background: rgba(255,255,255,.1); border-radius: 3px; height: 15px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; }
+  .split-col.l .bar-fill { background: linear-gradient(90deg, #14b8a6, #5eead4); }
+  .split-col.r .bar-fill { background: linear-gradient(90deg, #ea580c, #fb923c); }
+  .split-note { max-width: 760px; margin: 2.2rem auto 0; text-align: center; color: #cfe0dc; font-size: .95rem; line-height: 1.7; }
+  .split-note strong { color: #fff; font-weight: 600; }
+  .split-note a { color: #ffc491; text-decoration: none; border-bottom: 1px solid rgba(255,196,145,.5); }
+  .split-note a:hover { color: #fff; border-bottom-color: #fff; }
+
+  /* ── Prediction scorecard ── */
+  .scorecard { max-width: 760px; margin: 0 auto; background: var(--paper); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .scorecard h5 {
+    font-family: var(--font-mono); font-size: .64rem; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--gold); padding: 1rem 1.2rem .8rem; border-bottom: 1px dashed var(--border); margin: 0;
+  }
+  .sc-row { display: grid; grid-template-columns: 2.2rem 1fr auto; gap: .8rem; align-items: baseline; padding: .8rem 1.2rem; border-bottom: 1px solid var(--border); }
+  .sc-row:last-child { border-bottom: 0; }
+  .sc-id { font-family: var(--font-mono); font-size: .7rem; color: var(--muted); font-weight: 600; }
+  .sc-txt { font-size: .92rem; line-height: 1.55; color: var(--ink2); }
+  .sc-txt strong { color: var(--ink); font-weight: 600; }
+  .sc-res { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; padding: .18rem .5rem; border-radius: 3px; }
+  .sc-res.pass { background: var(--learn-soft); color: var(--learn-dk); }
+  .sc-res.part { background: var(--marks-soft); color: var(--marks-dk); }
+
+  /* ── Comic band ── */
+  .comic-band { background: linear-gradient(160deg, #16302b 0%, #0f1e1b 100%); padding: 2.6rem 1.5rem; }
+  .comic-inner { max-width: 940px; margin: 0 auto; text-align: center; }
+  .comic-inner img { width: 100%; height: auto; display: block; border-radius: 8px; box-shadow: 0 12px 44px rgba(0,0,0,.45); }
+  .comic-inner h4 {
+    font-family: var(--font-display); font-weight: 300; font-size: clamp(1.5rem, 4vw, 2.1rem);
+    color: #fff; margin-bottom: .4rem;
+  }
+  .comic-inner .csub { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: #8fb3ac; margin-bottom: 1.5rem; }
+
+  /* ── Card grids ── */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 1.9rem 0 2.2rem; }
+  .card {
+    background: var(--paper); border: 1px solid var(--border); border-top: 3px solid var(--learn);
+    border-radius: 7px; padding: 1.1rem 1.2rem;
+  }
+  .card.m { border-top-color: var(--marks); }
+  .card.g { border-top-color: var(--gold); }
+  .card h5 { font-family: var(--font-display); font-weight: 400; font-size: 1.2rem; margin-bottom: .45rem; line-height: 1.2; color: var(--ink); }
+  .card p { font-size: .93rem; line-height: 1.62; color: var(--ink2); margin: 0; }
+  .card p + p { margin-top: .55rem; }
+  .card .k { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: .35rem; }
+  .card a { color: var(--learn-dk); text-decoration: none; border-bottom: 1px solid rgba(15,118,110,.4); }
+  .card a:hover { color: var(--marks-dk); border-bottom-color: var(--marks); }
+
+  /* ── Question wall ── */
+  .qwall-band { background: var(--learn-soft); border-top: 1px solid #bfdfda; border-bottom: 1px solid #bfdfda; padding: 2.6rem 1.5rem; }
+  .qwall-inner { max-width: 1080px; margin: 0 auto; }
+  .qwall-inner h4 { font-family: var(--font-display); font-weight: 300; font-size: clamp(1.6rem, 4vw, 2.2rem); text-align: center; color: var(--ink); margin-bottom: .35rem; }
+  .qwall-sub { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; text-align: center; color: var(--learn-dk); margin-bottom: 1.8rem; }
+  .qwall { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: .8rem; }
+  .q {
+    background: var(--paper); border: 1px solid #bfdfda; border-radius: 7px;
+    padding: .9rem 1.05rem; font-size: .92rem; line-height: 1.58; color: var(--ink2);
+  }
+  .q .qw { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .08em; text-transform: uppercase; color: var(--learn-dk); display: block; margin-top: .5rem; }
+
+  /* ── Takeaways ── */
+  .takeaways-band { background: linear-gradient(140deg, #0a544e 0%, #0f1e1b 52%, #8c2d06 100%); padding: 3.2rem 1.5rem; }
+  .takeaways-inner { max-width: 1080px; margin: 0 auto; }
+  .takeaways-title { font-family: var(--font-display); font-weight: 300; font-size: clamp(2rem, 5vw, 2.9rem); color: #fff; text-align: center; margin-bottom: .4rem; }
+  .takeaways-sub { text-align: center; color: #b9d6d0; font-size: .78rem; margin-bottom: 2.1rem; font-family: var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+  .takeaway-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(275px, 1fr)); gap: 1rem; }
+  .takeaway { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.24); border-radius: 8px; padding: 1.25rem 1.3rem; }
+  .takeaway-num { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .14em; color: #ffc491; margin-bottom: .45rem; }
+  .takeaway-title { font-family: var(--font-display); font-weight: 400; font-size: 1.32rem; color: #fff; margin-bottom: .45rem; line-height: 1.2; }
+  .takeaway-text { font-size: .92rem; line-height: 1.66; color: #e7f0ee; }
+  .takeaway-text a { color: #ffd2a8; text-decoration: none; border-bottom: 1px solid rgba(255,210,168,.55); }
+  .takeaway-text a:hover { color: #fff; border-bottom-color: #fff; }
+  .takeaway-text strong { color: #fff; font-weight: 600; }
+
+  /* ── Footer ── */
+  .footer { background: var(--night); color: #a3bdb6; padding: 2.6rem 1.5rem; text-align: center; }
+  .footer p { margin-bottom: .7rem; font-size: .92rem; }
+  .footer a { color: #f0b775; text-decoration: none; border-bottom: 1px solid rgba(240,183,117,.5); }
+  .footer a:hover { color: #fff; border-bottom-color: #fff; }
+  .footer-mono { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .04em; color: #7d968f; }
+
+  /* ── Modals ── */
+  .modal { position: fixed; inset: 0; background: rgba(15,30,27,.9); display: none; align-items: center; justify-content: center; z-index: 900; padding: 1.4rem; }
+  .modal.open { display: flex; }
+  .modal-box { background: var(--paper); border-radius: 10px; max-width: 880px; width: 100%; max-height: 88vh; display: flex; flex-direction: column; overflow: hidden; }
+  .modal-head { padding: .95rem 1.3rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .modal-head h4 { font-family: var(--font-display); font-size: 1.25rem; font-weight: 400; }
+  .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--muted); line-height: 1; padding: 0 .3rem; }
+  .modal-close:hover { color: var(--learn); }
+  .modal-body { padding: 1.25rem; overflow-y: auto; font-size: .93rem; line-height: 1.72; }
+  .modal-body h1, .modal-body h2, .modal-body h3 { font-family: var(--font-display); font-weight: 400; margin: 1.2rem 0 .55rem; line-height: 1.22; }
+  .modal-body h1 { font-size: 1.5rem; } .modal-body h2 { font-size: 1.25rem; } .modal-body h3 { font-size: 1.1rem; }
+  .modal-body p { margin-bottom: .8rem; }
+  .modal-body a { color: var(--learn-dk); }
+  .modal-body ul, .modal-body ol { margin: 0 0 .8rem 1.2rem; }
+  .modal-body li { margin-bottom: .4rem; }
+  .modal-body blockquote { border-left: 3px solid var(--border); padding-left: .9rem; margin: .8rem 0; color: var(--ink2); }
+  .modal-body pre { background: #eef2f0; padding: .8rem; border-radius: 6px; overflow-x: auto; font-size: .76rem; }
+  .modal-body code { font-family: var(--font-mono); font-size: .84em; }
+  .modal-body table { border-collapse: collapse; width: 100%; font-size: .85rem; margin: .8rem 0; display: block; overflow-x: auto; }
+  .modal-body th, .modal-body td { border: 1px solid var(--border); padding: .4rem .6rem; text-align: left; }
+  .modal-body img { max-width: 100%; height: auto; }
+  .modal-src { font-family: var(--font-mono); font-size: .7rem; padding: .3rem 1.3rem 0; }
+  .modal-src a { color: var(--gold); }
+
+  /* ── Section jumper ── */
+  .jump {
+    position: fixed; z-index: 400; left: 50%; bottom: 1.1rem;
+    transform: translateX(-50%);
+    display: flex; align-items: stretch; gap: 1px;
+    background: var(--night); border-radius: 99px;
+    box-shadow: 0 6px 28px rgba(15,30,27,.4); overflow: hidden;
+    max-width: calc(100vw - 1.6rem);
+  }
+  .jump button, .jump .jump-cur {
+    appearance: none; border: 0; background: var(--night); color: #e6f0ed;
+    font-family: var(--font-mono); font-size: .68rem; letter-spacing: .04em;
+    padding: .55rem .8rem; cursor: pointer; line-height: 1.3;
+    display: flex; align-items: center; gap: .4rem; white-space: nowrap;
+    text-decoration: none;
+  }
+  .jump button:hover { background: var(--learn); color: #fff; }
+  .jump .jump-cur {
+    cursor: pointer; max-width: min(46vw, 320px);
+    overflow: hidden; text-overflow: ellipsis; display: block;
+    padding: .55rem 1rem; font-weight: 500;
+  }
+  .jump .jump-cur:hover { background: var(--night2); }
+  .jump .jump-cur .caret { color: #f0b775; }
+  .jump button[disabled] { opacity: .32; cursor: default; }
+  .jump button[disabled]:hover { background: var(--night); color: #e6f0ed; }
+
+  .jump-menu {
+    position: fixed; z-index: 401; left: 50%; bottom: 4rem;
+    transform: translateX(-50%);
+    background: var(--paper); border: 1px solid var(--border); border-radius: 12px;
+    box-shadow: 0 14px 46px rgba(15,30,27,.32);
+    padding: .8rem; display: none;
+    width: min(820px, calc(100vw - 1.6rem));
+    max-height: min(68vh, 560px); overflow-y: auto;
+  }
+  .jump-menu.open { display: block; }
+  .jump-menu .jm-group {
+    font-family: var(--font-mono); font-size: .6rem; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--gold); margin: .7rem .4rem .4rem;
+  }
+  .jump-menu .jm-group:first-child { margin-top: .2rem; }
+  .jump-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: .35rem; }
+  .jump-menu a {
+    display: block; text-decoration: none; color: var(--ink2);
+    font-family: var(--font-mono); font-size: .72rem; line-height: 1.4;
+    padding: .5rem .6rem; border-radius: 7px; border: 1px solid transparent;
+  }
+  .jump-menu a small { display: block; color: var(--muted); font-size: .62rem; margin-top: .15rem; }
+  .jump-menu a:hover { background: var(--learn-soft); border-color: #bfdfda; color: var(--learn-dk); }
+  .jump-menu a.is-cur { background: var(--learn); color: #fff; border-color: var(--learn); }
+  .jump-menu a.is-cur small { color: #d1f0ea; }
+  .jump-menu a.m:hover { background: var(--marks-soft); border-color: #f2cdb6; color: var(--marks-dk); }
+  .jump-menu a.m.is-cur { background: var(--marks); color: #fff; border-color: var(--marks); }
+  .jump-menu a.m.is-cur small { color: #ffe0cc; }
+  .jump-backdrop { position: fixed; inset: 0; z-index: 399; display: none; }
+  .jump-backdrop.open { display: block; }
+  body { padding-bottom: 4.2rem; }
+  [id] { scroll-margin-top: 4.6rem; }
+
+  @media (max-width: 640px) {
+    body { font-size: 17.5px; }
+    .hero { padding-top: 2.4rem; }
+    .jump button, .jump .jump-cur { font-size: .63rem; padding: .5rem .6rem; }
+    .jump .jump-cur { max-width: 52vw; }
+    .sc-row { grid-template-columns: 1.8rem 1fr; }
+    .sc-res { grid-column: 2; justify-self: start; }
+  }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<nav class="masthead">
+  <div class="masthead-inner">
+    <a class="masthead-brand" href="https://sanand0.github.io/talks/">← Anand's Talks</a>
+    <div class="masthead-right">
+      <span class="masthead-date">10 Aug 2026 · Remote · IITM BS</span>
+      <a class="masthead-link" href="#" id="transcript-btn">Transcript</a>
+      <a class="masthead-link" href="https://tds.s-anand.net/" target="_blank" rel="noopener">TDS course</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-kicker">Ask Me Anything · Tools in Data Science</div>
+  <h1>What is this course <em>really</em> teaching?</h1>
+  <p class="hero-sub">An AMA that quietly became a stress test of the course itself. <strong>68% of the students in the room named one thing as what taught them — and a different thing as what got them the marks.</strong> This is what happened when the teacher asked the questions.</p>
+  <div class="hero-meta">
+    <a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand S</a>, LLM Psychologist at <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a><br>
+    for students of <a href="https://tds.s-anand.net/" target="_blank" rel="noopener">Tools in Data Science</a>, <a href="https://study.iitm.ac.in/ds/course_pages/BSSE2002.html" target="_blank" rel="noopener">BS Degree Programme</a>, <a href="https://www.iitm.ac.in/" target="_blank" rel="noopener">IIT Madras</a><br>
+    10 August 2026 · 4:30 PM IST · one hour · remote
+  </div>
+  <div class="quick-links">
+    <a href="#video">⏯️ Watch</a>
+    <a href="#" id="transcript-btn2">📄 Transcript</a>
+    <a href="#split">📊 The split</a>
+    <a href="#stuck">🧗 GA5 Q11</a>
+    <a href="#comic">🎨 Comic page</a>
+    <a href="#wrong">🔥 "You're wrong about…"</a>
+    <a href="#takeaways">🎯 Takeaways</a>
+  </div>
+</header>
+
+<div class="band video-wrap" id="video">
+  <div class="video-inner">
+    <video controls preload="metadata" width="100%"><source src="https://media.s-anand.net/2026-08-10-tds-ama.webm" type='video/webm; codecs="vp9, opus"'></video>
+    <div class="audio-row">
+      <audio controls preload="metadata">
+        <source src="https://github.com/sanand0/talks/releases/download/talks/2026-08-10-tds-ama.opus" type="audio/ogg; codecs=opus">
+      </audio>
+    </div>
+    <p class="media-cap">
+      The full hour, unedited. <a href="#" id="transcript-btn4">Read the transcript</a> ·
+      <a href="https://media.s-anand.net/2026-08-10-tds-ama.webm">Download video</a> ·
+      <a href="https://github.com/sanand0/talks/releases/download/talks/2026-08-10-tds-ama.opus">Download audio</a><br>
+      Prefer to skim? The <a href="#comic">one-page comic</a> covers the whole session in eight panels.
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<p class="lede">At 4:30 PM on a Monday, a room full of students dialled into a video call expecting to interrogate their professor. <strong>Anand had other plans.</strong> Before he answered a single question, he dropped a link in the chat — <code>forms.s-anand.net</code> — and asked them to fill in a form.</p>
+
+<blockquote class="pull">
+  <p>"This is a session where you can ask me anything, and I have lots to ask you as well."</p>
+  <cite>Anand, 11 seconds in</cite>
+</blockquote>
+
+<p>The form looked innocuous. Seven questions, most of them optional. But it had been <span class="cite" data-pop="prep">designed the night before as an experiment</span>, complete with five written-down predictions to be scored afterwards. Two of the questions were near-identical twins, deliberately placed one after the other:</p>
+
+<ul>
+  <li><em>Which ONE contributed most to what you <strong>actually learned</strong> in TDS?</em></li>
+  <li><em>Which ONE contributed most to <strong>getting marks</strong> in TDS?</em></li>
+</ul>
+
+<p>Same eight choices both times. GAs/ROE. Projects. AI tools. Classmates. TAs and live sessions. Course videos and reading. Struggling on your own. Other. Neither question was editable after submission — <strong>you got one shot at each, and you answered the second one knowing what you'd said for the first.</strong></p>
+
+<p>Thirty-seven students answered both. What came back is the most interesting number in this entire story.</p>
+
+</div>
+
+<div class="band split-band" id="split">
+  <div class="split-inner">
+    <h2 class="split-title">Two curricula, running in the same course</h2>
+    <p class="split-sub">37 students · same eight options · asked back-to-back</p>
+    <div class="split-cols">
+      <div class="split-col l">
+        <h5>◆ What actually taught me</h5>
+        <div class="bar-row"><div class="bar-head"><span class="bar-lab">GAs / ROE</span><span class="bar-val">43% <span style="opacity:.6">· 16</span></span></div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div></div>
+        <div class="bar-row"><div class="bar-head"><span class="bar-lab">AI tools</span><span class="bar-val">19% <span style="opacity:.6">· 7</span></span></div><div class="bar-track"><div class="bar-fill" style="width:44%"></div></div></div>
+        <div class="bar-row"><div class="bar-head"><span class="bar-lab">Projects</span><span class="bar-val">11% <span style="opacity:.6">· 4</span></span></div><div class="bar-track"><div class="bar-fill" style="width:25%"></div></div></div>
+        <div class="bar-row"><div class="bar-head"><span class="bar-lab">Struggling on my own</span><span class="bar-val">11% <span style="opacity:.6">· 4</span></span></div><div class="bar-track"><div class="bar-fill" style="width:25%"></div></div></div>
+        <div class="bar-row"><div class="bar-head"><span class="bar-lab">Classmates</span><span class="bar-val">5% <span style="opacity:.6">· 2</span></span></div><div class="bar-track"><div class="bar-fill" style="width:12.5%"></div></div></div>
+        <div class="bar-row"><div class="bar-head"><span class="bar-lab">TAs / live / Discourse</span><span class="bar-val">5% <span style="opacity:.6">· 2</span></span></div><div class="bar-track"><div class="bar-fill" style="width:12.5%"></div></div></div>
+        <div class="bar-row"><div class="bar-head"><span class="bar-lab">Videos / reading</span><span class="bar-val">5% <span style="opacity:.6">· 2</span></span></div><div class="bar-track"><div class="bar-fill" style="width:12.5%"></div></div></div>
+      </div>
+      <div class="split-col r">
+        <h5>◆ What actually got me marks</h5>
+        <div class="bar-row"><div class="bar-head"><span class="bar-lab">AI tools</span><span class="bar-val">43% <span style="opacity:.6">· 16</span></span></div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div></div>
+        <div class="bar-row"><div class="bar-head"><span class="bar-lab">Classmates</span><span class="bar-val">24% <span style="opacity:.6">· 9</span></span></div><div class="bar-track"><div class="bar-fill" style="width:56%"></div></div></div>
+        <div class="bar-row"><div class="bar-head"><span class="bar-lab">GAs / ROE</span><span class="bar-val">22% <span style="opacity:.6">· 8</span></span></div><div class="bar-track"><div class="bar-fill" style="width:50%"></div></div></div>
+        <div class="bar-row"><div class="bar-head"><span class="bar-lab">Struggling on my own</span><span class="bar-val">8% <span style="opacity:.6">· 3</span></span></div><div class="bar-track"><div class="bar-fill" style="width:19%"></div></div></div>
+        <div class="bar-row"><div class="bar-head"><span class="bar-lab">Videos / reading</span><span class="bar-val">3% <span style="opacity:.6">· 1</span></span></div><div class="bar-track"><div class="bar-fill" style="width:6%"></div></div></div>
+        <div class="bar-row"><div class="bar-head"><span class="bar-lab">Projects</span><span class="bar-val">0% <span style="opacity:.6">· 0</span></span></div><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div></div>
+        <div class="bar-row"><div class="bar-head"><span class="bar-lab">TAs / live / Discourse</span><span class="bar-val">0% <span style="opacity:.6">· 0</span></span></div><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div></div>
+      </div>
+    </div>
+    <p class="split-note"><strong>25 of the same 37 students — 68% — gave different answers.</strong> Bundle them up and the picture sharpens: <strong>GAs and Projects were the teacher (54%); AI and classmates were the scoreboard (68%).</strong> The pre-registered prediction had been a modest "≥30% will differ." The <a href="#" class="chatpop" data-doc="chatgpt-prep.md" data-title="How Anand prepared — and what the data said afterwards">95% Wilson interval for this room</a> lands somewhere between 51% and 80%.</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<p>Read that split slowly, because it is not the scandal it first looks like.</p>
+
+<p>The lazy conclusion is <em>assessment misalignment</em> — students are being graded on something other than what they're learning. But TDS explicitly permits, and loudly encourages, exactly this. <strong>You are allowed to use AI. You are allowed to use your classmates. You are allowed to use the entire internet.</strong> So the marks aren't measuring the wrong thing; they're measuring a <em>different</em> thing — the ability to marshal the world to get a result. The wrestling with the GA is where the learning lives.</p>
+
+<p>Two constructs, quietly separated: <strong>"can you get the result using the world?"</strong> and <strong>"what capability has actually become yours?"</strong> Both are valuable. Only one of them is what a score usually claims to mean.</p>
+
+<p>The other detail worth staring at: <strong>only 2 of 37 students named videos and readings as their main source of learning.</strong> Four named Projects as their biggest teacher and <em>zero</em> named Projects as their biggest source of marks — projects appear to be almost pure learning, mark-free. For a course that deliberately deleted its own content and kept only the evaluations, that is a design working exactly as intended.</p>
+
+<blockquote class="pull g">
+  <p>"We removed the course content. We only have evaluations, and we're saying, 'Solve it by hook or by crook. I don't care how you solve it, just get there.' And the entire internet is there. Why are you relying on me for creating stuff?"</p>
+  <cite>Anand, on why TDS has no syllabus to memorise</cite>
+</blockquote>
+
+</div>
+
+<div class="band stat-band">
+  <h4>The hour, by the numbers</h4>
+  <div class="stat-grid">
+    <div class="stat-item"><div class="stat-num m">68%</div><div class="stat-label">named different sources<br>for learning vs marks</div></div>
+    <div class="stat-item"><div class="stat-num">40</div><div class="stat-label">students filled<br>the live form</div></div>
+    <div class="stat-item"><div class="stat-num">57</div><div class="stat-label">questions typed<br>into "Ask Anand anything"</div></div>
+    <div class="stat-item"><div class="stat-num">71%</div><div class="stat-label">named a tool-independent<br>skill as the durable one</div></div>
+    <div class="stat-item"><div class="stat-num m">0</div><div class="stat-label">of 70 free-text answers<br>used the word "verify"</div></div>
+    <div class="stat-item"><div class="stat-num">78</div><div class="stat-label">chat messages,<br>including one confession</div></div>
+  </div>
+  <p class="stat-foot">The form was live during the session, so students answered while the discussion was still forming. Names were collected but never shown. <a href="#" class="chatpop" data-doc="chatgpt-prep.md" data-title="How Anand prepared — and what the data said afterwards">Read the full preparation and analysis →</a></p>
+</div>
+
+<div class="wrap">
+
+<div class="sec-num">Section 01</div>
+<h2 class="sec" id="mirror">"What do you think TDS is <em>actually</em> teaching you?"</h2>
+
+<p>Ten minutes in, Anand turned the microphone around. <strong>One sentence each.</strong> Raise your hand or type it in chat. What follows is one of the more remarkable pieces of collective self-assessment you'll read — a room of students describing, unprompted, a curriculum nobody wrote down.</p>
+
+<div class="voices">
+  <div class="voice"><p>"We want to cover all the scenarios that even AI would not think at the first go."</p><span class="who">Rajkumar, on air</span></div>
+  <div class="voice"><p>"Sir, it takes the students into another dimension." <em>(Anand: "One more sentence explaining that.")</em> "The place that is not contemplated by the student."</p><span class="who">Umapathi, on air</span></div>
+  <div class="voice"><p>"TDS is actually teaching us how to think, how to solve the problems and work with the data, not only just using the AI tools and all."</p><span class="who">Angad, on air</span></div>
+  <div class="voice"><p>"Asking better questions."</p><span class="who">Shishir, on air — the shortest answer of the hour</span></div>
+  <div class="voice"><p>"When somebody like you says it, it gives permission to get things done and move on rather than endlessly diving into theory."</p><span class="who">Aditya, on air</span></div>
+  <div class="voice"><p>"AI is not rather than just your helper, but itself your co-pilot… or your partner which helps you to do your task faster."</p><span class="who">Ishaan, on air</span></div>
+  <div class="voice chat"><p>"TDS has taught me how to fool large language models"</p><span class="who">Varun, in chat</span></div>
+  <div class="voice chat"><p>"I have learned everything to learn nothing ….because execution may change in future"</p><span class="who">Rohit Sharma, in chat</span></div>
+  <div class="voice chat"><p>"How to get the job done at any cost even if a student doesn't know basics"</p><span class="who">Dev Verma, in chat</span></div>
+  <div class="voice chat"><p>"Its teaching me, Time matters the most."</p><span class="who">Prince Khunt, in chat</span></div>
+  <div class="voice chat"><p>"problem solving skills and using your available resources in best possible way"</p><span class="who">Gehlot Suyash, in chat</span></div>
+  <div class="voice chat"><p>"I agree that TDS helped us just to get things done but i also have a concern that I may not learnt anything new tbh as I feel everything is getting done by AI"</p><span class="who">Himanshu Ranjan, in chat — the dissent</span></div>
+</div>
+
+<p>Notice what nobody said. <strong>Nobody named a tool.</strong> No Python, no FastAPI, no Docker, no <code>uv</code>. Twelve people described a <em>stance</em> — permission, partnership, question-asking, resourcefulness, time discipline. One person, Himanshu, said the quiet part out loud: <em>maybe I learned nothing, because AI did it all.</em> That objection will keep resurfacing, and Anand will spend a good part of the hour answering it.</p>
+
+<p>Aditya's answer is the sleeper. <strong>"Permission"</strong> is a strange thing to list as a learning outcome — and yet, for students trained by a decade of schooling to keep reading until they understand everything, being told <em>you may stop and ship</em> is genuinely new information.</p>
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<div class="sec-num">Section 02</div>
+<h2 class="sec" id="exam">The exam that had to exist</h2>
+
+<p>The first question on the form was blunt: <em>"As we are relying on AI for all assignments, what's the expectation from End term exam in person?"</em></p>
+
+<p>Anand's answer was disarmingly honest. <strong>"The end term exam will be very simple."</strong> And then: <strong>"The end term in-person, no internet exam is a statutory requirement from the Senate, so it is there because it has to be there. I actually don't know what it will cover. Please ask Prasanna."</strong></p>
+
+<p>Prasanna, who sets the end-term, unmuted and took the question:</p>
+
+<blockquote class="pull g">
+  <p>"It's more to give logical reasoning based on the knowledge that you have gained through these different courses… It will be a multiple-choice question, and there could be some subjective questions as well."</p>
+  <cite>Prasanna, on the end-term</cite>
+</blockquote>
+
+<p>And here is the moment where an AMA turns into a design meeting. Anand, live, on the call, decided to change the exam:</p>
+
+<blockquote class="pull">
+  <p>"And now that gives me an idea. We will probably increase, Prasanna, if you're okay with it, the subjective-type questions a little bit… One of the major things is: how do we prompt and how do we verify? <strong>AI does the middle stuff well.</strong> The stuff that we ask for and checking the stuff that we get out is where the quality of prompts becomes important."</p>
+  <cite>Anand, inventing a syllabus change in real time</cite>
+</blockquote>
+
+<p>The reasoning is neat. In an online graded assignment, "what prompt would you give for this?" is a trivial question — <strong>you paste the question into a model and ask it to write the prompt.</strong> That's <a href="https://en.wikipedia.org/wiki/Prompt_engineering" target="_blank" rel="noopener">meta-prompting</a>, and Anand's verdict on it is generous: <em>"Good technique."</em> But in a closed-book hall with no internet, the same question suddenly measures something real. So: <strong>"practice learning how to prompt, specifying problems well, and verifying solutions well. These two will be part of the end term for sure, now that I think about it."</strong></p>
+
+<p><em>Now that I think about it.</em> Somewhere, a hundred students updated their revision plans.</p>
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<div class="sec-num">Section 03</div>
+<h2 class="sec" id="bubble">"Not only is it not a bubble, it is <em>underestimated</em>"</h2>
+
+<p>One student — Ishaan — was so keen on this question that he pasted it into the chat <strong>three separate times</strong> over half an hour: <em>"do you think AI will bring a big crisis in the job market, or will it become a bubble like the 2001 dotnet bubble?"</em> Uday had asked the same thing on the form. Anand took it head-on.</p>
+
+<blockquote class="pull m">
+  <p>"Not only is it not a bubble, it is underestimated. Usually, people underestimate long-term impact and overestimate short-term impact. Short term, maybe we have overestimated — I don't know — even that I don't think so."</p>
+  <cite>Anand, on the AI bubble question</cite>
+</blockquote>
+
+<p>That first sentence is <a href="https://en.wikipedia.org/wiki/Roy_Amara" target="_blank" rel="noopener">Amara's Law</a> being deliberately half-rejected. The argument that follows is the interesting bit: <strong>even if every model froze today, the unexploited potential of what already exists would keep the economy busy for years.</strong> Capability isn't the bottleneck; deployment is.</p>
+
+<p>He then took the strongest counter-argument seriously — the claim that AI is <span class="tip" data-tip="The argument that AI progress is scaling one variable (intelligence) while most real-world problems are bottlenecked by other things: physical constraints, permissions, coordination, trust.">growing along a single axis</span>, and that intelligence is overrated:</p>
+
+<blockquote class="pull">
+  <p>"That may be true, but the sheer number of problems that we can solve given perfect intelligence is enormous."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>Elsewhere in the hour, a subtler version of the same question arrived on the form and never got aired — <a href="#unanswered">Spandanjit asked</a> whether TDS is chasing trends too hard, given that companies are already capping AI spend. It's one of the sharpest questions of the day, and it's sitting in the FAQ queue.</p>
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<div class="sec-num">Section 04</div>
+<h2 class="sec" id="assets">Willpower is a bad plan. Build <em>assets</em> instead</h2>
+
+<p>Jeevana had asked how to tackle complex tasks — what behaviours, how to work under pressure. The expected answer is grit. Anand's answer was almost the opposite of grit.</p>
+
+<blockquote class="pull">
+  <p>"People can push themselves behaviorally 5%, 10%, 20% better — maybe even 100% — by sheer individual ability, willpower, etc. But how much ability and how much willpower do you have, and how many courses will you apply that to? <strong>It helps to have something else that supports you.</strong>"</p>
+  <cite>Anand, on tackling hard things</cite>
+</blockquote>
+
+<p>Then a list of what "something else" means, which starts sensible and ends somewhere delightful. <strong>Agents are an asset</strong> — you give them a task, they get it done. <strong>Money is an asset</strong> — "I don't have to worry about cooking; I can eat at a restaurant, and that is one problem solved." <strong>Friends are an asset.</strong> Your notes. Your relationships. How you organise your laptop, your file system, your prompts, your scripts.</p>
+
+<blockquote class="pull g">
+  <p>"Any kind of asset that you can build is an advantage… What are things that put you in a good position to tackle complex tasks without needing much by way of willpower or behavior change? That it happens automatically — that is the best situation."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>And then the escalation ladder for getting out of bed at 6 AM, delivered completely deadpan: <strong>set an alarm.</strong> If that fails — <em>"well, in my case, I tell my mother to wake me up."</em> If that fails, commit to friends who will physically come and shake you. If <em>that</em> fails: <em>"schedule a timer that will automatically, I don't know, turn on the AC, give you an electric shock at 6:00 AM — whatever."</em></p>
+
+<p>The point underneath the comedy is a real one, and it's the same point as the course design: <strong>you are engineering systems and people to solve your problem so that you don't have to rely on your limited abilities.</strong> Which is, when you think about it, exactly what delegating to an agent is.</p>
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<div class="sec-num">Section 05</div>
+<h2 class="sec" id="stuck">Field notes from <em class="m">GA5 Q11</em></h2>
+
+<p>Anand asked the room the single best diagnostic question you can ask a student: <strong>"Tell me about the last or most recent TDS problem where you were properly stuck. What did you do?"</strong></p>
+
+<p>Almost every answer converged on the same assignment. <strong>Graded Assignment 5, Question 11.</strong> It has entered TDS folklore. One student said it took two days. Another said four to five. It is the closest thing this course has to a shared trauma — and it turns out to be a near-perfect natural experiment in what "difficulty" even means.</p>
+
+<div class="voices">
+  <div class="voice"><p>"Last time in the GA5, if you remember, the question 11 is the toughest one. So I got stuck for the two days almost. And at last… we actually put some system which read the link from the TAs that how they are doing."</p><span class="who">Angad, on air — remember this one</span></div>
+  <div class="voice"><p>"We all got stuck at the GA5 question 11. But our TDS community will work on it, and our wisdom of crowd will solve that problem."</p><span class="who">Gaurav, on air</span></div>
+  <div class="voice"><p>"I didn't realize that the GitHub repository I created — and I had to create a YAML file which was supposed to be in workflows. I didn't notice it, so it took a long time. But the issue was so small it took a long time for me to realize that."</p><span class="who">Umapathi, on air — on GA6, the classic sterile bug</span></div>
+  <div class="voice chat"><p>"A friend spent 700$ worth of tokens in claude code, and shared the solution with everyone."</p><span class="who">Varun, in chat</span></div>
+  <div class="voice chat"><p>"my friends makes solvers and guides"</p><span class="who">Himanshu, in chat</span></div>
+  <div class="voice chat"><p>"Used javascript scripts which copies all funtions and api requests and responses on answer checking, pasted that to ai for analysis"</p><span class="who">Aman Kumar, in chat</span></div>
+  <div class="voice chat"><p>"also made solvers yesterday which solve the ga7 iin under minute…which is mindblowing"</p><span class="who">Angad, in chat</span></div>
+  <div class="voice chat"><p>"Asked the question in the group which consists 600 students."</p><span class="who">Prince Khunt, in chat</span></div>
+  <div class="voice"><p>"Take a step back, take a break. Then start again."</p><span class="who">Divyanshu, in chat</span></div>
+</div>
+
+<p>Anand read the chat aloud as it scrolled: Varun's $700 friend, <strong>"which amortizes the cost, which is great."</strong> Devanarayanan's answer — <em>"Build tools and use agents to get the human out of the loop"</em> — got a single word: <strong>"interesting."</strong></p>
+
+<h3 class="sub">The image nobody could place</h3>
+
+<p>The other recurring nightmare was a <a href="https://www.google.com/maps/about/behind-the-scenes/streetview/" target="_blank" rel="noopener">Street View</a> geolocation question in the ROE: here is a photograph, find its coordinates. Three completely different escape routes emerged, and each one is a different theory of problem-solving.</p>
+
+<div class="cards">
+  <div class="card">
+    <span class="k">Route 1 · Switch the tool</span>
+    <h5>Ask a different machine</h5>
+    <p>"I was really stuck on that question for around two hours and I was trying to get help from all the AI agents and all, but finally I just asked the Google AI mode — the Google Lens's new AI mode — and it gave me the answer in two seconds."</p>
+    <p><em>— Ishaan.</em> Anand, genuinely surprised: <strong>"I did not realize that Google AI mode probably has excellent street view recognition."</strong></p>
+  </div>
+  <div class="card g">
+    <span class="k">Route 2 · Do it by hand</span>
+    <h5>Brute force and sunlight</h5>
+    <p>"If you put it in Google Lens, it tells its Vienna. But now pointing the coordinates, it took me an hour searching through the city just to get to that place… it could have been done in three to four minutes, but again you have to brute force some things and just be good with street view, how to look at, you know, <strong>signs, directions, sun</strong>, and everything else."</p>
+    <p><em>— Divyanshu.</em></p>
+  </div>
+  <div class="card m">
+    <span class="k">Route 3 · Leave the room</span>
+    <h5>Take yourself out of the loop</h5>
+    <p>"I basically used the agent. I told it to use APIs like OpenStreetMap or whatever. And I gave it — this is the interesting part — <strong>I gave it a way so it can submit answers.</strong> So I take myself out of the loop and I can solve other ROE questions instead of constantly copy-pasting."</p>
+    <p><em>— Devanarayanan.</em> His chat message spells out the recipe: <em>"give it bash tool with internet… Also give agent a curl command to submit my answer. Told it to 'loop till you get correct.'"</em></p>
+  </div>
+</div>
+
+<p>Three students, one question, three radically different definitions of "solved." <strong>That is the whole course in miniature.</strong></p>
+
+<h3 class="sub">The TA who was awake at 3 AM (and the students who noticed)</h3>
+
+<p>And then, mid-discussion, the chat produced the funniest and most revealing exchange of the hour. It began when Anand read out one of Angad's messages, deadpan: <em>"Angad says, 'I know that Jaydeep TA sleeps at 3:00 AM.' Okay, that is helpful — leveraging the TAs is a good strategy."</em></p>
+
+<p>Except Angad had not meant it as a metaphor.</p>
+
+<div class="chatlog">
+  <div class="cl-label">Zoom chat · 24:25 → 32:58</div>
+  <div class="msg"><span class="nm">Angad Jangir<span class="tm">24:25</span></span>"also i know that jaideeep ta sleeps on 3 am"</div>
+  <div class="msg"><span class="nm ta">Jaideep <em>(TA)</em><span class="tm">27:06</span></span>"Firstly, I don't sleep at 3am. But my sleep time on this is really weird?"</div>
+  <div class="msg"><span class="nm">Mayank Poddar<span class="tm">27:43</span></span>"How do you find Jaideep's sleeping time?"</div>
+  <div class="msg"><span class="nm">Varun<span class="tm">28:00</span></span>"One of our students found your endpoint being submitted around midnight, that's why they are bringing it up :)"</div>
+  <div class="msg"><span class="nm">Varun<span class="tm">29:20</span></span>"They knew it was your endpoint because it was <strong>the first deployed endpoint that scored full marks on ga5 q11, way before everyone else</strong>"</div>
+  <div class="msg"><span class="nm ta">Jaideep <em>(TA)</em><span class="tm">29:40</span></span>"Oh my endpoint submission at 3am on that. I usually keep codex running over night it might be playing around with my system"</div>
+  <div class="msg"><span class="nm">Varun<span class="tm">30:45</span></span>"You run codex without making it ask for any permissions @Jaideep?"</div>
+  <div class="msg"><span class="nm">Angad Jangir<span class="tm">31:34</span></span>"yesh Right .You got the point , So i put a loop so that when your aerver be open and at that time I get the answer , so it kind of making more mind blowns and thinking more @jaideeep bhaiya"</div>
+  <div class="msg"><span class="nm ta">Jaideep <em>(TA)</em><span class="tm">31:37</span></span>"I am guilty for running on Yolo mode but yes"</div>
+  <div class="msg"><span class="nm">Angad Jangir<span class="tm">32:58</span></span>"@Jaideep Yes i am thinking , may be in Future you will be more aware , also i think its really made me thinking that how to solve this .also sorry for that but i did."</div>
+</div>
+
+<p>Unpack that. A student noticed that <strong>one endpoint had scored full marks on the hardest question long before anyone else</strong>, reverse-engineered whose it was from the submission timestamps, and then <strong>wrote a loop that polled the TA's server and harvested answers whenever it happened to be up.</strong> The TA, cheerfully, explains that his 3 AM activity was <a href="https://openai.com/index/introducing-codex/" target="_blank" rel="noopener">Codex</a> running unattended overnight in what he calls <span class="tip" data-tip="Slang for running a coding agent with all permission prompts disabled — it executes commands without asking. Convenient, fast, and exactly as risky as it sounds.">"Yolo mode."</span></p>
+
+<p>Nobody was punished. Nobody was even scolded. In a course that grades resourcefulness, this is not misconduct — it is <strong>an unusually complete demonstration of the learning objective</strong>, performed by a student, on a teaching assistant, live in the chat, with an apology attached. Angad also mentioned, almost in passing, that TDS got him into <a href="https://en.wikipedia.org/wiki/Bug_bounty_program" target="_blank" rel="noopener">bug bounties</a> and that he'd found his way into a bank's admin page. Anand's reply: <em>"That's something that we might be introducing in some of our projects going forward."</em></p>
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<div class="sec-num">Section 06</div>
+<h2 class="sec" id="difficulty">The confession: TDS was hackable for <em class="m">years</em></h2>
+
+<p>Angad had also submitted, on the form, a question that reads like a love letter with a challenge stapled to it: <em>"I really appreciate the way you have designed TDS… is it wrong to feel that TDS can be made even more challenging?"</em></p>
+
+<p>Anand's answer began somewhere unexpected.</p>
+
+<blockquote class="pull">
+  <p>"The difficulty is a relative thing these days. Somebody who finds that an agent has solved the problem — because maybe they've given the right prompt or have set it up the right way — finds that it's so easy. And somebody else who's figured out that they know the right people to reach out to finds that they have to take zero effort. And the people who have not yet figured it out are struggling."</p>
+  <cite>Anand, on why "is it hard?" is the wrong question</cite>
+</blockquote>
+
+<p>And then, unprompted, the confession:</p>
+
+<blockquote class="pull m">
+  <p>"For many years, TDS was entirely hackable, meaning all you have to do is figure out what is the API to send a request… the entire set of answer scripts is there, you just put in the score that you want, it will directly save that score. <strong>In that sense, every question was hackable.</strong> The percentage that hacked it was less than 2%, 3% for almost a year. So I left it open. Now we're finding that that percentage has gone up to about 15–20%, so now it makes sense to make it a little harder."</p>
+  <cite>Anand, on the open endpoint he deliberately never closed</cite>
+</blockquote>
+
+<p>Read that again. <strong>The grading endpoint was wide open, and he knew, and he left it that way — because so few people had the resourcefulness to find it.</strong> The hack rate wasn't a security metric. It was a <em>learning</em> metric. When it crossed 15–20%, the lesson had been learned by enough of the cohort, and the difficulty had to move.</p>
+
+<blockquote class="pull g">
+  <p>"If there is an open exposed endpoint, why are people not able to figure it out? There are many good reasons. They don't have enough friends; the community has not yet formed; they haven't thought about it. <strong>But these are also parts of things that we're teaching.</strong>"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>So: <strong>"Can TDS be made even more challenging? Yes, TDS is continuously becoming more and more challenging."</strong> Partly by design, partly because agents keep getting better and yesterday's hard question is today's one-shot. But with a governor on it — <em>"there was a time when TDS was the easiest course… Right now, TDS is not considered among the easy courses, so we probably won't make it more challenging than the natural pace of students' learning."</em></p>
+
+<h3 class="sub">The same question was transformative, enjoyable, and useless — depending on who you asked</h3>
+
+<p>Here is where the form did something the discussion couldn't. Half the respondents were shown <em>"describe one painful TDS experience that taught you something you still use"</em>; the other half got <em>"…that taught you almost nothing."</em> The split sample lets you see the same assignment from both sides.</p>
+
+<div class="cards">
+  <div class="card">
+    <span class="k">Transformative</span>
+    <h5>It changed my tools forever</h5>
+    <p>"GA5 Q11 was huge pain to get through. That's when I decided to finally use Claude Code for help… The question didn't get solved by it as well, but I realized the tool was working better than the other models I worked woth before, leading me to still use it."</p>
+    <p><em>— Gehlot Suyash</em></p>
+  </div>
+  <div class="card g">
+    <span class="k">Challenging</span>
+    <h5>It changed my approach</h5>
+    <p>"tds ga5 q11 challenge me to change my approach for solving a problems."</p>
+    <p><em>— Gaurav Tomar.</em> And Angad, separately, found GA5 questions 9 and 11 so interesting that he asked for the course to be made <strong>harder</strong>.</p>
+  </div>
+  <div class="card m">
+    <span class="k">Sterile</span>
+    <h5>It taught me nothing at all</h5>
+    <p>"i spent atleast 4-5 days with claude trying to figure out. <strong>Claude gave up saying it has done everything possible and I should try contacting the TA to get some tips.</strong> … Finally solved it with the solver that another student made. So indeed, all that time was lost without anything useful."</p>
+    <p><em>— Hema.</em> A model telling a student to go ask a human for help is either the funniest or the saddest sentence in this dataset.</p>
+  </div>
+</div>
+
+<p>The conclusion writes itself: <strong>desirable difficulty is not a property of a question. It's a property of the meeting between a question and a particular learner at a particular moment.</strong> The useful design question isn't "is GA5 Q11 too hard?" It's: <em>at what point does productive search turn into unproductive looping — and can a course detect that transition?</em></p>
+
+<p>One student put the mechanism precisely, in answer to "what does the TDS team believe that you think is wrong?":</p>
+
+<blockquote class="pull m">
+  <p>"There is sometimes an assumption that struggling with a problem for a long time automatically leads to learning. In reality, without timely guidance or feedback, students can spend a lot of time debugging the wrong approach and mainly learn how to get past that particular question rather than understand the underlying concept."</p>
+  <cite>Angad Jangir, on the form</cite>
+</blockquote>
+
+<p>The counterpoint, from another respondent, is just as short and just as good: <strong>"Surprisingly, there was no pain that was not educational."</strong> <em>— Aaditya Bugga.</em></p>
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<div class="sec-num">Section 07</div>
+<h2 class="sec" id="management">Why learn anything, if the machine can do it?</h2>
+
+<p>Dev Verma had asked the objection that every teacher in 2026 is fielding: if students let AI do the basics, they forego the manual effort, and the only thing they learn is to operate a generic tool. Anand agreed with the premise and then declined the conclusion.</p>
+
+<blockquote class="pull">
+  <p>"When a tool is available to solve a problem, the industry is not going to pay someone to do the same thing slower, costlier, and at lower quality. <strong>Today, many of the things that an agent can do, there is no point for a human to learn to do.</strong>"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>Then the qualifier, and it's a good one. <strong>Sometimes the process is the point, not the product.</strong></p>
+
+<blockquote class="pull g">
+  <p>"Today we do exercise. Why? I mean, is there anything as pointless as exercise? Lifting a weight — a machine can lift a weight better than you can, but you're doing this to build your muscle. Similarly, why are we learning mental multiplication when a calculator can do it? Because it trains our mind to think about things in certain ways. The rigor is important."</p>
+  <cite>Anand, on why we still learn things machines do better</cite>
+</blockquote>
+
+<p>So why does TDS refuse to teach the process? Because, he argues, <strong>everyone else already is.</strong> <em>"Most of the courses are focusing on the process anyway. There aren't that many courses that are teaching you to get the job done. So I have the luxury of saying 80% anyway you're learning that. So in TDS, let me teach you that 20% which is not often taught."</em></p>
+
+<p>And then the line that reframes the whole course:</p>
+
+<blockquote class="pull">
+  <p>"These agents are like people. They're smart enough. Now, management is a subject in itself where you get people to do stuff. <strong>In a sense, TDS is management for agents.</strong>"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>Which sets up his answer to Anusha's beautifully self-aware question — <em>"For GAs I'm prompting LLM, getting answer and pasting. What do I learn from TDS?"</em> The reply is a small masterpiece of pedagogical judo:</p>
+
+<blockquote class="pull m">
+  <p>"You're learning how to prompt, and paste it, and getting the job done. Now, if it were that easy, you'd be scoring full marks in TDS. <strong>If you're not scoring full marks, then there is something that you haven't learned.</strong> And if a reasonably large number of people are scoring full marks, we'll then move on to the next stage of learning."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>And the part he refuses to spell out, on purpose:</p>
+
+<blockquote class="pull g">
+  <p>"This 'something to learn,' I'm hoping you'll figure out what it is by yourself — I'm not trying to make it explicit, <strong>partly because I don't know, partly because it is what I'm recruiting for</strong>, that is, your ability to figure it out yourself… In other words, good question — figure it out, like many other things in TDS."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>It's worth noting he isn't speaking hypothetically about recruitment. Earlier in the hour, on whether the course makes you job-ready: <strong>"TDS is basically how I would recruit and what I'm giving people out as tasks within Straive or amongst our clients. So it is not even preparing you for job interviews; it is preparing you for the jobs themselves."</strong> With one caveat delivered immediately after — <em>"in a year's time, this material will be outdated."</em> The point is not the material. The point is learning <em>how to be prepared</em> when the material keeps expiring.</p>
+
+</div>
+
+<div class="band comic-band" id="comic">
+  <div class="comic-inner">
+    <h4>The whole hour, in eight panels</h4>
+    <p class="csub">Click to open the full-size image in a new tab</p>
+    <a href="comic-page.avif" target="_blank" rel="noopener">
+      <img src="comic-page.avif" alt="An eight-panel comic summarising the TDS AMA: Anand running a live AMA and asking students to fill a form; the learning-versus-marks split; TDS as an obstacle course; how students got unstuck on GA5 Q11; assets compounding faster than willpower; the tug-of-war between manual basics and AI delegation; the verification blind spot and toolkit; and what to keep teaching if AI gets 10x better." loading="lazy">
+    </a>
+    <p class="media-cap">Panel 2's stat card is the finding that anchors everything: <strong style="color:#fff">68% chose different answers</strong> for what taught them versus what scored for them. Panel 7 is the finding nobody in the room noticed about themselves.</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<div class="sec-num">Section 08</div>
+<h2 class="sec" id="verify">How do you check an answer you're not <em>qualified</em> to check?</h2>
+
+<p>Jai Tyagi asked the question that sits underneath everything else: <em>"How can we verify that an AI-generated answer is correct when we don't have enough expertise to check it ourselves?"</em></p>
+
+<p>Anand's move here is characteristic. He refused to treat it as a new problem.</p>
+
+<blockquote class="pull">
+  <p>"This actually is an age-old problem. <strong>How does a judge who knows nothing about engines decide on a patent case between two parties about engines? How does a regulator who knows nothing about the telecom industry pass laws related to regulation?</strong> That actually seems to work reasonably well. How does an auditor who does not understand or have access to all of the information that a company does, come in and still verify?"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>He then shared his screen and pulled up <a href="https://sanand0.github.io/talks/2026-08-07-data-hack-summit/" target="_blank" rel="noopener">a talk he'd given three days earlier at the Data Hack Summit</a> — titled, appropriately, <em>"How do you manage something that is smarter than you?"</em> — and walked through five verification techniques, each stolen from a profession that has practised it for centuries.</p>
+
+<div class="cards">
+  <div class="card"><span class="k">01 · Surgeons, pilots, divers</span><h5>Checklists</h5><p>"Here are five things I expect in the answer. Is it working? Does it have it? Does it not?" You don't need to be the expert — you need the expert's list.</p></div>
+  <div class="card"><span class="k">02 · Auditors, journalists</span><h5>Receipts</h5><p>"In our case, we ask for citations. Give me the original links, give me the actual files, show me the actual formulas. And this works very effectively too."</p></div>
+  <div class="card"><span class="k">03 · Auditors, radiologists</span><h5>Audits</h5><p>"Give the same logic, the input and the output, to another model and have it go through and find all the errors and create an audit list. See where it fails."</p></div>
+  <div class="card"><span class="k">04 · Juries, critics</span><h5>Voting</h5><p>"Ask ten people and see what the majority opinion is. In certain cases that works well, certain problems that's not the solution."</p></div>
+  <div class="card"><span class="k">05 · Driving tests, compilers</span><h5>Exams</h5><p>"The agent writes a piece of code and then we give it to an interpreter, a compiler, whatever, and say, 'Run it.' If it passes the exam, great."</p></div>
+</div>
+
+<p>The fifth one is the one that's quietly eating the world. <strong>"This is exactly what's happening with mathematics today, which is the agent says, 'I have solved a theorem,' and we pass it to <a href="https://lean-lang.org/" target="_blank" rel="noopener">Lean</a>, which is a programming language that can verify mathematics, and we get the result."</strong></p>
+
+<p>Can this generalise? Anand's example was insurance: take a policy, compile it into a formal language; take a claim, compile it into the same language; then mechanically check whether the clauses and exceptions fire. He called it <span class="tip" data-tip="Anand spelled it out as I-N-S-U-R-L-Y in the session. The demo he has linked elsewhere is Insurle.">"Insurly"</span> — the demo is <a href="https://mynkpdr.github.io/insurle-demo/" target="_blank" rel="noopener">Insurle</a>, and the underlying idea (formalise the contract, formalise the claim, let a theorem prover decide) shows up in <a href="https://arxiv.org/abs/2510.16381" target="_blank" rel="noopener">recent neuro-symbolic agent research</a> too. A sibling of the same idea is his own <a href="https://sanand0.github.io/policyascode/" target="_blank" rel="noopener">policy-as-code</a> experiment.</p>
+
+<blockquote class="pull g">
+  <p>"These are traditions from several professions in the past, and therefore <strong>how we verify need not be a new problem</strong>. It's something that we have solved in the past and we can learn from these professions as well."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<div class="sec-num">Section 09</div>
+<h2 class="sec" id="blindspot">The blind spot: the word nobody said</h2>
+
+<p>Now for the finding that only shows up if you go looking. After the session, all 70 free-text answers on the form — every durable-skill answer, every struggle story, every disagreement — were searched for four words.</p>
+
+<div class="band stat-band" style="margin-top:2.4rem">
+  <h4>Word counts across 70 free-text answers</h4>
+  <div class="stat-grid" style="max-width:800px">
+    <div class="stat-item"><div class="stat-num m">0</div><div class="stat-label">"verify" /<br>"verification"</div></div>
+    <div class="stat-item"><div class="stat-num m">0</div><div class="stat-label">"validate" /<br>"validation"</div></div>
+    <div class="stat-item"><div class="stat-num m">0</div><div class="stat-label">"test"</div></div>
+    <div class="stat-item"><div class="stat-num m">0</div><div class="stat-label">"check"</div></div>
+    <div class="stat-item"><div class="stat-num">7</div><div class="stat-label">"debug"<br>(alive and well)</div></div>
+  </div>
+  <p class="stat-foot">Verification design is named explicitly in the TDS course model, alongside framing, context engineering and orchestration. <strong>Not one student spontaneously described proving that an answer was right.</strong></p>
+</div>
+
+<p>This matters because it reveals the shape of the story students have internalised. It goes:</p>
+
+<p style="text-align:center;font-family:var(--font-mono);font-size:.9rem;color:var(--marks-dk);line-height:2"><strong style="background:none;color:var(--marks-dk)">problem → AI/tools → persistence/debugging → answer</strong></p>
+
+<p>Which is a good story! It's the story of a resourceful person. But the story the course is trying to install is one step longer:</p>
+
+<p style="text-align:center;font-family:var(--font-mono);font-size:.9rem;color:var(--learn-dk);line-height:2"><strong style="background:none;color:var(--learn-dk)">problem → hypothesis → answer → independent check → confidence</strong></p>
+
+<p><strong>Debugging is "make the error go away." Verification is "prove this is right."</strong> They feel similar and they are not remotely the same skill — and the gap between them widens precisely as models get better, because a model that is usually right is far more dangerous than one that is usually wrong.</p>
+
+<p>Which makes the timing of Anand's live decision to put prompting-and-verifying into the end-term look less like a whim and more like an instinct that the data confirmed an hour later. The suggested fix is almost embarrassingly cheap: <strong>after a question, ask one more question — "How do you know?"</strong></p>
+
+<p>Students, notably, are acquiring the behaviours faster than they're acquiring the vocabulary. <strong>71% of the durable-skill answers described a portable strategy</strong> — decomposition, resourcefulness, collaboration, adaptation — rather than a named tool. They are doing something real. They just don't yet have Anand's word for the most important part of it.</p>
+
+<div class="voices">
+  <div class="voice form"><p>"Problem-solving and the ability to break a problem into smaller steps, understand the data, and choose an appropriate approach <strong>instead of depending on a particular tool</strong>."</p><span class="who">Angad — durable skill</span></div>
+  <div class="voice form"><p>"AI can do a lot but it still needs guidance at times, so is with people if you have some working under you. <strong>So YOU always have to be clear with what is happening</strong> and that should be the 1st thing you have to look at before starting anything."</p><span class="who">Divyanshu — the deepest transfer in the dataset</span></div>
+  <div class="voice form"><p>"To realize when you get pushed into a rabbit hole by the AI, going about the same thing in some loop, and start thinking differently to prompt the AI in a different way, rather than waste time endlessly."</p><span class="who">Hema — useful struggle</span></div>
+  <div class="voice form"><p>"Not allowing AI to create architecture or take all decisions on its own, and let it debug on loop without stopping and discussing with me."</p><span class="who">Aman Kumar — useful struggle</span></div>
+  <div class="voice form"><p>"Explaining things better like how we have to with AI agents right now. It could be to teammates or other people."</p><span class="who">Divyanshu — durable skill</span></div>
+  <div class="voice form"><p>"Element of surprise."</p><span class="who">Umapathy — durable skill, entire answer</span></div>
+</div>
+
+<p>Divyanshu's is the one to frame. He is not saying "I learned Claude." He has independently arrived at a portable theory of delegation and management — the same theory Anand has been trying to teach for years. <strong>That is what success looks like, and it showed up exactly once.</strong></p>
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<div class="sec-num">Section 10</div>
+<h2 class="sec" id="wrong">"What does Anand believe about learning that you think is <em class="m">wrong</em>?"</h2>
+
+<p>The last question on the form was an invitation to dissent, and it was the one Anand most wanted answered. Twenty people took it. Eight said some version of "nothing" or "I don't know" — including the single best non-answer of the day:</p>
+
+<blockquote class="pull g">
+  <p>"That sounds like another ROE question. I don't have an answer."</p>
+  <cite>Umapathy G, declining to be assessed</cite>
+</blockquote>
+
+<p>The twelve substantive disagreements clustered into two camps, and they contradict each other — which is exactly what makes them useful.</p>
+
+<div class="cards">
+  <div class="card m">
+    <span class="k">Camp A · 6 responses</span>
+    <h5>AI lets you skip the foundations</h5>
+    <p>"If students do not practise basic way of writing codes manually, then they can not even understand tough things as they won't practise basics on their own and instead become more dependent on LLMs." <em>— Dev Verma</em></p>
+    <p>"Using AI to solve all the questions, I believe it would take away people's ability." <em>— Atharva Khandelwal</em></p>
+    <p>"Copy pasting from classmate without learning how to approach the problems." <em>— Gaurav Tomar</em></p>
+  </div>
+  <div class="card">
+    <span class="k">Camp B · 4 responses</span>
+    <h5>Struggle without feedback isn't learning</h5>
+    <p>"The TDS team sometimes assumes that students learn best by figuring things out independently through challenging tasks, but <strong>some students may need more structured guidance</strong>, simpler examples, and clearer explanations before they can learn effectively." <em>— Drishty Gupta</em></p>
+    <p>"TDS sometimes focuses too much on finding the correct solution and not enough on understanding the learning process." <em>— Drishty Gupta</em></p>
+  </div>
+  <div class="card g">
+    <span class="k">The outliers · 2 responses</span>
+    <h5>Two very specific complaints</h5>
+    <p>"When offline evaluation is done, especially for essays and other hand written answers, evaluating with an llm makes no sense. <strong>Training a student to write essays that a random large language model thinks highly of is not a useful skill at all.</strong>" <em>— Varun</em></p>
+    <p>And, with beautiful economy on what the team wrongly assumes: <strong>"That they will read every instruction."</strong> <em>— Thanish P V</em></p>
+  </div>
+</div>
+
+<p>Now put Camp A next to something a student said in the open question. Varun — the same person who'd typed "TDS has taught me how to fool large language models" — asked:</p>
+
+<blockquote class="pull m">
+  <p>"How do I overcome the TDS mindset creeping into other courses? I remember the first few weeks of doing java assignments after TDS started, <strong>I had to constantly resist the urge to paste the assignment into an agent and make the agent solve the assignment for me.</strong>"</p>
+  <cite>Varun, on the form — asked three separate times, which tells you how much it bothered him</cite>
+</blockquote>
+
+<p>This is the most quietly alarming data point of the day, and also the most encouraging one. <strong>Transfer happened.</strong> A habit formed in TDS reliably fired in an unrelated Java course. That is precisely what a course designer dreams of.</p>
+
+<p>But look at <em>what</em> transferred. Not "decide what to learn versus what to delegate, then verify." Just: <strong>"delegate."</strong> The memorable rule turned out to be a little too memorable — and the tension students keep circling isn't <em>should we use AI</em>, it's <strong>when am I producing, and when am I practising?</strong> Production mode says: get a robust result efficiently, use everything. Practice mode says: install this capability in my head, so do one manual rep. TDS is almost entirely production mode — deliberately, distinctively — and students are left inferring the boundary for themselves.</p>
+
+<p>Anand's answer to Varun refused to draw the boundary for him, and instead reframed the whole thing as a question of agency:</p>
+
+<blockquote class="pull">
+  <p>"This is like asking: how do I resist the urge to get onto social media? Or how do I resist the urge to just play video games… If you just went to the agents fully and said, 'You solve it for me,' there are certain skills that you will not be picking up. <strong>But maybe it doesn't matter. Maybe that is not the area that you end up learning skills in. Maybe you will spend the time that you save by doing that, learning something else.</strong> What could that be? I don't know. Professional dancing? Who knows?"</p>
+  <cite>Anand, declining to moralise</cite>
+</blockquote>
+
+<p>The only instruction he was willing to give was about <em>how</em> to choose, not <em>what</em> to choose:</p>
+
+<blockquote class="pull g">
+  <p>"Whatever you're doing, try to do it intentionally. If the mindset comes in, just pause for a second saying, 'I'm doing this. Do I want to do this?' And at that moment, if you say yes, do it. If you say no, don't do it. Secondly, write it down… <strong>You'll find journaling to be one of the most powerful techniques.</strong> And you can always take that journal, give it to an LLM also, and say, 'Here is how I'm deciding, how can I improve myself?'"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>Or, compressed: <strong>"When you do something intentionally, at least you know where you're going and why."</strong> Prince Kurien, on the form, had independently proposed the institutional version of the same idea — <em>"A learning log should be requested, along with a proportion of the mark for uniqueness."</em></p>
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<div class="sec-num">Section 11</div>
+<h2 class="sec" id="tenx">"If AI becomes <em>10× better</em> next term, what should I stop teaching?"</h2>
+
+<p>Anand's second big question to the room. The answers came fast, and collectively they sketch a curriculum that doesn't exist yet.</p>
+
+<div class="voices">
+  <div class="voice"><p>"We should stop teaching students to compete with the AI on execution. Instead, I think they should train the students to <strong>define the right problems and working with the messy, real-world constraints and also challenge the AI output</strong>."</p><span class="who">Angad, on air</span></div>
+  <div class="voice"><p>"Creating FastAPI and GitHub URL repository and deploying it — that portion might become irrelevant. What would be more relevant is security. <strong>The security concept will be more relevant as it becomes 10x; the likelihood of exposure will be more.</strong>"</p><span class="who">Umapathi, on air</span></div>
+  <div class="voice"><p>"AI becomes ten times smarter, which means it has so much intelligence that it can solve any task. So we can learn <strong>how to interact more comprehensively with humans, with masses</strong>. That should be done because AI will solve everything."</p><span class="who">Rohit, on air</span></div>
+  <div class="voice"><p>"You should ask students how they would approach the problem and ask them to <strong>document the problem and the solution</strong>."</p><span class="who">Jai, on air</span></div>
+  <div class="voice"><p>"Instead of focusing on some common questions that can be easily solved by AI, we can go for some vague or innovative questions. It might not even have a better answer, but we can <strong>score them based on how well they come up with the answer</strong>."</p><span class="who">Rajkumar, on air</span></div>
+  <div class="voice"><p>"In Project 1, there were questions like: the prompt which will prove the GPT wrong. So if it's 10x smarter, human should be able to build that intelligence — so <strong>prompting questions should remain</strong>."</p><span class="who">Dev, on air</span></div>
+  <div class="voice chat"><p>"Stop teaching/giving individual microtasks — give substantial capstone projects"</p><span class="who">Aaditya, in chat — the only message others explicitly seconded</span></div>
+  <div class="voice chat"><p>"Then TDS should add more privacy-preserving questions. I believe privacy will become huge concern, when AI will grow 10x."</p><span class="who">Prince Khunt, in chat</span></div>
+  <div class="voice chat"><p>"Manual marking should remain"</p><span class="who">Aayush Chourasia, in chat</span></div>
+  <div class="voice chat"><p>"ask them to create a social media account and how would they use AI to scale the account"</p><span class="who">Jai Tyagi, in chat</span></div>
+  <div class="voice chat"><p>"Ask ai to come up with cheapest solution to real business problems"</p><span class="who">Rajkumar, in chat</span></div>
+  <div class="voice"><p>"We should be able to strengthen our basics. Even though if AI is a great kind of thing, 10 times or 100 times, <strong>we will not be leaving our ABCDs</strong>."</p><span class="who">Uday, on air</span></div>
+</div>
+
+<p>Anand's running commentary as he called on people was itself a taxonomy: <em>"Interacting with humans rather than with AI. Got you."</em> … <em>"Security at scale is a fair point."</em> … <em>"Specification and verification is where I think you're going."</em> … <em>"Effectively evaluating outcomes rather than…"</em> … <em>"Working alongside rather than against AI."</em></p>
+
+<p><strong>Not one student proposed teaching more tools.</strong> Every single answer moved up the stack — to specification, judgment, security, documentation, human interaction, or the design of the problem itself. A room of students, asked to redesign their own course under a 10× capability shock, independently converged on the thing that AI cannot yet do: <em>decide what is worth doing, and whether it was done right.</em></p>
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<div class="sec-num">Section 12</div>
+<h2 class="sec" id="careers">Careers: the rise of the <em class="m">vibe-code fixer</em></h2>
+
+<p>Aaditya — a self-described "non-tech person from a traditional industry" wanting to move into product management — asked for career musings. The answer was more optimistic than he probably expected.</p>
+
+<blockquote class="pull">
+  <p>"<strong>The execution part is becoming easy. So, telling agents what to do and figuring out if that is correct is growing.</strong> Therefore, the role of someone who is non-tech in the traditional sense, maybe even tech-adjacent, is growing. And this is exactly what a product manager does, which is telling a team what to do — and in this case, the agent becomes the team — and verifying if they've done their job right."</p>
+  <cite>Anand, on non-technical careers</cite>
+</blockquote>
+
+<p>The economic logic: because agents execute so cheaply, <strong>the number of people needed to specify what to execute goes up, not down.</strong> The shape of those jobs? <em>"I don't know."</em></p>
+
+<p>Soham then asked the question every final-year student is actually asking: <em>"TDS is hard but I loved it; still, traditional coding gets tough, so why is fresher job hunting still so heavily DSA-oriented?"</em> (It took the chat a moment — Anand initially guessed DSA meant "Data Science and Analytics" before Devanarayanan, Aaditya and Suyash all corrected him in unison: <a href="https://en.wikipedia.org/wiki/Data_structure" target="_blank" rel="noopener">Data Structures and Algorithms</a>. Varun's gloss: <em>"leetcode grinding etc"</em>.)</p>
+
+<p>The answer had two halves, and the second half surprised the room.</p>
+
+<p><strong>Half one: the industry hasn't caught on yet, and there's a chain of reasons why.</strong> <em>"There is an HR team who gets requirements from the business team, who gets requirements from the client project manager, who gets requirements from the client business stakeholder. If the client business person has not yet caught on to the need for someone with a very different skill profile, the entire chain has not yet caught on."</em> His estimate: Data Science took three or four years to establish as a role. <strong>"I expect <a href="https://newsletter.pragmaticengineer.com/p/forward-deployed-engineers" target="_blank" rel="noopener">forward-deployed engineers</a> to happen a little faster than that, probably a lot faster."</strong></p>
+
+<p><strong>Half two: actually, DSA is about to matter more, not less.</strong></p>
+
+<blockquote class="pull m">
+  <p>"There really is a need for Data Structures and Algorithms because people are vibe-coding like crazy. <strong>A big role that is emerging is 'vibe-code fixer.'</strong> Somebody has created it, it's a mess — which is a good thing because somebody's finding it to be a useful mess. So somebody has to come and clean up the mess."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>Or, in the least sanitised phrasing of the session: <strong>"maintaining code, which people and agents have vomited out and nobody knows what to deal with, will be a growing thing."</strong> Two demand curves rising at once — <em>"the demand for agentic use will grow a lot. But the demand for more structured programming will also grow."</em></p>
+
+<h3 class="sub">How to predict five years out (spoiler: you can't, so predict something else)</h3>
+
+<p>Shivam asked how to read the direction of AI over five to ten years. Anand's answer opened with a confession — <em>"I am trying to figure out as well and I'm in the same boat as you are"</em> — and then offered a genuinely useful trick: <strong>stop predicting where AI will go, and predict where it can't.</strong></p>
+
+<div class="cards">
+  <div class="card"><span class="k">Anchor 1</span><h5>Physics doesn't move</h5><p>"If there is something that is constrained by physics, then I know that no matter how fast things change, technology changes, that will be a reasonably safe space to work in."</p></div>
+  <div class="card"><span class="k">Anchor 2</span><h5>Regulation doesn't move fast</h5><p>"No matter what, drugs will have to go through a rigorous testing… So I know that any kind of drug approval related areas will not change so fast thanks to AI."</p></div>
+  <div class="card"><span class="k">Anchor 3</span><h5>Human behaviour doesn't move at all</h5><p>"Just because AI is going to make things fast, we're not going to start working two hours a day… <strong>So if AI can do more, we will do more. We won't do less.</strong>"</p></div>
+  <div class="card g"><span class="k">The short horizon</span><h5>Read the insiders</h5><p>"What are people inside <a href="https://www.anthropic.com/" target="_blank" rel="noopener">Anthropic</a> saying? What are people inside <a href="https://openai.com/" target="_blank" rel="noopener">OpenAI</a> saying? They are able to see things three, six months at least ahead of we are. And if multiple people are saying the same things, I know that that is likely to happen."</p></div>
+</div>
+
+<p>That third card is the sharpest observation in the section, and it doubles as a labour-market forecast: <strong>if AI raises output per hour, we don't get shorter days. We get more output.</strong> "These are businesses that one can invest in because you have something that is likely to be protected irrespective of technology."</p>
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<div class="sec-num">Section 13</div>
+<h2 class="sec" id="design">Two questions about course design, answered like an engineer</h2>
+
+<p>Shishir had a complaint that reads like a bug report: <em>"Why are we saving the last submission instead of the best submission? Since we create the server only once, and it is hosted on Cloudflare, it may be lost or reset, causing all progress to be lost."</em></p>
+
+<p>Anand did two things at once. First, he took the suggestion seriously and immediately imagined how he'd exploit it: <strong>"Supposing I said we'll take the best response. Here is how I would approach the question. I would create 30 servers, tell it, 'Create random answers.' One of them is bound to be right."</strong> Not a criticism — an endorsement. <em>"This is not a bad strategy. And I'm not trying to discourage that strategy either."</em> He took it as a to-do: some future questions will explicitly say <em>toss 100 answers at it, we'll take the best.</em></p>
+
+<p>Then he explained why it can't be the default, and this is the best defence of an annoying design decision you'll read this year:</p>
+
+<blockquote class="pull">
+  <p>"The whole point of I'm hosting it in an environment where it might get reset — <strong>that is exactly the kind of real-life problem that an agent is not going to be able to solve for you.</strong> Today agents can create so much code that creating the code is not the difficult part. It is: how do I get the code to be reliable enough in a deployment environment? … If I can't run 10 services in one session, keep them all alive, then I haven't picked up the skill to be able to deal with the deluge of code and services that agents will be able to provide."</p>
+  <cite>Anand, on why your <a href="https://www.cloudflare.com/" target="_blank" rel="noopener">Cloudflare</a> deployment has to still be alive at grading time</cite>
+</blockquote>
+
+<p>Or, in one sentence: <strong>"the thing that is difficult is exactly what we're trying to test if you're able to learn."</strong></p>
+
+<h3 class="sub">Can AI judge human experts?</h3>
+
+<p>The last question of the hour, from Jai: can AI agents act as judges or auditors of human expert work in high-stakes domains? Anand inverted the framing entirely.</p>
+
+<blockquote class="pull g">
+  <p>"If an AI agent comes in and says, 'I think you are doing X right and Y wrong because of blah blah blah,' it is so high-stakes that <strong>I will verify what it's saying as well</strong>. Now it's giving me an extra pair of eyes. I wouldn't mind. So if we use AI as an additional pair of eyes, it's both harmless and reasonably high impact because it might be able to literally look at things with a fresh perspective."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>The counterfactual matters: high-stakes industries need experts, and <strong>experts are expensive.</strong> If AI can prepare 50% of what an expert checks, so the expert only has to glance and approve, that's real leverage — with the caveat that you'd still sample outputs to watch for drift.</p>
+
+<p>And then the reframe that should probably be printed on a poster somewhere:</p>
+
+<blockquote class="pull m">
+  <p>"I don't think the segmentation is: is this high-risk or low-risk industry? <strong>It is: how we break the task. Is it generation or is it verification? Is it preparation of verification or is it approval of verification?</strong> Is it verification of simple tasks? Is it verification of subtle tasks?"</p>
+  <cite>Anand, on the only risk taxonomy that actually works</cite>
+</blockquote>
+
+<p>Which lands us, an hour later, back at the word nobody in the room had used about themselves.</p>
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<div class="sec-num">Section 14</div>
+<h2 class="sec" id="close">The close: an email address that answers itself</h2>
+
+<p>The hour ran out with fifty-odd questions still unanswered on the form. So Anand did the most Anand thing possible. He gave the students an agent.</p>
+
+<blockquote class="pull">
+  <p>"For the next 21 days, till the end of the month, my email ID is available and I'll give you a specific email ID: <strong>askai@s-anand.net</strong>… <strong>Any email that any of you send to this will be answered by my agent, which has all the context of TDS and my work and everything else, and you will get a response within a day.</strong> It's a human-in-the-loop; I'm still very much looking at the inputs and outputs, but it saves me bandwidth."</p>
+  <cite>Anand, closing the session</cite>
+</blockquote>
+
+<p>Consider what just happened. A course that spent an hour arguing about when it's legitimate to delegate work to an agent ended with <strong>the instructor delegating his own office hours to an agent — and disclosing it, precisely, including where the human stays in the loop.</strong> Checklists, receipts, audits, voting, exams; specify, then verify. He demonstrated the entire curriculum in ninety seconds, using himself as the worked example.</p>
+
+<p>Angad, who had spent the hour looping a TA's server, had already typed his verdict into the chat a few minutes earlier:</p>
+
+<blockquote class="pull g">
+  <p>"Sir, the way you think about problems and design questions inspires me a lot. I feel if a professor can think at this level, then I should also push myself to reach that level someday. That's why, Sir, you are genuinely one of my idols."</p>
+  <cite>Angad Jangir, in chat</cite>
+</blockquote>
+
+</div>
+
+<div class="band qwall-band" id="unanswered">
+  <div class="qwall-inner">
+    <h4>The questions that ran out of clock</h4>
+    <p class="qwall-sub">57 were submitted · about 15 were answered live · these went to the FAQ queue</p>
+    <div class="qwall">
+      <div class="q">"Do you think TDS is chasing the current trends too much? Agentic systems are already costing companies more than they expect… Would a lag of 8-9 months benefit us more to learn skills that are here to stick?"<span class="qw">Spandanjit Mondal</span></div>
+      <div class="q">"I am becoming so dependent that I am not even checking what AI coded, only I check when the output is not as expected… <strong>verifying AI code in such large repos takes a lot time compared to if I would have done it myself.</strong> How do I stop this?"<span class="qw">Aman Kumar</span></div>
+      <div class="q">"Recent breakthroughs in math have been attributed to LLMs. My question is whether the success belongs to LLMs or language itself. Could we interpret the success of LLM models in math as <strong>success of language in solving problems</strong>?"<span class="qw">S Vignesh</span></div>
+      <div class="q">"How safe is using AI from a national security perspective? … using Claude or ChatGPT is giving information to USA because their servers are in the USA. <strong>Can prompting itself become a career in the future?</strong>"<span class="qw">Divyanshu Mahavir</span></div>
+      <div class="q">"I am using AI now for all coding task and all assignments for TDS — am I detaching myself from learning? … my coworkers already have experience writing code manually, but for me to keep up I have to code using AI."<span class="qw">Rishav Bairagya</span></div>
+      <div class="q">"How can students tell the difference between <strong>using AI to learn vs becoming dependent on it</strong>? … As AI becomes capable of doing more of the technical work, what will differentiate an average data scientist from an excellent one?"<span class="qw">Dhanu Sree Suresh</span></div>
+      <div class="q">"After TDS, I think Time is the most important thing in problem solving. Previously I believed, even if something takes a large amount of time, but learning is happening, I should spend that time. <strong>Now I focus on tasks which cannot be done using agents.</strong> Is my thinking correct?"<span class="qw">Prince Khunt</span></div>
+      <div class="q">"What was the thought process behind introducing extensive offline evaluation in Project 1 and ROE?"<span class="qw">Gehlot Suyash — asked three times</span></div>
+      <div class="q">"How are these questions in TDS assignments and projects designed? What is the thought process behind making those questions?"<span class="qw">Ishaan Sameer Sawant</span></div>
+      <div class="q">"I want to learn AI more deeply — attention, transformers, architectures, and eventually build models from scratch. What would be the best path and resources?"<span class="qw">Aman Kumar</span></div>
+      <div class="q">"If someone with a clinical background wants to transition into a data science role in a healthcare company, what level of skills and expertise would they need?"<span class="qw">Linnet Thomas</span></div>
+      <div class="q">"What is one mistake you commonly see students make when learning data science?"<span class="qw">Vivek Mittal</span></div>
+      <div class="q">"Are there plans to have such a course at the degree level? Maybe as an elective, where we are introduced to more 'enterprise' tools."<span class="qw">P Devanarayanan</span></div>
+      <div class="q">"Like Week-0, can we record this history of TDS development as a portion of the week content? A new student will have proper context."<span class="qw">Vanguri V Uday Bhaskar</span></div>
+      <div class="q">"Give everybody who has ever taken TDS access to the GA/ROE questions from both the previous and current terms even after the submission time has passed."<span class="qw">Prince Kurien</span></div>
+      <div class="q">"What is the future of software engineering? What are the allied fields one should try to improve skills in to still remain relevant?"<span class="qw">Hema — asked four times</span></div>
+    </div>
+    <p class="stat-foot" style="color:var(--ink2)">Anand's commitment: <strong>"I will take all of the questions that you have and reply as an FAQ."</strong></p>
+  </div>
+</div>
+
+<div class="band takeaways-band" id="takeaways">
+  <div class="takeaways-inner">
+    <h2 class="takeaways-title">Six things worth stealing</h2>
+    <p class="takeaways-sub">From one hour of a teacher interrogating his own course</p>
+    <div class="takeaway-grid">
+      <div class="takeaway">
+        <div class="takeaway-num">01</div>
+        <div class="takeaway-title">Ask what taught them and what scored — separately</div>
+        <div class="takeaway-text">Two near-identical questions, back to back, exposed something no gradebook could: <strong>68% of students named different sources.</strong> A score measures "can you get the result using the world." It does not measure "what has become yours." Both are worth having; only one is usually claimed.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">02</div>
+        <div class="takeaway-title">Debugging is not verification</div>
+        <div class="takeaway-text">Across 70 free-text answers, <strong>"debug" appeared seven times and "verify" appeared zero.</strong> Students have internalised <em>problem → AI → persist → answer.</em> The missing step is <em>independent check → confidence</em> — and it matters more, not less, as models get better. The cheapest fix is one extra question: <strong>"How do you know?"</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">03</div>
+        <div class="takeaway-title">Build assets, not willpower</div>
+        <div class="takeaway-text">"People can push themselves 5%, 10%, 20% better by sheer willpower. But how much willpower do you have?" <strong>Notes, prompts, scripts, friends, file systems and agents all compound; discipline does not.</strong> Engineer the environment so the hard thing happens without you having to want it.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">04</div>
+        <div class="takeaway-title">Difficulty is a relationship, not a property</div>
+        <div class="takeaway-text">GA5 Q11 was, simultaneously, the question that permanently upgraded one student's toolkit, changed another's whole approach, and cost a third five days for nothing. <strong>Don't ask "is it too hard?" Ask when productive search becomes unproductive looping</strong> — then truncate the sterile tail without softening the hard part.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">05</div>
+        <div class="takeaway-title">Verification is an old profession</div>
+        <div class="takeaway-text">Judges rule on engines they don't understand; auditors sign off on books they didn't keep. <strong>Checklists, receipts, audits, voting, exams</strong> — five techniques, all borrowed, all older than computing. <a href="https://sanand0.github.io/talks/2026-08-07-data-hack-summit/" target="_blank" rel="noopener">The full argument is here.</a></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">06</div>
+        <div class="takeaway-title">Name the delegation boundary out loud</div>
+        <div class="takeaway-text">Transfer worked — a student found himself reflexively pasting Java homework into an agent. But what transferred was "delegate," not "decide, then verify." <strong>Separate production mode (get the result, use everything) from practice mode (install the capability, do one manual rep)</strong> — or students will guess the boundary, and guess wrong.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <p><strong>"What do you think TDS is actually teaching you?"</strong><br>
+  10 August 2026 · Remote AMA for <a href="https://tds.s-anand.net/" target="_blank" rel="noopener">Tools in Data Science</a>, <a href="https://study.iitm.ac.in/ds/" target="_blank" rel="noopener">IITM BS Degree Programme</a></p>
+  <p>By <a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand S</a>, LLM Psychologist at <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a>. Students had 21 days to write to <a href="mailto:askai@s-anand.net">askai@s-anand.net</a> — answered by his agent, with him in the loop.</p>
+  <p><a href="#" id="transcript-btn3">📄 Full transcript</a> ·
+     <a href="https://media.s-anand.net/2026-08-10-tds-ama.webm">⏯️ Video</a> ·
+     <a href="https://github.com/sanand0/talks/releases/download/talks/2026-08-10-tds-ama.opus">🎧 Audio</a> ·
+     <a href="#" class="chatpop" data-doc="chatgpt-prep.md" data-title="How Anand prepared — and what the data said afterwards">🧪 Prep &amp; analysis</a> ·
+     <a href="https://sanand0.github.io/talks/">📚 More talks</a></p>
+  <p class="footer-mono">Related: <a href="../2026-08-07-data-hack-summit/">How Do You Manage Something Smarter Than You?</a> · <a href="../2026-06-12-let-ai-take-your-exams/">Let AI Take Your Exams</a> · <a href="../2026-03-18-iitm-academic-council/">The Open-Book Exam We Never Designed</a></p>
+</footer>
+
+<!-- ── Section jumper ── -->
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump" aria-label="Jump to section">
+  <button id="jump-prev" title="Previous section" aria-label="Previous section">◂</button>
+  <a class="jump-cur" href="#jump-menu" id="jump-cur" aria-haspopup="true" aria-expanded="false"><span class="caret">☰</span> <span id="jump-cur-label">Jump to…</span></a>
+  <button id="jump-next" title="Next section" aria-label="Next section">▸</button>
+</nav>
+
+<div class="jump-menu" id="jump-menu" role="menu">
+  <div class="jm-group">The experiment</div>
+  <div class="jump-grid">
+    <a href="#top" data-jump="top">Top<small>The setup</small></a>
+    <a href="#video" data-jump="video">Watch / listen<small>Video · audio · transcript</small></a>
+    <a class="m" href="#split" data-jump="split">The split<small>68% differed</small></a>
+    <a href="#mirror" data-jump="mirror">The mirror<small>"What is TDS teaching you?"</small></a>
+  </div>
+  <div class="jm-group">Answers from the hour</div>
+  <div class="jump-grid">
+    <a href="#exam" data-jump="exam">The end-term<small>Changed live, on air</small></a>
+    <a href="#bubble" data-jump="bubble">Not a bubble<small>"It is underestimated"</small></a>
+    <a href="#assets" data-jump="assets">Assets &gt; willpower<small>And Anand's mother</small></a>
+    <a class="m" href="#stuck" data-jump="stuck">GA5 Q11<small>War stories · the 3 AM TA</small></a>
+    <a class="m" href="#difficulty" data-jump="difficulty">Hackable for years<small>The confession</small></a>
+    <a href="#management" data-jump="management">Management for agents<small>Why we still exercise</small></a>
+  </div>
+  <div class="jm-group">The findings</div>
+  <div class="jump-grid">
+    <a href="#comic" data-jump="comic">The comic page<small>Whole hour, 8 panels</small></a>
+    <a href="#verify" data-jump="verify">Verifying the unverifiable<small>Five old techniques</small></a>
+    <a class="m" href="#blindspot" data-jump="blindspot">The blind spot<small>Zero mentions of "verify"</small></a>
+    <a class="m" href="#wrong" data-jump="wrong">"You're wrong about…"<small>Student dissent</small></a>
+  </div>
+  <div class="jm-group">The future</div>
+  <div class="jump-grid">
+    <a href="#tenx" data-jump="tenx">If AI gets 10× better<small>What to stop teaching</small></a>
+    <a href="#careers" data-jump="careers">Careers<small>The vibe-code fixer</small></a>
+    <a href="#design" data-jump="design">Course design<small>Two engineer's answers</small></a>
+    <a href="#close" data-jump="close">The close<small>askai@s-anand.net</small></a>
+    <a href="#unanswered" data-jump="unanswered">Unanswered<small>The FAQ queue</small></a>
+    <a href="#takeaways" data-jump="takeaways">Takeaways<small>Six things to steal</small></a>
+  </div>
+</div>
+
+<!-- ── Document modal ── -->
+<div class="modal" id="doc-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h4 id="doc-title">Transcript</h4>
+      <button class="modal-close" id="doc-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-src" id="doc-src"></div>
+    <div class="modal-body" id="doc-body"></div>
+  </div>
+</div>
+
+<!-- ── Citation popup ── -->
+<div class="modal" id="popup-overlay">
+  <div class="modal-box" style="max-width:620px">
+    <div class="modal-head">
+      <h4 id="popup-title"></h4>
+      <button class="modal-close" id="popup-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body" id="popup-content"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+<script>
+  // ── Progress bar ──
+  const prog = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    prog.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + '%';
+  });
+
+  // ── Markdown document modal ──
+  const modal = document.getElementById('doc-modal');
+  const dBody = document.getElementById('doc-body');
+  const dTitle = document.getElementById('doc-title');
+  const dSrc = document.getElementById('doc-src');
+  const cache = {};
+
+  function renderMarkdown(text) {
+    const body = text
+      .replace(/^---[\s\S]*?---\s*/, '')
+      .replace(/<summary>([\s\S]*?)<\/summary>/g, '\n\n**💭 $1**\n\n')
+      .replace(/<\/?details>/g, '\n\n');
+    const html = window.marked ? marked.parse(body) : body.replace(/\n/g, '<br>');
+    return html.replace(/<a /g, '<a target="_blank" rel="noopener" ');
+  }
+
+  async function openDoc(file, title, source) {
+    modal.classList.add('open');
+    dBody.scrollTop = 0;
+    dTitle.textContent = title;
+    dSrc.innerHTML = source ? `<a href="${source}" target="_blank" rel="noopener">↗ Open the original</a>` : '';
+    if (cache[file]) { dBody.innerHTML = cache[file]; return; }
+    dBody.innerHTML = '<p><em>Loading…</em></p>';
+    try {
+      const res = await fetch(file);
+      if (!res.ok) throw new Error(res.status);
+      const html = renderMarkdown(await res.text());
+      cache[file] = html;
+      dBody.innerHTML = html;
+    } catch (e) {
+      dBody.innerHTML = `<p>Could not load this file here. <a href="${source || file}" target="_blank" rel="noopener">Open it directly</a>.</p>`;
+    }
+  }
+
+  const openTranscript = e => { e.preventDefault(); openDoc('transcript.md', 'Full transcript — TDS AMA, 10 Aug 2026', ''); };
+  ['transcript-btn', 'transcript-btn2', 'transcript-btn3', 'transcript-btn4'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', openTranscript);
+  });
+
+  document.querySelectorAll('.chatpop').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      openDoc(el.dataset.doc, el.dataset.title, el.dataset.source || '');
+    });
+  });
+  document.getElementById('doc-close').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+
+  // ── Citation popups ──
+  const POPUPS = {
+    prep: {
+      title: "The form was an experiment, with pre-registered predictions",
+      html: `<p>The AMA form wasn't a feedback survey. Its comments spell out the intent: <em>"Give every student, including quiet students, an equal channel before discussion"</em> and <em>"Compare what students say drives LEARNING vs what drives MARKS."</em> Five hypotheses were written down <strong>before</strong> the data arrived, then scored afterwards.</p>
+      <div style="overflow-x:auto"><table>
+        <tr><th>Prediction</th><th>Result</th></tr>
+        <tr><td><strong>P1</strong> ≥30% give different learning vs marks sources</td><td><strong>25/37 = 68%</strong> · strong pass</td></tr>
+        <tr><td><strong>P2</strong> GAs / projects / AI / classmates beat course content as the learning source</td><td><strong>31/37 = 84%</strong> vs 2/37 · pass, but too easy</td></tr>
+        <tr><td><strong>P3</strong> ≥50% of durable skills are tool-independent</td><td><strong>17/24 = 71%</strong> strict coding · pass</td></tr>
+        <tr><td><strong>P4</strong> Sterile friction is mostly setup / prerequisites / evaluator ambiguity</td><td>Partial — <strong>AI looping</strong> and missing scaffolding mattered more than predicted</td></tr>
+        <tr><td><strong>P5</strong> A repeated hidden assumption surfaces</td><td>Two: <strong>"AI bypasses foundations"</strong> (6) and <strong>"struggle ≠ learning without feedback"</strong> (4)</td></tr>
+      </table></div>
+      <p>The honest caveat, in the analysis's own words: these are <strong>40 live-session respondents</strong> — an engaged survivor sample — so treat the percentages as evidence about <em>this room</em>, not the whole course.</p>
+      <p><a href="#" class="pop-doclink" data-doc="chatgpt-prep.md" data-title="How Anand prepared — and what the data said afterwards">Read the full preparation and analysis →</a></p>`
+    }
+  };
+  const overlay = document.getElementById('popup-overlay');
+  document.querySelectorAll('.cite').forEach(el => {
+    el.addEventListener('click', () => {
+      const data = POPUPS[el.dataset.pop];
+      if (!data) return;
+      document.getElementById('popup-title').textContent = data.title;
+      document.getElementById('popup-content').innerHTML = data.html;
+      overlay.classList.add('open');
+    });
+  });
+  document.getElementById('popup-content').addEventListener('click', e => {
+    const a = e.target.closest('.pop-doclink');
+    if (!a) return;
+    e.preventDefault();
+    overlay.classList.remove('open');
+    openDoc(a.dataset.doc, a.dataset.title, '');
+  });
+  document.getElementById('popup-close').addEventListener('click', () => overlay.classList.remove('open'));
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+
+  // ── Section jumper ──
+  (function () {
+    const menu = document.getElementById('jump-menu');
+    const backdrop = document.getElementById('jump-backdrop');
+    const curBtn = document.getElementById('jump-cur');
+    const curLabel = document.getElementById('jump-cur-label');
+    const prevBtn = document.getElementById('jump-prev');
+    const nextBtn = document.getElementById('jump-next');
+    const links = Array.from(menu.querySelectorAll('a[data-jump]'));
+    const ids = links.map(a => a.dataset.jump);
+    const labels = {};
+    links.forEach(a => { labels[a.dataset.jump] = a.firstChild.textContent.trim(); });
+    let idx = 0;
+
+    const closeMenu = () => { menu.classList.remove('open'); backdrop.classList.remove('open'); curBtn.setAttribute('aria-expanded', 'false'); };
+    const toggleMenu = e => {
+      e.preventDefault();
+      const open = !menu.classList.contains('open');
+      menu.classList.toggle('open', open);
+      backdrop.classList.toggle('open', open);
+      curBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) { const cur = menu.querySelector('a.is-cur'); if (cur) cur.scrollIntoView({ block: 'nearest' }); }
+    };
+    curBtn.addEventListener('click', toggleMenu);
+    backdrop.addEventListener('click', closeMenu);
+    links.forEach(a => a.addEventListener('click', closeMenu));
+
+    function setCurrent(i) {
+      idx = i;
+      curLabel.textContent = labels[ids[i]];
+      links.forEach((a, k) => a.classList.toggle('is-cur', k === i));
+      prevBtn.disabled = i <= 0;
+      nextBtn.disabled = i >= ids.length - 1;
+    }
+    const go = i => {
+      if (i < 0 || i >= ids.length) return;
+      const el = document.getElementById(ids[i]);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setCurrent(i);
+    };
+    prevBtn.addEventListener('click', () => go(idx - 1));
+    nextBtn.addEventListener('click', () => go(idx + 1));
+
+    const targets = ids.map(id => document.getElementById(id)).filter(Boolean);
+    function onScroll() {
+      const y = window.scrollY + window.innerHeight * 0.3;
+      let best = 0;
+      targets.forEach((el, k) => { if (el.getBoundingClientRect().top + window.scrollY <= y) best = k; });
+      if (best !== idx) setCurrent(best);
+    }
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { onScroll(); ticking = false; });
+    }, { passive: true });
+    setCurrent(0);
+    onScroll();
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeMenu();
+      if (e.target.matches('input, textarea')) return;
+      if (menu.classList.contains('open') || modal.classList.contains('open') || overlay.classList.contains('open')) return;
+      if (e.key === 'j') go(idx + 1);
+      if (e.key === 'k') go(idx - 1);
+    });
+  })();
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { modal.classList.remove('open'); overlay.classList.remove('open'); }
+  });
+</script>
+</body>
+</html>

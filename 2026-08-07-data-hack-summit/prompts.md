@@ -8,6 +8,19 @@
 
 -->
 
+## Revision, 07 Aug 2026
+
+<!--
+cd ~/code/talks/
+dev.sh -p ~/Documents/forms:ro -- claude --dangerously-skip-permissions --model opus --effort medium
+-->
+
+Update 2026-08-07-data-hack-summit/index.html.
+
+Read prompt.md for context. I think people who said they run tests on AI output (in the survey) find errors about twice as often as people who spot-check it. Analyze, verify, and incorporate.
+
+## Initial draft, 07 Aug 2026
+
 <!--
 cd ~/code/talks/
 dev.sh -p ~/Documents/forms:ro -- claude --dangerously-skip-permissions --model opus --effort medium

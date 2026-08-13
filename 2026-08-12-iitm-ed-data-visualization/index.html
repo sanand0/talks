@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why Are You Even Sitting in This Class? | ED5518 · IIT Madras</title>
+<meta name="description" content="Anand S, LLM Psychologist at Straive, spent an hour at IIT Madras arguing that his own students shouldn't need to learn data visualization — and then, with the room's help, worked out exactly what's left.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=Literata:ital,opsz,wght@0,7..72,300;0,7..72,400;0,7..72,600;1,7..72,300;1,7..72,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --paper: #ffffff;
+    --ink: #191b2c;
+    --ink2: #3a3e58;
+    --muted: #62667f;
+    --border: #e2ded4;
+    --machine: #2b3f9e;        /* indigo — what the agent does */
+    --machine-dk: #1d2c72;
+    --machine-soft: #e6e9f8;
+    --human: #b04a06;          /* rust — what the human does */
+    --human-dk: #8a3905;
+    --human-soft: #fbe9d9;
+    --gold: #7d5808;
+    --sand: #efe9dc;
+    --night: #141628;
+    --night2: #20244a;
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-body: 'Literata', Georgia, serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; overflow-x: clip; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg); color: var(--ink);
+    line-height: 1.75; font-size: 18.5px; font-weight: 300;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    padding-bottom: 4.2rem;
+  }
+  [id] { scroll-margin-top: 4.6rem; }
+
+  /* ── Progress ── */
+  #progress {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--machine), var(--gold), var(--human));
+    z-index: 1000; transition: width .15s linear;
+  }
+
+  /* ── Masthead ── */
+  .masthead {
+    position: sticky; top: 0; z-index: 200;
+    background: rgba(247,245,240,.94); border-bottom: 1px solid var(--border);
+    padding: .7rem 1.4rem; backdrop-filter: blur(8px);
+  }
+  .masthead-inner {
+    max-width: 1200px; margin: 0 auto; display: flex;
+    justify-content: space-between; align-items: center; gap: .8rem; flex-wrap: wrap;
+  }
+  .masthead-brand {
+    font-family: var(--font-mono); font-size: .72rem; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--ink2); text-decoration: none;
+  }
+  .masthead-brand:hover { color: var(--machine); }
+  .masthead-right { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+  .masthead-date { font-family: var(--font-mono); font-size: .68rem; color: var(--muted); }
+  .masthead-link {
+    font-family: var(--font-mono); font-size: .66rem; letter-spacing: .04em;
+    color: var(--machine-dk); text-decoration: none;
+    border: 1px solid var(--machine); border-radius: 3px;
+    padding: .26rem .55rem; transition: all .2s; white-space: nowrap;
+  }
+  .masthead-link:hover { background: var(--machine); color: #fff; }
+
+  /* ── Layout ── */
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 1.5rem; }
+  .wrap-wide { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ── Hero ── */
+  .hero { max-width: 900px; margin: 0 auto; padding: 3.4rem 1.5rem 1.4rem; text-align: center; }
+  .hero-kicker {
+    font-family: var(--font-mono); font-size: .64rem; letter-spacing: .24em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem;
+  }
+  .hero h1 {
+    font-family: var(--font-display); font-weight: 300;
+    font-size: clamp(2.4rem, 7vw, 4.5rem); line-height: 1.02;
+    letter-spacing: -.02em; margin-bottom: 1.1rem;
+  }
+  .hero h1 em { font-style: italic; color: var(--machine); }
+  .hero-sub {
+    font-size: 1.16rem; color: var(--ink2); line-height: 1.62;
+    max-width: 680px; margin: 0 auto 1.8rem; font-weight: 300;
+  }
+  .hero-meta {
+    font-family: var(--font-mono); font-size: .72rem; color: var(--muted);
+    letter-spacing: .02em; line-height: 2;
+  }
+  .hero-meta a { color: var(--machine-dk); text-decoration: none; border-bottom: 1px solid rgba(43,63,158,.45); }
+  .hero-meta a:hover { color: var(--human-dk); border-bottom-color: var(--human); }
+
+  /* ── Quick links ── */
+  .quick-links { margin: 1.8rem auto 0; display: flex; gap: .55rem; justify-content: center; flex-wrap: wrap; }
+  .quick-links a {
+    font-family: var(--font-mono); font-size: .7rem; letter-spacing: .02em;
+    text-decoration: none; color: var(--ink2);
+    background: var(--paper); border: 1px solid var(--border);
+    border-radius: 99px; padding: .42rem .9rem; transition: all .2s;
+  }
+  .quick-links a:hover { border-color: var(--machine); color: var(--machine-dk); transform: translateY(-1px); }
+
+  /* ── Full-width bands ── */
+  .band { width: 100vw; margin-left: calc(50% - 50vw); margin-top: 3.2rem; margin-bottom: 3.4rem; }
+  .audio-wrap { background: var(--night); padding: 2.4rem 1.5rem; }
+  .audio-inner { max-width: 820px; margin: 0 auto; text-align: center; }
+  .audio-inner h4 {
+    font-family: var(--font-display); font-weight: 300; font-size: clamp(1.4rem, 4vw, 2rem);
+    color: #fff; margin-bottom: .3rem;
+  }
+  .audio-inner .asub {
+    font-family: var(--font-mono); font-size: .66rem; letter-spacing: .12em;
+    text-transform: uppercase; color: #9ea4cc; margin-bottom: 1.4rem;
+  }
+  .audio-inner audio { width: 100%; max-width: 620px; }
+  .media-cap {
+    font-family: var(--font-mono); font-size: .71rem; color: #b2b7d6;
+    text-align: center; margin-top: 1.1rem; line-height: 1.9;
+  }
+  .media-cap a { color: #ffc98a; text-decoration: none; border-bottom: 1px solid rgba(255,201,138,.5); }
+  .media-cap a:hover { color: #ffe6c9; border-bottom-color: #ffe6c9; }
+
+  /* ── Body text ── */
+  .wrap p { margin-bottom: 1.3rem; }
+  .wrap p a, .wrap li a, .wrap figcaption a, .wrap dd a {
+    color: var(--machine-dk); text-decoration: none; border-bottom: 1px solid rgba(43,63,158,.4);
+  }
+  .wrap p a:hover, .wrap li a:hover { color: var(--human-dk); border-bottom-color: var(--human); }
+  .wrap strong { font-weight: 600; color: var(--ink); background: linear-gradient(transparent 62%, rgba(230,233,248,.95) 62%); }
+  .wrap strong.h { background: linear-gradient(transparent 62%, rgba(251,233,217,.95) 62%); }
+  .wrap ul, .wrap ol { margin: 0 0 1.3rem 1.3rem; }
+  .wrap li { margin-bottom: .5rem; }
+  .lede { font-size: 1.2rem; line-height: 1.62; color: var(--ink2); }
+
+  /* ── Section headers ── */
+  .sec-num {
+    font-family: var(--font-mono); font-size: .64rem; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: .5rem;
+  }
+  h2.sec {
+    font-family: var(--font-display); font-weight: 300;
+    font-size: clamp(1.9rem, 5vw, 2.8rem); line-height: 1.1;
+    letter-spacing: -.018em; margin: 3rem 0 1.2rem;
+  }
+  h2.sec em { font-style: italic; color: var(--machine); }
+  h2.sec em.h { color: var(--human); }
+  h3.sub {
+    font-family: var(--font-mono); font-weight: 700; text-transform: uppercase;
+    font-size: .76rem; letter-spacing: .12em; margin: 2.4rem 0 .8rem; color: var(--gold);
+  }
+  .dinkus { text-align: center; color: var(--muted); letter-spacing: .8em; margin: 2.6rem 0; font-size: .8rem; }
+
+  /* ── Pull quotes ── */
+  blockquote.pull {
+    margin: 2.1rem 0; padding: 1.3rem 1.6rem;
+    background: var(--paper); border-left: 4px solid var(--machine);
+    border-radius: 0 6px 6px 0; box-shadow: 0 2px 14px rgba(25,27,44,.07);
+  }
+  blockquote.pull p {
+    font-family: var(--font-display); font-size: 1.3rem; font-weight: 300;
+    line-height: 1.4; margin-bottom: .6rem; letter-spacing: -.008em; color: var(--ink);
+  }
+  blockquote.pull cite {
+    font-family: var(--font-mono); font-style: normal; font-size: .67rem;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+  }
+  blockquote.pull.h { border-left-color: var(--human); }
+  blockquote.pull.g { border-left-color: var(--gold); }
+  blockquote.pull.big p { font-size: 1.55rem; }
+
+  /* ── Student voice cards ── */
+  .voices { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: .85rem; margin: 1.8rem 0 2rem; }
+  .voice {
+    background: var(--human-soft); border: 1px solid #f0d3b8; border-radius: 8px;
+    padding: 1rem 1.15rem;
+  }
+  .voice p { font-size: .95rem; line-height: 1.6; margin: 0 0 .55rem; color: var(--ink); }
+  .voice .who {
+    font-family: var(--font-mono); font-size: .62rem; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--human-dk);
+  }
+  .voice .who::before { content: "🙋 "; }
+
+  /* ── Exchange (dialogue) ── */
+  .exchange { margin: 1.9rem 0 2.2rem; border-left: 3px solid var(--border); padding-left: 1.2rem; }
+  .exchange .turn { margin-bottom: 1rem; }
+  .exchange .turn:last-child { margin-bottom: 0; }
+  .exchange .spk {
+    font-family: var(--font-mono); font-size: .62rem; letter-spacing: .1em;
+    text-transform: uppercase; display: block; margin-bottom: .15rem;
+  }
+  .exchange .turn.s .spk { color: var(--human-dk); }
+  .exchange .turn.a .spk { color: var(--machine-dk); }
+  .exchange .turn p { font-size: 1rem; line-height: 1.65; margin: 0; color: var(--ink2); }
+  .exchange .turn.a p { color: var(--ink); }
+
+  /* ── Cite / tooltip ── */
+  .cite {
+    cursor: pointer; color: var(--gold); font-weight: 600;
+    border-bottom: 1px dotted var(--gold); text-decoration: none;
+  }
+  .cite::after { content: "†"; font-size: .7em; vertical-align: super; }
+  .tip { border-bottom: 1px dotted var(--muted); cursor: help; position: relative; }
+  .tip:hover::after, .tip:focus::after {
+    content: attr(data-tip);
+    position: absolute; bottom: 132%; left: 50%; transform: translateX(-50%);
+    background: var(--night); color: #e8eaf7; font-family: var(--font-body);
+    font-size: .8rem; line-height: 1.5; font-style: normal; font-weight: 300;
+    padding: .6rem .8rem; border-radius: 6px; width: min(300px, 78vw);
+    z-index: 90; box-shadow: 0 6px 22px rgba(0,0,0,.34);
+  }
+
+  /* ── Iframe embed bands ── */
+  .iframe-wrap { background: var(--machine-soft); padding: 2.2rem 1.5rem; }
+  .iframe-wrap.dark { background: var(--night2); }
+  .iframe-wrap.warm { background: var(--human-soft); }
+  .iframe-wrap.sand { background: var(--sand); }
+  .iframe-inner { max-width: 1400px; margin: 0 auto; }
+  .iframe-inner iframe {
+    width: 100%; height: min(88vh, 820px); border: 0; border-radius: 8px;
+    background: #fff; box-shadow: 0 10px 40px rgba(25,27,44,.18); display: block;
+  }
+  .iframe-inner iframe.short { height: min(64vh, 600px); }
+  .iframe-inner iframe.tall { height: min(92vh, 900px); }
+  .iframe-cap {
+    font-family: var(--font-mono); font-size: .71rem; color: var(--ink2);
+    text-align: center; margin-top: 1rem; line-height: 1.8;
+  }
+  .iframe-wrap.dark .iframe-cap { color: #b2b7d6; }
+  .iframe-cap a { color: var(--machine-dk); text-decoration: none; border-bottom: 1px solid rgba(43,63,158,.45); }
+  .iframe-cap a:hover { color: var(--human-dk); border-bottom-color: var(--human); }
+  .iframe-wrap.dark .iframe-cap a { color: #ffc98a; border-bottom-color: rgba(255,201,138,.5); }
+  .iframe-wrap.dark .iframe-cap a:hover { color: #ffe6c9; border-bottom-color: #ffe6c9; }
+
+  /* ── Comic band ── */
+  .comic-band { background: linear-gradient(160deg, #20244a 0%, #141628 100%); padding: 2.8rem 1.5rem; }
+  .comic-inner { max-width: 980px; margin: 0 auto; text-align: center; }
+  .comic-inner img { width: 100%; height: auto; display: block; border-radius: 8px; box-shadow: 0 14px 48px rgba(0,0,0,.5); }
+  .comic-inner h4 {
+    font-family: var(--font-display); font-weight: 300; font-size: clamp(1.5rem, 4vw, 2.1rem);
+    color: #fff; margin-bottom: .35rem;
+  }
+  .comic-inner .csub {
+    font-family: var(--font-mono); font-size: .66rem; letter-spacing: .12em;
+    text-transform: uppercase; color: #9ea4cc; margin-bottom: 1.5rem;
+  }
+  .comic-inner a { display: block; text-decoration: none; }
+
+  /* ── Stat band ── */
+  .stat-band { background: var(--sand); border-top: 1px solid #ded6c5; border-bottom: 1px solid #ded6c5; padding: 2.6rem 1.5rem; }
+  .stat-band h4 {
+    font-family: var(--font-mono); font-size: .68rem; letter-spacing: .16em; text-transform: uppercase;
+    text-align: center; color: var(--gold); margin-bottom: 1.7rem;
+  }
+  .stat-grid { max-width: 1060px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1.5rem; }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: var(--font-display); font-weight: 300; font-size: clamp(1.9rem, 4.6vw, 2.8rem);
+    color: var(--machine-dk); line-height: 1; letter-spacing: -.03em;
+  }
+  .stat-num.h { color: var(--human-dk); }
+  .stat-label { font-family: var(--font-mono); font-size: .63rem; letter-spacing: .03em; color: var(--ink2); margin-top: .5rem; line-height: 1.6; }
+  .stat-foot { max-width: 800px; margin: 1.8rem auto 0; text-align: center; font-size: .95rem; color: var(--ink2); }
+  .stat-foot a { color: var(--machine-dk); }
+
+  /* ── Card grids ── */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 1rem; margin: 1.9rem 0 2.2rem; }
+  .cards.c3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+  .cards.c5 { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+  /* card groups inside the narrow text column break out so a set fits one row */
+  .wrap .cards, .wrap .voices {
+    width: min(1120px, calc(100vw - 3rem));
+    margin-left: 50%; transform: translateX(-50%);
+  }
+  .card {
+    background: var(--paper); border: 1px solid var(--border); border-top: 3px solid var(--machine);
+    border-radius: 7px; padding: 1.1rem 1.2rem;
+  }
+  .card.h { border-top-color: var(--human); }
+  .card.g { border-top-color: var(--gold); }
+  .card h5 { font-family: var(--font-display); font-weight: 400; font-size: 1.18rem; margin-bottom: .45rem; line-height: 1.22; color: var(--ink); }
+  .card p { font-size: .92rem; line-height: 1.62; color: var(--ink2); margin: 0; }
+  .card p + p { margin-top: .55rem; }
+  .card .k { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: .35rem; }
+  .card a { color: var(--machine-dk); text-decoration: none; border-bottom: 1px solid rgba(43,63,158,.4); }
+  .card a:hover { color: var(--human-dk); border-bottom-color: var(--human); }
+
+  /* ── Wide card band ── */
+  .cardband { background: var(--machine-soft); border-top: 1px solid #ccd3f0; border-bottom: 1px solid #ccd3f0; padding: 2.6rem 1.5rem; }
+  .cardband.warm { background: var(--human-soft); border-color: #f0d3b8; }
+  .cardband-inner { max-width: 1120px; margin: 0 auto; }
+  .cardband h4 { font-family: var(--font-display); font-weight: 300; font-size: clamp(1.55rem, 4vw, 2.15rem); text-align: center; color: var(--ink); margin-bottom: .35rem; }
+  .cardband .cbsub { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; text-align: center; color: var(--machine-dk); margin-bottom: 1.8rem; }
+  .cardband.warm .cbsub { color: var(--human-dk); }
+  .cardband .cards { margin: 0; }
+  .cardband .card { border-color: #ccd3f0; }
+  .cardband.warm .card { border-color: #f0d3b8; }
+  .cardband .cbfoot { max-width: 820px; margin: 1.8rem auto 0; text-align: center; font-size: .95rem; color: var(--ink2); line-height: 1.7; }
+  .cardband .cbfoot a { color: var(--machine-dk); text-decoration: none; border-bottom: 1px solid rgba(43,63,158,.45); }
+  .cardband.warm .cbfoot a { color: var(--human-dk); border-bottom-color: rgba(138,57,5,.45); }
+
+  /* ── Bottleneck list ── */
+  .bottle-band { background: var(--night); padding: 2.8rem 1.5rem; }
+  .bottle-inner { max-width: 900px; margin: 0 auto; }
+  .bottle-inner h4 { font-family: var(--font-display); font-weight: 300; font-size: clamp(1.5rem, 4vw, 2.1rem); color: #fff; text-align: center; margin-bottom: .35rem; }
+  .bottle-inner .bsub { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: #9ea4cc; text-align: center; margin-bottom: 1.8rem; }
+  .bottle-list { list-style: none; margin: 0; font-family: var(--font-mono); font-size: .82rem; line-height: 1.6; }
+  .bottle-list li { padding: .55rem 0 .55rem 0; border-bottom: 1px solid rgba(255,255,255,.11); color: #dfe2f4; display: grid; grid-template-columns: 6.4rem 1fr; gap: .8rem; }
+  .bottle-list li:last-child { border-bottom: 0; }
+  .bottle-list .bd { color: #8f95bd; font-size: .72rem; padding-top: .12rem; }
+  .bottle-list .bt strong { color: #ffd7a8; font-weight: 500; }
+  .bottle-list .tag { color: #8fd8c4; }
+  .bottle-foot { margin-top: 1.6rem; color: #c3c8e2; font-size: .95rem; line-height: 1.7; text-align: center; }
+  .bottle-foot strong { color: #fff; font-weight: 600; }
+
+  /* ── Scorecard table ── */
+  .scorecard { max-width: 760px; margin: 2rem auto; background: var(--paper); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .scorecard h5 {
+    font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--gold); padding: 1rem 1.2rem .8rem; border-bottom: 1px dashed var(--border); margin: 0;
+  }
+  .scorecard table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  .scorecard th, .scorecard td { padding: .55rem 1.2rem; text-align: left; border-bottom: 1px solid var(--border); }
+  .scorecard th { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+  .scorecard td { color: var(--ink2); }
+  .scorecard td.n { text-align: right; font-family: var(--font-mono); font-size: .82rem; }
+  .scorecard td.win { color: var(--machine-dk); font-weight: 600; }
+  .scorecard tr:last-child td { border-bottom: 0; }
+  .scorecard tr.tot td { background: var(--machine-soft); color: var(--machine-dk); font-weight: 600; }
+  .scorecard .scfoot { padding: .9rem 1.2rem; font-size: .84rem; color: var(--ink2); border-top: 1px solid var(--border); line-height: 1.6; }
+  .scorecard .scfoot a { color: var(--machine-dk); }
+
+  /* ── Takeaways ── */
+  .takeaways-band { background: linear-gradient(140deg, #1d2c72 0%, #141628 52%, #612803 100%); padding: 3.2rem 1.5rem; }
+  .takeaways-inner { max-width: 1120px; margin: 0 auto; }
+  .takeaways-title { font-family: var(--font-display); font-weight: 300; font-size: clamp(2rem, 5vw, 2.9rem); color: #fff; text-align: center; margin-bottom: .4rem; }
+  .takeaways-sub { text-align: center; color: #c2c7e4; font-size: .72rem; margin-bottom: 2.1rem; font-family: var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
+  .takeaway-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+  .takeaway { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.26); border-radius: 8px; padding: 1.25rem 1.3rem; }
+  .takeaway-num { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .14em; color: #ffc98a; margin-bottom: .45rem; }
+  .takeaway-title { font-family: var(--font-display); font-weight: 400; font-size: 1.3rem; color: #fff; margin-bottom: .45rem; line-height: 1.22; }
+  .takeaway-text { font-size: .92rem; line-height: 1.66; color: #e9ebf7; }
+  .takeaway-text a { color: #ffd7ae; text-decoration: none; border-bottom: 1px solid rgba(255,215,174,.55); }
+  .takeaway-text a:hover { color: #fff; border-bottom-color: #fff; }
+  .takeaway-text strong { color: #fff; font-weight: 600; }
+
+  /* ── Footer ── */
+  .footer { background: var(--night); color: #b2b7d6; padding: 2.6rem 1.5rem; text-align: center; }
+  .footer p { margin-bottom: .7rem; font-size: .92rem; }
+  .footer a { color: #ffc98a; text-decoration: none; border-bottom: 1px solid rgba(255,201,138,.5); }
+  .footer a:hover { color: #fff; border-bottom-color: #fff; }
+  .footer-mono { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .04em; color: #8f95bd; }
+
+  /* ── Modals ── */
+  .modal { position: fixed; inset: 0; background: rgba(20,22,40,.9); display: none; align-items: center; justify-content: center; z-index: 900; padding: 1.4rem; }
+  .modal.open { display: flex; }
+  .modal-box { background: var(--paper); border-radius: 10px; max-width: 880px; width: 100%; max-height: 88vh; display: flex; flex-direction: column; overflow: hidden; }
+  .modal-head { padding: .95rem 1.3rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .modal-head h4 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 400; color: var(--ink); }
+  .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--muted); line-height: 1; padding: 0 .3rem; }
+  .modal-close:hover { color: var(--machine); }
+  .modal-body { padding: 1.25rem; overflow-y: auto; font-size: .93rem; line-height: 1.72; color: var(--ink2); }
+  .modal-body h1, .modal-body h2, .modal-body h3 { font-family: var(--font-display); font-weight: 400; margin: 1.2rem 0 .55rem; line-height: 1.22; color: var(--ink); }
+  .modal-body h1 { font-size: 1.45rem; } .modal-body h2 { font-size: 1.22rem; } .modal-body h3 { font-size: 1.08rem; }
+  .modal-body p { margin-bottom: .8rem; }
+  .modal-body strong { color: var(--ink); font-weight: 600; }
+  .modal-body a { color: var(--machine-dk); }
+  .modal-body ul, .modal-body ol { margin: 0 0 .8rem 1.2rem; }
+  .modal-body li { margin-bottom: .4rem; }
+  .modal-body blockquote { border-left: 3px solid var(--border); padding-left: .9rem; margin: .8rem 0; color: var(--ink2); }
+  .modal-body pre { background: #f0eee8; padding: .8rem; border-radius: 6px; overflow-x: auto; font-size: .76rem; }
+  .modal-body code { font-family: var(--font-mono); font-size: .84em; }
+  .modal-body table { border-collapse: collapse; width: 100%; font-size: .85rem; margin: .8rem 0; display: block; overflow-x: auto; }
+  .modal-body th, .modal-body td { border: 1px solid var(--border); padding: .4rem .6rem; text-align: left; }
+  .modal-body img { max-width: 100%; height: auto; }
+  .modal-src { font-family: var(--font-mono); font-size: .7rem; padding: .3rem 1.3rem 0; }
+  .modal-src a { color: var(--gold); }
+
+  /* ── Section jumper ── */
+  .jump {
+    position: fixed; z-index: 400; left: 50%; bottom: 1.1rem; transform: translateX(-50%);
+    display: flex; align-items: stretch; gap: 1px; background: var(--night);
+    border-radius: 99px; box-shadow: 0 6px 28px rgba(20,22,40,.42); overflow: hidden;
+    max-width: calc(100vw - 1.6rem);
+  }
+  .jump button, .jump .jump-cur {
+    appearance: none; border: 0; background: var(--night); color: #e8eaf7;
+    font-family: var(--font-mono); font-size: .68rem; letter-spacing: .04em;
+    padding: .55rem .8rem; cursor: pointer; line-height: 1.3;
+    display: flex; align-items: center; gap: .4rem; white-space: nowrap; text-decoration: none;
+  }
+  .jump button:hover { background: var(--machine); color: #fff; }
+  .jump .jump-cur { cursor: pointer; max-width: min(46vw, 320px); overflow: hidden; text-overflow: ellipsis; display: block; padding: .55rem 1rem; font-weight: 500; }
+  .jump .jump-cur:hover { background: var(--night2); }
+  .jump .jump-cur .caret { color: #ffc98a; }
+  .jump button[disabled] { opacity: .32; cursor: default; }
+  .jump button[disabled]:hover { background: var(--night); color: #e8eaf7; }
+
+  .jump-menu {
+    position: fixed; z-index: 401; left: 50%; bottom: 4rem; transform: translateX(-50%);
+    background: var(--paper); border: 1px solid var(--border); border-radius: 12px;
+    box-shadow: 0 14px 46px rgba(20,22,40,.34); padding: .8rem; display: none;
+    width: min(860px, calc(100vw - 1.6rem)); max-height: min(68vh, 560px); overflow-y: auto;
+  }
+  .jump-menu.open { display: block; }
+  .jump-menu .jm-group {
+    font-family: var(--font-mono); font-size: .6rem; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--gold); margin: .7rem .4rem .4rem;
+  }
+  .jump-menu .jm-group:first-child { margin-top: .2rem; }
+  .jump-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: .35rem; }
+  .jump-menu a {
+    display: block; text-decoration: none; color: var(--ink2);
+    font-family: var(--font-mono); font-size: .72rem; line-height: 1.4;
+    padding: .5rem .6rem; border-radius: 7px; border: 1px solid transparent;
+  }
+  .jump-menu a small { display: block; color: var(--muted); font-size: .62rem; margin-top: .15rem; }
+  .jump-menu a:hover { background: var(--machine-soft); border-color: #ccd3f0; color: var(--machine-dk); }
+  .jump-menu a.is-cur { background: var(--machine); color: #fff; border-color: var(--machine); }
+  .jump-menu a.is-cur small { color: #dbe1fa; }
+  .jump-menu a.h:hover { background: var(--human-soft); border-color: #f0d3b8; color: var(--human-dk); }
+  .jump-menu a.h.is-cur { background: var(--human); color: #fff; border-color: var(--human); }
+  .jump-menu a.h.is-cur small { color: #ffe3cd; }
+  .jump-backdrop { position: fixed; inset: 0; z-index: 399; display: none; }
+  .jump-backdrop.open { display: block; }
+
+  @media (max-width: 640px) {
+    body { font-size: 17.5px; }
+    .hero { padding-top: 2.4rem; }
+    .jump button, .jump .jump-cur { font-size: .63rem; padding: .5rem .6rem; }
+    .jump .jump-cur { max-width: 52vw; }
+    .iframe-inner iframe { height: 68vh; }
+    .bottle-list li { grid-template-columns: 1fr; gap: .1rem; }
+  }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<nav class="masthead">
+  <div class="masthead-inner">
+    <a class="masthead-brand" href="https://sanand0.github.io/talks/">← Anand's Talks</a>
+    <div class="masthead-right">
+      <span class="masthead-date">12 Aug 2026 · ED 307 · IIT Madras</span>
+      <a class="masthead-link" href="transcript.md" id="transcript-btn">Transcript</a>
+      <a class="masthead-link" href="https://ed.iitm.ac.in/" target="_blank" rel="noopener">Engineering Design</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-kicker">ED5518 · Data Visualization for Engineers · Guest hour</div>
+  <h1>Why are you even <em>sitting</em> in this class?</h1>
+  <p class="hero-sub">A man who spent two decades building a data visualization company walked into a data visualization course and spent the first half hour arguing that <strong>the students shouldn't need to be there.</strong> Then the room fought back — and between them they found the part that doesn't go away.</p>
+  <div class="hero-meta">
+    <a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand S</a>, LLM Psychologist at <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a><br>
+    for <a href="https://ed.iitm.ac.in/facultydetail/?id=45" target="_blank" rel="noopener">Dr Palaniappan Ramu</a>'s <span class="tip" data-tip="ED5518, a 9-credit course in the Department of Engineering Design. Weekly topics include 'How technology shapes charts', 'Purpose and problem framing', 'Uncertainty', 'Verification', 'Critique' and 'Accountability' — Anand deliberately took a slice across several of them.">ED5518: Data Visualization for Engineers</span><br>
+    <a href="https://ed.iitm.ac.in/" target="_blank" rel="noopener">Department of Engineering Design</a>, <a href="https://www.iitm.ac.in/" target="_blank" rel="noopener">IIT Madras</a> · 12 August 2026 · one hour
+  </div>
+  <div class="quick-links">
+    <a href="#listen">🎧 Listen</a>
+    <a href="transcript.md" id="transcript-btn2">📄 Transcript</a>
+    <a href="#comic">🎨 Comic page</a>
+    <a href="#pushback">🙋 The pushback</a>
+    <a href="#bottlenecks">🧗 AI Bottlenecks</a>
+    <a href="#takeaways">🎯 Takeaways</a>
+  </div>
+</header>
+
+<div class="band audio-wrap" id="listen">
+  <div class="audio-inner">
+    <h4>The full hour, unedited</h4>
+    <p class="asub">Recorded on a phone hanging from an office lanyard</p>
+    <audio controls preload="metadata">
+      <source src="https://github.com/sanand0/talks/releases/download/talks/2026-08-12-iitm-ed-data-visualization.opus" type="audio/ogg; codecs=opus">
+      Your browser does not support the audio element.
+    </audio>
+    <p class="media-cap">
+      <a href="transcript.md" id="transcript-btn3">Read the full transcript</a> ·
+      <a href="https://github.com/sanand0/talks/releases/download/talks/2026-08-12-iitm-ed-data-visualization.opus">Download audio</a> ·
+      <a href="ED5518-course-outline.pdf" target="_blank" rel="noopener">ED5518 course outline (PDF)</a><br>
+      In a hurry? The <a href="#comic">one-page comic</a> is the whole hour in a handful of panels.
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<p class="lede">The recording setup was, as Anand described it, <strong>"a very high-tech way of recording my talks."</strong> It was his phone, hanging from the lanyard of his office badge, with the badge taken off.</p>
+
+<p>He feeds the recordings to his models afterwards and asks them two questions. First: <em>what mistakes did I make?</em> Second — and this is the more unusual one — <em>what did I say yesterday that is no longer true, so I have to go correct myself?</em></p>
+
+<p>Which set up the disclaimer he opened with, and which is worth putting at the top of any page that transcribes him:</p>
+
+<blockquote class="pull g big">
+  <p>"Whatever I say now will expire very soon. It has a short shelf life — some things may last for a few years, many things will last only for a few months."</p>
+  <cite>Anand, roughly 40 seconds in</cite>
+</blockquote>
+
+<p>And then the escape hatch, delivered deadpan: <strong>"Make sure whatever you think you are learning, you check before using; and if you don't learn it, don't worry, you don't have anything to forget. Harmless."</strong></p>
+
+<p>ED5518 is a serious course. Nine credits, a prerequisite list that runs from linear algebra through Pareto fronts, and a syllabus that walks from <em class="tip" data-tip="Week 1 of ED5518: 'A classic chart by hand, by code, by AI; ask AI to invent a new form.'">how technology shapes charts</em> through perception, uncertainty, verification, critique and accountability, ending in a twelfth-week "capstone decision room" where students defend a live decision interface in front of engineers, users and skeptics.</p>
+
+<p>Anand did not pick a topic from it. <strong>He took a slice across three of them</strong> — purpose and problem framing, verification, and a third that isn't quite on the syllabus but turns out to hold the other two together: communication. All aimed at a single question.</p>
+
+<blockquote class="pull">
+  <p>"All of these are focused on one theme, which is: why on earth are you even sitting in this class and learning it if AI can do all of it tomorrow?"</p>
+  <cite>Anand, opening the argument</cite>
+</blockquote>
+
+<h2 class="sec" id="my-life">For twenty years, this <em>was</em> his life</h2>
+
+<p>Before he could argue the job away, he had to establish that he had held it. <strong>"For many decades, my life was data visualization. I got my internship because of one data visualization. I created a company that does data visualization. I've even sold the company."</strong></p>
+
+<p>The internship was at <span class="tip" data-tip="Lehman Brothers, the investment bank that collapsed in September 2008 — the largest bankruptcy filing in US history. Anand's internship predates that.">Lehman Brothers</span>, and the chart that won it was a <a href="https://gramener.com/securities/" target="_blank" rel="noopener">correlation matrix of securities</a>: currencies, commodities, indices, all cross-correlated and then reordered so similar things sat together. Gold, silver, platinum clustered — unsurprising, they're precious metals. But sitting right there with them, negatively correlated with almost everything else, was the Pakistani Rupee.</p>
+
+<p>Anand still doesn't know why. <strong>That was the point.</strong></p>
+
+<blockquote class="pull h">
+  <p>"They said, 'Look, this is a very different way of looking at things — not something that we had explored before, not something that we had seen before. Very good.'"</p>
+  <cite>Lehman Brothers, hiring an intern on the strength of one chart</cite>
+</blockquote>
+
+<p>Then he founded <a href="https://gramener.com/" target="_blank" rel="noopener">Gramener</a>, later sold to <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a>. And the visualization that <strong>"caught on like wildfire"</strong> was not a business chart at all.</p>
+
+<h2 class="sec" id="mahabharata">The chart that read the <em>Mahabharata</em></h2>
+
+<p>Take the epic. Make each chapter a bar, its length the word count. Now mark where each character is mentioned. <span class="tip" data-tip="The eldest Pandava brother, and the epic's central figure of dharma.">Yudhishthira</span> is everywhere, right through the book. Arjuna is not — which is how Anand discovered that <strong>large stretches of the Mahabharata have nothing to do with the war or the brothers at all</strong>, and are just philosophical discussion.</p>
+
+<p>Then came the gossip test. There is a persistent story about Karna and Draupadi. So he looked.</p>
+
+<blockquote class="pull">
+  <p>"Draupadi, Draupadi, Draupadi… Ha. Having an affair. Now, is that true? I scanned through the whole thing and found that there are very few chapters where they're even mentioned together. So at least according to the original epic, this can't be. <strong>Now, this is a very efficient way. I don't have to sit and read the entire story to find out the answers to important questions like these.</strong>"</p>
+  <cite>Anand, on the noblest possible use of data visualization</cite>
+</blockquote>
+
+<p>Which opened the real door. If two characters appear in the same chapters, they're connected. <span class="tip" data-tip="Nala and Damayanti — a self-contained love story told within the Mahabharata, in the Vana Parva.">Nala and Damayanti</span> light up in identical spots. Subhadra doesn't. So you can build a similarity matrix over characters and lay out the whole cast as a network — and read the social structure of the epic without having read the epic.</p>
+
+<p>Gandhari, it turns out, <strong>talks to exactly three people</strong>: her husband Dhritarashtra, her brother-in-law Vidura, and her sister-in-law Kunti. That's it. That's her whole world.</p>
+
+<p>And then the chart said something that was, quite clearly, wrong. Anand asked it who Draupadi's favourite Pandava was. Sahadeva sat close. Nakula, close. Bhima, close. Yudhishthira, not far. <strong class="h">Arjuna was the furthest away.</strong></p>
+
+<blockquote class="pull h">
+  <p>"I said, 'Wait, hold on. I thought Arjuna was supposed to be her favorite Pandava. This is telling me that something is wrong.' I redid the calculation. Redid the calculation again. Yet again. Every way I tried it, Arjuna was the furthest away from Draupadi."</p>
+  <cite>Anand, debugging an epic</cite>
+</blockquote>
+
+<p>The bug was not in the code. It was in the assumption. An investment banker in Pune eventually explained it: there is a play — <em>"this Bengali play which in turn is based on a Marathi play, or the other way around"</em> — built entirely on the premise that <strong>Draupadi loves Arjuna and there is no matching evidence of Arjuna loving Draupadi.</strong></p>
+
+<p>Anand's diagnosis is the sharpest methodological line in the hour, and it applies far beyond epics:</p>
+
+<blockquote class="pull big">
+  <p>"If you are trying to plot a symmetric relationship, you should realize the entire play was about how Draupadi felt ignored because Arjuna went around gallivanting with lots of other people."</p>
+  <cite>Anand — the chart wasn't wrong, the symmetry assumption was</cite>
+</blockquote>
+
+<p>Which is how a chart about a 4th-century BCE epic taught him about 20th-century regional theatre: <strong>"Not only am I learning about the Mahabharata, I'm learning about derivatives of Mahabharata and inner politics and so on."</strong> People saw it, said "data visualization can show you so many things," and bought Gramener's services. It worked.</p>
+</div>
+
+<div class="band iframe-wrap">
+  <div class="iframe-inner">
+    <iframe src="https://gramener.com/mahabharatha/closeness" title="Mahabharata character closeness network" loading="lazy"></iframe>
+    <p class="iframe-cap">
+      Click any character. The layout is built from co-occurrence across chapters — nobody encoded the relationships by hand.<br>
+      <a href="https://gramener.com/mahabharatha/closeness" target="_blank" rel="noopener">↗ The Mahabharata · character closeness</a> ·
+      <a href="https://gramener.com/securities/" target="_blank" rel="noopener">↗ The securities correlation matrix that got him hired</a>
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<p>And then the turn the whole hour hangs on:</p>
+
+<blockquote class="pull">
+  <p>"But here is the thing: <strong>today, AI can create these visualizations faster than I can.</strong> The bulk of what I used to do for about two decades was painstakingly create these visuals, write the code for it, iterate manually. Now AI does it significantly faster."</p>
+  <cite>Anand, dismantling his own career in one sentence</cite>
+</blockquote>
+
+<p>So he asked for a show of hands. <em>Who thinks we still need to learn data visualization?</em> Most of the room. <em>Who thinks we don't?</em></p>
+
+<p><strong>Four hands.</strong> Anand counted them approvingly — "four brave hands" — and then refused to grade them:</p>
+
+<blockquote class="pull g">
+  <p>"I have no idea who's right, who's wrong. This is one of those things where I have zero clue. But who knows, maybe the four of you are right."</p>
+  <cite>Anand, on the only honest answer available in 2026</cite>
+</blockquote>
+
+<p>He also set the ground rules for the hour, which he attributed to <span class="tip" data-tip="Geet, Kareena Kapoor's character in the 2007 Imtiaz Ali film Jab We Met, is famous for talking continuously and without pause.">Kareena Kapoor in <em>Jab We Met</em></span>: <strong>"please stop me at any point. But otherwise, I will just keep talking."</strong> The room laughed. The room did, eventually, stop him — and that's where the talk gets good.</p>
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<p class="sec-num">Part one · the case against the course</p>
+<h2 class="sec" id="faster">Exhibit A: <em>faster</em></h2>
+
+<p>The Times of India came to Anand with a property they were about to kill. It was called <strong>Stat-TOI-stix</strong> — statistics, with "TOI" wedged into the middle — a recurring set of data cards in the paper. The reason for shutting it down was straightforward: making the visualizations took too much effort.</p>
+
+<blockquote class="pull">
+  <p>"I said, 'Okay, fine, let me do one thing. I will give you five interns. You do them.' <strong>Those five interns were agents.</strong> What do I mean by agents? ChatGPT."</p>
+  <cite>Anand, staffing a newsroom</cite>
+</blockquote>
+
+<p>The pipeline had three prompts and essentially no human labour. <strong>Step one was the data engineering</strong>, historically the expensive part:</p>
+
+<blockquote class="pull g">
+  <p>"Download all data from UNdata — data.un.org — efficiently. If there's an API, you find out how to use it, write the Python script, blah, blah, blah. Make sure that the script is resumable."</p>
+  <cite>The entirety of prompt #1, given to <a href="https://openai.com/codex/" target="_blank" rel="noopener" style="color:var(--machine-dk)">Codex</a></cite>
+</blockquote>
+
+<p>His effort: about five minutes of looking at it, plus a minute or two checking it was still running. The agent's effort: half an hour writing the program, half an hour running it. <strong>"The data engineering problem, which used to be a big part of data visualization, seemed to vanish."</strong></p>
+
+<p><strong>Step two was the insight hunt</strong>, with an unusually well-specified brief — find the obscure and the surprising, because the obvious has been mined already, and make it true, verifiable and simple enough for a lay audience. Five minutes of his time, a couple of hours of the agent's. He took the results to the paper's editors.</p>
+
+<blockquote class="pull h big">
+  <p>"This is better than anything our journalists produce."</p>
+  <cite>Editors at the Times of India, on 100% AI-generated story leads</cite>
+</blockquote>
+
+<p><strong>Step three was house style.</strong> He told an agent to go to the Times of India, download all the published PDFs, look at what the cards look like, and write itself an instruction file called "Stat-TOI-stix format." Then render everything as consistent SVGs in that format.</p>
+
+<p>Did he have to fix anything? Some text spilled over. And then the newspaper politely asked him to stop helping:</p>
+
+<blockquote class="pull">
+  <p>"Anand, you don't bother doing all this. <strong>Leave some work for us.</strong> We have a graphics team. That is what our graphics team does anyway, and we are very efficient at it. We will take care of all of these things; you just give it raw."</p>
+  <cite>The Times of India graphics desk, defending its territory</cite>
+</blockquote>
+
+<p>"Okay, fine," said Anand. <strong>"Why take your job?"</strong></p>
+</div>
+
+<div class="band iframe-wrap sand">
+  <div class="iframe-inner">
+    <iframe src="https://sanand0.github.io/journalists/statnostics/" title="Statoistics — AI-generated data cards gallery" loading="lazy"></iframe>
+    <p class="iframe-cap">
+      The gallery of AI-generated data cards. Each one carries a <strong>Verify</strong> button — see below for why that mattered more than the chart.<br>
+      <a href="https://sanand0.github.io/journalists/statnostics/" target="_blank" rel="noopener">↗ Statoistics · data cards gallery</a> ·
+      <a href="https://sanand0.github.io/journalists/statnostics/process.html" target="_blank" rel="noopener">↗ How AI builds a data newsroom (the full process)</a> ·
+      <a href="https://www.scribd.com/document/920495614/Birthdays" target="_blank" rel="noopener">↗ "Common Birthdays in India and US", as published (PDF)</a>
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<h3 class="sub">The part the editors actually cared about</h3>
+
+<p>Speed was never the sticking point. <strong>Trust was.</strong> The editors' objection is the best articulation of the AI verification problem anyone gave that hour, and it came from journalists, not engineers:</p>
+
+<blockquote class="pull h">
+  <p>"We want to check if it is correct. How do we know that it is not making a mistake? <strong>Our journalists also make mistakes, but the journalist I can ask them, 'How did you do this?', sit with them, blah, blah, blah. You have given me something, I don't know how to do that.</strong>"</p>
+  <cite>The Times of India, on the real problem with a machine colleague</cite>
+</blockquote>
+
+<p>So Anand added a fourth instruction: add citations, <em>think about how they will verify it</em>, and produce a comprehensive verification checklist and statement of procedure. Every card got a <strong>Verify</strong> button that opens a step-by-step audit trail — what the card claims, which fields and tables it came from, the source table's row and column counts, every number in the card traced back to its source value, the ways you should check it, and the ways you might get it wrong. Then a tick-box checklist: confirm the record count was actually 41,659, tick. Confirm the next one, tick. All ticked, card verified.</p>
+
+<p>They followed the procedure religiously for the first card. And the second. And, roughly, up to the tenth.</p>
+
+<blockquote class="pull g">
+  <p>"Yeah, okay, this is not making a mistake. Maybe we will check every third or fourth; we will run a sampling of sorts."</p>
+  <cite>The Times of India, arriving at statistical process control by exhaustion</cite>
+</blockquote>
+
+<p>That drift — from full audit to spot check — is the whole story of institutional trust, compressed into ten cards. Anand's summary of what the pipeline actually did:</p>
+
+<blockquote class="pull">
+  <p>"Effectively, what we were doing was <strong>compressing the cycle of identification, generation, and verification.</strong> What is the insight? How should it be presented? And how to verify?"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>And the punchline, which is the one that should worry a room of students: he doesn't even write the prompts any more. <strong>"I've written those prompts. Now I don't even have to do anything. I just have to say, 'Do it again.'"</strong> That's how the rest of the cards got made. <strong class="h">Why do I have a job?</strong></p>
+
+<h2 class="sec" id="better">Exhibit B: <em>better</em> — and the six and a half years</h2>
+
+<p>This is the section where Anand quietly drops the most extraordinary fact about himself, in the middle of a sentence about clustering:</p>
+
+<blockquote class="pull big h">
+  <p>"My life's greatest achievement till date is that I sat and spent <strong>six and a half years typing out every single <em>Calvin and Hobbes</em> strip.</strong>"</p>
+  <cite>Anand, on a résumé line that does not appear on his résumé</cite>
+</blockquote>
+
+<p>The result lives on a website he refuses to publish, because he already got a <span class="tip" data-tip="The DMCA is a 1998 US copyright law. Its 'notice and takedown' provision lets rights-holders demand removal of infringing material — Bill Watterson is famously protective of Calvin and Hobbes and has never licensed it for merchandise.">DMCA takedown notice</span> for it. But it means he can search two decades of comics by text — "what is that little Tracer Bullet comic where…"</p>
+
+<p>What he could never do was <em>visualize</em> it. He knew what he wanted — some comics are similar, group them, show me the clusters — and had no idea how. <strong>3,000 strips. He failed at the attempt and left it.</strong></p>
+
+<p>Then he handed the same problem to Codex.</p>
+
+<p>What came back was a <a href="https://files.s-anand.net/blog/calvinmap/" target="_blank" rel="noopener">UMAP of every strip</a>, each dot a comic, arranged by similarity — and the clusters are immediately, delightfully legible to anyone who's read the strip. There's a distinct island for <strong>Moe the bully</strong>, different from everything else in both art style and language. Another for the entire imaginary-alter-ego canon — Spaceman Spiff, Tracer Bullet, Stupendous Man, the dinosaurs. Another for <strong>Rosalyn the babysitter</strong>. And a timeline slider that plays the clusters forward, so you can watch Moe vanish from the strip for a stretch and come back.</p>
+
+<blockquote class="pull">
+  <p>"A, it is able to create a similarity matrix. <strong>B, it is able to create a visualization in a way that I would not have thought of.</strong>"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<div class="exchange">
+  <div class="turn s"><span class="spk">Student</span><p>Is it using similarity based on the text and description in the strips or is it something else?</p></div>
+  <div class="turn a"><span class="spk">Anand</span><p>It is based on the text and image embedding using the Gemini API.</p></div>
+</div>
+
+<p>Which triggered the clearest ninety-second explanation of embeddings you'll hear. <strong>"Embeddings are where you convert text into numbers."</strong> The naive version: take all 40,000 words in English, put them in a spreadsheet, and for each comic tick the words it contains. You now have a 40,000-digit binary number per comic.</p>
+
+<p>The problem, in Anand's example: <em>"cold" and "cool" are different words; there's nothing similar between them.</em> So instead of words, use concepts. Does this text have <strong>coolness</strong>? Maybe 70% — write 0.7. <strong>Anger</strong>? 5% — write 0.05. Do that a few thousand times and the distance between two lists tells you how similar the two things are. <span class="tip" data-tip="Google's Gemini embedding models output high-dimensional vectors with Matryoshka representation learning — the dimensions are ordered by importance, so you can truncate the vector and keep most of the signal. Anand's 'diminishing importance' is exactly this.">And the numbers come in order of diminishing importance</span>, so you can cut the list short and keep most of the meaning. Feed it images as well as text, and the same distance works across both.</p>
+
+<p>Then the honest accounting of what he contributed, which is: the requirement, and nothing else.</p>
+
+<blockquote class="pull h">
+  <p>"This, therefore, firstly is not something I would have thought of because I didn't know about embedding similarity. I would not have thought of because I didn't know about <span style="border-bottom:1px dotted currentColor" title="Uniform Manifold Approximation and Projection — a 2018 dimensionality-reduction technique by McInnes, Healy & Melville that preserves local and some global structure better than t-SNE.">UMAPs</span>. Also, something that I would not have thought of because <strong>I wouldn't have even known that this sort of a thing can lead to temporal patterns.</strong>"</p>
+  <cite>Anand, on being out-imagined by a coding agent</cite>
+</blockquote>
+
+<p>The same trick generalises alarmingly well. Point it at the <em>images</em> of published data journalism and you get <a href="https://ritesh17rb.github.io/chart-map/" target="_blank" rel="noopener">a map of the visual identity of newsrooms</a>. The <em>South China Morning Post</em> forms a tight, unmistakable island. So does <em>Reuters</em> — somewhere else entirely. <em>The Guardian</em> and the <em>Financial Times</em> are scattered all over, because they change style to suit the story.</p>
+
+<blockquote class="pull">
+  <p>"If I had to say, 'Give me two completely different styles of data visualization across all the papers,' then these two, I would say, are very contrasting things. <strong>This is not a question that I even knew I could ask, but it is able to solve it for me without my even asking for it.</strong>"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>Point it at <a href="https://openalex.org/" target="_blank" rel="noopener">OpenAlex</a> — the open index of the world's research papers — and you get <a href="https://files.s-anand.net/blog/nie-research/evolution.html" target="_blank" rel="noopener">a map of science itself</a>, with one institution's output highlighted inside it. The axes weren't specified by anyone; the model constructed them and they turned out to be readable:</p>
+
+<div class="cards c3">
+  <div class="card"><span class="k">X axis</span><h5>Perception ← → Matter</h5><p>Left is AI, vision and perception. Right is materials, energy and devices.</p></div>
+  <div class="card"><span class="k">Y axis</span><h5>Life ← → Formalism</h5><p>Top is living systems and biology. Bottom is equations and formal systems.</p></div>
+  <div class="card h"><span class="k">The finding</span><h5>Mathematics after COVID</h5><p>From 2021, maths <strong>moved away from biology</strong> — the COVID research wave receding — and away from AI and vision, towards materials, energy and devices.</p></div>
+</div>
+
+<p>Which converts into advice an institution can act on: <strong>if your papers sit where the field was three years ago, you are about to be left behind.</strong> "Again, something that it was able to do better than I could, because this is 100% AI-generated."</p>
+
+<h2 class="sec" id="creative">Exhibit C: <em>more creative</em></h2>
+
+<p>The prompt was close to a dare. <strong>"Create a bunch of visualizations that I have never created, nobody has ever created, genuine innovation, and show me what you can find."</strong></p>
+
+<p>What came back — and what Anand is visibly fond of — is a <strong>causal lag clock matrix</strong>. It is, pointedly, a descendant of the correlation matrix that got him hired at Lehman, except it answers a question that one couldn't. Eight financial variables, cross-correlated: blue for positive, red for negative, as usual. But each cell also contains a little clock hand. <strong class="h">The direction the hand points tells you which variable leads and which lags; how far it's rotated tells you by how many months.</strong></p>
+
+<blockquote class="pull g">
+  <p>"Yield spread is a strongly leading indicator of retail sales by about seven months, which means that <strong>if you want to predict retail sales seven months later, look at yield spread today.</strong> The correlation is as much as 58% — not a bad correlation. That is useful."</p>
+  <cite>Anand, reading a chart form that did not exist last year</cite>
+</blockquote>
+
+<p>Scan for clocks tilted right and you've found your leading indicators. Find that something you currently forecast with is a <em>lagging</em> indicator, and you stop using it. His verdict has two clauses, and the second one is the hard one:</p>
+
+<blockquote class="pull">
+  <p>"This is a novel visualization in that <strong>A, it does not exist, and B, it is useful</strong> in that, well, I actually do plan to use this wherever I can."</p>
+  <cite>Anand, on the difference between novelty and invention</cite>
+</blockquote>
+</div>
+
+<div class="band iframe-wrap dark">
+  <div class="iframe-inner">
+    <iframe src="https://sanand0.github.io/datastories/novel-dataviz/" title="Three novel data visualizations" loading="lazy"></iframe>
+    <p class="iframe-cap">
+      Three chart forms generated from a single prompt asking for something nobody had made before. The causal lag clock is one of them.<br>
+      <a href="https://sanand0.github.io/datastories/novel-dataviz/" target="_blank" rel="noopener">↗ Three Novel Data Visualizations</a> ·
+      <a href="https://files.s-anand.net/blog/calvinmap/" target="_blank" rel="noopener">↗ The Calvin &amp; Hobbes UMAP</a> ·
+      <a href="https://ritesh17rb.github.io/chart-map/" target="_blank" rel="noopener">↗ The visual identity of data journalism</a>
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<h2 class="sec" id="critique">Exhibit D: it's a <em>better critic</em> than the teacher</h2>
+
+<p>Anand allowed himself one line of retreat. Fine — the machine can generate. But he was standing in a classroom. <strong>"At least as a teacher, if I'm correcting your papers, I need to learn how to critique your visualization. Or at least for that, I have to know data visualization, maybe?"</strong></p>
+
+<p>Then he tested that too. A colleague, Jaydev, had sent a chart round on WhatsApp asking for critiques. Anand forwarded it to <a href="https://claude.ai/share/fd6796dc-e1da-436a-81d1-36dbdf8c989b" target="_blank" rel="noopener">Claude</a> — "a friend is asking me for some critique on this. Give me the critique and, by the way, give it to me as HTML" — and got back a list that beat him on every axis.</p>
+
+<div class="cards c5">
+  <div class="card"><span class="k">Structure</span><h5>Dual axis</h5><p>The top and bottom charts can't be visually connected.</p></div>
+  <div class="card"><span class="k">Scale</span><h5>Truncated Y axis</h5><p>Starts at 0.06, not zero. Anand had to <em>peer closely</em> to spot it.</p></div>
+  <div class="card"><span class="k">Labels</span><h5>0.11 vs 11%</h5><p>"Very true, makes it so much easier to understand."</p></div>
+  <div class="card"><span class="k">Encoding</span><h5>A line over categories</h5><p>Free electricity, midday meals, LPG subsidy — joined by a line chart. Is there an order to these?</p></div>
+  <div class="card h"><span class="k">Colour</span><h5>Why is it red?</h5><p>Anand's pick for best point in the list: <strong>what does this colour mean, and why red if it isn't a bad thing?</strong></p></div>
+</div>
+
+<p>Plus the classic: correlation versus causation. His scorecard on the machine's critique was three letters long, and each letter costs a teacher something:</p>
+
+<blockquote class="pull h">
+  <p>"A series of points: <strong>A, more than I could point out; B, better than I could point out; C, certainly faster than I could point out.</strong>"</p>
+  <cite>Anand, grading the grader</cite>
+</blockquote>
+</div>
+
+<div class="band iframe-wrap warm">
+  <div class="iframe-inner">
+    <iframe src="https://files.s-anand.net/pages/chart-critique/" class="short" title="Chart critique, generated by Claude" loading="lazy"></iframe>
+    <p class="iframe-cap">
+      The critique itself, rendered as HTML because that's what the prompt asked for.<br>
+      <a href="https://files.s-anand.net/pages/chart-critique/" target="_blank" rel="noopener">↗ Chart Critique</a> ·
+      <a href="https://claude.ai/share/fd6796dc-e1da-436a-81d1-36dbdf8c989b" target="_blank" rel="noopener">↗ The full Claude conversation</a>
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<h2 class="sec" id="why-at-all">The deeper cut: why do you need the <em class="h">chart</em> at all?</h2>
+
+<p>Up to here, the argument was only that AI does data visualization better than you. Now Anand goes after the artefact itself.</p>
+
+<blockquote class="pull big">
+  <p>"Boss, why do you need data visualization?"</p>
+  <cite>Anand, going after his own life's work</cite>
+</blockquote>
+
+<p>The evidence is a colleague named Thanoj, at a logistics company running <a href="https://www.snowflake.com/en/product/features/cortex/" target="_blank" rel="noopener">Snowflake Cortex</a> — <span class="tip" data-tip="Snowflake is a cloud data warehouse; Cortex is its built-in LLM layer, so the model sits directly on top of the company's own data.">"like the ChatGPT sitting inside Snowflake"</span> — over all the company's data. He asked it for use cases. It produced fifteen.</p>
+
+<p>He took them to the head of analytics, who compared them against a report on his desk. That report was the output of a <strong>three-month engagement with a strategy consulting firm, November to February, described as "very expensive."</strong></p>
+
+<blockquote class="pull g">
+  <p>"There is an 80% overlap."</p>
+  <cite>The head of analytics, comparing a very expensive quarter to an afternoon</cite>
+</blockquote>
+
+<p>Thanoj, understandably thrilled, set about building a visualization for each of the fifteen. Revenue forecasting: a chart. Pricing anomaly detection: an outlier chart. And so on. At which point Anand asked the question that unravels the entire deliverable:</p>
+
+<div class="exchange">
+  <div class="turn a"><span class="spk">Anand</span><p>Yaar, what is the guy going to do with that pricing anomaly detection?</p></div>
+  <div class="turn s"><span class="spk">Thanoj</span><p>Well, he will correct — he will find out where the anomaly is and then correct it.</p></div>
+  <div class="turn a"><span class="spk">Anand</span><p>You do it for him, no?</p></div>
+</div>
+
+<p>So instead of an outlier chart, Thanoj sent an email. Here is the whole analysis, in the form it was actually delivered:</p>
+
+<blockquote class="pull h">
+  <p>"I ran an anomaly detection check and for our services which cost $175 to $179 every month, there were <strong>105,000 transactions which are less than 16 cents.</strong> Either you have a massive data quality problem, or you are charging 16 cents instead of $160 or $170. In which case you have a massive revenue leakage. <strong>Either way, you have a massive problem.</strong>"</p>
+  <cite>The email that replaced the chart</cite>
+</blockquote>
+
+<p>There was no visualization attached. There didn't need to be. (The <a href="https://files.s-anand.net/pages/fde/waste-management-commercial.html" target="_blank" rel="noopener">full generated use-case brief for the sector</a> is worth a look — the deliverable is prose and numbers, not charts.) Anand's verdict on the whole exercise is the line that should be printed on the door of every dashboard project:</p>
+
+<blockquote class="pull big">
+  <p>"One of the emails was, <strong>'We are losing $170 million in revenue. Here is the fix.' That one subject is more important than any visualization that you can show.</strong> $170 million."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>And the email didn't stop at the number. It named the customers — go talk to the US Department of Energy, Meridian Chemical, Summit Refining — <strong>if you want to keep them, because otherwise they're leaving.</strong></p>
+
+<p>The logic underneath is short and hard to escape. What do we want people to do with a data visualization? <strong>Decide something, and act on it.</strong> So: decide for them and tell them what to do. Better yet, act for them — connect the agent to the source systems and let it fix the problem.</p>
+
+<p>Which is, almost word for word, <span class="tip" data-tip="ED5518 Week 8, 'From insight to outcome': 'One problem, three deliveries: chart, one-line answer, direct agent action; argue which was right.'">week eight of the course the students are enrolled in.</span> Anand had just argued the case for delivery number three.</p>
+
+<blockquote class="pull">
+  <p>"Why do we need this course? Any guesses? Or any thoughts, any counter-thoughts? So here I'm basically saying, look, <strong>you don't need to learn data visualization because AI knows data visualization. Secondly, you don't need the course at all because we don't need data visualization.</strong> Thoughts?"</p>
+  <cite>Anand, having spent half his hour arguing himself out of a job and the students out of a class</cite>
+</blockquote>
+
+</div>
+
+<div class="band cardband warm" id="pushback">
+  <div class="cardband-inner">
+    <h4>Then the room fought back</h4>
+    <p class="cbsub">Four answers, in the order they came</p>
+    <div class="cards">
+      <div class="card h"><span class="k">From the room</span><h5>"Speed of conveying"</h5><p>"Every time we are going through something, we are visualizing… now what matters is <strong>how fast are you going to convey a large amount of information in a short span of time?</strong>"</p></div>
+      <div class="card h"><span class="k">From the room</span><h5>"It's always being driven by human beings"</h5><p>Seven words. Anand called it "an excellent point" and rebuilt the second half of his talk around it.</p></div>
+      <div class="card h"><span class="k">From the room</span><h5>"To view some unstructured data"</h5><p>"To get some insights out of it. <strong>To just get to know what exists.</strong>"</p></div>
+      <div class="card h"><span class="k">From the room</span><h5>"To verify our decision"</h5><p>"We take decision and check whether it correlates with things." Anand: "As a cross-check, got you."</p></div>
+    </div>
+    <p class="cbfoot">Anand pushed back on every one of them — <em>"Visualization efficiently conveys understanding. Why do you need to understand? Agent is understanding. Why are you standing in the way slowing things down?"</em> — but two of these answers survived the pressure, and they turned out to be the two the rest of the hour was built on.</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<h2 class="sec" id="accountability">Answer one: <em class="h">nobody knows how to sue an agent</em></h2>
+
+<p>The seven-word answer — <strong>"it's always being driven by human beings"</strong> — got the most interesting riff of the hour. Anand's expansion is that responsibility is a solved legal technology, and agents are conspicuously outside it.</p>
+
+<blockquote class="pull h big">
+  <p>"Ultimately, <strong>we don't yet have a mechanism to hold an agent responsible.</strong> Humans are responsible. Companies are responsible. We know how to take companies to court."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>And then a genuinely surprising list of things that our legal systems <em>have</em> already figured out how to hold responsible:</p>
+
+<div class="cards">
+  <div class="card"><span class="k">Precedent</span><h5>Companies</h5><p>Sued, fined, dissolved. The template for everything below.</p></div>
+  <div class="card"><span class="k">Precedent</span><h5>Ships</h5><p>A vessel can be <span class="tip" data-tip="In admiralty law, an action in rem is brought against the ship itself as defendant — the vessel can be arrested and sold to satisfy a judgment, regardless of who owns it.">taken to court and stripped of its assets</span> in its own name.</p></div>
+  <div class="card"><span class="k">Precedent</span><h5>Rivers</h5><p>"There is a <a href="https://en.wikipedia.org/wiki/Te_Awa_Tupua_(Whanganui_River_Claims_Settlement)_Act_2017" target="_blank" rel="noopener">Māori river</a> which is a legal entity."</p></div>
+  <div class="card"><span class="k">Precedent</span><h5>Temples</h5><p>They hold their own funds and are administered on their own behalf.</p></div>
+</div>
+
+<blockquote class="pull">
+  <p>"We have not yet cracked <strong>how to give agents money, how to take an agent to court, how to kill an agent</strong>, or in the case of a company, we dissolve the company, we shut down an agent, whatever. We will figure it out. So until then, humans are responsible."</p>
+  <cite>Anand, on the load-bearing gap</cite>
+</blockquote>
+
+<p>The consequence is not sentimental, it's structural. <strong>For as long as a human signs off — "maybe for a few years, maybe even for a few decades" — that human has to actually understand the thing they're signing.</strong> And visualization is how you compress enough of it into a head fast enough to be accountable for it.</p>
+
+<p>Which drags verification along behind it: <strong class="h">"if accountability is important, meaning you're hanging your neck out for it, your need to verify stuff becomes important. Is the visualization actually showing you what you really ought to see?"</strong></p>
+
+<h2 class="sec" id="unknown">Answer two: <em>you can't ask for what you can't imagine</em></h2>
+
+<p>The fourth student said visualization is a cross-check on decisions. Anand pressed — <em>if the agent decides as well as you do, and these days better, then what?</em> — and then answered his own question with the sentence that reframes everything before it.</p>
+
+<blockquote class="pull big g">
+  <p>"Where you're stuck may actually be the point, which is, 'Look, I am not sure I know, but maybe there is something.' Put another way: <strong>I don't even know the question to ask. So how do I know that it is giving the answer when I don't know the question?</strong>"</p>
+  <cite>Anand, arriving at the thing that survives</cite>
+</blockquote>
+
+<p>A question you can articulate is a question an agent can answer. <strong>The residual value of a chart is that it shows you things you weren't looking for.</strong> "I want a different perspective of looking at what I don't know."</p>
+</div>
+
+<div class="band comic-band" id="comic">
+  <div class="comic-inner">
+    <h4>The whole hour, in one page</h4>
+    <p class="csub">Click to open full size in a new tab</p>
+    <a href="comic-page.avif" target="_blank" rel="noopener">
+      <img src="comic-page.avif" alt="Comic-page visual summary of Anand's ED5518 guest lecture at IIT Madras" loading="lazy">
+    </a>
+    <p class="media-cap">A visual summary of the session — the argument against the course, the pushback from the room, and the five uses that survived.</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<p class="sec-num">Part two · what he still uses it for</p>
+<h2 class="sec" id="understand">Use one: to <em>understand</em> — because the agent can't sleep for you</h2>
+
+<p>Anand's own defence of visualization starts from a category of things that cannot be delegated on principle:</p>
+
+<blockquote class="pull big">
+  <p>"There are some things that I do for myself. I eat. I sleep. The agent can't sleep on my behalf, can't eat on my behalf. <strong>The agent also can't watch movies on my behalf</strong> — well, that's coming later."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>And: <strong>"the agent can't solve my curiosity."</strong> The worked example is gloriously trivial, which is the point. A friend blogged about Bangalore weather, and Anand started wondering: <em>is there a specific window of the day when it rains, such that if I carry an umbrella only then, I'm covered?</em></p>
+
+<p>The <a href="https://sanand0.github.io/datastories/rainy-seasons/#?city=India" target="_blank" rel="noopener">chart he ended up with</a> is not a standard chart, and he says he "wasn't even thinking twice about it." Each city, January to December, coloured by how cleanly an umbrella window separates rain from no-rain. <strong class="h">Caracas has the tightest window on Earth</strong> — in August, a 57% chance of rain inside the window and 5.7% outside it.</p>
+
+<blockquote class="pull g">
+  <p>"<strong>This part is the information compression. I can instantly understand and I can instantly verify, and that is useful.</strong> … I knew my problem clearly. My problem was: I want to figure out in an instant where it only rains inside that umbrella period, and I will know it when I see it."</p>
+  <cite>Anand — "I will know it when I see it" is a legitimate spec</cite>
+</blockquote>
+
+<p>Then he browsed for the worst cities, live, with running commentary. Cairo: hopeless, no umbrella period at all. <strong>Ahmedabad is among the worst in India</strong> — you simply cannot time it. Pune is decent in June through September. Kolkata, okay. Chennai, not good: in the rainy season you carry it all day. Somewhere in the middle of scrolling he interrupted himself with <em>"why am I doing this?"</em> — and then noted that this exact frustration is why he later added a search box.</p>
+
+<h2 class="sec" id="explore">Use two: to <em>explore</em> — a question you didn't know you had</h2>
+
+<p>The <a href="https://sanand0.github.io/imdb/#Genre=Animation&Type=movie" target="_blank" rel="noopener">IMDb explorer</a> dates to <strong>2008, sketched on a whiteboard with Col Needham, IMDb's founder</strong>, while the two of them argued about how they pick what to watch. Votes on a log X-axis, rating on the Y. Top right: the beloved and the widely seen.</p>
+
+<p>Anand turned it into a guessing game with the room. <em>What's the top-right movie of the 2020s?</em></p>
+
+<div class="voices">
+  <div class="voice"><p><em>Spider-Man</em></p><span class="who">Student — half right</span></div>
+  <div class="voice"><p><em>Dune</em></p><span class="who">Student</span></div>
+  <div class="voice"><p><em>Oppenheimer</em></p><span class="who">Student — correct</span></div>
+</div>
+
+<p>The answers were <em>Spider-Man: No Way Home</em> and <em>Oppenheimer</em>. "Yeah, spot on, you know the movies to watch." Anand's own confession: <strong>"I have not seen <em>Oppenheimer</em> fully yet, only halfway there."</strong></p>
+
+<p>Then the far more entertaining direction — the bottom right. <strong class="h">Very popular. Terrible rating. "Almost an embarrassment."</strong></p>
+
+<div class="exchange">
+  <div class="turn s"><span class="spk">Student</span><p>Indian movie?</p></div>
+  <div class="turn s"><span class="spk">Another student</span><p><em>Snow White</em>?</p></div>
+  <div class="turn a"><span class="spk">Anand</span><p>Any other guesses? <em>Snow White</em> is in fact correct. [Laughter]</p></div>
+</div>
+
+<blockquote class="pull h">
+  <p>"Now, this is not just a disaster of the 2020s, <strong>this is the disaster of all years. Like, there has never been this popular and terrible movie ever.</strong>"</p>
+  <cite>Anand, on <a href="https://www.imdb.com/title/tt6208148/" target="_blank" rel="noopener" style="color:var(--human-dk)">Disney's 2025 live-action <em>Snow White</em></a></cite>
+</blockquote>
+
+<p>But the reason this chart earns its place isn't the outliers. It's what happens when you filter to animation and scrub through decades — <strong>you get the history of an art form, told by nobody:</strong></p>
+
+<div class="cards c5">
+  <div class="card"><span class="k">1930s</span><h5>One dot</h5><p><em>Snow White and the Seven Dwarfs</em>. That is the entire decade. That is where the genre starts.</p></div>
+  <div class="card"><span class="k">1940s–50s</span><h5>Two clusters, then one</h5><p>Four Disney films and four non-Disney in the forties — and a visible quality gap. <strong>"Disney was the only show in town."</strong></p></div>
+  <div class="card"><span class="k">1970s</span><h5>Disney loses its charm</h5><p>Fewer Disney titles, lower ratings across the board.</p></div>
+  <div class="card"><span class="k">1980s</span><h5>The revival comes from elsewhere</h5><p><em>My Neighbor Totoro</em> — Miyazaki and <a href="https://www.ghibli.jp/" target="_blank" rel="noopener">Studio Ghibli</a> pushing the ratings up from outside Hollywood.</p></div>
+  <div class="card h"><span class="k">1990s</span><h5>The game changes</h5><p><em>The Lion King</em>, Disney's "last great original," and <em>Toy Story</em>, Pixar's first blockbuster. Then the sheer volume explodes with computer graphics.</p></div>
+</div>
+
+<blockquote class="pull">
+  <p>"Effectively, <strong>I get to see the history of a field, a question that I didn't even have.</strong> I didn't even know that I had this question or that this is a thing, and I'm able to explore it."</p>
+  <cite>Anand</cite>
+</blockquote>
+</div>
+
+<div class="band iframe-wrap">
+  <div class="iframe-inner">
+    <iframe src="https://sanand0.github.io/imdb/#Genre=Animation&Type=movie" class="tall" title="IMDb movie explorer, filtered to animation" loading="lazy"></iframe>
+    <p class="iframe-cap">
+      Filtered to animated films, as Anand had it on screen. Scrub the decades and watch Disney's monopoly, decline and Pixar-era rebirth.<br>
+      <a href="https://sanand0.github.io/imdb/#Genre=Animation&Type=movie" target="_blank" rel="noopener">↗ IMDb movie explorer</a> ·
+      <a href="https://sanand0.github.io/datastories/rainy-seasons/#?city=India" target="_blank" rel="noopener">↗ Where does it rain on schedule?</a>
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<h2 class="sec" id="formats">A detour: stop exploring only the <em>data</em></h2>
+
+<p>Here Anand made a distinction most visualization courses skip. There are two mechanisms by which AI makes an image, and they have completely different properties:</p>
+
+<div class="cards">
+  <div class="card"><span class="k">Route 1</span><h5>Write a program</h5><p>HTML, JavaScript, SVG. It draws using its knowledge of <em>code</em>. The result is <strong>interactive and editable</strong> — but bounded by what can be programmed.</p></div>
+  <div class="card h"><span class="k">Route 2</span><h5>Generate a raster image</h5><p>It draws using every image it was trained on. Harder to edit precisely, but <strong>"anything that can be represented as pixels, it can draw."</strong></p></div>
+</div>
+
+<p>Which raises a problem Anand admits to plainly: <strong>"I don't even know what I can create."</strong> Creativity used to be his contribution; now the constraint is his imagination of the format, not his ability to execute it. So he had Claude enumerate the space — <a href="https://sanand0.github.io/llmartstyle/?category=comic" target="_blank" rel="noopener">a catalogue of comic rendering styles</a>. Elegant brush. Spot-black economy. Flat icon. Ratty line. <em>Peanuts</em>, <em>Tintin</em>, <em>Archie</em>, <em>Amar Chitra Katha</em>. Now it's a copy-paste menu.</p>
+
+<blockquote class="pull g">
+  <p>"When it comes to exploration, <strong>it is not just exploration of the content that we are asked to do as data visualizers. We are also asked to explore formats.</strong>"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>And then the three questions that got the widest eyes in the room:</p>
+
+<div class="cards c3">
+  <div class="card"><span class="k">Format</span><h5>An engraving</h5><p>"Why should a data visualization not be an engraving on the factory machine out there? <strong>Literally an engraving.</strong>"</p></div>
+  <div class="card"><span class="k">Format</span><h5>Beads in piles</h5><p>The machine drops a bead as it produces. Five little stacks grow over time, one per error type. <span class="tip" data-tip="An established research area — physical data representations, from Hans Rosling's IKEA-box demos to museum-scale installations. See dataphys.org for a catalogue of over 350 examples going back millennia.">Physical data visualization</span>, no screen involved.</p></div>
+  <div class="card h"><span class="k">Format</span><h5>Sound</h5><p><strong>"Why should it not be <a href="https://en.wikipedia.org/wiki/Sonification" target="_blank" rel="noopener">data sonification</a>?"</strong> Operators already listen to machines and know how they're running. <strong>"That is a feature, not a byproduct. You can design for it."</strong></p></div>
+</div>
+</div>
+
+<div class="band iframe-wrap dark">
+  <div class="iframe-inner">
+    <iframe src="https://sanand0.github.io/llmartstyle/?category=comic" class="short" title="LLM Art Style catalogue, comic category" loading="lazy"></iframe>
+    <p class="iframe-cap">
+      The style catalogue. Find a look you couldn't have named, copy its prompt.<br>
+      <a href="https://sanand0.github.io/llmartstyle/?category=comic" target="_blank" rel="noopener">↗ LLM Art Style</a> ·
+      <a href="https://sanand0.github.io/datastories/tds-2026-01-p1/gallery/index.html?sort=total&dir=desc" target="_blank" rel="noopener">↗ AI image scores, ranked — the same idea applied to student work</a>
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<h2 class="sec" id="explain">Use three: to <em>explain</em> — four ways to sit an exam</h2>
+
+<p>In his <a href="https://tds.s-anand.net/" target="_blank" rel="noopener">Tools in Data Science</a> course, Anand has <strong>keystroke-level data</strong>: every character every student typed, which second they solved which question. He gave the lot to an agent, which came back with a competent, useless answer — <em>"there are four types of solvers, this is the performance…"</em></p>
+
+<blockquote class="pull">
+  <p>"Boss, I don't get it. <strong>Explain it to me in a way that I can explain it to someone who doesn't get it.</strong>"</p>
+  <cite>Anand — arguably the single most reusable prompt in the hour</cite>
+</blockquote>
+
+<p>What came back was a chart of each student's path through a 120-minute exam, and it made the four behaviours instantly nameable:</p>
+
+<div class="cards">
+  <div class="card"><span class="k">Type 1</span><h5>Linear solvers</h5><p>One question after another, in order. Sometimes they fail and move on, sometimes they come back. An almost straight line.</p></div>
+  <div class="card"><span class="k">Type 2</span><h5>Cyclers</h5><p>Try, fail, return. Try, fail, return. Round and round the same question.</p></div>
+  <div class="card"><span class="k">Type 3</span><h5>Jumpers</h5><p>Skip questions entirely. Never even attempt the ones in the middle.</p></div>
+  <div class="card h"><span class="k">Type 4</span><h5>Togglers</h5><p><strong>Stuck on bad questions.</strong> 40 minutes on Q1 — got it. 40 minutes on Q2 — got it wrong. Moving slowly, getting stuck.</p></div>
+</div>
+
+<p>And then the finding, which is worth pinning above any exam desk:</p>
+
+<blockquote class="pull big g">
+  <p>"We know that <strong>the students who are going question after question after question — not necessarily solving them, but scanning them linearly — are performing the best.</strong>"</p>
+  <cite>Anand, with the honest caveat: "Now, is this correlation or causation? We don't know."</cite>
+</blockquote>
+
+<p>Which converts into one piece of advice a TA can give in one breath: <strong class="h">skim every question at least before writing the code. Don't skip, don't toggle, get a sense of perspective.</strong></p>
+
+<p>But — and this is the part that makes it a visualization story rather than an analytics story — <strong>the advice would not have landed without the picture.</strong></p>
+
+<blockquote class="pull">
+  <p>"<strong>If you want to convince somebody of your argument, you need to show a visual proof</strong>, and the quality of that visual — the extent to which what you show matches what you want them to do — determines whether you succeed or not."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p class="stat-foot" style="text-align:left;max-width:none;margin:0 0 1.3rem"><a href="https://sanand0.github.io/talks/2026-03-15-how-students-learn-python/#/41" target="_blank" rel="noopener">See the solver-path chart in its original slide</a>, from Anand's PyConf Hyderabad 2026 talk on how students learn Python.</p>
+
+<h2 class="sec" id="convince">Use four: to <em>convince</em> — moving a "no" to a "maybe"</h2>
+
+<p>Anand's hardest sales job is convincing people how fast AI is improving. His instrument is <a href="https://sanand0.github.io/llmpricing/" target="_blank" rel="noopener">a scatter plot of every frontier model</a>. X-axis: cost per million tokens — <span class="tip" data-tip="Roughly a million tokens: the complete Harry Potter series, or the King James Bible. Anand uses it as a unit people can feel.">roughly what it costs a model to read all of Harry Potter</span>. Y-axis: intelligence, scaled to human education levels via <a href="https://lmarena.ai/" target="_blank" rel="noopener">Elo score</a>.</p>
+
+<p>Read it left to right and the story tells itself.</p>
+</div>
+
+<div class="band stat-band">
+  <h4>Two and a half years, in education levels</h4>
+  <div class="stat-grid">
+    <div class="stat-item"><div class="stat-num">Jun '23</div><div class="stat-label">Claude 1 · below high-school graduate · <strong>$8</strong> to read Harry Potter</div></div>
+    <div class="stat-item"><div class="stat-num">Nov '23</div><div class="stat-label">GPT-4 · <strong>college junior</strong><br>"That was a big jump"</div></div>
+    <div class="stat-item"><div class="stat-num h">~1 yr</div><div class="stat-label">Master's level<br><strong>"In one year, four years of education is completed"</strong></div></div>
+    <div class="stat-item"><div class="stat-num h">+4 mo</div><div class="stat-label">PhD level<br>"And in four months, it's become a PhD"</div></div>
+    <div class="stat-item"><div class="stat-num h">Today</div><div class="stat-label"><strong>Tenured professor</strong><br>Cost falling the whole way</div></div>
+  </div>
+  <p class="stat-foot">"So in about two, two-and-a-half years, from a high school student to a tenured professor. <strong>That is how fast it is becoming smarter.</strong>" — and the reaction he's after: <em>"Ah, okay, AI is getting smarter at a pace that is faster than I had imagined."</em> · <a href="https://sanand0.github.io/llmpricing/" target="_blank" rel="noopener">Explore the live chart</a></p>
+</div>
+
+<div class="wrap">
+
+<p>Then comes objection number two, which he says is universal: <strong>"Ha, but AI applies in that field, not in my field."</strong></p>
+
+<p>For that he uses <a href="https://openai.com/index/gdpval/" target="_blank" rel="noopener">GDPval</a> — <span class="tip" data-tip="In the talk Anand called it 'GPQA'. The study he describes and links to is GDPval: 1,320 real work tasks across 44 occupations, written by professionals averaging 14 years of experience, with model output blind-graded against the expert's own deliverable.">OpenAI's benchmark of real professional deliverables</span>, graded blind against experts' own work. <strong>Green means the agent did better. Red means the human did.</strong> And the tiles have been turning green.</p>
+
+<p>Accountants and auditors were beating the models last year. This year, not so. Which is where the talk produced its most expensive anecdote:</p>
+
+<blockquote class="pull h big">
+  <p>"My auditor submitted a return on my behalf; I had ChatGPT cross-check it."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>The model spotted that capital gains from an HDFC holding had been filed under Indian taxation without applying the double-taxation treaty — Anand lives in Singapore. He put the question to his auditor. She said it was because it was an <span class="tip" data-tip="A Non-Resident Ordinary account — an Indian bank account for NRIs holding income earned in India, such as rent, dividends or pension.">NRO account</span>. He replied — armed with a judgment he had not read until that week — that the judgment says nothing about NRO accounts. She went to consult her senior.</p>
+
+<blockquote class="pull g big">
+  <p>"Next day she came back and said, <strong>'Okay, you saved 14 lakhs.'</strong> Fourteen lakhs! Are you crazy? And I know nothing about tax. I was simply asking ChatGPT, 'Is she correct? Is she correct? Is she correct?'"</p>
+  <cite>Anand, ₹1.4 million richer for asking the same question three times</cite>
+</blockquote>
+
+<p>He's careful about the claim, though — <strong>"maybe not an expert, I don't know — but certainly beat my auditor."</strong> And the reason he shows the task-level drill-down rather than the headline is a lesson in persuasion:</p>
+
+<blockquote class="pull">
+  <p>"If I just said, 'Oh, it is smarter,' they'd say, 'Yeah, but on what?' <strong>Maybe not trying to move them from a 'no' to a 'yes'; if I move them from a 'no' to a 'maybe', that is a huge deal.</strong> … And a list did not have that kind of an impact."</p>
+  <cite>Anand, on the actual job of a persuasive chart</cite>
+</blockquote>
+</div>
+
+<div class="band iframe-wrap sand">
+  <div class="iframe-inner">
+    <iframe src="https://sanand0.github.io/datastories/gdpval/" title="GDPval analysis — AI impact on sectors and occupations" loading="lazy"></iframe>
+    <p class="iframe-cap">
+      Green: agents beat the human experts. Red: humans still win. Drill into a cell to see the actual task an expert wrote.<br>
+      <a href="https://sanand0.github.io/datastories/gdpval/" target="_blank" rel="noopener">↗ AI Impact on Sectors &amp; Occupations</a> ·
+      <a href="https://openai.com/index/gdpval/" target="_blank" rel="noopener">↗ The GDPval study itself</a>
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<h2 class="sec" id="verify">Use five: to <em class="h">verify</em> — the picture as the audit</h2>
+
+<p>Embeddings, Anand pointed out, aren't only for text and images. <strong>They work on satellite imagery too.</strong> Take a patch of Earth on one date, embed it; take the same patch on another date, embed it; the distance between them is how much that place changed. Run it over a grid and you have a change-detection map of a whole city — the approach behind <a href="https://allenai.org/olmoearth" target="_blank" rel="noopener">OlmoEarth</a>, Ai2's open Earth-observation model family.</p>
+
+<p>His colleague Varun built exactly that. And the first version was, by Anand's own account, <strong>unverifiable.</strong></p>
+
+<blockquote class="pull h">
+  <p>"When we originally created this version, I had no basis for verification. <strong>One of the first things to do, therefore, was to add a map behind so that I can see what this place is.</strong>"</p>
+  <cite>Anand — the fix was context, not accuracy</cite>
+</blockquote>
+
+<p>With satellite imagery behind the grid, the cells became claims you could check by eye. Live, on Chennai:</p>
+
+<div class="cards c3">
+  <div class="card"><span class="k">Adyar River</span><h5>More water, not less</h5><p>January 2015 versus December 2025, comparable seasons. <strong>"There actually is a lot less water in the Adyar River in 2015… and yes, this is a known thing"</strong> — the river holds more water this decade than last.</p></div>
+  <div class="card h"><span class="k">Anna Nagar</span><h5>A concrete revamp</h5><p>New buildings, and <strong>a visible loss of greenery on the left.</strong> "It was able to spot the difference beyond just the fading of the images."</p></div>
+  <div class="card"><span class="k">Kodungaiyur</span><h5>Positive news</h5><p>A ground converted to — or grown into — green land. "Converted, or has become green land, I don't know, but there is definitely more green cover here."</p></div>
+</div>
+
+<p>Reds mean vegetation lost, greens mean gained. Zoomed out, the verdict on Chennai is blunt: <strong>"overall in Chennai, things have generally worsened from a vegetation perspective."</strong></p>
+
+<p>Then the Times of India asked for one more thing — a before picture, an after picture, and an agentic web search explaining what actually happened there. Which produced results like: this patch of North Bangalore moved from cramped legacy facilities to <strong>40 acres of rural scrubland transformed into the new BCCI Centre of Excellence.</strong></p>
+
+<blockquote class="pull g big">
+  <p>"<strong>Now you get context. Now I am able to believe it. This is a way of verification.</strong>"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>And here he draws the distinction the course spends a whole week on. There are <strong>two directions of verification</strong>, and he'd now demonstrated both:</p>
+
+<div class="cards">
+  <div class="card"><span class="k">Direction 1</span><h5>Verifying the visualization</h5><p>The Times of India checklist. A stated procedure, source tables, row counts, every number traced. <strong>"Anyone who processes it will know that it is true."</strong></p></div>
+  <div class="card h"><span class="k">Direction 2</span><h5>The visualization as the verification</h5><p><strong>"This is the complement."</strong> Before picture, after picture. "You say, 'Yeah, I agree, this has in fact changed. I can see the nature of the change and yes, this is valid.'"</p></div>
+</div>
+
+<p style="font-size:.95rem;color:var(--ink2)">Explore it yourself: <a href="https://pythonicvarun.github.io/olmoearth-change-insights/" target="_blank" rel="noopener">the OlmoEarth output library</a> · <a href="https://pythonicvarun.github.io/olmoearth-change-insights/outputs/chennai/?basemap=esri_imagery&metric=water_delta&unit=cells&period=10y&opacity=0.15&historical=timeline&speed=1200&lat=13.01385&lng=80.26315&zoom=16.00&historicalDate=2015-01-21&renderMode=variation" target="_blank" rel="noopener">Chennai, water delta over 10 years</a> · <a href="https://pythonicvarun.github.io/olmoearth-change-insights/outputs/gurgaon/?basemap=esri_imagery&metric=vegetation_delta&unit=cells&period=5y&opacity=0.70&historical=timeline&speed=1200&lat=28.42630&lng=76.88649&zoom=11.95&historicalDate=2022-08-31&renderMode=variation" target="_blank" rel="noopener">Gurgaon, vegetation delta over 5 years</a></p>
+
+</div>
+
+<div class="band cardband">
+  <div class="cardband-inner">
+    <h4>So: why data visualization?</h4>
+    <p class="cbsub">Anand's own closing summary, in his order</p>
+    <div class="cards c3">
+      <div class="card"><span class="k">One</span><h5>To find questions</h5><p><strong>"What on earth don't I know in the first place?"</strong> The framing job got harder, not easier: "what is it that I don't even know I don't know? And what kinds of visualizations can expose that?"</p></div>
+      <div class="card"><span class="k">Two</span><h5>To understand &amp; explain</h5><p>For yourself, or to convince someone else. <strong>"And by design, I don't mean the aesthetics, I mean the form, the function."</strong> The test: one look, and "Ha, I get it. You are right."</p></div>
+      <div class="card"><span class="k">Three</span><h5>To verify at a glance</h5><p>Whether for yourself or a reader — and "use AI agents to critique your own visualizations, they're pretty good at it."</p></div>
+    </div>
+    <p class="cbfoot">All three share one property, and Anand names it explicitly: <strong>"Data visualization in all of the cases that I was using it for, you'll find, was primarily for human consumption."</strong> Where humans have to be in the room — because we're the endpoint, the actor, or the one who is accountable. <em>"And if that is the case, then the purpose to which we apply data visualizations to needs to align with that."</em></p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<h2 class="sec" id="bottlenecks">The homework: <em class="h">write down where you got stuck</em></h2>
+
+<p>The practical instruction Anand left the room with is the smallest and, he'd argue, the highest-leverage thing in the hour. It starts from a premise about what is now scarce:</p>
+
+<blockquote class="pull big">
+  <p>"<strong>If agents make the cost and time of solving problems down to zero, the difficulty is finding questions.</strong> If you are stuck, fantastic, you have a problem to solve. Stop wasting that valuable resource."</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p>He keeps a file called <strong>AI Bottlenecks</strong>. Every time something frustrates him, it goes in, dated. And then — this is the part that makes it work — he goes back and annotates entries when he later solves them, or delegates them, or turns them into a reusable asset.</p>
+
+<p>He put his actual list on screen. It is charmingly unimpressive, and he knows it: <em>"You'd say, 'Boss, there are better things to get stuck on,' but this is what I was stuck on that day."</em></p>
+</div>
+
+<div class="band bottle-band">
+  <div class="bottle-inner">
+    <h4>AI Bottlenecks</h4>
+    <p class="bsub">Anand's actual file · most recent first</p>
+    <ul class="bottle-list">
+      <li><span class="bd">08 Aug 2026</span><span class="bt">My scheduled tasks are not self improving.</span></li>
+      <li><span class="bd">03 Aug 2026</span><span class="bt">Too many chats.</span></li>
+      <li><span class="bd">26 Jul 2026</span><span class="bt">Data sonification via Lyria is hard.</span></li>
+      <li><span class="bd">26 Jul 2026</span><span class="bt">Too many chats. <span class="tag">#Learning</span> Focus on executing faster, close tabs and don't waste time with what's not clear. Some will get actioned anyway, some will be duplicated, many will come up again.</span></li>
+      <li><span class="bd">23 Jul 2026</span><span class="bt">Video workflows are hard.</span></li>
+      <li><span class="bd">20 Jul 2026</span><span class="bt">Too many chats. ⭐ <span class="tag">#Delegate</span> to ChatGPT to read and tell me what to do.</span></li>
+      <li><span class="bd">13 Jul 2026</span><span class="bt">When looking for agent capabilities that surprise me, I confuse it with <strong>ANSWERS</strong> (rather than capabilities) that surprise.</span></li>
+      <li><span class="bd">12 Jul 2026</span><span class="bt">Too many chats. ⭐ <span class="tag">#Assetize</span> into tab grouping by asset/intent, a tabnote tab manager<br><span style="color:#9ea4cc">↳ 26 Jul: I closed the "Learning and Talk Delivery" tab easily once I had a <code>talk-prep.md</code> to park the learnings into.</span></span></li>
+      <li><span class="bd">02 Jul 2026</span><span class="bt">The key bottlenecks in running an agent <code>/loop</code> are (a) <strong>imagining higher order problems</strong> and (b) <strong>defining a measure of success / progress</strong>.</span></li>
+      <li><span class="bd">26 Jun 2026</span><span class="bt">Too many ideas, too little agentic execution.</span></li>
+      <li><span class="bd">18 Jun 2026</span><span class="bt">Stuck on actioning Codex new features. Too much to read/do.</span></li>
+      <li><span class="bd">04 Jun 2026</span><span class="bt">Reviewed meeting briefs. It's still all over the place. I should ask it to <strong>PREPARE</strong> me: stuff I shouldn't miss, stuff I might ask, etc. <span class="tag">#Assetize</span></span></li>
+      <li><span class="bd">29 May 2026</span><span class="bt">Publishing a blog post after dictation requires rewording, linking, image generation, image compression, image deployment and linking, emailing.</span></li>
+    </ul>
+    <p class="bottle-foot">The tags are the method. <strong>#Learning</strong> means he changed how he works. <strong>#Delegate</strong> means an agent took it. <strong>#Assetize</strong> means it became a reusable file — a skill, a prompt, an <code>AGENTS.md</code>. <em>"At any point, I have a list of known problems, not vague unknown problems. <strong>Document yours.</strong>"</em></p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<p>The "too many chats" entry, incidentally, escalated. Anand built an entire application whose only purpose is to track his browser tabs. <strong class="h">As of that afternoon, he had 162 tabs open</strong>, spread across multiple windows.</p>
+
+<p>His resolution to it is a discipline, not a tool: whatever a tab says, hand it to an agent and say <em>"you do what I'm supposed to do."</em> Or close it. <strong>"If I don't understand it, why do I have it open?"</strong></p>
+
+<h2 class="sec" id="qa">The questions at the end</h2>
+
+<h3 class="sub">"But I won't be satisfied if I don't go check it"</h3>
+
+<p>A student pushed back on the close-the-tab advice with an honest confession: what if the model says something isn't important, but I think it might be? <strong>I can't just let it go.</strong></p>
+
+<p>Anand did not argue. He confessed harder:</p>
+
+<blockquote class="pull big g">
+  <p>"<strong>My to-do list is 25 years old.</strong> Meaning I have items from 2001, and maybe slightly before, that I'm still storing. I won't throw it away. I completely relate to it."</p>
+  <cite>Anand, on not fixing yourself</cite>
+</blockquote>
+
+<p>The resolution isn't discipline, it's infrastructure. <strong>"So don't — just archive it."</strong> He has a separate program that scans every open tab daily and saves the list, so nothing is ever actually lost. <em>"The reason I'm comfortable saying 'close tabs' is because I have it archived."</em> <strong class="h">Closing is only cheap if retrieval is free.</strong></p>
+
+<h3 class="sub">"What if the AI makes mistakes?"</h3>
+
+<p>The last real question of the hour, and the best one. Anand's answer has three layers.</p>
+
+<p><strong>Layer one: don't ask a probabilistic system to do a deterministic job.</strong> He doesn't have an agent closing his tabs. He has an application — written by an agent — that closes his tabs.</p>
+
+<blockquote class="pull">
+  <p>"The agent, therefore, <strong>does not have to do something that may be non-deterministic when it can be delegated deterministically to a program.</strong> So I tell it, 'Solve the problem, see if you can do it through a program. If you're doing it through a program, save the program and reuse it next time.'"</p>
+  <cite>Anand</cite>
+</blockquote>
+
+<p><strong>Layer two: for what's left, benchmark it.</strong> Two days before the class, Anand had run exactly this on transcript summarization — the same pipeline that produced the transcript of this talk. He described it live and slightly breathlessly while hunting for the file. Here is what the run actually found:</p>
+
+<div class="scorecard">
+  <h5>Blind benchmark · 16 transcripts · 4 judges, model identity and cost hidden until scores were frozen</h5>
+  <table>
+    <tr><th>Field</th><th style="text-align:right">Gemini 3.5 Flash</th><th style="text-align:right">GPT-5.6 Luna</th></tr>
+    <tr><td>Summary</td><td class="n">2.88</td><td class="n win">3.19</td></tr>
+    <tr><td>Keywords</td><td class="n win">3.12</td><td class="n">2.69</td></tr>
+    <tr><td>Actions</td><td class="n win">2.75</td><td class="n">2.38</td></tr>
+    <tr><td>What I missed</td><td class="n">2.12</td><td class="n win">2.81</td></tr>
+    <tr><td>Ideas</td><td class="n">2.00</td><td class="n">2.00</td></tr>
+    <tr class="tot"><td>Overall (0–4 scale)</td><td class="n">2.575</td><td class="n">2.612</td></tr>
+    <tr class="tot"><td>Relative cost</td><td class="n">2.47×</td><td class="n">1.00×</td></tr>
+  </table>
+  <p class="scfoot">Quality was a statistical dead heat — a gap of <strong>0.037</strong>, well inside judge noise. The decision was made on the cost column. Anand's summary in the room: <em>"on the summary, Luna was actually better, keywords Gemini is better… Luna is about half or 2.5 times less cost, so it said, 'Move to this.'"</em> The scoring was done by one model and verified by another; he skipped the most expensive judge on principle — <em>"I would have tried Fable, but I said, let's not waste too much money."</em></p>
+</div>
+
+<p>The test corpus, he mentioned in passing, included <em>his daughter's conversation with a dermatologist</em> — which tells you something about how ordinary this kind of evaluation has become.</p>
+
+<blockquote class="pull h">
+  <p>"<strong>Is this perfect? No. Is this better than the other model? Yes, almost clearly and convincingly. Is this better than me doing it by myself? Absolutely.</strong> I'm far more expensive and for this volume, I will make more mistakes."</p>
+  <cite>Anand, on the correct baseline for judging AI error rates</cite>
+</blockquote>
+
+<p><strong>Layer three — and this is where the hour lands.</strong> Anand had put the question to a model directly, in the plainest possible form:</p>
+
+<blockquote class="pull big">
+  <p>"How am I going to verify you when you are smarter than me in taxation?"</p>
+  <cite>Anand's prompt</cite>
+</blockquote>
+
+<p>The reply reframed the whole problem as an old one:</p>
+
+<blockquote class="pull g">
+  <p>"Anand, this is a problem that has been there for centuries. <strong>How are you going to verify your auditor who's smarter than you at taxation? How do judges pass judgments on a patent when they don't understand engineering? How do regulators who don't understand telecom pass a telecom bill?</strong> We've been solving this problem for centuries."</p>
+  <cite>The model, to Anand</cite>
+</blockquote>
+
+<p>And then it handed over the toolkit, which is not technical at all:</p>
+
+<div class="cards">
+  <div class="card"><span class="k">Technique</span><h5>Process checklists</h5><p><strong>"How does the FDA verify drugs? They have a checklist of a process."</strong> Follow it and the drug is deemed at least not too much of a disaster. You don't verify the chemistry — you verify the procedure.</p></div>
+  <div class="card h"><span class="k">Technique</span><h5>Outcome-based incentives</h5><p><strong>"How do we make sure that the real estate agent is not going to cheat me? Because he's going to get paid only after I get the house."</strong> Commission, contingency, skin in the game.</p></div>
+  <div class="card g"><span class="k">The prompt</span><h5>Steal from every profession</h5><p>"<em>How can I learn from the wisdom of all these other professions in the past where people have verified people smarter than themselves, and I'm applying those techniques?</em>"</p></div>
+</div>
+
+<p>Which is a satisfying place for the hour to end: the newest problem in the room turns out to be one that auditors, judges, regulators and drug agencies have all been quietly solving since before anyone wrote a line of code.</p>
+
+<div class="dinkus">◆ ◆ ◆</div>
+
+<p>Anand closed with an offer and a search-engine flex. <strong>"Just search for my name, S. Anand — Google me, you'll probably find me as the first or second hit"</strong> — his <a href="https://www.s-anand.net/" target="_blank" rel="noopener">contact details are on his blog</a> — <em>"just welcome to drop an email anytime."</em></p>
+
+<p>And then, characteristically: <strong>"The class is technically over, however you are free to hang out."</strong></p>
+
+</div>
+
+<div class="band takeaways-band" id="takeaways">
+  <div class="takeaways-inner">
+    <h2 class="takeaways-title">Six things worth keeping</h2>
+    <p class="takeaways-sub">From an hour spent arguing that the hour was unnecessary</p>
+    <div class="takeaway-grid">
+      <div class="takeaway">
+        <div class="takeaway-num">01</div>
+        <div class="takeaway-title">The scarce thing is the question</div>
+        <div class="takeaway-text">If agents drive the cost of <em>solving</em> to zero, the bottleneck moves to <strong>finding problems worth solving</strong>. "If you are stuck, fantastic, you have a problem to solve. Stop wasting that valuable resource."</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">02</div>
+        <div class="takeaway-title">Write down where you got stuck</div>
+        <div class="takeaway-text">Keep an <a href="#bottlenecks">AI Bottlenecks file</a>, dated, and go back to annotate it. Tag each entry by what happened to it: you learned something, you delegated it, or you <strong>turned it into a reusable asset</strong>.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">03</div>
+        <div class="takeaway-title">Often the right chart is an email</div>
+        <div class="takeaway-text">"We are losing $170 million in revenue. Here is the fix." <strong>Decide for them, or act for them.</strong> A visualization that only leads to an obvious action should have been the action.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">04</div>
+        <div class="takeaway-title">Humans stay because humans are liable</div>
+        <div class="takeaway-text">We can sue companies, ships, <a href="https://en.wikipedia.org/wiki/Te_Awa_Tupua_(Whanganui_River_Claims_Settlement)_Act_2017" target="_blank" rel="noopener">rivers</a> and temples. We cannot yet sue an agent. Until we can, <strong>a human signs off — and has to genuinely understand what they're signing.</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">05</div>
+        <div class="takeaway-title">Verification runs both ways</div>
+        <div class="takeaway-text">Verify the chart — <a href="https://sanand0.github.io/journalists/statnostics/" target="_blank" rel="noopener">a stated procedure with every number traced to source</a>. And use the chart <em>as</em> the verification — <strong>before picture, after picture, "yes, I agree this changed."</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">06</div>
+        <div class="takeaway-title">Verifying something smarter is an old problem</div>
+        <div class="takeaway-text">Judges rule on patents they don't understand; the FDA approves drugs by <strong>checking the process, not the chemistry</strong>; estate agents are paid on outcome. Steal the techniques — they're centuries old.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <p><strong style="color:#fff">Why are you even sitting in this class?</strong></p>
+  <p><a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand S</a>, LLM Psychologist at <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a>, for <a href="https://ed.iitm.ac.in/" target="_blank" rel="noopener">ED5518: Data Visualization for Engineers</a><br>
+  Dr Palaniappan Ramu's course, Department of Engineering Design, <a href="https://www.iitm.ac.in/" target="_blank" rel="noopener">IIT Madras</a> · 12 August 2026</p>
+  <p><a href="transcript.md" id="transcript-btn4">📄 Full transcript</a> ·
+     <a href="https://github.com/sanand0/talks/releases/download/talks/2026-08-12-iitm-ed-data-visualization.opus">🎧 Audio</a> ·
+     <a href="ED5518-course-outline.pdf" target="_blank" rel="noopener">📋 Course outline</a> ·
+     <a href="https://sanand0.github.io/talks/">📚 All talks</a></p>
+  <p class="footer-mono">Everything above expires. "Whatever you think you are learning, you check before using."</p>
+</footer>
+
+<!-- ── Section jumper ── -->
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump" aria-label="Jump to section">
+  <button id="jump-prev" title="Previous section" aria-label="Previous section">◂</button>
+  <a class="jump-cur" href="#jump-menu" id="jump-cur" aria-haspopup="true" aria-expanded="false"><span class="caret">☰</span> <span id="jump-cur-label">Jump to…</span></a>
+  <button id="jump-next" title="Next section" aria-label="Next section">▸</button>
+</nav>
+<div class="jump-menu" id="jump-menu">
+  <div class="jm-group">Setting up</div>
+  <div class="jump-grid">
+    <a href="#top" data-jump="top">Top<small>Short shelf life</small></a>
+    <a href="#listen" data-jump="listen">Listen<small>Audio + transcript</small></a>
+    <a href="#my-life" data-jump="my-life">Twenty years<small>Lehman, Gramener</small></a>
+    <a href="#mahabharata" data-jump="mahabharata">The Mahabharata<small>Draupadi &amp; Arjuna</small></a>
+  </div>
+  <div class="jm-group">Part one · the case against the course</div>
+  <div class="jump-grid">
+    <a href="#faster" data-jump="faster">A · Faster<small>Stat-TOI-stix</small></a>
+    <a href="#better" data-jump="better">B · Better<small>Calvin &amp; Hobbes UMAP</small></a>
+    <a href="#creative" data-jump="creative">C · More creative<small>Causal lag clock</small></a>
+    <a href="#critique" data-jump="critique">D · Better critic<small>Chart critique</small></a>
+    <a href="#why-at-all" data-jump="why-at-all" class="h">Why the chart at all?<small>The $170M email</small></a>
+  </div>
+  <div class="jm-group">The room fights back</div>
+  <div class="jump-grid">
+    <a href="#pushback" data-jump="pushback" class="h">The pushback<small>Four student answers</small></a>
+    <a href="#accountability" data-jump="accountability" class="h">Accountability<small>You can't sue an agent</small></a>
+    <a href="#unknown" data-jump="unknown" class="h">The unknown question<small>What survives</small></a>
+    <a href="#comic" data-jump="comic">Comic page<small>The hour in one image</small></a>
+  </div>
+  <div class="jm-group">Part two · what he still uses it for</div>
+  <div class="jump-grid">
+    <a href="#understand" data-jump="understand">1 · Understand<small>Umbrella windows</small></a>
+    <a href="#explore" data-jump="explore">2 · Explore<small>IMDb, and Snow White</small></a>
+    <a href="#formats" data-jump="formats">Detour · Formats<small>Engravings, beads, sound</small></a>
+    <a href="#explain" data-jump="explain">3 · Explain<small>Four kinds of solver</small></a>
+    <a href="#convince" data-jump="convince">4 · Convince<small>14 lakhs, and GDPval</small></a>
+    <a href="#verify" data-jump="verify">5 · Verify<small>Chennai from orbit</small></a>
+  </div>
+  <div class="jm-group">Closing</div>
+  <div class="jump-grid">
+    <a href="#bottlenecks" data-jump="bottlenecks" class="h">AI Bottlenecks<small>Anand's stuck list</small></a>
+    <a href="#qa" data-jump="qa" class="h">The questions<small>What if AI is wrong?</small></a>
+    <a href="#takeaways" data-jump="takeaways" class="h">Takeaways<small>Six things to keep</small></a>
+  </div>
+</div>
+
+<!-- ── Markdown document modal ── -->
+<div class="modal" id="doc-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h4 id="doc-title">Transcript</h4>
+      <button class="modal-close" id="doc-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-src" id="doc-src"></div>
+    <div class="modal-body" id="doc-body"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+<script>
+  // ── Progress bar ──
+  const prog = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    prog.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + '%';
+  }, { passive: true });
+
+  // ── Markdown document modal ──
+  const modal = document.getElementById('doc-modal');
+  const dBody = document.getElementById('doc-body');
+  const dTitle = document.getElementById('doc-title');
+  const dSrc = document.getElementById('doc-src');
+  const cache = {};
+
+  function renderMarkdown(text) {
+    const body = text.replace(/^---[\s\S]*?---\s*/, '');
+    const html = window.marked ? marked.parse(body) : body.replace(/\n/g, '<br>');
+    return html.replace(/<a /g, '<a target="_blank" rel="noopener" ');
+  }
+
+  async function openDoc(file, title, source) {
+    modal.classList.add('open');
+    dBody.scrollTop = 0;
+    dTitle.textContent = title;
+    dSrc.innerHTML = source ? `<a href="${source}" target="_blank" rel="noopener">↗ Open the original</a>` : '';
+    if (cache[file]) { dBody.innerHTML = cache[file]; return; }
+    dBody.innerHTML = '<p><em>Loading…</em></p>';
+    try {
+      const res = await fetch(file);
+      if (!res.ok) throw new Error(res.status);
+      const html = renderMarkdown(await res.text());
+      cache[file] = html;
+      dBody.innerHTML = html;
+    } catch (e) {
+      dBody.innerHTML = `<p>Could not load this file here. <a href="${source || file}" target="_blank" rel="noopener">Open it directly</a>.</p>`;
+    }
+  }
+
+  const openTranscript = e => {
+    e.preventDefault();
+    openDoc('transcript.md', 'Full transcript — ED5518, IIT Madras, 12 Aug 2026', '');
+  };
+  ['transcript-btn', 'transcript-btn2', 'transcript-btn3', 'transcript-btn4'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', openTranscript);
+  });
+  document.getElementById('doc-close').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+
+  // ── Section jumper ──
+  (function () {
+    const menu = document.getElementById('jump-menu');
+    const backdrop = document.getElementById('jump-backdrop');
+    const curBtn = document.getElementById('jump-cur');
+    const curLabel = document.getElementById('jump-cur-label');
+    const prevBtn = document.getElementById('jump-prev');
+    const nextBtn = document.getElementById('jump-next');
+    const links = Array.from(menu.querySelectorAll('a[data-jump]'));
+    const ids = links.map(a => a.dataset.jump);
+    const labels = {};
+    links.forEach(a => { labels[a.dataset.jump] = a.firstChild.textContent.trim(); });
+    let idx = 0;
+
+    const closeMenu = () => { menu.classList.remove('open'); backdrop.classList.remove('open'); curBtn.setAttribute('aria-expanded', 'false'); };
+    const toggleMenu = e => {
+      e.preventDefault();
+      const open = !menu.classList.contains('open');
+      menu.classList.toggle('open', open);
+      backdrop.classList.toggle('open', open);
+      curBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) { const cur = menu.querySelector('a.is-cur'); if (cur) cur.scrollIntoView({ block: 'nearest' }); }
+    };
+    curBtn.addEventListener('click', toggleMenu);
+    backdrop.addEventListener('click', closeMenu);
+    links.forEach(a => a.addEventListener('click', closeMenu));
+
+    function setCurrent(i) {
+      idx = i;
+      curLabel.textContent = labels[ids[i]];
+      links.forEach((a, k) => a.classList.toggle('is-cur', k === i));
+      prevBtn.disabled = i <= 0;
+      nextBtn.disabled = i >= ids.length - 1;
+    }
+    const go = i => {
+      if (i < 0 || i >= ids.length) return;
+      const el = document.getElementById(ids[i]);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setCurrent(i);
+    };
+    prevBtn.addEventListener('click', () => go(idx - 1));
+    nextBtn.addEventListener('click', () => go(idx + 1));
+
+    const targets = ids.map(id => document.getElementById(id)).filter(Boolean);
+    function onScroll() {
+      const y = window.scrollY + window.innerHeight * 0.3;
+      let best = 0;
+      targets.forEach((el, k) => { if (el.getBoundingClientRect().top + window.scrollY <= y) best = k; });
+      if (best !== idx) setCurrent(best);
+    }
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { onScroll(); ticking = false; });
+    }, { passive: true });
+    setCurrent(0);
+    onScroll();
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeMenu();
+      if (e.target.matches('input, textarea')) return;
+      if (menu.classList.contains('open') || modal.classList.contains('open')) return;
+      if (e.key === 'j') go(idx + 1);
+      if (e.key === 'k') go(idx - 1);
+    });
+  })();
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') modal.classList.remove('open');
+  });
+</script>
+</body>
+</html>

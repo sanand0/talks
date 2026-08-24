@@ -1,8 +1,21 @@
 ---
 marp: true
-title: Data Design by Dialogue
+date: "2025-06-27"
+title: "Data Design by Dialogue"
+event: "VizChitra 2025"
+location: "Bangalore, India"
+topics:
+  - "data visualization"
+  - "LLMs"
+  - "data analysis"
+  - "data storytelling"
+links:
+  event: "https://hasgeek.com/VizChitra/2025/schedule/data-design-by-dialogue-visualizing-data-with-llms-RM88yTfBNKrgSAJFiL2RQL"
+  video: "https://youtu.be/htc3LwVbPgI"
+  slides: "https://talks.s-anand.net/2025-06-27-data-design-by-dialogue/"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-06-27-data-design-by-dialogue/transcript.md"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/
+url: https://talks.s-anand.net/2025-06-27-data-design-by-dialogue/
 theme: gaia
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
@@ -15,7 +28,7 @@ paginate: true
   }
 
   section {
-    background-image: url('https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/');
+    background-image: url('https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-06-27-data-design-by-dialogue/');
     background-repeat: no-repeat;
     background-position: top 20px right 20px;
     background-size: 80px auto;
@@ -24,13 +37,13 @@ paginate: true
 
 # Data Design by Dialogue
 
-#### [Visualizing Data with LLMs](https://hasgeek.com/VizChitra/2025/schedule/data-design-by-dialogue-visualizing-data-with-llms-RM88yTfBNKrgSAJFiL2RQL) | [Slides](https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/)
+#### [Visualizing Data with LLMs](https://hasgeek.com/VizChitra/2025/schedule/data-design-by-dialogue-visualizing-data-with-llms-RM88yTfBNKrgSAJFiL2RQL) | [Slides](https://talks.s-anand.net/2025-06-27-data-design-by-dialogue/)
 
 [VizChitra](https://vizchitra.com/) · 27 June 2025, 4:15 pm IST · [Bangalore](https://maps.app.goo.gl/fujVnPiBKaQhuZ3V9)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 [Video](https://youtu.be/htc3LwVbPgI) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-06-27-data-design-by-dialogue/transcript.md)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-06-27-data-design-by-dialogue/)
 
 ---
 
@@ -170,10 +183,10 @@ Try it! See where it works and fails.
 
 # Data Design by Dialogue
 
-#### [Visualizing Data with LLMs](https://hasgeek.com/VizChitra/2025/schedule/data-design-by-dialogue-visualizing-data-with-llms-RM88yTfBNKrgSAJFiL2RQL) | [Slides](https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/)
+#### [Visualizing Data with LLMs](https://hasgeek.com/VizChitra/2025/schedule/data-design-by-dialogue-visualizing-data-with-llms-RM88yTfBNKrgSAJFiL2RQL) | [Slides](https://talks.s-anand.net/2025-06-27-data-design-by-dialogue/)
 
 [VizChitra](https://vizchitra.com/) · 27 June 2025, 4:15 pm IST · [Bangalore](https://maps.app.goo.gl/fujVnPiBKaQhuZ3V9)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 [Video](https://youtu.be/htc3LwVbPgI) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-06-27-data-design-by-dialogue/transcript.md)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-06-27-data-design-by-dialogue/)

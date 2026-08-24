@@ -1,8 +1,21 @@
 ---
 marp: true
-title: LLM Psychology
+date: "2025-11-06"
+title: "LLM Psychology"
+event: "Madhu Decodes"
+location: "Remote"
+topics:
+  - "LLM psychology"
+  - "AI behavior"
+  - "evaluation"
+  - "personality"
+links:
+  event: "https://www.youtube.com/channel/UCZLuqdSatDu-solUJzxRh6g"
+  video: "https://youtu.be/grXvLwWQBAw"
+  slides: "https://talks.s-anand.net/2025-11-06-llm-psychology/"
+  transcript: "https://github.com/sanand0/talks/tree/main/2025-11-06-llm-psychology"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-11-06-llm-psychology/
+url: https://talks.s-anand.net/2025-11-06-llm-psychology/
 theme: marpessa
 paginate: true
 style: |
@@ -22,7 +35,7 @@ style: |
 [Video](https://youtu.be/grXvLwWQBAw) · [Transcript](https://github.com/sanand0/talks/tree/main/2025-11-06-llm-psychology) · [Article](https://github.com/sanand0/talks/raw/refs/heads/main/2025-11-06-llm-psychology/mind-readers.docx)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-11-06-llm-psychology)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-11-06-llm-psychology)
 
 ---
 
@@ -361,7 +374,7 @@ So, in short, it is possible to engineer systems that can only that can access p
 [Video](https://youtu.be/grXvLwWQBAw) · [Transcript](https://github.com/sanand0/talks/tree/main/2025-11-06-llm-psychology) · [Article](https://github.com/sanand0/talks/raw/refs/heads/main/2025-11-06-llm-psychology/mind-readers.docx)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-11-06-llm-psychology)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-11-06-llm-psychology)
 
 ---
 

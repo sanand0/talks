@@ -327,7 +327,7 @@ I might try to list talks from places like sanand0.github.io/talks, but it seems
 
 Searching for talks by Anand Subramanian
 
-[sanand0.github.io](https://sanand0.github.io/talks/)
+[sanand0.github.io](https://talks.s-anand.net/)
 
 [dictionary.cambridge.org](https://dictionary.cambridge.org/dictionary/english/visualizing)
 
@@ -379,7 +379,7 @@ Searching for open LLM psychologist resources
 
 [www.s-anand.net](https://www.s-anand.net/blog/the-llm-psychologist/)
 
-[sanand0.github.io](https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/)
+[sanand0.github.io](https://talks.s-anand.net/2025-06-27-data-design-by-dialogue/)
 
 [hackernoon.com](https://hackernoon.com/ai-is-playing-favorite-with-numbers)
 
@@ -455,9 +455,9 @@ Web· 220
 -
   - [S Anand](https://www.s-anand.net/blog/talks/) - Talks | S Anand
 -
-  - [Sanand0](https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/) - Data Design by Dialogue
+  - [Sanand0](https://talks.s-anand.net/2025-06-27-data-design-by-dialogue/) - Data Design by Dialogue
 -
-  - [Sanand0](https://sanand0.github.io/talks/2025-09-16-vibe-analysis/) - Vibe Analysis
+  - [Sanand0](https://talks.s-anand.net/2025-09-16-vibe-analysis/) - Vibe Analysis
 -
   - [S Anand](https://www.s-anand.net/blog/the-calvin-and-hobbes-search-takedown/) - The Calvin and Hobbes Search Takedown | S Anand
 -
@@ -571,7 +571,7 @@ Web· 220
 -
   - [s-anand.net](https://www.s-anand.net/blog/the-calvin-and-hobbes-search-takedown/?utm_source=chatgpt.com) - The Calvin and Hobbes Search Takedown - S Anand - 21 May 2010 — I set up a site that let people search for strips. Early this month, I was asked to take it down. This is the story.Read more
 -
-  - [s-anand.net](https://www.s-anand.net/blog/2025/?utm_source=chatgpt.com) - 2025 | S Anand - 31 Dec 2025 — S Anand. 2025. My Year in 2025. Here's the report card for my ... https://sanand0.github.io/talks/2025-11-06-llm-psychology/ How about ...Read more
+  - [s-anand.net](https://www.s-anand.net/blog/2025/?utm_source=chatgpt.com) - 2025 | S Anand - 31 Dec 2025 — S Anand. 2025. My Year in 2025. Here's the report card for my ... https://talks.s-anand.net/2025-11-06-llm-psychology/ How about ...Read more
 -
   - [s-anand.net](https://www.s-anand.net/blog/talks/?utm_source=chatgpt.com) - Talks | S Anand - 22 Mar 2021 — His data stories company, Gramener, was acquired by Straive, where he researches AI and publishes demos. ... Anand is an alumnus of IIM Bangalore, ...Read more
 -
@@ -697,13 +697,13 @@ Web· 220
 -
   - [analyticsvidhya.com](https://www.analyticsvidhya.com/blog/2025/06/genai-leaders-to-meet-in-india/?utm_source=chatgpt.com) - Top 15 GenAI Leaders to Meet in India in 2025 - 23 Jun 2025 — Top GenAI Leaders to Meet in India in 2025 · Dr. Kiran R · Dr. Qingyun Wu · Dr. Joshua Starmer · Anand S · David Zakkam · Bhaskarjit Sarmah · John ...Read more
 -
-  - [sanand0.github.io](https://sanand0.github.io/talks/?utm_source=chatgpt.com) - Anand's Talks - 10 Aug 2024: LLM Psychology at TEDx MDI Gurgaon, 2024 · ⏯️ Video · · Slides ... 02 Oct 2017: ANAND S of Gramener talks about Automating Analysis @#Cypher2017 ( ...Read more
+  - [sanand0.github.io](https://talks.s-anand.net/?utm_source=chatgpt.com) - Anand's Talks - 10 Aug 2024: LLM Psychology at TEDx MDI Gurgaon, 2024 · ⏯️ Video · · Slides ... 02 Oct 2017: ANAND S of Gramener talks about Automating Analysis @#Cypher2017 ( ...Read more
 -
   - [sanand0.github.io](https://sanand0.github.io/?utm_source=chatgpt.com) - Anand's Code - Open source · GitHub. Code by Anand S. Data tools, LLM experiments, visualizations, and utilities — built in public. 192. Projects. 988. Stars. 13. Topics.Read more
 -
-  - [sanand0.github.io](https://sanand0.github.io/talks/2025-06-27-data-design-by-dialogue/?utm_source=chatgpt.com) - Data Design by Dialogue - Data Design by Dialogue. Visualizing Data with LLMs | Slides · VizChitra · 27 June 2025, 4:15 pm IST · Bangalore · Anand S · LLM Psychologist · ...Read more
+  - [sanand0.github.io](https://talks.s-anand.net/2025-06-27-data-design-by-dialogue/?utm_source=chatgpt.com) - Data Design by Dialogue - Data Design by Dialogue. Visualizing Data with LLMs | Slides · VizChitra · 27 June 2025, 4:15 pm IST · Bangalore · Anand S · LLM Psychologist · ...Read more
 -
-  - [sanand0.github.io](https://sanand0.github.io/talks/2025-09-16-vibe-analysis/?utm_source=chatgpt.com) - Vibe Analysis - Vibe Analysis. Fifth Elephant Workshop · 16 Sep 2025, 2:00 pm IST · Bangalore · Anand S · LLM Psychologist · Straive · CC0 - Public Domain.Read more
+  - [sanand0.github.io](https://talks.s-anand.net/2025-09-16-vibe-analysis/?utm_source=chatgpt.com) - Vibe Analysis - Vibe Analysis. Fifth Elephant Workshop · 16 Sep 2025, 2:00 pm IST · Bangalore · Anand S · LLM Psychologist · Straive · CC0 - Public Domain.Read more
 -
   - [yourstory.com](https://yourstory.com/2013/07/a-look-at-gramener-from-a-data-scientists-eye-and-how-to-become-one?utm_source=chatgpt.com) - A look at Gramener from a Data Scientists' eye and how to ... - 19 Jul 2013 — S.Anand, Chief Data Scientist, Gramener. S. Anand is a data ... A look at Gramener from a Data Scientists' eye and how to become one | YourStory.
 -

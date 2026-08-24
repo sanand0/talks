@@ -65,7 +65,7 @@ in the transcript and sources:
 - TAKEAWAY-1
 - TAKEAWAY-2
 
-This will be deployed at https://sanand0.github.io/talks/YYYY-MM-DD-slug/
+This will be deployed at https://talks.s-anand.net/YYYY-MM-DD-slug/
 
 --- <!-- Optional: landing page when there are multiple sub-pages -->
 

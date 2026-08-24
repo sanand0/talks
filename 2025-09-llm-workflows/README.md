@@ -1,8 +1,19 @@
 ---
 marp: true
-title: Redesigning Work in the LLM Era
+date: "2025-09"
+title: "Redesigning Work in the LLM Era"
+event: "Proposed talk"
+location: "TBD"
+topics:
+  - "future of work"
+  - "LLMs"
+  - "workflow design"
+  - "AI transformation"
+status: "draft"
+links:
+  slides: "https://talks.s-anand.net/2025-09-llm-workflows/"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-09-llm-workflows/
+url: https://talks.s-anand.net/2025-09-llm-workflows/
 theme: gaia
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
@@ -21,7 +32,7 @@ paginate: true
 
 Slides: **sanand0.github.io/talks/**
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-llm-workflows/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-09-llm-workflows/)
 
 <!--
 Welcome! This talk is not a “tool demo”; it’s a tour of how **work itself** gets rewritten whenever a big, general-purpose technology shows up. We did it with steam and electricity. We did it again with the PC and the Internet. And now we have to do it—cheerfully, skeptically—with LLMs.
@@ -768,7 +779,7 @@ And yes, you are allowed to have fun. The work gets lighter when the system carr
 
 Slides: **sanand0.github.io/talks/**
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-llm-workflows/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-09-llm-workflows/)
 
 <!--
 Pick one workflow you own. Write its function signature. Add five golden tests. Put a tiny logger in the middle. Run a one-week canary. Then send me your before/after story. I collect them the way some people collect stamps.

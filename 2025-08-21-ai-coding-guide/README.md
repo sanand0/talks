@@ -1,8 +1,20 @@
 ---
 marp: true
-title: AI Coding Guide
+date: "2025-08-21"
+title: "AI Coding Guide"
+event: "DataHack Summit 2025"
+location: "Bangalore, India"
+topics:
+  - "AI coding"
+  - "software engineering"
+  - "evaluation"
+  - "agents"
+links:
+  event: "https://www.analyticsvidhya.com/datahacksummit/"
+  slides: "https://talks.s-anand.net/2025-08-21-ai-coding-guide/"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-08-21-ai-coding-guide/transcript.md"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-08-21-ai-coding-guide/
+url: https://talks.s-anand.net/2025-08-21-ai-coding-guide/
 theme: gaia
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
@@ -12,9 +24,9 @@ paginate: true
 
 [DataHack Summit](https://www.analyticsvidhya.com/datahacksummit/) · 21 Aug 2025 · [Bangalore](https://maps.app.goo.gl/fBAcQ6VopycH8z9T8)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Slides](https://sanand0.github.io/talks/2025-08-21-ai-coding-guide/) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-08-21-ai-coding-guide/transcript.md)
+[Slides](https://talks.s-anand.net/2025-08-21-ai-coding-guide/) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-08-21-ai-coding-guide/transcript.md)
 
-![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-08-21-ai-coding-guide/)
+![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-08-21-ai-coding-guide/)
 
 ---
 
@@ -91,9 +103,9 @@ Or, commit to _broad_ improvement, not specific apps.
 
 [DataHack Summit](https://www.analyticsvidhya.com/datahacksummit/) · 21 Aug 2025 · [Bangalore](https://maps.app.goo.gl/fBAcQ6VopycH8z9T8)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Slides](https://sanand0.github.io/talks/2025-08-21-ai-coding-guide/) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-08-21-ai-coding-guide/transcript.md)
+[Slides](https://talks.s-anand.net/2025-08-21-ai-coding-guide/) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-08-21-ai-coding-guide/transcript.md)
 
-![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-08-21-ai-coding-guide/)
+![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-08-21-ai-coding-guide/)
 
 <!--
 

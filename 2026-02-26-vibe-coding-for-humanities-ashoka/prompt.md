@@ -49,7 +49,7 @@ Prominently include these near the top:
 - include the YouTube video: https://youtu.be/mCJLNML7FrE - let it take up most of the available screen width and height.
 - link to the transcript
 
-This will be deployed at https://sanand0.github.io/talks/2026-02-26-vibe-coding-for-humanities-ashoka/
+This will be deployed at https://talks.s-anand.net/2026-02-26-vibe-coding-for-humanities-ashoka/
 
 Update README.md to include this talk in the list of talks.
 

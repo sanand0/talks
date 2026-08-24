@@ -1,8 +1,21 @@
 ---
 marp: true
-title: Vibe Analytics
+date: "2025-12-03"
+title: "Vibe Analytics"
+event: "IIM Alumni Singapore"
+location: "Remote"
+topics:
+  - "vibe analytics"
+  - "LLMs"
+  - "data analysis"
+  - "AI workflows"
+links:
+  event: "https://iimalumni.sg/"
+  slides: "https://talks.s-anand.net/2025-12-03-vibe-analytics-iim-alumni-sg/"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-12-03-vibe-analytics-iim-alumni-sg/transcript.md"
+  audio: "https://github.com/sanand0/talks/releases/download/talks/2025-12-03-Vibe-Analytics.opus"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-12-03-vibe-analytics-iim-alumni-sg/
+url: https://talks.s-anand.net/2025-12-03-vibe-analytics-iim-alumni-sg/
 theme: gaia
 paginate: true
 style: |
@@ -26,7 +39,7 @@ style: |
 [Transcript](https://github.com/sanand0/talks/blob/main/2025-12-03-vibe-analytics-iim-alumni-sg/transcript.md) · [Audio](https://github.com/sanand0/talks/releases/download/talks/2025-12-03-Vibe-Analytics.opus) · [Story](https://github.com/sanand0/talks/blob/main/2025-12-03-vibe-analytics-iim-alumni-sg/article.md) · [WhatsApp Group](https://chat.whatsapp.com/DUxeM59JBNH47Wmm1i5qRa)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-12-03-vibe-analytics-iim-alumni-sg/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-12-03-vibe-analytics-iim-alumni-sg/)
 
 ---
 
@@ -235,4 +248,4 @@ Sharing reinforces learning, builds commitment. Share ideas / plans:
 [Transcript](https://github.com/sanand0/talks/blob/main/2025-12-03-vibe-analytics-iim-alumni-sg/transcript.md) · [Audio](https://github.com/sanand0/talks/releases/download/talks/2025-12-03-Vibe-Analytics.opus) · [Story](https://github.com/sanand0/talks/blob/main/2025-12-03-vibe-analytics-iim-alumni-sg/article.md) · [WhatsApp Group](https://chat.whatsapp.com/DUxeM59JBNH47Wmm1i5qRa)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-12-03-vibe-analytics-iim-alumni-sg/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-12-03-vibe-analytics-iim-alumni-sg/)

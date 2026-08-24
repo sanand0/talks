@@ -1,10 +1,25 @@
+---
+date: "2025-09-13"
+title: "DuckDB is the new Pandas"
+event: "PyCon India 2025"
+location: "Bangalore, India"
+topics:
+  - "DuckDB"
+  - "Pandas"
+  - "Python"
+  - "analytics"
+  - "data engineering"
+links:
+  event: "https://cfp.in.pycon.org/2025/talk/W8VJX3/"
+  slides: "https://talks.s-anand.net/2025-09-13-duckdb-is-the-new-pandas/"
+---
 # DuckDB is the new Pandas
 
 PyCon India, Bangalore, 13 Sep 2025
 
 Anand S, LLM Psychologist @ **Straive**
 
-**Slides**: <https://sanand0.github.io/talks/>
+**Slides**: <https://talks.s-anand.net/>
 
 **Questions**: Slido.com - 2987 234
 
@@ -404,7 +419,7 @@ Community extensions: https://duckdb.org/community_extensions/list_of_extensions
 
 # DuckDB is the new Pandas
 
-Slides: <https://sanand0.github.io/talks/>
+Slides: <https://talks.s-anand.net/>
 
 LICENSE: CC0 - Public Domain
 

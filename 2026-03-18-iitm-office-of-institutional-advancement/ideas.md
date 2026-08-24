@@ -121,7 +121,7 @@ If time is short, these are the five highest-impact ideas that seem both useful 
 
 ### 4. Treat digital exhaust as a fundraising and alumni-engagement asset
 
-- **Source:** [Mining Digital Exhaust workshop 2025](https://www.s-anand.net/blog/mining-digital-exhaust-workshop-2025/), [Vibe Analytics](https://sanand0.github.io/talks/2025-12-03-vibe-analytics-iim-alumni-sg/), [WhatsApp Group](https://www.s-anand.net/blog/prompts/whatsapp-group/)
+- **Source:** [Mining Digital Exhaust workshop 2025](https://www.s-anand.net/blog/mining-digital-exhaust-workshop-2025/), [Vibe Analytics](https://talks.s-anand.net/2025-12-03-vibe-analytics-iim-alumni-sg/), [WhatsApp Group](https://www.s-anand.net/blog/prompts/whatsapp-group/)
 - **Description:** Mine WhatsApp groups, event chats, webinar transcripts, email threads, CRM notes, and internal discussion logs for topics, bridges, influencers, recurring asks, drop-offs, and sentiment shifts.
 - **Why this should hit for OIA:** OIA almost certainly sits on a lot of underused exhaust: reunion groups, chapter chats, donor conversations, event feedback, internal planning threads. The non-obvious insight is that these are not archival leftovers. They are a rich intelligence layer for relationship strategy, segmentation, and community health.
 
@@ -133,7 +133,7 @@ If time is short, these are the five highest-impact ideas that seem both useful 
 
 ### 6. Write repeatable advancement work like APIs: inputs, outputs, done-when, tests, and risk tags
 
-- **Source:** [Redefining Work in the LLM Era](https://sanand0.github.io/talks/2025-09-llm-workflows/)
+- **Source:** [Redefining Work in the LLM Era](https://talks.s-anand.net/2025-09-llm-workflows/)
 - **Description:** For tasks like prospect briefs, thank-you drafts, project-page updates, alumni-reunion follow-up, or CSR opportunity scans, define:
   - inputs
   - expected output
@@ -151,7 +151,7 @@ If time is short, these are the five highest-impact ideas that seem both useful 
 
 ### 8. Turn policy prose into checklists and validators
 
-- **Source:** [Data to Decisions with AI](https://sanand0.github.io/talks/2025-12-05-scdm-keynote/), [Policy as Code demo](https://sanand0.github.io/policyascode/)
+- **Source:** [Data to Decisions with AI](https://talks.s-anand.net/2025-12-05-scdm-keynote/), [Policy as Code demo](https://sanand0.github.io/policyascode/)
 - **Description:** Convert gift rules, naming rules, approval conditions, stewardship requirements, event protocols, and brand constraints into checklist-style prompts or machine-checkable validators.
 - **Why this should hit for OIA:** AI is safest and strongest where validation is "harmless." The big non-obvious use case is not "write the donor note from scratch," but "check whether this note, deck, or proposal violates any rules before it goes out."
 

@@ -28,7 +28,7 @@ Typical assets: `transcript.md` (primary content), `summary.avif` / `sketchnote.
 (`form.yaml`, `responses.tsv`), extra `.html` pages, images, videos.
 
 Defaults derivable from the directory name `<talk-dir>`:
-- Deployment URL: `https://sanand0.github.io/talks/<talk-dir>/`
+- Deployment URL: `https://talks.s-anand.net/<talk-dir>/`
 - Audio (if the prompt mentions a recording): `https://github.com/sanand0/talks/releases/download/talks/<talk-dir>.opus`
 
 ### 2. Gather context

@@ -1,3 +1,19 @@
+---
+date: "2024-10-19"
+title: "AI as a learning tool: What students, teachers, and parents need to know"
+event: "The Hindu Edge webinar"
+location: "Remote"
+topics:
+  - "AI in education"
+  - "learning"
+  - "teaching"
+  - "generative AI"
+links:
+  event: "https://www.thehindu.com/sci-tech/technology/the-hindu-to-host-webinar-on-the-use-of-artificial-intelligence-in-education/article68769905.ece"
+  video: "https://youtu.be/fPvhDOyUPc8"
+  slides: "https://github.com/sanand0/talks/releases/download/talks/2024-10-19-ai-in-education-webinar.pptx"
+  transcript: "https://github.com/sanand0/talks/blob/main/2024-10-19-ai-in-education-webinar/README.md"
+---
 # AI in Education Webinar
 
 This is the transcript of [AI as a learning tool: What students, teachers, and parents need to know](https://www.thehindu.com/sci-tech/technology/the-hindu-to-host-webinar-on-the-use-of-artificial-intelligence-in-education/article68769905.ece),

@@ -1,8 +1,19 @@
 ---
 marp: true
-title: Python in the Browser
+date: "2025-06-18"
+title: "Python in the Browser"
+event: "PyCon Singapore 2025"
+location: "Singapore"
+topics:
+  - "Python"
+  - "browser"
+  - "Pyodide"
+  - "data analysis"
+links:
+  event: "https://pycon.sg/"
+  slides: "https://talks.s-anand.net/2025-06-pycon-sg/"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-06-pycon-sg
+url: https://talks.s-anand.net/2025-06-pycon-sg/
 theme: gaia
 backgroundColor: white
 paginate: true
@@ -18,9 +29,9 @@ paginate: true
 
 ###### LLM Psychologist @ Straive
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-06-pycon-sg/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-06-pycon-sg/)
 
-Slides: [sanand0.github.io/talks/2025-06-pycon-sg/](https://sanand0.github.io/talks/2025-06-pycon-sg/)
+Slides: [sanand0.github.io/talks/2025-06-pycon-sg/](https://talks.s-anand.net/2025-06-pycon-sg/)
 
 ---
 
@@ -78,6 +89,6 @@ After the LLM generates code, here's how we run it.
 
 ###### LLM Psychologist @ Straive
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-06-pycon-sg/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-06-pycon-sg/)
 
-Slides: [sanand0.github.io/talks/2025-06-pycon-sg/](https://sanand0.github.io/talks/2025-06-pycon-sg/)
+Slides: [sanand0.github.io/talks/2025-06-pycon-sg/](https://talks.s-anand.net/2025-06-pycon-sg/)

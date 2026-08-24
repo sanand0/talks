@@ -1,8 +1,22 @@
 ---
 marp: true
-title: Lessons from Social Code Analysis
+date: "2025-08-11"
+title: "Lessons from Social Code Analysis"
+event: "PyConSG Education Summit 2025"
+location: "Singapore"
+topics:
+  - "education"
+  - "code analysis"
+  - "grading"
+  - "collaboration"
+  - "Python"
+links:
+  event: "https://pycon.sg/edusummit.html"
+  video: "https://youtu.be/2WclnjSljbM"
+  slides: "https://talks.s-anand.net/2025-08-11-social-code-analysis/"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-08-11-social-code-analysis/transcript.md"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-08-11-social-code-analysis/
+url: https://talks.s-anand.net/2025-08-11-social-code-analysis/
 theme: gaia
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
@@ -21,9 +35,9 @@ paginate: true
 
 [PyConSG Education Summit](https://pycon.sg/edusummit.html) · 11 Aug 2025 · [SUTD, Singapore](https://maps.app.goo.gl/rfqZDgPiPkhr5C7E6)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Video](https://youtu.be/2WclnjSljbM) · [Blog](https://www.s-anand.net/blog/category/education/) · [Slides](https://sanand0.github.io/talks/2025-08-11-social-code-analysis/) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-08-11-social-code-analysis/transcript.md)
+[Video](https://youtu.be/2WclnjSljbM) · [Blog](https://www.s-anand.net/blog/category/education/) · [Slides](https://talks.s-anand.net/2025-08-11-social-code-analysis/) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-08-11-social-code-analysis/transcript.md)
 
-![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-08-11-social-code-analysis/)
+![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-08-11-social-code-analysis/)
 
 ---
 
@@ -232,6 +246,6 @@ They scored the most.
 
 [PyConSG Education Summit](https://pycon.sg/edusummit.html) · 11 Aug 2025 · [SUTD, Singapore](https://maps.app.goo.gl/rfqZDgPiPkhr5C7E6)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Blog](https://www.s-anand.net/blog/category/education/) · [Slides](https://sanand0.github.io/talks/2025-08-11-social-code-analysis/) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-08-11-social-code-analysis/transcript.md)
+[Blog](https://www.s-anand.net/blog/category/education/) · [Slides](https://talks.s-anand.net/2025-08-11-social-code-analysis/) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-08-11-social-code-analysis/transcript.md)
 
-![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-08-11-social-code-analysis/)
+![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-08-11-social-code-analysis/)

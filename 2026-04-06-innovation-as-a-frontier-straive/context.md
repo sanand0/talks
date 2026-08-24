@@ -12,7 +12,7 @@ type: project
 - **Date**: 6 Apr 2026
 - **Venue**: Straive ACE Fireside Chat (internal webinar)
 - **Venue URL**: https://straive.com/
-- **Deployment URL**: https://sanand0.github.io/talks/2026-04-06-innovation-as-a-frontier-straive/
+- **Deployment URL**: https://talks.s-anand.net/2026-04-06-innovation-as-a-frontier-straive/
 
 ## Speakers
 

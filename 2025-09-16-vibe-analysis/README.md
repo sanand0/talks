@@ -1,8 +1,19 @@
 ---
 marp: true
-title: Vibe Analysis
+date: "2025-09-16"
+title: "Vibe Analysis"
+event: "Fifth Elephant Workshop"
+location: "Bangalore, India"
+topics:
+  - "vibe analysis"
+  - "LLMs"
+  - "data analysis"
+  - "AI workflows"
+links:
+  event: "http://has.gy/hV8U"
+  slides: "https://talks.s-anand.net/2025-09-16-vibe-analysis/"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-09-16-vibe-analysis/
+url: https://talks.s-anand.net/2025-09-16-vibe-analysis/
 theme: gaia
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
@@ -21,9 +32,9 @@ paginate: true
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-https://sanand0.github.io/talks/
+https://talks.s-anand.net/
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-16-vibe-analysis/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-09-16-vibe-analysis/)
 
 ---
 

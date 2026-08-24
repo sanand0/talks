@@ -1,8 +1,43 @@
 # Anand's Talks
 
-Slides, stories, transcripts, video and audio from talks, workshops, and panels - mostly by [Anand](https://www.s-anand.net/).
+Since 2011 [Anand](https://www.s-anand.net/) has been been speaking about data, AI, visualization, and education at events & organizations.
 
-<!-- Use ":ignore" on non-Markdown links, e.g. HTML, .opus -->
+<style scoped>
+
+.video-embed {
+  position: relative;
+  padding-top: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--entry);
+  border: 1px solid var(--border);
+
+  iframe {
+    border: 0;
+    max-width: 100%;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+</style>
+
+<div class="video-embed"><iframe src="https://www.youtube.com/embed/videoseries?list=PLHCH16htawZbR_-mIqfGmYbhE5S2UckOh" title="YouTube playlist" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+
+**[Full YouTube playlist](https://www.youtube.com/playlist?list=PLHCH16htawZbR_-mIqfGmYbhE5S2UckOh)** has videos of public talks.
+
+## Events
+
+Some of the events I've spoken at are:
+
+- TEDx: [IIM Bangalore](https://www.ted.com/tedx/events/14548), [NMIMS Bangalore](https://www.ted.com/tedx/events/13132), [Whitefield](https://www.ted.com/tedx/events/24163), [KG Institutions](https://www.ted.com/tedx/events/35806), ...
+- Strata: [New York 2018](https://conferences.oreilly.com/strata/strata-ny-2018/public/schedule/detail/69021), [London 2015](https://conferences.oreilly.com/strata/big-data-conference-uk-2015/public/schedule/detail/39819)
+- PyCon: [India](https://in.pycon.org/2019/), [Indonesia](https://pycon.id/), [Iran](https://ir.pycon.org/), [Kenya](https://www.pyconke.org/), ...
+
+## Latest talks
 
 - 12 Aug 2026. **[Why Are You Even Sitting in This Class?](2026-08-12-iitm-ed-data-visualization/ ":ignore")** — guest hour for [ED5518: Data Visualization for Engineers](https://ed.iitm.ac.in/), Dr Palaniappan Ramu's course at the [Department of Engineering Design](https://ed.iitm.ac.in/), [IIT Madras](https://www.iitm.ac.in/). Half an hour arguing the students shouldn't need the course — then the room fought back and found the part that doesn't go away. [📖 Story](2026-08-12-iitm-ed-data-visualization/ ":ignore") [💬 Transcript](2026-08-12-iitm-ed-data-visualization/transcript.md) [🎧 Audio](https://github.com/sanand0/talks/releases/download/talks/2026-08-12-iitm-ed-data-visualization.opus ":ignore")
 - 10 Aug 2026. **[What Is This Course Really Teaching?](2026-08-10-tds-ama/ ":ignore")** — AMA for [Tools in Data Science](https://tds.s-anand.net/) students of the [IITM BS Programme](https://study.iitm.ac.in/ds/course_pages/BSSE2002.html), Remote. 68% of students named one source for what taught them and a different one for what got them marks. [📖 Story](2026-08-10-tds-ama/ ":ignore") [⏯️ Video](https://media.s-anand.net/2026-08-10-tds-ama.webm ":ignore") [💬 Transcript](2026-08-10-tds-ama/transcript.md) [🎧 Audio](https://github.com/sanand0/talks/releases/download/talks/2026-08-10-tds-ama.opus ":ignore")
@@ -262,9 +297,45 @@ Stuff I _want_ to talk about and am hunting for a forum.
 - 💻 = Screencast
 - 💬 = Transcript
 
+## Bio for talks
+
+If you need a short bio to introduce me, you're welcome to modify this.
+
+> Anand is an LLM psychologist at [Straive](https://straive.com/), where he researches AI and publishes demos. He co-founded [Gramener](https://gramener.com/), a data stories company, which was acquired in 2023. He teaches [Tools in Data Science](https://tds.s-anand.net/) at [IIT Madras](https://study.iitm.ac.in/ds/course_pages/BSSE2002.html). He's among [India's top 10 data scientists](https://analyticsindiamag.com/ai-features/top-10-data-scientists-in-india-2015) and [AI influencers](https://analyticsindiamag.com/lists/indias-100-most-influential-people-in-ai) and also a regular TEDx/Pycon speaker.
+>
+> Anand is an alumnus of IIM Bangalore, IIT Madras, London Business School, IBM, Infosys Consulting, Lehman Brothers, and BCG.
+>
+> More importantly, he hand-transcribed every Calvin & Hobbes strip ever, is addicted to Minecraft & Anime (thanks to his daughter), and dreams of watching every film on the [IMDb Top 250](https://www.imdb.com/chart/top/) (except [The Shining](https://www.imdb.com/title/tt0081505/)).
+>
+> He blogs at [s-anand.net](https://www.s-anand.net/).
+
+[Blog](https://www.s-anand.net/) · [LinkedIn](https://www.linkedin.com/in/sanand0/) · [GitHub](https://github.com/sanand0) · [X/Twitter](https://twitter.com/sanand0) · [YouTube](https://www.youtube.com/channel/UCBOUVZF7VkeXzGaQ89CxiTQ)
+
+### Speaker photos
+
+[![Anand S](https://www.s-anand.net/blog/assets/Anand-5a-1.webp)](https://www.s-anand.net/blog/assets/Anand-5a-1.webp)
+
+[Alternative photo](https://www.s-anand.net/blog/assets/s-anand-2015.webp)
+
+### Logistics
+
+- **Presentation:** I usually present interactive demos rather than a fixed slide deck.
+- **Laptop:** I use my own Lenovo/Ubuntu laptop via HDMI + USB3. I need it near the podium so I can type.
+- **Aspect ratio:** 16:9, 16:10, or 4:3 are fine. Please check that circles appear as circles, not ovals.
+- **Internet:** My demos need Internet. Mobile data is a fallback; reliable venue Wi-Fi helps.
+- **Security:** I don't carry ID. If venue security requires one, please arrange an escort for me with my phone and laptop.
+- **Attire:** I wear round-neck T-shirts, jeans, and open sandals. Please allow this.
+- **Badges:** Please print my name on **both sides**, in **large letters**.
+- **Agenda:** Please share the agenda and other speakers' sessions so I can attend and adapt my talk to the room.
+- **Recording:** Please record video + audio + screen and share it publicly — or at least with me.
+
+### Fee / honorarium
+
+I don't charge or pay a fee for public talks. I only accept dry fruits, [Wikipedia donations](https://donate.wikimedia.org/), or [GitHub donations](https://github.com/open-source/sponsors) as honorarium. Contact me for corporate/private talks. I generally share sanitized recordings publicly.
+
 <!--
 
-Build process: `npm run build` (Used by.github/workflows/deploy.yml)
+Build process: `just build` (also used by `.github/workflows/deploy.yml` via `setup.sh`)
 
 PPTX / Audio / ... are at https://github.com/sanand0/talks/releases/tag/talks
 

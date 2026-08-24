@@ -1,4 +1,8 @@
+set -euo pipefail
 shopt -s nullglob
+
+# Build the talks index from README.md. Keep this exact command as the canonical root build.
+npx -y --package markdown-to-html-cli markdown-to-html --source README.md --output index.html
 
 wget -q --no-clobber https://cdn.jsdelivr.net/gh/sanand0/marpessa/marpessa.css
 

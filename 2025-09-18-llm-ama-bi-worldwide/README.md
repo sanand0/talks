@@ -1,8 +1,20 @@
 ---
 marp: true
+date: "2025-09-18"
 title: "LLMs: Ask Me Anything"
+event: "BI Worldwide AMA"
+location: "Chennai, India"
+topics:
+  - "LLMs"
+  - "AI adoption"
+  - "future of work"
+  - "education"
+links:
+  event: "https://www.biworldwide.com/"
+  slides: "https://talks.s-anand.net/2025-09-18-llm-ama-bi-worldwide/"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-09-18-llm-ama-bi-worldwide/README.md"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-09-18-llm-ama-bi-worldwide/
+url: https://talks.s-anand.net/2025-09-18-llm-ama-bi-worldwide/
 theme: gaia
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
@@ -20,9 +32,9 @@ transcript { display: none; }
 [Transcript](https://github.com/sanand0/talks/blob/main/2025-09-18-llm-ama-bi-worldwide/README.md)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-https://sanand0.github.io/talks/
+https://talks.s-anand.net/
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-18-llm-ama-bi-worldwide/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-09-18-llm-ama-bi-worldwide/)
 
 ---
 
@@ -467,9 +479,9 @@ Thank you. Thanks a lot, sir. I also did not know it was so heavy.
 [Transcript](https://github.com/sanand0/talks/2025-09-18-llm-ama-bi-worldwide/blob/main/README.md)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-https://sanand0.github.io/talks/
+https://talks.s-anand.net/
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-18-llm-ama-bi-worldwide/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-09-18-llm-ama-bi-worldwide/)
 
 ---
 

@@ -1,10 +1,23 @@
 ---
 marp: true
-title: Making Open Data Useful: Lessons from Diagram Chasing
-  author: Vivek Matthew and Aman Bhargava
-  url: https://sanand0.github.io/talks/2025-09-21-making-open-data-useful/
-  theme: marpessa
-  paginate: true
+date: "2025-09-21"
+title: "Making Open Data Useful: Lessons from Diagram Chasing"
+event: "IndiaFOSS 2025"
+location: "Bangalore, India"
+topics:
+  - "open data"
+  - "data visualization"
+  - "civic tech"
+  - "data storytelling"
+links:
+  event: "https://fossunited.org/c/indiafoss/2025/cfp/1hutna15uj"
+  video: "https://www.youtube.com/watch?v=7NCUE02l1DE"
+  slides: "https://talks.s-anand.net/2025-09-21-making-open-data-useful/"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-09-21-making-open-data-useful/README.md"
+author: Vivek Matthew and Aman Bhargava
+url: https://talks.s-anand.net/2025-09-21-making-open-data-useful/
+theme: marpessa
+paginate: true
   # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
   # https://chatgpt.com/c/69073893-1090-8322-8cf9-aa71bc3c4e84
 ---
@@ -15,7 +28,7 @@ title: Making Open Data Useful: Lessons from Diagram Chasing
 [Vivek Matthew](https://github.com/Vonter) · [Aman Bhargava](https://aman.bh/) · [Diagram Chasing](https://diagramchasing.fun/)
 [Video](https://www.youtube.com/watch?v=7NCUE02l1DE) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-09-21-making-open-data-useful/README.md)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-21-making-open-data-useful/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-09-21-making-open-data-useful/)
 
 [1]: https://diagramchasing.fun/?utm_source=chatgpt.com "Diagram Chasing"
 [2]: https://blr-rains.netlify.app/?utm_source=chatgpt.com "BLR Water Log"
@@ -474,7 +487,7 @@ Master of ceremonies says two questions. Anybody? No, no, it needs to go into th
 [Vivek Matthew](https://github.com/Vonter) · [Aman Bhargava](https://aman.bh/) · [Diagram Chasing](https://diagramchasing.fun/)
 [Video](https://www.youtube.com/watch?v=7NCUE02l1DE) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-09-21-making-open-data-useful/README.md)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-21-making-open-data-useful/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-09-21-making-open-data-useful/)
 
 [1]: https://diagramchasing.fun/?utm_source=chatgpt.com "Diagram Chasing"
 [2]: https://blr-rains.netlify.app/?utm_source=chatgpt.com "BLR Water Log"

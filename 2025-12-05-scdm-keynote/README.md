@@ -1,8 +1,21 @@
 ---
 marp: true
-title: SCDM Keynote
+date: "2025-12-05"
+title: "Data to Decisions (with AI)"
+event: "SCDM India Conference 2025"
+location: "Hyderabad, India"
+topics:
+  - "clinical trials"
+  - "AI"
+  - "data management"
+  - "verification"
+links:
+  event: "https://scdmlive.org/india-conference-2025/"
+  slides: "https://talks.s-anand.net/2025-12-05-scdm-keynote/"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-12-05-scdm-keynote/transcript.md"
+  audio: "https://github.com/sanand0/talks/releases/download/talks/2025-12-05-SCDM-Talk.opus"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-12-05-scdm-keynote/
+url: https://talks.s-anand.net/2025-12-05-scdm-keynote/
 theme: marpessa
 paginate: true
 class: theme-tailwind
@@ -233,7 +246,7 @@ Data-driven decision lead to better site selection.
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 [Q&A](https://github.com/sanand0/talks/blob/main/2025-12-05-scdm-keynote/qa.md) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-12-05-scdm-keynote/transcript.md) · [Audio](https://github.com/sanand0/talks/releases/download/talks/2025-12-05-SCDM-Talk.opus) · [Story](story.html) · [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-## ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-12-05-scdm-keynote) Slides + My contact details
+## ![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-12-05-scdm-keynote) Slides + My contact details
 
 ---
 

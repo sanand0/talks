@@ -1,8 +1,21 @@
 ---
 marp: true
-title: Vibe Analysis
+date: "2025-10-16"
+title: "Vibe Analysis"
+event: "Landmark Group"
+location: "Remote"
+topics:
+  - "vibe analysis"
+  - "LLMs"
+  - "data analysis"
+  - "AI workflows"
+links:
+  event: "https://www.landmarkgroup.com/"
+  video: "https://youtu.be/coOYoHVrWU0"
+  slides: "https://talks.s-anand.net/2025-10-16-vibe-analysis/"
+  transcript: "https://github.com/sanand0/talks/tree/main/2025-10-16-vibe-analysis"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-10-16-vibe-analysis/
+url: https://talks.s-anand.net/2025-10-16-vibe-analysis/
 theme: gaia
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
@@ -28,9 +41,9 @@ paginate: true
 [Video](https://youtu.be/coOYoHVrWU0) . [Transcript](https://github.com/sanand0/talks/tree/main/2025-10-16-vibe-analysis) · [Spreadsheet][sheet]
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-https://sanand0.github.io/talks/
+https://talks.s-anand.net/
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-10-16-vibe-analysis/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-10-16-vibe-analysis/)
 
 ---
 
@@ -867,6 +880,6 @@ With that, let me draw this session to a close. Thank you so much for giving me 
 [Video](https://youtu.be/coOYoHVrWU0) . [Transcript](https://github.com/sanand0/talks/tree/main/2025-10-16-vibe-analysis) · [Spreadsheet][sheet]
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-https://sanand0.github.io/talks/
+https://talks.s-anand.net/
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-10-16-vibe-analysis/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-10-16-vibe-analysis/)

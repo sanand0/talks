@@ -1,8 +1,20 @@
 ---
 marp: true
-title: Applied Vibe Coding
+date: "2025-11-15"
+title: "Applied Vibe Coding"
+event: "IIT Madras workshop"
+location: "Remote"
+topics:
+  - "vibe coding"
+  - "AI coding"
+  - "education"
+  - "agents"
+links:
+  event: "https://www.iitm.ac.in/"
+  slides: "https://talks.s-anand.net/2025-11-15-applied-vibe-coding/"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-11-15-applied-vibe-coding/transcript.md"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-11-15-applied-vibe-coding/
+url: https://talks.s-anand.net/2025-11-15-applied-vibe-coding/
 theme: gaia
 paginate: true
 style: |
@@ -21,7 +33,7 @@ style: |
 [Transcript](https://github.com/sanand0/talks/blob/main/2025-11-15-applied-vibe-coding/README.md) · [Spreadsheet](https://docs.google.com/spreadsheets/d/1qX8TRuWl5pbhj6K34eqxHPUYb9qd9g-P1joWkasosC4/edit?usp=sharing)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-11-15-applied-vibe-coding/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-11-15-applied-vibe-coding/)
 
 ---
 
@@ -182,4 +194,4 @@ Plan to learn along with the agents, not just delegate.
 [Spreadsheet](https://docs.google.com/spreadsheets/d/1qX8TRuWl5pbhj6K34eqxHPUYb9qd9g-P1joWkasosC4/edit?usp=sharing)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-11-15-applied-vibe-coding/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-11-15-applied-vibe-coding/)

@@ -1,8 +1,20 @@
 ---
 marp: true
-title: AI First Thinking for HR Professionals
+date: "2025-11-13"
+title: "AI First Thinking for HR Professionals"
+event: "Impress AI"
+location: "Singapore"
+topics:
+  - "AI adoption"
+  - "HR"
+  - "AI literacy"
+  - "future of work"
+links:
+  event: "https://www.linkedin.com/posts/impress.ai_hiringblueprint2026-savos-aiinhr-activity-7397135743879413760-QCDt/"
+  slides: "https://talks.s-anand.net/2025-11-13-nirmal-impress-ai-hr/"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-11-13-nirmal-impress-ai-hr/README.md"
 author: Nirmal Palaparthi
-url: https://sanand0.github.io/talks/2025-11-13-nirmal-impress-ai-hr/
+url: https://talks.s-anand.net/2025-11-13-nirmal-impress-ai-hr/
 theme: marpessa
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
@@ -19,7 +31,7 @@ transcript { display: none; }
 [Nirmal Palaparthi](https://www.linkedin.com/in/aprilsystems) · [gameTheory](http://https://gametheory.school/)
 [Transcript](https://github.com/sanand0/talks/blob/main/2025-11-13-nirmal-impress-ai-hr/README.md)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-11-13-nirmal-impress-ai-hr/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-11-13-nirmal-impress-ai-hr/)
 
 ---
 
@@ -410,7 +422,7 @@ Questions?
 [Nirmal Palaparthi](https://www.linkedin.com/in/aprilsystems) · [gameTheory](http://https://gametheory.school/)
 [Transcript](https://github.com/sanand0/talks/blob/main/2025-11-13-nirmal-impress-ai-hr/README.md)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-11-13-nirmal-impress-ai-hr/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-11-13-nirmal-impress-ai-hr/)
 
 ---
 

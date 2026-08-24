@@ -1,8 +1,21 @@
 ---
 marp: true
-title: Vibe Coding
+date: "2025-10-23"
+title: "Vibe Coding"
+event: "Straive"
+location: "Remote"
+topics:
+  - "vibe coding"
+  - "AI coding"
+  - "software development"
+  - "agents"
+links:
+  event: "https://straive.com/"
+  video: "https://drive.google.com/file/d/1NmuSHWAotDHo5uDvi8s5V8sUJHWRDhvo/view?usp=sharing"
+  slides: "https://talks.s-anand.net/2025-10-23-vibe-coding/"
+  transcript: "https://github.com/sanand0/talks/tree/main/2025-10-23-vibe-coding"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-10-23-vibe-coding/
+url: https://talks.s-anand.net/2025-10-23-vibe-coding/
 theme: gaia
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
@@ -28,9 +41,9 @@ paginate: true
 [Video](https://drive.google.com/file/d/1NmuSHWAotDHo5uDvi8s5V8sUJHWRDhvo/view?usp=sharing) · [Transcript](https://github.com/sanand0/talks/tree/main/2025-10-23-vibe-coding) · [Spreadsheet](https://docs.google.com/spreadsheets/d/1a4xBlO1snYLT5Bzi71SG5Wqel2j6yoAM3CAw0UNWCRg/edit?gid=0#gid=0)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-https://sanand0.github.io/talks/
+https://talks.s-anand.net/
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-10-23-vibe-coding/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-10-23-vibe-coding/)
 
 ---
 
@@ -833,9 +846,9 @@ All the best. Thanks for attending. Have a good day, everyone. Bye.
 [Video](https://drive.google.com/file/d/1NmuSHWAotDHo5uDvi8s5V8sUJHWRDhvo/view?usp=sharing) · [Transcript](https://github.com/sanand0/talks/tree/main/2025-10-23-vibe-coding) · [Spreadsheet](https://docs.google.com/spreadsheets/d/1a4xBlO1snYLT5Bzi71SG5Wqel2j6yoAM3CAw0UNWCRg/edit?gid=0#gid=0)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-https://sanand0.github.io/talks/
+https://talks.s-anand.net/
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-10-23-vibe-coding/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-10-23-vibe-coding/)
 
 ---
 

@@ -20,7 +20,7 @@ Prominently include these near the top:
 - include the YouTube video: https://youtu.be/DOaZX0wouJw - let it take up most of the available screen width and height.
 - link to the transcript
 
-This will be deployed at https://sanand0.github.io/talks/2022-03-07-career-principles-with-rajen-makhijani/
+This will be deployed at https://talks.s-anand.net/2022-03-07-career-principles-with-rajen-makhijani/
 
 Update README.md to include this talk in the list of talks under Others' talks.
 

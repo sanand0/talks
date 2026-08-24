@@ -1,8 +1,21 @@
 ---
 marp: true
-title: Homelabbing with Bare Metal
+date: "2025-09-20"
+title: "Homelabbing with Bare Metal"
+event: "IndiaFOSS 2025"
+location: "Bangalore, India"
+topics:
+  - "homelab"
+  - "Raspberry Pi"
+  - "hardware"
+  - "self-hosting"
+links:
+  event: "https://fossunited.org/c/indiafoss/2025/cfp/4v6f8ek2n0"
+  video: "https://www.youtube.com/live/FtF-I0-wJGo?t=3460s"
+  slides: "https://talks.s-anand.net/2025-09-20-kiran-homelabbing-with-bare-metal/"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-09-20-kiran-homelabbing-with-bare-metal/README.md"
 author: Kiran Jonnalagadda
-url: https://sanand0.github.io/talks/2025-09-20-kiran-homelabbing-with-bare-metal/
+url: https://talks.s-anand.net/2025-09-20-kiran-homelabbing-with-bare-metal/
 theme: gaia
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
@@ -20,7 +33,7 @@ transcript { display: none; }
 [Kiran Jonnalagadda](https://www.linkedin.com/in/kiranjonna/) · Co-founder [Hasgeek](http://hasgeek.com/)
 [Transcript](https://github.com/sanand0/talks/blob/main/2025-09-20-kiran-homelabbing-with-bare-metal/README.md)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-20-kiran-homelabbing-with-bare-metal/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-09-20-kiran-homelabbing-with-bare-metal/)
 
 ---
 
@@ -293,7 +306,7 @@ So that's available if you feel like it, but that's completely optional because 
 [Kiran Jonnalagadda](https://www.linkedin.com/in/kiranjonna/) · Co-founder [Hasgeek](http://hasgeek.com/)
 [Transcript](https://github.com/sanand0/talks/blob/main/2025-09-20-kiran-homelabbing-with-bare-metal/README.md) · [Video](https://www.youtube.com/live/FtF-I0-wJGo?t=3460s)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-20-kiran-homelabbing-with-bare-metal/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-09-20-kiran-homelabbing-with-bare-metal/)
 
 ---
 

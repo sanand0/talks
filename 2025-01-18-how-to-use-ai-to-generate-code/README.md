@@ -1,3 +1,18 @@
+---
+date: "2025-01-18"
+title: "How to use AI to generate code?"
+event: "The Hindu webinar"
+location: "Remote"
+topics:
+  - "AI coding"
+  - "code generation"
+  - "education"
+  - "future of work"
+links:
+  event: "https://www.thehindu.com/sci-tech/technology/the-hindu-to-host-webinar-on-the-use-of-artificial-intelligence-in-education/article68769905.ece"
+  video: "https://youtu.be/pbRFDUGby3o"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-01-18-how-to-use-ai-to-generate-code/README.md"
+---
 ## How to use AI to generate code?
 
 <iframe src="https://www.youtube.com/embed/pbRFDUGby3o" title="YouTube video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen width="600" height="400"></iframe>

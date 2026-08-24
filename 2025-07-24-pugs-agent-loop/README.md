@@ -1,3 +1,18 @@
+---
+date: "2025-07-24"
+title: "Cool LLM CLI Python uses"
+event: "Singapore Python User Group"
+location: "Singapore"
+topics:
+  - "LLMs"
+  - "Python"
+  - "CLI"
+  - "agents"
+  - "automation"
+links:
+  event: "https://www.meetup.com/singapore-python-user-group/"
+  slides: "https://talks.s-anand.net/2025-07-24-pugs-agent-loop/"
+---
 # Cool LLM CLI Python uses
 
 ```

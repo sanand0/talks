@@ -1,8 +1,20 @@
 ---
 marp: true
-title: Building a culture of openness
+date: "2025-09-21"
+title: "Building a culture of openness"
+event: "IndiaFOSS 2025"
+location: "Bangalore, India"
+topics:
+  - "open source"
+  - "community"
+  - "peer review"
+  - "openness"
+links:
+  event: "https://fossunited.org/c/indiafoss/2025/cfp/0ios0i6o47"
+  slides: "https://talks.s-anand.net/2025-09-21-zainab-building-a-culture-of-openness/"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-09-21-zainab-building-a-culture-of-openness/README.md"
 author: Zainab Bawa
-url: https://sanand0.github.io/talks/2025-09-21-zainab-building-a-culture-of-openness/
+url: https://talks.s-anand.net/2025-09-21-zainab-building-a-culture-of-openness/
 theme: gaia
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
@@ -19,7 +31,7 @@ transcript { display: none; }
 [Zainab Bawa](https://www.linkedin.com/in/zainabbawa/) · COO [Hasgeek](http://hasgeek.com/)
 [Transcript](https://github.com/sanand0/talks/blob/main/2025-09-21-zainab-building-a-culture-of-openness/README.md)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-21-zainab-building-a-culture-of-openness/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-09-21-zainab-building-a-culture-of-openness/)
 
 ---
 
@@ -285,7 +297,7 @@ And finally, **success is really proportional to the investment of all the actor
 [Zainab Bawa](https://www.linkedin.com/in/zainabbawa/) · COO [Hasgeek](http://hasgeek.com/)
 [Transcript](https://github.com/sanand0/talks/blob/main/2025-09-21-zainab-building-a-culture-of-openness/README.md)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-21-zainab-building-a-culture-of-openness/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-09-21-zainab-building-a-culture-of-openness/)
 
 ---
 

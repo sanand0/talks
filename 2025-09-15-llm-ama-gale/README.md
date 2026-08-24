@@ -1,8 +1,20 @@
 ---
 marp: true
+date: "2025-09-15"
 title: "LLMs: Ask Me Anything"
+event: "GALE Partners AMA"
+location: "Bangalore, India"
+topics:
+  - "LLMs"
+  - "AI adoption"
+  - "future of work"
+  - "education"
+links:
+  event: "https://www.gale.agency/"
+  slides: "https://talks.s-anand.net/2025-09-15-llm-ama-gale/"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-09-15-llm-ama-gale/README.md"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-09-15-llm-ama-gale/
+url: https://talks.s-anand.net/2025-09-15-llm-ama-gale/
 theme: gaia
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
@@ -20,9 +32,9 @@ transcript { display: none; }
 [Transcript](https://github.com/sanand0/talks/blob/main/2025-09-15-llm-ama-gale/README.md)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-https://sanand0.github.io/talks/
+https://talks.s-anand.net/
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-15-llm-ama-gale/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-09-15-llm-ama-gale/)
 
 ---
 
@@ -316,9 +328,9 @@ How should we deal with it? Classic project management principles. This does not
 [Transcript](https://github.com/sanand0/talks/2025-09-15-llm-ama-gale/blob/main/README.md)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-https://sanand0.github.io/talks/
+https://talks.s-anand.net/
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-15-llm-ama-gale/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-09-15-llm-ama-gale/)
 
 ---
 

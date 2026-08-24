@@ -43,7 +43,7 @@
     EMBED: https://sanand0.github.io/llmartstyle/?category=comic
 26. I still use data viz - To explain
 27. How Students Learn Python — PyConf Hyderabad 2026
-    https://sanand0.github.io/talks/2026-03-15-how-students-learn-python/#/41
+    https://talks.s-anand.net/2026-03-15-how-students-learn-python/#/41
 28. I still use data viz - To convince
 29. LLM Pricing
     https://sanand0.github.io/llmpricing/

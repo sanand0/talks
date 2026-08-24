@@ -26,7 +26,7 @@
 
 **Anand**: [09:12] Let's go into the summary for the last talk. That is the link that you'd also seen from Sandeep. It's a recap of the previous session. It has the video, it has the audio, it has a detailed write-up in a story form of what we discussed last time, what you can do with it, what are the files that we uploaded, what are the examples that we looked at, what are the tools that we used, and eventually a quick comic summary of this and a series of takeaways that you can get out of this session.
 
-[Summmary of the previous talk: What Your AI Doesn't Know About You](https://sanand0.github.io/talks/2026-05-23-ai-unboxed-context-engineering/)
+[Summmary of the previous talk: What Your AI Doesn't Know About You](https://talks.s-anand.net/2026-05-23-ai-unboxed-context-engineering/)
 
 **Anand**: [09:56] This entire preparation—meaning creating this story—took about an hour of elapsed time. It didn't take me the hour; it took Claude an hour with me coming in and correcting it and so on. **How does one go about putting together a summary like this and what are the parts involved?** That is what we're going to start with in today's session, which is about tools and workflows. It really should be titled "Workflows and Tools" because we'll be leading with the workflows and that will take us to specific tools.
 

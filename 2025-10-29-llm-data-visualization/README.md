@@ -1,8 +1,20 @@
 ---
 marp: true
-title: LLM Data Visualization
+date: "2025-10-29"
+title: "LLM Data Visualization"
+event: "IIT Madras — Department of Engineering Design"
+location: "Chennai, India"
+topics:
+  - "data visualization"
+  - "LLMs"
+  - "SOM"
+  - "education"
+links:
+  event: "https://www.iitm.ac.in/"
+  slides: "https://talks.s-anand.net/2025-10-29-llm-data-visualization/"
+  transcript: "https://github.com/sanand0/talks/tree/main/2025-10-29-llm-data-visualization/"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-10-29-llm-data-visualization/
+url: https://talks.s-anand.net/2025-10-29-llm-data-visualization/
 theme: marpessa
 paginate: true
 style: |
@@ -21,7 +33,7 @@ style: |
 [Transcript](https://github.com/sanand0/talks/tree/main/2025-10-29-llm-data-visualization/)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-10-29-llm-data-visualization/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-10-29-llm-data-visualization/)
 
 ---
 
@@ -594,7 +606,7 @@ If you forget all of this, play more with ChatGPT. All the best.
 [Transcript](https://github.com/sanand0/talks/tree/main/2025-10-29-llm-data-visualization/)
 [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-10-29-llm-data-visualization/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-10-29-llm-data-visualization/)
 
 ---
 

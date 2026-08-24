@@ -1,8 +1,21 @@
 ---
 marp: true
-title: Goodbye MBA, Hello AI
+date: "2025-07-13"
+title: "Goodbye MBA, Hello AI"
+event: "IIT Madras DoMS MBA Commencement"
+location: "Chennai, India"
+topics:
+  - "AI"
+  - "management"
+  - "MBA"
+  - "future of work"
+links:
+  event: "https://doms.iitm.ac.in/"
+  video: "https://youtu.be/sSyBUSuLduQ"
+  slides: "https://talks.s-anand.net/2025-07-13-goodbye-mba-hello-ai/"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-07-13-goodbye-mba-hello-ai/transcript.md"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-07-13-goodbye-mba-hello-ai/
+url: https://talks.s-anand.net/2025-07-13-goodbye-mba-hello-ai/
 theme: gaia
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
@@ -17,7 +30,7 @@ paginate: true
 14 July 2025, 10:30 am IST
 [Video](https://youtu.be/sSyBUSuLduQ) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-07-13-goodbye-mba-hello-ai/transcript.md)
 
-[![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-07-13-goodbye-mba-hello-ai/)](https://sanand0.github.io/talks/2025-07-13-goodbye-mba-hello-ai/)
+[![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-07-13-goodbye-mba-hello-ai/)](https://talks.s-anand.net/2025-07-13-goodbye-mba-hello-ai/)
 
 ---
 
@@ -128,7 +141,7 @@ https://forms.gle/vha4c6fjidLzBycT8
 14 July 2025, 10:30 am IST
 [Video](https://youtu.be/sSyBUSuLduQ) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-07-13-goodbye-mba-hello-ai/transcript.md)
 
-[![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-07-13-goodbye-mba-hello-ai/)](https://sanand0.github.io/talks/2025-07-13-goodbye-mba-hello-ai/)
+[![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-07-13-goodbye-mba-hello-ai/)](https://talks.s-anand.net/2025-07-13-goodbye-mba-hello-ai/)
 
 ---
 

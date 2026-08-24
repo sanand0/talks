@@ -1,5 +1,20 @@
 # Prompts
 
+## talks.s-anand.net, 24 Aug 2026
+
+- Add a CNAME pointing to talks.s-anand.net.
+- Switch from docsify to `npx -y --package markdown-to-html-cli markdown-to-html --source README.md --output index.html` as the build step. Ensure that `just build` will do this, and so will every push, via GitHub Actions.
+- Incorporate content from ~/code/blog/pages/talks.md into README.md thoughtfully. I will be redirecting https://www.s-anand.net/blog/talks/ to https://talks.s-anand.net/.
+  The page is intended for two audiences: first time visitors who want to evaluate me as a speaker, and repeat visitors who want to find new talks. Enable both.
+- Update all links that point to https://sanand0.github.io/talks/ to https://talks.s-anand.net/ - including in SKILL.md and prompt-template.md but not in prompts.md (which are historical records of past prompts).
+- Update the README.md of individual talks with YAML metadata mentioning: date, title, event, location, topics, links.{event,video,slides,transcript,audio,blog} - I might be missing or over-stating, so use your discretion.
+
+---
+
+I've made a few changes to README.md. Retain those.
+Ensure that the style is similar to https://www.s-anand.net/blog/talks/ (see ~/code/blog/ for the code). (No footer required.)
+Add title, description, favicon, keywords, author, etc. in line with https://www.s-anand.net/blog/talks/.
+
 ## Update skill, 11 Jul 2026
 
 <!--

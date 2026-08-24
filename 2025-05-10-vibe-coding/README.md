@@ -1,3 +1,18 @@
+---
+date: "2025-05-10"
+title: "Vibe Coding"
+event: "SETU Thought Leader Session"
+location: "Remote"
+topics:
+  - "vibe coding"
+  - "AI coding"
+  - "software development"
+  - "education"
+links:
+  event: "https://www.setuschool.com"
+  video: "https://youtu.be/ODXSDbY12dg"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-05-10-vibe-coding/README.md"
+---
 # Vibe Coding
 
 This is a talk delivered to [SETU school](https://www.setuschool.com) on 10 May 2025 about [Vibe Coding](https://en.wikipedia.org/wiki/Vibe_coding).

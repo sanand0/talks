@@ -1,3 +1,15 @@
+---
+date: "2026-04-22"
+title: "The Dinner Table Theory of AI Skills"
+event: "Dinner conversation / panel discussion"
+location: "Edison, New Jersey, USA"
+topics:
+  - "AI skills"
+  - "education"
+  - "hiring"
+  - "future of work"
+links: {}
+---
 # The Dinner Table Theory of AI Skills
 
 *A conversation over Paneer Shashlik and Nellore fish curry accidentally became one of the more honest discussions of what education means now, between [Manoj](https://www.linkedin.com/in/manojgovindan/), [Manish](https://www.linkedin.com/in/manishxsuthar/) and [Anand](https://www.s-anand.net/)*

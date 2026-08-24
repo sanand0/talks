@@ -1,8 +1,20 @@
 ---
 marp: true
-title: LLM Trends
+date: "2025-09-22"
+title: "LLM Trends"
+event: "Straive"
+location: "Chennai, India"
+topics:
+  - "LLMs"
+  - "AI trends"
+  - "context windows"
+  - "AI economics"
+links:
+  event: "https://straive.com/"
+  slides: "https://talks.s-anand.net/2025-09-22-llm-trends/"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-09-22-llm-trends/transcript.md"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-09-22-llm-trends/
+url: https://talks.s-anand.net/2025-09-22-llm-trends/
 theme: gaia
 paginate: true
 backgroundColor: #fff
@@ -28,9 +40,9 @@ backgroundColor: #fff
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 [Transcript](https://github.com/sanand0/talks/blob/main/2025-09-22-llm-trends/transcript.md) · [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-https://sanand0.github.io/talks/
+https://talks.s-anand.net/
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-22-llm-trends/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-09-22-llm-trends/)
 
 ---
 
@@ -223,9 +235,9 @@ Combine 2 random ideas into new creative initiatives towards a specific purpose.
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 [Transcript](https://github.com/sanand0/talks/blob/main/2025-09-22-llm-trends/transcript.md) · [CC0 - Public Domain](https://creativecommons.org/publicdomain/zero/1.0/)
 
-https://sanand0.github.io/talks/
+https://talks.s-anand.net/
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-09-22-llm-trends/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-09-22-llm-trends/)
 
 ---
 

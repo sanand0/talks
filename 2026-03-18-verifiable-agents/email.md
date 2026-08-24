@@ -6,7 +6,7 @@ Yesterday, Ankor and I spoke on one of the most underrated problems in enterpris
 
 Models aren't bad. They're _probabilistic_. Every software quality process invented was built for _deterministic_ systems that don't do that. LLMs break that assumption.
 
-![Session sketchnote](https://sanand0.github.io/talks/2026-03-18-verifiable-agents/sketchnote.avif)
+![Session sketchnote](https://talks.s-anand.net/2026-03-18-verifiable-agents/sketchnote.avif)
 
 ---
 
@@ -20,7 +20,7 @@ Models aren't bad. They're _probabilistic_. Every software quality process inven
 > _"If you assume agentic AI being deployed across a variety of use cases, it is untenable to rely on humans across every use case in this way."_
 > — Ankor Rai
 
-![What happens when AI has no verification — slide showing enterprise failures](https://sanand0.github.io/talks/2026-03-18-verifiable-agents/slide-06.avif)
+![What happens when AI has no verification — slide showing enterprise failures](https://talks.s-anand.net/2026-03-18-verifiable-agents/slide-06.avif)
 
 ---
 
@@ -30,7 +30,7 @@ Morgan Stanley's AI is restricted to a curated library of ~100,000 internal docu
 
 The pattern: **constrain the agent, then verify the output**.
 
-![How enterprises verify agents today](https://sanand0.github.io/talks/2026-03-18-verifiable-agents/slide-07.avif)
+![How enterprises verify agents today](https://talks.s-anand.net/2026-03-18-verifiable-agents/slide-07.avif)
 
 Five strategies are in use: knowledge & data grounding · domain-specific constrained steps · LLM-as-judge · cross-referencing between models · rule-based output checks. Most deployments use several in combination — plus a human at the end.
 
@@ -70,7 +70,7 @@ The direction of travel: move from checking every output to verifying the pipeli
 
 The post-2008 analogy is apt: after the Global Financial Crisis, the OCC required every quantitative model to have a separate validation team. AI is heading the same way.
 
-![Enterprise AI Stack — verification as a formal layer](https://sanand0.github.io/talks/2026-03-18-verifiable-agents/slide-10.avif)
+![Enterprise AI Stack — verification as a formal layer](https://talks.s-anand.net/2026-03-18-verifiable-agents/slide-10.avif)
 
 ---
 

@@ -1,8 +1,21 @@
 ---
 marp: true
-title: RIP, Data Scientists
+date: "2025-08-21"
+title: "RIP, Data Scientists"
+event: "DataHack Summit 2025"
+location: "Bangalore, India"
+topics:
+  - "data science"
+  - "AI agents"
+  - "data analysis"
+  - "future of work"
+links:
+  event: "https://www.analyticsvidhya.com/datahacksummit/"
+  video: "https://youtu.be/xZpdwLHW40o"
+  slides: "https://talks.s-anand.net/2025-08-21-rip-data-scientists/"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-08-21-rip-data-scientists/transcript.md"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-08-21-rip-data-scientists/
+url: https://talks.s-anand.net/2025-08-21-rip-data-scientists/
 theme: gaia
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
@@ -27,9 +40,9 @@ paginate: true
 
 [DataHack Summit](https://www.analyticsvidhya.com/datahacksummit/) · 21 Aug 2025 · [Bangalore](https://maps.app.goo.gl/fBAcQ6VopycH8z9T8)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Video](https://youtu.be/xZpdwLHW40o) · [Slides](https://sanand0.github.io/talks/2025-08-21-rip-data-scientists/) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-08-21-rip-data-scientists/transcript.md)
+[Video](https://youtu.be/xZpdwLHW40o) · [Slides](https://talks.s-anand.net/2025-08-21-rip-data-scientists/) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-08-21-rip-data-scientists/transcript.md)
 
-![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-08-21-rip-data-scientists/)
+![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-08-21-rip-data-scientists/)
 
 ---
 
@@ -187,7 +200,7 @@ paginate: true
 
 You can also use [Codex](https://chatgpt.com/codex), [Jules](https://jules.google.com/), [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview), [Cursor](https://cursor.com/), etc. to build [D3](https://d3js.org/) / [ChartJS](https://www.chartjs.org/) data visualizations.
 
-Here are [data visualizations by non-programmers](https://sanand0.github.io/talks/2025-06-28-prompt-to-plot/#14) vibe-coding in a 2 hour workshop.
+Here are [data visualizations by non-programmers](https://talks.s-anand.net/2025-06-28-prompt-to-plot/#14) vibe-coding in a 2 hour workshop.
 
 </div>
 
@@ -275,9 +288,9 @@ hypotheses statistically significantly.
 
 [DataHack Summit](https://www.analyticsvidhya.com/datahacksummit/) · 21 Aug 2025 · [Bangalore](https://maps.app.goo.gl/fBAcQ6VopycH8z9T8)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
-[Slides](https://sanand0.github.io/talks/2025-08-21-rip-data-scientists/) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-08-21-rip-data-scientists/transcript.md)
+[Slides](https://talks.s-anand.net/2025-08-21-rip-data-scientists/) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-08-21-rip-data-scientists/transcript.md)
 
-![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-08-21-rip-data-scientists/)
+![h:200px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-08-21-rip-data-scientists/)
 
 <!--
 

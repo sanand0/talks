@@ -1,8 +1,21 @@
 ---
 marp: true
-title: Prompt-to-Plot
+date: "2025-06-28"
+title: "Prompt-to-Plot"
+event: "VizChitra 2025"
+location: "Bangalore, India"
+topics:
+  - "data visualization"
+  - "LLMs"
+  - "vibe coding"
+  - "data storytelling"
+links:
+  event: "https://hasgeek.com/VizChitra/prompt-to-plot/"
+  video: "https://youtu.be/SdDulR-1bBM"
+  slides: "https://talks.s-anand.net/2025-06-28-prompt-to-plot/"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-06-28-prompt-to-plot/transcript.md"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-06-28-prompt-to-plot/
+url: https://talks.s-anand.net/2025-06-28-prompt-to-plot/
 theme: gaia
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
@@ -14,7 +27,7 @@ paginate: true
   }
 
   section {
-    background-image: url('https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-06-28-prompt-to-plot/');
+    background-image: url('https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-06-28-prompt-to-plot/');
     background-repeat: no-repeat;
     background-position: top 20px right 20px;
     background-size: 80px auto;
@@ -27,13 +40,13 @@ paginate: true
 
 # Prompt to Plot
 
-#### [Crafting Visual Stories with LLMs](https://hasgeek.com/VizChitra/prompt-to-plot/) | [Slides](https://sanand0.github.io/talks/2025-06-28-prompt-to-plot/)
+#### [Crafting Visual Stories with LLMs](https://hasgeek.com/VizChitra/prompt-to-plot/) | [Slides](https://talks.s-anand.net/2025-06-28-prompt-to-plot/)
 
 [VizChitra](https://vizchitra.com/) · 28 June 2025, 10:00 am IST · [Bangalore](https://maps.app.goo.gl/VsnBZmVpA6Sxmyje7)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 [Video](https://youtu.be/SdDulR-1bBM) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-06-28-prompt-to-plot/transcript.md)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-06-28-prompt-to-plot/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-06-28-prompt-to-plot/)
 
 ---
 
@@ -172,10 +185,10 @@ This data visualization was nice, but not beautiful and not a story. So, let us 
 
 # Prompt to Plot
 
-#### [Crafting Visual Stories with LLMs](https://hasgeek.com/VizChitra/prompt-to-plot/) | [Slides](https://sanand0.github.io/talks/2025-06-28-prompt-to-plot/)
+#### [Crafting Visual Stories with LLMs](https://hasgeek.com/VizChitra/prompt-to-plot/) | [Slides](https://talks.s-anand.net/2025-06-28-prompt-to-plot/)
 
 [VizChitra](https://vizchitra.com/) · 28 June 2025, 10:00 am IST · [Bangalore](https://maps.app.goo.gl/VsnBZmVpA6Sxmyje7)
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 [Video](https://youtu.be/SdDulR-1bBM) · [Transcript](https://github.com/sanand0/talks/blob/main/2025-06-28-prompt-to-plot/transcript.md)
 
-![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-06-28-prompt-to-plot/)
+![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-06-28-prompt-to-plot/)

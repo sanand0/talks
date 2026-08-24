@@ -1,3 +1,20 @@
+---
+date: "2025-12-06"
+title: "Mining Digital Exhaust"
+event: "Fifth Elephant"
+location: "Bangalore, India"
+topics:
+  - "digital exhaust"
+  - "LLMs"
+  - "data analysis"
+  - "personal data"
+  - "data storytelling"
+links:
+  event: "https://hasgeek.com/fifthelephant/mining-digital-exhaust-workshop/"
+  video: "https://youtu.be/I4MQVA1b4BE"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-12-06-mining-digital-exhaust/transcript.md"
+  blog: "https://www.s-anand.net/blog/mining-digital-exhaust-workshop-2025/"
+---
 Prompt used to create index.html: https://claude.ai/share/31ac31c3-a50d-4675-83b6-aaf1c23cd7a9
 
 ---

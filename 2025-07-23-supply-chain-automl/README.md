@@ -1,8 +1,22 @@
 ---
 marp: true
-title: Automating Insights with Live Coding
+date: "2025-07-23"
+title: "Automating Insights from IoT Data"
+event: "AWS Innovation Day — Manufacturing, Industrial and Supply Chain"
+location: "Singapore"
+topics:
+  - "IoT"
+  - "manufacturing"
+  - "supply chain"
+  - "AI coding"
+  - "data analysis"
+links:
+  event: "https://pages.awscloud.com/aws-mfg-industrial-suppy-chain-innovation-day.html"
+  slides: "https://talks.s-anand.net/2025-07-23-supply-chain-automl/"
+  transcript: "https://github.com/sanand0/talks/blob/main/2025-07-23-supply-chain-automl/transcript.md"
+  audio: "https://github.com/sanand0/talks/blob/main/2025-07-23-supply-chain-automl/audio.opus"
 author: Anand S
-url: https://sanand0.github.io/talks/2025-07-23-supply-chain-automl/
+url: https://talks.s-anand.net/2025-07-23-supply-chain-automl/
 theme: gaia
 paginate: true
 # Build: npx -y @marp-team/marp-cli@latest --html README.md -o index.html
@@ -18,7 +32,7 @@ paginate: true
 
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 
-[![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-07-23-supply-chain-automl/)](https://sanand0.github.io/talks/2025-07-23-supply-chain-automl/)
+[![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-07-23-supply-chain-automl/)](https://talks.s-anand.net/2025-07-23-supply-chain-automl/)
 
 ---
 
@@ -76,7 +90,7 @@ In fact, we could _just pass this email and data_ to an LLM agent!
 
 ### Let's Explore!
 
-[![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-07-23-supply-chain-automl/)](https://sanand0.github.io/talks/2025-07-23-supply-chain-automl/)
+[![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-07-23-supply-chain-automl/)](https://talks.s-anand.net/2025-07-23-supply-chain-automl/)
 
 ---
 
@@ -90,7 +104,7 @@ In fact, we could _just pass this email and data_ to an LLM agent!
 
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 
-[![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-07-23-supply-chain-automl/)](https://sanand0.github.io/talks/2025-07-23-supply-chain-automl/)
+[![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-07-23-supply-chain-automl/)](https://talks.s-anand.net/2025-07-23-supply-chain-automl/)
 
 ---
 
@@ -144,7 +158,7 @@ In fact, we could _just pass this email and data_ to an LLM agent!
 
 ### Let’s Explore!
 
-[![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-07-23-supply-chain-automl/)](https://sanand0.github.io/talks/2025-07-23-supply-chain-automl/)
+[![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-07-23-supply-chain-automl/)](https://talks.s-anand.net/2025-07-23-supply-chain-automl/)
 
 ---
 
@@ -158,4 +172,4 @@ In fact, we could _just pass this email and data_ to an LLM agent!
 
 [Anand S](https://s-anand.net/) · [LLM Psychologist](https://www.linkedin.com/in/sanand0/) · [Straive](https://straive.com/)
 
-[![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-07-23-supply-chain-automl/)](https://sanand0.github.io/talks/2025-07-23-supply-chain-automl/)
+[![h:180px](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://talks.s-anand.net/2025-07-23-supply-chain-automl/)](https://talks.s-anand.net/2025-07-23-supply-chain-automl/)

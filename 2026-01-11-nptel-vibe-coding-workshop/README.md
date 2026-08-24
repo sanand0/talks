@@ -1,3 +1,18 @@
+---
+date: "2026-01-11"
+title: "Applied Vibe Coding"
+event: "NPTEL Vibe Coding Workshop"
+location: "Remote"
+topics:
+  - "vibe coding"
+  - "AI coding"
+  - "education"
+  - "agents"
+links:
+  event: "https://elearn.nptel.ac.in/shop/iit-workshops/ongoing/computer-science/applied-vibe-coding-workshop/"
+  video: "https://youtu.be/9tyU5mC0SyQ"
+  transcript: "https://github.com/sanand0/talks/blob/main/2026-01-11-nptel-vibe-coding-workshop/transcript.md"
+---
 # NPTEL Vibe Coding Workshop
 
 ## App prompt
@@ -34,7 +49,7 @@ Here are other links referenced during the workshop. Incorporate them as relevan
 - AI Music Generator API | Text to Music with Beatoven.ai: https://www.beatoven.ai/api
 - Beatoven.ai: https://beatoven.ai/
 - Algorithmic art video compilation - Claude: https://claude.ai/chat/a456b26b-d15d-4b89-8f85-685225905ebc
-- Anand's Talks: https://sanand0.github.io/talks/#/
+- Anand's Talks: https://talks.s-anand.net/#/
 - Computer use | OpenAI API: https://platform.openai.com/docs/guides/tools-computer-use
 - Data Stories: https://sanand0.github.io/datastories/
   - The Ruler-Straight Disappearing Act — A Weight Story: https://sanand0.github.io/datastories/weight-2025-12/index.html

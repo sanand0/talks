@@ -2,28 +2,6 @@
 
 Since 2011 [Anand](https://www.s-anand.net/) has been been speaking about data, AI, visualization, and education at events & organizations.
 
-<style scoped>
-
-.video-embed {
-  position: relative;
-  padding-top: 56.25%;
-  height: 0;
-  overflow: hidden;
-  border-radius: var(--radius);
-  background: var(--entry);
-  border: 1px solid var(--border);
-
-  iframe {
-    border: 0;
-    max-width: 100%;
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-  }
-}
-
-</style>
 
 <div class="video-embed"><iframe src="https://www.youtube.com/embed/videoseries?list=PLHCH16htawZbR_-mIqfGmYbhE5S2UckOh" title="YouTube playlist" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 

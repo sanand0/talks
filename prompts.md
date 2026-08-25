@@ -2,6 +2,8 @@
 
 ## talks.s-anand.net, 24 Aug 2026
 
+<!-- https://chatgpt.com/c/6a8c163e-1034-83ee-ba09-ed542336fd01 -->
+
 - Add a CNAME pointing to talks.s-anand.net.
 - Switch from docsify to `npx -y --package markdown-to-html-cli markdown-to-html --source README.md --output index.html` as the build step. Ensure that `just build` will do this, and so will every push, via GitHub Actions.
 - Incorporate content from ~/code/blog/pages/talks.md into README.md thoughtfully. I will be redirecting https://www.s-anand.net/blog/talks/ to https://talks.s-anand.net/.

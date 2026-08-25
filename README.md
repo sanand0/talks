@@ -1,23 +1,24 @@
-# Anand's Talks
+# [Anand](https://www.s-anand.net/)'s Talks
 
-Since 2011 [Anand](https://www.s-anand.net/) has been been speaking about data, AI, visualization, and education at events & organizations.
-
+Since 2011 I've spoken about data, AI, visualization, and education at events & organizations.
+This **[YouTube playlist](https://www.youtube.com/playlist?list=PLHCH16htawZbR_-mIqfGmYbhE5S2UckOh)** compiles most public talks.
 
 <div class="video-embed"><iframe src="https://www.youtube.com/embed/videoseries?list=PLHCH16htawZbR_-mIqfGmYbhE5S2UckOh" title="YouTube playlist" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 
-**[Full YouTube playlist](https://www.youtube.com/playlist?list=PLHCH16htawZbR_-mIqfGmYbhE5S2UckOh)** has videos of public talks.
-
 ## Events
 
-Some of the events I've spoken at are:
+I speak regularly at:
 
-- TEDx: [IIM Bangalore](https://www.ted.com/tedx/events/14548), [NMIMS Bangalore](https://www.ted.com/tedx/events/13132), [Whitefield](https://www.ted.com/tedx/events/24163), [KG Institutions](https://www.ted.com/tedx/events/35806), ...
-- Strata: [New York 2018](https://conferences.oreilly.com/strata/strata-ny-2018/public/schedule/detail/69021), [London 2015](https://conferences.oreilly.com/strata/big-data-conference-uk-2015/public/schedule/detail/39819)
-- PyCon: [India](https://in.pycon.org/2019/), [Indonesia](https://pycon.id/), [Iran](https://ir.pycon.org/), [Kenya](https://www.pyconke.org/), ...
+- **Conferences:** [PyCon](2025-09-13-duckdb-is-the-new-pandas/), [DataHack Summit](2026-08-07-data-hack-summit/ ":ignore"), [Fifth Elephant](2026-07-07-when-data-is-for-agents-fifth-elephant/ ":ignore"), [VizChitra](2026-07-04-vizchitra-dialog-curators-dilemma/ ":ignore"), ...
+- **Closed rooms:** [LBSNAA](https://youtu.be/kihmwxFLSf8), [Harvard Graduate School of Education](2026-04-30-harvard-education/ ":ignore"), [IIT Madras Academic Advisory Council](2026-03-18-iitm-academic-council/ ":ignore"), ...
+- **Colleges:** [IIT Madras](2026-08-12-iitm-ed-data-visualization/ ":ignore"), [IIM Bangalore](2026-07-02-iimb-mda-workshop/ ":ignore"), [Ashoka](https://youtu.be/mCJLNML7FrE), [NIE Mysore](2026-03-21-faculty-ai-transformation-nie/ ":ignore"), [NPTEL](https://youtu.be/m9mIe4baN-k), ...
+- **Corporates:** [Deloitte](https://youtu.be/kihmwxFLSf8), [Applied Materials](2026-02-11-amat-dt-day/ ":ignore"), [AWS](2025-07-23-supply-chain-automl/ ":ignore"), [EQT](2026-06-16-eqt-data-stack-for-agents/ ":ignore"), [Landmark Group](https://youtu.be/coOYoHVrWU0), ...
+- **TEDx:** [MDI Gurgaon](https://youtu.be/rA__c6CosVI), [Whitefield](https://youtu.be/ew5_-7cwSm0), [KG Institutions](https://www.ted.com/tedx/events/35806), [IIM Bangalore](https://www.ted.com/tedx/events/14548), [NMIMS Bangalore](https://www.ted.com/tedx/events/13132)
+- **PyCon:** [India](2025-09-13-duckdb-is-the-new-pandas/), [Singapore](2025-06-pycon-sg/ ":ignore"), [Hyderabad](2026-03-15-pyconf-ai-in-sdlc/ ":ignore"), [Indonesia](https://pycon.id/), [Iran](https://ir.pycon.org/), [Kenya](https://www.pyconke.org/)
 
 ## Latest talks
 
-- 12 Aug 2026. **[Why Are You Even Sitting in This Class?](2026-08-12-iitm-ed-data-visualization/ ":ignore")** — guest hour for [ED5518: Data Visualization for Engineers](https://ed.iitm.ac.in/), Dr Palaniappan Ramu's course at the [Department of Engineering Design](https://ed.iitm.ac.in/), [IIT Madras](https://www.iitm.ac.in/). Half an hour arguing the students shouldn't need the course — then the room fought back and found the part that doesn't go away. [📖 Story](2026-08-12-iitm-ed-data-visualization/ ":ignore") [💬 Transcript](2026-08-12-iitm-ed-data-visualization/transcript.md) [🎧 Audio](https://github.com/sanand0/talks/releases/download/talks/2026-08-12-iitm-ed-data-visualization.opus ":ignore")
+- 12 Aug 2026. **[Why Are You Even Sitting in This Class?](2026-08-12-iitm-ed-data-visualization/ ":ignore")** — [ED5518: Data Visualization for Engineers](https://ed.iitm.ac.in/), Dr Palaniappan Ramu's course at the [Department of Engineering Design](https://ed.iitm.ac.in/), [IIT Madras](https://www.iitm.ac.in/). Half an hour arguing the students shouldn't need the course — then the room fought back and found the part that doesn't go away. [📖 Story](2026-08-12-iitm-ed-data-visualization/ ":ignore") [💬 Transcript](2026-08-12-iitm-ed-data-visualization/transcript.md) [🎧 Audio](https://github.com/sanand0/talks/releases/download/talks/2026-08-12-iitm-ed-data-visualization.opus ":ignore")
 - 10 Aug 2026. **[What Is This Course Really Teaching?](2026-08-10-tds-ama/ ":ignore")** — AMA for [Tools in Data Science](https://tds.s-anand.net/) students of the [IITM BS Programme](https://study.iitm.ac.in/ds/course_pages/BSSE2002.html), Remote. 68% of students named one source for what taught them and a different one for what got them marks. [📖 Story](2026-08-10-tds-ama/ ":ignore") [⏯️ Video](https://media.s-anand.net/2026-08-10-tds-ama.webm ":ignore") [💬 Transcript](2026-08-10-tds-ama/transcript.md) [🎧 Audio](https://github.com/sanand0/talks/releases/download/talks/2026-08-10-tds-ama.opus ":ignore")
 - 07 Aug 2026. **[How Do You Manage Something Smarter Than You?](2026-08-07-data-hack-summit/ ":ignore")** — [Data Hack Summit 2026](https://www.analyticsvidhya.com/datahacksummit-2026/#agenda), Bangalore. Five ways to specify to a smarter intelligence and five ways to verify one — every one of them stolen from a profession that has done it for centuries. [📖 Story](2026-08-07-data-hack-summit/ ":ignore") [⏯️ Video](https://media.s-anand.net/2026-08-07-data-hack-summit.webm ":ignore") [💬 Transcript](2026-08-07-data-hack-summit/transcript.md) [🎧 Audio](https://github.com/sanand0/talks/releases/download/talks/2026-08-07-data-hack-summit.opus ":ignore")
 - 25 Jul 2026. **[Hire a Data Scientist for $100](2026-07-25-ai-unboxed-agentic-analysis/ ":ignore")** — Agentic Analysis for [IIM Alumni Singapore](https://iimalumni.sg/), AI Unboxed series (3/4). Finding public data, letting agents download and model it, and the one schedule worth running daily. [📖 Story](2026-07-25-ai-unboxed-agentic-analysis/ ":ignore") [⏯️ Video](https://media.s-anand.net/2026-07-25-ai-unboxed-agentic-analysis.webm ":ignore") [💬 Transcript](2026-07-25-ai-unboxed-agentic-analysis/transcript.md) [🎧 Audio](https://github.com/sanand0/talks/releases/download/talks/2026-07-25-ai-unboxed-agentic-analysis.opus ":ignore")
@@ -121,6 +122,12 @@ I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtu
   · [🪧](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/2011-01-28-datameet-learning-r.pptx)
   · [Slides](https://github.com/sanand0/talks/releases/download/talks/2011-01-28-datameet-learning-r.pptx)
   · [🎤 Audio](https://github.com/sanand0/talks/releases/download/talks/2011-01-28-datameet-learning-r.mp3)
+
+⏯️ = Video
+📂 = My video copy
+🪧 = Online slides
+💻 = Screencast
+💬 = Transcript
 
 ## Videos from past talks
 
@@ -261,19 +268,15 @@ I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtu
 - 07 Mar 2022. [Rajen Makhijani](https://www.linkedin.com/in/rajen-makhijani-7b28572). **[The Accomplished Beginner](2022-03-07-career-principles-with-rajen-makhijani/ ":ignore")** on [Network Capital](https://youtu.be/DOaZX0wouJw). [⏯️ Video (36m)](https://youtu.be/DOaZX0wouJw) [💬 Transcript](2022-03-07-career-principles-with-rajen-makhijani/transcript.md)
 - 20 Feb 2022. [Rajen Makhijani](https://www.linkedin.com/in/rajen-makhijani-7b28572). **[The Glass Wall of Class](2022-02-20-it-doesnt-have-to-be-us-and-them-rajen-makhijani/ ":ignore")** on [The Mindful Wealth Podcast](https://youtu.be/_XzHn-B62Rs). [⏯️ Video (36m)](https://youtu.be/_XzHn-B62Rs) [💬 Transcript](2022-02-20-it-doesnt-have-to-be-us-and-them-rajen-makhijani/transcript.md)
 
+<!--
+
 ## WIP
 
 Stuff I _want_ to talk about and am hunting for a forum.
 
 - **[Redefining Work in the LLM Era](2025-09-llm-workflows/ ":ignore")**.
 
-## Legend
-
-- ⏯️ = Video
-- 📂 = My video copy
-- 🪧 = Online slides
-- 💻 = Screencast
-- 💬 = Transcript
+-->
 
 ## Bio for talks
 

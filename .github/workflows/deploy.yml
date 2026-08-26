@@ -29,6 +29,18 @@ jobs:
       # Build pages (same path used by `just build`)
       - run: bash setup.sh
 
+      - name: Add GoatCounter analytics
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          snippet = '<script>window.goatcounter = {path: p => \'/@talks\' + p}</script>\n<script data-goatcounter="https://sanand0.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>'
+          for path in Path('.').rglob("*.html"):
+              html = path.read_text()
+              if "data-goatcounter" not in html and "</head>" in html:
+                  path.write_text(html.replace("</head>", snippet + "\n</head>", 1))
+          PY
+
       # Upload a specific page to GitHub Pages. Defaults to _site
       - uses: actions/upload-pages-artifact@v3
         with:

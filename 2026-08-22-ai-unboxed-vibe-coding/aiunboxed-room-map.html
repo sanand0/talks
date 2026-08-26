@@ -1,0 +1,604 @@
+
+<meta charset="utf-8">
+<title>The Room Map</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0e1a'/%3E%3Ccircle cx='18' cy='20' r='5' fill='%23e8ac4f'/%3E%3Ccircle cx='46' cy='16' r='4' fill='%2352d9c4'/%3E%3Ccircle cx='48' cy='46' r='5' fill='%23e8ac4f'/%3E%3Ccircle cx='16' cy='46' r='4' fill='%2352d9c4'/%3E%3Cline x1='18' y1='20' x2='46' y2='16' stroke='%23444a72' stroke-width='2'/%3E%3Cline x1='18' y1='20' x2='16' y2='46' stroke='%23444a72' stroke-width='2'/%3E%3Cline x1='48' y1='46' x2='46' y2='16' stroke='%23444a72' stroke-width='2'/%3E%3Cline x1='48' y1='46' x2='16' y2='46' stroke='%23444a72' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#f7f5ef; --surface:#ffffff; --surface-2:#f0ece0; --border:#e2ddd0;
+  --text:#1c1f2e; --text-dim:#5b5f7a;
+  --offer:#a3701a; --offer-soft:#f3e3c4;
+  --need:#0e8a76; --need-soft:#d8f2ec;
+  --signal:#c8402f; --signal-soft:#fbe2dd;
+  --chip-bg:#efece2; --chip-text:#4a4f6b;
+  --shadow: 0 1px 2px rgba(30,25,10,.06), 0 8px 24px rgba(30,25,10,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#0b0e1a; --surface:#141832; --surface-2:#181d3c; --border:#282e54;
+    --text:#eef0fa; --text-dim:#9ca3c4;
+    --offer:#e8ac4f; --offer-soft:#3a2f16;
+    --need:#52d9c4; --need-soft:#123a34;
+    --signal:#ff7a68; --signal-soft:#3a1a18;
+    --chip-bg:#1c2148; --chip-text:#b7bde0;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 32px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#0b0e1a; --surface:#141832; --surface-2:#181d3c; --border:#282e54;
+  --text:#eef0fa; --text-dim:#9ca3c4;
+  --offer:#e8ac4f; --offer-soft:#3a2f16;
+  --need:#52d9c4; --need-soft:#123a34;
+  --signal:#ff7a68; --signal-soft:#3a1a18;
+  --chip-bg:#1c2148; --chip-text:#b7bde0;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 32px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:'Archivo',system-ui,sans-serif; line-height:1.5;
+}
+h1,h2,h3{font-family:'Fraunces',Georgia,serif; text-wrap:balance; margin:0}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+a{color:inherit}
+::selection{background:var(--offer); color:#1c1f2e}
+:focus-visible{outline:2px solid var(--need); outline-offset:2px; border-radius:4px}
+
+.wrap{max-width:920px; margin:0 auto; padding:0 20px}
+
+/* topbar */
+.topbar{
+  position:sticky; top:0; z-index:20;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+}
+.topbar-inner{display:flex; align-items:center; gap:14px; padding:12px 20px; max-width:920px; margin:0 auto}
+.brand{font-family:'Fraunces',serif; font-weight:600; font-size:1.05rem; white-space:nowrap}
+.brand .dot{color:var(--need)}
+.topnav{display:flex; gap:2px; margin-left:8px; overflow-x:auto; scrollbar-width:none}
+.topnav::-webkit-scrollbar{display:none}
+.topnav a{
+  font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.04em; text-transform:uppercase;
+  color:var(--text-dim); text-decoration:none; padding:7px 10px; border-radius:7px; white-space:nowrap;
+}
+.topnav a:hover{color:var(--text); background:var(--surface-2)}
+.theme-btn{
+  margin-left:auto; flex:none; width:34px; height:34px; border-radius:9px; border:1px solid var(--border);
+  background:var(--surface); color:var(--text); cursor:pointer; display:grid; place-items:center;
+}
+.theme-btn:hover{background:var(--surface-2)}
+.theme-btn svg{width:16px; height:16px}
+
+/* hero */
+.hero{padding:44px 0 30px}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--need); margin:0 0 12px;
+}
+.hero h1{font-size:clamp(2rem,5vw,3rem); font-weight:600; letter-spacing:-.01em}
+.hero p.lede{
+  font-size:1.05rem; color:var(--text-dim); max-width:62ch; margin:14px 0 0;
+}
+.stat-row{display:flex; gap:28px; flex-wrap:wrap; margin-top:26px}
+.stat b{
+  display:block; font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums;
+  font-size:1.6rem; font-weight:600; color:var(--text);
+}
+.stat span{font-size:.78rem; color:var(--text-dim)}
+
+/* signal card */
+.signal{
+  border:1px solid var(--signal); background:var(--signal-soft); border-radius:14px;
+  padding:22px 24px; margin:8px 0 40px; box-shadow:var(--shadow);
+}
+.signal .eyebrow{color:var(--signal)}
+.signal h2{font-size:1.35rem; font-weight:600}
+.signal p{color:var(--text); margin:10px 0 0; max-width:66ch}
+.signal-bar{display:flex; height:12px; border-radius:6px; overflow:hidden; margin:16px 0 8px; max-width:420px}
+.signal-bar b{background:var(--signal); display:block}
+.signal-bar i{background:var(--chip-bg); display:block}
+.signal-cap{font-size:.78rem; color:var(--text-dim)}
+.signal-cap strong{color:var(--text)}
+
+section{padding:36px 0}
+section > h2{font-size:1.5rem; font-weight:600; margin-bottom:6px}
+section > .sub{color:var(--text-dim); font-size:.92rem; margin:0 0 20px; max-width:64ch}
+
+/* toolbar */
+.toolbar{
+  position:sticky; top:57px; z-index:10; background:var(--bg); padding:10px 0 14px;
+  display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+}
+search{display:contents}
+.search-box{
+  position:relative; flex:1 1 220px; min-width:180px;
+}
+.search-box input{
+  width:100%; padding:9px 12px 9px 34px; border-radius:9px; border:1px solid var(--border);
+  background:var(--surface); color:var(--text); font-family:'Archivo',sans-serif; font-size:.92rem;
+}
+.search-box svg{position:absolute; left:10px; top:50%; transform:translateY(-50%); width:15px; height:15px; color:var(--text-dim); pointer-events:none}
+.tagbar{display:flex; gap:6px; flex-wrap:wrap}
+.tag-chip{
+  font-family:'JetBrains Mono',monospace; font-size:.7rem; letter-spacing:.02em;
+  padding:6px 10px; border-radius:999px; border:1px solid var(--border); background:var(--chip-bg);
+  color:var(--chip-text); cursor:pointer; white-space:nowrap;
+}
+.tag-chip[aria-pressed="true"]{background:var(--need); color:#08201c; border-color:var(--need)}
+.tag-chip:hover{border-color:var(--need)}
+.clear-btn{
+  font-family:'JetBrains Mono',monospace; font-size:.72rem; color:var(--text-dim); background:none;
+  border:1px dashed var(--border); border-radius:999px; padding:6px 10px; cursor:pointer;
+}
+.clear-btn:hover{color:var(--text); border-color:var(--text-dim)}
+.count-note{font-size:.78rem; color:var(--text-dim); margin:0 0 14px}
+
+/* cards grid */
+.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px}
+.card{
+  background:var(--surface); border:1px solid var(--border); border-radius:13px; padding:16px 18px;
+  box-shadow:var(--shadow); display:flex; flex-direction:column; gap:10px;
+  width:100%; text-align:left; font-family:inherit; color:inherit; cursor:pointer;
+}
+.card:hover{border-color:var(--need)}
+.card.dim{opacity:.28; filter:saturate(.4)}
+.card-name{font-weight:600; font-size:.98rem}
+.card-name .anon{color:var(--text-dim); font-weight:500; font-style:italic}
+.kv{display:flex; gap:8px; align-items:baseline}
+.kv .k{
+  font-family:'JetBrains Mono',monospace; font-size:.66rem; letter-spacing:.06em; text-transform:uppercase;
+  flex:none; width:52px; padding-top:2px;
+}
+.kv.offer .k{color:var(--offer)}
+.kv.need .k{color:var(--need)}
+.kv.ask .k{color:var(--text-dim)}
+.kv .v{font-size:.88rem}
+.chips{display:flex; gap:5px; flex-wrap:wrap}
+.chip{
+  font-family:'JetBrains Mono',monospace; font-size:.64rem; padding:3px 8px; border-radius:999px;
+  background:var(--chip-bg); color:var(--chip-text);
+}
+.conn-teaser{font-size:.76rem; color:var(--need); border-top:1px dashed var(--border); padding-top:8px; margin-top:2px}
+
+/* person dialog */
+dialog#personDialog{
+  background:var(--surface); color:var(--text); border:1px solid var(--border); border-radius:14px;
+  padding:0; max-width:520px; width:calc(100% - 40px); box-shadow:var(--shadow);
+}
+dialog#personDialog::backdrop{background:rgba(10,10,20,.6)}
+.dialog-head{display:flex; align-items:flex-start; gap:12px; padding:20px 22px 0}
+.dialog-head h3{font-size:1.25rem; font-weight:600; flex:1}
+.dialog-close{
+  flex:none; width:30px; height:30px; border-radius:8px; border:1px solid var(--border); background:var(--surface-2);
+  color:var(--text-dim); cursor:pointer; font-size:1rem; line-height:1; display:grid; place-items:center;
+}
+.dialog-close:hover{color:var(--text)}
+.dialog-body{padding:14px 22px 22px; display:flex; flex-direction:column; gap:14px}
+.conn-group h4{
+  font-family:'JetBrains Mono',monospace; font-size:.7rem; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--text-dim); margin:0 0 8px;
+}
+.conn-group ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px}
+.conn-group li{
+  background:var(--surface-2); border-radius:9px; padding:8px 12px; font-size:.86rem;
+}
+.conn-name{font-weight:600; display:block}
+.conn-detail{color:var(--text-dim)}
+.conn-empty{font-size:.88rem; color:var(--text-dim)}
+
+/* pulse */
+.pulse-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:28px}
+.pulse-block h3{font-size:.95rem; font-weight:600; margin-bottom:12px}
+.bar-row{display:grid; grid-template-columns:110px 1fr 34px; align-items:center; gap:8px; margin-bottom:7px; font-size:.82rem}
+.bar-row .label{color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.bar-track{height:9px; border-radius:5px; background:var(--surface-2); overflow:hidden}
+.bar-fill{height:100%; border-radius:5px; background:var(--need)}
+.bar-row .num{font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums; color:var(--text-dim); text-align:right}
+
+/* ask / decisions */
+.quote-list{columns:2; column-gap:14px}
+@media (max-width:640px){.quote-list{columns:1}}
+.quote{
+  break-inside:avoid; background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  padding:14px 16px; margin-bottom:14px; box-shadow:var(--shadow);
+}
+.quote.dim{opacity:.28; filter:saturate(.4)}
+.quote p{margin:0; font-size:.92rem; font-family:'Fraunces',serif; font-style:italic}
+.quote p::before{content:"\201C"}
+.quote p::after{content:"\201D"}
+.quote .chips{margin-top:10px}
+
+.decision-list{display:flex; flex-direction:column; gap:10px}
+.decision{
+  display:flex; align-items:center; gap:14px; background:var(--surface); border:1px solid var(--border);
+  border-left:3px solid var(--border); border-radius:10px; padding:12px 16px; box-shadow:var(--shadow);
+}
+.decision.dim{opacity:.28; filter:saturate(.4)}
+.decision.hl{border-left-color:var(--signal)}
+.decision p{margin:0; font-size:.92rem; flex:1}
+.decision .chips{flex:none}
+
+footer{
+  border-top:1px solid var(--border); padding:28px 0 44px; color:var(--text-dim); font-size:.8rem;
+}
+footer a{color:var(--need); text-decoration:underline}
+
+@media (prefers-reduced-motion:no-preference){
+  .hero, .signal, .card, .quote, .decision{animation:rise .5s ease both}
+  .signal{animation-delay:.05s}
+  .hero h1{animation:rise .6s ease both}
+}
+@keyframes rise{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+
+@media (max-width:600px){
+  .topnav{display:none}
+  .stat-row{gap:20px}
+  .kv .k{width:44px}
+}
+</style>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <span class="brand">The Room<span class="dot">·</span>Map</span>
+    <nav class="topnav">
+      <a href="#signal">Signal</a>
+      <a href="#match">Match</a>
+      <a href="#pulse">Pulse</a>
+      <a href="#ask">Ask</a>
+      <a href="#decisions">Decisions</a>
+    </nav>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Toggle dark mode" title="Toggle dark / light mode"></button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="hero">
+    <p class="eyebrow">AI Unboxed 4 &middot; workshop pulse</p>
+    <h1>Before you all scatter&mdash;<br>here's who's in the room.</h1>
+    <p class="lede">16 of you answered a few questions before this session. No new data collected here&mdash;just what you already told us, organized so it's actually useful: who can help with what, what the room keeps deciding, and what's genuinely on people's minds.</p>
+    <div class="stat-row">
+      <div class="stat"><b>16</b><span>people answered</span></div>
+      <div class="stat"><b>8</b><span>discoverable by name</span></div>
+      <div class="stat"><b>15</b><span>things offered</span></div>
+      <div class="stat"><b>13</b><span>things needed</span></div>
+      <div class="stat"><b>8</b><span>recurring decisions</span></div>
+    </div>
+  </div>
+
+  <section id="signal" style="padding-top:6px">
+    <div class="signal">
+      <p class="eyebrow">the one pattern worth building for</p>
+      <h2>62% of the decisions people repeat are about money&mdash;and three people in this room already do that for a living.</h2>
+      <p>When asked "what's a decision you repeatedly make using too many tabs, sheets, or people," 5 of 8 answers were some flavor of <em>which stock, fund, or company to bet on</em>. Meanwhile, three people in the Match section below list investing-adjacent expertise as something they can help with. If one decision-intelligence tool got built out of this room, this is it.</p>
+      <div class="signal-bar" title="5 of 8 recurring decisions are investing-related"><b style="width:62%"></b><i style="width:38%"></i></div>
+      <p class="signal-cap">Jump to <strong>Decisions</strong> below, or filter <strong>Match</strong> by <span class="mono">investing</span> to see who.</p>
+    </div>
+  </section>
+
+  <section id="match">
+    <h2>Find your match</h2>
+    <p class="sub">Everyone who answered is here. Everyone who said yes shows up by name; everyone else is anonymous, as they asked. Click anyone to see who they should connect with. Search or filter by topic; it filters every section below too.</p>
+    <div class="toolbar">
+      <search>
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="q" placeholder="Search names, offers, needs, questions&hellip;" aria-label="Search the room" autocomplete="off">
+        </div>
+      </search>
+      <div class="tagbar" id="tagbar" role="group" aria-label="Filter by topic"></div>
+      <button class="clear-btn" id="clearBtn" type="button">Clear filters</button>
+    </div>
+    <p class="count-note" id="matchCount" aria-live="polite"></p>
+    <div class="grid" id="peopleGrid"></div>
+  </section>
+
+  <section id="pulse">
+    <h2>Room pulse</h2>
+    <p class="sub">Pure headcounts&mdash;never tied to a name, consent or not.</p>
+    <div class="pulse-grid">
+      <div class="pulse-block">
+        <h3>Joining from</h3>
+        <div id="pulseJoining"></div>
+      </div>
+      <div class="pulse-block">
+        <h3>Agent of choice</h3>
+        <div id="pulseAgent"></div>
+      </div>
+      <div class="pulse-block">
+        <h3>Homework completed</h3>
+        <div id="pulseHomework"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ask">
+    <h2>What the room would ask</h2>
+    <p class="sub">"If you could ask the others here one question and get an honest answer, what would you ask?" &mdash; shown without names, so answer honestly if you get asked back.</p>
+    <p class="count-note" id="askCount" aria-live="polite"></p>
+    <div class="quote-list" id="askList"></div>
+  </section>
+
+  <section id="decisions">
+    <h2>Decisions worth building a tool for</h2>
+    <p class="sub">"A decision you repeatedly make using too many tabs, sheets, notes, or people." The investing cluster from the signal above is outlined.</p>
+    <p class="count-note" id="decisionCount" aria-live="polite"></p>
+    <div class="decision-list" id="decisionList"></div>
+  </section>
+
+  <footer>
+    Built from AI Unboxed 4's own workshop form&mdash;only what people opted into sharing, shown the way they consented to. No data leaves this page; everything below runs in your browser. &middot; <a href="#signal">Back to top</a>
+  </footer>
+</div>
+
+<dialog id="personDialog" aria-labelledby="dialogName">
+  <div class="dialog-head">
+    <h3 id="dialogName"></h3>
+    <button type="button" class="dialog-close" id="dialogClose" aria-label="Close">&times;</button>
+  </div>
+  <div class="dialog-body" id="dialogBody"></div>
+</dialog>
+
+<script id="room-data" type="application/json">{"tags": {"investing": "Investing & Markets", "ai-coding": "AI & Coding", "career-future": "Career & Future of Work", "family-education": "Family, Health & Education", "productivity": "Productivity & Organization", "business-research": "Business & Research", "lifestyle-travel": "Lifestyle & Travel", "relationships-networking": "Relationships & Networking", "trust-meta": "Trust, Safety & Meta"}, "people": [{"id": 0, "displayName": null, "consent": false, "joining": "Teams", "agent": "None", "homework": [1], "offer": {"text": "Drinks, stock market, coffee", "tags": ["lifestyle-travel", "investing"]}, "need": {"text": "Cocktail, AI investing", "tags": ["lifestyle-travel", "investing"]}, "ask": {"text": "How often do u use AI everyday", "tags": ["ai-coding"]}, "decision": null}, {"id": 1, "displayName": "Anand R., Secretary — IIM Alumni Sg", "consent": true, "joining": "Teams", "agent": "Claude Code", "homework": [1], "offer": {"text": "Advice on where to invest", "tags": ["investing"]}, "need": {"text": "How to use AI for real cases, not quick answers", "tags": ["ai-coding"]}, "ask": {"text": "Are we doing this right?", "tags": ["trust-meta"]}, "decision": {"text": "Which stocks to research", "tags": ["investing"]}}, {"id": 2, "displayName": null, "consent": false, "joining": "Teams", "agent": "ChatGPT", "homework": [2, 3], "offer": {"text": "Kids' exam practice papers, specific topics like health", "tags": ["family-education"]}, "need": null, "ask": null, "decision": null}, {"id": 3, "displayName": null, "consent": false, "joining": "Teams", "agent": "Perplexity", "homework": [1], "offer": {"text": "Understand businesses", "tags": ["business-research"]}, "need": {"text": "Future of our kids in the AI era", "tags": ["family-education", "career-future"]}, "ask": {"text": "Future of our kids in the AI era", "tags": ["family-education", "career-future"]}, "decision": {"text": "Which company to invest in", "tags": ["investing"]}}, {"id": 4, "displayName": null, "consent": false, "joining": "In the room", "agent": "Claude Code", "homework": [2, 3], "offer": {"text": "Investing in private equity or private debt", "tags": ["investing"]}, "need": {"text": "Use AI better for creating marketing tools", "tags": ["business-research", "ai-coding"]}, "ask": null, "decision": {"text": "Which tasks to prioritise today", "tags": ["productivity"]}}, {"id": 5, "displayName": null, "consent": false, "joining": "Teams", "agent": "Don't use any", "homework": [], "offer": {"text": "Hiking / trek recommendations", "tags": ["lifestyle-travel"]}, "need": {"text": "Automation of mailbox responses, automated prep ahead of meetings", "tags": ["productivity"]}, "ask": {"text": "What use case will you actually use after all these sessions?", "tags": ["trust-meta"]}, "decision": null}, {"id": 6, "displayName": null, "consent": false, "joining": null, "agent": "Huggingface", "homework": [2], "offer": {"text": "Contrarian challenge", "tags": ["trust-meta"]}, "need": {"text": "How to do global consumer research reasonably cheaply", "tags": ["business-research"]}, "ask": {"text": "In your company, to what extent has AI acted as an ERP (systemic, central impact) vs Excel (individual productivity)?", "tags": ["ai-coding", "business-research"]}, "decision": {"text": "Holiday planning: choice of hotel, car, amongst multiple providers and room options", "tags": ["lifestyle-travel"]}}, {"id": 7, "displayName": null, "consent": false, "joining": "Teams", "agent": "Claude Code", "homework": [2, 3], "offer": null, "need": null, "ask": {"text": "In which facet of your life has AI coding been most useful?", "tags": ["ai-coding"]}, "decision": null}, {"id": 8, "displayName": "Rohit Sipahimalani", "consent": true, "joining": "In the room", "agent": "None", "homework": [], "offer": {"text": "Macro views", "tags": ["investing"]}, "need": {"text": "How to use code", "tags": ["ai-coding"]}, "ask": {"text": "What do you use AI for on a day to day basis?", "tags": ["ai-coding"]}, "decision": null}, {"id": 9, "displayName": "Anand S", "consent": true, "joining": "In the room", "agent": "Codex, Claude Code", "homework": [1, 2, 3], "offer": {"text": "AI advice", "tags": ["ai-coding"]}, "need": {"text": "AI in education", "tags": ["family-education", "career-future"]}, "ask": {"text": "How often do you use AI to code?", "tags": ["ai-coding"]}, "decision": null}, {"id": 10, "displayName": "Sandeep Bhargava", "consent": true, "joining": "In the room", "agent": "Claude Code", "homework": [2], "offer": {"text": "Finding local gifts", "tags": ["lifestyle-travel"]}, "need": {"text": "Keeping track of what's happening in the AI value chain", "tags": ["career-future", "business-research"]}, "ask": {"text": "What is AI code used for?", "tags": ["ai-coding"]}, "decision": {"text": "Investment strategies across countries", "tags": ["investing"]}}, {"id": 11, "displayName": "Sandeep Dhingra", "consent": true, "joining": "In the room", "agent": "Claude Code", "homework": [1, 2], "offer": {"text": "Discussing marital issues!", "tags": ["relationships-networking"]}, "need": {"text": "Use AI to code", "tags": ["ai-coding"]}, "ask": {"text": "More participation", "tags": ["trust-meta"]}, "decision": {"text": "Organise my data better — emails, meetings, notes, things to do", "tags": ["productivity"]}}, {"id": 12, "displayName": "Shijo George", "consent": true, "joining": "In the room", "agent": "ChatGPT", "homework": [1], "offer": {"text": "Singapore trivia", "tags": ["lifestyle-travel"]}, "need": {"text": "I'm looking for a job", "tags": ["career-future"]}, "ask": {"text": "How can I help?", "tags": ["trust-meta"]}, "decision": null}, {"id": 13, "displayName": "Shoaib Ahmed", "consent": true, "joining": "Teams", "agent": "Claude Code", "homework": [1], "offer": {"text": "Netflix recommendations", "tags": ["lifestyle-travel"]}, "need": {"text": "Investment help", "tags": ["investing"]}, "ask": {"text": "How do I prepare myself for AI disruption at the workplace?", "tags": ["career-future"]}, "decision": {"text": "Choosing a fund / ETF", "tags": ["investing"]}}, {"id": 14, "displayName": "Sonal Priyanka", "consent": true, "joining": "Teams", "agent": "Codex", "homework": [2], "offer": {"text": "Connecting with people", "tags": ["relationships-networking"]}, "need": {"text": "Learning how to write book or movie reviews", "tags": ["lifestyle-travel"]}, "ask": {"text": "How safe do you feel using agents, given the recent events of rogue agents?", "tags": ["trust-meta", "ai-coding"]}, "decision": {"text": "Portfolio investment decisions", "tags": ["investing"]}}, {"id": 15, "displayName": null, "consent": false, "joining": "Teams", "agent": "NA", "homework": [2], "offer": {"text": "Update trackers", "tags": ["productivity"]}, "need": null, "ask": null, "decision": null}]}</script>
+<script>
+const DATA = JSON.parse(document.getElementById('room-data').textContent);
+const { tags: TAG_LABELS, people: PEOPLE } = DATA;
+
+// ---------- theme ----------
+const themeBtn = document.getElementById('themeBtn');
+const sunIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+const moonIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>';
+function applyTheme(t){
+  if(t) document.documentElement.setAttribute('data-theme', t);
+  else document.documentElement.removeAttribute('data-theme');
+  const dark = t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  themeBtn.innerHTML = dark ? sunIcon : moonIcon;
+}
+let savedTheme = null;
+try { savedTheme = localStorage.getItem('room-map-theme'); } catch(e) {}
+applyTheme(savedTheme);
+themeBtn.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme')
+    || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const next = current === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  try { localStorage.setItem('room-map-theme', next); } catch(e) {}
+});
+
+// ---------- state from URL hash ----------
+function readHash(){
+  const h = location.hash.replace(/^#/, '');
+  const [path, qs] = h.split('?');
+  const params = new URLSearchParams(qs || '');
+  return { path: path || '', q: params.get('q') || '', tag: params.get('tag') || '', person: params.get('person') || '' };
+}
+function writeHash(state){
+  const params = new URLSearchParams();
+  if (state.q) params.set('q', state.q);
+  if (state.tag) params.set('tag', state.tag);
+  if (state.person != null && state.person !== '') params.set('person', state.person);
+  const qs = params.toString();
+  const h = '#' + (state.path || '') + (qs ? '?' + qs : '');
+  history.replaceState(null, '', h);
+}
+const initial = readHash();
+let state = { q: initial.q, tag: initial.tag, person: initial.person };
+
+// ---------- tag bar ----------
+const tagbar = document.getElementById('tagbar');
+Object.entries(TAG_LABELS).forEach(([id, label]) => {
+  const btn = document.createElement('button');
+  btn.className = 'tag-chip'; btn.type = 'button'; btn.dataset.tag = id;
+  btn.textContent = label; btn.title = 'Filter everything below by ' + label;
+  btn.setAttribute('aria-pressed', String(state.tag === id));
+  btn.addEventListener('click', () => {
+    state.tag = state.tag === id ? '' : id;
+    render();
+  });
+  tagbar.appendChild(btn);
+});
+document.getElementById('clearBtn').addEventListener('click', () => {
+  state = { q: '', tag: '' };
+  document.getElementById('q').value = '';
+  render();
+});
+const qInput = document.getElementById('q');
+qInput.value = state.q;
+qInput.addEventListener('input', () => { state.q = qInput.value; render(); });
+
+// ---------- matching helpers ----------
+function personLabel(p){ return p.displayName || ('Anonymous #' + (p.id + 1)); }
+function matchesQuery(text, q){ return !q || (text || '').toLowerCase().includes(q.toLowerCase()); }
+function personText(p){
+  return [p.displayName, p.offer?.text, p.need?.text, p.ask?.text, p.decision?.text].filter(Boolean).join(' ');
+}
+function personTags(p){
+  return new Set([...(p.offer?.tags||[]), ...(p.need?.tags||[]), ...(p.ask?.tags||[]), ...(p.decision?.tags||[])]);
+}
+function personVisible(p, q, tag){
+  const tagOk = !tag || personTags(p).has(tag);
+  const qOk = matchesQuery(personText(p), q);
+  return tagOk && qOk;
+}
+// bidirectional connections for a person: who they could help, and who could help them
+function findConnections(p){
+  const canHelp = p.offer
+    ? PEOPLE.filter(o => o.id !== p.id && o.need && o.need.tags.some(t => p.offer.tags.includes(t)))
+    : [];
+  const couldHelpMe = p.need
+    ? PEOPLE.filter(o => o.id !== p.id && o.offer && o.offer.tags.some(t => p.need.tags.includes(t)))
+    : [];
+  return { canHelp, couldHelpMe };
+}
+function connectionCount(p){
+  const { canHelp, couldHelpMe } = findConnections(p);
+  return new Set([...canHelp.map(o => o.id), ...couldHelpMe.map(o => o.id)]).size;
+}
+
+function renderTagChips(tagList){
+  return tagList.map(t => `<span class="chip">${TAG_LABELS[t] || t}</span>`).join('');
+}
+
+// ---------- people grid ----------
+const peopleGrid = document.getElementById('peopleGrid');
+const matchCount = document.getElementById('matchCount');
+function renderPeople(){
+  const q = state.q, tag = state.tag;
+  let shown = 0;
+  peopleGrid.innerHTML = PEOPLE
+    .map(p => {
+      const visible = personVisible(p, q, tag);
+      if (visible) shown++;
+      const count = connectionCount(p);
+      const teaser = count
+        ? `${count} potential connection${count > 1 ? 's' : ''} &rarr;`
+        : `See who to connect with &rarr;`;
+      const askFallback = (!p.offer && !p.need && p.ask)
+        ? `<div class="kv ask"><span class="k">asks</span><span class="v">${p.ask.text}</span></div>` : '';
+      return `<button type="button" class="card${visible ? '' : ' dim'}" data-id="${p.id}">
+        <div class="card-name">${p.displayName ? p.displayName : `<span class="anon">Anonymous #${p.id + 1}</span>`}</div>
+        ${p.offer ? `<div class="kv offer"><span class="k">offers</span><span class="v">${p.offer.text}</span></div>` : ''}
+        ${p.need ? `<div class="kv need"><span class="k">needs</span><span class="v">${p.need.text}</span></div>` : ''}
+        ${askFallback}
+        <div class="chips">${renderTagChips([...personTags(p)])}</div>
+        <p class="conn-teaser">${teaser}</p>
+      </button>`;
+    }).join('');
+  matchCount.textContent = `Showing ${shown} of ${PEOPLE.length} people.`;
+}
+
+// ---------- ask the room ----------
+const askList = document.getElementById('askList');
+const askCount = document.getElementById('askCount');
+function renderAsk(){
+  const q = state.q, tag = state.tag;
+  const items = PEOPLE.filter(p => p.ask);
+  let shown = 0;
+  askList.innerHTML = items.map(p => {
+    const tagOk = !tag || p.ask.tags.includes(tag);
+    const qOk = matchesQuery(p.ask.text, q);
+    const visible = tagOk && qOk;
+    if (visible) shown++;
+    return `<div class="quote${visible ? '' : ' dim'}"><p>${p.ask.text}</p><div class="chips">${renderTagChips(p.ask.tags)}</div></div>`;
+  }).join('');
+  askCount.textContent = `Showing ${shown} of ${items.length} questions.`;
+}
+
+// ---------- decisions ----------
+const decisionList = document.getElementById('decisionList');
+const decisionCount = document.getElementById('decisionCount');
+function renderDecisions(){
+  const q = state.q, tag = state.tag;
+  const items = PEOPLE.filter(p => p.decision);
+  let shown = 0;
+  decisionList.innerHTML = items.map(p => {
+    const tagOk = !tag || p.decision.tags.includes(tag);
+    const qOk = matchesQuery(p.decision.text, q);
+    const visible = tagOk && qOk;
+    if (visible) shown++;
+    const isInvesting = p.decision.tags.includes('investing');
+    return `<div class="decision${visible ? '' : ' dim'}${isInvesting ? ' hl' : ''}"><p>${p.decision.text}</p><div class="chips">${renderTagChips(p.decision.tags)}</div></div>`;
+  }).join('');
+  decisionCount.textContent = `Showing ${shown} of ${items.length} decisions.`;
+}
+
+// ---------- pulse ----------
+function bar(label, n, max){
+  const pct = max ? Math.round((n / max) * 100) : 0;
+  return `<div class="bar-row"><span class="label" title="${label}">${label}</span><span class="bar-track"><span class="bar-fill" style="width:${pct}%"></span></span><span class="num">${n}</span></div>`;
+}
+function renderPulse(){
+  const joining = {};
+  PEOPLE.forEach(p => { if (p.joining) joining[p.joining] = (joining[p.joining]||0)+1; });
+  const jMax = Math.max(...Object.values(joining));
+  document.getElementById('pulseJoining').innerHTML = Object.entries(joining)
+    .sort((a,b) => b[1]-a[1]).map(([k,v]) => bar(k, v, jMax)).join('');
+
+  const agentBuckets = {};
+  PEOPLE.forEach(p => {
+    (p.agent || '').split(',').map(s => s.trim()).forEach(raw => {
+      const norm = raw.toLowerCase();
+      let key = raw;
+      if (/^claude/.test(norm)) key = 'Claude Code';
+      else if (/^codex/.test(norm)) key = 'Codex';
+      else if (/^chatgpt/.test(norm)) key = 'ChatGPT';
+      else if (/^perplexity/.test(norm)) key = 'Perplexity';
+      else if (/^hugging/.test(norm)) key = 'Hugging Face';
+      else if (!norm || norm === 'na' || norm === 'none' || /don.t use/.test(norm)) key = 'None yet';
+      agentBuckets[key] = (agentBuckets[key]||0)+1;
+    });
+  });
+  const aMax = Math.max(...Object.values(agentBuckets));
+  document.getElementById('pulseAgent').innerHTML = Object.entries(agentBuckets)
+    .sort((a,b) => b[1]-a[1]).map(([k,v]) => bar(k, v, aMax)).join('');
+
+  const hwLabels = {1:'1. Self, with Python', 2:'2. Automated a task', 3:'3. Made it fail'};
+  const hw = {1:0,2:0,3:0};
+  PEOPLE.forEach(p => (p.homework||[]).forEach(n => hw[n]++));
+  const hMax = Math.max(...Object.values(hw));
+  document.getElementById('pulseHomework').innerHTML = Object.entries(hwLabels)
+    .map(([k,label]) => bar(label, hw[k], hMax)).join('');
+}
+
+function render(){
+  renderPeople();
+  renderAsk();
+  renderDecisions();
+  document.querySelectorAll('.tag-chip').forEach(btn => btn.setAttribute('aria-pressed', String(btn.dataset.tag === state.tag)));
+  writeHash({ path: '', q: state.q, tag: state.tag, person: state.person });
+}
+
+// ---------- person dialog ----------
+const personDialog = document.getElementById('personDialog');
+const dialogName = document.getElementById('dialogName');
+const dialogBody = document.getElementById('dialogBody');
+
+function connGroup(title, list, textKey){
+  if (!list.length) return '';
+  const items = list.map(o => `<li><span class="conn-name">${personLabel(o)}</span><span class="conn-detail">${o[textKey].text}</span></li>`).join('');
+  return `<div class="conn-group"><h4>${title}</h4><ul>${items}</ul></div>`;
+}
+function personDialogBody(p){
+  const { canHelp, couldHelpMe } = findConnections(p);
+  const header = [
+    p.offer ? `<div class="kv offer"><span class="k">offers</span><span class="v">${p.offer.text}</span></div>` : '',
+    p.need ? `<div class="kv need"><span class="k">needs</span><span class="v">${p.need.text}</span></div>` : '',
+  ].join('');
+  const groups = [
+    connGroup('You could help', canHelp, 'need'),
+    connGroup('Could help you', couldHelpMe, 'offer'),
+  ].join('');
+  const empty = (!canHelp.length && !couldHelpMe.length)
+    ? `<p class="conn-empty">No overlapping offers or needs yet in this room&mdash;but say hello anyway.</p>` : '';
+  return header + groups + empty;
+}
+function openPerson(id){
+  const p = PEOPLE.find(x => x.id === id);
+  if (!p) return;
+  dialogName.textContent = personLabel(p);
+  dialogBody.innerHTML = personDialogBody(p);
+  if (typeof personDialog.showModal === 'function') personDialog.showModal();
+  state.person = id;
+  writeHash({ path: '', q: state.q, tag: state.tag, person: state.person });
+}
+peopleGrid.addEventListener('click', e => {
+  const card = e.target.closest('.card');
+  if (card) openPerson(Number(card.dataset.id));
+});
+document.getElementById('dialogClose').addEventListener('click', () => personDialog.close());
+personDialog.addEventListener('click', e => { if (e.target === personDialog) personDialog.close(); });
+personDialog.addEventListener('close', () => {
+  state.person = '';
+  writeHash({ path: '', q: state.q, tag: state.tag, person: '' });
+});
+
+renderPulse();
+render();
+if (initial.person !== '' && !Number.isNaN(Number(initial.person))) openPerson(Number(initial.person));
+</script>

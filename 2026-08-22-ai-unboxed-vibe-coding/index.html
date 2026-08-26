@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You Don't Even Need to Code | AI Unboxed 4 · Anand for IIM Alumni Singapore</title>
+<meta name="description" content="The fourth and final AI Unboxed workshop for IIM Alumni Singapore — Vibe Coding. Sixteen people filled a form, and two hours later they had an app built from their own answers. Decision interfaces, organizers, editors, policy as code, and bookmarklets.">
+<meta property="og:title" content="You Don't Even Need to Code">
+<meta property="og:description" content="AI Unboxed 4 · Vibe Coding — for the IIM Alumni Association of Singapore, 22 August 2026.">
+<meta property="og:image" content="https://talks.s-anand.net/2026-08-22-ai-unboxed-vibe-coding/comic-page.avif">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f3ee;
+    --paper: #fffdfa;
+    --ink: #171a2c;
+    --ink2: #384156;
+    --muted: #6b7488;
+    --violet: #6d28d9;
+    --violet-dk: #4c1d95;
+    --violet-soft: #ede4fd;
+    --blue: #0e6ba8;
+    --blue-dk: #0a4f7c;
+    --blue-soft: #dfeefa;
+    --amber: #a2570b;
+    --amber-soft: #fbead0;
+    --border: #e2dbd0;
+    --night: #10121f;
+    --night2: #1b2033;
+    --night3: #241c3d;
+    --font-display: 'Bricolage Grotesque', 'Trebuchet MS', sans-serif;
+    --font-body: 'Source Serif 4', Georgia, serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    /* Chart palette — validated: adjacent CVD ΔE 20.9 (protan), normal ΔE 25.0, both ≥3:1 on paper */
+    --c-offer: #0e6ba8;
+    --c-need:  #a2570b;
+    --c-one:   #6d28d9;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.76;
+    font-size: 18.5px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    padding-bottom: 4.2rem;
+  }
+  [id] { scroll-margin-top: 4.8rem; }
+
+  /* ── Progress ── */
+  #progress {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--violet), var(--blue), var(--amber));
+    z-index: 1000; transition: width .15s linear;
+  }
+
+  /* ── Masthead ── */
+  .masthead {
+    position: sticky; top: 0; z-index: 200;
+    background: rgba(246,243,238,.95);
+    border-bottom: 1px solid var(--border);
+    padding: .7rem 1.5rem;
+    backdrop-filter: blur(8px);
+  }
+  .masthead-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: .8rem; flex-wrap: wrap;
+  }
+  .masthead-brand {
+    font-family: var(--font-display); font-size: .84rem; font-weight: 800;
+    letter-spacing: .07em; text-transform: uppercase; color: var(--ink);
+    text-decoration: none;
+  }
+  .masthead-brand:hover { color: var(--violet); }
+  .masthead-right { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+  .masthead-date { font-family: var(--font-mono); font-size: .68rem; color: var(--muted); }
+  .masthead-link {
+    font-family: var(--font-mono); font-size: .67rem; letter-spacing: .03em;
+    color: var(--violet-dk); text-decoration: none;
+    border: 1px solid var(--violet); border-radius: 4px;
+    padding: .26rem .55rem; transition: all .2s; white-space: nowrap;
+  }
+  .masthead-link:hover { background: var(--violet); color: #fff; }
+
+  /* ── Layout ── */
+  .wrap { max-width: 730px; margin: 0 auto; padding: 0 1.5rem; }
+  .wrap-wide { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ── Hero ── */
+  .hero { max-width: 830px; margin: 0 auto; padding: 3.6rem 1.5rem 1.4rem; text-align: center; }
+  .hero-series {
+    display: inline-flex; gap: .35rem; align-items: center;
+    font-family: var(--font-mono); font-size: .62rem; letter-spacing: .13em;
+    background: var(--violet-soft); color: var(--violet-dk);
+    padding: .32rem .8rem; border-radius: 99px; margin-bottom: 1.3rem;
+    text-transform: uppercase;
+  }
+  .hero-kicker {
+    font-family: var(--font-mono); font-size: .66rem; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--amber); margin-bottom: 1.1rem;
+  }
+  .hero h1 {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(2.3rem, 7vw, 4.3rem); line-height: 1.0;
+    letter-spacing: -.035em; margin-bottom: 1.1rem;
+  }
+  .hero h1 em { font-style: normal; color: var(--violet); }
+  .hero-sub {
+    font-size: 1.19rem; color: var(--ink2); line-height: 1.6;
+    max-width: 640px; margin: 0 auto 1.7rem;
+  }
+  .hero-meta {
+    font-family: var(--font-mono); font-size: .73rem; color: var(--muted);
+    letter-spacing: .02em; line-height: 2;
+  }
+  .hero-meta a { color: var(--blue-dk); text-decoration: none; border-bottom: 1px solid rgba(14,107,168,.4); }
+  .hero-meta a:hover { color: var(--violet); border-bottom-color: var(--violet); }
+
+  .quick-links { margin: 1.7rem auto 0; display: flex; gap: .55rem; justify-content: center; flex-wrap: wrap; }
+  .quick-links a {
+    font-family: var(--font-mono); font-size: .71rem; letter-spacing: .02em;
+    text-decoration: none; color: var(--ink2);
+    background: var(--paper); border: 1px solid var(--border);
+    border-radius: 99px; padding: .44rem .95rem; transition: all .2s;
+  }
+  .quick-links a:hover { border-color: var(--violet); color: var(--violet); transform: translateY(-1px); }
+
+  /* ── Full-width bands ── */
+  .band { width: 100vw; margin-left: calc(50% - 50vw); margin-top: 3.4rem; margin-bottom: 3.4rem; }
+  .video-wrap { background: var(--night); padding: 2.5rem 1.5rem; }
+  .video-inner { max-width: 1000px; margin: 0 auto; }
+  .video-inner video { width: 100%; display: block; border-radius: 6px; background: #000; }
+  .media-cap {
+    font-family: var(--font-mono); font-size: .72rem; color: #9aa4c4;
+    text-align: center; margin-top: 1rem; line-height: 1.75;
+  }
+  .media-cap a { color: #ffb45c; text-decoration: none; border-bottom: 1px solid rgba(255,180,92,.45); }
+  .media-cap a:hover { color: #ffdcb4; border-bottom-color: #ffdcb4; }
+  .media-cap strong { color: #fff; font-weight: 700; }
+  .media-cap .tip { border-bottom-color: #7f88ad; }
+  .audio-row { max-width: 720px; margin: 1.4rem auto 0; }
+  .audio-row audio { width: 100%; }
+
+  /* ── Body text ── */
+  .wrap p, .wrap-wide > p { margin-bottom: 1.35rem; }
+  .wrap p a, .wrap li a, .wrap-wide > p a {
+    color: var(--blue-dk); text-decoration: none;
+    border-bottom: 1px solid rgba(14,107,168,.42);
+  }
+  .wrap p a:hover, .wrap li a:hover { color: var(--violet); border-bottom-color: var(--violet); }
+  .wrap strong { font-weight: 600; color: var(--ink); background: linear-gradient(transparent 60%, rgba(237,228,253,.95) 60%); }
+  .wrap ul, .wrap ol { margin: 0 0 1.35rem 1.3rem; }
+  .wrap li { margin-bottom: .55rem; }
+  .lede { font-size: 1.1rem; color: var(--ink2); }
+
+  /* ── Charts ── */
+  .chart-band { background: var(--paper); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 2.8rem 1.5rem; }
+  .chart-inner { max-width: 1140px; margin: 0 auto; }
+  .chart-grid { display: grid; gap: 2.2rem; grid-template-columns: 1.45fr 1fr; align-items: start; }
+  .chart-grid.even { grid-template-columns: 1fr 1fr; }
+  @media (max-width: 860px) { .chart-grid, .chart-grid.even { grid-template-columns: 1fr; } }
+  figure.chart { margin: 0; }
+  figure.chart + figure.chart { margin-top: 2.2rem; }
+  .chart-h {
+    font-family: var(--font-display); font-weight: 700; font-size: 1.04rem;
+    letter-spacing: -.02em; margin-bottom: .2rem; color: var(--ink);
+  }
+  .chart-sub { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .03em; color: var(--muted); margin-bottom: 1rem; line-height: 1.6; }
+  .chart-legend { display: flex; gap: 1rem; flex-wrap: wrap; font-family: var(--font-mono); font-size: .66rem; color: var(--ink2); margin-bottom: .9rem; }
+  .chart-legend span { display: inline-flex; align-items: center; gap: .38rem; }
+  .swatch { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+  .sw-offer { background: var(--c-offer); }
+  .sw-need  { background: var(--c-need); }
+
+  /* Diverging (butterfly) rows */
+  .fly-row { display: grid; grid-template-columns: 1fr 152px 1fr; align-items: center; gap: .4rem; margin-bottom: .3rem; }
+  .fly-name { font-family: var(--font-mono); font-size: .63rem; line-height: 1.35; text-align: center; color: var(--ink2); }
+  .fly-side { display: flex; align-items: center; gap: .4rem; }
+  .fly-side.l { justify-content: flex-end; }
+  .fly-bar { height: 15px; border-radius: 4px; transition: filter .15s; }
+  .fly-side.l .fly-bar { background: var(--c-offer); border-radius: 4px 0 0 4px; }
+  .fly-side.r .fly-bar { background: var(--c-need);  border-radius: 0 4px 4px 0; }
+  .fly-row:hover .fly-bar { filter: brightness(1.18) saturate(1.1); }
+  .fly-n { font-family: var(--font-mono); font-size: .66rem; font-weight: 700; color: var(--ink2); min-width: .8em; }
+  .fly-zero { font-family: var(--font-mono); font-size: .62rem; color: var(--muted); }
+
+  /* Simple horizontal bars */
+  .hbar { display: grid; grid-template-columns: 128px 1fr auto; align-items: center; gap: .55rem; margin-bottom: .34rem; }
+  .hbar-lab { font-family: var(--font-mono); font-size: .63rem; color: var(--ink2); line-height: 1.3; text-align: right; }
+  .hbar-track { background: #ece6f9; border-radius: 4px; height: 15px; }
+  .hbar-fill { background: var(--c-one); height: 100%; border-radius: 4px; display: block; transition: filter .15s; }
+  .hbar:hover .hbar-fill { filter: brightness(1.18); }
+  .hbar-n { font-family: var(--font-mono); font-size: .66rem; font-weight: 700; color: var(--ink2); }
+  .hbar-n small { font-weight: 400; color: var(--muted); }
+  .hbar.ghost .hbar-fill { background: repeating-linear-gradient(135deg, var(--c-one) 0 3px, #b79aec 3px 6px); }
+
+  /* Column chart */
+  .cols { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; height: 168px; align-items: end; }
+  .col { display: flex; flex-direction: column; justify-content: flex-end; height: 100%; text-align: center; }
+  .col-n { font-family: var(--font-mono); font-size: .6rem; font-weight: 700; color: var(--ink2); margin-bottom: .2rem; }
+  .col-bar { background: var(--c-one); border-radius: 4px 4px 0 0; transition: filter .15s; }
+  .col:hover .col-bar { filter: brightness(1.18); }
+  .col-x { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; margin-top: .35rem; }
+  .col-x span { font-family: var(--font-mono); font-size: .58rem; color: var(--muted); text-align: center; }
+
+  .chart-note { font-size: .87rem; line-height: 1.62; color: var(--ink2); margin-top: 1rem; }
+  .chart-note a { color: var(--blue-dk); text-decoration: none; border-bottom: 1px solid rgba(14,107,168,.4); }
+  .chart-note a:hover { color: var(--violet); border-bottom-color: var(--violet); }
+  .chart-note strong { font-weight: 600; }
+  details.tblview { margin-top: 1rem; }
+  details.tblview summary { font-family: var(--font-mono); font-size: .64rem; color: var(--muted); cursor: pointer; letter-spacing: .04em; }
+  details.tblview summary:hover { color: var(--violet); }
+  details.tblview table { margin-top: .7rem; }
+
+  /* ── Section headers ── */
+  .sec-num {
+    display: block; font-family: var(--font-mono); font-size: .65rem; font-weight: 400;
+    letter-spacing: .2em; text-transform: uppercase; color: var(--violet);
+    margin-bottom: .55rem; line-height: 1.6;
+  }
+  h2.sec {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(1.75rem, 4.4vw, 2.6rem); line-height: 1.08;
+    letter-spacing: -.03em; margin: 3.2rem 0 1.25rem;
+  }
+  h3.sub {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: 1.26rem; margin: 2.1rem 0 .75rem; color: var(--ink2); letter-spacing: -.015em;
+  }
+  .dinkus { text-align: center; color: var(--violet); letter-spacing: .75em; margin: 2.5rem 0; font-size: .8rem; }
+
+  /* ── Pull quotes ── */
+  blockquote.pull {
+    margin: 2.1rem 0; padding: 1.35rem 1.55rem;
+    background: var(--paper); border-left: 4px solid var(--violet);
+    border-radius: 0 7px 7px 0;
+    box-shadow: 0 2px 14px rgba(23,26,44,.06);
+  }
+  blockquote.pull p {
+    font-family: var(--font-display); font-size: 1.19rem; font-weight: 400;
+    line-height: 1.45; margin-bottom: .6rem; letter-spacing: -.015em; color: var(--ink);
+  }
+  blockquote.pull cite {
+    font-family: var(--font-mono); font-style: normal; font-size: .7rem;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+  }
+  blockquote.pull.blue { border-left-color: var(--blue); }
+  blockquote.pull.amber { border-left-color: var(--amber); }
+  blockquote.pull.big p { font-size: 1.42rem; font-weight: 600; }
+
+  /* ── Prompt / code boxes ── */
+  .prompt-box {
+    background: var(--night); color: #dbe0f5;
+    border-radius: 8px; padding: 1.15rem 1.3rem; margin: 1.8rem 0;
+    font-family: var(--font-mono); font-size: .81rem; line-height: 1.72;
+  }
+  .prompt-box .plabel {
+    display: block; font-size: .61rem; letter-spacing: .17em; text-transform: uppercase;
+    color: #ffb45c; margin-bottom: .65rem;
+  }
+  .prompt-box a { color: #8fd0f5; word-break: break-word; }
+  .prompt-box em { color: #a9b2d6; font-style: italic; }
+  .prompt-box strong { color: #fff; background: none; font-weight: 700; box-shadow: inset 0 -.55em 0 rgba(109,40,217,.55); }
+  .prompt-box code { color: #ffd9a8; }
+  .prompt-box p { margin-bottom: .8rem; }
+  .prompt-box p:last-child { margin-bottom: 0; }
+
+  /* ── Chat snippet ── */
+  .chat-snippet {
+    background: var(--blue-soft); border: 1px solid #bcd9ee;
+    border-radius: 8px; padding: 1.05rem 1.25rem; margin: 1.8rem 0;
+  }
+  .chat-snippet.violet { background: var(--violet-soft); border-color: #d6c4f7; }
+  .chat-snippet-label {
+    font-family: var(--font-mono); font-size: .63rem; letter-spacing: .13em;
+    text-transform: uppercase; color: var(--blue-dk); margin-bottom: .55rem;
+  }
+  .chat-snippet.violet .chat-snippet-label { color: var(--violet-dk); }
+  .chat-snippet strong { background: none; color: var(--ink); font-weight: 700; }
+  table.data strong { background: none; font-weight: 700; }
+  .qlist strong { background: none; font-weight: 700; }
+  .chat-snippet p { font-size: .95rem; margin-bottom: .65rem; line-height: 1.66; }
+  .chat-snippet p:last-child { margin-bottom: 0; }
+  .chat-snippet a { color: var(--blue-dk); }
+  .chat-snippet.violet a { color: var(--violet-dk); }
+
+  /* ── Cite / tooltip ── */
+  .cite {
+    cursor: pointer; color: var(--violet); font-weight: 600;
+    border-bottom: 1px dotted var(--violet); text-decoration: none;
+  }
+  .cite::after { content: "†"; font-size: .7em; vertical-align: super; }
+  .tip { border-bottom: 1px dotted var(--muted); cursor: help; position: relative; }
+  .tip:hover::after {
+    content: attr(data-tip);
+    position: absolute; bottom: 132%; left: 50%; transform: translateX(-50%);
+    background: var(--night); color: #eceef8; font-family: var(--font-body);
+    font-size: .8rem; line-height: 1.5; font-style: normal; font-weight: 400;
+    padding: .6rem .8rem; border-radius: 6px; width: min(310px, 78vw);
+    z-index: 90; box-shadow: 0 6px 22px rgba(0,0,0,.3); text-align: left;
+  }
+
+  /* ── Stat band ── */
+  .stat-band { background: var(--violet-soft); border-top: 1px solid #ddcffa; border-bottom: 1px solid #ddcffa; padding: 2.4rem 1.5rem; }
+  .stat-grid {
+    max-width: 1000px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1.5rem;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: var(--font-display); font-weight: 800; font-size: clamp(1.7rem, 4vw, 2.4rem);
+    color: var(--violet-dk); line-height: 1.05; letter-spacing: -.03em;
+  }
+  .stat-label {
+    font-family: var(--font-mono); font-size: .67rem; letter-spacing: .04em;
+    color: #3f3560; margin-top: .45rem; line-height: 1.55;
+  }
+  .stat-note { max-width: 760px; margin: 1.8rem auto 0; text-align: center; font-size: .95rem; color: #3f3560; line-height: 1.7; }
+  .stat-note a { color: var(--violet-dk); }
+
+  /* ── Dark quote band ── */
+  .band-quote { background: var(--night3); padding: 3rem 1.5rem; }
+  .band-quote-inner { max-width: 850px; margin: 0 auto; text-align: center; }
+  .band-quote p {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(1.3rem, 3.3vw, 1.95rem); line-height: 1.35; color: #f6f1ff;
+    letter-spacing: -.025em;
+  }
+  .band-quote cite {
+    display: block; margin-top: 1.2rem; font-family: var(--font-mono); font-style: normal;
+    font-size: .71rem; letter-spacing: .1em; text-transform: uppercase; color: #c4a7ff;
+  }
+
+  /* ── Cards ── */
+  .cards-band { background: var(--paper); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 2.8rem 1.5rem; }
+  .cards-inner { max-width: 1140px; margin: 0 auto; }
+  .cards-title {
+    font-family: var(--font-display); font-weight: 800; font-size: 1.6rem;
+    text-align: center; margin-bottom: .5rem; letter-spacing: -.025em;
+  }
+  .cards-sub { text-align: center; color: var(--muted); font-size: .94rem; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto; line-height: 1.65; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 1rem; }
+  .cards.c3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .cards.wide { width: min(1100px, calc(100vw - 3rem)); position: relative; left: 50%; transform: translateX(-50%); }
+  .card {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.15rem 1.2rem;
+  }
+  .card-num {
+    font-family: var(--font-mono); font-size: .63rem; letter-spacing: .13em;
+    color: var(--violet); margin-bottom: .45rem; text-transform: uppercase;
+  }
+  .card-title { font-family: var(--font-display); font-weight: 600; font-size: 1.04rem; margin-bottom: .4rem; line-height: 1.28; letter-spacing: -.015em; }
+  .card-body { font-size: .9rem; line-height: 1.62; color: var(--ink2); }
+  .card-body a { color: var(--blue-dk); text-decoration: none; border-bottom: 1px solid rgba(14,107,168,.4); }
+  .card-body a:hover { color: var(--violet); border-bottom-color: var(--violet); }
+
+  /* ── Images ── */
+  .fig-band { background: var(--night); padding: 2.6rem 1.5rem; }
+  .fig-band.light { background: var(--amber-soft); }
+  .fig-inner { max-width: 940px; margin: 0 auto; text-align: center; }
+  .fig-inner.narrow { max-width: 640px; }
+  .fig-inner img { max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 6px; }
+  .fig-cap {
+    font-family: var(--font-mono); font-size: .72rem; line-height: 1.72;
+    color: #9aa4c4; margin-top: 1rem; text-align: center;
+  }
+  .fig-band.light .fig-cap { color: #6a4f24; }
+  .fig-cap a { color: #ffb45c; text-decoration: none; border-bottom: 1px solid rgba(255,180,92,.45); }
+  .fig-band.light .fig-cap a { color: #8a4708; border-bottom-color: rgba(138,71,8,.45); }
+  .fig-cap a:hover { color: #ffdcb4; }
+  .fig-band.light .fig-cap a:hover { color: var(--violet); border-bottom-color: var(--violet); }
+
+  /* ── Comic ── */
+  .comic-band { background: linear-gradient(155deg, #241c3d 0%, #10121f 100%); padding: 2.8rem 1.5rem; }
+  .comic-inner { max-width: 980px; margin: 0 auto; text-align: center; }
+  .comic-inner img { width: 100%; height: auto; display: block; border-radius: 8px; box-shadow: 0 14px 48px rgba(0,0,0,.5); }
+  .comic-inner h4 { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.45rem,3.6vw,2.1rem); color: #fff; letter-spacing: -.03em; margin-bottom: .35rem; }
+  .comic-inner .csub { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: #c4a7ff; margin-bottom: 1.4rem; }
+
+  /* ── Iframe embeds ── */
+  .iframe-wrap { background: var(--blue-soft); padding: 2.4rem 1.5rem; }
+  .iframe-wrap.dark { background: var(--night2); }
+  .iframe-wrap.violet { background: var(--violet-soft); }
+  .iframe-inner { max-width: 1180px; margin: 0 auto; }
+  .iframe-inner iframe {
+    width: 100%; height: min(84vh, 760px); border: 1px solid rgba(0,0,0,.18);
+    border-radius: 8px; background: #fff; display: block;
+  }
+  .iframe-inner iframe.short { height: min(62vh, 560px); }
+  .iframe-cap { font-family: var(--font-mono); font-size: .72rem; color: #35506b; text-align: center; margin-top: 1rem; line-height: 1.72; }
+  .iframe-wrap.violet .iframe-cap { color: #3f3560; }
+  .iframe-wrap.dark .iframe-cap { color: #9aa4c4; }
+  .iframe-cap a { color: var(--blue-dk); text-decoration: none; border-bottom: 1px solid rgba(14,107,168,.45); }
+  .iframe-wrap.violet .iframe-cap a { color: var(--violet-dk); border-bottom-color: rgba(76,29,149,.45); }
+  .iframe-wrap.dark .iframe-cap a { color: #ffb45c; border-bottom-color: rgba(255,180,92,.45); }
+  .iframe-cap a:hover { color: var(--violet); }
+  .iframe-wrap.dark .iframe-cap a:hover { color: #ffdcb4; border-bottom-color: #ffdcb4; }
+  .embed-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .embed-duo iframe { height: min(72vh, 660px); }
+  /* Fixed-page CV embeds: a 720x1046px sheet scaled to the column, so neither scrolls */
+  .cv-fig { margin: 0; }
+  .cv-stage {
+    position: relative; width: 100%; aspect-ratio: 720 / 1046; overflow: hidden;
+    background: #fff; border: 1px solid rgba(0,0,0,.18); border-radius: 8px;
+  }
+  .cv-stage iframe {
+    position: absolute; top: 0; left: 0; width: 720px; height: 1046px;
+    border: 0; transform-origin: top left; display: block;
+  }
+  .cv-fig figcaption {
+    font-family: var(--font-mono); font-size: .68rem; line-height: 1.65;
+    color: #3f3560; margin-top: .7rem; text-align: center;
+  }
+  .cv-fig figcaption b { color: var(--violet-dk); }
+  .cv-fig figcaption a { color: var(--violet-dk); border-bottom: 1px solid rgba(76,29,149,.45); text-decoration: none; }
+  .cv-fig figcaption a:hover { color: var(--violet); border-bottom-color: var(--violet); }
+  @media (max-width: 820px) { .embed-duo { grid-template-columns: 1fr; } }
+
+  /* ── Tables ── */
+  .tbl-wrap { overflow-x: auto; margin: 1.8rem 0; }
+  table.data {
+    border-collapse: collapse; width: 100%; font-family: var(--font-mono);
+    font-size: .78rem; background: var(--paper); min-width: 480px;
+  }
+  table.data th, table.data td { border: 1px solid var(--border); padding: .5rem .7rem; text-align: left; vertical-align: top; line-height: 1.5; }
+  table.data th { background: var(--violet-soft); color: var(--violet-dk); font-weight: 700; letter-spacing: .03em; }
+  table.data td.yes { background: #dff3e4; color: #14532d; font-weight: 700; }
+  table.data td.no { background: #fbe0e0; color: #7f1d1d; font-weight: 700; }
+  table.data caption { caption-side: bottom; font-family: var(--font-mono); font-size: .68rem; color: var(--muted); padding-top: .7rem; text-align: left; line-height: 1.6; }
+
+  /* ── Quote list (survey answers) ── */
+  .qlist { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: .7rem; margin: 1.6rem 0; }
+  .qlist div {
+    background: var(--paper); border: 1px solid var(--border); border-left: 3px solid var(--blue);
+    border-radius: 5px; padding: .7rem .85rem; font-size: .9rem; line-height: 1.55; color: var(--ink2);
+  }
+  .qlist div b { display: block; font-family: var(--font-mono); font-size: .62rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-top: .35rem; font-weight: 500; }
+
+  /* ── Takeaways ── */
+  .takeaways-band { background: linear-gradient(140deg, #4c1d95 0%, #241c3d 50%, #0a4f7c 100%); padding: 3.4rem 1.5rem; }
+  .takeaways-inner { max-width: 1140px; margin: 0 auto; }
+  .takeaways-title {
+    font-family: var(--font-display); font-weight: 800; font-size: clamp(1.8rem, 4.2vw, 2.5rem);
+    color: #fff; text-align: center; margin-bottom: .5rem; letter-spacing: -.03em;
+  }
+  .takeaways-sub { text-align: center; color: #dcc9ff; font-size: .95rem; margin-bottom: 2.2rem; }
+  .takeaway-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1rem; }
+  .takeaway {
+    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.24);
+    border-radius: 9px; padding: 1.25rem 1.3rem;
+  }
+  .takeaway-num { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .14em; color: #ffc98a; margin-bottom: .45rem; }
+  .takeaway-title { font-family: var(--font-display); font-weight: 700; font-size: 1.08rem; color: #fff; margin-bottom: .45rem; line-height: 1.28; letter-spacing: -.02em; }
+  .takeaway-text { font-size: .92rem; line-height: 1.66; color: #ece5f8; }
+  .takeaway-text a { color: #ffd9a8; text-decoration: none; border-bottom: 1px solid rgba(255,217,168,.55); font-weight: 500; }
+  .takeaway-text a:hover { color: #fff; border-bottom-color: #fff; }
+
+  /* ── Footer ── */
+  .footer { background: var(--night); color: #a4adcc; padding: 2.6rem 1.5rem; text-align: center; }
+  .footer p { margin-bottom: .7rem; font-size: .92rem; }
+  .footer a { color: #ffb45c; text-decoration: none; border-bottom: 1px solid rgba(255,180,92,.45); }
+  .footer a:hover { color: #fff; border-bottom-color: #fff; }
+  .footer-mono { font-family: var(--font-mono); font-size: .71rem; letter-spacing: .04em; color: #8791b4; }
+
+  /* ── Modals ── */
+  .modal { position: fixed; inset: 0; background: rgba(16,18,31,.88); display: none; align-items: center; justify-content: center; z-index: 900; padding: 1.5rem; }
+  .modal.open { display: flex; }
+  .modal-box { background: var(--paper); border-radius: 10px; max-width: 900px; width: 100%; max-height: 89vh; display: flex; flex-direction: column; overflow: hidden; }
+  .modal-head { padding: 1rem 1.3rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .modal-head h4 { font-family: var(--font-display); font-size: 1.04rem; font-weight: 700; }
+  .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--muted); line-height: 1; padding: 0 .3rem; }
+  .modal-close:hover { color: var(--violet); }
+  .modal-body { padding: 1.3rem; overflow-y: auto; font-size: .93rem; line-height: 1.7; }
+  .modal-body h1, .modal-body h2, .modal-body h3 { font-family: var(--font-display); margin: 1.2rem 0 .6rem; line-height: 1.25; letter-spacing: -.02em; }
+  .modal-body h1 { font-size: 1.32rem; } .modal-body h2 { font-size: 1.14rem; } .modal-body h3 { font-size: 1.02rem; }
+  .modal-body p { margin-bottom: .8rem; }
+  .modal-body a { color: var(--blue-dk); }
+  .modal-body blockquote { border-left: 3px solid var(--border); padding-left: .9rem; margin: .8rem 0; color: var(--ink2); }
+  .modal-body pre { background: #efe9e0; padding: .8rem; border-radius: 6px; overflow-x: auto; font-size: .77rem; }
+  .modal-body code { font-family: var(--font-mono); font-size: .84em; }
+  .modal-body table { border-collapse: collapse; width: 100%; font-size: .84rem; margin: .8rem 0; display: block; overflow-x: auto; }
+  .modal-body th, .modal-body td { border: 1px solid var(--border); padding: .4rem .6rem; text-align: left; }
+  .modal-body img { max-width: 100%; height: auto; }
+  .modal-src { font-family: var(--font-mono); font-size: .71rem; padding: .35rem 1.3rem 0; }
+  .modal-src a { color: var(--violet-dk); }
+
+  /* ── Section jumper ── */
+  .jump {
+    position: fixed; z-index: 400; left: 50%; bottom: 1.1rem; transform: translateX(-50%);
+    display: flex; align-items: stretch; gap: 1px;
+    background: var(--night); border-radius: 99px;
+    box-shadow: 0 6px 28px rgba(16,18,31,.45); overflow: hidden;
+    max-width: calc(100vw - 1.6rem);
+  }
+  .jump button, .jump .jump-cur {
+    appearance: none; border: 0; background: var(--night); color: #e9ecf8;
+    font-family: var(--font-mono); font-size: .68rem; letter-spacing: .03em;
+    padding: .55rem .8rem; cursor: pointer; line-height: 1.3;
+    display: flex; align-items: center; gap: .4rem; white-space: nowrap; text-decoration: none;
+  }
+  .jump button:hover { background: var(--violet); color: #fff; }
+  .jump .jump-cur { cursor: pointer; max-width: min(48vw, 330px); overflow: hidden; text-overflow: ellipsis; display: block; padding: .55rem 1rem; font-weight: 500; }
+  .jump .jump-cur:hover { background: var(--night3); }
+  .jump .jump-cur .caret { color: #ffb45c; }
+  .jump button[disabled] { opacity: .32; cursor: default; }
+  .jump button[disabled]:hover { background: var(--night); color: #e9ecf8; }
+  .jump-menu {
+    position: fixed; z-index: 401; left: 50%; bottom: 4rem; transform: translateX(-50%);
+    background: var(--paper); border: 1px solid var(--border); border-radius: 12px;
+    box-shadow: 0 14px 46px rgba(16,18,31,.35);
+    padding: .8rem; display: none;
+    width: min(860px, calc(100vw - 1.6rem)); max-height: min(68vh, 560px); overflow-y: auto;
+  }
+  .jump-menu.open { display: block; }
+  .jump-menu .jm-group { font-family: var(--font-mono); font-size: .59rem; letter-spacing: .16em; text-transform: uppercase; color: var(--amber); margin: .7rem .4rem .4rem; }
+  .jump-menu .jm-group:first-child { margin-top: .2rem; }
+  .jump-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: .35rem; }
+  .jump-menu a { display: block; text-decoration: none; color: var(--ink2); font-family: var(--font-mono); font-size: .71rem; line-height: 1.4; padding: .5rem .6rem; border-radius: 7px; border: 1px solid transparent; }
+  .jump-menu a small { display: block; color: var(--muted); font-size: .61rem; margin-top: .15rem; }
+  .jump-menu a:hover { background: var(--violet-soft); border-color: #d6c4f7; color: var(--violet-dk); }
+  .jump-menu a.is-cur { background: var(--violet); color: #fff; border-color: var(--violet); }
+  .jump-menu a.is-cur small { color: #e4d6ff; }
+  .jump-backdrop { position: fixed; inset: 0; z-index: 399; display: none; }
+  .jump-backdrop.open { display: block; }
+
+  @media (max-width: 640px) {
+    body { font-size: 17.5px; }
+    .hero { padding-top: 2.5rem; }
+    .iframe-inner iframe { height: 68vh; }
+  }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<nav class="masthead">
+  <div class="masthead-inner">
+    <a class="masthead-brand" href="https://talks.s-anand.net/">Anand's Talks</a>
+    <div class="masthead-right">
+      <span class="masthead-date">22 Aug 2026 · Singapore</span>
+      <a class="masthead-link" href="https://iimalumni.sg/" target="_blank" rel="noopener">IIM Alumni SG</a>
+      <a class="masthead-link" id="transcript-btn" href="transcript.md">Transcript</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-series">AI Unboxed · Session 4 of 4 · Vibe Coding</div>
+  <div class="hero-kicker">A 2-hour workshop — in a room in Singapore, and on Microsoft Teams</div>
+  <h1>You Don't Even<br>Need to <em>Code</em></h1>
+  <p class="hero-sub">Sixteen people answered a five-question form at the start. Two hours later they were browsing an app built out of their own answers — and the app had told Anand something he didn't know he wanted.</p>
+  <div class="hero-meta">
+    <a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand S</a>, LLM Psychologist &amp; Head of Innovation at <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a><br>
+    for the <a href="https://iimalumni.sg/" target="_blank" rel="noopener">IIM Alumni Association of Singapore</a> · hosted by Debi &amp; Saurabh
+  </div>
+  <div class="quick-links">
+    <a href="#outlier">The outlier</a>
+    <a href="#permissions">Permissions, not code</a>
+    <a href="#organizers">Organizers</a>
+    <a href="#cv">The CV that grew up</a>
+    <a href="#app">The app, live</a>
+    <a href="#policy">Policy as code</a>
+    <a href="#bookmarklets">Bookmarklets</a>
+    <a href="#takeaways">Takeaways</a>
+  </div>
+</header>
+
+<div class="band video-wrap" id="video">
+  <div class="video-inner">
+    <video controls preload="metadata" width="100%"><source src="https://media.s-anand.net/2026-08-22-ai-unboxed-4-vibe-coding.webm" type='video/webm; codecs="vp9, opus"'></video>
+    <div class="audio-row">
+      <audio controls preload="metadata" style="width:100%">
+        <source src="https://github.com/sanand0/talks/releases/download/talks/2026-08-22-ai-unboxed-vibe-coding.opus" type="audio/ogg; codecs=opus">
+        Your browser does not support audio. <a href="https://github.com/sanand0/talks/releases/download/talks/2026-08-22-ai-unboxed-vibe-coding.opus">Download the audio</a>.
+      </audio>
+    </div>
+    <p class="media-cap">
+      The full two hours, <span class="tip" data-tip="AV1 is the same codec Anand recommends in the Organizers section for his own photo and video archive — and this page is the argument for it. 2 hours 9 minutes of screen share and camera video, 900 MB in, 130 MB out, with no visible loss. That is a 7x saving.">compressed with <a href="https://en.wikipedia.org/wiki/AV1" target="_blank" rel="noopener">AV1</a> from <strong>900 MB down to 130 MB</strong></span> — 2 h 09 m of video at roughly a megabyte a minute.<br>
+      <a href="#" id="transcript-btn2">📄 Read the transcript</a> ·
+      <a href="https://github.com/sanand0/talks/releases/download/talks/2026-08-22-ai-unboxed-vibe-coding.opus">🎧 Download audio</a> ·
+      <a href="#comic">🎨 The whole session as one comic page</a><br>
+      Earlier in the series: <a href="../2026-05-23-ai-unboxed-context-engineering/">1 · Context Engineering</a> ·
+      <a href="../2026-06-20-ai-unboxed-tools-workflows/">2 · Tools &amp; Workflows</a> ·
+      <a href="../2026-07-25-ai-unboxed-agentic-analysis/">3 · Agentic Analysis</a>
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p class="lede">The last of four workshops opened with a sentence that seemed designed to make the topic disappear.</p>
+
+  <blockquote class="pull big">
+    <p>"The bulk of today's session will be about coding, but just as much about <strong>how we don't even need to code</strong>."</p>
+    <cite>Anand, first words of the session</cite>
+  </blockquote>
+
+  <p>Then the room display refused to cooperate, the screen share went recursive, and Anand found himself looking at his own desktop reflected inside itself. <strong>"My desktop was actually a thousand desktops out here, one inside each other."</strong> Saurabh, hosting, called it correctly: <em>"So like Inception, right?"</em></p>
+
+  <p>Once the mirrors were untangled, the session went where it had been going all along — not to a code editor, but to a scatter plot from 2008.</p>
+
+  <h2 class="sec" id="outlier"><span class="sec-num">One · Decision interfaces</span>The movie that ruined the top-ten list</h2>
+
+  <p>Anand's answer to "why write code at all?" is not software. It's <strong>a picture of every movie ever made</strong> — 15,510 of them, in fact. Popularity on the X axis, rating on the Y, one box per title. <a href="https://www.imdb.com/title/tt1375666/" target="_blank" rel="noopener"><em>Inception</em></a> far right (2.86 million votes). <a href="https://www.imdb.com/title/tt0185906/" target="_blank" rel="noopener"><em>Band of Brothers</em></a> near the ceiling at 9.4. <a href="https://www.imdb.com/title/tt1099212/" target="_blank" rel="noopener"><em>Twilight</em></a> "hovering around five" — 5.4, to be exact. <a href="https://www.imdb.com/title/tt1392170/" target="_blank" rel="noopener"><em>The Hunger Games</em></a> somewhere in the crowded middle.</p>
+
+  <p>He pointed at a box in the bottom-right corner — the impossible quadrant. Ridiculously popular, rated terribly. <strong>"Any guesses on what this might be?"</strong></p>
+
+  <p>The room guessed <a href="https://www.imdb.com/title/tt0111161/" target="_blank" rel="noopener"><em>Shawshank Redemption</em></a> (wrong direction entirely — 9.3), then <a href="https://www.imdb.com/title/tt1323594/" target="_blank" rel="noopener"><em>Despicable Me</em></a>, then <a href="https://www.imdb.com/title/tt13751694/" target="_blank" rel="noopener"><em>Animal</em></a>. Nobody got it.</p>
+
+  <p>The answer was <a href="https://www.imdb.com/title/tt6208148/" target="_blank" rel="noopener"><strong><em>Snow White</em> (2025)</strong></a> — <span class="tip" data-tip="The auto-transcription renders the title as 'Sura' here. Everything else matches exactly: rating 2.2, released 2025, 'one year back' from August 2026, and by far the largest vote count of anything rated below 2.5 in Anand's dataset.">Disney's live-action remake</span>. <strong>2.2 stars. 397,875 votes.</strong> In the entire dataset, no film rated below 2.5 has even half as many votes — <a href="https://www.imdb.com/title/tt10888594/" target="_blank" rel="noopener"><em>Radhe</em></a> (1.8, 181,897) is the runner-up, with <a href="https://www.imdb.com/title/tt7886848/" target="_blank" rel="noopener"><em>Sadak 2</em></a> (1.2, 97,354) further down the same lonely wall.</p>
+
+  <blockquote class="pull">
+    <p>"I love these outliers."</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>But the outliers are only half of it. The same chart, filtered to <a href="https://sanand0.github.io/imdb/#Genre=Animation" target="_blank" rel="noopener">Animation</a> and dragged through the decades, becomes a history lesson.</p>
+
+  <p>In the 1930s there is <strong>exactly one animated title in the whole dataset</strong>: <a href="https://www.imdb.com/title/tt0029583/" target="_blank" rel="noopener"><em>Snow White and the Seven Dwarfs</em></a> (1937), rated 7.6. In the 1940s a cluster appears, led by <a href="https://www.imdb.com/title/tt0032910/" target="_blank" rel="noopener"><em>Pinocchio</em></a>, <a href="https://www.imdb.com/title/tt0032455/" target="_blank" rel="noopener"><em>Fantasia</em></a>, <a href="https://www.imdb.com/title/tt0034492/" target="_blank" rel="noopener"><em>Bambi</em></a> and <a href="https://www.imdb.com/title/tt0033563/" target="_blank" rel="noopener"><em>Dumbo</em></a>. The 1960s is when <a href="https://en.wikipedia.org/wiki/Studio_Ghibli" target="_blank" rel="noopener">Studio Ghibli</a> starts climbing toward <a href="https://en.wikipedia.org/wiki/Walt_Disney_Animation_Studios" target="_blank" rel="noopener">Disney</a>. And by the 1980s — the "biggish explosion", as Anand called it — the three highest-rated animated titles of the decade are <a href="https://www.imdb.com/title/tt0121220/" target="_blank" rel="noopener"><em>Dragon Ball Z</em></a> (8.8), <a href="https://www.imdb.com/title/tt0096697/" target="_blank" rel="noopener"><em>The Simpsons</em></a> (8.6) and <a href="https://www.imdb.com/title/tt0095327/" target="_blank" rel="noopener"><em>Grave of the Fireflies</em></a> (8.5). <strong>Not one of them is Disney.</strong> <a href="https://www.imdb.com/title/tt0096283/" target="_blank" rel="noopener"><em>My Neighbor Totoro</em></a> (8.1) sits above <a href="https://www.imdb.com/title/tt0097757/" target="_blank" rel="noopener"><em>The Little Mermaid</em></a> (7.6). Then <a href="https://www.imdb.com/title/tt0110357/" target="_blank" rel="noopener"><em>The Lion King</em></a> and <a href="https://www.imdb.com/title/tt0114709/" target="_blank" rel="noopener"><em>Toy Story</em></a> flip the story again.</p>
+
+  <p>Which leaves the chart with a joke buried in it that nobody in the room noticed. <strong>The film that opens the entire history of animation, and the film sitting alone in the disaster corner, are the same title, 88 years apart.</strong> 7.6, then 2.2.</p>
+
+  <p>The other end of the chart is the one Anand actually uses, though — the quiet, highly-rated titles nobody has heard of. He pointed at <a href="https://www.imdb.com/title/tt38268282/" target="_blank" rel="noopener"><em>Steel Ball Run</em></a> (9.5), <a href="https://www.imdb.com/title/tt30263074/" target="_blank" rel="noopener"><em>Sapne Vs Everyone</em></a> (9.2), <a href="https://www.imdb.com/title/tt2395695/" target="_blank" rel="noopener"><em>Cosmos</em></a> and <a href="https://www.imdb.com/title/tt5491994/" target="_blank" rel="noopener"><em>Planet Earth II</em></a> (9.4): <strong>"A good way to discover things that are very highly rated but we probably haven't heard of."</strong></p>
+
+  <p>Play with it yourself. Every dot is a movie; the <strong>Outliers</strong> checkbox is the button that took eighteen years to exist.</p>
+</div>
+
+<div class="band iframe-wrap">
+  <div class="iframe-inner">
+    <iframe src="https://sanand0.github.io/imdb/#Genre=Animation" title="IMDb movie explorer, filtered to Animation" loading="lazy"></iframe>
+    <p class="iframe-cap">
+      <a href="https://sanand0.github.io/imdb/#Genre=Animation" target="_blank" rel="noopener">sanand0.github.io/imdb</a> — filtered to Animation, as Anand showed it. Tick <b>Outliers</b> and drag the year slider.<br>
+      Built in 2008 after <a href="https://en.wikipedia.org/wiki/Col_Needham" target="_blank" rel="noopener">Col Needham</a>, IMDb's founder, noticed someone scraping his website and invited him to Bristol for a chat.
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>That origin story is the good bit. Anand had been scraping IMDb; Needham's response was <strong>"why don't you come out to Bristol and let's have a chat"</strong> — and the visualization they ideated together, he says, <strong>kicked off his entire data-visualization career</strong>. Eighteen years later it's still running.</p>
+
+  <p>And still improving, which is the actual point:</p>
+
+  <blockquote class="pull blue">
+    <p>"I've been looking at this, I never thought of adding a button for outliers. Not thought of, it was a reasonable amount of work. <strong>When AI-made coding becomes easier, it was just a, 'Oh, I've been giving this for so many years, just do it for me.'</strong> 'No, no, no, that's not how I want the outliers, do it differently.' 'Okay, yeah, this looks fine.'"</p>
+    <cite>Anand, on the feature that waited fifteen years</cite>
+  </blockquote>
+
+  <p>The value got named out loud in the room, in one line: <em>"typically what happens is when you have a top 10, top 20, you tend to go and look at those 20; your decision gets restricted to that. <strong>That outliers setup is a very beautiful way to look at things which you probably like.</strong>"</em></p>
+
+  <p>Asked how hard this would be to reproduce, Anand didn't hedge: <strong>"Download the IMDb data and create a scatter plot matrix of rating versus votes. You'll be between 50 to 70% there."</strong></p>
+
+  <p>Debi named the category before Anand did — <em>"So like a dashboard for yourself."</em> Anand corrected the plural and kept it: <strong>"Dashboards for ourselves."</strong></p>
+
+  <blockquote class="pull">
+    <p>"Personally, I find <strong>this sort of a decisioning interface as one of the most powerful reasons for using code</strong>… Often we need the code, or we need to explicitly get it to do things that may involve code, because we want to play around with the code in a certain way, and a chat interface doesn't do the job for us."</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <h2 class="sec" id="survey">The room becomes the dataset</h2>
+
+  <p>Then came the move that made the rest of the session possible. Anand put up a QR code and asked everyone to fill in a short form — <strong>not as a warm-up, but as raw material</strong>. "What we're going to do is run the rest of this session to build a decision interface from your responses. And effectively we are feeding the data for the system to get built."</p>
+
+  <p>The questions were disarmingly personal for a corporate AI workshop:</p>
+
+  <div class="qlist">
+    <div>What's something people who know us well tend to ask you for help with?<b>The "offer" question</b></div>
+    <div>What's one thing you'd genuinely value help, perspective, or an introduction on right now?<b>The "need" question</b></div>
+    <div>If there's one question you could ask people in a group, what would you ask?<b>The "ask" question</b></div>
+    <div>A decision you repeatedly make using too many tabs, sheets, notes, or people.<b>Added mid-session</b></div>
+  </div>
+
+  <p>Sixteen people answered. Here is what the room actually looked like, in numbers.</p>
+</div>
+
+<div class="band stat-band" id="numbers">
+  <div class="stat-grid">
+    <div class="stat-item"><div class="stat-num">16</div><div class="stat-label">people answered</div></div>
+    <div class="stat-item"><div class="stat-num">9 : 6</div><div class="stat-label">on Teams : in the room</div></div>
+    <div class="stat-item"><div class="stat-num">8</div><div class="stat-label">agreed to be named<br>(8 stayed anonymous)</div></div>
+    <div class="stat-item"><div class="stat-num">6</div><div class="stat-label">use Claude Code —<br>the single most-named agent</div></div>
+    <div class="stat-item"><div class="stat-num">62%</div><div class="stat-label">of repeated decisions<br>were about money</div></div>
+  </div>
+  <p class="stat-note">
+    The homework from the previous session split the room in a telling way: <strong>9 of 16 had automated an annoying task</strong>, 7 had gotten an agent to do something for them with Python, but only <strong>4 had managed to make it fail</strong>.
+    Two people listed <em>Hugging Face</em> and <em>Perplexity</em> as their coding agent, which Anand noted with visible delight.
+  </p>
+</div>
+
+
+<div class="band chart-band" id="roomcharts">
+  <div class="chart-inner">
+    <h3 class="cards-title">What sixteen people actually said</h3>
+    <p class="cards-sub">Every chart here is drawn from the same CSV Anand handed the agent at the start of the session — the one that became <a href="aiunboxed-room-map.html" target="_blank" rel="noopener">the Room Map</a>.</p>
+    <div class="chart-grid">
+      <figure class="chart">
+        <figcaption class="chart-h">Supply and demand, side by side</figcaption>
+        <p class="chart-sub">Topics people offered help with vs. topics people wanted help with · 16 respondents</p>
+        <div class="chart-legend">
+          <span><i class="swatch sw-offer"></i> Offered — "what people ask me for"</span>
+          <span><i class="swatch sw-need"></i> Needed — "what I'd value help on"</span>
+        </div>
+      <div class="fly-row" title="Lifestyle &amp; Travel: 5 offered, 2 needed">
+        <div class="fly-side l"><span class="fly-n">5</span><span class="fly-bar" style="width:100%"></span></div>
+        <div class="fly-name">Lifestyle &amp; Travel</div>
+        <div class="fly-side r"><span class="fly-bar" style="width:40%"></span><span class="fly-n">2</span></div>
+      </div>
+      <div class="fly-row" title="Investing &amp; Markets: 4 offered, 2 needed">
+        <div class="fly-side l"><span class="fly-n">4</span><span class="fly-bar" style="width:80%"></span></div>
+        <div class="fly-name">Investing &amp; Markets</div>
+        <div class="fly-side r"><span class="fly-bar" style="width:40%"></span><span class="fly-n">2</span></div>
+      </div>
+      <div class="fly-row" title="AI &amp; Coding: 1 offered, 4 needed">
+        <div class="fly-side l"><span class="fly-n">1</span><span class="fly-bar" style="width:20%"></span></div>
+        <div class="fly-name">AI &amp; Coding</div>
+        <div class="fly-side r"><span class="fly-bar" style="width:80%"></span><span class="fly-n">4</span></div>
+      </div>
+      <div class="fly-row" title="Career &amp; Future of Work: 0 offered, 4 needed">
+        <div class="fly-side l"><span class="fly-zero">—</span></div>
+        <div class="fly-name">Career &amp; Future of Work</div>
+        <div class="fly-side r"><span class="fly-bar" style="width:80%"></span><span class="fly-n">4</span></div>
+      </div>
+      <div class="fly-row" title="Business &amp; Research: 1 offered, 3 needed">
+        <div class="fly-side l"><span class="fly-n">1</span><span class="fly-bar" style="width:20%"></span></div>
+        <div class="fly-name">Business &amp; Research</div>
+        <div class="fly-side r"><span class="fly-bar" style="width:60%"></span><span class="fly-n">3</span></div>
+      </div>
+      <div class="fly-row" title="Family, Health &amp; Education: 1 offered, 2 needed">
+        <div class="fly-side l"><span class="fly-n">1</span><span class="fly-bar" style="width:20%"></span></div>
+        <div class="fly-name">Family, Health &amp; Education</div>
+        <div class="fly-side r"><span class="fly-bar" style="width:40%"></span><span class="fly-n">2</span></div>
+      </div>
+      <div class="fly-row" title="Productivity &amp; Organization: 1 offered, 1 needed">
+        <div class="fly-side l"><span class="fly-n">1</span><span class="fly-bar" style="width:20%"></span></div>
+        <div class="fly-name">Productivity &amp; Organization</div>
+        <div class="fly-side r"><span class="fly-bar" style="width:20%"></span><span class="fly-n">1</span></div>
+      </div>
+      <div class="fly-row" title="Relationships &amp; Networking: 2 offered, 0 needed">
+        <div class="fly-side l"><span class="fly-n">2</span><span class="fly-bar" style="width:40%"></span></div>
+        <div class="fly-name">Relationships &amp; Networking</div>
+        <div class="fly-side r"><span class="fly-zero">—</span></div>
+      </div>
+      <div class="fly-row" title="Trust, Safety &amp; Meta: 1 offered, 0 needed">
+        <div class="fly-side l"><span class="fly-n">1</span><span class="fly-bar" style="width:20%"></span></div>
+        <div class="fly-name">Trust, Safety &amp; Meta</div>
+        <div class="fly-side r"><span class="fly-zero">—</span></div>
+      </div>
+        <p class="chart-note"><strong>The room could not help itself with the thing it came for.</strong> Career &amp; Future of Work drew <strong>four requests and zero offers</strong>; AI &amp; Coding drew four requests and one offer — Anand's. What the room had in surplus was cocktails, hikes, Netflix picks and Singapore trivia. The one topic in genuine balance was money: four offers, two requests, and five of the eight "decisions I keep repeating" answers.</p>
+        <details class="tblview">
+          <summary>▸ View as a table</summary>
+          <div class="tbl-wrap"><table class="data">
+            <thead><tr><th>Topic</th><th>Offered</th><th>Needed</th></tr></thead>
+            <tbody>
+        <tr><td>Lifestyle &amp; Travel</td><td>5</td><td>2</td></tr>
+        <tr><td>Investing &amp; Markets</td><td>4</td><td>2</td></tr>
+        <tr><td>AI &amp; Coding</td><td>1</td><td>4</td></tr>
+        <tr><td>Career &amp; Future of Work</td><td>0</td><td>4</td></tr>
+        <tr><td>Business &amp; Research</td><td>1</td><td>3</td></tr>
+        <tr><td>Family, Health &amp; Education</td><td>1</td><td>2</td></tr>
+        <tr><td>Productivity &amp; Organization</td><td>1</td><td>1</td></tr>
+        <tr><td>Relationships &amp; Networking</td><td>2</td><td>0</td></tr>
+        <tr><td>Trust, Safety &amp; Meta</td><td>1</td><td>0</td></tr>
+            </tbody>
+          </table></div>
+        </details>
+      </figure>
+      <div>
+        <figure class="chart">
+          <figcaption class="chart-h">Coding agent of choice</figcaption>
+          <p class="chart-sub">Free text, so people naming two are counted twice</p>
+      <div class="hbar" title="Claude Code: 7"><div class="hbar-lab">Claude Code</div><div class="hbar-track"><span class="hbar-fill" style="width:100%"></span></div><div class="hbar-n">7</div></div>
+      <div class="hbar" title="None / not yet: 4"><div class="hbar-lab">None / not yet</div><div class="hbar-track"><span class="hbar-fill" style="width:57%"></span></div><div class="hbar-n">4</div></div>
+      <div class="hbar" title="ChatGPT: 2"><div class="hbar-lab">ChatGPT</div><div class="hbar-track"><span class="hbar-fill" style="width:29%"></span></div><div class="hbar-n">2</div></div>
+      <div class="hbar" title="Codex: 2"><div class="hbar-lab">Codex</div><div class="hbar-track"><span class="hbar-fill" style="width:29%"></span></div><div class="hbar-n">2</div></div>
+      <div class="hbar" title="Perplexity: 1"><div class="hbar-lab">Perplexity</div><div class="hbar-track"><span class="hbar-fill" style="width:14%"></span></div><div class="hbar-n">1</div></div>
+      <div class="hbar" title="Huggingface: 1"><div class="hbar-lab">Huggingface</div><div class="hbar-track"><span class="hbar-fill" style="width:14%"></span></div><div class="hbar-n">1</div></div>
+          <p class="chart-note">Claude Code by a distance — and two people who answered <em>Hugging Face</em> and <em>Perplexity</em>, which Anand noted with visible delight. A quarter of the room was not using one at all.</p>
+        </figure>
+        <figure class="chart">
+          <figcaption class="chart-h">Homework from session 3</figcaption>
+          <p class="chart-sub">Three exercises, 16 respondents</p>
+      <div class="hbar" title="Automated one annoying task: 9 of 16"><div class="hbar-lab">Automated one annoying task</div><div class="hbar-track"><span class="hbar-fill" style="width:56%"></span></div><div class="hbar-n">9<small>/16</small></div></div>
+      <div class="hbar" title="Got it to do something with Python: 7 of 16"><div class="hbar-lab">Got it to do something with Python</div><div class="hbar-track"><span class="hbar-fill" style="width:44%"></span></div><div class="hbar-n">7<small>/16</small></div></div>
+      <div class="hbar" title="Managed to make it fail: 4 of 16"><div class="hbar-lab">Managed to make it fail</div><div class="hbar-track"><span class="hbar-fill" style="width:25%"></span></div><div class="hbar-n">4<small>/16</small></div></div>
+          <p class="chart-note"><strong>Breaking it was harder than using it.</strong> The gap between 9 and 4 is what launched the session's first real argument — <em>"what constitutes failure?"</em></p>
+        </figure>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>The failure gap became the session's first real idea. <strong>Making it fail turned out to be the hard homework.</strong> "'Make it fail' seems to have been either tougher or less attempted," Anand observed. <em>"Is that because we don't try too hard, or it's too capable? Both are possible."</em></p>
+
+  <p>Debi pushed back usefully: people had probably interpreted the exercise differently. <em>"In my case, I think I could make it fail because I wasn't getting my required solution. So it was just failing, and then I said, 'Okay, what is happening?'"</em></p>
+
+  <blockquote class="pull amber">
+    <p>"I think it's an important point, which is <strong>what constitutes failure?</strong> … just knowing that 'here's something that it cannot do as of date' which on a future day if we're able to do, <strong>literally represents the boundaries of it</strong>."</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>He keeps a running list of these — an <strong>"AI bottlenecks list"</strong>, updated daily, of things he tried and failed to do. And the entries have started to change character in a way that is either funny or ominous depending on your mood:</p>
+
+  <blockquote class="pull">
+    <p>"Increasingly, the list comprises of things like: <strong>I have too much work to do because of AI.</strong> I'm supposed to sit and read this response and action it; that is a lot of work for me. But it is still a bottleneck."</p>
+    <cite>Anand</cite>
+  </blockquote>
+</div>
+
+<div class="band band-quote">
+  <div class="band-quote-inner">
+    <p>"You don't necessarily need to think of it as code versus not code. That used to be a distinction pre-AI; <strong>it no longer is a relevant distinction</strong>."</p>
+    <cite>Anand</cite>
+  </div>
+</div>
+
+<div class="wrap">
+  <h2 class="sec" id="permissions"><span class="sec-num">Two · The real distinction</span>It was never about the code. It's about permissions.</h2>
+
+  <p>To prove the point, Anand ran the most trivial program imaginable — twice.</p>
+
+  <div class="prompt-box">
+    <span class="plabel">The prompt, in plain ChatGPT and plain Claude</span>
+    <p>Write and run a Python program to print the 50th Fibonacci number.</p>
+    <p><em>Deliberately on the lightest, cheapest models available.</em></p>
+  </div>
+
+  <p>Both wrote it. Both <em>ran</em> it. Saurabh, reasonably, asked whether you needed Codex for this. <strong>"This is normal ChatGPT."</strong></p>
+
+  <div class="cards" style="margin:1.6rem 0">
+    <div class="card">
+      <div class="card-num">Live demo · ChatGPT</div>
+      <div class="card-title">50th Fibonacci, written and run</div>
+      <div class="card-body"><a href="https://chatgpt.com/share/6a8ef39c-6584-83ec-a0a1-7d0b57fc7d95" target="_blank" rel="noopener">Open the shared chat →</a></div>
+    </div>
+    <div class="card">
+      <div class="card-num">Live demo · Claude</div>
+      <div class="card-title">The identical prompt, identical result</div>
+      <div class="card-body"><a href="https://claude.ai/share/a2dd795a-e548-4a25-8fda-32638ab41036" target="_blank" rel="noopener">Open the shared chat →</a></div>
+    </div>
+  </div>
+
+  <p>The point of a trivial example is that <strong>it doesn't take much by way of intelligence</strong>. ChatGPT and Claude each have "a little computer sitting inside" — a container that can write code, run code, and download packages. So why does <a href="https://code.claude.com/docs/en/overview" target="_blank" rel="noopener">Claude Code</a> exist at all? Why <a href="https://developers.openai.com/codex/" target="_blank" rel="noopener">Codex</a>?</p>
+
+  <blockquote class="pull big blue">
+    <p>"<strong>Codex and Claude Code are effectively ways of getting the intelligence of these models into your permission systems.</strong> When you run something on ChatGPT or Claude, the permissions it has are the permissions that <em>it</em> has. When you run Codex or Claude Code, the permissions you have are the permissions <em>you</em> can give it."</p>
+    <cite>Anand — the sentence the whole session hangs on</cite>
+  </blockquote>
+
+  <p>Not the data on your machine, though that matters. Not the compute. <strong>Mostly the access.</strong> Your laptop is already logged into your company's email, OneDrive, SharePoint, Salesforce, HubSpot, the ERP. That access is the asset.</p>
+
+  <h3 class="sub">"Work" is just "Code" with a friendlier name</h3>
+
+  <p>Anand cut through the recent naming churn with unusual bluntness. Both vendors have shipped a mode called <em>Work</em>, and it confused the room until he said this:</p>
+
+  <blockquote class="pull">
+    <p>"For all practical purposes, there is no difference between Claude Work and Claude Code. They are the same thing… When somebody says 'Work,' think of it as 'Code,' but with a lighter name so that people are not put off by it. <strong>It is really more marketing than anything else</strong>, making things easier for us also — nothing wrong."</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>The distinction that <em>does</em> matter is a one-liner, and Debi got there first: <em>"it's basically… using it on the browser versus your downloaded app."</em> Browser has no connection to your local data. Local app roughly inherits your permissions. (And <a href="https://code.claude.com/docs/en/claude-code-on-the-web" target="_blank" rel="noopener">remote control</a> has since muddied even that — you can now run it locally and drive it from the browser. Anand was refreshingly honest: <em>"I haven't really gotten a good mental model around it."</em>)</p>
+
+  <h3 class="sub">The disk-size experiment, which half-failed on purpose</h3>
+
+  <p>So he tested it live, with the dumbest possible question — <strong>"How large is my disk?"</strong> — because a cloud container physically cannot answer it.</p>
+
+  <div class="tbl-wrap">
+    <table class="data">
+      <thead><tr><th>Where it ran</th><th>What it could see</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>ChatGPT desktop → Chat</td><td>Cloud container</td><td class="no">"I can't inspect your computer's disk from this chat."</td></tr>
+        <tr><td>ChatGPT desktop → Work / Codex, full access</td><td>The actual machine</td><td class="yes">937 GB total</td></tr>
+        <tr><td>Claude desktop → Chat <em>and</em> Work</td><td>Cloud container</td><td class="no">Reported the session sandbox, not the laptop</td></tr>
+        <tr><td>Claude Code, given a folder</td><td>The actual machine</td><td class="yes">Correct answer, after one permission prompt</td></tr>
+      </tbody>
+      <caption>Built live, on a spreadsheet, while sixteen people ran the same test on their own machines. The Claude row is the interesting one — it was <em>the audience</em> that produced it.</caption>
+    </table>
+  </div>
+
+  <p>This is the part a slide deck can't do. Sandeep, on Teams, ran the same prompt and reported back: <strong>"Claude basically told me, 'I have no way of checking your actual laptop disk.' It gave me the size of the session sandbox."</strong> Anand assumed Chat; Sandeep clarified he'd tried Work too. Anand signed in and reproduced it. Another participant reported 252 GB with 30 GB free — from the cloud sandbox, not their laptop.</p>
+
+  <p>Someone else, poking at the same answer, discovered their SSD was made by <a href="https://en.wikipedia.org/wiki/SK_Hynix" target="_blank" rel="noopener">SK Hynix</a>. Which prompted Anand's aside about what code is <em>actually</em> most used for:</p>
+
+  <blockquote class="pull amber">
+    <p>"This, incidentally, is one of the most common uses of code, which is: <strong>'I have a problem with my computer, help me fix it.'</strong> I had a problem with the NVIDIA driver — fix it. My computer is running slowly — fix it."</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>A participant immediately objected that <em>"My computer is running slowly, fix it"</em> might go and delete a lot of things you didn't want deleted. Anand's fix was three words plus a phrase: <strong>"Tell it 'fix it safely,'"</strong> or <em>"Please display all the steps you are going to follow,"</em> or <em>"Ask me first before you take action."</em></p>
+
+  <p>Which produced the best laugh of the hour, from a participant watching himself negotiate with a machine:</p>
+
+  <blockquote class="pull">
+    <p>"Increasingly, I'm feeling like someone of my father's generation who would ask me, 'Look, do this,' and before I do something, 'Are you sure? Don't touch the bonnet!' I know, I know, I kind of know this stuff. I do this for a living. <strong>And these are far more patient than I am. Clearly.</strong>"</p>
+    <cite>A participant</cite>
+  </blockquote>
+
+  <p>And the best story, which was really an argument for local access all by itself:</p>
+
+  <blockquote class="pull blue">
+    <p>"I take a lot of photos and I have this iPhone since 2009 or something. So I tried to connect it with the camera and I couldn't. Apparently, <strong>there is a Bluetooth stack of devices from 2009 which has overflowed. So I had to remove it, and I don't think I could have figured that out through Google or anything like that. I was just blown away by this.</strong>"</p>
+    <cite>A participant</cite>
+  </blockquote>
+
+  <h2 class="sec" id="risk">Three kinds of risk, and why Anand says the answer is "negligible"</h2>
+
+  <p>Anand R. — a different Anand, in the room, and the association's secretary — asked the question everyone was carrying:</p>
+
+  <blockquote class="pull amber">
+    <p>"You're trying to check out how much memory you have, so you gave it access to the computer. Now, because of the nature of the task, it's going to check every folder and file. <strong>What is the risk that you're now running of some unintended thing coming in?</strong>"</p>
+    <cite>Anand R., IIM Alumni Singapore</cite>
+  </blockquote>
+
+  <p>The answer came in three parts.</p>
+
+  <div class="cards wide" style="margin:2rem 0">
+    <div class="card">
+      <div class="card-num">Risk 1</div>
+      <div class="card-title">You asked for something bad</div>
+      <div class="card-body">"Format my drive." A bad instruction, faithfully executed. But the harnesses now push back: <em>"you probably didn't mean this."</em> Insist four or five times and it may still decline.</div>
+    </div>
+    <div class="card">
+      <div class="card-num">Risk 2</div>
+      <div class="card-title">It does it the wrong way</div>
+      <div class="card-body">Counting every file to measure a disk. Models increasingly <strong>monitor themselves</strong> — if a process runs long or has odd side effects, they stop and reconsider.</div>
+    </div>
+    <div class="card">
+      <div class="card-num">Risk 3</div>
+      <div class="card-title">Something else made it go wrong</div>
+      <div class="card-body">A malicious script, or its own mistake. The mitigation is a second model checking <strong>every tool call before it runs</strong> — which is exactly what auto mode is.</div>
+    </div>
+  </div>
+
+  <p>His evidence was a <a href="https://simonwillison.net/tags/claude-code/" target="_blank" rel="noopener">Simon Willison interview with the Claude Code team</a>, where they said that <span class="tip" data-tip="Simon Willison's write-up quotes the team: 'Broadly within Anthropic, almost every single person uses auto mode.' Claude Code lead Boris Cherny added that his team has used Auto mode exclusively for many months.">almost everyone inside Anthropic runs auto mode</span>. <a href="https://www.anthropic.com/engineering/claude-code-auto-mode" target="_blank" rel="noopener">Anthropic then made it the default</a>, and <a href="https://code.claude.com/docs/en/permission-modes" target="_blank" rel="noopener">documented it as a permission mode</a>.</p>
+
+  <blockquote class="pull big">
+    <p>"What they're saying is <strong>a team as sensitive as Anthropic is comfortable just running code without any sandboxes and any kind of checks using auto mode</strong>, because every instruction, every tool call that is being made is being checked by a model as smart as <span class="tip" data-tip="The transcript records 'Sonnet 3.5' here — almost certainly a mis-transcription of the current Sonnet, since the point being made is that a strong model reviews each tool call.">Sonnet 3.5</span> to see if it is okay in this context or not."</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p><strong>"Is there a risk today, therefore? The answer is negligible."</strong></p>
+
+  <p>Sonal asked the follow-up that actually decides adoption: <em>"if I just asked it to not just find the code but also just run it, what is the risk in terms of let's say if it does it wrongly? <strong>Are we able to undo what the code does?</strong>"</em></p>
+
+  <p>Anand split it in two, and the practical half is the better half:</p>
+
+  <blockquote class="pull blue">
+    <p>"<strong>The practical answer is: it doesn't matter what the technology says or what I say; what matters is, has it gained enough of your trust that you would allow it to do something?</strong> Until it does, make backups. Copy that folder somewhere else… Try it five times, ten times. Copying takes very little effort. And after every single one of those attempts, if you see not even a sniff of anything going wrong, then the next time you may tell it, 'You make a copy, make sure I can undo.' And then after a month, a year, however long it takes for you to get comfortable, don't bother telling it to make a copy; <strong>it will fade away.</strong>"</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>Sonal's second question — <em>can agents be put on a scheduler?</em> — got a one-word answer: <strong>absolutely</strong>. Both vendors have schedules; in Claude they're called <a href="https://code.claude.com/docs/en/desktop-scheduled-tasks" target="_blank" rel="noopener">routines</a>, in ChatGPT <a href="https://help.openai.com/en/articles/10291617-scheduled-tasks-in-chatgpt" target="_blank" rel="noopener">scheduled tasks</a>. The only catch is that your machine has to be awake.</p>
+
+  <p>And when a participant asked whether <strong>open-weights models</strong> would be safer, since people can inspect them, Anand declined the easy answer:</p>
+
+  <blockquote class="pull">
+    <p>"They're all black boxes. Not only are they black boxes to us, <strong>they are black boxes to most of the experts as well</strong>… <span class="tip" data-tip="Anthropic's interpretability research — circuit tracing, feature attribution and 'attribution graphs' — is the work Anand is gesturing at here.">Anthropic kind of has something like 'brain probes'</span>… <strong>The comfort, if at all, is the other way, which is: can I hold somebody liable?</strong>"</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>A participant selling enterprise AI services confirmed the mess from the buyer's side — security questionnaires, unclear liability, nobody with an answer. Sandeep's version was funnier: <em>"It's those 78 questions once, then I answered those then I got another 65."</em> Anand's verdict on the whole category: <strong>"I feel the questions I'm answering, they're not even the right questions they should be asking."</strong> Too early. <strong>"The cleanest thing is to protect the blast radius."</strong></p>
+</div>
+
+<div class="wrap">
+  <h2 class="sec" id="organizers"><span class="sec-num">Three · Organizers</span>Folders, photos, tickets, emails, 1,400 MP3s</h2>
+
+  <p>The second use case is the least glamorous and probably the most immediately useful: <strong>pointing an agent at the mess on your own disk</strong>.</p>
+
+  <p>Anand dictated the task live, in one breath, to ChatGPT's Work mode on a deliberately light model:</p>
+
+  <div class="prompt-box">
+    <span class="plabel">Dictated live, unedited</span>
+    <p>"I'd like you to go through my photos folder and tell me how large it is. It contains a bunch of photos and videos. I'm interested in reducing the file size without reducing the visual quality and also preserving the metadata. <em>Research what are the best image formats that I should consider for this and test on a few folders to see how much compression I can get. Extrapolate this to the rest of the folders</em> and give me a sense of, maybe on a folder-to-folder basis, how much I can expect in terms of compression and show this to me in a visual form."</p>
+  </div>
+
+  <p>Note what's in there: <strong>research the formats, test on a sample, extrapolate, then visualise</strong>. That's a work plan, not a command.</p>
+
+  <p>First pass came back with ~4–5 GB of savings on images and a surprise — the videos, not the photos, were eating the disk. So he pushed:</p>
+
+  <blockquote class="pull blue">
+    <p>"<strong>Video compression, actually, is now shockingly advanced. <a href='https://en.wikipedia.org/wiki/AV1' target='_blank' rel='noopener'>AV1</a> is a phenomenal, phenomenally powerful format.</strong>"</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>If you want the proof, it is already on this page. <a href="#video">The recording at the top</a> is an AV1 file: <strong>2 hours 9 minutes of screen share and camera video, 900 MB compressed down to 130 MB</strong>, with nothing visibly lost. Seven times smaller, for the cost of letting a machine grind overnight.</p>
+
+  <p>Second pass: <strong>15.6 GB</strong> of savings, plus a side-by-side comparison of <a href="https://en.wikipedia.org/wiki/AVIF" target="_blank" rel="noopener">AVIF</a> quality levels — the agent doing what you would do, which is shell out to <a href="https://ffmpeg.org/" target="_blank" rel="noopener">ffmpeg</a> and read the file sizes back. Anand's reaction to the comparison grid is the most quotable sentence about image compression ever spoken in a workshop:</p>
+
+  <blockquote class="pull">
+    <p>"<strong>I can't tell the difference between any of these, frankly.</strong> Yeah, and that's usually the case. These are way too conservative and I'm quite happy to be more aggressive."</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>The economics matter here, and they're counterintuitive. Running a 70 GB compression job overnight costs almost nothing in tokens, because <strong>the tokens are spent writing the instructions, not doing the work</strong>. "When the program is running overnight, the tokens are not getting consumed other than maybe to monitor it a little bit… <strong>These are not complicated tasks. They have to write simple programs, they have to delegate the compression to a powerful compressor.</strong>"</p>
+
+  <h3 class="sub">Two more piles: 117 days, and 1,400 songs</h3>
+
+  <p>The travel spreadsheet was assembled from emails, flight tickets and scanned passport images. Debi identified the use case instantly: <em>"How many days are you in Singapore versus India?"</em> Anand's version has a legal twist:</p>
+
+  <blockquote class="pull amber">
+    <p>"There's apparently a Karnataka High Court judgment that says that the day you enter India does not count, the day you leave India counts. So depending on this, <strong>I'm either in India for 117 days or 123 days</strong>, and that obviously changes the tax treatment and all of that."</p>
+    <cite>Anand — the judgment is <a href="https://indiankanoon.org/doc/188730914/" target="_blank" rel="noopener">on Indian Kanoon</a></cite>
+  </blockquote>
+
+  <p>The music library is the better story. Thirty years of MP3s — <strong>1,412 files, 103 hours</strong> — with essentially no metadata beyond a filename convention Anand had maintained by hand: <code>movie.songname.mp3</code>. No language, no year, no official title, no composer.</p>
+
+  <p>So the agent went and got them: <a href="https://en.wikipedia.org/wiki/Wikipedia" target="_blank" rel="noopener">Wikipedia</a> for the songs, <a href="https://musicbrainz.org/" target="_blank" rel="noopener">MusicBrainz</a> for the catalogue (<a href="https://musicbrainz.org/doc/MusicBrainz_Identifier" target="_blank" rel="noopener">album IDs and recording IDs</a> are separate, and it matched both), and a plain web search for the leftovers. The results are worth looking at, because they show exactly where an agent's reach ends.</p>
+
+  <p>A participant asked the sharpest question of that stretch: <strong>"Where does this code stay?"</strong></p>
+
+  <blockquote class="pull big">
+    <p>"<strong>This code is ephemeral.</strong> The code is not saved anywhere. It writes the code, it runs the code, and gone. It doesn't even save it."</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>Which prompts the obvious objection — <em>why are we wasting tokens to write the code again and again?</em> Anand's rule of thumb is refreshingly unromantic: he runs the photo job once every two months, so he doesn't care. If he ran it every two days, he would.</p>
+
+  <p>The music job crossed that line, so the code got saved. It is now <a href="https://github.com/sanand0/scripts/blob/main/musictag.py" target="_blank" rel="noopener"><code>musictag.py</code></a> — a 413-line Python script with <code>dump</code>, <code>fix</code>, <code>check</code> and <code>clean</code> subcommands, a CSV as the system of record, and MusicBrainz IDs written into the <a href="https://en.wikipedia.org/wiki/ID3" target="_blank" rel="noopener">ID3 tags</a> via <a href="https://mutagen.readthedocs.io/" target="_blank" rel="noopener">mutagen</a>. Anand runs it manually because he's comfortable doing that. <strong>You don't have to be.</strong></p>
+
+  <div class="chat-snippet violet">
+    <div class="chat-snippet-label">The version for the rest of us</div>
+    <p>"Save the script because I'm going to ask you again tomorrow to do the same thing." Next day: <em>"I've added a whole bunch of songs here, you run the script, make sure you know where you've saved it, or I'll tell you where you've saved it, and run."</em></p>
+  </div>
+
+  <blockquote class="pull big blue">
+    <p>"But the point is, <strong>the code is not for us to run; the code is for the agents to run.</strong>"</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+</div>
+
+<div class="band chart-band" id="musiccharts">
+  <div class="chart-inner">
+    <h3 class="cards-title">One folder, thirty years, thirteen columns</h3>
+    <p class="cards-sub">Anand started with <strong>1,412 MP3 files</strong> and one piece of information: a filename he had typed himself, <code>movie.song-name.mp3</code>. Everything below was found by the agent, and is now the CSV that <a href="https://github.com/sanand0/scripts/blob/main/musictag.py" target="_blank" rel="noopener">musictag.py</a> keeps in sync.</p>
+    <div class="chart-grid even">
+      <figure class="chart">
+        <figcaption class="chart-h">What the agent filled in</figcaption>
+        <p class="chart-sub">Share of 1,412 files carrying each tag · striped bar = the only field that existed before</p>
+      <div class="hbar ghost" title="File name: 1412 of 1412 files (100%)"><div class="hbar-lab">File name</div><div class="hbar-track"><span class="hbar-fill" style="width:100%"></span></div><div class="hbar-n">100%</div></div>
+      <div class="hbar" title="Song title: 1412 of 1412 files (100%)"><div class="hbar-lab">Song title</div><div class="hbar-track"><span class="hbar-fill" style="width:100%"></span></div><div class="hbar-n">100%</div></div>
+      <div class="hbar" title="Language / genre: 1412 of 1412 files (100%)"><div class="hbar-lab">Language / genre</div><div class="hbar-track"><span class="hbar-fill" style="width:100%"></span></div><div class="hbar-n">100%</div></div>
+      <div class="hbar" title="Singer: 1384 of 1412 files (98%)"><div class="hbar-lab">Singer</div><div class="hbar-track"><span class="hbar-fill" style="width:98%"></span></div><div class="hbar-n">98%</div></div>
+      <div class="hbar" title="Album / film: 1344 of 1412 files (95%)"><div class="hbar-lab">Album / film</div><div class="hbar-track"><span class="hbar-fill" style="width:95%"></span></div><div class="hbar-n">95%</div></div>
+      <div class="hbar" title="Year: 1324 of 1412 files (94%)"><div class="hbar-lab">Year</div><div class="hbar-track"><span class="hbar-fill" style="width:94%"></span></div><div class="hbar-n">94%</div></div>
+      <div class="hbar" title="Composer: 1286 of 1412 files (91%)"><div class="hbar-lab">Composer</div><div class="hbar-track"><span class="hbar-fill" style="width:91%"></span></div><div class="hbar-n">91%</div></div>
+      <div class="hbar" title="Track number: 1089 of 1412 files (77%)"><div class="hbar-lab">Track number</div><div class="hbar-track"><span class="hbar-fill" style="width:77%"></span></div><div class="hbar-n">77%</div></div>
+      <div class="hbar" title="MusicBrainz ID: 945 of 1412 files (67%)"><div class="hbar-lab">MusicBrainz ID</div><div class="hbar-track"><span class="hbar-fill" style="width:67%"></span></div><div class="hbar-n">67%</div></div>
+      <div class="hbar" title="Wikipedia page: 858 of 1412 files (61%)"><div class="hbar-lab">Wikipedia page</div><div class="hbar-track"><span class="hbar-fill" style="width:61%"></span></div><div class="hbar-n">61%</div></div>
+      <div class="hbar" title="Lyricist: 178 of 1412 files (13%)"><div class="hbar-lab">Lyricist</div><div class="hbar-track"><span class="hbar-fill" style="width:13%"></span></div><div class="hbar-n">13%</div></div>
+        <p class="chart-note">It matched <strong>two thirds</strong> of the collection to a <a href="https://musicbrainz.org/" target="_blank" rel="noopener">MusicBrainz</a> release ID and <strong>61%</strong> to a Wikipedia page — for songs whose only identifier was a filename Anand had typed by hand over three decades. Lyricist credits are the field that stayed sparse: 178 files. That is what an unsolved problem looks like in a chart.</p>
+      </figure>
+      <div>
+        <figure class="chart">
+          <figcaption class="chart-h">1,324 songs with a year, 1939–2025</figcaption>
+          <p class="chart-sub">Songs per decade · 103 hours of audio in total</p>
+          <div class="cols">
+        <div class="col" title="1930s: 1 songs"><span class="col-n">1</span><span class="col-bar" style="height:4%"></span></div>
+        <div class="col" title="1940s: 3 songs"><span class="col-n">3</span><span class="col-bar" style="height:5%"></span></div>
+        <div class="col" title="1950s: 97 songs"><span class="col-n">97</span><span class="col-bar" style="height:28%"></span></div>
+        <div class="col" title="1960s: 143 songs"><span class="col-n">143</span><span class="col-bar" style="height:40%"></span></div>
+        <div class="col" title="1970s: 75 songs"><span class="col-n">75</span><span class="col-bar" style="height:23%"></span></div>
+        <div class="col" title="1980s: 167 songs"><span class="col-n">167</span><span class="col-bar" style="height:46%"></span></div>
+        <div class="col" title="1990s: 228 songs"><span class="col-n">228</span><span class="col-bar" style="height:61%"></span></div>
+        <div class="col" title="2000s: 351 songs"><span class="col-n">351</span><span class="col-bar" style="height:92%"></span></div>
+        <div class="col" title="2010s: 199 songs"><span class="col-n">199</span><span class="col-bar" style="height:54%"></span></div>
+        <div class="col" title="2020s: 60 songs"><span class="col-n">60</span><span class="col-bar" style="height:19%"></span></div>
+          </div>
+          <div class="col-x">
+        <span>30s</span>
+        <span>40s</span>
+        <span>50s</span>
+        <span>60s</span>
+        <span>70s</span>
+        <span>80s</span>
+        <span>90s</span>
+        <span>00s</span>
+        <span>10s</span>
+        <span>20s</span>
+          </div>
+        </figure>
+        <figure class="chart">
+          <figcaption class="chart-h">Top composers it identified</figcaption>
+          <p class="chart-sub">Of 1,286 songs with a composer credit</p>
+      <div class="hbar" title="Ilaiyaraaja: 257 songs"><div class="hbar-lab">Ilaiyaraaja</div><div class="hbar-track"><span class="hbar-fill" style="width:100%"></span></div><div class="hbar-n">257</div></div>
+      <div class="hbar" title="A. R. Rahman: 177 songs"><div class="hbar-lab">A. R. Rahman</div><div class="hbar-track"><span class="hbar-fill" style="width:69%"></span></div><div class="hbar-n">177</div></div>
+      <div class="hbar" title="Harris Jayaraj: 74 songs"><div class="hbar-lab">Harris Jayaraj</div><div class="hbar-track"><span class="hbar-fill" style="width:29%"></span></div><div class="hbar-n">74</div></div>
+      <div class="hbar" title="S. D. Burman: 55 songs"><div class="hbar-lab">S. D. Burman</div><div class="hbar-track"><span class="hbar-fill" style="width:21%"></span></div><div class="hbar-n">55</div></div>
+      <div class="hbar" title="Yuvan Shankar Raja: 44 songs"><div class="hbar-lab">Yuvan Shankar Raja</div><div class="hbar-track"><span class="hbar-fill" style="width:17%"></span></div><div class="hbar-n">44</div></div>
+      <div class="hbar" title="Viswanathan-Ramamoorthy: 44 songs"><div class="hbar-lab">Viswanathan-Ramamoorthy</div><div class="hbar-track"><span class="hbar-fill" style="width:17%"></span></div><div class="hbar-n">44</div></div>
+          <p class="chart-note"><a href="https://en.wikipedia.org/wiki/Ilaiyaraaja" target="_blank" rel="noopener">Ilaiyaraaja</a> and <a href="https://en.wikipedia.org/wiki/A._R._Rahman" target="_blank" rel="noopener">A. R. Rahman</a> account for <strong>a third of the credited collection</strong> between them — a fact that did not exist anywhere until an agent went and looked it up, song by song.</p>
+        </figure>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <h3 class="sub">The inbox, and the thing it still can't do</h3>
+
+  <p>Debi asked about the <a href="https://help.openai.com/en/articles/11145746-connectors-in-chatgpt" target="_blank" rel="noopener">Gmail connector</a>. A participant answered before Anand could: <strong>"It's fantastic, Debi. It's fantastic, please use it."</strong></p>
+
+  <p>Anand's advice on connectors versus plugins versus whatever they're called this quarter:</p>
+
+  <blockquote class="pull">
+    <p>"<strong>If you're able to access your email in any way, don't worry about plugin versus non-plugin.</strong> It simply means that at some time you would have enabled it. It used to be called connectors, now it's renamed to plugins or whatever."</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>And then Sonal supplied the session's single best failure report — a genuine, current, reproducible boundary:</p>
+
+  <blockquote class="pull amber">
+    <p>"I have like hundreds of thousands of unread emails — it could not actually <strong>delete</strong> emails. So it was able to sort of work with me to move emails to trash, but the actual physical deletion of emails had to be done by me. So that's still, I think, what it's not capable of doing… <strong>I'm down to like 60,000 unread emails from 130, 140.</strong>"</p>
+    <cite>Sonal Priyanka</cite>
+  </blockquote>
+
+  <p>Anand's response: <strong>"That's probably good, actually."</strong> Once it's in the trash, your job is done.</p>
+</div>
+
+<div class="band cards-band">
+  <div class="cards-inner">
+    <h3 class="cards-title">What the room wanted organized</h3>
+    <p class="cards-sub">From the live form: "a decision you repeatedly make using too many tabs, sheets, notes, or people." Eight answers came in — and <strong>five of them were some flavour of which stock, fund or company to bet on</strong>, while three people in the same room list investing as something they can <em>help</em> with.</p>
+    <div class="cards">
+      <div class="card"><div class="card-num">Investing · 62%</div><div class="card-title">"Which stocks to research"</div><div class="card-body">Also: <em>which company to invest in</em> · <em>investment strategies across countries</em> · <em>choosing a fund / ETF</em> · <em>portfolio investment decisions</em>.</div></div>
+      <div class="card"><div class="card-num">Productivity</div><div class="card-title">"Which tasks to prioritise today"</div><div class="card-body">And: <em>"Organise my data better — emails, meetings, notes, things to do."</em></div></div>
+      <div class="card"><div class="card-num">Travel</div><div class="card-title">"Holiday planning"</div><div class="card-body">"Choice of hotel, car, amongst multiple providers and room options" — the archetypal too-many-tabs decision.</div></div>
+      <div class="card"><div class="card-num">The pattern</div><div class="card-title">Supply met demand in the same room</div><div class="card-body">The app Anand built spotted this before he did: <strong>"If one decision-intelligence tool got built out of this room, this is it."</strong> <a href="aiunboxed-room-map.html" target="_blank" rel="noopener">See it →</a></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <h2 class="sec" id="cv"><span class="sec-num">Four · Editors</span>The CV that had to grow up</h2>
+
+  <p>Someone at <a href="https://www.iitm.ac.in/" target="_blank" rel="noopener">IIT Madras</a> had asked Anand to update his CV so they could consider him for a professor-of-practice role. His CV was a PowerPoint deck from 2024, still describing him as CEO of <a href="https://gramener.com/" target="_blank" rel="noopener">Gramener</a>, a company that had since been <a href="https://straive.com/" target="_blank" rel="noopener">acquired by Straive</a>.</p>
+
+  <p>He knew exactly how <em>not</em> to do it:</p>
+
+  <blockquote class="pull big amber">
+    <p>"<strong>Because I know it can edit HTML well, but not Word or PowerPoint.</strong> So for the last year, my strategy has been: don't try and tell it to edit PowerPoint decks. <strong>Convert the PowerPoint to what it can edit, and stay in that space.</strong>"</p>
+    <cite>Anand, answering Sonal's "why HTML?"</cite>
+  </blockquote>
+
+  <p>There was a second sneaky move underneath it. The whole conversation ran through what Anand calls <strong>local MCP</strong> — <em>"Think of local MCP as where I'm giving ChatGPT a connector or a plugin to my computer."</em> (<a href="https://en.wikipedia.org/wiki/Model_Context_Protocol" target="_blank" rel="noopener">Model Context Protocol</a> is the open standard behind it; it's what has since turned into "Remote Control" in these tools.) His stated reason is gloriously mercenary: <strong>"for all practical purposes, ChatGPT's tokens are free — Claude's are not."</strong></p>
+
+  <p>So step one was not "update my CV." Step one was <strong>"help me convert this into HTML"</strong> — and then, crucially, a quality bar rather than a spec:</p>
+
+  <div class="prompt-box">
+    <span class="plabel">The instruction that did the work</span>
+    <p>"Take this and convert it to HTML, and <strong>I won't be happy until you've gotten to something really close to the original</strong>."</p>
+  </div>
+
+  <p>Here they are, side by side — the 2024 PowerPoint-turned-PDF, and the 2026 HTML that descended from it. Anand's own summary of the conversion: <em>"I looked at this one, I looked at this one, and I couldn't really tell much of a difference."</em></p>
+</div>
+
+<div class="band iframe-wrap violet">
+  <div class="iframe-inner">
+    <div class="embed-duo">
+      <figure class="cv-fig">
+        <div class="cv-stage"><iframe src="https://files.s-anand.net/cv/S_Anand_2024_semantic.html" title="S Anand CV 2024 — the semantic HTML conversion of the PowerPoint" loading="lazy" scrolling="no"></iframe></div>
+        <figcaption><b>2024 · the conversion.</b> The PowerPoint, rebuilt as HTML. <a href="https://files.s-anand.net/cv/S_Anand_2024_semantic.html" target="_blank" rel="noopener">Open</a> · <a href="https://files.s-anand.net/cv/S_Anand_2024.pdf" target="_blank" rel="noopener">compare to the original PDF</a></figcaption>
+      </figure>
+      <figure class="cv-fig">
+        <div class="cv-stage"><iframe src="https://files.s-anand.net/cv/S_Anand_2026.html" title="S Anand CV, 2026, HTML" loading="lazy" scrolling="no"></iframe></div>
+        <figcaption><b>2026 · the rewrite.</b> Same 540×780pt page, 60–70% new words. <a href="https://files.s-anand.net/cv/S_Anand_2026.html" target="_blank" rel="noopener">Open</a> · <a href="https://files.s-anand.net/cv/S_Anand_2026.pdf" target="_blank" rel="noopener">as PDF</a></figcaption>
+      </figure>
+    </div>
+    <p class="iframe-cap">
+      Both are live HTML pages, scaled to fit — the same fixed 540×780pt sheet the PowerPoint used, which is why they print back to a near-identical PDF.<br>
+      Watch the gold medals, the school prizes and the Gramener client logos disappear. That is <em>"this is a kid's CV"</em>, executed.<br>
+      The whole redesign conversation: <a href="https://chatgpt.com/share/6a8ef3e9-9f38-83ec-a226-2af39fde4148" target="_blank" rel="noopener">"Anand CV Update 2026" on ChatGPT</a> · <a href="#" class="chatpop" data-doc="chat-chatgpt-cv.md" data-title="Anand CV Update 2026 — full chat" data-source="https://chatgpt.com/share/6a8ef3e9-9f38-83ec-a226-2af39fde4148">read the export here</a>
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>Two things about that conversion are worth stealing.</p>
+
+  <p>First, the honest accounting of how much steering it needed:</p>
+
+  <blockquote class="pull">
+    <p>"<strong>In short, if it had been allowed to do it by itself, it would have gotten there maybe 80%. If I had blindly — without looking at the output — said 'do better' three times, it would have matched it close to pixel-perfect.</strong>"</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>Second, the hidden machinery. To compare its HTML against the original, the agent wrote code that drove a headless browser with <a href="https://playwright.dev/" target="_blank" rel="noopener">Playwright</a> and printed the page to PDF — <em>without Anand ever opening a browser.</em> <strong>"Browser automation is a very powerful capability that the systems have."</strong></p>
+
+  <blockquote class="pull big blue">
+    <p>"When editing, the broad rule of thumb is: <strong>we are able to convert between formats far more seamlessly than we thought before. Shift, edit, shift back.</strong>"</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <h3 class="sub">"This is a kid's CV"</h3>
+
+  <p>Sonal wanted to see the actual result and asked the interesting question: did it just cut words to fit? Anand's answer is the part of the story that has nothing to do with technology.</p>
+
+  <blockquote class="pull big">
+    <p>"It basically ChatGPT said, <strong>'Look, this is a kid's CV. As an adult, you should be talking about adult stuff. The fact that you won a gold medal in school is charming, but please take that out. Talk about what you are currently doing and what you can do.'</strong>"</p>
+    <cite>Anand, relaying the editorial verdict</cite>
+  </blockquote>
+
+  <p>The chat export bears this out — and shows the model refusing the brief it was given. Anand asked for an update. It proposed a repositioning.</p>
+
+  <div class="chat-snippet">
+    <div class="chat-snippet-label">From the ChatGPT session · <a href="#" class="chatpop" data-doc="chat-chatgpt-cv.md" data-title="Anand CV Update 2026 — full chat" data-source="https://chatgpt.com/share/6a8ef3e9-9f38-83ec-a226-2af39fde4148">open the full chat</a></div>
+    <p>"The biggest change I would make is <strong>not 'update the 2024 CV.'</strong> I would change what the page is about."</p>
+    <p>"The existing page says, roughly, <em>'I have had an unusually strong 30-year data/consulting career.'</em> The 2026 page should say <em>'I am now doing unusual, hands-on work at the frontier of AI — in industry, education, research, and public communication — backed by that 30-year career.'</em>"</p>
+    <p>"I would preserve the one-page 540×780 pt layout, Constantia/Calibri typography, approximate font sizes, two-column structure, four-image strip, and timeline. <strong>But I would replace perhaps 60–70% of the words.</strong>"</p>
+  </div>
+
+  <p>It also did something more interesting than writing copy. Asked to pick portfolio images from Anand's own repositories, it <strong>rendered the candidates as contact sheets and judged them at the size they'd actually appear</strong> — roughly a 68-point-tall thumbnail:</p>
+
+  <div class="chat-snippet">
+    <div class="chat-snippet-label">On picking the four images</div>
+    <p>"I would <strong>not</strong> use the multi-LLM double-checking chart or system-override matrix: excellent work, but <strong>they lose visual impact when shrunk</strong>."</p>
+    <p>"I would <strong>not put a new headshot at the bottom</strong>. The current visual language is 'here is evidence of what I make,' which is unusual and much stronger. A headshot would turn the page toward an executive bio."</p>
+  </div>
+
+  <p>This is the Anthropic-versus-OpenAI temperament question in miniature, and Anand came back to it later. But note what made it possible: <strong>the model had to be able to read his disk.</strong> "Go through my entire disk. This is what I was two years ago, you figure out what I am now and put that in."</p>
+
+  <p>A participant asked how this differed from just using chat, since chat had happily edited their Word file. Anand's answer was unusually candid about his own uncertainty — and then landed the point anyway:</p>
+
+  <blockquote class="pull">
+    <p>"However, I am only about 30% sure of this. <strong>In fact, I am not even sure if I did this on Codex or ChatGPT.</strong> Like I said, I have a connector from ChatGPT to my local computer… And therefore, does it make a difference? Not really. <strong>So, we're using code, we're giving it access to local data, and that access is what makes a difference.</strong>"</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <h3 class="sub">Two side-notes on style, from the room</h3>
+
+  <p>A participant described how their team escapes corporate AI slop in slide decks — and it's a good recipe:</p>
+
+  <blockquote class="pull blue">
+    <p>"In the corporate world, there's so much of AI slop, you can figure out which one is which — but the most sophisticated version of doing it is: if your corporate has a color schema, you kind of tell Claude, 'This is the color schema.' … After a few iterations, I've got to a point where <strong>my slides look like I've made them. But it has imperfections. I don't want perfect slides</strong>."</p>
+    <cite>A participant</cite>
+  </blockquote>
+
+  <p>Anand's addition: <strong>"That style transfer makes a big difference when we provide examples."</strong> And when copying a style, asking for a checklist to verify against turns out to be more powerful than describing the style again.</p>
+
+  <p>Anand R. offered the other half — what happens when you give it your whole corpus instead of one document:</p>
+
+  <blockquote class="pull">
+    <p>"I thought, why not make a website about myself? … I downloaded LinkedIn data and fed it in… <strong>It has a phenomenal amount of detail on what I've done in life, or what I have views on, that even I did not remember</strong>, which might be very relevant today if I wanted to position myself for something. … I've lived in many cities and managed people in many cities, so I kind of got them all in a graph. <strong>So that became my favorite tool when I was talking with people.</strong>"</p>
+    <cite>Anand R., IIM Alumni Singapore</cite>
+  </blockquote>
+
+  <p>His advice to Sonal, unprompted and rather good: <strong>keep one folder where every CV, bio and note about yourself accumulates.</strong> Over time the agent stops answering questions and starts offering advice you didn't ask for.</p>
+</div>
+
+<div class="wrap">
+  <h2 class="sec" id="app"><span class="sec-num">Five · Building it, live</span>Dictating an app you can't specify</h2>
+
+  <p>Now the promise from the start of the session came due. Sixteen people's answers were sitting in a CSV. Anand opened a fresh session, picked a medium-intelligence model with full access, and <strong>started dictating</strong>.</p>
+
+  <p>What he dictated is remarkable mostly for how much it admits:</p>
+
+  <div class="prompt-box">
+    <span class="plabel">Dictated live · lightly trimmed for length, not for sense</span>
+    <p>"I'd like to build a networking application of sorts based on the responses that we got on the survey. The aim is to connect people with each other. <em>To be fair, I'm not really sure what kind of utility we could provide…</em> It's really more a decision intelligence app…</p>
+    <p><strong>I know this is vague, but you are supposed to be smart. Use your intelligence.</strong> Create something that is both useful, practical, and simple. Put it as a web interface. <strong>I would like to be able to literally email this to people, so maybe just a plain HTML application with the data embedded in it would work fine.</strong></p>
+    <p>And since people won't even know what this is if they open it blindly — <em>that includes me</em> — I'd like the application to be reasonably self-explanatory. Don't go rambling about what to do etc.; the whole point is for you to create this in a way that is both intuitive and useful."</p>
+  </div>
+
+  <h3 class="sub">Why Claude for this one</h3>
+
+  <p>Anand deliberately switched model families, and explained why with reference to <a href="https://eqbench.com/about.html" target="_blank" rel="noopener">EQ-Bench</a> — a benchmark that scores models on <span class="tip" data-tip="EQ-Bench 3 scores models on empathy, pragmatic EI, depth of insight, social dexterity, emotional reasoning and message tailoring — and separately tracks style traits like Compliant, Challenging, Warmth and Validating, which is the axis Anand is describing.">traits like <em>compliant</em>, <em>challenging</em>, <em>warmth</em> and <em>validating</em></span> alongside raw ability.</p>
+
+  <blockquote class="pull big">
+    <p>"<strong>The model set of models that challenge you the most are the Anthropic models.</strong> They say, 'Look, you are saying X, I actually think Y is probably what you want, I'm going to nudge you towards Y or do Y.' <strong>When I'm less clear, I go to the Anthropic models. When I'm more clear, I go to the GPT models. When I want to feel good, I go to the Gemini models.</strong>"</p>
+    <cite>Anand — the most quotable model-selection heuristic of the session</cite>
+  </blockquote>
+
+  <p>The Gemini characterisation came with a demonstration: tell one <em>"no you are wrong, 2+2 is 1"</em> and it will find a way to agree with you.</p>
+
+  <h3 class="sub">Steering: the feature nobody tells you about</h3>
+
+  <p>While the agent was working, Anand typed another instruction and hit enter. It didn't stop. It read the new line mid-flight and carried on.</p>
+
+  <blockquote class="pull blue">
+    <p>"<strong>This is called steering. That is pretty powerful</strong> — because if it's in the middle of doing something that is taking two, three minutes, then you realize, 'Oh wait, I forgot to say this.' <strong>You don't need to stop it; you can just tell it whatever else, press enter, it will take it up.</strong>"</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>Later, doing the same thing in Codex, he noted the behavioural difference: Claude Code absorbed the instruction into the current run; <strong>Codex queued it for the next turn</strong>. Both work. Neither is in most people's mental model of "chatting with an AI."</p>
+
+  <h3 class="sub">The two magic words</h3>
+
+  <p>Anand walked through the four ways to ship software — desktop executable, mobile app, web app with a backend, web app without one — and then made a claim that explains most of what he builds:</p>
+
+  <blockquote class="pull big amber">
+    <p>"<strong>So the magic word to use in many cases is HTML application. Single-page HTML application makes it even more precise.</strong> I want one HTML file which is the entire application. Then you can mail it, you can share a link."</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>His supporting argument is worth internalising: a huge fraction of what we do in Excel needs no server at all. You only need a backend when you want to <em>save</em> something. Gmail reads offline. News apps read offline. <strong>An interface over data you already have is a file, not a service.</strong></p>
+
+  <p>Then, to publish it, he did something that should not work and does:</p>
+
+  <div class="prompt-box">
+    <span class="plabel">Verbatim</span>
+    <p>"I want to publish this on the public internet. <em>There are supposed to be lots of servers that allow agents to publish HTML files.</em> Find and push."</p>
+  </div>
+
+  <p>A participant asked the obvious sceptical question — why would anyone provide that infrastructure for free? Anand's answer was the biggest laugh of the session, and also completely correct:</p>
+
+  <blockquote class="pull big">
+    <p>"<strong>It costs nothing. You are putting your data into my server, which I can happily do whatever I want with it, at the very least read. If you have 2,000 of these, I will sell you as my asset and get acquired.</strong>"</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <h3 class="sub">What came back</h3>
+
+  <p>The app opened with a headline nobody had asked for: <strong>62% of the decisions people repeat are about money — and three people in this room already do that for a living.</strong> It had found supply and demand sitting in the same room and pointed at the gap.</p>
+
+  <p>Here it is. It's a single HTML file with the data embedded, exactly as specified. Click any person to see who they should talk to.</p>
+</div>
+
+<div class="band iframe-wrap dark">
+  <div class="iframe-inner">
+    <iframe src="aiunboxed-room-map.html" title="The Room Map — the app built live during the session" loading="lazy"></iframe>
+    <p class="iframe-cap">
+      <a href="aiunboxed-room-map.html" target="_blank" rel="noopener">The Room Map</a> — built live, from 16 form responses, in a single self-contained HTML file.
+      Names appear only for the 8 people who consented; the rest are matched anonymously.
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>Anand read the matches out loud as he found them. <em>"Anand for real AI use cases, not quick answers; Anonymous 5 for…"</em> — then, catching himself, <em>"Okay, that's whom I could help. <strong>Rohit: ask me how to use code, tell me every bit of everything.</strong>"</em></p>
+
+  <p>And: <strong>"The examples are so detailed. And I can help — obviously Rohit, but you could also help Shijo with investment advice and Anonymous 1 on cocktail and AI investing."</strong></p>
+
+  <p>Then came the sentence that justifies the entire exercise. He looked at the finished app and said it wasn't what he wanted.</p>
+
+  <blockquote class="pull big blue">
+    <p>"<strong>Now this is not what I need, but I didn't know what I needed before I asked it in the first place. Now I know — and therefore prototyping becomes a very powerful way of need discovery.</strong>"</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>Debi named it: <em>"It's created a decisioning interface, sort of a thing."</em> Exactly the category the session opened with, arrived at from the opposite direction.</p>
+
+  <p>So he dictated the revision — <em>"Modify the application so that you show me a list of all the names, anonymous or actual, and when I click on each person, it should show me who are the people that person should connect with"</em> — and pushed again. That version is the one embedded above.</p>
+</div>
+
+<div class="band cards-band">
+  <div class="cards-inner">
+    <h3 class="cards-title">What sixteen people wanted to ask each other</h3>
+    <p class="cards-sub">One form field read: <em>"If you could ask the others here one question and get an honest answer, what would you ask?"</em> Shown without names, as promised. Read them as a group and a mood emerges.</p>
+    <div class="qlist">
+      <div>"In your company, to what extent has AI acted as an ERP (systemic, central impact) vs Excel (individual productivity)?"<b>The sharpest question in the dataset</b></div>
+      <div>"How safe do you feel using agents, given the recent events of rogue agents?"<b>Sonal Priyanka</b></div>
+      <div>"What use case will you actually use after all these sessions?"<b>Anonymous — and fair</b></div>
+      <div>"How do I prepare myself for AI disruption at the workplace?"<b>Shoaib Ahmed</b></div>
+      <div>"Are we doing this right?"<b>Anand R.</b></div>
+      <div>"How can I help?"<b>Shijo George — who also wrote "I'm looking for a job"</b></div>
+      <div>"In which facet of your life has AI coding been most useful?"<b>Anonymous</b></div>
+      <div>"Future of our kids in the AI era"<b>Written as both a need and a question</b></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <h2 class="sec" id="policy"><span class="sec-num">Six · Policy as code</span>Turning a contract into a flowchart that can't argue back</h2>
+
+  <p>Code has one property that chat does not: <strong>it is deterministic</strong>. Anand's fourth use case exploits exactly that — take a document whose whole purpose is to encode rules, and convert it into rules that actually execute.</p>
+
+  <p>His example was an insurance logic engine that compiles a motor insurance contract into something halfway between English and <a href="https://en.wikipedia.org/wiki/Prolog" target="_blank" rel="noopener">Prolog</a>:</p>
+
+  <div class="prompt-box">
+    <span class="plabel">The contract, as code</span>
+    <p>A valid claim is <strong>true</strong> if the driver is fully eligible, <strong>and</strong> the vehicle authorization is valid, <strong>and</strong> the incident circumstances are covered, <strong>and</strong> the claim procedure is followed.</p>
+    <p>The driver is fully eligible if they are age-eligible, they are license-compliant, and the driving history is clean.</p>
+    <p>They are age-eligible if <code>age &gt; 21</code> and <code>driving_experience_months &gt; 12</code>.</p>
+  </div>
+
+  <p>"Goes on almost like a tree," said Anand — and that tree is the claim process. Feed in a claim: Marcia, 28, 84 months of driving experience. Age valid. Licence valid. Then one branch fails. <strong>Blood alcohol must be under 0.08; hers is 0.14. Denied.</strong></p>
+</div>
+
+<div class="band iframe-wrap">
+  <div class="iframe-inner">
+    <iframe src="https://mynkpdr.github.io/insurle-demo/" title="InsurLE — Insurance Logic Engine" loading="lazy"></iframe>
+    <p class="iframe-cap">
+      <a href="https://mynkpdr.github.io/insurle-demo/" target="_blank" rel="noopener">InsurLE — Insurance Logic Engine</a>: 4 contracts, 8 claims, 48 logic rules, and an animated trace of every branch of every decision.<br>
+      Related: <a href="https://sanand0.github.io/policyascode/" target="_blank" rel="noopener">Policy as Code</a> — upload any policy PDF, extract atomic rules, then validate documents against them, entirely in your browser.
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>The obvious objection — <em>what if it converted the contract wrong?</em> — Anand answered by counting how many times you have to worry:</p>
+
+  <blockquote class="pull">
+    <p>"One may argue that it did not convert it correctly to the program; the contract needs to be verified and matched against the program. <strong>That's a one-time effort</strong>, and you can do this very diligently with accuracy. The second is whether the claim is not converted. Okay, cross-check, double-check, triple-check four times, whatever. <strong>But once those two are sorted, there is no arguing whether it's done the job right or not.</strong>"</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <blockquote class="pull big amber">
+    <p>"<strong>Upload any arbitrary document and say, 'What part of this can be converted into programmatic verification?'</strong>"</p>
+    <cite>Anand — the reusable move</cite>
+  </blockquote>
+
+  <p>A participant asked for the distinction between programmatic and LLM verification. The answer is short:</p>
+
+  <blockquote class="pull blue">
+    <p>"<strong>Programmatic verification is deterministic. An LLM verification may not be.</strong> … 99.999% of the time, it will likely be correct — yes or no, yes. And 99% of the time it will give you the same answer. <strong>It may simply miss the blood alcohol count once.</strong>"</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>What followed was the best discussion of the session — the room arguing, correctly, that determinism isn't always what you want. Anand R. pointed out that an elevated blood alcohol reading <em>"could be because of some medicines or something like that."</em> Sandeep took it further:</p>
+
+  <blockquote class="pull">
+    <p>"There may be situations where… on compassionate grounds, what do we do kind of a thing, right? So rather than saying a digital yes or a no, <strong>what are the other circumstances that should be taken into account and assist the decision-making?</strong>"</p>
+    <cite>Sandeep</cite>
+  </blockquote>
+
+  <p>Anand's resolution didn't pick a side. <strong>"That can be brought as another overlay also onto the deterministic."</strong> Rules decide what's decidable; judgment sits on top of it, visible and separable — which is precisely what the comic page draws in panel 6.</p>
+
+  <blockquote class="pull big">
+    <p>"<strong>I think determinism is good wherever we can afford it.</strong>"</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <h3 class="sub">When the rules can't be code, make them a checklist</h3>
+
+  <p>The same trick works one rung down. Take the <strong>European financial promotion guidelines</strong> — a stack of PDFs governing how anyone may advertise a financial product in Europe (in the UK, the <a href="https://www.handbook.fca.org.uk/handbook/COBS/4/" target="_blank" rel="noopener">FCA's COBS 4</a> is the canonical version of this genre). Step one isn't code. Step one is: <em>use an LLM to convert this into a checklist.</em></p>
+
+  <p>Then run any document against the checklist and demand evidence. Anand's contract-analysis demo does exactly that: for each rule, a yes/no <strong>and the clause that justifies it</strong>. "Copyright and ownership permissions" → yes, section 4.1, <em>"the author shall retain the copyright."</em> "Quality and standards" → not found.</p>
+
+  <blockquote class="pull">
+    <p>"Now maybe it's making a mistake; a human can go validate and also verify, 'Okay, it says this piece of text is there, is it actually there?' <strong>Very easy to narrow down.</strong>"</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>The room fell in love with the interface — <em>"It's such a beautiful interface." "Beautiful one."</em> — and Debi asked the question that mattered:</p>
+
+  <blockquote class="pull big blue">
+    <p>Debi: "Which you just tell Claude to create. But you've obviously… <strong>knowing what we want is the most important thing.</strong>"<br>
+    Anand: "Increasingly, yes."<br>
+    Debi: "So you knew what you wanted; that's why it's exactly… <strong>which is… so knowing what you want is the most important.</strong>"</p>
+    <cite>Debi and Anand, arriving at the session's thesis</cite>
+  </blockquote>
+
+  <p>Anand then undercut his own expertise beautifully:</p>
+
+  <blockquote class="pull amber">
+    <p>"To be fair, the prompt was, <strong>'Look, it should be like Excel, but fancy.'</strong> … That goes a long way."</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>The tools shown here: <a href="https://mynkpdr.github.io/insurle-demo/" target="_blank" rel="noopener">InsurLE</a>, <a href="https://sanand0.github.io/policyascode/" target="_blank" rel="noopener">Policy as Code</a>, and Straive's <a href="https://contractanalysis.straivedemo.com/" target="_blank" rel="noopener">Contract Analysis</a> demo (sign-in required). Anand's description of how the last one was built, when asked whether it was some special setup: <strong>"No, no, it's just Codex behind the scenes with a fancy interface. Nothing more than that."</strong></p>
+
+  <p>And the anecdote that sold the whole category, from Anand R., recalling his time at <a href="https://www.imd.org/" target="_blank" rel="noopener">IMD</a>:</p>
+
+  <blockquote class="pull">
+    <p>"When I was in IMD, one of our professors made a house and he said, <strong>'I was looking at the by-laws, they were 250 pages. I read it. I'll be surprised if anyone else did.'</strong> So this would make it easier for him to do."</p>
+    <cite>Anand R., IIM Alumni Singapore</cite>
+  </blockquote>
+</div>
+
+<div class="band band-quote">
+  <div class="band-quote-inner">
+    <p>"There is one really niche way of deploying applications that almost no one knows about or talks about, which is that <strong>your browser itself is a pretty powerful coding environment</strong>."</p>
+    <cite>Anand, introducing the last section</cite>
+  </div>
+</div>
+
+<div class="wrap">
+  <h2 class="sec" id="bookmarklets"><span class="sec-num">Seven · Bookmarklets</span>The fifth axis nobody uses</h2>
+
+  <p>A <a href="https://en.wikipedia.org/wiki/Bookmarklet" target="_blank" rel="noopener">bookmarklet</a> is a bookmark whose URL is a small JavaScript program. Click it, and the program runs on whatever page you're looking at. The technology is ancient. Almost nobody uses it. And that, Anand argued, makes it the most under-exploited deployment target on your machine.</p>
+
+  <blockquote class="pull">
+    <p>"<strong>You can by and large create anything where the activity is restricted to that one page.</strong>"</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>He then opened his own bookmarks bar, which is where the session got genuinely conspiratorial.</p>
+
+  <div class="cards wide" style="margin:2rem 0">
+    <div class="card">
+      <div class="card-num">Bookmarklet 1</div>
+      <div class="card-title">Teams Captions</div>
+      <div class="card-body">Teams shows live captions but won't let you copy them. This adds a panel with <strong>Copy</strong> and <strong>Start Recording</strong>. "So one of the first things that I do when I get into a meeting, even if the other person is not recording, is <strong>turn on my captions</strong>." Debi: <em>"So when you say captions, it's like a transcript."</em> Anand: <strong>"It is exactly a transcript."</strong></div>
+    </div>
+    <div class="card">
+      <div class="card-num">Bookmarklet 2</div>
+      <div class="card-title">WhatsApp Scraper</div>
+      <div class="card-body">Sandeep noted that WhatsApp has quietly removed chat export in some groups. "<strong>This kind of pretty much breaks that.</strong>" It copied 17 visible messages; scroll up and the button re-counts to 33, then more.</div>
+    </div>
+    <div class="card">
+      <div class="card-num">Bookmarklet 3</div>
+      <div class="card-title">LinkedIn Invite Scraper</div>
+      <div class="card-body">Anand has <strong>~1,000 unaccepted invites</strong> and wants to triage them by common connections, deprioritising premium accounts. "This I didn't want to manually scroll. So I told it, <strong>'You scroll.'</strong>"</div>
+    </div>
+    <div class="card">
+      <div class="card-num">Bookmarklet 4</div>
+      <div class="card-title">Straive Intelligence</div>
+      <div class="card-body">A one-click reskin of ChatGPT into Straive's brand colours — built because colleagues kept asking for demos of things ChatGPT already does. <em>"This is exactly ChatGPT, just reskinned."</em></div>
+    </div>
+  </div>
+
+  <p>That last one deserves its own paragraph, because it is the funniest and most honest thing said all session:</p>
+
+  <blockquote class="pull big amber">
+    <p>"At Straive, a lot of times the team would reach out to me and say, 'Anand, can you create a demo for X?' See, ChatGPT can already do that. <strong>'Yeah, yeah, but if we tell our client that ChatGPT can do it, they won't buy our services. So I want you to create something that does exactly just this one little thing which I know ChatGPT can anyway do, I won't tell them.'</strong> … Now, I'm lazy. So what I do is give them a Bookmarklet."</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>The constraint is real, though. Anand was careful about it. Multi-page journeys — scraping second- and third-degree LinkedIn connections, or crawling every TED talk's detail page — strain the model. <strong>"Bookmarklets don't… they might work. I'm not sure if I've tried and succeeded."</strong></p>
+
+  <p>And when a participant pointed out that LinkedIn lets you download your data anyway, Anand gave the rule for when a bookmarklet is worth building at all:</p>
+
+  <blockquote class="pull blue">
+    <p>"<strong>The download does not have, for instance, the list of invites that I have not accepted.</strong> … And you're right, if the export is there, use the export. <strong>This is only to solve the problem that is not yet solved.</strong>"</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <p>Many of Anand's single-purpose browser tools live in one public collection — mostly LLM-generated, all single-page:</p>
+</div>
+
+<div class="band iframe-wrap violet">
+  <div class="iframe-inner">
+    <iframe class="short" src="https://tools.s-anand.net/" title="tools.s-anand.net — a collection of single-page web apps" loading="lazy"></iframe>
+    <p class="iframe-cap">
+      <a href="https://tools.s-anand.net/" target="_blank" rel="noopener">tools.s-anand.net</a> — "a collection of single page web apps, mostly LLM generated." The living evidence for "single-page HTML application."
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+  <h3 class="sub">The room's wishlist, triaged live</h3>
+
+  <p>Anand unhid a new form question mid-session — <em>"On a website you use often, what's one tiny thing that repeatedly annoys you?"</em> — collected half a dozen answers, and then did something better than building one: <strong>he told the room which ones were possible, and why.</strong></p>
+
+  <div class="tbl-wrap">
+    <table class="data">
+      <thead><tr><th>What the room asked for</th><th>Verdict</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Zoom transcript capture</td><td class="yes">Possible</td><td>If Zoom runs in the browser without launching the desktop app. "Bookmarklets work on the browser."</td></tr>
+        <tr><td>Ads I have to click away</td><td class="yes">Possible</td><td>"You could just have one button and automatically have it click on your behalf. <strong>This is a good use case.</strong>"</td></tr>
+        <tr><td>Summarising WhatsApp / Telegram chats</td><td class="yes">Possible</td><td>Two steps: extract, then paste and ask. "This is in fact my workflow; <strong>I don't read group conversations at all.</strong> I convert them into podcasts and listen to them."</td></tr>
+        <tr><td>Stop me after 10 minutes on Instagram</td><td class="yes">Easiest of the lot</td><td>Debi: <em>"But that I think you already have phone settings for that."</em> Anand: <em>"Probably not on the browser desktop."</em></td></tr>
+        <tr><td>View a LinkedIn profile without revealing myself</td><td class="no">No</td><td>"<strong>A Bookmarklet is limited to what the browser can do.</strong> And if you're on the browser, you're logged in as yourself onto LinkedIn, then you are revealing yourself."</td></tr>
+        <tr><td>Scrape 2nd/3rd-degree LinkedIn connections</td><td class="no">Doubtful</td><td>Multiple pages. "Multiple pages are a little difficult on something like a Bookmarklet."</td></tr>
+      </tbody>
+      <caption>Live triage. Knowing the shape of the constraint — <em>one page, in a browser, as you</em> — is most of the skill.</caption>
+    </table>
+  </div>
+
+  <p>The room picked Instagram. Anand shortened it from ten minutes to twenty posts for demo reasons, and made one important adjustment mid-thought:</p>
+
+  <blockquote class="pull">
+    <p>"Now we don't need any major coding tools or anything. Claude can do it, ChatGPT can do it… <strong>[but] we will need a coding agent so that it can test. Otherwise, it won't be able to see the browser and test it out.</strong>"</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <div class="prompt-box">
+    <span class="plabel">Into Codex, with full access</span>
+    <p>"Create and test a Bookmarklet that will make sure I don't read more than 20 posts on Instagram in any five-minute duration."</p>
+    <p><em>…then, typed mid-run:</em> "I have a window of Instagram open, you should use that to test."</p>
+  </div>
+
+  <p>He flagged the one thing that might not reproduce on your machine: he has browser-control extensions installed for both Claude and ChatGPT, so the agent can actually drive the browser to test its own output. Without that, a participant noted — <em>"But it can write the code."</em> Anand: <strong>"It can write the code, correct."</strong></p>
+
+  <blockquote class="pull big blue">
+    <p>"<strong>Like with most things, the trick is knowing that there is something called a Bookmarklet. After that, the creation, the execution, and all is simply tell ChatGPT or Claude or whatever to do it; it will do the rest of it.</strong>"</p>
+    <cite>Anand</cite>
+  </blockquote>
+</div>
+
+<div class="band comic-band" id="comic">
+  <div class="comic-inner">
+    <h4>The whole two hours, in eight panels</h4>
+    <p class="csub">Click to open the full-size image</p>
+    <a href="comic-page.avif" target="_blank" rel="noopener">
+      <img src="comic-page.avif" alt="Comic page: 'You Don't Even Need to Code' — eight panels covering decision interfaces, access and permissions, organizers, format shifting, policy as code, prototyping, and bookmarklets.">
+    </a>
+    <p class="fig-cap" style="color:#c4a7ff">
+      <a href="comic-page.avif" target="_blank" rel="noopener">Open the full-size comic page →</a><br>
+      The bottom strip carries the session's own summary: <em>"Ask better questions. Give AI access. Shift formats. Code the rules. Prototype. Automate the small stuff. The star isn't the code — it's the capability you unlock."</em>
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+  <h2 class="sec" id="benchmarks"><span class="sec-num">Eight · The section that ran out of time</span>Benchmarks: testing your theories against data</h2>
+
+  <p>Anand had a sixth theme queued and never got to it. <strong>"We did not cover benchmarks, that's okay, leave that aside."</strong> It's worth covering here, because it's the one that turns opinions about AI into evidence — and because the material behind it is unusually good.</p>
+
+  <p>It starts with a piece of prompt folklore that spread across developer Twitter. <a href="https://x.com/andrew_n_carr" target="_blank" rel="noopener">Andrew Carr</a> had been telling models to <em>"only report to me in ASD-STE100 Simplified Technical English"</em> — <span class="tip" data-tip="ASD-STE100 is a controlled English specification developed for aerospace maintenance manuals: a restricted vocabulary, one meaning per word, short sentences, active voice. Designed so non-native speakers can read safety-critical instructions without ambiguity.">a controlled English standard from aerospace manuals</span>. Ben Sehl proposed making it permanent:</p>
+
+  <div class="chat-snippet">
+    <div class="chat-snippet-label">Ben Sehl, on X · <a href="https://x.com/benjaminsehl/status/2082158002958741746" target="_blank" rel="noopener">view the post</a></div>
+    <p>"Adding to every AGENTS md file for the rest of time. (h/t @richardpenner for the self-referential explanation on what ASD-STE100 is)"</p>
+  </div>
+
+  <p>Anand's reaction was not to adopt it. It was to <strong>ask whether simpler writing makes the thinking worse</strong> — and then to actually test it.</p>
+
+  <p>He first asked Claude to design the experiment, which produced a piece of methodology advice worth keeping:</p>
+
+  <div class="chat-snippet violet">
+    <div class="chat-snippet-label">Claude, designing the rubric · <a href="https://claude.ai/share/09321cc3-7cf0-4b78-8bbb-f153b576a517" target="_blank" rel="noopener">shared chat</a> · <a href="#" class="chatpop" data-doc="chat-claude-simplified-responses.md" data-title="Evaluating simplified responses in AI prompts — Claude" data-source="https://claude.ai/share/09321cc3-7cf0-4b78-8bbb-f153b576a517">read the export</a></div>
+    <p>"Pick tasks where quality shows up as <em>content</em>, not vocabulary — otherwise you just measure style preference."</p>
+    <p>"<strong>The ignore-style paragraph is load-bearing.</strong> Drop it and the judge will score fluency, and simple English will lose (or win) for reasons that have nothing to do with thinking quality."</p>
+    <p>"If plain language costs you something, it shows up as <strong>a named missing item</strong> — a dropped confound, a dropped exception — not as a lower score."</p>
+    <p>"Also keep an open mind on direction. Forcing plain language strips padding, and some answers get <em>better</em> because the weak reasoning stops hiding behind vocabulary. <strong>A tie is a real result here, not a failed experiment.</strong>"</p>
+  </div>
+
+  <p>It wasn't a tie. Anand ran <strong>six tasks, with and without the suffix, each pair judged twice in both orders</strong> to cancel position bias. Of 84 judgements, all but a handful went the same way.</p>
+
+  <div class="tbl-wrap">
+    <table class="data">
+      <thead><tr><th>Task</th><th>Sources checked, without</th><th>Sources checked, with "Answer in ASD-STE100"</th></tr></thead>
+      <tbody>
+        <tr><td>Model benchmarking</td><td>66 sources</td><td class="no">44 sources</td></tr>
+        <tr><td>Evidence and judgment</td><td>123 sources</td><td class="no">84 sources</td></tr>
+        <tr><td>Adversarial system design</td><td>97 sources</td><td class="no">26 sources</td></tr>
+      </tbody>
+      <caption>Across all six tasks and both judging orders, simplification lost on correctness, key drivers, mechanism, caveats and actionability almost without exception. Full results and every eval: <a href="https://www.s-anand.net/blog/simple-writing-hurts-thinking/" target="_blank" rel="noopener">Simple writing hurts thinking</a>.</caption>
+    </table>
+  </div>
+
+  <blockquote class="pull big amber">
+    <p>"<strong>Don't simplify the writing initially. Let it think. THEN, ask for a simple explanation.</strong> … For me: I shouldn't invoke my writing and speaking skills along with other thinking skills."</p>
+    <cite>Anand, <a href="https://www.s-anand.net/blog/simple-writing-hurts-thinking/" target="_blank" rel="noopener">Simple writing hurts thinking</a>, 1 Aug 2026</cite>
+  </blockquote>
+
+  <h3 class="sub">The other benchmark: what a good prompt is actually worth</h3>
+
+  <p>The second piece of unused material is a twelve-stage prompt-optimisation run on something mundane — the script that writes the summary and tags for every post on Anand's blog. It is the best available answer to "how much does prompt engineering actually matter, and what does it cost?"</p>
+
+  <p>The whole experiment — twelve prompt generations, dozens of API calls, five diverse test posts, an independent judge, then a human judge when the independent judge proved to be measuring the wrong thing — <strong>cost about 4.3 cents</strong>.</p>
+
+  <p>Four findings survive being lifted out of context:</p>
+
+  <div class="cards wide" style="margin:2rem 0">
+    <div class="card">
+      <div class="card-num">Finding 1</div>
+      <div class="card-title">The objective was wrong, not the wording</div>
+      <div class="card-body">"<strong>'Better summary' and 'better description' are not the same optimization problem.</strong>" A summary says the most important thing. A description has to answer: <em>what is this about, and what specifically will I get if I open it?</em></div>
+    </div>
+    <div class="card">
+      <div class="card-num">Finding 2</div>
+      <div class="card-title">Examples have gravity</div>
+      <div class="card-body">A vivid detail hijacks a summary. But deleting examples breaks story posts. The real rule: "<strong>Is the example evidence for the payload, or is the example the payload?</strong>"</div>
+    </div>
+    <div class="card">
+      <div class="card-num">Finding 3</div>
+      <div class="card-title">Your schema is a second prompt</div>
+      <div class="card-body">The prose prompt said "routing snippet"; the JSON schema field still said "highest-value takeaway." The model was being told two different tasks. "<strong>Schema descriptions are not documentation; they are prompt tokens.</strong>"</div>
+    </div>
+    <div class="card">
+      <div class="card-num">Finding 4</div>
+      <div class="card-title">"Think it through" has a price tag</div>
+      <div class="card-body">Asking the model to silently enumerate options before answering cost <strong>46% more</strong> despite an identical visible answer. "Think through X, Y, Z before answering <strong>can materially raise token use even if your requested visible answer is tiny</strong>."</div>
+    </div>
+  </div>
+
+  <p>And one caution that belongs next to every "be more specific" prompt tip ever written:</p>
+
+  <blockquote class="pull blue">
+    <p>"<strong>Specificity increases usefulness and searchability, but also creates more facts that can be wrong.</strong>"</p>
+    <cite>From the <a href="https://chatgpt.com/share/6a8ef574-7140-83ec-a98b-5235b4b150fd" target="_blank" rel="noopener">summarize.py benchmark session</a> — <a href="#" class="chatpop" data-doc="chat-chatgpt-summarize-benchmark.md" data-title="summarize.py blog update — full chat" data-source="https://chatgpt.com/share/6a8ef574-7140-83ec-a98b-5235b4b150fd">read the export</a></cite>
+  </blockquote>
+
+  <p>The proof was a hallucination: asked for more detail about a folk puzzle, one run turned the <em>farmer's</em> daughter into a <em>zamindar's</em> daughter. The bland version had no opportunity to make that mistake. The fix was an explicit final pass — <em>silently check actors, numbers, relationships and causal claims against the source</em>.</p>
+
+  <p>There's also a nice bit of accounting hygiene in there. The script had been printing costs using stale prices, overstating every run by <strong>5×</strong> — and the actual bill to regenerate metadata for all <strong>3,027 posts and pages</strong> came to about <strong>$2.26</strong>. The expensive resource wasn't money. It was <strong>wall-clock time</strong>: at one worker and ~3.9 s per call, the full corpus is a 3.3-hour job.</p>
+
+  <h2 class="sec" id="close">The close</h2>
+
+  <p>Anand's own summary, delivered while a bookmarklet was still compiling in the background, comes in two parts.</p>
+
+  <blockquote class="pull big">
+    <p>"<strong>More importantly, one, if you know that it is possible, then a huge capability gets unlocked.</strong> A big part of therefore what we need to do is keep asking things like, 'Look, I don't even know what I don't know. Tell me what might be useful for me that you think I'm not even aware of.'"</p>
+    <cite>Anand</cite>
+  </blockquote>
+
+  <blockquote class="pull big blue">
+    <p>"<strong>Secondly, the difference with regard to coding is not that code is an artifact that has value, but what you get through code has value.</strong> … What seems to be making a bigger difference is <strong>access</strong>. Can it access the context on your system, the tools on your system, the permissions on your system… And even that distinction is fading. So <strong>treat code as something that anyway is part of every request if needed; it is not a big thing anymore.</strong>"</p>
+    <cite>Anand, closing the four-part series</cite>
+  </blockquote>
+
+  <p>The last word, though, belonged to a participant — and it was about these write-ups:</p>
+
+  <blockquote class="pull amber">
+    <p>"I find the write-ups you send later, that's very useful just to revise through the entire thing. I had actually missed two of the sessions, so for that you can almost catch up completely. … <strong>the recording takes longer to go through, whereas you read through it and it just gives you pretty much everything.</strong> I don't need two hours to listen to the whole recording."</p>
+    <cite>A participant, closing the series</cite>
+  </blockquote>
+
+  <p>Which is, come to think of it, the same argument as the whole session. <strong>The artifact isn't the point. The thing you get from it is.</strong></p>
+</div>
+
+<div class="band takeaways-band" id="takeaways">
+  <div class="takeaways-inner">
+    <h3 class="takeaways-title">Six things to steal from this session</h3>
+    <p class="takeaways-sub">AI Unboxed 4 · Vibe Coding · 22 August 2026</p>
+    <div class="takeaway-grid">
+      <div class="takeaway">
+        <div class="takeaway-num">01</div>
+        <div class="takeaway-title">Stop asking "should I use code?"</div>
+        <div class="takeaway-text">Every chat already has a computer inside it. The <a href="https://chatgpt.com/share/6a8ef39c-6584-83ec-a0a1-7d0b57fc7d95" target="_blank" rel="noopener">Fibonacci demo</a> takes the lightest model available. <strong>"Treat code as something that anyway is part of every request if needed; it is not a big thing anymore."</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">02</div>
+        <div class="takeaway-title">The real question is access</div>
+        <div class="takeaway-text"><a href="https://developers.openai.com/codex/" target="_blank" rel="noopener">Codex</a> and <a href="https://code.claude.com/docs/en/overview" target="_blank" rel="noopener">Claude Code</a> exist to put model intelligence <em>inside your permission system</em>. "Work" is "Code" with friendlier branding; browser versus local app is the distinction that matters.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">03</div>
+        <div class="takeaway-title">Shift the format, then edit</div>
+        <div class="takeaway-text">Don't fight PowerPoint or Word. Convert to HTML, edit there, print back. <strong>"I won't be happy until you've gotten to something really close to the original"</strong> is a better instruction than any spec. <a href="https://files.s-anand.net/cv/S_Anand_2026.html" target="_blank" rel="noopener">The result →</a></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">04</div>
+        <div class="takeaway-title">Say "single-page HTML application"</div>
+        <div class="takeaway-text">One file, data embedded, emailable, hostable anywhere. Most interfaces over data you already have need no backend at all. Evidence: <a href="aiunboxed-room-map.html" target="_blank" rel="noopener">the room map</a> and <a href="https://tools.s-anand.net/" target="_blank" rel="noopener">tools.s-anand.net</a>.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">05</div>
+        <div class="takeaway-title">Prototype to find out what you want</div>
+        <div class="takeaway-text"><strong>"This is not what I need, but I didn't know what I needed before I asked it in the first place."</strong> Build the wrong version fast; the right requirement only becomes visible once something is on screen. Debi's corollary: <em>knowing what you want is the most important thing.</em></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">06</div>
+        <div class="takeaway-title">Keep a list of what failed</div>
+        <div class="takeaway-text">Anand's daily "AI bottlenecks list" marks the frontier: what it can't do today, it may do next month. Test your beliefs instead of holding them — <a href="https://www.s-anand.net/blog/simple-writing-hurts-thinking/" target="_blank" rel="noopener">one such test</a> cost about four cents and overturned a popular prompt tip.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <p><strong style="color:#fff">Anand learns from your questions.</strong></p>
+  <p><a href="https://www.s-anand.net/" target="_blank" rel="noopener">s-anand.net</a> ·
+     <a href="https://wa.me/919741552552" target="_blank" rel="noopener">WhatsApp +91 9741 552 552</a> ·
+     <a href="mailto:s-anand@s-anand.net">s-anand@s-anand.net</a></p>
+  <p><a href="#" id="transcript-btn3">💬 Transcript</a> ·
+     <a href="https://media.s-anand.net/2026-08-22-ai-unboxed-4-vibe-coding.webm">⏯️ Video</a> ·
+     <a href="https://github.com/sanand0/talks/releases/download/talks/2026-08-22-ai-unboxed-vibe-coding.opus">🎧 Audio</a> ·
+     <a href="aiunboxed-room-map.html">🗺️ The Room Map</a> ·
+     <a href="https://talks.s-anand.net/">📚 More talks</a></p>
+  <p class="footer-mono">The AI Unboxed series for the <a href="https://iimalumni.sg/" target="_blank" rel="noopener">IIM Alumni Association of Singapore</a>:
+     <a href="../2026-05-23-ai-unboxed-context-engineering/">1 · Context Engineering</a> ·
+     <a href="../2026-06-20-ai-unboxed-tools-workflows/">2 · Tools &amp; Workflows</a> ·
+     <a href="../2026-07-25-ai-unboxed-agentic-analysis/">3 · Agentic Analysis</a> ·
+     4 · Vibe Coding <em>(you are here)</em></p>
+</footer>
+
+<!-- ── Section jumper ── -->
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump" aria-label="Jump to section">
+  <button id="jump-prev" title="Previous section" aria-label="Previous section">◂</button>
+  <a class="jump-cur" href="#jump-menu" id="jump-cur" aria-haspopup="true" aria-expanded="false"><span class="caret">☰</span> <span id="jump-cur-label">Jump to…</span></a>
+  <button id="jump-next" title="Next section" aria-label="Next section">▸</button>
+</nav>
+
+<div class="jump-menu" id="jump-menu" role="menu">
+  <div class="jm-group">Opening</div>
+  <div class="jump-grid">
+    <a href="#top" data-jump="top">Top<small>The setup</small></a>
+    <a href="#video" data-jump="video">Watch / listen<small>Video · audio · transcript</small></a>
+    <a href="#outlier" data-jump="outlier">The outlier<small>IMDb, and a button 15 years late</small></a>
+    <a href="#survey" data-jump="survey">The room as dataset<small>Five questions, 16 answers</small></a>
+    <a href="#numbers" data-jump="numbers">By the numbers<small>9 automated, 4 made it fail</small></a>
+    <a href="#roomcharts" data-jump="roomcharts">The room, charted<small>Supply vs demand</small></a>
+  </div>
+  <div class="jm-group">The core idea</div>
+  <div class="jump-grid">
+    <a href="#permissions" data-jump="permissions">Permissions, not code<small>Chat vs Work vs Code</small></a>
+    <a href="#risk" data-jump="risk">Three kinds of risk<small>"The answer is negligible"</small></a>
+  </div>
+  <div class="jm-group">The five use cases</div>
+  <div class="jump-grid">
+    <a href="#organizers" data-jump="organizers">Organizers<small>Photos, tickets, 1,412 MP3s</small></a>
+    <a href="#musiccharts" data-jump="musiccharts">The music library<small>1 field in, 13 out</small></a>
+    <a href="#cv" data-jump="cv">Editors<small>"This is a kid's CV"</small></a>
+    <a href="#app" data-jump="app">The app, live<small>Dictated, steered, published</small></a>
+    <a href="#policy" data-jump="policy">Policy as code<small>Contracts as flowcharts</small></a>
+    <a href="#bookmarklets" data-jump="bookmarklets">Bookmarklets<small>The fifth axis</small></a>
+  </div>
+  <div class="jm-group">Closing</div>
+  <div class="jump-grid">
+    <a href="#comic" data-jump="comic">The comic page<small>Two hours, eight panels</small></a>
+    <a href="#benchmarks" data-jump="benchmarks">Benchmarks<small>The section that ran out of time</small></a>
+    <a href="#close" data-jump="close">The close<small>Capability, not code</small></a>
+    <a href="#takeaways" data-jump="takeaways">Takeaways<small>Six things to steal</small></a>
+  </div>
+</div>
+
+<!-- ── Document / chat modal ── -->
+<div class="modal" id="doc-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h4 id="doc-title">Transcript</h4>
+      <button class="modal-close" id="doc-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-src" id="doc-src"></div>
+    <div class="modal-body" id="doc-body"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+<script>
+  // ── Progress bar ──
+  const prog = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    prog.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + '%';
+  }, { passive: true });
+
+  // ── Markdown document modal ──
+  const modal = document.getElementById('doc-modal');
+  const dBody = document.getElementById('doc-body');
+  const dTitle = document.getElementById('doc-title');
+  const dSrc = document.getElementById('doc-src');
+  const cache = {};
+
+  function renderMarkdown(text) {
+    const body = text
+      .replace(/^---[\s\S]*?---\s*/, '')
+      .replace(/<summary>([\s\S]*?)<\/summary>/g, '\n\n**💭 $1**\n\n')
+      .replace(/<\/?details>/g, '\n\n');
+    const html = window.marked ? marked.parse(body) : body.replace(/\n/g, '<br>');
+    return html.replace(/<a /g, '<a target="_blank" rel="noopener" ');
+  }
+
+  async function openDoc(file, title, source) {
+    modal.classList.add('open');
+    dBody.scrollTop = 0;
+    dTitle.textContent = title;
+    dSrc.innerHTML = source ? `<a href="${source}" target="_blank" rel="noopener">↗ Open the original shared chat</a>` : '';
+    if (cache[file]) { dBody.innerHTML = cache[file]; return; }
+    dBody.innerHTML = '<p><em>Loading…</em></p>';
+    try {
+      const res = await fetch(file);
+      if (!res.ok) throw new Error(res.status);
+      const html = renderMarkdown(await res.text());
+      cache[file] = html;
+      dBody.innerHTML = html;
+    } catch (e) {
+      dBody.innerHTML = `<p>Could not load this file here. <a href="${file}" target="_blank" rel="noopener">Open it directly</a>${source ? ` or <a href="${source}" target="_blank" rel="noopener">view the original chat</a>` : ''}.</p>`;
+    }
+  }
+
+  const openTranscript = e => { e.preventDefault(); openDoc('transcript.md', 'Workshop Transcript — Vibe Coding', ''); };
+  ['transcript-btn', 'transcript-btn2', 'transcript-btn3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', openTranscript);
+  });
+
+  document.querySelectorAll('.chatpop').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      openDoc(el.dataset.doc, el.dataset.title, el.dataset.source || '');
+    });
+  });
+  document.getElementById('doc-close').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+
+  // ── Fixed-page CV embeds: scale the 720px sheet to whatever width the column gives it ──
+  (function () {
+    const stages = document.querySelectorAll('.cv-stage');
+    if (!stages.length) return;
+    const fit = () => stages.forEach(st => {
+      const f = st.querySelector('iframe');
+      if (f) f.style.transform = `scale(${st.clientWidth / 720})`;
+    });
+    fit();
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(document.body);
+    window.addEventListener('resize', fit, { passive: true });
+    stages.forEach(st => st.querySelector('iframe')?.addEventListener('load', fit));
+  })();
+
+  // ── Section jumper ──
+  (function () {
+    const menu = document.getElementById('jump-menu');
+    const backdrop = document.getElementById('jump-backdrop');
+    const curBtn = document.getElementById('jump-cur');
+    const curLabel = document.getElementById('jump-cur-label');
+    const prevBtn = document.getElementById('jump-prev');
+    const nextBtn = document.getElementById('jump-next');
+    const links = Array.from(menu.querySelectorAll('a[data-jump]'));
+    const ids = links.map(a => a.dataset.jump);
+    const labels = {};
+    links.forEach(a => { labels[a.dataset.jump] = a.firstChild.textContent.trim(); });
+    let idx = 0;
+
+    const closeMenu = () => { menu.classList.remove('open'); backdrop.classList.remove('open'); curBtn.setAttribute('aria-expanded', 'false'); };
+    const toggleMenu = e => {
+      e.preventDefault();
+      const open = !menu.classList.contains('open');
+      menu.classList.toggle('open', open);
+      backdrop.classList.toggle('open', open);
+      curBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) { const cur = menu.querySelector('a.is-cur'); if (cur) cur.scrollIntoView({ block: 'nearest' }); }
+    };
+    curBtn.addEventListener('click', toggleMenu);
+    backdrop.addEventListener('click', closeMenu);
+    links.forEach(a => a.addEventListener('click', closeMenu));
+
+    function setCurrent(i) {
+      idx = i;
+      curLabel.textContent = labels[ids[i]];
+      links.forEach((a, k) => a.classList.toggle('is-cur', k === i));
+      prevBtn.disabled = i <= 0;
+      nextBtn.disabled = i >= ids.length - 1;
+    }
+    const go = i => {
+      if (i < 0 || i >= ids.length) return;
+      const el = document.getElementById(ids[i]);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setCurrent(i);
+    };
+    prevBtn.addEventListener('click', () => go(idx - 1));
+    nextBtn.addEventListener('click', () => go(idx + 1));
+
+    const targets = ids.map(id => document.getElementById(id)).filter(Boolean);
+    function onScroll() {
+      const y = window.scrollY + window.innerHeight * 0.3;
+      let best = 0;
+      targets.forEach((el, k) => { if (el.getBoundingClientRect().top + window.scrollY <= y) best = k; });
+      if (best !== idx) setCurrent(best);
+    }
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { onScroll(); ticking = false; });
+    }, { passive: true });
+    setCurrent(0);
+    onScroll();
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeMenu();
+      if (e.target.matches('input, textarea')) return;
+      if (menu.classList.contains('open') || modal.classList.contains('open')) return;
+      if (e.key === 'j') go(idx + 1);
+      if (e.key === 'k') go(idx - 1);
+    });
+  })();
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') modal.classList.remove('open');
+  });
+</script>
+</body>
+</html>

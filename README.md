@@ -303,13 +303,13 @@ If you need a short bio to introduce me, you're welcome to modify this.
 
 - **Presentation:** I usually present interactive demos rather than a fixed slide deck.
 - **Laptop:** I use my own Lenovo/Ubuntu laptop via HDMI + USB3. I need it near the podium so I can type.
-- **Aspect ratio:** 16:9, 16:10, or 4:3 are fine. Please check that circles appear as circles, not ovals.
-- **Internet:** My demos need Internet. Mobile data is a fallback; reliable venue Wi-Fi helps.
-- **Security:** I don't carry ID. If venue security requires one, please arrange an escort for me with my phone and laptop.
+- **Screen:** 16:9, 16:10, or 4:3 displays are fine. Please check that circles appear as circles, not ovals.
+- **Internet:** My demos need Internet. If mobile data at venue is flaky, please help with Wi-Fi.
+- **Security:** I don't carry ID. If venue security requires one, please escort my phone, laptop, and me.
 - **Attire:** I wear round-neck T-shirts, jeans, and open sandals. Please allow this.
-- **Badges:** Please print my name on **both sides**, in **large letters**.
+- **Badges:** Please print my name on _both sides_, in _large letters_.
 - **Agenda:** Please share the agenda and other speakers' sessions so I can attend and adapt my talk to the room.
-- **Recording:** Please record video + audio + screen and share it publicly — or at least with me.
+- **Recording:** Please record my video + audio + screen and share it publicly - or at least with me.
 
 ### Fee / honorarium
 

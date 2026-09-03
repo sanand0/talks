@@ -1,0 +1,1329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Convergence 2026 — What's Left For Us</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%232a78d6'/%3E%3Ccircle%20cx='22'%20cy='24'%20r='7'%20fill='%23fcfcfb'/%3E%3Ccircle%20cx='42'%20cy='24'%20r='7'%20fill='%23eb6834'/%3E%3Ccircle%20cx='32'%20cy='42'%20r='7'%20fill='%231baf7a'/%3E%3C/svg%3E">
+<style>
+/* ====================== TOKENS ====================== */
+:root{
+  color-scheme: light;
+  --surface-1: #fcfcfb;
+  --surface-2: #f2f1ec;
+  --page: #f9f9f7;
+  --ink-1: #0b0b0b;
+  --ink-2: #52514e;
+  --ink-muted: #898781;
+  --grid: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border: rgba(11,11,11,0.10);
+  --accent: #2a78d6;
+  --accent-ink: #ffffff;
+  --dot-idle: #c3c2b7;
+
+  --s1: #2a78d6; /* blue */
+  --s2: #eb6834; /* orange */
+  --s3: #1baf7a; /* aqua */
+  --s4: #eda100; /* yellow */
+  --s5: #e87ba4; /* magenta */
+  --s6: #008300; /* green */
+  --s7: #4a3aa7; /* violet */
+  --s8: #e34948; /* red */
+
+  --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius-dot: 30%;
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme: dark;
+    --surface-1: #1a1a19;
+    --surface-2: #232322;
+    --page: #0d0d0d;
+    --ink-1: #ffffff;
+    --ink-2: #c3c2b7;
+    --ink-muted: #8b8a84;
+    --grid: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255,255,255,0.10);
+    --accent: #3987e5;
+    --dot-idle: #46453f;
+
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+    --s5: #d55181; --s6: #1fae1f; --s7: #9085e9; --s8: #e66767;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --surface-1: #1a1a19; --surface-2: #232322; --page: #0d0d0d;
+  --ink-1: #ffffff; --ink-2: #c3c2b7; --ink-muted: #8b8a84;
+  --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+  --accent: #3987e5; --dot-idle: #46453f;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+  --s5: #d55181; --s6: #1fae1f; --s7: #9085e9; --s8: #e66767;
+}
+
+/* ====================== RESET / BASE ====================== */
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0; background:var(--page); color:var(--ink-1);
+  font-family:var(--font-body); -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+h1,h2,h3{font-family:var(--font-display); font-weight:600; margin:0;}
+button{font-family:inherit; color:inherit;}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+.sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
+
+/* ====================== APP SHELL ====================== */
+#app{position:fixed; inset:0; display:flex; flex-direction:column;}
+
+/* top bar */
+#topbar{
+  display:flex; align-items:center; gap:.75rem;
+  padding:.6rem 1rem; border-bottom:1px solid var(--border);
+  background:var(--surface-1); z-index:40; flex:0 0 auto;
+}
+#brand{font-family:var(--font-display); font-weight:600; font-size:1rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:0 1 auto; min-width:0;}
+#brand span{color:var(--accent);}
+#progress-track{flex:1 1 30px; min-width:20px; height:4px; background:var(--grid); border-radius:2px; position:relative; overflow:hidden;}
+#progress-fill{position:absolute; inset:0 auto 0 0; width:0%; background:var(--accent); border-radius:2px; transition:width .5s ease;}
+.icon-btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:.35rem;
+  width:2.25rem; height:2.25rem; border-radius:999px; border:1px solid var(--border);
+  background:var(--surface-2); cursor:pointer; flex:0 0 auto;
+}
+.icon-btn:hover{background:var(--grid);}
+.icon-btn svg{width:18px; height:18px; stroke:var(--ink-1); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;}
+#map-btn{width:auto; padding:0 .85rem; gap:.4rem; font-size:.8rem; font-weight:600;}
+
+/* main stage */
+#stage-wrap{flex:1; position:relative; min-height:0;}
+#stage{
+  position:absolute; inset:0; display:grid;
+  grid-template-columns: minmax(280px, 380px) 1fr;
+  gap:0;
+}
+@media (max-width: 720px){
+  #stage{grid-template-columns:1fr; grid-template-rows: minmax(0,40%) 1fr;}
+  #panel{border-right:none; border-bottom:1px solid var(--border);}
+  #panel .stat{font-size:2.3rem;}
+}
+@media (max-width: 480px){
+  #brand{font-size:.82rem;}
+  #progress-track{display:none;}
+  #map-btn .btn-label{display:none;}
+  #map-btn{padding:0 .6rem;}
+  .annot{font-size:.6rem; max-width:15vw; overflow:hidden; text-overflow:ellipsis;}
+  .annot.big{font-size:1.05rem;}
+}
+
+#panel{
+  padding:1.8rem 1.6rem; overflow-y:auto; border-right:1px solid var(--border);
+  display:flex; flex-direction:column; gap:1.15rem; background:var(--surface-1);
+}
+#panel .kicker{font-size:.82rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--accent);}
+#panel h2{font-size:2.05rem; line-height:1.15; letter-spacing:-.01em;}
+#panel .caption{font-size:1.15rem; line-height:1.48; color:var(--ink-2); max-width:46ch;}
+#panel .stat{font-family:var(--font-display); font-size:3.6rem; line-height:1; font-weight:600; color:var(--accent);}
+#panel .stat-label{font-size:.98rem; color:var(--ink-muted);}
+#panel .legend{display:flex; flex-wrap:wrap; gap:.5rem .8rem; margin-top:.25rem;}
+#panel .legend-item{display:flex; align-items:center; gap:.45rem; font-size:.92rem; color:var(--ink-2);}
+#panel .legend-swatch{width:13px; height:13px; border-radius:30%; flex:0 0 auto;}
+#panel .legend-item.dim{opacity:.35;}
+#panel .sourceline{margin-top:auto; font-size:.78rem; color:var(--ink-muted); padding-top:.75rem; border-top:1px dashed var(--border);}
+
+#visual{position:relative; overflow:hidden;}
+#dotfield{position:absolute; inset:0;}
+#annot-layer{position:absolute; inset:0; pointer-events:none;}
+.annot{position:absolute; font-size:.95rem; font-weight:700; color:var(--ink-2); letter-spacing:.01em; white-space:nowrap; transform:translate(-50%,0); transition:left .8s cubic-bezier(.4,0,.2,1), top .8s cubic-bezier(.4,0,.2,1), opacity .4s ease;}
+.annot.big{font-size:1.25rem; font-family:var(--font-display); color:var(--ink-1); font-weight:600;}
+.annot.axis{font-size:.72rem; font-weight:600; color:var(--ink-muted); max-width:16ch; overflow:hidden; text-overflow:ellipsis;}
+
+.dot{
+  position:absolute; top:0; left:0; width:16px; height:16px;
+  border-radius:var(--radius-dot); background:var(--dot-idle);
+  transform:translate(0,0); cursor:pointer; padding:0; border:none;
+  transition:transform .85s cubic-bezier(.45,0,.15,1), background-color .5s ease, opacity .5s ease, width .5s ease, height .5s ease;
+  will-change:transform;
+}
+.dot:hover, .dot:focus-visible{ box-shadow:0 0 0 3px var(--border); z-index:5;}
+.dot.dimmed{ opacity:.16; }
+
+/* bottom nav */
+#bottombar{
+  display:flex; align-items:center; gap:.6rem; padding:.55rem .9rem;
+  border-top:1px solid var(--border); background:var(--surface-1); flex:0 0 auto; z-index:40;
+}
+#beat-dots{display:flex; gap:.32rem; flex:1; overflow-x:auto; scrollbar-width:none;}
+#beat-dots::-webkit-scrollbar{display:none;}
+.beat-dot{
+  flex:0 0 auto; padding:.3rem .65rem; border-radius:999px; border:1px solid var(--border);
+  background:var(--surface-2); font-size:.72rem; cursor:pointer; white-space:nowrap; color:var(--ink-2);
+}
+.beat-dot.active{background:var(--accent); color:var(--accent-ink); border-color:var(--accent); font-weight:600;}
+.beat-dot.detour{border-style:dashed;}
+
+/* map overlay */
+#map-overlay{
+  position:fixed; inset:0; background:color-mix(in oklab, var(--page) 75%, transparent);
+  backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; z-index:90;
+}
+#map-overlay[hidden]{display:none;}
+#map-card{
+  background:var(--surface-1); border:1px solid var(--border); border-radius:18px;
+  padding:1.5rem; max-width:920px; width:92vw; max-height:82vh; overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
+#map-card h3{font-size:1.1rem; margin-bottom:.25rem;}
+#map-card .sub{font-size:.82rem; color:var(--ink-muted); margin-bottom:1rem;}
+#map-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:.6rem;}
+.map-item{
+  text-align:left; border:1px solid var(--border); border-radius:12px; padding:.75rem .85rem;
+  background:var(--surface-2); cursor:pointer; display:flex; flex-direction:column; gap:.2rem;
+}
+.map-item:hover{border-color:var(--accent);}
+.map-item .n{font-size:.65rem; font-weight:700; color:var(--accent); letter-spacing:.06em;}
+.map-item .t{font-weight:600; font-size:.92rem;}
+.map-item .c{font-size:.76rem; color:var(--ink-muted);}
+#map-section-label{font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-muted); margin:1.1rem 0 .4rem;}
+
+/* explore drawer */
+#explore-drawer{
+  position:fixed; right:1rem; bottom:4rem; z-index:80; background:var(--surface-1);
+  border:1px solid var(--border); border-radius:14px; padding:.9rem; width:270px;
+  box-shadow:0 14px 40px rgba(0,0,0,.22);
+}
+#explore-drawer[hidden]{display:none;}
+#explore-drawer h4{font-size:.8rem; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-muted); margin-bottom:.6rem;}
+#explore-drawer label{display:block; font-size:.75rem; color:var(--ink-2); margin:.5rem 0 .2rem;}
+#explore-drawer select{width:100%; padding:.4rem .5rem; border-radius:8px; border:1px solid var(--border); background:var(--surface-2); color:var(--ink-1); font-size:.82rem;}
+#explore-return{margin-top:.8rem; width:100%; padding:.5rem; border-radius:8px; border:none; background:var(--accent); color:#fff; font-weight:600; font-size:.82rem; cursor:pointer;}
+
+/* modal */
+#modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; z-index:100; padding:1rem;}
+#modal-overlay[hidden]{display:none;}
+#modal-card{background:var(--surface-1); border-radius:18px; max-width:560px; width:100%; max-height:88vh; overflow-y:auto; box-shadow:0 24px 70px rgba(0,0,0,.3); position:relative;}
+#modal-close{position:absolute; top:.8rem; right:.8rem; z-index:2;}
+#modal-body{padding:1.6rem;}
+.modal-tag{display:inline-flex; align-items:center; gap:.4rem; padding:.25rem .6rem; border-radius:999px; font-size:.72rem; font-weight:700; margin-right:.4rem; margin-bottom:.5rem;}
+.modal-role{font-size:.78rem; color:var(--ink-muted); margin-bottom:.2rem;}
+.modal-field{margin-top:1rem;}
+.modal-field .fl{font-size:.68rem; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-muted); margin-bottom:.25rem;}
+.modal-field .fv{font-size:.98rem; line-height:1.45;}
+.modal-field.highlight{background:var(--surface-2); border-radius:10px; padding:.7rem .85rem; margin-top:.9rem;}
+.modal-field.highlight .fv{font-weight:600;}
+
+@media (prefers-reduced-motion: reduce){
+  .dot, .annot, #progress-fill{transition-duration:.01ms !important;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="topbar">
+    <div id="brand">Convergence 2026 <span>·</span> What's Left For Us</div>
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <button id="map-btn" class="icon-btn" title="Jump to any section (M)">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      <span class="btn-label">Jump</span>
+    </button>
+    <button id="theme-btn" class="icon-btn" title="Toggle theme">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </div>
+
+  <div id="stage-wrap">
+    <div id="stage">
+      <aside id="panel">
+        <div class="kicker" id="beat-kicker">Section</div>
+        <h2 id="beat-title">Loading…</h2>
+        <p class="caption" id="beat-caption"></p>
+        <div id="beat-stat-wrap" hidden>
+          <div class="stat" id="beat-stat"></div>
+          <div class="stat-label" id="beat-stat-label"></div>
+        </div>
+        <div class="legend" id="beat-legend"></div>
+        <div class="sourceline">88 responses · Jio Institute Convergence, 3 Sep 2026 · click any dot for detail</div>
+      </aside>
+      <div id="visual">
+        <div id="dotfield" role="list" aria-label="Survey respondents"></div>
+        <div id="annot-layer"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="bottombar">
+    <button id="prev-btn" class="icon-btn" title="Previous (←)"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <div id="beat-dots" role="tablist" aria-label="Story sections"></div>
+    <button id="explore-btn" class="icon-btn" title="Explore a different cut">
+      <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h6"/><circle cx="18" cy="12" r="2"/></svg>
+    </button>
+    <button id="next-btn" class="icon-btn" title="Next (→)"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+  </div>
+</div>
+
+
+<div id="map-overlay" hidden>
+  <div id="map-card" role="dialog" aria-modal="true" aria-labelledby="map-title">
+    <h3 id="map-title">Jump anywhere</h3>
+    <div class="sub">This is a collection of insights, not a fixed sequence — go wherever the room's questions take you.</div>
+    <div id="map-section-label">Main story</div>
+    <div id="map-grid"></div>
+    <div id="map-section-label">Detours &amp; explorations</div>
+    <div id="map-grid-detour"></div>
+  </div>
+</div>
+
+<div id="explore-drawer" hidden>
+  <h4>Explore a different cut</h4>
+  <label for="ex-color">Colour by</label>
+  <select id="ex-color"></select>
+  <label for="ex-group">Group / arrange by</label>
+  <select id="ex-group"></select>
+  <button id="explore-return">↩ Back to the story</button>
+</div>
+
+<div id="modal-overlay" hidden>
+  <div id="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-name">
+    <button id="modal-close" class="icon-btn" title="Close (Esc)"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+const RESPONSES = [{"role":"Data / AI","task":"Verify / Validate AI responses against my context","blockers":"The task needs judgment or context I don’t trust it with","keep":"Experiencing - e.g. reading good prose. Interacting - e.g. replying to family WhatsApp messages. Understanding - e.g. learning interesting topics. Staying in control - e.g. approving irreversible decisions.","question":"Post AGI / ASI, would we really feel different, or are we so adaptible that it feels like the new normal?","mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves relationships and trust for humans; current barriers are judgment / context-bound.","mindsetConfidence":"Low","delegationTarget":"Reporting / synthesis","barrierProfile":"Judgment / context-bound","barrierBreadth":"One / low","humanCore":"Relationships / trust","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Macro future / AGI","adoptionPosture":"Context / human-bound","verificationSalience":"No explicit verification gate"},{"role":"Business / general management","task":"One recurring task I wish AI would take off my plate completely is researching and mapping the right contacts — finding who to reach out to, verifying their details, and updating the CRM after every touchpoint. It’s hours of work every week, zero strategic thinking required, but I still do it myself because it’s too nuanced to hand off without a proper brief.","blockers":"It gets things wrong / I still need to verify it, I don’t yet know how to make AI do it","keep":"The first conversation with a potential partner, the pitch where you’re reading the room, the follow-up where instinct tells you to push or pull back — that I’d keep. Because the reason people say yes to a partnership isn’t the deck or the data. It’s trust, and trust is built person to person. No version of AI gets a seat at that table for me.","question":"I can use AI to research, draft, and map — but when I walk into a room with a senior stakeholders; as AI gets better at doing the work, does the human in the room still need that institutional credibility to close the deal, or does that become irrelevant too?","mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves relationships and trust for humans; current barriers are verification-bound. The open question also centers on the human–AI boundary.","mindsetConfidence":"High","delegationTarget":"Coordination / follow-through","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Relationships / trust","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Human–AI boundary","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Education / research","task":"sending and replying emails","blockers":"It gets things wrong / I still need to verify it, Security, privacy, compliance, or policy, Cost / speed","keep":"strategy, new products","question":null,"mindset":"Eager Delegator","mindsetReason":"Shows willingness to automate coordination/follow-through work; constraints are mainly multi-factor stack, while the human keeps judgment and decisions.","mindsetConfidence":"Medium","delegationTarget":"Coordination / follow-through","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"No stated question","adoptionPosture":"Verify-first","verificationSalience":"Verification-present"},{"role":"Education / research","task":"Cleaning","blockers":"The task needs human interaction / presence, I don’t yet know how to make AI do it","keep":"Thinking","question":"How accurate it is!","mindset":"Reluctant Verifier","mindsetReason":"Wants physical/personal work automated, but is held back by human-presence bound and explicitly raises trust/verification; retains creativity/thinking.","mindsetConfidence":"Low","delegationTarget":"Physical / personal","barrierProfile":"Human-presence bound","barrierBreadth":"Two","humanCore":"Creativity / thinking","delegationAppetite":"Selective — retain more","aiRole":"Executor / agent","futureConcern":"Trust / verification","adoptionPosture":"Context / human-bound","verificationSalience":"No explicit verification gate"},{"role":"Finance","task":"Legal work.","blockers":"The task needs judgment or context I don’t trust it with, I don’t yet know how to make AI do it","keep":"Performance management of my team","question":"How many AIs do I need to address the different aspects of my work in a specific industry sector? One for marketing, one for legal work etc.","mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves relationships and trust for humans; current barriers are judgment / context-bound.","mindsetConfidence":"Low","delegationTarget":"Reporting / synthesis","barrierProfile":"Judgment / context-bound","barrierBreadth":"Two","humanCore":"Relationships / trust","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Technical architecture","adoptionPosture":"Context / human-bound","verificationSalience":"No explicit verification gate"},{"role":"Business / general management","task":"managing email traffic","blockers":"It cannot access the data or systems it needs, The task needs judgment or context I don’t trust it with","keep":"internal and external personal relationships","question":"relationship between Ai deployment and employee numbers","mindset":"Eager Delegator","mindsetReason":"Shows willingness to automate coordination/follow-through work; constraints are mainly judgment / context-bound, while the human keeps relationships and trust.","mindsetConfidence":"Medium","delegationTarget":"Coordination / follow-through","barrierProfile":"Judgment / context-bound","barrierBreadth":"Two","humanCore":"Relationships / trust","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Enterprise adoption / governance","adoptionPosture":"Integration-ready","verificationSalience":"No explicit verification gate"},{"role":"Business / general management","task":"Every morning summarise important emails and highlight urgent issues","blockers":"Cost / speed, I don’t yet know how to make AI do it","keep":"Keep important decisions to remain with me.","question":"How should we measure whether AI is improving business performance, not just individual productivity?","mindset":"Eager Delegator","mindsetReason":"Shows willingness to automate coordination/follow-through work; constraints are mainly practical / know-how, while the human keeps judgment and decisions.","mindsetConfidence":"High","delegationTarget":"Coordination / follow-through","barrierProfile":"Practical / know-how","barrierBreadth":"Two","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Enterprise adoption / governance","adoptionPosture":"Exploring / unsure","verificationSalience":"No explicit verification gate"},{"role":"Student","task":"Nine","blockers":"Other / something else","keep":"Nothing","question":null,"mindset":"Full Delegator","mindsetReason":"Explicitly protects nothing; the response signals willingness to delegate essentially everything once AI is capable enough.","mindsetConfidence":"High","delegationTarget":"No clear task","barrierProfile":"Low / no barrier","barrierBreadth":"One / low","humanCore":"Nothing protected","delegationAppetite":"Total delegation","aiRole":"Autopilot","futureConcern":"No stated question","adoptionPosture":"High-delegation","verificationSalience":"No explicit verification gate"},{"role":"Education / research","task":"None","blockers":"It gets things wrong / I still need to verify it, It cannot take the actions required","keep":"whatever includes human relationship","question":null,"mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves relationships and trust for humans; current barriers are verification-bound.","mindsetConfidence":"Low","delegationTarget":"No clear task","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Relationships / trust","delegationAppetite":"High — retain agency","aiRole":"Unclear","futureConcern":"No stated question","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Technology / engineering","task":"Sort through emails and delete / block spam mails and invites which manage to get through current filters.","blockers":"I don’t yet know how to make AI do it","keep":"Reading and replying my emails","question":"How can an AI trained on public information be trusted to analyze and draw conclusions on company proprietary information. Second, how secure is the company's proprietary information from being used in analysis by the same AI for outsiders?","mindset":"Eager Delegator","mindsetReason":"Shows willingness to automate coordination/follow-through work; constraints are mainly practical / know-how, while the human keeps some hands-on execution.","mindsetConfidence":"High","delegationTarget":"Coordination / follow-through","barrierProfile":"Practical / know-how","barrierBreadth":"One / low","humanCore":"Specific craft / execution","delegationAppetite":"Low — retain execution","aiRole":"Assistant","futureConcern":"Enterprise adoption / governance","adoptionPosture":"Exploring / unsure","verificationSalience":"No explicit verification gate"},{"role":"Sales / marketing","task":"Editing my photos","blockers":"It cannot access the data or systems it needs","keep":"Nothing","question":"Will chatgpt will go bankrupt in coming future?","mindset":"Full Delegator","mindsetReason":"Explicitly protects nothing; the response signals willingness to delegate essentially everything once AI is capable enough.","mindsetConfidence":"High","delegationTarget":"Creative / communication","barrierProfile":"System / security-bound","barrierBreadth":"One / low","humanCore":"Nothing protected","delegationAppetite":"Total delegation","aiRole":"Autopilot","futureConcern":"Macro future / AGI","adoptionPosture":"High-delegation","verificationSalience":"No explicit verification gate"},{"role":"Student","task":"None","blockers":"It gets things wrong / I still need to verify it, The task needs human interaction / presence, Security, privacy, compliance, or policy","keep":"Privacy","question":"How to reduce hallucinations in the answers generated by AI?","mindset":"Reluctant Verifier","mindsetReason":"Wants no concrete task automated, but is held back by multi-factor stack and explicitly raises trust/verification; retains privacy/personal agency.","mindsetConfidence":"High","delegationTarget":"No clear task","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Privacy / personal agency","delegationAppetite":"Selective — retain more","aiRole":"Unclear","futureConcern":"Trust / verification","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Student","task":"Doing the dishes","blockers":"I don’t yet know how to make AI do it","keep":"Nothing, if it is a work. Humans does not need to work","question":"None","mindset":"Full Delegator","mindsetReason":"Explicitly protects nothing; the response signals willingness to delegate essentially everything once AI is capable enough.","mindsetConfidence":"High","delegationTarget":"Physical / personal","barrierProfile":"Practical / know-how","barrierBreadth":"One / low","humanCore":"Nothing protected","delegationAppetite":"Total delegation","aiRole":"Autopilot","futureConcern":"No stated question","adoptionPosture":"High-delegation","verificationSalience":"No explicit verification gate"},{"role":"Business / general management","task":"searching for jobs","blockers":"It gets things wrong / I still need to verify it, It cannot access the data or systems it needs, It cannot take the actions required, Cost / speed","keep":"verification","question":".","mindset":"Reluctant Verifier","mindsetReason":"Wants coordination/follow-through work automated, but is held back by multi-factor stack; retains some hands-on execution.","mindsetConfidence":"Medium","delegationTarget":"Coordination / follow-through","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Specific craft / execution","delegationAppetite":"Low — retain execution","aiRole":"Assistant","futureConcern":"No stated question","adoptionPosture":"Verify-first","verificationSalience":"Verification-present"},{"role":"Student","task":"None","blockers":"The task needs judgment or context I don’t trust it with, The task needs human interaction / presence, Security, privacy, compliance, or policy","keep":"Final decisions, my inputs in designing, brainstorming. I'll challenge the AI based on my human insights.","question":null,"mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves judgment and decisions for humans; current barriers are multi-factor stack.","mindsetConfidence":"High","delegationTarget":"No clear task","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Unclear","futureConcern":"No stated question","adoptionPosture":"Context / human-bound","verificationSalience":"No explicit verification gate"},{"role":"Data / AI","task":"Planning and Finding Ideas","blockers":"It gets things wrong / I still need to verify it, The task needs human interaction / presence, Security, privacy, compliance, or policy, Cost / speed","keep":"Learning","question":null,"mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves creativity/thinking for humans; current barriers are multi-factor stack.","mindsetConfidence":"High","delegationTarget":"Creative / communication","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Creativity / thinking","delegationAppetite":"Selective — retain more","aiRole":"Collaborator / co-creator","futureConcern":"No stated question","adoptionPosture":"Verify-first","verificationSalience":"Verification-present"},{"role":"Data / AI","task":"Summarising my week","blockers":"The task needs judgment or context I don’t trust it with, Security, privacy, compliance, or policy","keep":"Validating the final decision","question":"How to decide human in loop areas in a project?","mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves judgment and decisions for humans; current barriers are judgment / context-bound. The open question also centers on the human–AI boundary.","mindsetConfidence":"High","delegationTarget":"Reporting / synthesis","barrierProfile":"Judgment / context-bound","barrierBreadth":"Two","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Human–AI boundary","adoptionPosture":"Context / human-bound","verificationSalience":"No explicit verification gate"},{"role":"Data / AI","task":"Scheduling my day~ Like whom I have to talk today, wish today, meet today, etc","blockers":"It gets things wrong / I still need to verify it, It cannot access the data or systems it needs, It cannot take the actions required, The task needs judgment or context I don’t trust it with, The task needs human interaction / presence, Cost / speed","keep":"What I want to eat and where I want to go on holidays.","question":null,"mindset":"Eager Delegator","mindsetReason":"Shows willingness to automate coordination/follow-through work; constraints are mainly multi-factor stack, while the human keeps some hands-on execution.","mindsetConfidence":"Low","delegationTarget":"Coordination / follow-through","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Specific craft / execution","delegationAppetite":"Low — retain execution","aiRole":"Assistant","futureConcern":"No stated question","adoptionPosture":"Verify-first","verificationSalience":"Verification-present"},{"role":"Data / AI","task":"Keeping up with the repetitive maintenance around AI systems — monitoring model performance, investigating failed evaluations, updating datasets, checking production logs, and creating recurring reports. I’d love for AI to continuously detect what changed, identify likely causes, and propose or even implement the fixes, while I focus on building new capabilities.","blockers":"It gets things wrong / I still need to verify it, The task needs human interaction / presence","keep":"I’d happily delegate coding, testing, debugging, monitoring, documentation, and routine experimentation to AI. But I’d want to personally decide what we should build, which trade-offs matter, how much risk is acceptable, and when a technically possible solution is actually the right one.","question":"If AI can eventually handle most of the technical execution, what becomes the most valuable skill for an AI engineer — and how do we make sure we’re building that skill rather than just becoming better at prompting and supervising AI?","mindset":"Career Navigator","mindsetReason":"The defining unresolved question is how skills, differentiation, or career relevance change as AI absorbs more execution; the human core retained is judgment / decisions.","mindsetConfidence":"High","delegationTarget":"Analysis / technical execution","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Analyst / technical agent","futureConcern":"Career relevance / skills","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Finance","task":"Calculations","blockers":"Nothing — I already delegate almost everything I reasonably can","keep":"Decisions","question":"Who's responsible if AI goes wrong","mindset":"Eager Delegator","mindsetReason":"Shows willingness to automate analysis/technical execution; constraints are mainly low / no barrier, while the human keeps judgment and decisions.","mindsetConfidence":"High","delegationTarget":"Analysis / technical execution","barrierProfile":"Low / no barrier","barrierBreadth":"One / low","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Analyst / technical agent","futureConcern":"Enterprise adoption / governance","adoptionPosture":"High-delegation","verificationSalience":"No explicit verification gate"},{"role":"Technology / engineering","task":"Email Management","blockers":"The task needs judgment or context I don’t trust it with","keep":"Nothing","question":"How much we should trust AI","mindset":"Full Delegator","mindsetReason":"Explicitly protects nothing; the response signals willingness to delegate essentially everything once AI is capable enough.","mindsetConfidence":"High","delegationTarget":"Coordination / follow-through","barrierProfile":"Judgment / context-bound","barrierBreadth":"One / low","humanCore":"Nothing protected","delegationAppetite":"Total delegation","aiRole":"Autopilot","futureConcern":"Trust / verification","adoptionPosture":"High-delegation","verificationSalience":"No explicit verification gate"},{"role":"Business / general management","task":"Business Case Simulations","blockers":"It gets things wrong / I still need to verify it, The task needs judgment or context I don’t trust it with","keep":"Nothing","question":"How can we implement AI on old infrastructure > 15 years old with almost no Capex?","mindset":"Full Delegator","mindsetReason":"Explicitly protects nothing; the response signals willingness to delegate essentially everything once AI is capable enough.","mindsetConfidence":"High","delegationTarget":"Analysis / technical execution","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Nothing protected","delegationAppetite":"Total delegation","aiRole":"Autopilot","futureConcern":"Enterprise adoption / governance","adoptionPosture":"High-delegation","verificationSalience":"Verification-dominant"},{"role":"Technology / engineering","task":"End to end production level deployment","blockers":"It gets things wrong / I still need to verify it, The task needs judgment or context I don’t trust it with","keep":"Communicating with teams and stakeholders","question":"Where to use AI?","mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves relationships and trust for humans; current barriers are verification-bound.","mindsetConfidence":"Medium","delegationTarget":"Analysis / technical execution","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Relationships / trust","delegationAppetite":"High — retain agency","aiRole":"Analyst / technical agent","futureConcern":"Enterprise adoption / governance","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Student","task":"Mundane tasks which requires no brain power","blockers":"It gets things wrong / I still need to verify it, Security, privacy, compliance, or policy, Cost / speed","keep":"Thinking","question":null,"mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves creativity/thinking for humans; current barriers are multi-factor stack.","mindsetConfidence":"Low","delegationTarget":"Generic repetitive work","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Creativity / thinking","delegationAppetite":"Selective — retain more","aiRole":"Executor / agent","futureConcern":"No stated question","adoptionPosture":"Verify-first","verificationSalience":"Verification-present"},{"role":"Finance","task":"None","blockers":"It gets things wrong / I still need to verify it, The task needs human interaction / presence","keep":"Parts which require judgement","question":"If Ai starts taking decisions, who's gonna be responsible?","mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves judgment and decisions for humans; current barriers are verification-bound.","mindsetConfidence":"Medium","delegationTarget":"No clear task","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Unclear","futureConcern":"Enterprise adoption / governance","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Data / AI","task":"Data Analysis and Reporting","blockers":"It gets things wrong / I still need to verify it, The task needs judgment or context I don’t trust it with","keep":"Decision Making","question":"How much we can trust ai while making decisions","mindset":"Reluctant Verifier","mindsetReason":"Wants analysis/technical execution automated, but is held back by verification-bound and explicitly raises trust/verification; retains judgment and decisions.","mindsetConfidence":"High","delegationTarget":"Analysis / technical execution","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Analyst / technical agent","futureConcern":"Trust / verification","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Finance","task":"Financial Statements","blockers":"It gets things wrong / I still need to verify it","keep":"Personal documentation","question":null,"mindset":"Reluctant Verifier","mindsetReason":"Wants analysis/technical execution automated, but is held back by verification-bound; retains privacy/personal agency.","mindsetConfidence":"Medium","delegationTarget":"Analysis / technical execution","barrierProfile":"Verification-bound","barrierBreadth":"One / low","humanCore":"Privacy / personal agency","delegationAppetite":"Selective — retain more","aiRole":"Analyst / technical agent","futureConcern":"No stated question","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Sales / marketing","task":"Organising data","blockers":"It gets things wrong / I still need to verify it, The task needs judgment or context I don’t trust it with","keep":"Important texts, creatives and anything that needs credibility","question":"How the engine’s regression system is reliable enough for resposnes","mindset":"Reluctant Verifier","mindsetReason":"Wants reporting/synthesis work automated, but is held back by verification-bound and explicitly raises trust/verification; retains creativity/thinking.","mindsetConfidence":"High","delegationTarget":"Reporting / synthesis","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Creativity / thinking","delegationAppetite":"Selective — retain more","aiRole":"Assistant","futureConcern":"Trust / verification","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Data / AI","task":"Coding","blockers":"It gets things wrong / I still need to verify it, It cannot access the data or systems it needs","keep":"Financial decisions","question":"How would workplace look","mindset":"Eager Delegator","mindsetReason":"Shows willingness to automate analysis/technical execution; constraints are mainly verification-bound, while the human keeps judgment and decisions.","mindsetConfidence":"High","delegationTarget":"Analysis / technical execution","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Analyst / technical agent","futureConcern":"Macro future / AGI","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Sales / marketing","task":"Making reports","blockers":"It gets things wrong / I still need to verify it, The task needs judgment or context I don’t trust it with","keep":"Strategy","question":null,"mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves judgment and decisions for humans; current barriers are verification-bound.","mindsetConfidence":"Medium","delegationTarget":"Reporting / synthesis","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"No stated question","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Student","task":"summarizing","blockers":"The task needs judgment or context I don’t trust it with, Security, privacy, compliance, or policy","keep":"ideation","question":"How to know when AI is hallucinating ?","mindset":"Reluctant Verifier","mindsetReason":"Wants reporting/synthesis work automated, but is held back by judgment / context-bound and explicitly raises trust/verification; retains creativity/thinking.","mindsetConfidence":"Medium","delegationTarget":"Reporting / synthesis","barrierProfile":"Judgment / context-bound","barrierBreadth":"Two","humanCore":"Creativity / thinking","delegationAppetite":"Selective — retain more","aiRole":"Assistant","futureConcern":"Trust / verification","adoptionPosture":"Context / human-bound","verificationSalience":"No explicit verification gate"},{"role":"Student","task":"Strategy and ideation","blockers":"The task needs human interaction / presence","keep":"Nothing","question":"How would AI be able to generate a very new idea which doesn't exist, how does it observe patterns and work on ideas provides put of the box ideas","mindset":"Full Delegator","mindsetReason":"Explicitly protects nothing; the response signals willingness to delegate essentially everything once AI is capable enough.","mindsetConfidence":"High","delegationTarget":"Creative / communication","barrierProfile":"Human-presence bound","barrierBreadth":"One / low","humanCore":"Nothing protected","delegationAppetite":"Total delegation","aiRole":"Autopilot","futureConcern":"Human–AI boundary","adoptionPosture":"High-delegation","verificationSalience":"No explicit verification gate"},{"role":"Data / AI","task":"Manual time taking tasks","blockers":"It gets things wrong / I still need to verify it, The task needs judgment or context I don’t trust it with","keep":"Problem solving","question":"Future of AI","mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves creativity/thinking for humans; current barriers are verification-bound.","mindsetConfidence":"Medium","delegationTarget":"Generic repetitive work","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Creativity / thinking","delegationAppetite":"Selective — retain more","aiRole":"Executor / agent","futureConcern":"Macro future / AGI","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Student","task":"Daily tasks organizer - reminders, deadlines, to do's","blockers":"The task needs human interaction / presence, I don’t yet know how to make AI do it","keep":"Very confidential details like my debit/credit card passwords","question":null,"mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves privacy/personal agency for humans; current barriers are human-presence bound.","mindsetConfidence":"Medium","delegationTarget":"Coordination / follow-through","barrierProfile":"Human-presence bound","barrierBreadth":"Two","humanCore":"Privacy / personal agency","delegationAppetite":"Selective — retain more","aiRole":"Assistant","futureConcern":"No stated question","adoptionPosture":"Context / human-bound","verificationSalience":"No explicit verification gate"},{"role":"Student","task":"Repetitive task that can save a lot of time","blockers":"It gets things wrong / I still need to verify it","keep":"Where in creativity flushes out of my brain.","question":"The AI hallucination, is this true?","mindset":"Reluctant Verifier","mindsetReason":"Wants repetitive work automated, but is held back by verification-bound and explicitly raises trust/verification; retains creativity/thinking.","mindsetConfidence":"High","delegationTarget":"Generic repetitive work","barrierProfile":"Verification-bound","barrierBreadth":"One / low","humanCore":"Creativity / thinking","delegationAppetite":"Selective — retain more","aiRole":"Executor / agent","futureConcern":"Trust / verification","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Data / AI","task":"Cleaning and preprocessing messy datasets before I can actually start modeling","blockers":"It gets things wrong / I still need to verify it, The task needs judgment or context I don’t trust it with","keep":"Choosing which problem is actually worth solving, and deciding what a 'good' model output even means for that problem — the framing, not the execution","question":"As a student entering the job market, how do I demonstrate real judgment and skill when AI can already produce work that looks competent ?\"","mindset":"Career Navigator","mindsetReason":"The defining unresolved question is how skills, differentiation, or career relevance change as AI absorbs more execution; the human core retained is judgment / decisions.","mindsetConfidence":"High","delegationTarget":"Analysis / technical execution","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Analyst / technical agent","futureConcern":"Career relevance / skills","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Sales / marketing","task":"Mathematical And Stats","blockers":"It gets things wrong / I still need to verify it, I don’t yet know how to make AI do it","keep":"Brainstorming and Idea Generation","question":null,"mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves creativity/thinking for humans; current barriers are verification-bound.","mindsetConfidence":"Low","delegationTarget":"Analysis / technical execution","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Creativity / thinking","delegationAppetite":"Selective — retain more","aiRole":"Analyst / technical agent","futureConcern":"No stated question","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Finance","task":"technical analysis of stocks","blockers":"It gets things wrong / I still need to verify it, The task needs judgment or context I don’t trust it with, The task needs human interaction / presence, I don’t yet know how to make AI do it","keep":"Research","question":"How do you actually verify AI responses","mindset":"Reluctant Verifier","mindsetReason":"Wants analysis/technical execution automated, but is held back by multi-factor stack and explicitly raises trust/verification; retains some hands-on execution.","mindsetConfidence":"High","delegationTarget":"Analysis / technical execution","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Specific craft / execution","delegationAppetite":"Low — retain execution","aiRole":"Analyst / technical agent","futureConcern":"Trust / verification","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Student","task":"Summarizing study materials and preparing notes for classes","blockers":"It gets things wrong / I still need to verify it, The task needs judgment or context I don’t trust it with","keep":"Learning,problem-solving and making important decisions myself.","question":"How will AI change the skills and jobs we need to develop in the next 5 years?","mindset":"Career Navigator","mindsetReason":"The defining unresolved question is how skills, differentiation, or career relevance change as AI absorbs more execution; the human core retained is judgment / decisions.","mindsetConfidence":"High","delegationTarget":"Reporting / synthesis","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Career relevance / skills","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Data / AI","task":"Manually analyzing data, preparing reports, and doing repetitive documentation that AI could automate.","blockers":"It gets things wrong / I still need to verify it, It cannot access the data or systems it needs","keep":"I’d still want to keep decision-making, problem-solving, and creative work for myself.","question":"How will AI change the skills we need to stay valuable in the workplace?","mindset":"Career Navigator","mindsetReason":"The defining unresolved question is how skills, differentiation, or career relevance change as AI absorbs more execution; the human core retained is judgment / decisions.","mindsetConfidence":"High","delegationTarget":"Analysis / technical execution","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Analyst / technical agent","futureConcern":"Career relevance / skills","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Student","task":"Jotting down of notes and summarising them","blockers":"It gets things wrong / I still need to verify it, The task needs human interaction / presence","keep":"Where my creativity is involved and the work which forces me to think continuously","question":"What is the best use of an AI and how it can be leveraged without hampering our privacy","mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves creativity/thinking for humans; current barriers are verification-bound.","mindsetConfidence":"High","delegationTarget":"Reporting / synthesis","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Creativity / thinking","delegationAppetite":"Selective — retain more","aiRole":"Assistant","futureConcern":"Enterprise adoption / governance","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Data / AI","task":"Handling schedule","blockers":"It gets things wrong / I still need to verify it, It cannot access the data or systems it needs","keep":"The sensitive data","question":null,"mindset":"Eager Delegator","mindsetReason":"Shows willingness to automate coordination/follow-through work; constraints are mainly verification-bound, while the human keeps privacy/personal agency.","mindsetConfidence":"Medium","delegationTarget":"Coordination / follow-through","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Privacy / personal agency","delegationAppetite":"Selective — retain more","aiRole":"Assistant","futureConcern":"No stated question","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Student","task":"Turning a random thought into something useful instead of letting it disappear five minutes later.","blockers":"It gets things wrong / I still need to verify it, Security, privacy, compliance, or policy, Cost / speed","keep":"The final decision making I’ll happily let AI do the heavy lifting, but I’m not letting it take credit for my genius ideas.","question":"If everyone has access to the same AI, what will actually differentiate one person from another?","mindset":"Career Navigator","mindsetReason":"The defining unresolved question is how skills, differentiation, or career relevance change as AI absorbs more execution; the human core retained is judgment / decisions.","mindsetConfidence":"High","delegationTarget":"Creative / communication","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Collaborator / co-creator","futureConcern":"Career relevance / skills","adoptionPosture":"Verify-first","verificationSalience":"Verification-present"},{"role":"Technology / engineering","task":"None","blockers":"It gets things wrong / I still need to verify it, It cannot access the data or systems it needs, Security, privacy, compliance, or policy","keep":"Creative, cultural vision, relationship & trust building","question":"How do we train the next generation if AI automates all the entry level work where people traditionally learn the fundamentals","mindset":"Career Navigator","mindsetReason":"Explicitly raises the apprenticeship gap: how people build expertise or judgment if AI removes foundational work; the human core retained is relationships / trust.","mindsetConfidence":"High","delegationTarget":"No clear task","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Relationships / trust","delegationAppetite":"High — retain agency","aiRole":"Unclear","futureConcern":"Apprenticeship / learning ladder","adoptionPosture":"Verify-first","verificationSalience":"Verification-present"},{"role":"Student","task":"None","blockers":"It gets things wrong / I still need to verify it","keep":"My personal things","question":null,"mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves privacy/personal agency for humans; current barriers are verification-bound.","mindsetConfidence":"Low","delegationTarget":"No clear task","barrierProfile":"Verification-bound","barrierBreadth":"One / low","humanCore":"Privacy / personal agency","delegationAppetite":"Selective — retain more","aiRole":"Unclear","futureConcern":"No stated question","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Student","task":"None","blockers":"It gets things wrong / I still need to verify it","keep":"None","question":null,"mindset":"Full Delegator","mindsetReason":"Explicitly protects nothing; the response signals willingness to delegate essentially everything once AI is capable enough.","mindsetConfidence":"High","delegationTarget":"No clear task","barrierProfile":"Verification-bound","barrierBreadth":"One / low","humanCore":"Nothing protected","delegationAppetite":"Total delegation","aiRole":"Autopilot","futureConcern":"No stated question","adoptionPosture":"High-delegation","verificationSalience":"Verification-dominant"},{"role":"Technology / engineering","task":"None","blockers":"It cannot take the actions required, Security, privacy, compliance, or policy","keep":"Nothing","question":null,"mindset":"Full Delegator","mindsetReason":"Explicitly protects nothing; the response signals willingness to delegate essentially everything once AI is capable enough.","mindsetConfidence":"High","delegationTarget":"No clear task","barrierProfile":"System / security-bound","barrierBreadth":"Two","humanCore":"Nothing protected","delegationAppetite":"Total delegation","aiRole":"Autopilot","futureConcern":"No stated question","adoptionPosture":"High-delegation","verificationSalience":"No explicit verification gate"},{"role":"Business / general management","task":"Replying to emails","blockers":"It gets things wrong / I still need to verify it, The task needs human interaction / presence","keep":"Human interactions","question":"Whether it will replace humans in the long run","mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves relationships and trust for humans; current barriers are verification-bound. The open question also centers on the human–AI boundary.","mindsetConfidence":"High","delegationTarget":"Coordination / follow-through","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Relationships / trust","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Human–AI boundary","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Student","task":"Researching information, organizing it, and turning it into presentations/reports.","blockers":"It gets things wrong / I still need to verify it, The task needs judgment or context I don’t trust it with","keep":"Strategic thinking, decision-making, and creative problem-solving , especially understanding people and deciding what direction to take.","question":"How do we use AI to improve our thinking and decision-making without becoming overly dependent on it?","mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves judgment and decisions for humans; current barriers are verification-bound. The open question also centers on the human–AI boundary.","mindsetConfidence":"High","delegationTarget":"Reporting / synthesis","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Human–AI boundary","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Data / AI","task":"None","blockers":"Other / something else","keep":"To take decision or jeep myself in the loop of decision at last.","question":"how should someone keep themselves Relevant in the age of AI","mindset":"Career Navigator","mindsetReason":"The defining unresolved question is how skills, differentiation, or career relevance change as AI absorbs more execution; the human core retained is judgment / decisions.","mindsetConfidence":"High","delegationTarget":"No clear task","barrierProfile":"Low / no barrier","barrierBreadth":"One / low","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Unclear","futureConcern":"Career relevance / skills","adoptionPosture":"Exploring / unsure","verificationSalience":"No explicit verification gate"},{"role":"Student","task":"Making notes","blockers":"The task needs human interaction / presence","keep":"Making the final judgement","question":"When to rely on AI and when to not","mindset":"Reluctant Verifier","mindsetReason":"Wants reporting/synthesis work automated, but is held back by human-presence bound and explicitly raises trust/verification; retains judgment and decisions.","mindsetConfidence":"Low","delegationTarget":"Reporting / synthesis","barrierProfile":"Human-presence bound","barrierBreadth":"One / low","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Trust / verification","adoptionPosture":"Context / human-bound","verificationSalience":"No explicit verification gate"},{"role":"Student","task":"Audit and verification, and humanisation of content in my own way.","blockers":"It gets things wrong / I still need to verify it, The task needs judgment or context I don’t trust it with, Security, privacy, compliance, or policy","keep":"I would like to keep the assembling part or say the understanding and delegation of tasks","question":null,"mindset":"Reluctant Verifier","mindsetReason":"Wants reporting/synthesis work automated, but is held back by multi-factor stack; retains creativity/thinking.","mindsetConfidence":"Medium","delegationTarget":"Reporting / synthesis","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Creativity / thinking","delegationAppetite":"Selective — retain more","aiRole":"Assistant","futureConcern":"No stated question","adoptionPosture":"Verify-first","verificationSalience":"Verification-present"},{"role":"Sales / marketing","task":"None","blockers":"Other / something else","keep":"Human judgement","question":null,"mindset":"Eager Delegator","mindsetReason":"Shows willingness to automate no concrete task; constraints are mainly low / no barrier, while the human keeps judgment and decisions.","mindsetConfidence":"High","delegationTarget":"No clear task","barrierProfile":"Low / no barrier","barrierBreadth":"One / low","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Unclear","futureConcern":"No stated question","adoptionPosture":"Exploring / unsure","verificationSalience":"No explicit verification gate"},{"role":"Business / general management","task":"Generating the garphics","blockers":"The task needs judgment or context I don’t trust it with, The task needs human interaction / presence","keep":"Final check.","question":null,"mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves judgment and decisions for humans; current barriers are judgment / context-bound.","mindsetConfidence":"Medium","delegationTarget":"Creative / communication","barrierProfile":"Judgment / context-bound","barrierBreadth":"Two","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Collaborator / co-creator","futureConcern":"No stated question","adoptionPosture":"Context / human-bound","verificationSalience":"No explicit verification gate"},{"role":"Education / research","task":"None","blockers":"It gets things wrong / I still need to verify it, It cannot access the data or systems it needs, It cannot take the actions required, The task needs judgment or context I don’t trust it with","keep":"I’d keep the final decision-making, creative thinking, and human interactions that require empathy and judgment.","question":null,"mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves relationships and trust for humans; current barriers are multi-factor stack.","mindsetConfidence":"High","delegationTarget":"No clear task","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Relationships / trust","delegationAppetite":"High — retain agency","aiRole":"Unclear","futureConcern":"No stated question","adoptionPosture":"Verify-first","verificationSalience":"Verification-present"},{"role":"Student","task":"None","blockers":"Cost / speed","keep":"Thinking","question":"Framework to automate daily life and track","mindset":"Eager Delegator","mindsetReason":"Shows willingness to automate no concrete task; constraints are mainly practical / know-how, while the human keeps creativity/thinking.","mindsetConfidence":"Low","delegationTarget":"No clear task","barrierProfile":"Practical / know-how","barrierBreadth":"One / low","humanCore":"Creativity / thinking","delegationAppetite":"Selective — retain more","aiRole":"Unclear","futureConcern":"Technical architecture","adoptionPosture":"Exploring / unsure","verificationSalience":"No explicit verification gate"},{"role":"Finance","task":"Automate market updates","blockers":"The task needs human interaction / presence, I don’t yet know how to make AI do it","keep":"More of judgement oriented","question":null,"mindset":"Eager Delegator","mindsetReason":"Shows willingness to automate reporting/synthesis work; constraints are mainly human-presence bound, while the human keeps judgment and decisions.","mindsetConfidence":"Medium","delegationTarget":"Reporting / synthesis","barrierProfile":"Human-presence bound","barrierBreadth":"Two","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"No stated question","adoptionPosture":"Context / human-bound","verificationSalience":"No explicit verification gate"},{"role":"Sales / marketing","task":"Email writing and framing of messages","blockers":"It gets things wrong / I still need to verify it, The task needs judgment or context I don’t trust it with, The task needs human interaction / presence","keep":"Content generation, copy writing and ideation","question":"Will AI actually be the only reliabke source in the future? Will it replace almost everything?","mindset":"Reluctant Verifier","mindsetReason":"Wants coordination/follow-through work automated, but is held back by multi-factor stack and explicitly raises trust/verification; retains creativity/thinking.","mindsetConfidence":"High","delegationTarget":"Coordination / follow-through","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Creativity / thinking","delegationAppetite":"Selective — retain more","aiRole":"Assistant","futureConcern":"Trust / verification","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Student","task":"None","blockers":"The task needs human interaction / presence","keep":"Human connection/communication, creative tasks and moral judgement","question":null,"mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves relationships and trust for humans; current barriers are human-presence bound.","mindsetConfidence":"High","delegationTarget":"No clear task","barrierProfile":"Human-presence bound","barrierBreadth":"One / low","humanCore":"Relationships / trust","delegationAppetite":"High — retain agency","aiRole":"Unclear","futureConcern":"No stated question","adoptionPosture":"Context / human-bound","verificationSalience":"No explicit verification gate"},{"role":"Finance","task":"None","blockers":"The task needs human interaction / presence","keep":"Nothing","question":null,"mindset":"Full Delegator","mindsetReason":"Explicitly protects nothing; the response signals willingness to delegate essentially everything once AI is capable enough.","mindsetConfidence":"High","delegationTarget":"No clear task","barrierProfile":"Human-presence bound","barrierBreadth":"One / low","humanCore":"Nothing protected","delegationAppetite":"Total delegation","aiRole":"Autopilot","futureConcern":"No stated question","adoptionPosture":"High-delegation","verificationSalience":"No explicit verification gate"},{"role":"Finance","task":"Preparing routine reports, summaries, and documentation.","blockers":"It gets things wrong / I still need to verify it","keep":"Making important decisions that require human judgment, experience, and accountability.","question":"How can we use AI effectively without losing critical thinking and human judgment?","mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves judgment and decisions for humans; current barriers are verification-bound. The open question also centers on the human–AI boundary.","mindsetConfidence":"High","delegationTarget":"Reporting / synthesis","barrierProfile":"Verification-bound","barrierBreadth":"One / low","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Human–AI boundary","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Finance","task":"Researching information, organizing it, and turning it into structured reports or presentations.","blockers":"It gets things wrong / I still need to verify it, The task needs judgment or context I don’t trust it with","keep":"Strategic thinking, decision-making, and the human interactions involved in understanding people and building relationships.","question":"How do we use AI to become significantly more productive without becoming overly dependent on it or losing our own critical-thinking skills?","mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves relationships and trust for humans; current barriers are verification-bound. The open question also centers on the human–AI boundary.","mindsetConfidence":"High","delegationTarget":"Reporting / synthesis","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Relationships / trust","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Human–AI boundary","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Business / general management","task":"None","blockers":"The task needs judgment or context I don’t trust it with, The task needs human interaction / presence","keep":"Brainstorming","question":"None","mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves creativity/thinking for humans; current barriers are judgment / context-bound.","mindsetConfidence":"High","delegationTarget":"No clear task","barrierProfile":"Judgment / context-bound","barrierBreadth":"Two","humanCore":"Creativity / thinking","delegationAppetite":"Selective — retain more","aiRole":"Unclear","futureConcern":"No stated question","adoptionPosture":"Context / human-bound","verificationSalience":"No explicit verification gate"},{"role":"Student","task":"Nobe","blockers":"Security, privacy, compliance, or policy, Cost / speed","keep":"Faster work execution lower error rate","question":null,"mindset":"Eager Delegator","mindsetReason":"Shows willingness to automate no concrete task; constraints are mainly system / security-bound, while the human keeps some hands-on execution.","mindsetConfidence":"High","delegationTarget":"No clear task","barrierProfile":"System / security-bound","barrierBreadth":"Two","humanCore":"Specific craft / execution","delegationAppetite":"Low — retain execution","aiRole":"Unclear","futureConcern":"No stated question","adoptionPosture":"Context / human-bound","verificationSalience":"No explicit verification gate"},{"role":"Sales / marketing","task":"None","blockers":"It gets things wrong / I still need to verify it, The task needs human interaction / presence","keep":"Ideation","question":"Ai bubble","mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves creativity/thinking for humans; current barriers are verification-bound.","mindsetConfidence":"High","delegationTarget":"No clear task","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Creativity / thinking","delegationAppetite":"Selective — retain more","aiRole":"Unclear","futureConcern":"Macro future / AGI","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Student","task":"Making presentations","blockers":"It gets things wrong / I still need to verify it, Security, privacy, compliance, or policy","keep":"Personal interactions, office work because of privacy","question":"How much does AI hallucinate while generating responses?","mindset":"Reluctant Verifier","mindsetReason":"Wants reporting/synthesis work automated, but is held back by verification-bound and explicitly raises trust/verification; retains relationships and trust.","mindsetConfidence":"High","delegationTarget":"Reporting / synthesis","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Relationships / trust","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Trust / verification","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Finance","task":"Cross check facts, doesn't hallucinate","blockers":"It gets things wrong / I still need to verify it, It cannot take the actions required, The task needs judgment or context I don’t trust it with, Security, privacy, compliance, or policy","keep":"I would want to keep the judgement and best rpute to solve the problem,accuracy of the problem","question":"With AI automation how is it going to change the revolution of young professionals if those are the professionals who get to move to bigger positions after the Automation","mindset":"Career Navigator","mindsetReason":"Explicitly raises the apprenticeship gap: how people build expertise or judgment if AI removes foundational work; the human core retained is judgment / decisions.","mindsetConfidence":"High","delegationTarget":"Reporting / synthesis","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Apprenticeship / learning ladder","adoptionPosture":"Verify-first","verificationSalience":"Verification-present"},{"role":"Data / AI","task":"Driving","blockers":"The task needs human interaction / presence, Cost / speed","keep":"Banking data","question":"How AI reasons ?","mindset":"Eager Delegator","mindsetReason":"Shows willingness to automate physical/personal work; constraints are mainly human-presence bound, while the human keeps privacy/personal agency.","mindsetConfidence":"Low","delegationTarget":"Physical / personal","barrierProfile":"Human-presence bound","barrierBreadth":"Two","humanCore":"Privacy / personal agency","delegationAppetite":"Selective — retain more","aiRole":"Executor / agent","futureConcern":"Trust / verification","adoptionPosture":"Context / human-bound","verificationSalience":"No explicit verification gate"},{"role":"Student","task":"Repeated work","blockers":"The task needs human interaction / presence, Nothing — I already delegate almost everything I reasonably can","keep":"Privacy work","question":null,"mindset":"Eager Delegator","mindsetReason":"Shows willingness to automate repetitive work; constraints are mainly low / no barrier, while the human keeps privacy/personal agency.","mindsetConfidence":"High","delegationTarget":"Generic repetitive work","barrierProfile":"Low / no barrier","barrierBreadth":"Two","humanCore":"Privacy / personal agency","delegationAppetite":"Selective — retain more","aiRole":"Executor / agent","futureConcern":"No stated question","adoptionPosture":"High-delegation","verificationSalience":"No explicit verification gate"},{"role":"Student","task":"Doing repeated task, creating docs & ppts.","blockers":"It gets things wrong / I still need to verify it, It cannot access the data or systems it needs, The task needs human interaction / presence, Cost / speed","keep":"Quality Control, Security Process","question":"We are already in the phase of GenAI what can we expect from the next version of AI ?","mindset":"Reluctant Verifier","mindsetReason":"Wants reporting/synthesis work automated, but is held back by multi-factor stack; retains judgment and decisions.","mindsetConfidence":"Medium","delegationTarget":"Reporting / synthesis","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Macro future / AGI","adoptionPosture":"Verify-first","verificationSalience":"Verification-present"},{"role":"Data / AI","task":"Meetings","blockers":"It gets things wrong / I still need to verify it","keep":"Verification of what it does","question":"How will be world by 2030?","mindset":"Reluctant Verifier","mindsetReason":"Wants coordination/follow-through work automated, but is held back by verification-bound; retains some hands-on execution.","mindsetConfidence":"Medium","delegationTarget":"Coordination / follow-through","barrierProfile":"Verification-bound","barrierBreadth":"One / low","humanCore":"Specific craft / execution","delegationAppetite":"Low — retain execution","aiRole":"Assistant","futureConcern":"Macro future / AGI","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Data / AI","task":"Social media / content creation","blockers":"It gets things wrong / I still need to verify it, The task needs human interaction / presence","keep":"Editing things, videos, photos","question":null,"mindset":"Reluctant Verifier","mindsetReason":"Wants creative/communication work automated, but is held back by verification-bound; retains some hands-on execution.","mindsetConfidence":"Medium","delegationTarget":"Creative / communication","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Specific craft / execution","delegationAppetite":"Low — retain execution","aiRole":"Collaborator / co-creator","futureConcern":"No stated question","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Data / AI","task":"None","blockers":"The task needs judgment or context I don’t trust it with, The task needs human interaction / presence","keep":"Account login and pre testing the task.","question":"How much really the AI will impact on each industry?","mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves privacy/personal agency for humans; current barriers are judgment / context-bound.","mindsetConfidence":"High","delegationTarget":"No clear task","barrierProfile":"Judgment / context-bound","barrierBreadth":"Two","humanCore":"Privacy / personal agency","delegationAppetite":"Selective — retain more","aiRole":"Unclear","futureConcern":"Macro future / AGI","adoptionPosture":"Context / human-bound","verificationSalience":"No explicit verification gate"},{"role":"Data / AI","task":"Doing Root cause analysis on what the problem is with the help of analytical tools like SQL and dashboards","blockers":"It cannot access the data or systems it needs, The task needs judgment or context I don’t trust it with, The task needs human interaction / presence","keep":"I would love to still be involved in ideation process to solve business problems and take managerial decisions based on it","question":"If AI is going to reach same level of intelligence over time, what would be the major differentiating factor between the models and what role will harness play?","mindset":"Eager Delegator","mindsetReason":"Shows willingness to automate analysis/technical execution; constraints are mainly multi-factor stack, while the human keeps judgment and decisions.","mindsetConfidence":"Medium","delegationTarget":"Analysis / technical execution","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Analyst / technical agent","futureConcern":"Technical architecture","adoptionPosture":"Integration-ready","verificationSalience":"No explicit verification gate"},{"role":"Data / AI","task":"None","blockers":"The task needs judgment or context I don’t trust it with, Security, privacy, compliance, or policy, Cost / speed","keep":"Nothing","question":"None","mindset":"Full Delegator","mindsetReason":"Explicitly protects nothing; the response signals willingness to delegate essentially everything once AI is capable enough.","mindsetConfidence":"High","delegationTarget":"No clear task","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Nothing protected","delegationAppetite":"Total delegation","aiRole":"Autopilot","futureConcern":"No stated question","adoptionPosture":"High-delegation","verificationSalience":"No explicit verification gate"},{"role":"Business / general management","task":"Preparing and formatting reports, presentations, and assignments.","blockers":"It gets things wrong / I still need to verify it, The task needs judgment or context I don’t trust it with","keep":"Building relationships, making important decisions, and work that requires creativity and human judgment.","question":"How much of our work will AI eventually be able to handle without human involvement?","mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves relationships and trust for humans; current barriers are verification-bound. The open question also centers on the human–AI boundary.","mindsetConfidence":"High","delegationTarget":"Reporting / synthesis","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Relationships / trust","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Human–AI boundary","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Business / general management","task":"Lots of monotous paper work that should be automated but still operted by the humans","blockers":"It gets things wrong / I still need to verify it, It cannot access the data or systems it needs, It cannot take the actions required, The task needs judgment or context I don’t trust it with","keep":"Decision making","question":null,"mindset":"Eager Delegator","mindsetReason":"Shows willingness to automate coordination/follow-through work; constraints are mainly multi-factor stack, while the human keeps judgment and decisions.","mindsetConfidence":"High","delegationTarget":"Coordination / follow-through","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"No stated question","adoptionPosture":"Verify-first","verificationSalience":"Verification-present"},{"role":"Student","task":"Searching out of curiosity for new things during travel","blockers":"It gets things wrong / I still need to verify it, The task needs judgment or context I don’t trust it with, Cost / speed","keep":"Nothing","question":"i feel how different ai tools can build everything smart and fast","mindset":"Full Delegator","mindsetReason":"Explicitly protects nothing; the response signals willingness to delegate essentially everything once AI is capable enough.","mindsetConfidence":"High","delegationTarget":"Physical / personal","barrierProfile":"Multi-factor stack","barrierBreadth":"Three+","humanCore":"Nothing protected","delegationAppetite":"Total delegation","aiRole":"Autopilot","futureConcern":"Technical architecture","adoptionPosture":"High-delegation","verificationSalience":"Verification-present"},{"role":"Data / AI","task":"None","blockers":"It gets things wrong / I still need to verify it, Security, privacy, compliance, or policy","keep":"Judgement","question":null,"mindset":"Reluctant Verifier","mindsetReason":"Wants no concrete task automated, but is held back by verification-bound; retains judgment and decisions.","mindsetConfidence":"Low","delegationTarget":"No clear task","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Unclear","futureConcern":"No stated question","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Student","task":"Organizing syllabus dates, assignments, and test schedules from multiple classes into a single master planner","blockers":"It gets things wrong / I still need to verify it, Security, privacy, compliance, or policy","keep":"I would keep strategic decision-making and relationship building. While AI can execute tasks flawlessly, it lacks genuine empathy, ethical judgment, and the ability to build deep trust with team members. Setting the overall vision and managing human connections are parts of my work I will always keep for myself.","question":"How can entry-level professionals build deep expertise and judgment if AI tools automate the foundational tasks traditionally used for training?","mindset":"Career Navigator","mindsetReason":"Explicitly raises the apprenticeship gap: how people build expertise or judgment if AI removes foundational work; the human core retained is relationships / trust.","mindsetConfidence":"High","delegationTarget":"Coordination / follow-through","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Relationships / trust","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Apprenticeship / learning ladder","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Student","task":"Routine administrative tasks - memos, forms, scheduling","blockers":"It gets things wrong / I still need to verify it, It cannot access the data or systems it needs","keep":"Organising, scheduling, coordinating and decision making","question":"Which skillsets will become less important and can be delegated to AI. Which skillsets should we strive to keep even as AI makes our work faster, easier, etc.","mindset":"Career Navigator","mindsetReason":"The defining unresolved question is how skills, differentiation, or career relevance change as AI absorbs more execution; the human core retained is judgment / decisions.","mindsetConfidence":"High","delegationTarget":"Coordination / follow-through","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Career relevance / skills","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Other","task":"Mundane tasks","blockers":"The task needs judgment or context I don’t trust it with","keep":"Human judgment relating to purpose","question":"How can AI make us better humans","mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves judgment and decisions for humans; current barriers are judgment / context-bound. The open question also centers on the human–AI boundary.","mindsetConfidence":"High","delegationTarget":"Generic repetitive work","barrierProfile":"Judgment / context-bound","barrierBreadth":"One / low","humanCore":"Judgment / decisions","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Human–AI boundary","adoptionPosture":"Context / human-bound","verificationSalience":"No explicit verification gate"},{"role":"Data / AI","task":"None","blockers":"Cost / speed","keep":"Nothing","question":"How AI will performance after 100 years","mindset":"Full Delegator","mindsetReason":"Explicitly protects nothing; the response signals willingness to delegate essentially everything once AI is capable enough.","mindsetConfidence":"High","delegationTarget":"No clear task","barrierProfile":"Practical / know-how","barrierBreadth":"One / low","humanCore":"Nothing protected","delegationAppetite":"Total delegation","aiRole":"Autopilot","futureConcern":"Macro future / AGI","adoptionPosture":"High-delegation","verificationSalience":"No explicit verification gate"},{"role":"Education / research","task":"academic workload planning","blockers":"The task needs judgment or context I don’t trust it with, I don’t yet know how to make AI do it","keep":"employee/human interaction/motivation","question":null,"mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves relationships and trust for humans; current barriers are judgment / context-bound.","mindsetConfidence":"Low","delegationTarget":"Coordination / follow-through","barrierProfile":"Judgment / context-bound","barrierBreadth":"Two","humanCore":"Relationships / trust","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"No stated question","adoptionPosture":"Context / human-bound","verificationSalience":"No explicit verification gate"},{"role":"Education / research","task":"Routine follow up","blockers":"It gets things wrong / I still need to verify it, The task needs human interaction / presence","keep":"Hypo case","question":"Stop hyping and start doing assigned tasks properly without hallucinations","mindset":"Reluctant Verifier","mindsetReason":"Wants coordination/follow-through work automated, but is held back by verification-bound and explicitly raises trust/verification; retains some hands-on execution.","mindsetConfidence":"High","delegationTarget":"Coordination / follow-through","barrierProfile":"Verification-bound","barrierBreadth":"Two","humanCore":"Specific craft / execution","delegationAppetite":"Low — retain execution","aiRole":"Assistant","futureConcern":"Trust / verification","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Data / AI","task":"monthly reporting","blockers":"It gets things wrong / I still need to verify it","keep":"business development model , partnership and outreach","question":"I am in the energy and chemical sector. which are the 4 key areas of focus in terms of business transformation and good worker outcome","mindset":"Protective Humanist","mindsetReason":"Even with much better AI, explicitly reserves relationships and trust for humans; current barriers are verification-bound.","mindsetConfidence":"Low","delegationTarget":"Reporting / synthesis","barrierProfile":"Verification-bound","barrierBreadth":"One / low","humanCore":"Relationships / trust","delegationAppetite":"High — retain agency","aiRole":"Executor / agent","futureConcern":"Enterprise adoption / governance","adoptionPosture":"Verify-first","verificationSalience":"Verification-dominant"},{"role":"Data / AI","task":"building dashboard","blockers":"It cannot access the data or systems it needs","keep":"Human interaction/consulting","question":null,"mindset":"Eager Delegator","mindsetReason":"Shows willingness to automate analysis/technical execution; constraints are mainly system / security-bound, while the human keeps relationships and trust.","mindsetConfidence":"High","delegationTarget":"Analysis / technical execution","barrierProfile":"System / security-bound","barrierBreadth":"One / low","humanCore":"Relationships / trust","delegationAppetite":"High — retain agency","aiRole":"Analyst / technical agent","futureConcern":"No stated question","adoptionPosture":"Integration-ready","verificationSalience":"No explicit verification gate"},{"role":"Education / research","task":"Updating lesson plans","blockers":"I don’t yet know how to make AI do it","keep":"Planning, strategic management, client relationships","question":"Defije Digital Humans","mindset":"Eager Delegator","mindsetReason":"Shows willingness to automate creative/communication work; constraints are mainly practical / know-how, while the human keeps relationships and trust.","mindsetConfidence":"High","delegationTarget":"Creative / communication","barrierProfile":"Practical / know-how","barrierBreadth":"One / low","humanCore":"Relationships / trust","delegationAppetite":"High — retain agency","aiRole":"Collaborator / co-creator","futureConcern":"Technical architecture","adoptionPosture":"Exploring / unsure","verificationSalience":"No explicit verification gate"}];
+</script>
+<script>
+'use strict';
+/* ============================================================
+   FIELD REGISTRY — evocative labels + fixed categorical colors.
+   Color order follows the dataviz palette slots (s1..s8), assigned
+   once per value and never re-cycled by sort order.
+   ============================================================ */
+const PALETTE = ['var(--s1)','var(--s2)','var(--s3)','var(--s4)','var(--s5)','var(--s6)','var(--s7)','var(--s8)'];
+
+function makeField(label, values){
+  // values: array of [key, displayLabel] in a fixed color-assignment order
+  const map = {};
+  values.forEach(([key, disp], i) => { map[key] = { label: disp, color: PALETTE[i % PALETTE.length], order: i }; });
+  return { label, values: map, order: values.map(v => v[0]) };
+}
+
+const FIELDS = {
+  role: makeField("What they mainly do", [
+    ['Student','Students'],
+    ['Data / AI','Data & AI'],
+    ['Business / general management','Business'],
+    ['Finance','Finance'],
+    ['Education / research','Academia'],
+    ['Sales / marketing','Sales & marketing'],
+    ['Technology / engineering','Engineering'],
+    ['Other','Other'],
+  ]),
+  mindset: makeField("Five ways this room thinks about AI", [
+    ['Protective Humanist','Take the work, I’ll keep the wheel'],
+    ['Eager Delegator','Please, take it'],
+    ['Reluctant Verifier','I’d delegate if I didn’t have to check'],
+    ['Full Delegator','Take all of it'],
+    ['Career Navigator','Where do I fit now?'],
+  ]),
+  delegationTarget: makeField("What they'd hand over tomorrow", [
+    ['Reporting / synthesis','Write it up for me'],
+    ['Coordination / follow-through','Chase it for me'],
+    ['Analysis / technical execution','Crunch it for me'],
+    ['Creative / communication','Make something new'],
+    ['Generic repetitive work','All the boring bits'],
+    ['Physical / personal','My life admin'],
+    ['No clear task','Couldn’t name one'],
+  ]),
+  barrierProfile: makeField("What's actually in the way", [
+    ['Verification-bound','I’d have to check it anyway'],
+    ['Multi-factor stack','Everything’s in the way'],
+    ['Judgment / context-bound','It doesn’t know my world'],
+    ['Human-presence bound','You have to be in the room'],
+    ['Practical / know-how','I don’t know how yet'],
+    ['Low / no barrier','Nothing’s stopping me'],
+    ['System / security-bound','Legal would never allow it'],
+  ]),
+  humanCore: makeField("What they'd never hand over", [
+    ['Judgment / decisions','The final call'],
+    ['Relationships / trust','The people part'],
+    ['Creativity / thinking','Thinking it up'],
+    ['Nothing protected','Nothing — take it all'],
+    ['Specific craft / execution','The bit I love doing'],
+    ['Privacy / personal agency','My private life'],
+  ]),
+  delegationAppetite: makeField("How much they'd hand over", [
+    ['High — retain agency','Most of it — but I decide'],
+    ['Selective — retain more','Some of it'],
+    ['Total delegation','All of it'],
+    ['Low — retain execution','Help me, don’t replace me'],
+  ]),
+  aiRole: makeField("The job title they'd give AI", [
+    ['Executor / agent','Chief of staff'],
+    ['Unclear','Haven’t decided'],
+    ['Autopilot','Autopilot'],
+    ['Assistant','Intern'],
+    ['Analyst / technical agent','Analyst'],
+    ['Collaborator / co-creator','Creative partner'],
+  ]),
+  futureConcern: makeField("The question keeping them up at night", [
+    ['No stated question','Didn’t ask one'],
+    ['Trust / verification','Can I believe it?'],
+    ['Macro future / AGI','Where does all this end?'],
+    ['Human–AI boundary','What’s still mine?'],
+    ['Enterprise adoption / governance','Will this ever work at my company?'],
+    ['Career relevance / skills','Am I still valuable?'],
+    ['Technical architecture','How do I actually build it?'],
+    ['Apprenticeship / learning ladder','How does anyone learn now?'],
+  ]),
+  adoptionPosture: makeField("How they work with AI today", [
+    ['Verify-first','Check everything'],
+    ['Context / human-bound','Only where I’m not needed'],
+    ['High-delegation','Let it run'],
+    ['Exploring / unsure','Still figuring it out'],
+    ['Integration-ready','Plug it into everything'],
+  ]),
+  verificationSalience: makeField("The checking reflex", [
+    ['Verification-dominant','Checking IS the job'],
+    ['No explicit verification gate','Never mentioned checking'],
+    ['Verification-present','Checking in the background'],
+  ]),
+  barrierBreadth: makeField("How many walls they hit", [
+    ['One / low','One wall'],
+    ['Two','Two walls'],
+    ['Three+','Walled in'],
+  ]),
+  mindsetConfidence: makeField("How sure we are", [
+    ['High','High confidence'],
+    ['Medium','Medium confidence'],
+    ['Low','Low confidence — a judgment call'],
+  ]),
+};
+
+const N = RESPONSES.length;
+RESPONSES.forEach((r,i) => r._i = i);
+
+function fieldColor(fieldKey, value){
+  const f = FIELDS[fieldKey];
+  if(!f) return 'var(--dot-idle)';
+  const v = f.values[value];
+  return v ? v.color : 'var(--dot-idle)';
+}
+function fieldLabel(fieldKey, value){
+  const f = FIELDS[fieldKey];
+  if(!f) return value || '—';
+  const v = f.values[value];
+  return v ? v.label : (value || '—');
+}
+
+/* ============================================================
+   STAGE / DOT RENDERING
+   ============================================================ */
+const dotfield = document.getElementById('dotfield');
+const annotLayer = document.getElementById('annot-layer');
+const visualEl = document.getElementById('visual');
+
+const dotEls = RESPONSES.map((r,i) => {
+  const b = document.createElement('button');
+  b.className = 'dot';
+  b.type = 'button';
+  b.setAttribute('role','listitem');
+  b.setAttribute('aria-label', `Respondent ${i+1}, ${r.role || 'unknown role'}`);
+  b.dataset.i = i;
+  b.addEventListener('click', () => openModal(i));
+  dotfield.appendChild(b);
+  return b;
+});
+
+function stageSize(){
+  const r = visualEl.getBoundingClientRect();
+  return { w: r.width, h: r.height };
+}
+
+const DOT = 16; // default dot diameter (px) — keep in sync with .dot{width/height} in <style>
+
+/* ---- layout helpers ---- */
+// Pack `items` (array of dot indices) into a centered grid inside a box.
+function packGrid(items, box, opts={}){
+  const dotSize = opts.dotSize || DOT;
+  const gap = opts.gap ?? 6;
+  const cell = dotSize + gap;
+  const maxCols = Math.max(1, Math.floor(box.w / cell));
+  const cols = opts.cols || Math.min(maxCols, Math.ceil(Math.sqrt(items.length * box.w / Math.max(box.h,1))) || 1);
+  const rows = Math.ceil(items.length / cols);
+  const gridW = cols * cell - gap;
+  const gridH = rows * cell - gap;
+  const ox = box.x + (box.w - gridW) / 2;
+  const oy = box.y + (box.h - gridH) / 2;
+  const pos = {};
+  items.forEach((idx, n) => {
+    const c = n % cols, rIdx = Math.floor(n / cols);
+    pos[idx] = { x: ox + c * cell + dotSize/2, y: oy + rIdx * cell + dotSize/2 };
+  });
+  return pos;
+}
+
+// Pack items into a horizontal-fill grid left-aligned within a box (for bars): fills row by row, left to right.
+function packBarFill(items, box, opts={}){
+  const dotSize = opts.dotSize || DOT;
+  const gap = opts.gap ?? 6;
+  const cell = dotSize + gap;
+  const cols = Math.max(1, Math.floor((box.w + gap) / cell));
+  const pos = {};
+  items.forEach((idx, n) => {
+    const c = n % cols, rIdx = Math.floor(n / cols);
+    pos[idx] = { x: box.x + dotSize/2 + c * cell, y: box.y + box.h - dotSize/2 - rIdx * cell };
+  });
+  return pos;
+}
+
+// Phyllotaxis (golden-angle spiral) pack around a center — organic cluster blob.
+function packCluster(items, cx, cy, opts={}){
+  const dotSize = opts.dotSize || DOT;
+  const spacing = opts.spacing ?? (dotSize * 0.78);
+  const golden = Math.PI * (3 - Math.sqrt(5));
+  const pos = {};
+  items.forEach((idx, n) => {
+    const r = spacing * Math.sqrt(n + 0.5);
+    const theta = n * golden;
+    pos[idx] = { x: cx + r * Math.cos(theta), y: cy + r * Math.sin(theta) };
+  });
+  return pos;
+}
+
+function groupBy(field){
+  const groups = {};
+  RESPONSES.forEach(r => {
+    const v = r[field] || '—';
+    (groups[v] = groups[v] || []).push(r._i);
+  });
+  return groups;
+}
+
+// value -> array of indices, using multi-select comma-joined strings (e.g. blockers) — first token only by default
+function groupBySingle(field){ return groupBy(field); }
+
+/* ---- layout builders return {positions:{idx:{x,y}}, bars?:[{x,y,w,h,label,color}], clusters?:[...] } ---- */
+
+function layoutOverview(){
+  const {w,h} = stageSize();
+  const box = {x: w*0.05, y: h*0.07, w: w*0.90, h: h*0.86};
+  const items = RESPONSES.map(r => r._i);
+  const positions = packGrid(items, box, {dotSize:DOT+3, gap:7});
+  return { positions, colorFn: () => 'var(--dot-idle)', dotSize:DOT+3 };
+}
+
+function layoutBars(field, opts={}){
+  const {w,h} = stageSize();
+  const groups = groupBy(field);
+  const order = opts.order || FIELDS[field].order;
+  let keys = order.filter(k => groups[k] && groups[k].length);
+  if(opts.sortByCount) keys = keys.slice().sort((a,b) => groups[b].length - groups[a].length);
+  const topPad = h*0.085, bottomPad = h*0.03, leftPad = w*0.015, rightPad = w*0.025;
+  const usableH = h - topPad - bottomPad;
+  const barGap = Math.max(usableH * 0.045, 38);
+  const barH = (usableH - barGap*(keys.length-1)) / keys.length;
+  const maxCount = Math.max(...keys.map(k => groups[k].length));
+  const maxW = w - leftPad - rightPad - 20;
+  const dotSize = Math.max(11, Math.min(DOT+2, barH-10));
+  const labelOffset = Math.min(barGap*0.4, 24);
+  const positions = {}; const bars = [];
+  keys.forEach((k, i) => {
+    const items = groups[k];
+    const barW = Math.max(maxW * (items.length / maxCount), barH*1.2);
+    const y = topPad + i * (barH + barGap);
+    const box = {x: leftPad, y, w: barW, h: barH};
+    Object.assign(positions, packBarFill(items, box, {dotSize, gap:6}));
+    bars.push({ x:leftPad, y, w:barW, h:barH, label: fieldLabel(field,k), count: items.length, color: fieldColor(field,k), key:k, items, labelY: y-labelOffset });
+  });
+  const colorFn = opts.colorFn || (r => fieldColor(field, r[field]));
+  return { positions, bars, colorFn, dotSize };
+}
+
+function layoutGrid2(xField, yField, opts={}){
+  const {w,h} = stageSize();
+  const xOrder = opts.xOrder || FIELDS[xField].order;
+  const yOrder = opts.yOrder || FIELDS[yField].order;
+  const pad = {t:h*0.06,b:h*0.05,l:opts.padL ?? w*0.22,r:w*0.02};
+  const cellW = (w - pad.l - pad.r) / xOrder.length;
+  const cellH = (h - pad.t - pad.b) / yOrder.length;
+  const dotSize = Math.max(9, Math.min(14, Math.min(cellW,cellH)*0.22));
+  const buckets = {};
+  RESPONSES.forEach(r => {
+    const xv = r[xField], yv = r[yField];
+    const xi = xOrder.indexOf(xv), yi = yOrder.indexOf(yv);
+    if(xi<0||yi<0) return;
+    const key = xi+'_'+yi;
+    (buckets[key] = buckets[key] || []).push(r._i);
+  });
+  const positions = {}; const cells = [];
+  yOrder.forEach((yv, yi) => {
+    xOrder.forEach((xv, xi) => {
+      const items = buckets[xi+'_'+yi] || [];
+      const box = {x: pad.l + xi*cellW, y: pad.t + yi*cellH, w: cellW, h: cellH};
+      const inset = {x: box.x+5, y: box.y+5, w: box.w-10, h: box.h-10};
+      Object.assign(positions, packGrid(items, inset, {dotSize, gap:5}));
+      cells.push({...box, xLabel: fieldLabel(xField,xv), yLabel: fieldLabel(yField,yv), count: items.length, key: xi+'_'+yi, items});
+    });
+  });
+  const colorFn = opts.colorFn || (r => fieldColor(opts.colorField || yField, r[opts.colorField || yField]));
+  return { positions, cells, xOrder, yOrder, cellW, cellH, pad, colorFn, dotSize };
+}
+
+function layoutClusters(field, opts={}){
+  const {w,h} = stageSize();
+  const groups = groupBy(field);
+  const order = opts.order || FIELDS[field].order;
+  const keys = order.filter(k => groups[k] && groups[k].length);
+  const cols = opts.cols || Math.ceil(Math.sqrt(keys.length));
+  const rows = Math.ceil(keys.length / cols);
+  const cellW = w / cols, cellH = h*0.9 / rows;
+  const dotSize = DOT;
+  const positions = {}; const clusters = [];
+  keys.forEach((k, i) => {
+    const c = i % cols, r = Math.floor(i / cols);
+    const cx = cellW*(c+0.5), cy = h*0.06 + cellH*(r+0.5);
+    const items = groups[k];
+    const spacing = Math.max(11, Math.min(16, 64 / Math.sqrt(items.length)));
+    Object.assign(positions, packCluster(items, cx, cy, {dotSize, spacing}));
+    clusters.push({cx, cy, label: fieldLabel(field,k), count: items.length, color: fieldColor(field,k), key:k, items, cellH});
+  });
+  const colorFn = opts.colorFn || (r => fieldColor(field, r[field]));
+  return { positions, clusters, colorFn, dotSize };
+}
+
+// highlight a subset (predicate true -> colored/accent), rest -> muted grey cluster
+function layoutSplit(predicate, opts={}){
+  const {w,h} = stageSize();
+  const yes = RESPONSES.filter(r => predicate(r)).map(r=>r._i);
+  const no = RESPONSES.filter(r => !predicate(r)).map(r=>r._i);
+  const yesSize = opts.yesSize ?? DOT+4, noSize = opts.noSize ?? DOT-2;
+  const positions = {};
+  Object.assign(positions, packCluster(yes, w*0.30, h*0.5, {dotSize:yesSize, spacing:yesSize*0.85}));
+  Object.assign(positions, packCluster(no, w*0.72, h*0.5, {dotSize:noSize, spacing:noSize*0.85}));
+  const colorFn = opts.colorFn || (r => predicate(r) ? (opts.yesColor||'var(--accent)') : 'var(--dot-idle)');
+  const sizeFn = r => predicate(r) ? yesSize : noSize;
+  return { positions, colorFn, sizeFn, clusters:[{cx:w*0.30,cy:h*0.5,count:yes.length,label:opts.yesLabel,items:yes,key:'yes'},{cx:w*0.72,cy:h*0.5,count:no.length,label:opts.noLabel,items:no,key:'no'}] };
+}
+</script>
+
+<script>
+'use strict';
+/* ============================================================
+   EXTRA LAYOUTS (universe-aware + specialised beats)
+   ============================================================ */
+function layoutColumns(field, opts={}){
+  const {w,h} = stageSize();
+  const groups = groupBy(field);
+  const order = opts.order || FIELDS[field].order;
+  const keys = order.filter(k => groups[k] && groups[k].length);
+  const pad = {t:h*0.16,b:h*0.05,l:w*0.06,r:w*0.04};
+  const colGap = (w - pad.l - pad.r) * (opts.gapFrac ?? 0.05);
+  const colW = ((w - pad.l - pad.r) - colGap*(keys.length-1)) / keys.length;
+  const usableH = h - pad.t - pad.b;
+  const dotSize = DOT;
+  const gap = 6, cell = dotSize+gap;
+  const positions = {}; const cols = [];
+  const fillW = Math.min(colW, opts.maxColW || 165);
+  const fillCols = Math.max(1, Math.floor((fillW+gap)/cell));
+  keys.forEach((k,i) => {
+    const items = groups[k];
+    const x = pad.l + i*(colW+colGap);
+    const box = {x: x + (colW-fillW)/2, y: pad.t, w: fillW, h: usableH};
+    Object.assign(positions, packBarFill(items, box, {dotSize, gap}));
+    const rows = Math.ceil(items.length / fillCols);
+    const stackTop = box.y + box.h - dotSize/2 - (rows-1)*cell - dotSize/2;
+    cols.push({x, y:pad.t, w:colW, h:usableH, label: fieldLabel(field,k), count: items.length, key:k, items, labelY: stackTop - 14});
+  });
+  const colorFn = opts.colorFn || (r => fieldColor(field, r[field]));
+  return { positions, cols, colorFn, dotSize };
+}
+
+function seededJitter(i, salt=0){
+  const x = Math.sin(i*12.9898 + salt*78.233) * 43758.5453;
+  return x - Math.floor(x) - 0.5;
+}
+
+function layoutScatterFree(xField, yField, colorField){
+  const {w,h} = stageSize();
+  const xOrder = FIELDS[xField].order, yOrder = FIELDS[yField].order;
+  const pad = {t:h*0.08,b:h*0.10,l:w*0.22,r:w*0.06};
+  const cellW = (w-pad.l-pad.r)/xOrder.length, cellH = (h-pad.t-pad.b)/yOrder.length;
+  const positions = {};
+  RESPONSES.forEach(r => {
+    const xi = xOrder.indexOf(r[xField]), yi = yOrder.indexOf(r[yField]);
+    if(xi<0||yi<0) return;
+    const jx = seededJitter(r._i,1)*cellW*0.72, jy = seededJitter(r._i,2)*cellH*0.72;
+    positions[r._i] = { x: pad.l + cellW*(xi+0.5) + jx, y: pad.t + cellH*(yOrder.length-yi-0.5) + jy };
+  });
+  const colorFn = r => fieldColor(colorField, r[colorField]);
+  return { positions, colorFn, xField, yField, xOrder, yOrder, pad, cellW, cellH };
+}
+
+function layoutIsolate(indices, opts={}){
+  const {w,h} = stageSize();
+  const dotSize = opts.dotSize || DOT+3;
+  const positions = packCluster(indices, opts.cx ?? w/2, opts.cy ?? h/2, {dotSize, spacing: opts.spacing || dotSize*0.85});
+  const colorFn = opts.colorFn || (() => 'var(--accent)');
+  return { positions, colorFn, dotSize, clusters:[{cx:opts.cx??w/2, cy:opts.cy??h/2, items:indices, count:indices.length, label:opts.label, cellH:h*0.7}] };
+}
+
+function layoutSpotlight3(indices, opts={}){
+  const {w,h} = stageSize();
+  const rest = RESPONSES.map(r=>r._i).filter(i => !indices.includes(i));
+  const positions = {};
+  const cx = w/2, cy = h*0.42, R = Math.min(w,h)*0.52;
+  rest.forEach((idx,n) => {
+    const angle = (n/rest.length)*Math.PI*2;
+    positions[idx] = { x: cx + R*Math.cos(angle), y: cy + R*0.62*Math.sin(angle) + h*0.14 };
+  });
+  const spacing = Math.min(w*0.27, 280);
+  indices.forEach((idx,n) => {
+    const x = cx + (n-(indices.length-1)/2)*spacing;
+    positions[idx] = { x, y: cy };
+  });
+  const colorFn = opts.colorFn || (r => indices.includes(r._i) ? 'var(--s2)' : 'var(--dot-idle)');
+  return { positions, colorFn, spotlight: indices, rest };
+}
+
+// Ladder beat 9 — stage A: 3 rungs by delegationTarget mapping. Stage B: rung3 = humanCore Judgment, rest drain.
+const RUNG_MAP = {
+  'Coordination / follow-through':1, 'Generic repetitive work':1, 'Physical / personal':1,
+  'Reporting / synthesis':2, 'Analysis / technical execution':2,
+  'No clear task':3, 'Creative / communication':3,
+};
+const RUNG_LABEL = {1:'Friction — gathering, chasing, formatting', 2:'Production — analysis, drafting, reporting', 3:'Judgment — deciding, framing, owning it'};
+function layoutLadderStageA(){
+  const {w,h} = stageSize();
+  const rungs = {1:[],2:[],3:[]};
+  RESPONSES.forEach(r => { const rg = RUNG_MAP[r.delegationTarget]; if(rg) rungs[rg].push(r._i); });
+  const pad = {t:h*0.10,b:h*0.06,l:w*0.06,r:w*0.06};
+  const bandH = (h-pad.t-pad.b)/3;
+  const dotSize = Math.max(11, Math.min(DOT, bandH*0.22));
+  const positions = {}; const bands = [];
+  [3,2,1].forEach((rg,i) => {
+    const y = pad.t + i*bandH;
+    const box = {x:pad.l, y:y+14, w:w-pad.l-pad.r, h:bandH-28};
+    Object.assign(positions, packBarFill(rungs[rg], box, {dotSize, gap:6}));
+    bands.push({...box, rung:rg, label:RUNG_LABEL[rg], items:rungs[rg]});
+  });
+  const rungColor = {1:'var(--s4)', 2:'var(--s2)', 3:'var(--s1)'};
+  const colorFn = r => rungColor[RUNG_MAP[r.delegationTarget]] || 'var(--dot-idle)';
+  return { positions, bands, colorFn, dotSize };
+}
+function layoutLadderStageB(){
+  const {w,h} = stageSize();
+  const pad = {t:h*0.10,b:h*0.06,l:w*0.07,r:w*0.07};
+  const bandH = (h-pad.t-pad.b)/3;
+  const keep = RESPONSES.filter(r => r.humanCore === 'Judgment / decisions').map(r=>r._i);
+  const drain = RESPONSES.map(r=>r._i).filter(i => !keep.includes(i));
+  const box = {x:pad.l, y:pad.t+14, w:w-pad.l-pad.r, h:bandH-28};
+  const dotSize = DOT;
+  const positions = packGrid(keep, box, {dotSize, gap:7});
+  drain.forEach(idx => { positions[idx] = { x: pad.l + (idx % 12) * ((w-pad.l-pad.r)/12), y: h + 60 }; });
+  const colorFn = r => keep.includes(r._i) ? 'var(--s1)' : 'var(--dot-idle)';
+  return { positions, colorFn, dotSize, bands:[{...box, rung:3, label:RUNG_LABEL[3], items:keep}] };
+}
+
+function layoutClustersU(field, universe, opts={}){
+  const {w,h} = stageSize();
+  const set = new Set(universe);
+  const groups = {};
+  universe.forEach(i => { const v = RESPONSES[i][field] || '—'; (groups[v]=groups[v]||[]).push(i); });
+  const order = opts.order || FIELDS[field].order;
+  const keys = order.filter(k => groups[k] && groups[k].length);
+  const cols = opts.cols || Math.ceil(Math.sqrt(keys.length));
+  const rows = Math.ceil(keys.length/cols);
+  const cellW = w/cols, cellH = h*0.86/rows;
+  const positions = {}; const clusters = [];
+  keys.forEach((k,i) => {
+    const c = i%cols, r = Math.floor(i/cols);
+    const cx = cellW*(c+0.5), cy = h*0.08 + cellH*(r+0.5);
+    const items = groups[k];
+    const spacing = Math.max(9, Math.min(15, 56/Math.sqrt(items.length)));
+    Object.assign(positions, packCluster(items, cx, cy, {dotSize:DOT-2, spacing}));
+    clusters.push({cx, cy, label: fieldLabel(field,k), count: items.length, color: fieldColor(field,k), key:k, items, cellH});
+  });
+  const colorFn = opts.colorFn || (r => fieldColor(field, r[field]));
+  return { positions, clusters, colorFn, dotSize: DOT-2 };
+}
+
+// Beat 6 — two clean philosophies pulled out of the crowd; everyone else fades into a loose band.
+function layoutAgentLeash(){
+  const {w,h} = stageSize();
+  const A = RESPONSES.filter(r => r.aiRole==='Executor / agent' && r.delegationAppetite==='High — retain agency').map(r=>r._i);
+  const B = RESPONSES.filter(r => r.aiRole==='Autopilot' && r.delegationAppetite==='Total delegation').map(r=>r._i);
+  const rest = RESPONSES.map(r=>r._i).filter(i => !A.includes(i) && !B.includes(i));
+  const sizeA = DOT+5, sizeB = DOT+3, sizeRest = DOT-4;
+  const positions = {};
+  Object.assign(positions, packCluster(A, w*0.26, h*0.42, {dotSize:sizeA, spacing:sizeA*0.82}));
+  Object.assign(positions, packCluster(B, w*0.74, h*0.42, {dotSize:sizeB, spacing:sizeB*0.86}));
+  const restCols = Math.max(8, Math.floor(w/(sizeRest+8)));
+  const restCell = sizeRest+8;
+  const restW = restCols*restCell;
+  rest.forEach((idx,n) => {
+    const c = n % restCols, rIdx = Math.floor(n/restCols);
+    positions[idx] = { x: w/2 - restW/2 + c*restCell + restCell/2, y: h*0.82 + rIdx*restCell };
+  });
+  const colorFn = r => A.includes(r._i) ? 'var(--s1)' : B.includes(r._i) ? 'var(--s3)' : 'var(--dot-idle)';
+  const sizeFn = r => A.includes(r._i) ? sizeA : B.includes(r._i) ? sizeB : sizeRest;
+  return { positions, colorFn, sizeFn, clusters:[
+    {cx:w*0.26, cy:h*0.42, count:A.length, label:'Chief of staff, but I decide', items:A, key:'A', cellH:h*0.6},
+    {cx:w*0.74, cy:h*0.42, count:B.length, label:'Full autopilot', items:B, key:'B', cellH:h*0.6},
+  ]};
+}
+
+/* ============================================================
+   SCENE APPLICATION
+   ============================================================ */
+let currentLayout = null, currentScene = null, bucketOfIndex = {}, itemsByBucketKey = {};
+
+function buildBucketIndex(layout){
+  bucketOfIndex = {}; itemsByBucketKey = {};
+  const list = layout.bars || layout.cols || layout.cells || layout.clusters;
+  if(!list) return;
+  list.forEach((entry, n) => {
+    const key = entry.key ?? String(n);
+    itemsByBucketKey[key] = entry.items || [];
+    (entry.items || []).forEach(idx => bucketOfIndex[idx] = key);
+  });
+}
+
+function applyScene(scene, layout){
+  currentScene = scene; currentLayout = layout;
+  const colorFn = scene.colorFn || layout.colorFn || (() => 'var(--dot-idle)');
+  const ringSet = scene.ringSet ? scene.ringSet(layout) : null;
+  const dimSet = scene.dimSet ? scene.dimSet(layout) : null;
+  const sizeFn = scene.sizeFn || layout.sizeFn || (() => layout.dotSize || DOT);
+  RESPONSES.forEach((r,i) => {
+    const el = dotEls[i];
+    const pos = layout.positions[i];
+    if(!pos){ el.style.opacity = '0'; el.style.pointerEvents = 'none'; return; }
+    el.style.pointerEvents = 'auto';
+    el.style.opacity = '';
+    el.classList.toggle('dimmed', !!(dimSet && dimSet.has(i)));
+    const size = sizeFn(r, layout);
+    el.style.width = size+'px'; el.style.height = size+'px';
+    el.style.transform = `translate(${pos.x-size/2}px, ${pos.y-size/2}px)`;
+    el.style.background = colorFn(r, layout);
+    el.style.boxShadow = (ringSet && ringSet.has(i)) ? '0 0 0 3px var(--accent), 0 0 0 5px var(--surface-1)' : '';
+  });
+  buildBucketIndex(layout);
+  renderAnnotations(scene, layout);
+  renderPanel(scene, layout);
+}
+
+function renderAnnotations(scene, layout){
+  annotLayer.innerHTML = '';
+  const add = (x,y,text,opts={}) => {
+    const d = document.createElement('div');
+    d.className = 'annot' + (opts.big?' big':'') + (opts.axis?' axis':'');
+    d.style.left = x+'px'; d.style.top = y+'px';
+    if(opts.align==='right'){ d.style.transform='translate(-100%,-50%)'; }
+    else if(opts.align==='left'){ d.style.transform='translate(0,-50%)'; }
+    else{ d.style.transform='translate(-50%,-100%)'; }
+    if(opts.color) d.style.color = opts.color;
+    d.textContent = text;
+    annotLayer.appendChild(d);
+  };
+  (layout.bars||[]).forEach(b => add(b.x, b.labelY ?? (b.y-6), `${b.label} — ${b.count}`, {align:'left', big:true}));
+  (layout.cols||[]).forEach(c => add(c.x+c.w/2, c.labelY ?? (c.y-6), `${c.label} · ${c.count}`, {big:true}));
+  (layout.clusters||[]).forEach(c => { if(c.label){ const off = c.cellH ? Math.min(c.cellH*0.4, 46+Math.sqrt(c.count)*7) : 46+Math.sqrt(c.count)*7; add(c.cx, c.cy - off, `${c.label} · ${c.count}`, {big:true}); } });
+  (layout.cells||[]).forEach(c => { /* headers drawn separately */ });
+  if(layout.xOrder && !layout.cells){
+    const {pad,cellW,cellH,xOrder,yOrder} = layout;
+    xOrder.forEach((xv,xi) => add(pad.l+cellW*(xi+0.5), pad.t-8, fieldLabel(scene.gridX||layout.xField, xv), {axis:true}));
+    yOrder.forEach((yv,yi) => add(pad.l-10, pad.t+cellH*(yOrder.length-yi-0.5), fieldLabel(scene.gridY||layout.yField, yv), {align:'right', axis:true}));
+  }
+  if(layout.xOrder && layout.cells){
+    const {pad,cellW,cellH,xOrder,yOrder} = layout;
+    xOrder.forEach((xv,xi) => add(pad.l+cellW*(xi+0.5), pad.t-8, fieldLabel(scene.gridX, xv), {axis:true}));
+    yOrder.forEach((yv,yi) => add(pad.l-10, pad.t+cellH*(yi+0.5), fieldLabel(scene.gridY, yv), {align:'right', axis:true}));
+  }
+  if(layout.bands) layout.bands.forEach(b => add(b.x+10, b.y+4, `${b.label}  ·  ${b.items.length}`, {align:'left', big:true}));
+  if(scene.annotate){ scene.annotate(layout).forEach(a => add(a.x, a.y, a.text, a)); }
+}
+
+function legendFromField(fieldKey, presentKeys){
+  const f = FIELDS[fieldKey];
+  return f.order.filter(k => !presentKeys || presentKeys.has(k)).map(k => ({label: f.values[k].label, color: f.values[k].color}));
+}
+
+function renderPanel(scene, layout){
+  document.getElementById('beat-kicker').textContent = scene.kicker || '';
+  document.getElementById('beat-title').textContent = scene.title;
+  document.getElementById('beat-caption').innerHTML = scene.caption;
+  const sw = document.getElementById('beat-stat-wrap');
+  if(scene.stat){ sw.hidden = false; document.getElementById('beat-stat').textContent = scene.stat; document.getElementById('beat-stat-label').textContent = scene.statLabel||''; }
+  else sw.hidden = true;
+  const legendWrap = document.getElementById('beat-legend');
+  legendWrap.innerHTML = '';
+  let items = scene.legendItems ? scene.legendItems() : (scene.legendField ? legendFromField(scene.legendField) : null);
+  if(items){
+    items.forEach(it => {
+      const d = document.createElement('div'); d.className='legend-item';
+      d.innerHTML = `<span class="legend-swatch" style="background:${it.color}"></span>${it.label}`;
+      legendWrap.appendChild(d);
+    });
+  }
+}
+
+/* ============================================================
+   BEATS — the main story arc
+   ============================================================ */
+const BEATS = [
+{
+  id:'hook', title:'You are the dataset',
+  caption:'88 of you answered five questions before tonight. Every dot on this screen is one of you — coded by hand this afternoon.',
+  stat:'88', statLabel:'people in this room',
+  layout: () => layoutOverview(),
+  modalFields: ['role'],
+},
+{
+  id:'b2', title:'So what’s stopping you?',
+  caption:'Not cost. Not access. Not security. The number one answer, by a distance: <b>I’d still have to check it.</b>',
+  stat:'35 of 88', statLabel:'say “I’d have to check it anyway”',
+  layout: () => layoutBars('barrierProfile', { sortByCount:true, colorFn: r => fieldColor('verificationSalience', r.verificationSalience) }),
+  legendField:'verificationSalience',
+  modalFields:['barrierProfile','verificationSalience'],
+},
+{
+  id:'b3', title:'The people who know how, still can’t',
+  caption:'22 of you work in Data & AI. Not one said “I don’t know how.” 18 still said it’s wrong, or it doesn’t know their world.',
+  stat:'0 of 22', statLabel:'Data & AI people who blamed lack of know-how',
+  stages: [
+    {
+      layout: () => layoutIsolate(RESPONSES.filter(r=>r.role==='Data / AI').map(r=>r._i), {colorFn: () => 'var(--s1)', label:'Data & AI, zero blame “don’t know how”', dotSize:13, spacing:15}),
+    },
+    {
+      title:'18 of 22 still don’t trust the output',
+      caption:'Split the same 22: most say it’s wrong or missing context. Only a handful blame anything else.',
+      stat:'18 of 22', statLabel:'blame wrongness or missing judgment/context',
+      layout: () => layoutSplit(
+        r => (r.blockers||'').includes('gets things wrong') || (r.blockers||'').includes('judgment or context'),
+        { universe: RESPONSES.filter(r=>r.role==='Data / AI').map(r=>r._i), yesLabel:'wrong or no context', noLabel:'other reasons', yesColor:'var(--s2)' }
+      ),
+    },
+  ],
+  modalFields:['role','barrierProfile'],
+},
+{
+  id:'b1', title:'What you’d hand over tomorrow',
+  caption:'We asked what one task you’d love to never do again. Most named the same kind of thing: chasing and writing things up. Almost nobody said “be creative for me.”',
+  stat:'56%', statLabel:'of everyone who named a task wants AI to close a loop, not have an idea',
+  layout: () => layoutBars('delegationTarget', {
+    order:['Reporting / synthesis','Coordination / follow-through','Analysis / technical execution','Creative / communication','Generic repetitive work','Physical / personal','No clear task'],
+    colorFn: r => ['Reporting / synthesis','Coordination / follow-through','Generic repetitive work'].includes(r.delegationTarget) ? 'var(--s2)' : 'var(--dot-idle)',
+  }),
+  legendItems: () => [{label:'Wants a loop closed (write-ups, chasing, busywork)', color:'var(--s2)'}, {label:'Everything else', color:'var(--dot-idle)'}],
+  modalFields:['delegationTarget'],
+},
+{
+  id:'b5', title:'Now imagine AI is ten times better',
+  caption:'Perfectly reliable. Plugged into every system. We asked what you’d still keep. Only 12 of you said “nothing.”',
+  stat:'86%', statLabel:'still keep something, even from a perfect AI',
+  stages: [
+    { layout: () => layoutSplit(r => r.humanCore!=='Nothing protected', {yesLabel:'keep something', noLabel:'take it all', yesColor:'var(--s1)'}) },
+    {
+      title:'What they’d never hand over',
+      caption:'The single biggest answer: the final call. Judgment is the last thing people give up.',
+      stat:'28', statLabel:'keep “the final call” for themselves',
+      layout: () => layoutClusters('humanCore'),
+      legendField:'humanCore',
+    },
+  ],
+  modalFields:['humanCore'],
+},
+{
+  id:'b6', title:'Take the work. I’ll keep the wheel.',
+  caption:'The most common wish is for AI to just go and act — a chief of staff. The most common condition is that the human still decides. An agent, on a leash. A much smaller group wants the opposite: full autopilot.',
+  stat:'25 of 88', statLabel:'want AI to run the work, and still hold the wheel',
+  layout: () => layoutAgentLeash(),
+  legendItems: () => [{label:'Chief of staff, but I decide — 25', color:'var(--s1)'}, {label:'Full autopilot — 12', color:'var(--s3)'}, {label:'Everyone else — 51', color:'var(--dot-idle)'}],
+  modalFields:['aiRole','delegationAppetite'],
+},
+{
+  id:'b4', title:'It’s never just one wall',
+  caption:'Most people didn’t hit one obstacle. They hit two or three at once. That’s why “just use AI more” doesn’t work.',
+  stat:'63 of 88', statLabel:'face two or more blockers at once',
+  layout: () => layoutColumns('barrierBreadth', { colorFn: r => fieldColor('barrierProfile', r.barrierProfile) }),
+  legendField:'barrierProfile',
+  modalFields:['barrierBreadth','barrierProfile'],
+},
+{
+  id:'b7', title:'Five ways this room thinks',
+  caption:'Every one of you falls into one of five stances toward AI.',
+  stat:'30', statLabel:'the largest group: hand over the work, keep the wheel',
+  stages: [
+    { layout: () => layoutBars('mindset', {sortByCount:true}), legendField:'mindset' },
+    {
+      title:'Not split by job, though',
+      caption:'Recolour the same five bars by profession: every stance is a mix of students, managers and engineers. Students alone split 7/7/5/4/3 across all five.',
+      stat:'all 5', statLabel:'stances appear inside the student cohort alone',
+      layout: () => layoutBars('mindset', {sortByCount:true, colorFn: r => fieldColor('role', r.role)}),
+      legendField:'role',
+    },
+  ],
+  modalFields:['mindset','mindsetReason'],
+},
+{
+  id:'b8', title:'Three people asked the same question',
+  caption:'An engineer, a finance professional and a student — who’ve never met — independently asked one thing: if AI does the junior work, where does anyone learn the senior work?',
+  stat:'3', statLabel:'named it outright, out of 88',
+  layout: () => layoutSpotlight3(RESPONSES.filter(r=>r.futureConcern==='Apprenticeship / learning ladder').map(r=>r._i)),
+  modalFields:['futureConcern','question'],
+},
+{
+  id:'b9', title:'The ladder',
+  caption:'You want AI to take the writing-up, the chasing, the crunching — exactly the work people used to learn judgment on. Nobody in this room has designed the replacement.',
+  stat:'?', statLabel:'if AI removes the rungs, how does anyone climb?',
+  stages: [
+    { layout: () => layoutLadderStageA() },
+    {
+      title:'If AI removes the rungs, how does anyone climb?',
+      caption:'76 of you are protecting the top of the ladder. Only 3 of you asked how anyone gets there. Cheaper verification. Buy the chief of staff, not the genius. Design the apprenticeship on purpose.',
+      stat:'28', statLabel:'still standing on judgment, alone',
+      layout: () => layoutLadderStageB(),
+    },
+  ],
+  modalFields:['delegationTarget','humanCore'],
+},
+];
+
+/* ============================================================
+   DETOURS — reachable via Map / Explore, never in the main flow
+   ============================================================ */
+const DETOURS = [
+{ id:'x-verify-role', label:'Who checks the most?',
+  title:'Who checks the most?', caption:'The checking reflex barely differs by role — Data & AI (11 of 22) check just as hard as students (10 of 26).',
+  layout: () => layoutColumns('role', {colorFn: r => fieldColor('verificationSalience', r.verificationSalience)}),
+  legendField:'verificationSalience', modalFields:['role','verificationSalience'] },
+{ id:'x-mindset-core', label:'What each stance protects',
+  title:'What each stance protects', caption:'“The people part” clusters almost entirely inside one stance — protect the work, keep the wheel.',
+  gridX:'humanCore', gridY:'mindset',
+  layout: () => layoutGrid2('humanCore','mindset', {colorField:'humanCore'}),
+  legendField:'humanCore', modalFields:['mindset','humanCore'] },
+{ id:'x-questions', label:'What the room doesn’t know',
+  title:'What the room doesn’t know', caption:'33 of you asked nothing. Of those who did, the questions split cleanly by role.',
+  layout: () => layoutBars('futureConcern', {sortByCount:true, colorFn: r => fieldColor('role', r.role)}),
+  legendField:'role', modalFields:['futureConcern','question'] },
+{ id:'x-confidence', label:'How sure am I about this?',
+  title:'How sure am I about any of this?', caption:'56 codings were high-confidence, 18 medium, 14 a judgment call. Intellectual honesty, on the same five bars as Beat 7.',
+  layout: () => layoutBars('mindset', {sortByCount:true, colorFn: r => fieldColor('mindsetConfidence', r.mindsetConfidence)}),
+  legendField:'mindsetConfidence', modalFields:['mindset','mindsetConfidence'] },
+{ id:'x-scatter', label:'The whole room at once',
+  title:'The whole room at once', caption:'Every dot, positioned by how many walls they hit and how much they’d delegate, coloured by stance. Click anyone.',
+  layout: () => layoutScatterFree('barrierBreadth','delegationAppetite','mindset'),
+  gridX:'barrierBreadth', gridY:'delegationAppetite',
+  legendField:'mindset', modalFields:['barrierBreadth','delegationAppetite','mindset'] },
+{ id:'x-giveaway', label:'The 12 who’d give it all away',
+  title:'The 12 who’d give it all away', caption:'A small, real accelerationist minority — mostly students and engineers, willing to hand over everything.',
+  layout: () => layoutIsolate(RESPONSES.filter(r=>r.humanCore==='Nothing protected').map(r=>r._i), {colorFn: r => fieldColor('role', r.role), label:'take all of it'}),
+  legendField:'role', modalFields:['humanCore','role'] },
+{ id:'x-nameless', label:'The 22 who couldn’t name a task',
+  title:'The 22 who couldn’t name a task', caption:'Usually thrown away as noise — but most of them are stuck behind the same wall as everyone else, not disengaged.',
+  layout: () => layoutClustersU('barrierProfile', RESPONSES.filter(r=>r.delegationTarget==='No clear task').map(r=>r._i)),
+  legendField:'barrierProfile', modalFields:['delegationTarget','barrierProfile'] },
+];
+const BEATS_BY_ID = Object.fromEntries(BEATS.map(b=>[b.id,b]));
+const DETOURS_BY_ID = Object.fromEntries(DETOURS.map(d=>[d.id,d]));
+</script>
+
+<script>
+'use strict';
+/* ============================================================
+   ROUTING / NAVIGATION
+   ============================================================ */
+let mainIdx = 0, mainStage = 0, currentModalIdx = null;
+
+function parseToken(token){
+  const m = token.match(/^(.+)-s(\d+)$/);
+  if(m && BEATS_BY_ID[m[1]]) return { id:m[1], stage:parseInt(m[2],10) };
+  return { id:token, stage:0 };
+}
+
+function buildExploreScene(colorField, groupField){
+  const cf = FIELDS[colorField] ? colorField : 'mindset';
+  const gf = FIELDS[groupField] ? groupField : 'barrierProfile';
+  const cLabel = FIELDS[cf].label, gLabel = FIELDS[gf].label;
+  return {
+    title:`${gLabel} — coloured by ${cLabel}`,
+    caption:'A live cut of the room. Press <b>↩ Back to the story</b> when you’re ready to return.',
+    layout: () => layoutBars(gf, { sortByCount:true, colorFn: r => fieldColor(cf, r[cf]) }),
+    legendField: cf,
+    modalFields: [gf, cf],
+    _explore:true, _colorField:cf, _groupField:gf,
+  };
+}
+
+function resolveScene(sceneIdRaw, stage){
+  if(sceneIdRaw.startsWith('explore-')){
+    const parts = sceneIdRaw.split('-');
+    return { scene: buildExploreScene(parts[1], parts[2]), kind:'explore', id:sceneIdRaw };
+  }
+  if(BEATS_BY_ID[sceneIdRaw]){
+    const beat = BEATS_BY_ID[sceneIdRaw];
+    const scene = Object.assign({}, beat, beat.stages ? (beat.stages[stage]||{}) : {});
+    scene._stageCount = beat.stages ? beat.stages.length : 1;
+    scene._stage = stage;
+    const idx = BEATS.findIndex(b => b.id === sceneIdRaw);
+    scene.kicker = sceneIdRaw === 'hook' ? 'Welcome' : `Beat ${idx}`;
+    return { scene, kind:'beat', id: sceneIdRaw, stage };
+  }
+  if(DETOURS_BY_ID[sceneIdRaw]){
+    return { scene: DETOURS_BY_ID[sceneIdRaw], kind:'detour', id: sceneIdRaw };
+  }
+  return { scene: BEATS[0], kind:'beat', id: BEATS[0].id, stage:0 };
+}
+
+function render(){
+  const raw = (location.hash || '#hook').slice(1);
+  const [scenePart, modalPart] = raw.split('~');
+  const { id: tokenId, stage } = parseToken(scenePart || 'hook');
+  const resolved = resolveScene(tokenId, stage);
+  const layout = resolved.scene.layout();
+  applyScene(resolved.scene, layout);
+  updateChrome(resolved);
+  if(modalPart && modalPart[0] === 'r') showModalContent(parseInt(modalPart.slice(1),10));
+  else closeModalUI();
+}
+
+function go(token, {push=false}={}){
+  const hash = '#' + token;
+  if(push) history.pushState(null, '', hash); else history.replaceState(null, '', hash);
+  render();
+}
+
+function currentScenePart(){ return (location.hash||'#hook').slice(1).split('~')[0]; }
+
+function goToMain(push=false){
+  const beat = BEATS[mainIdx];
+  const token = mainStage ? `${beat.id}-s${mainStage}` : beat.id;
+  go(token, {push});
+}
+
+function next(){
+  const beat = BEATS[mainIdx];
+  const stageCount = beat.stages ? beat.stages.length : 1;
+  if(mainStage < stageCount-1) mainStage++;
+  else if(mainIdx < BEATS.length-1){ mainIdx++; mainStage = 0; }
+  else return;
+  goToMain(false);
+}
+function prev(){
+  if(mainStage > 0) mainStage--;
+  else if(mainIdx > 0){ mainIdx--; mainStage = (BEATS[mainIdx].stages ? BEATS[mainIdx].stages.length-1 : 0); }
+  else return;
+  goToMain(false);
+}
+function jumpToBeat(i){ mainIdx = i; mainStage = 0; goToMain(false); closeMap(); }
+function jumpToDetour(id){ go(id, {push:true}); closeMap(); }
+
+function openModal(idx){ go(currentScenePart() + '~r' + idx, {push:true}); }
+function closeModalTriggered(){ if(location.hash.includes('~r')) history.back(); else closeModalUI(); }
+function closeModalUI(){ document.getElementById('modal-overlay').hidden = true; currentModalIdx = null; }
+
+function modalNav(dir){
+  if(currentModalIdx === null) return;
+  const bucket = bucketOfIndex[currentModalIdx];
+  const items = (bucket !== undefined && itemsByBucketKey[bucket]) ? itemsByBucketKey[bucket] : RESPONSES.map(r=>r._i);
+  const pos = items.indexOf(currentModalIdx);
+  const next = items[(pos + dir + items.length) % items.length];
+  go(currentScenePart() + '~r' + next, {push:false});
+}
+
+/* ============================================================
+   CHROME (top bar, bottom bar, panel legend already in applyScene)
+   ============================================================ */
+function updateChrome(resolved){
+  if(resolved.kind === 'beat'){
+    mainIdx = BEATS.findIndex(b => b.id === resolved.id);
+    mainStage = resolved.stage || 0;
+  }
+  const idx = BEATS.findIndex(b => b.id === resolved.id);
+  const pct = idx >= 0 ? (idx/(BEATS.length-1))*100 : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.querySelectorAll('.beat-dot').forEach((el,i) => el.classList.toggle('active', i === idx));
+}
+
+/* ============================================================
+   UI: bottom beat pills, map overlay, explore drawer, modal, theme
+   ============================================================ */
+function escapeHtml(s){ const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
+
+function buildBeatDots(){
+  const wrap = document.getElementById('beat-dots');
+  wrap.innerHTML = '';
+  BEATS.forEach((b,i) => {
+    const el = document.createElement('button');
+    el.className = 'beat-dot';
+    el.type = 'button';
+    el.textContent = i === 0 ? 'Hook' : String(i);
+    el.title = b.title;
+    el.addEventListener('click', () => jumpToBeat(i));
+    wrap.appendChild(el);
+  });
+}
+
+function buildMap(){
+  const main = document.getElementById('map-grid');
+  const det = document.getElementById('map-grid-detour');
+  main.innerHTML = ''; det.innerHTML = '';
+  BEATS.forEach((b,i) => {
+    const btn = document.createElement('button');
+    btn.className = 'map-item';
+    btn.innerHTML = `<span class="n">${i===0?'HOOK':'BEAT '+i}</span><span class="t">${escapeHtml(b.title)}</span><span class="c">${escapeHtml((b.caption||'').replace(/<[^>]+>/g,'')).slice(0,90)}</span>`;
+    btn.addEventListener('click', () => jumpToBeat(i));
+    main.appendChild(btn);
+  });
+  DETOURS.forEach(d => {
+    const btn = document.createElement('button');
+    btn.className = 'map-item';
+    btn.innerHTML = `<span class="n">DETOUR</span><span class="t">${escapeHtml(d.title)}</span><span class="c">${escapeHtml((d.caption||'').replace(/<[^>]+>/g,'')).slice(0,90)}</span>`;
+    btn.addEventListener('click', () => jumpToDetour(d.id));
+    det.appendChild(btn);
+  });
+}
+
+function openMap(){ document.getElementById('map-overlay').hidden = false; }
+function closeMap(){ document.getElementById('map-overlay').hidden = true; }
+function toggleMap(){ document.getElementById('map-overlay').hidden ? openMap() : closeMap(); }
+
+function buildExploreDrawer(){
+  const colorSel = document.getElementById('ex-color'), groupSel = document.getElementById('ex-group');
+  colorSel.innerHTML = ''; groupSel.innerHTML = '';
+  Object.keys(FIELDS).forEach(fk => {
+    const o1 = document.createElement('option'); o1.value = fk; o1.textContent = FIELDS[fk].label; colorSel.appendChild(o1);
+    const o2 = document.createElement('option'); o2.value = fk; o2.textContent = FIELDS[fk].label; groupSel.appendChild(o2);
+  });
+  colorSel.value = 'mindset'; groupSel.value = 'barrierProfile';
+  const apply = () => {
+    const already = currentScenePart().startsWith('explore-');
+    go(`explore-${colorSel.value}-${groupSel.value}`, {push: !already});
+  };
+  colorSel.addEventListener('change', apply);
+  groupSel.addEventListener('change', apply);
+  document.getElementById('explore-btn').addEventListener('click', () => {
+    document.getElementById('explore-drawer').hidden = false;
+    apply();
+  });
+  document.getElementById('explore-return').addEventListener('click', () => {
+    document.getElementById('explore-drawer').hidden = true;
+    goToMain(false);
+  });
+}
+
+function showModalContent(idx){
+  currentModalIdx = idx;
+  document.getElementById('modal-overlay').hidden = false;
+  const r = RESPONSES[idx];
+  const scene = currentScene;
+  const color = dotEls[idx].style.background || 'var(--dot-idle)';
+  const fields = (scene && scene.modalFields) || ['role'];
+  let html = `<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem;">
+    <span style="width:24px;height:24px;border-radius:30%;background:${color};flex:0 0 auto;box-shadow:0 0 0 1px var(--border);"></span>
+    <span class="modal-role">${escapeHtml(fieldLabel('role', r.role))}</span>
+  </div>`;
+  fields.forEach(fk => {
+    if(fk === 'question'){
+      html += `<div class="modal-field highlight"><div class="fl">Their open question</div><div class="fv">${r.question ? '“'+escapeHtml(r.question)+'”' : '<em>No question given</em>'}</div></div>`;
+      return;
+    }
+    if(fk === 'mindsetReason') return;
+    const f = FIELDS[fk];
+    if(!f) return;
+    const disp = fieldLabel(fk, r[fk]);
+    const total = RESPONSES.filter(x => x[fk] === r[fk]).length;
+    html += `<div class="modal-field highlight"><div class="fl">${f.label}</div><div class="fv">${escapeHtml(disp)} <span style="font-weight:400;color:var(--ink-muted);font-size:.78rem;">— ${total} of 88</span></div></div>`;
+  });
+  html += `<div style="margin-top:1.1rem;border-top:1px dashed var(--border);padding-top:.9rem;">`;
+  const verb = [['What they’d hand off','task'], ['What stops them','blockers'], ['What they’d keep','keep'], ['Their open question','question']];
+  verb.forEach(([label,key]) => {
+    if(fields.includes(key)) return;
+    const val = r[key];
+    html += `<div class="modal-field"><div class="fl">${label}</div><div class="fv">${val ? '“'+escapeHtml(val)+'”' : '<span style="color:var(--ink-muted)">— not given —</span>'}</div></div>`;
+  });
+  html += `</div>`;
+  if(r.mindsetReason){
+    html += `<div class="modal-field" style="font-style:italic;color:var(--ink-2);font-size:.85rem;">Why we coded it this way: ${escapeHtml(r.mindsetReason)} <span style="font-style:normal;font-weight:600;">(${fieldLabel('mindsetConfidence', r.mindsetConfidence)})</span></div>`;
+  }
+  const allFields = ['mindset','delegationTarget','barrierProfile','barrierBreadth','humanCore','delegationAppetite','aiRole','futureConcern','adoptionPosture','verificationSalience'];
+  const rest = allFields.filter(fk => !fields.includes(fk));
+  html += `<details style="margin-top:1rem;"><summary style="cursor:pointer;font-size:.8rem;color:var(--ink-muted);">See all ${rest.length} other codes</summary><div style="margin-top:.6rem;display:grid;gap:.35rem;">`;
+  rest.forEach(fk => { html += `<div style="font-size:.82rem;"><span style="color:var(--ink-muted)">${FIELDS[fk].label}:</span> ${escapeHtml(fieldLabel(fk, r[fk]))}</div>`; });
+  html += `</div></details>`;
+  document.getElementById('modal-body').innerHTML = html;
+}
+
+/* ============================================================
+   THEME
+   ============================================================ */
+function initTheme(){
+  const saved = localStorage.getItem('cvg-theme');
+  if(saved) document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('theme-btn').addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('cvg-theme', next);
+  });
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function init(){
+  initTheme();
+  buildBeatDots();
+  buildMap();
+  buildExploreDrawer();
+
+  document.getElementById('prev-btn').addEventListener('click', prev);
+  document.getElementById('next-btn').addEventListener('click', next);
+  document.getElementById('map-btn').addEventListener('click', toggleMap);
+  document.getElementById('map-overlay').addEventListener('click', e => { if(e.target.id === 'map-overlay') closeMap(); });
+  document.getElementById('modal-overlay').addEventListener('click', e => { if(e.target.id === 'modal-overlay') closeModalTriggered(); });
+  document.getElementById('modal-close').addEventListener('click', closeModalTriggered);
+  document.addEventListener('click', e => {
+    const drawer = document.getElementById('explore-drawer');
+    if(drawer.hidden) return;
+    if(drawer.contains(e.target) || e.target.closest('#explore-btn')) return;
+    drawer.hidden = true;
+  });
+
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape'){
+      if(!document.getElementById('modal-overlay').hidden) closeModalTriggered();
+      else if(!document.getElementById('map-overlay').hidden) closeMap();
+      else if(!document.getElementById('explore-drawer').hidden){ document.getElementById('explore-drawer').hidden = true; document.getElementById('explore-btn').focus(); }
+      return;
+    }
+    if(e.target.tagName === 'SELECT') return;
+    if(!document.getElementById('modal-overlay').hidden){
+      if(e.key === 'ArrowRight'){ modalNav(1); e.preventDefault(); }
+      if(e.key === 'ArrowLeft'){ modalNav(-1); e.preventDefault(); }
+      return;
+    }
+    if(e.key === 'ArrowRight') next();
+    else if(e.key === 'ArrowLeft') prev();
+    else if(e.key === 'm' || e.key === 'M') toggleMap();
+  });
+
+  window.addEventListener('popstate', render);
+  let resizeT;
+  window.addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(render, 120); });
+
+  if(!location.hash) history.replaceState(null, '', '#hook');
+  render();
+}
+
+if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+
+</body>
+</html>

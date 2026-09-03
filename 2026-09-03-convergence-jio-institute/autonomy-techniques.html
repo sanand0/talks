@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Who Gets the Final Call?</title>
+<meta name="color-scheme" content="light dark" />
+<style>
+  :root {
+    --bg:#f5f1e8; --panel:#fffdf7; --ink:#171813; --muted:#66695f; --hair:#d7d2c6;
+    --shadow:0 12px 40px rgba(30,26,18,.10); --focus:#171813;
+    --frame:#315efb; --evidence:#0e8f72; --test:#d87810; --challenge:#b5468b; --control:#6d5bd0;
+    --modal-bg:rgba(18,18,16,.46); --quote:#f3efe5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#11130f; --panel:#191c17; --ink:#f4f1e8; --muted:#aeb3a7; --hair:#30352d;
+      --shadow:0 18px 55px rgba(0,0,0,.34); --focus:#fffaf0; --quote:#22261f;
+      --frame:#7190ff; --evidence:#42c8a7; --test:#f0a044; --challenge:#e077bd; --control:#aa96ff;
+      --modal-bg:rgba(0,0,0,.68);
+    }
+  }
+  html[data-theme="light"] { --bg:#f5f1e8; --panel:#fffdf7; --ink:#171813; --muted:#66695f; --hair:#d7d2c6; --shadow:0 12px 40px rgba(30,26,18,.10); --focus:#171813; --quote:#f3efe5; --frame:#315efb; --evidence:#0e8f72; --test:#d87810; --challenge:#b5468b; --control:#6d5bd0; --modal-bg:rgba(18,18,16,.46); }
+  html[data-theme="dark"] { --bg:#11130f; --panel:#191c17; --ink:#f4f1e8; --muted:#aeb3a7; --hair:#30352d; --shadow:0 18px 55px rgba(0,0,0,.34); --focus:#fffaf0; --quote:#22261f; --frame:#7190ff; --evidence:#42c8a7; --test:#f0a044; --challenge:#e077bd; --control:#aa96ff; --modal-bg:rgba(0,0,0,.68); }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--ink)}
+  body{font-family:"Avenir Next","Segoe UI Variable",system-ui,sans-serif;letter-spacing:-.012em}
+  button{font:inherit;color:inherit;appearance:none;-webkit-appearance:none}
+  .app{height:100dvh;display:grid;grid-template-rows:auto 1fr auto;padding:clamp(14px,2vw,30px);gap:clamp(10px,1.4vh,18px);position:relative}
+  .app:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.36;background-image:linear-gradient(var(--hair) 1px,transparent 1px),linear-gradient(90deg,var(--hair) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.35),transparent 55%)}
+  header,.board,footer{position:relative;z-index:1}
+  header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px}
+  .eyebrow{font-size:clamp(13px,.85vw,17px);letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:var(--muted);margin-bottom:4px}
+  h1{font-family:Charter,"Iowan Old Style","Palatino Linotype",serif;font-size:clamp(44px,3.8vw,72px);line-height:.94;letter-spacing:-.045em;margin:0;max-width:950px;font-weight:760}
+  .lead{font-size:clamp(15px,1vw,20px);color:var(--muted);margin-top:7px;font-weight:600}
+  .controls{display:flex;align-items:center;gap:12px;flex:none}
+  .icon-btn{height:46px;min-width:46px;padding:0 11px;border:1px solid var(--hair);background:color-mix(in srgb,var(--panel) 88%,transparent);border-radius:999px;cursor:pointer;display:grid;place-items:center;font-weight:800;box-shadow:0 3px 12px rgba(0,0,0,.04)}
+  .icon-btn:hover{transform:translateY(-1px);border-color:var(--muted)}
+  .rank-filter{width:clamp(280px,24vw,430px);padding:10px 14px 9px;border:1px solid var(--hair);background:color-mix(in srgb,var(--panel) 92%,transparent);border-radius:16px;box-shadow:0 5px 18px rgba(0,0,0,.05)}
+  .rank-filter-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:5px}.rank-filter-label{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:900}.rank-filter-value{font-family:Charter,"Iowan Old Style",serif;font-size:24px;font-weight:800;color:var(--ink)}
+  .rank-filter input{width:100%;margin:0;accent-color:var(--ink);cursor:pointer}.rank-filter-scale{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;font-weight:800;margin-top:2px}.rank-filter-scale b{color:var(--ink)}
+  .tech.rank-hidden{visibility:hidden;pointer-events:none}.stage.no-visible .stage-head{opacity:.38}.stage.no-visible{background:color-mix(in srgb,var(--panel) 45%,transparent);box-shadow:none}
+  .board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(8px,.8vw,14px);min-height:0}
+  .stage{min-width:0;display:grid;grid-template-rows:auto 1fr;background:color-mix(in srgb,var(--panel) 70%,transparent);border:1px solid var(--hair);border-radius:clamp(14px,1.2vw,20px);padding:clamp(8px,.85vw,14px);box-shadow:0 8px 28px rgba(0,0,0,.035);position:relative;overflow:hidden}
+  .stage:before{content:"";height:5px;position:absolute;left:0;right:0;top:0;background:var(--stage)}
+  .stage-head{padding:clamp(7px,.6vw,10px) 3px clamp(6px,.55vw,9px);display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+  .stage-name{font-size:clamp(16px,1.05vw,21px);text-transform:uppercase;letter-spacing:.12em;font-weight:900;color:var(--stage)}
+  .stage-num{font-family:Charter,serif;font-size:clamp(26px,1.8vw,34px);font-weight:800;color:color-mix(in srgb,var(--stage) 78%,var(--ink))}
+  .cards{display:grid;grid-template-rows:repeat(4,minmax(0,1fr));gap:clamp(6px,.6vw,10px);min-height:0}
+  .tech{position:relative;width:100%;text-align:left;border:1px solid var(--hair);background-color:var(--panel);color:var(--ink);border-radius:clamp(10px,.85vw,15px);padding:clamp(8px,.72vw,12px);cursor:pointer;min-height:0;overflow:hidden;display:grid;align-content:center;transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease,background .14s ease}
+  .tech:before{content:"";position:absolute;left:0;top:22%;bottom:22%;width:3px;background:var(--stage);border-radius:0 4px 4px 0;opacity:.9}
+  .tech:hover,.tech.selected{transform:translateY(-2px);border-color:color-mix(in srgb,var(--stage) 65%,var(--hair));box-shadow:0 7px 18px color-mix(in srgb,var(--stage) 12%,transparent)}
+  .tech.selected{outline:2px solid color-mix(in srgb,var(--stage) 62%,transparent);outline-offset:1px}
+  .tech .num{position:absolute;right:9px;top:7px;font-size:clamp(12px,.78vw,15px);font-variant-numeric:tabular-nums;color:var(--muted);opacity:.65;font-weight:800}
+  .tech strong{font-size:clamp(18px,1.25vw,24px);line-height:1.05;letter-spacing:-.03em;display:block;padding-right:18px}
+  .tech span{font-size:clamp(12px,.82vw,16px);line-height:1.18;color:var(--muted);margin-top:clamp(3px,.35vh,6px);font-weight:600}
+  .blank{visibility:hidden}
+  footer{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:clamp(12px,.78vw,15px);color:var(--muted);font-weight:650}
+  .keys{display:flex;gap:5px;align-items:center}.key{border:1px solid var(--hair);background:var(--panel);border-bottom-width:2px;border-radius:5px;padding:1px 6px;color:var(--ink);font-weight:800}
+  .sequence{font-weight:800;letter-spacing:.02em}.sequence b{color:var(--ink)}
+  .modal-wrap{position:fixed;inset:0;background:var(--modal-bg);z-index:20;display:none;align-items:center;justify-content:flex-end;padding:clamp(12px,1.5vw,24px);backdrop-filter:blur(6px)}
+  .modal-wrap.open{display:flex}
+  .modal{width:min(720px,48vw);height:min(92dvh,900px);background:var(--panel);border:1px solid var(--hair);border-radius:24px;box-shadow:0 24px 90px rgba(0,0,0,.35);display:grid;grid-template-rows:auto auto auto 1fr auto;overflow:hidden;animation:slide .18s ease-out}
+  @keyframes slide{from{transform:translateX(18px);opacity:.4}to{transform:none;opacity:1}}
+  .modal-top{display:flex;justify-content:space-between;gap:16px;padding:24px 26px 12px;align-items:flex-start}
+  .modal-kicker{font-size:15px;text-transform:uppercase;letter-spacing:.14em;font-weight:900;color:var(--modal-accent)}
+  .modal h2{font-family:Charter,"Iowan Old Style",serif;margin:4px 0 0;font-size:clamp(40px,3.4vw,58px);line-height:.98;letter-spacing:-.045em}
+  .close{width:38px;height:38px;border-radius:50%;border:1px solid var(--hair);background:transparent;cursor:pointer;font-size:22px;line-height:1}
+  .one-line{font-size:clamp(19px,1.4vw,25px);line-height:1.35;color:var(--muted);padding:0 26px 16px;font-weight:650}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 26px 18px}.stat{border:1px solid var(--hair);border-radius:12px;padding:10px 12px;background:var(--quote)}.stat small{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.1em;font-weight:900}.stat b{font-size:17px}
+  .body{overflow:auto;padding:0 26px 18px;scrollbar-width:thin}.body h3{font-size:14px;text-transform:uppercase;letter-spacing:.12em;margin:7px 0 9px;color:var(--modal-accent)}.why{font-size:18px;line-height:1.43;margin:0 0 18px}
+  .quote{background:var(--quote);border-left:3px solid var(--modal-accent);padding:11px 13px;margin:0 0 9px;border-radius:0 10px 10px 0;font-family:Charter,"Iowan Old Style",serif;font-size:17px;line-height:1.38}
+  .modal-nav{border-top:1px solid var(--hair);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:15px;font-weight:700}.modal-nav button{border:0;background:none;cursor:pointer;padding:7px 8px;color:var(--ink);font-weight:850}
+  @media (max-width:1100px){.app{padding:12px}.stage{padding:7px}.tech{padding:8px}.tech strong{font-size:17px}.tech span{font-size:12px}.modal{width:min(760px,72vw)}}
+  @media (max-width:760px){html,body{overflow:auto}.app{height:auto;min-height:100dvh}.board{grid-template-columns:1fr}.cards{grid-template-rows:none}.blank{display:none}.tech{min-height:74px}.modal-wrap{align-items:flex-end;padding:0}.modal{width:100%;height:86dvh;border-radius:22px 22px 0 0}header{align-items:flex-start}.controls{position:absolute;right:0;top:0}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div>
+      <div class="eyebrow">My AI autonomy playbook · July–August 2026</div>
+      <h1>Who gets the final call?</h1>
+      <div class="lead">18 techniques. Five autonomy levels. How I decide when AI decides.</div>
+    </div>
+    <div class="controls">
+      <div class="rank-filter" aria-label="Filter autonomy techniques by importance rank">
+        <div class="rank-filter-top"><span class="rank-filter-label">Show most important first</span><span class="rank-filter-value" id="rankValue">Top 1</span></div>
+        <input id="rankRange" type="range" min="1" max="18" value="18" step="1" aria-label="Number of top-ranked techniques to show" />
+        <div class="rank-filter-scale"><b>1</b><span>importance rank</span><b>18</b></div>
+      </div>
+      <button class="icon-btn" id="theme" aria-label="Toggle light and dark mode" title="Toggle theme">◐</button>
+    </div>
+  </header>
+
+  <main class="board" id="board" aria-label="Final-call autonomy techniques"></main>
+
+  <footer>
+    <div class="sequence"><b>Direct</b> → Choose → Gate → Trust → Delegate</div>
+    <div class="keys"><span class="key">←</span><span class="key">→</span><span class="key">↑</span><span class="key">↓</span> navigate &nbsp; <span class="key">Enter</span> open &nbsp; <span class="key">Esc</span> close &nbsp; · &nbsp; slider reveals by rank</div>
+  </footer>
+</div>
+
+<div class="modal-wrap" id="modalWrap" role="presentation">
+  <section class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-top"><div><div class="modal-kicker" id="modalKicker"></div><h2 id="modalTitle"></h2></div><button class="close" id="close" aria-label="Close">×</button></div>
+    <div class="one-line" id="modalLine"></div>
+    <div class="stats" id="stats"></div>
+    <div class="body"><h3>Why it works</h3><p class="why" id="why"></p><h3>Prompt snippets</h3><div id="quotes"></div></div>
+    <div class="modal-nav"><button id="prev">← Previous</button><span id="position"></span><button id="next">Next →</button></div>
+  </section>
+</div>
+
+<script>
+const stages = [
+  {id:'direct', name:'Direct', color:'var(--frame)', desc:'AI chooses the method'},
+  {id:'choose', name:'Choose', color:'var(--evidence)', desc:'AI recommends; I decide'},
+  {id:'gate', name:'Gate', color:'var(--test)', desc:'AI finishes; I release'},
+  {id:'trust', name:'Trust', color:'var(--challenge)', desc:'Verification replaces review'},
+  {id:'delegate', name:'Delegate', color:'var(--control)', desc:'The final call moves outward'}
+];
+const techs = [
+ {stage:'direct',title:'Work independently',line:'Own the process; interrupt me only for material uncertainty.',freq:'Very high',impact:'Very high',eff:'Excellent',why:'This is the core delegation pattern: the AI gets broad freedom over searches, sources, structure and intermediate choices, but must escalate when an unknown could materially change a decision, commitment or risk. It removes supervision without removing accountability.',q:['“Work independently.”','“If a missing fact would significantly change the decision, commitment, or risk AND cannot be found from the sources…”','“Ask one clarifying question… or recommend a DISCUSS LIVE.”']},
+ {stage:'direct',title:'Use your discretion',line:'Choose the local tactic; no need for me to be a bottleneck.',freq:'High',impact:'High',eff:'Excellent',why:'You deliberately avoid micromanaging reversible tactical choices. This is especially effective when the objective is clear and there are many small choices whose individual value is lower than the cost of asking you.',q:['“Use your discretion”','“no need for me to be a bottleneck”','“You don’t have to test all hypotheses… Use your discretion”']},
+ {stage:'direct',title:'Choose the research path',line:'Decide what to inspect, download, search and analyze.',freq:'High',impact:'Medium-high',eff:'Very good',why:'Rather than specifying every file, query or dataset, you define the evidence universe and let the AI decide where attention has the highest return. This substantially expands autonomy while keeping the ultimate judgment with you.',q:['“Search and take what you need from the attachments.”','“download what you consider as most relevant. Analyze these…”','“Go ahead with the next highest-return analysis”']},
+ {stage:'direct',title:'Do the whole workflow',line:'Research, synthesize, draft and package—not just advise.',freq:'High',impact:'High',eff:'Very good',why:'You often delegate end-to-end production rather than asking for one isolated step. The retained control is usually at the outer boundary: what gets sent, published, committed or accepted.',q:['“Research extensively. Plan carefully for how best to be effective yet comprehensive.”','“Work independently.”','“Continue and complete the task.”']},
+
+ {stage:'choose',title:'Give me real options',line:'Expand the decision space; don’t silently choose for me.',freq:'High',impact:'High',eff:'Very good',why:'This makes the AI responsible for searching the option space while preserving your authority to close it. Asking for materially different approaches—and even one you expect to reject—reduces premature convergence on what the model thinks you want.',q:['“Give me options to pick from unless there is a clear winner. Don’t pre-filter.”','“Give me four materially different approaches…”','“Include one approach you expect me to reject.”']},
+ {stage:'choose',title:'Name my judgment calls',line:'Surface the few decisions that only I should make.',freq:'Medium-high',impact:'High',eff:'Very good',why:'You ask the AI to make a recommendation, explain it, and then explicitly separate the residual choices that depend on your authority, relationships, risk tolerance or private context. This avoids both timid “it depends” answers and accidental overreach.',q:['“Judgment calls: up to 3 decisions only I can make”','“your pick, why, alternatives, and why I might differ”','“what evidence would change the decision.”']},
+ {stage:'choose',title:'I make the final shortlist',line:'Let AI score and argue; reserve selection explicitly.',freq:'Medium',impact:'High',eff:'Excellent',why:'This is an explicit ownership statement. The AI can apply criteria, gather evidence and rank aggressively, but the commitment remains yours. It is particularly effective for people, opportunities and other choices where context is hard to encode fully.',q:['“evidence for every judgment and flag uncertainties. I will make the final shortlist.”','“Give me options to pick from…”','“I will make the final shortlist.”']},
+ {stage:'choose',title:'Correct the decision',line:'Change claims, scope or commitments—not just wording.',freq:'Very high',impact:'Very high',eff:'Excellent',why:'Your edits tend to target the consequential layer: exaggeration, factual scope, promised time, organizational signalling, authenticity and the actual recommendation. This is where retained human judgment appears to add the most value.',q:['“We don’t have to exaggerate, we don’t have to understate. We will just say what happened.”','“This is long. Shorten it…”','“version I’ll go with”']},
+
+ {stage:'gate',title:'Draft only. NEVER send.',line:'Give AI the finished artifact; keep the external consequence.',freq:'Very high (≥23)',impact:'Very high',eff:'Excellent',why:'This is your most frequent explicit authority boundary. The AI may search broadly and write the complete answer, but it cannot create the external consequence. The gate is simple, memorable and robust.',q:['“Draft only. NEVER send, label, archive, or modify email.”','“Draft only. NEVER send or modify email.”','“Draft only.”']},
+ {stage:'gate',title:'Keep live systems gated',line:'Patch or stage freely; verify before production changes.',freq:'Medium-high',impact:'Very high',eff:'Excellent',why:'You extend the same boundary beyond email: the AI can prepare changes, but live systems receive a separate verification gate. This preserves speed in the sandbox while making irreversible mistakes expensive to cross.',q:['“Verify carefully before updating the live versions, though.”','“You may make commits without asking, but do not push.”','“make the smallest possible patch that fixes the bug”']},
+ {stage:'gate',title:'Escalate material unknowns',line:'Don’t ask me everything—only what can change the outcome.',freq:'High',impact:'Very high',eff:'Excellent',why:'The gate is triggered by materiality rather than uncertainty itself. This is more scalable than requiring approval for every ambiguity: harmless unknowns are resolved autonomously; consequential ones come back to you.',q:['“If a missing fact would significantly change the decision, commitment, or risk…”','“Ask me when neither is appropriate and proceeding without the fact could cause material harm.”','“DISCUSS LIVE”']},
+ {stage:'gate',title:'Promote through checkpoints',line:'Research → second pass → verify → mutate.',freq:'High',impact:'High',eff:'Excellent',why:'You frequently increase autonomy in stages. Each pass can expand evidence or attack the previous answer from a new angle, while the live mutation or final commitment waits until the work has earned promotion.',q:['“Proceed with the second pass. Research and scrutinize in detail.”','“Proceed with a third pass.”','“Plan for what a third pass might help with, if required…”']},
+
+ {stage:'trust',title:'Implement, test, fix',line:'When correctness is measurable, verification can replace supervision.',freq:'High',impact:'Very high',eff:'Excellent',why:'For code and other mechanically testable artifacts, you hand over far more of the final production loop. Tests, builds, diffs and idempotent reruns provide an external standard, so you need less personal inspection.',q:['“implement”','“run the tests”','“fix defects”']},
+ {stage:'trust',title:'Sent as-is',line:'Keep the send button, but accept the substance unchanged.',freq:'High (≥12 observed)',impact:'High',eff:'Very good',why:'This is the transition zone between retention and delegation. Formally, you still approve the action. Practically, repeated unchanged acceptance means the AI owns most substantive choices when the workflow has earned enough trust.',q:['“Sent without revisions.”','“Sent without modifications.”','“Good reply. Sent as-is.”']},
+ {stage:'trust',title:'Five-second review',line:'Use a tiny human gate once the workflow is trusted.',freq:'Medium',impact:'High',eff:'Good → very good',why:'A cursory review preserves a chance to catch glaring contextual errors while keeping throughput close to automation. It is efficient, but the human gate becomes weak against smooth, plausible mistakes.',q:['“I sent it as-is with a 5-second glance.”','“Sent without revisions after a cursory review.”','“Sent as-is.”']},
+
+ {stage:'delegate',title:'Send without review',line:'Explicitly remove even the nominal human judgment gate.',freq:'Low-medium',impact:'Very high',eff:'Situational',why:'This is genuine surrender of the substantive final call. It can be rational for routinized, low-stakes, high-volume work, but it also removes the strongest independent check against a confident category error.',q:['“Send without review”','“Sent without review as this is ‘Ask AI’.”','“Sent as-is without review.”']},
+ {stage:'delegate',title:'Go with your call',line:'Transfer the actual judgment—not merely the work.',freq:'Low',impact:'Very high',eff:'Situational',why:'Unlike “work independently,” this wording delegates the decision itself. Its rarity is informative: you use it selectively, where trust is high or the downside of a wrong choice is acceptable.',q:['“Will go with your call on this.”','“Will go with your call on this.”','“use your discretion”']},
+ {stage:'delegate',title:'Act directly',line:'Let the delegate create the consequence now.',freq:'Rare',impact:'Very high',eff:'Highest risk',why:'This is the far end of the autonomy spectrum: advice becomes action without a separate approval step. You appear to reserve it for cases where the task is trusted, small, reversible or worth the attention saved.',q:['“So then please go ahead.”','“You can purchase the account right now.”','“$20 or 2,000 rupees, I think.”']}
+];
+
+const rankOrder=[8,0,12,4,5,9,13,1,7,2,11,14,15,16,10,17,6,3];
+rankOrder.forEach((techIndex,pos)=>techs[techIndex].rank=pos+1);
+
+const board=document.getElementById('board');
+const indexByStage=Object.fromEntries(stages.map(s=>[s.id,[]]));
+techs.forEach((t,i)=>indexByStage[t.stage].push({...t,index:i}));
+Object.values(indexByStage).forEach(list=>list.sort((a,b)=>a.rank-b.rank));
+for(const s of stages){
+  const section=document.createElement('section'); section.className='stage'; section.style.setProperty('--stage',s.color); section.dataset.stage=s.id;
+  section.innerHTML=`<div class="stage-head"><div><div class="stage-name">${s.name}</div><div style="font-size:clamp(12px,.75vw,15px);color:var(--muted);font-weight:650;margin-top:2px">${s.desc}</div></div><div class="stage-num">${String(stages.indexOf(s)+1).padStart(2,'0')}</div></div><div class="cards"></div>`;
+  const cards=section.querySelector('.cards');
+  for(const t of indexByStage[s.id]){
+    const b=document.createElement('button'); b.className='tech'; b.style.setProperty('--stage',s.color); b.dataset.index=t.index; b.setAttribute('aria-label',`${t.title}. ${t.line}`);
+    b.innerHTML=`<span class="num">#${t.rank}</span><strong>${t.title}</strong><span>${t.line}</span>`;
+    b.addEventListener('click',()=>openTech(t.index)); cards.appendChild(b);
+  }
+  while(cards.children.length<4){const x=document.createElement('div');x.className='blank';cards.appendChild(x)}
+  board.appendChild(section);
+}
+
+let current=rankOrder[0], modalOpen=false, visibleCount=18;
+const wrap=document.getElementById('modalWrap');
+const closeBtn=document.getElementById('close');
+const rankRange=document.getElementById('rankRange');
+const rankValue=document.getElementById('rankValue');
+function stageOf(t){return stages.find(s=>s.id===t.stage)}
+function visibleIndices(){return rankOrder.slice(0,visibleCount)}
+function updateHash(){history.replaceState(null,'',`#show=${visibleCount}&technique=${current+1}`)}
+function applyFilter(n,keepCurrent=false){
+ visibleCount=Math.max(1,Math.min(techs.length,+n||1));
+ rankRange.value=visibleCount; rankValue.textContent=`Top ${visibleCount}`;
+ document.querySelectorAll('.tech').forEach(e=>{
+   const idx=+e.dataset.index, hidden=techs[idx].rank>visibleCount;
+   e.classList.toggle('rank-hidden',hidden); e.disabled=hidden; e.setAttribute('aria-hidden',String(hidden));
+ });
+ document.querySelectorAll('.stage').forEach(section=>section.classList.toggle('no-visible',!section.querySelector('.tech:not(.rank-hidden)')));
+ if(!keepCurrent || techs[current].rank>visibleCount) current=rankOrder[0];
+ document.querySelectorAll('.tech').forEach(e=>e.classList.toggle('selected',+e.dataset.index===current));
+ updateHash();
+}
+function select(i,focus=false){
+ if(techs[i].rank>visibleCount) return;
+ current=i;
+ document.querySelectorAll('.tech').forEach(e=>e.classList.toggle('selected',+e.dataset.index===current));
+ if(focus) document.querySelector(`.tech[data-index="${current}"]`)?.focus({preventScroll:true});
+ updateHash();
+ if(modalOpen) fillModal();
+}
+function stepVisible(delta,focus=true){
+ const v=visibleIndices(); let p=v.indexOf(current); if(p<0)p=0; p=(p+delta+v.length)%v.length; select(v[p],focus);
+}
+function fillModal(){
+ const t=techs[current], s=stageOf(t); document.querySelector('.modal').style.setProperty('--modal-accent',s.color);
+ document.getElementById('modalKicker').textContent=`Rank #${t.rank} · ${s.name}`;
+ document.getElementById('modalTitle').textContent=t.title; document.getElementById('modalLine').textContent=t.line;
+ document.getElementById('stats').innerHTML=`<div class="stat"><small>Frequency</small><b>${t.freq}</b></div><div class="stat"><small>Impact</small><b>${t.impact}</b></div><div class="stat"><small>Effectiveness</small><b>${t.eff}</b></div>`;
+ document.getElementById('why').textContent=t.why;
+ document.getElementById('quotes').innerHTML=t.q.map(q=>`<blockquote class="quote">${q}</blockquote>`).join('');
+ document.getElementById('position').textContent=`Rank ${t.rank} of ${techs.length}`;
+}
+function openTech(i){if(techs[i].rank>visibleCount)return;select(i);modalOpen=true;fillModal();wrap.classList.add('open');document.body.setAttribute('aria-hidden','false');closeBtn.focus();}
+function closeModal(){modalOpen=false;wrap.classList.remove('open');document.querySelector(`.tech[data-index="${current}"]`)?.focus({preventScroll:true});}
+closeBtn.addEventListener('click',closeModal);document.getElementById('prev').onclick=()=>stepVisible(-1,false);document.getElementById('next').onclick=()=>stepVisible(1,false);
+wrap.addEventListener('mousedown',e=>{if(e.target===wrap)closeModal()});
+rankRange.addEventListener('input',()=>applyFilter(rankRange.value,true));
+
+document.addEventListener('keydown',e=>{
+ if(e.target===rankRange)return;
+ if(e.key==='Escape'&&modalOpen){e.preventDefault();closeModal();return}
+ if(['ArrowRight','ArrowDown'].includes(e.key)){e.preventDefault();stepVisible(1,true);return}
+ if(['ArrowLeft','ArrowUp'].includes(e.key)){e.preventDefault();stepVisible(-1,true);return}
+ if(e.key==='Enter'&&!modalOpen){e.preventDefault();openTech(current)}
+});
+
+const showMatch=location.hash.match(/show=(\d+)/), hashMatch=location.hash.match(/technique=(\d+)/);
+if(hashMatch) current=Math.max(0,Math.min(techs.length-1,+hashMatch[1]-1));
+const initialShow=Math.max(showMatch?+showMatch[1]:18,techs[current].rank); applyFilter(initialShow,true); select(current);
+
+const themeBtn=document.getElementById('theme');
+try{const saved=localStorage.getItem('final-call-theme');if(saved)document.documentElement.dataset.theme=saved}catch(e){}
+themeBtn.addEventListener('click',()=>{const cur=document.documentElement.dataset.theme;const dark=cur==='dark'||(cur==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches);const next=dark?'light':'dark';document.documentElement.dataset.theme=next;try{localStorage.setItem('final-call-theme',next)}catch(e){}});
+</script>
+</body>
+</html>

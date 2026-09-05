@@ -12,7 +12,7 @@ I'm delivering a keynote at Jio Institute's Convergence 2026.
 
 Schedule:\* [https://www.jioinstitute.edu.in/sites/default/files/media_document/Convergence%20Schedule%20%281%29.pdf](https://www.jioinstitute.edu.in/sites/default/files/media_document/Convergence%20Schedule%20%281%29.pdf)
 
-On [LocalMCP](/plugins/plugin_asdk_app_69e6c604b4ec8191b8e14bb9e8d7cd52?plugin_detail_origin=inline_selection_pill) read my recent emails about this. Research the conference, attendees, schedule, my talk's stated agenda "Inaugural Keynote II - Data Storytelling" - which we don't need to stick too closely to (I can always link almost ANYTHING to data storytelling), the audience and their profile and interests, etc.
+On @LocalMCP read my recent emails about this. Research the conference, attendees, schedule, my talk's stated agenda "Inaugural Keynote II - Data Storytelling" - which we don't need to stick too closely to (I can always link almost ANYTHING to data storytelling), the audience and their profile and interests, etc.
 
 I have 15 minutes for this talk.
 
@@ -20,7 +20,7 @@ OBJECTIVE: Suggest prioritized talk topics aligned with the conference, not over
 
 I use talks to push myself to learn something new, test ideas live, learn from the audience, give them a useful surprise, and build compounding assets before/during/after.
 
-Infer what I'm exploring from memory, chat history, then [LocalMCP](/plugins/plugin_asdk_app_69e6c604b4ec8191b8e14bb9e8d7cd52?plugin_detail_origin=inline_selection_pill) - unresolved questions, emerging ambitions, changed beliefs, recurring interests, recent surprises, and connections across unrelated work. Prefer recent choices, excitements, what I keep returning to.
+Infer what I'm exploring from memory, chat history, then @LocalMCP - unresolved questions, emerging ambitions, changed beliefs, recurring interests, recent surprises, and connections across unrelated work. Prefer recent choices, excitements, what I keep returning to.
 
 Find questions I genuinely don’t know the answer to (I might not even know they're worth pursuing),
 that solve a REAL, frequent audience need,
@@ -96,8 +96,7 @@ I can also watch the published programme through September 3 and flag any change
 Here's another answer from Claude.
 Take what's better, drop what's worse, explore any new thoughts this leads you to, and rewrite your response based on that.
 
-<CLAUDE>
-
+```markdown
 ## What I found
 
 **Your slot:** 4:50–5:05 pm, Thu 3 Sep, Nanyang Executive Centre, NTU. You are Inaugural Keynote II of three, listed as "Data Storytelling."
@@ -185,8 +184,7 @@ The one line they walk out with: _"AI's reach and reliability problems are closi
 - Ask for a Jio student to read out the live poll results. It costs you nothing, frees your hands, and Jio will love it.
 - Screen aspect ratio and whether you control your own laptop.
 - Shailesh Kumar invited you and you said you wanted to hear how Jio teaches AI. Worth booking ten minutes at the dinner rather than leaving it to chance.
-
-</CLAUDE>
+```
 
 In any case, I'm keen on asking a few questions via a Google Form before the event and (a) doing the analysis live on stage or (b) sharing insights from the analysis during the talk. So, give me the questions I could share with the team and have them fill it out. Not too much, not too long, they should be able to fill it out in 2-3 minutes.
 

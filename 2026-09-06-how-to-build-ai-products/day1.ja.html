@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>まず作れ、学ぶのは後だ | Day 1 · How to Build AI Products — and Prove They Work</title>
+<meta name="description" content="SUTD DAIシグネチャー・マスタークラス Day 1。29名の学生、2時間、講義なし。アーナンドは2つのエージェントに「サッカー分析、何かすごいものを」という2語のブリーフだけを与え、成果物を適当なファイルホストに公開し、人間に残された仕事は検証と説明だけだと語った。">
+<meta property="og:title" content="まず作れ、学ぶのは後だ — Day 1">
+<meta property="og:description" content="SUTD DAIシグネチャー・マスタークラス · How to Build AI Products — and Prove They Work · 2026年9月7日（月）、シンクタンク13、SUTD シンガポール。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,600&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,600&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+JP:wght@400;600;700;900&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f1ea;
+    --paper: #fffdf9;
+    --ink: #1b1a22;
+    --ink2: #3e3b48;
+    --muted: #78717f;
+    --indigo: #4a3fa8;
+    --indigo-dk: #2f2775;
+    --indigo-soft: #e7e4f8;
+    --rust: #b8471f;
+    --rust-dk: #8a3315;
+    --rust-soft: #fbe1d6;
+    --olive: #8a7a17;
+    --olive-dk: #6a5d0f;
+    --olive-soft: #f4eec8;
+    --border: #ded7c8;
+    --night: #14121c;
+    --night2: #1d1a29;
+    --font-display: 'Playfair Display', 'Noto Serif JP', Georgia, serif;
+    --font-body: 'Spectral', 'Noto Sans JP', Georgia, serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.9;
+    font-size: 18px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    padding-bottom: 3rem;
+  }
+  [id] { scroll-margin-top: 4.6rem; }
+  img { max-width: 100%; display: block; }
+
+  #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--indigo), var(--olive), var(--rust)); z-index: 1000; transition: width .15s linear; }
+
+  /* ── Masthead ── */
+  .masthead { position: sticky; top: 0; z-index: 200; background: rgba(244,241,234,.95); border-bottom: 1px solid var(--border); padding: .7rem 1.5rem; backdrop-filter: blur(8px); }
+  .masthead-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: .8rem; flex-wrap: wrap; }
+  .masthead-brand { font-family: var(--font-mono); font-size: .8rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+  .masthead-brand:hover { color: var(--indigo); }
+  .masthead-right { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+  .masthead-date { font-family: var(--font-mono); font-size: .68rem; color: var(--muted); }
+  .masthead-link { font-family: var(--font-mono); font-size: .67rem; color: var(--indigo-dk); text-decoration: none; border: 1px solid var(--indigo); border-radius: 4px; padding: .26rem .55rem; transition: all .2s; white-space: nowrap; }
+  .masthead-link:hover { background: var(--indigo); color: #fff; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 1.5rem; }
+  .wrap-wide { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ── Hero ── */
+  .hero { max-width: 860px; margin: 0 auto; padding: 3.4rem 1.5rem 1.2rem; text-align: center; }
+  .hero-kicker { font-family: var(--font-mono); font-size: .67rem; letter-spacing: .12em; text-transform: uppercase; color: var(--rust); margin-bottom: 1.1rem; line-height: 1.9; }
+  .hero h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(2.1rem, 6.4vw, 3.8rem); line-height: 1.28; letter-spacing: -.01em; margin-bottom: 1.1rem; }
+  .hero h1 em { font-style: normal; color: var(--indigo); font-weight: 700; }
+  .hero-sub { font-size: 1.1rem; color: var(--ink2); line-height: 1.85; max-width: 640px; margin: 0 auto 1.6rem; }
+  .hero-meta { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); line-height: 2; }
+  .hero-meta a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.4); }
+  .hero-meta a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+
+  .quick-links { margin: 1.7rem auto 0; display: flex; gap: .55rem; justify-content: center; flex-wrap: wrap; max-width: 780px; }
+  .quick-links a { font-family: var(--font-mono); font-size: .71rem; text-decoration: none; color: var(--ink2); background: var(--paper); border: 1px solid var(--border); border-radius: 99px; padding: .44rem .95rem; transition: all .2s; }
+  .quick-links a:hover { border-color: var(--indigo); color: var(--indigo-dk); transform: translateY(-1px); }
+
+  /* ── Bands (the ONLY safe full-width pattern) ── */
+  .band { width: 100vw; margin-left: calc(50% - 50vw); margin-top: 3.2rem; margin-bottom: 3.2rem; }
+
+  /* ── Body text ── */
+  .wrap p, .wrap-wide > p { margin-bottom: 1.35rem; }
+  .wrap p a, .wrap li a, .wrap-wide > p a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.42); }
+  .wrap p a:hover, .wrap li a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+  .wrap strong { font-weight: 600; color: var(--ink); background: linear-gradient(transparent 62%, rgba(231,228,248,.95) 62%); }
+  .wrap ul, .wrap ol { margin: 0 0 1.35rem 1.3rem; }
+  .wrap li { margin-bottom: .55rem; }
+  .lede { font-size: 1.06rem; color: var(--ink2); }
+
+  .sec-num { display: block; font-family: var(--font-mono); font-size: .64rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--indigo); margin: 3.4rem 0 .55rem; line-height: 1.6; }
+  h2.sec { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.55rem, 4.4vw, 2.3rem); line-height: 1.35; letter-spacing: -.01em; margin: 0 0 1.2rem; }
+  .wrap code { font-family: var(--font-mono); font-size: .82em; background: var(--olive-soft); padding: .08rem .32rem; border-radius: 4px; }
+  h3.sub { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; margin: 2.1rem 0 .7rem; color: var(--ink2); }
+  .dinkus { text-align: center; color: var(--indigo); letter-spacing: .75em; margin: 2.6rem 0; font-size: .8rem; }
+
+  /* ── Pull quotes ── */
+  blockquote.pull { margin: 2.1rem 0; padding: 1.3rem 1.55rem; background: var(--paper); border-left: 4px solid var(--indigo); border-radius: 0 7px 7px 0; box-shadow: 0 2px 14px rgba(27,26,34,.07); }
+  blockquote.pull p { font-family: var(--font-display); font-size: 1.1rem; font-weight: 500; font-style: normal; line-height: 1.75; margin-bottom: .55rem; color: var(--ink); }
+  blockquote.pull p:last-of-type { margin-bottom: .55rem; }
+  blockquote.pull cite { font-family: var(--font-mono); font-style: normal; font-size: .69rem; color: var(--muted); }
+  blockquote.pull.rust { border-left-color: var(--rust); }
+  blockquote.pull.olive { border-left-color: var(--olive); }
+
+  /* ── Dialogue exchange ── */
+  .dialogue { background: var(--paper); border: 1px solid var(--border); border-radius: 9px; padding: 1.2rem 1.4rem; margin: 1.8rem 0 2.1rem; font-size: .95rem; }
+  .dialogue .turn { display: grid; grid-template-columns: 5.6rem 1fr; gap: .8rem; margin-bottom: .55rem; line-height: 1.7; }
+  .dialogue .turn:last-child { margin-bottom: 0; }
+  .dialogue .who { font-family: var(--font-mono); font-size: .64rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: .32rem; }
+  .dialogue .who.a { color: var(--indigo); }
+  .dialogue .said strong { font-weight: 600; }
+  @media (max-width: 560px) { .dialogue .turn { grid-template-columns: 1fr; gap: .1rem; } }
+
+  /* ── Prompt box ── */
+  .prompt-box { font-family: var(--font-mono); font-size: .84rem; line-height: 1.75; background: var(--night); color: #e8e3f4; border-radius: 9px; padding: 1.1rem 1.3rem; margin: 1.7rem 0 2rem; box-shadow: 0 3px 16px rgba(27,26,34,.16); }
+  .prompt-box .plabel { display: block; font-size: .62rem; letter-spacing: .16em; text-transform: uppercase; color: #b9a6f0; margin-bottom: .55rem; }
+  .prompt-box em { color: #ffc98c; font-style: normal; }
+
+  /* ── Inline cards ── */
+  .mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.6rem 0 2.2rem; }
+  @media (max-width: 640px) { .mini-grid { grid-template-columns: 1fr; } }
+  .mini { background: var(--paper); border: 1px solid var(--border); border-top: 3px solid var(--indigo); border-radius: 8px; padding: 1.05rem 1.2rem; }
+  .mini.n2 { border-top-color: var(--rust); }
+  .mini.n3 { border-top-color: var(--olive); }
+  .mini.n4 { border-top-color: var(--indigo-dk); }
+  .mini-kick { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: .35rem; }
+  .mini-title { font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; margin-bottom: .4rem; line-height: 1.4; }
+  .mini-body { font-size: .87rem; line-height: 1.75; color: var(--ink2); }
+  .mini-body strong { color: var(--ink); font-weight: 600; }
+
+  /* ── Stat band ── */
+  .stat-band { background: var(--night); padding: 2.8rem 1.5rem; color: #efecf6; border-radius: 12px; margin: 1.8rem 0 1rem; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1.6rem; text-align: center; max-width: 1000px; margin: 0 auto; }
+  .stat-n { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.7rem, 4.6vw, 2.6rem); letter-spacing: -.01em; }
+  .stat-n.indigo { color: #a99cf5; }
+  .stat-n.rust { color: #f39c78; }
+  .stat-n.olive { color: #e0cf6b; }
+  .stat-lab { font-family: var(--font-mono); font-size: .7rem; color: #b8b1c6; margin-top: .4rem; line-height: 1.6; }
+
+  /* ── Embeds ── */
+  .iframe-wrap { padding: 2.4rem 1.5rem; background: var(--indigo-soft); }
+  .iframe-wrap.rust { background: var(--rust-soft); }
+  .iframe-wrap.olive { background: var(--olive-soft); }
+  .iframe-wrap.dark { background: var(--night2); }
+  .iframe-inner { max-width: 1160px; margin: 0 auto; }
+  .embed-frame { background: var(--paper); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(27,26,34,.1); }
+  .embed-frame .chrome { display: flex; align-items: center; gap: .45rem; padding: .6rem .85rem; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .embed-frame .chrome .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border); flex: none; }
+  .embed-frame .chrome .url { font-family: var(--font-mono); font-size: .67rem; color: var(--muted); margin-left: .5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .embed-frame iframe { width: 100%; height: min(80vh, 840px); border: 0; display: block; background: #fff; }
+  .embed-cap { font-family: var(--font-mono); font-size: .72rem; text-align: center; margin-top: 1rem; line-height: 1.85; color: var(--indigo-dk); }
+  .iframe-wrap.rust .embed-cap { color: var(--rust-dk); }
+  .iframe-wrap.olive .embed-cap { color: var(--olive-dk); }
+  .iframe-wrap.dark .embed-cap { color: #b8b1c6; }
+  .embed-cap strong { font-weight: 700; }
+  .embed-cap a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.45); }
+  .iframe-wrap.rust .embed-cap a { color: var(--rust-dk); border-bottom-color: rgba(138,51,21,.45); }
+  .iframe-wrap.olive .embed-cap a { color: var(--olive-dk); border-bottom-color: rgba(106,93,15,.5); }
+  .iframe-wrap.dark .embed-cap a { color: #ffc98c; border-bottom-color: rgba(255,201,140,.45); }
+  .embed-cap a:hover { color: var(--rust); }
+  .embed-badge { display: flex; align-items: center; justify-content: center; gap: .6rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .embed-badge .pill { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; background: var(--indigo-dk); color: #fff; border-radius: 99px; padding: .38rem .9rem; }
+  .iframe-wrap.rust .embed-badge .pill { background: var(--rust-dk); }
+  .iframe-wrap.olive .embed-badge .pill { background: var(--olive-dk); }
+
+  /* ── Link cards ── */
+  .link-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; max-width: 1080px; margin: 0 auto; }
+  .link-card { display: block; background: var(--paper); border: 1px solid var(--border); border-radius: 10px; padding: 1.15rem 1.3rem; text-decoration: none; color: inherit; transition: all .2s; }
+  .link-card:hover { border-color: var(--indigo); box-shadow: 0 4px 16px rgba(27,26,34,.12); transform: translateY(-2px); }
+  .link-card .lc-kick { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; color: var(--rust); margin-bottom: .4rem; }
+  .link-card .lc-title { font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; margin-bottom: .4rem; line-height: 1.4; color: var(--ink); }
+  .link-card .lc-body { font-size: .87rem; line-height: 1.75; color: var(--ink2); }
+
+  /* ── Tooltip ── */
+  .tip { border-bottom: 1px dotted var(--rust); cursor: help; position: relative; }
+  .tip::after {
+    content: attr(data-tip); position: absolute; bottom: 132%; left: 50%; transform: translateX(-50%);
+    background: var(--night); color: #f2eff8; padding: .55rem .8rem; border-radius: 6px; font-size: .78rem;
+    font-family: var(--font-body); line-height: 1.6; white-space: normal; width: 250px; pointer-events: none;
+    opacity: 0; transition: opacity .2s; z-index: 300; font-style: normal; text-align: left; box-shadow: 0 4px 18px rgba(0,0,0,.3);
+  }
+  .tip:hover::after { opacity: 1; }
+
+  /* ── Cite / popup trigger ── */
+  a.cite { border-bottom: 1px dotted var(--muted); cursor: pointer; color: inherit; text-decoration: none; }
+  a.cite::after { content: "†"; font-size: .7em; vertical-align: super; color: var(--indigo); }
+  a.cite:hover { color: var(--indigo-dk); }
+
+  /* ── Takeaways ── */
+  .takeaways-band { background: linear-gradient(140deg, #2f2775 0%, #1d1a29 52%, #8a3315 100%); padding: 3.4rem 1.5rem; }
+  .takeaways-inner { max-width: 1140px; margin: 0 auto; }
+  .takeaways-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.5rem, 3.8vw, 2.1rem); color: #fff; text-align: center; margin-bottom: .5rem; letter-spacing: -.01em; }
+  .takeaways-sub { text-align: center; color: #cfc7f0; font-size: .88rem; margin-bottom: 2.2rem; font-family: var(--font-mono); }
+  .takeaway-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+  .takeaway { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15); border-radius: 10px; padding: 1.25rem 1.35rem; }
+  .takeaway-num { font-family: var(--font-mono); font-size: .65rem; letter-spacing: .14em; color: #e0cf6b; margin-bottom: .45rem; }
+  .takeaway-title { font-family: var(--font-display); font-weight: 700; font-size: 1rem; color: #fff; margin-bottom: .45rem; line-height: 1.4; }
+  .takeaway-text { font-size: .9rem; line-height: 1.8; color: #e6e1f2; }
+  .takeaway-text strong { color: #fff; font-weight: 600; }
+  .takeaway-text a { color: #ffd9a8; text-decoration: none; border-bottom: 1px solid rgba(255,217,168,.55); }
+  .takeaway-text a:hover { color: #fff; border-bottom-color: #fff; }
+
+  /* ── Homework band ── */
+  .todo-band { background: var(--paper); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 2.8rem 1.5rem; }
+  .todo-inner { max-width: 800px; margin: 0 auto; }
+  .todo-inner h3 { font-family: var(--font-display); font-weight: 800; font-size: 1.4rem; margin-bottom: 1rem; }
+  .todo-inner ol { margin: 0 0 0 1.3rem; }
+  .todo-inner li { margin-bottom: .7rem; line-height: 1.85; }
+  .todo-inner a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.42); }
+  .todo-inner a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+  .todo-inner strong { font-weight: 600; }
+
+  .footer { background: var(--night); color: #a8a2b6; padding: 2.6rem 1.5rem; text-align: center; }
+  .footer p { margin-bottom: .7rem; font-size: .92rem; }
+  .footer a { color: #ffc98c; text-decoration: none; border-bottom: 1px solid rgba(255,201,140,.45); }
+  .footer a:hover { color: #fff; border-bottom-color: #fff; }
+  .footer-mono { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .04em; color: #7f7891; }
+
+  /* ── Modal ── */
+  .modal { position: fixed; inset: 0; background: rgba(20,18,28,.9); display: none; align-items: center; justify-content: center; z-index: 900; padding: 1.4rem; }
+  .modal.open { display: flex; }
+  .modal-box { background: var(--paper); border-radius: 10px; max-width: 880px; width: 100%; max-height: 88vh; display: flex; flex-direction: column; overflow: hidden; }
+  .modal-head { padding: .95rem 1.3rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .modal-head h4 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; }
+  .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--muted); line-height: 1; padding: 0 .3rem; }
+  .modal-close:hover { color: var(--rust); }
+  .modal-body { padding: 1.25rem; overflow-y: auto; font-size: .93rem; line-height: 1.85; }
+  .modal-body h1, .modal-body h2, .modal-body h3 { font-family: var(--font-display); font-weight: 700; margin: 1.2rem 0 .55rem; line-height: 1.4; }
+  .modal-body h1 { font-size: 1.35rem; } .modal-body h2 { font-size: 1.15rem; } .modal-body h3 { font-size: 1.05rem; }
+  .modal-body p { margin-bottom: .8rem; }
+  .modal-body a { color: var(--indigo-dk); }
+  .modal-body ul, .modal-body ol { margin: 0 0 .8rem 1.2rem; }
+  .modal-body li { margin-bottom: .4rem; }
+  .modal-body pre { background: var(--bg); padding: .8rem; border-radius: 6px; overflow-x: auto; font-size: .8rem; }
+  .modal-body code { font-family: var(--font-mono); font-size: .84em; }
+  .modal-body blockquote { border-left: 3px solid var(--border); padding-left: .9rem; margin: .8rem 0; color: var(--ink2); }
+  .modal-body table { display: block; overflow-x: auto; border-collapse: collapse; }
+  .modal-body th, .modal-body td { border: 1px solid var(--border); padding: .4rem .6rem; }
+  .modal-src { font-family: var(--font-mono); font-size: .7rem; padding: .35rem 1.3rem 0; }
+  .modal-src a { color: var(--rust-dk); }
+
+  /* ── Comic / visual summary band ── */
+  .comic-band { background: var(--night); padding: 2.6rem 1.5rem 2.4rem; }
+  .comic-inner { max-width: 780px; margin: 0 auto; }
+  .comic-kick { font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: #e0cf6b; text-align: center; margin-bottom: 1.1rem; }
+  .comic-inner a.comic-link { display: block; border-radius: 10px; overflow: hidden; box-shadow: 0 8px 34px rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.12); }
+  .comic-inner img { width: 100%; max-width: 100%; height: auto; display: block; }
+  .comic-cap { font-family: var(--font-mono); font-size: .72rem; line-height: 1.9; text-align: center; color: #cfc9dd; margin-top: 1.1rem; }
+  .comic-cap strong { color: #fff; font-weight: 700; }
+  .comic-cap a { color: #ffc98c; text-decoration: none; border-bottom: 1px solid rgba(255,201,140,.5); }
+  .comic-cap a:hover { color: #fff; border-bottom-color: #fff; }
+
+  /* ── Aside / fact box (breaks up long prose) ── */
+  .factbox { background: var(--paper); border: 1px solid var(--border); border-left: 4px solid var(--olive); border-radius: 0 9px 9px 0; padding: 1.15rem 1.35rem; margin: 2rem 0 2.2rem; }
+  .factbox.indigo { border-left-color: var(--indigo); }
+  .factbox.rust { border-left-color: var(--rust); }
+  .factbox .fb-kick { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: .55rem; }
+  .factbox .fb-title { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; line-height: 1.4; margin-bottom: .6rem; color: var(--ink); }
+  .factbox ol, .factbox ul { margin: 0 0 0 1.15rem; }
+  .factbox li { font-size: .9rem; line-height: 1.75; margin-bottom: .45rem; color: var(--ink2); }
+  .factbox li:last-child { margin-bottom: 0; }
+  .factbox li strong { font-weight: 600; color: var(--ink); }
+  .factbox p { font-size: .9rem; line-height: 1.75; color: var(--ink2); margin-bottom: .6rem; }
+  .factbox ul + p, .factbox ol + p, .factbox .hops + p { margin-top: .9rem; }
+  .factbox p:last-child { margin-bottom: 0; }
+  .factbox a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.42); }
+  .factbox a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+  .factbox code { font-family: var(--font-mono); font-size: .82em; background: var(--olive-soft); padding: .08rem .32rem; border-radius: 4px; }
+
+  /* Hop trail — a short sequence rendered as chips */
+  .hops { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; margin: .3rem 0 .1rem; }
+  .hops span.hop { font-family: var(--font-mono); font-size: .74rem; background: var(--bg); border: 1px solid var(--border); border-radius: 99px; padding: .28rem .7rem; color: var(--ink2); }
+  .hops span.hop a { border-bottom: 0; color: var(--indigo-dk); }
+  .hops span.hop.win { background: var(--olive-soft); border-color: var(--olive); color: var(--olive-dk); font-weight: 500; }
+  .hops span.arrow { color: var(--muted); font-family: var(--font-mono); font-size: .8rem; }
+
+  /* ── Scene navigation rail ── */
+  #scene-nav { position: fixed; z-index: 180; right: .7rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: flex-end; gap: .45rem; max-width: min(19rem, 84vw); }
+  #sn-toggle { display: none; }
+  #sn-list { list-style: none; margin: 0; padding: .35rem; display: flex; flex-direction: column; gap: 1px; background: rgba(255,253,249,.94); border: 1px solid var(--border); border-radius: 11px; box-shadow: 0 4px 22px rgba(27,26,34,.14); backdrop-filter: blur(8px); max-height: 80vh; overflow-y: auto; overflow-x: hidden; }
+  #sn-list li { margin: 0; }
+  #sn-list a { display: flex; align-items: baseline; gap: .5rem; text-decoration: none; padding: .24rem .42rem; border-radius: 6px; }
+  #sn-list a b { font-family: var(--font-mono); font-size: .62rem; font-weight: 500; letter-spacing: .04em; color: var(--muted); flex: none; width: 1.3rem; text-align: right; }
+  #sn-list a i { font-family: var(--font-body); font-style: normal; font-size: .72rem; line-height: 1.5; color: var(--ink2); white-space: nowrap; max-width: 0; overflow: hidden; opacity: 0; transition: max-width .28s ease, opacity .2s ease; }
+  #scene-nav:hover #sn-list a i, #scene-nav:focus-within #sn-list a i { max-width: 15rem; opacity: 1; }
+  #sn-list a:hover, #sn-list a:focus-visible { background: var(--indigo-soft); outline: none; }
+  #sn-list a:hover b, #sn-list a:hover i { color: var(--indigo-dk); }
+  #sn-list a.active { background: var(--indigo-soft); }
+  #sn-list a.active b { color: var(--indigo-dk); font-weight: 700; }
+  #sn-list a.active i { color: var(--indigo-dk); }
+
+  /* Keep the rail clear of the widest content on desktop */
+  @media (min-width: 1101px) {
+    .wrap-wide, .iframe-wrap, .comic-band, .todo-band, .takeaways-band { padding-left: 5rem; padding-right: 5rem; }
+  }
+
+  @media (max-width: 1100px) {
+    #scene-nav { top: auto; bottom: 1rem; right: .8rem; transform: none; }
+    #sn-toggle { display: inline-flex; align-items: center; gap: .45rem; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .04em; text-transform: uppercase; background: var(--night); color: #f2eff8; border: 0; border-radius: 99px; padding: .55rem .95rem; cursor: pointer; box-shadow: 0 3px 16px rgba(27,26,34,.35); }
+    #sn-list { display: none; order: -1; max-height: 58vh; }
+    #scene-nav.open #sn-list { display: flex; }
+    #scene-nav.open #sn-list a i { max-width: 13rem; opacity: 1; white-space: normal; }
+  }
+
+  @media (max-width: 640px) {
+    body { font-size: 16.5px; }
+    .embed-frame iframe { height: 66vh; }
+    .comic-band { padding: 1.8rem .9rem 1.6rem; }
+  }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <a class="masthead-brand" href="https://talks.s-anand.net/">S Anand · Talks</a>
+    <div class="masthead-right">
+      <span class="masthead-date">Day 1 · 2026年9月7日 · SUTD</span>
+      <span class="masthead-date"><a href="day1.html" style="color:inherit">EN</a></span>
+      <a class="masthead-link" href="index.ja.html">全5日間</a>
+      <a class="masthead-link" href="transcript-day-1.ja.md" id="transcript-btn">文字起こし</a>
+    </div>
+  </div>
+</header>
+
+<div class="hero" id="top">
+  <div class="hero-kicker">SUTD DAI シグネチャー・マスタークラス · エキスパート・インダストリー・シリーズ · Day 1（全5回）</div>
+  <h1>まず作れ、<em>学ぶのは後だ</em></h1>
+  <p class="hero-sub">学期休みの初日の朝、AIプロダクトの作り方を学ぶために29名の学生が集まった。だが彼らが最初に告げられたのは、<strong>「AIプロダクトの作り方など誰も知らない」</strong>という事実だった——だからこそ、今すぐ作り始めなければならないのだと。</p>
+  <p class="hero-meta"><a href="https://www.sutd.edu.sg/" target="_blank" rel="noopener">シンガポール工科デザイン大学（SUTD）</a> · ビルディング1、シンクタンク13 · 2026年9月7日（月）10:00–12:00（シンガポール時間）<br>講師：アーナンド・S（<a href="https://www.straive.com/" target="_blank" rel="noopener">Straive</a>社 イノベーション責任者）／ ホスト：コートニー・フー · <a href="transcript-day-1.ja.md" id="transcript-btn2">全文書き起こしを読む</a></p>
+  <div class="quick-links">
+    <a href="#form">📝 ノートPC上のフォーム</a>
+    <a href="#zero">💡 アイデアの価値はゼロ</a>
+    <a href="#football">⚽ 2つのエージェント、1つの指示</a>
+    <a href="#trains">🚆 電車</a>
+    <a href="#ideate">🗂️ 153の課題</a>
+    <a href="#publish">🚀 どこかに公開する</a>
+    <a href="#verify">🔍 人間に残されたもの</a>
+    <a href="#shipped">📦 教室からリリースされたもの</a>
+    <a href="#takeaways">🗒️ 得られた教訓</a>
+  </div>
+</div>
+
+<nav id="scene-nav" aria-label="シーンへ移動">
+  <button id="sn-toggle" type="button" aria-expanded="false" aria-controls="sn-list">☰ シーン一覧</button>
+  <ol id="sn-list">
+    <li><a href="#top"><b>↑</b><i>ページの先頭</i></a></li>
+    <li><a href="#comic"><b>▤</b><i>8コマで振り返るDay 1</i></a></li>
+    <li><a href="#form"><b>01</b><i>ノートPCから配信されたフォーム</i></a></li>
+    <li><a href="#unlearn"><b>02</b><i>「AIプロダクトの作り方なんて知らない」</i></a></li>
+    <li><a href="#zero"><b>03</b><i>アイデアの価値はゼロ</i></a></li>
+    <li><a href="#wild"><b>04</b><i>10個のアイデア、5分間</i></a></li>
+    <li><a href="#football"><b>05</b><i>2つのエージェント、最悪の指示</i></a></li>
+    <li><a href="#install"><b>——</b><i>全員が何かをインストールする</i></a></li>
+    <li><a href="#trains"><b>06</b><i>シンガポールの電車は時間通りか？</i></a></li>
+    <li><a href="#ideate"><b>07</b><i>アイデア出しすら委任できる</i></a></li>
+    <li><a href="#publish"><b>08</b><i>「どこかのサイトを見つけて公開してくれ」</i></a></li>
+    <li><a href="#verify"><b>09</b><i>人間に残された2つの役割</i></a></li>
+    <li><a href="#benchmark"><b>10</b><i>プロンプトは本当に機能するか？</i></a></li>
+    <li><a href="#shipped"><b>11</b><i>教室が生み出した成果物</i></a></li>
+    <li><a href="#close"><b>12</b><i>「誰もが同じ力を持っている」</i></a></li>
+    <li><a href="#homework"><b>宿題</b><i>Day 1の持ち帰り課題</i></a></li>
+    <li><a href="#afterclass"><b>+</b><i>宿題は明日を待たなかった</i></a></li>
+    <li><a href="#takeaways"><b>★</b><i>Day 1から得られた9つの教訓</i></a></li>
+  </ol>
+</nav>
+
+<div class="band comic-band" id="comic">
+  <div class="comic-inner">
+    <div class="comic-kick">8コマで振り返るDay 1</div>
+    <a class="comic-link" href="comic-page-day-1.avif" target="_blank" rel="noopener" title="漫画を新しいタブでフルサイズ表示">
+      <img src="comic-page-day-1.avif" width="1055" height="1491" alt="「まず作れ。次に学べ。常に検証せよ」と題された8コマの漫画ページ。授業は通常とは真逆の発想から始まり、サッカーに関する曖昧なプロンプトが導火線に火をつけ、エージェントが数分でプロトタイプへと仕立て上げる。同じプロンプトに3つのエージェントがまったく異なる答えを返し、アイデアそのものにはほぼ価値がないことが暴かれ、公開先を探すエージェントは指示をあまりに文字通り解釈しすぎる。人間に残された仕事は「検証すること」と「説明すること」だけ。そして学生たちは「明日までに作り、リンクを共有せよ」という唯一の課題を与えられて教室を後にする。">
+    </a>
+    <p class="comic-cap"><strong>2時間の全容が描かれた8コマ。</strong> まず作り、曖昧なプロンプトで火をつけ、3つのエージェントの意見の食い違いを見届け、アイデアが決して参入障壁（堀）にならないことを知り、指示を文字通り解釈しすぎるエージェントを捕まえ、そして唯一出された宿題で締めくくられる。<a href="comic-page-day-1.avif" target="_blank" rel="noopener">フルサイズで開く ↗</a></p>
+  </div>
+</div>
+
+<article class="article">
+
+<div class="wrap" id="form">
+  <span class="sec-num">シーン1 · 10:24</span>
+  <h2 class="sec">ノートPCから配信されたフォーム</h2>
+  <p class="lede">AIプロダクト開発に関する5日間のマスタークラスで最初に登場した「成果物」は、ひとつのWebフォームだった。SUTDのサーバーでも、クラウドプラットフォームでも、SLA（サービス水準合意）が結ばれた場所でもホストされていない。教室の中にある講師のノートPC上で動いており、正午に彼がノートPCの画面を閉じれば消えてしまうものだった。</p>
+  <p>教室に向けられたアーナンドの最初の指示は、拍子抜けするほどありふれたものだった。<em>「このサイトにアクセスし、Googleアカウントでサインインして、フォームに記入してください。」</em> 質問1はGitHubのID。質問2はこの1週間で何を得たいか。プロジェクターにQRコードが静かに映し出される中、回答が11件、15件と少しずつ集まるのを教室全体で待った。</p>
+  <p>少し立ち止まって、この状況の意味を考えてみる価値がある。なぜなら、この1週間の本質がすべてここに凝縮されているからだ。フォームもまた立派なひとつのプロダクトである。これは<strong>1つの教室のためだけに、1週間のためだけに作られ、それを使う本人のマシン上でホストされたもの</strong>——「作らないでおくより、作ったほうが安上がりだから」という理由で作られた、使い捨てのソフトウェアなのだ。<a href="https://forms.s-anand.net/sutd-ai-products/" target="_blank" rel="noopener">このフォームはここにある</a>が、大抵はアクセスできない。アーナンドのノートPCが開き、サーバーが稼働している間しか存在しないからだ。授業の最後の1分、事務連絡のついでに彼自身がそう語った。</p>
+  <div class="factbox indigo">
+    <div class="fb-kick">使い捨てフォームで実際に尋ねられたこと</div>
+    <ul>
+      <li>「あなたの<strong>GitHub ID</strong>は？」 — まだ持っていない多数の学生のために、アカウント登録ページへのリンク付きで。</li>
+      <li>「この講義で何を得たいですか？ <strong>なぜ受講を申し込んだのですか？</strong>」</li>
+      <li>「もし<strong>今夜までに小さなAI Webアプリをリリースしなければならない</strong>としたら、何がボトルネックになりますか？」 — 「Git/GitHub」から「何を作るかを決めること」まで、当てはまるものをすべて選択。</li>
+      <li>「AIコーディングエージェントが<strong>一見正しそうに見えて、実は間違っていたもの</strong>を出力した経験があれば教えてください。」</li>
+      <li>「どのAIコーディングエージェントを<strong>インストールして実行できましたか？</strong>」</li>
+    </ul>
+    <p>最終的に質問は12問になった。なぜなら、<strong>講義開始時には存在しなかった質問がいくつもあったからだ</strong>。アーナンドは講義の真っ最中にライブで質問を追加し、教室の面々は画面がリロードされていくのを目の当たりにした。</p>
+  </div>
+  <blockquote class="pull rust">
+    <p>「言い忘れていたことが2点あります。このフォームは私のノートPC上で動いています。私がノートPCをシャットダウンすると、フォームにはアクセスできなくなります。あと数分でシャットダウンします。でも大丈夫です。手元にローカルコピーがあるでしょうし、それがなくても問題ありません。何をすべきかは分かっていますよね。」</p>
+    <cite>— アーナンド、講義の締めの言葉</cite>
+  </blockquote>
+  <p>一方、DAIシグネチャー・マスタークラスを運営するSUTDの講師、<a class="tip" href="https://www.sutd.edu.sg/dai/" target="_blank" rel="noopener" data-tip="SUTDのデザイン&人工知能(DAI)分野。シグネチャー・マスタークラスは、短期集中型スタジオに実務家を招く企画です。">DAI</a>を運営するコートニー・フーは、すでにこの1週間のルールを設定していた。月曜と金曜はこの教室で対面、水曜はオンラインで必席、火曜と木曜は任意の相談セッション。出欠も取る。そして彼女は、課題内容を募集要項の言葉通りの表現で提示した。</p>
+  <blockquote class="pull">
+    <p>「今週末までにですね、皆さんには——物理的なAIではなく［笑］——AIのプロトタイプ、つまりAIプロダクトを作ってもらい、<strong>そしてそれらが実際に機能することを証明してもらいます</strong>。」</p>
+    <cite>— コートニー・フー（SUTD）、マスタークラス冒頭にて</cite>
+  </blockquote>
+  <p>この最後の一節こそ、この講義が存在するすべての理由である。5月にSUTDから登壇依頼を受けた際、アーナンドは単なる生成AIツールのワークショップを行うこともできた。しかし彼は代わりに、コースの背骨となる1文を返答した。<strong>「AIを実際に使う上で最も難しいのは、その成果物が『本当に機能しているかどうか』を知ることだ。」</strong> 作ること自体は簡単な半分にすぎない。学生に求められる最終成果物は、単なるデモではなく、「<strong>プロトタイプに加えて、それが正しく機能することを証明する構造化された証拠の体系</strong>」（ベンチマーク、評価基準、テスト、エラーの発生パターン）である。シラバスの草案のすべてに残された表現を使うなら、これこそが「デプロイ可能なプロダクト」と「雰囲気だけで作られたデモ（バイブスコーディングによるデモ）」を分かつものなのだ。</p>
+  <p>このことが、Day 1を少し逆説的なものにしている。「機能することを証明する」前に、まず「証明すべき何か」がなければならない。したがって月曜日のテーマは、とにかく可能な限り素早く、無頓着に「何か」を作り出すことだった。</p>
+</div>
+
+<div class="wrap-wide">
+  <div class="stat-band">
+    <div class="stat-grid">
+      <div><div class="stat-n indigo">29名</div><div class="stat-lab">受講生 — SUTDの学生21名、東京都市大学からの留学生8名</div></div>
+      <div><div class="stat-n rust">21名中15名</div><div class="stat-lab">SUTDの受講生のほとんどが新入生またはフレッシュモア第3学期 — 熟練したAIプログラマーの集まりではない</div></div>
+      <div><div class="stat-n olive">7.5時間</div><div class="stat-lab">5日間の総対面講義時間。残りは意図的に「開発時間」に充てられている</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap" id="unlearn">
+  <span class="sec-num">シーン2 · 10:38</span>
+  <h2 class="sec">「AIプロダクトの作り方なんて知らない」</h2>
+  <p>「この1週間で何を得たいか」という質問に9人が回答していた。アーナンドはその回答のまとめを読み上げた。彼らはAIを使ってプロダクト開発を自動化したい、そのためのスキルを身につけたいと考えていた。結構だ、と彼は言った。それは大体この講義のテーマ通りだ。そして彼は、それを根底からひっくり返した。</p>
+  <blockquote class="pull">
+    <p>「しかし、私たちがやろうとしているのは、AIプロダクトの作り方を学んでから作る、ということでは<strong>ありません</strong>。まずAIプロダクトを作り、その上で『やってはいけない作り方』を学ぶのです。まずやってみて、失敗し、学び、それを繰り返すのです。」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>その理由は、単なる教育的なポーズや流行りの言い回しではなかった。率直な告白だった。</p>
+  <blockquote class="pull rust">
+    <p>「なぜか？ 私自身、AIプロダクトの作り方を知らないからです。誰も本当の作り方なんて分かっていないと思います。AIはあまりに急速に変化しているため、今日私が教えることは1ヶ月後には役に立たなくなります。では、なぜわざわざ知識を学ぶ必要があるのでしょう？ 皆さんに本当に必要なのは、<strong>『学び方を学ぶこと』</strong>です。状況が変わったとき、どのようにして新しいやり方を見つけ出せばいいのか？」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>プログラミング歴25年のベテランによる単なる謙遜のように聞こえるかもしれないが、そうではない。これは<strong>「AIの知識の減価償却スピード」</strong>についての主張である。9月の月曜日に教えた特定の技術は、数週間単位の消費期限しかない。だからこそ、他人に渡せる唯一の永続的な資産とは、足元の前提が揺らいだときに技術を自ら再構築するための「手法」だけなのだ。この講義は「コンテンツの伝達」ではない。「ループを回すこと」そのものなのだ。</p>
+  <blockquote class="pull olive">
+    <p>「このコースでやることの大半は、実際にモノを作ることです。私から教えることはほとんどありません。『さあ、モノを作ろう』と言うだけで、実際に作業を行うのはエージェントたちです。私たちは実質的に、彼らを操縦しているだけにすぎません。」</p>
+    <cite>— アーナンド、開始10分にて</cite>
+  </blockquote>
+</div>
+
+<div class="wrap" id="zero">
+  <span class="sec-num">シーン3 · 10:20</span>
+  <h2 class="sec">アイデアの価値はゼロ</h2>
+  <p class="lede">「プロダクトを作るための最初のステップは何だと思いますか？」 正解はないと言いながら、彼は10分かけてそのことを証明していった。</p>
+  <div class="dialogue">
+    <div class="turn"><div class="who">教室</div><div class="said">アイデアを持つこと。</div></div>
+    <div class="turn"><div class="who">教室</div><div class="said">プロンプトを用意すること。</div></div>
+    <div class="turn"><div class="who">教室</div><div class="said">AIのアカウントを持つこと。</div></div>
+    <div class="turn"><div class="who a">アーナンド</div><div class="said">「一理あるが、それは除外しよう——アカウントなんていつでも簡単に手に入る。」</div></div>
+    <div class="turn"><div class="who">教室</div><div class="said">課題を見つけること。ターゲット層を決めること。最終的なプロダクトがどうなるかの構造を持つこと。</div></div>
+  </div>
+  <p>そこで彼が提示したのは、教室の誰も挙げなかったひとつの要素だった。<strong>「そのプロダクトを保護してくれるような規制や法的枠組みはあるか？」</strong> 規制が最も重要な出発点だからではない。他のすべての出発点が抱える弱点を浮き彫りにするからだ。</p>
+  <blockquote class="pull">
+    <p>「アイデアならあなたも持てるし、他の誰かも持てる。AIアカウントも誰だって持てる。ターゲット市場だって誰もが同じ市場を狙える。<strong>では、なぜあなたのプロダクトが他と差別化されると言えるのでしょうか？</strong>」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>対照的に、ライセンスや許認可は、構造的に「自分だけが持ち、他人は持てない」ものである。「私にはこのプロダクトを作るライセンスがあり、他の誰も持っていない。だから彼らは私から買うしかない」。<strong>これは、現在でも持続しうる数少ない参入障壁（堀）のひとつである</strong>。そして彼が引き合いに出した例は、不気味なほどこの講義のテーマそのものだった——もしシンガポール政府が、他のAIプロダクトが正しく動作するかどうかを監査する権限を特定の1社にのみ与えたとしたら、その会社には確固たるビジネスが成立する。</p>
+  <p>教室からはさらに「市場の隙間（ギャップ）」や「コンプライアンス上の未開拓領域」といった出発点が挙がり、アーナンド自身の過去の経験から、コンサルティング会社時代の教訓も語られた。</p>
+  <blockquote class="pull rust">
+    <p>「アーナンド、君が本当に身を置くべき業界は金融だよ。あそこは金がそこら中に流れている。指を突っ込むだけで、いくらかは手にへばりついてくるからね。」</p>
+    <cite>— アーナンドが以前勤めていたコンサルティング会社のパートナーの言葉（アーナンドによる引用）</cite>
+  </blockquote>
+  <p>金がどこに流れているかを見極め、その流れの途中に収まるプロダクトを見つける。M&A関連のツールかもしれない。泥臭いが、実際に機能するアプローチだ。しかし、こうした出発点のメニューをずらりと並べた真の狙いは、このカテゴリー全体の価値を否定することにあった。</p>
+  <h3 class="sub">10の出発点と、それぞれの価値</h3>
+  <div class="factbox">
+    <div class="fb-kick">教室からの回答とアーナンドの補足</div>
+    <ul>
+      <li><strong>アイデア</strong> — 誰でも思いつける。<strong>プロンプト</strong> — 同じく誰でも書ける。<strong>AIアカウント</strong> — その場で却下。「アカウントなんて誰でも簡単に手に入る」。</li>
+      <li><strong>解決すべき課題</strong>、<strong>ターゲット層</strong>、<strong>完成形のイメージ</strong> — どれももっともだが、競合他社もまったく同じコストで手に入れられる。</li>
+      <li><strong>市場の隙間（ギャップ）</strong>と<strong>コンプライアンスの空白地帯</strong> — 少しマシだ。特定の瞬間に紐づいているからだ。しかし、その隙間はいずれ閉じる。</li>
+      <li><strong>金の流れを追う</strong> — コンサルティング会社の経験則。泥臭く、長持ちするが、独占的なものではない。</li>
+      <li><strong>ライセンス（許認可）</strong> — 他者が構造的に持つことのできない、リスト唯一の要素。したがってアーナンドが「参入障壁」と認めた唯一のもの。</li>
+    </ul>
+  </div>
+  <blockquote class="pull olive">
+    <p>「ひとつ覚えておくべきなのは、<strong>プロダクトのアイデアは差別化要因にはならない</strong>ということです。あなたが思いつくどんなプロダクトも、アイデアも、すでに誰かが考えています。断言しますが、誰かがすでに思いついています。」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>学部生の教室なら誰もがひるむような場面だが、アーナンドは容赦なく踏み込んだ。学生たちは自分が初めて思いついたからといって、そのアイデアが唯一無二だと思いがちだ。しかしVC（ベンチャーキャピタル）にピッチしてみれば、「そのアイデアなら100回は見た」と言われるのがオチだ。VCに「まず秘密保持契約（NDA）にサインしてくれ」と求めるなど、自分の置かれた状況を根本から見誤っている。</p>
+  <blockquote class="pull">
+    <p>「問題は、誰かにアイデアを盗まれることではありません。アイデアを相手に差し出したところで、使ってさえもらえないことが問題なのです。<strong>あなたが抱えているのはマーケティングの問題であって、機密保持の問題ではないのです。</strong>」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>そして、決定的な数字が提示された。<strong>「どのプロダクトを作るかを選び、アイデアを思いつくという第1段階の価値は、ゼロです。」</strong> あなたがそのアイデアを思いつくのに3年かかったとしても、別の誰かは3分で偶然思いつくかもしれない。だから、この講義ではアイデア出しの手法には1分たりとも時間を割かない。好きな方法で思いつけばいい。<strong>とにかく突拍子もないものを作ってみろ、と。</strong></p>
+</div>
+
+<div class="wrap" id="wild">
+  <span class="sec-num">シーン4 · 10:35</span>
+  <h2 class="sec">10個のアイデア、5分間、そして所要時間のアンケート</h2>
+  <p>アーナンドは教室が見守る中、フォームにその場で質問を追加した——<em>「この講義で実装してみたいプロダクトのアイデアは何ですか？」</em>——そして5分間の時間を与えた。数分もしないうちに、画面上には10個の回答が並んだ。それは教室にいるメンバーの関心を映し出す見事なレントゲン写真だった。</p>
+  <div class="mini-grid">
+    <div class="mini">
+      <div class="mini-kick">教室からの回答</div>
+      <div class="mini-title">日常の摩擦・不便の解消</div>
+      <div class="mini-body">AIチームカレンダープランナー。スケジュールの作成・最適化ツールおよび学習ガイド。あらゆる飲食店の最新メニューを正確に網羅したメニューアプリ。<strong>「自分の生活などを自動で管理してくれる秘書アプリ」</strong> — これに対しアーナンドは「野心的だ」と的確に指摘した。</div>
+    </div>
+    <div class="mini n2">
+      <div class="mini-kick">教室からの回答</div>
+      <div class="mini-title">難解な文章を読みやすくする</div>
+      <div class="mini-body">専門的な法律用語や難解な学術論文を一般の人にも分かる言葉に翻訳し、利用規約の中の重要箇所にフラグを立てるツール。国際政治ニュースの要約ツール。株式市場のニュースを収集・分析するツール。</div>
+    </div>
+    <div class="mini n3">
+      <div class="mini-kick">教室からの回答</div>
+      <div class="mini-title">個人的で遊び心のあるもの</div>
+      <div class="mini-body">サッカーの分析。自分のWhatsAppやTelegramのメッセージ履歴を学習させた、自分自身のチャットボット。小規模で具体的、そして結果的に——この日の午前の講義を一気に加速させる最速の切り口となった。</div>
+    </div>
+    <div class="mini n4">
+      <div class="mini-kick">東京都市大学より</div>
+      <div class="mini-title">実際の研究テーマ</div>
+      <div class="mini-body">「まばらな地盤調査データから日本全国の地下地盤構造を可視化する」。アーナンドのコメントは<strong>「これは非常に具体的だ」</strong>というものだった。それもそのはず、これはリストの中で唯一、学生ではなく<strong>教授によって提出されたアイデア</strong>だったのだ。そしてこのツールは講義の終盤、実際のボーリング調査データを伴って再登場することになる。</div>
+    </div>
+  </div>
+  <p>続いて、その後の展開を決定づけるアンケートが行われた。<strong>「これらを1つ実装するのに、どれくらい時間がかかると思いますか？」</strong> 1年以上 — 数名の手が挙がる。1ヶ月以上 — 手が挙がる。1週間以上 — 数名。1時間以上。1時間未満 — さらに数名の手が挙がる。</p>
+  <blockquote class="pull rust">
+    <p>「アイデア次第ですよね？ でも、ひとつ言っておくと、私の予想ではこれらの中のいくつか——それも1つだけでなく複数——は、1時間未満で完成させられます。今からそれをやってみましょう。」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+</div>
+
+<div class="wrap" id="football">
+  <span class="sec-num">シーン5 · 10:38</span>
+  <h2 class="sec">2つのエージェント、あえて投げた最悪の指示</h2>
+  <p class="lede">「サッカー分析は手頃なサイズ感ですね。サッカー分析を提案したのは誰ですか？ どんなイメージを持っていますか？」 提案したのは東京都市大学のグループの1人で、通訳をするクラスメイトを介してやり取りが行われた。返ってきた答えは、「具体的なアイデアはないが、とにかくサッカーではデータ分析が非常に重要だから」というものだった。</p>
+  <p>通常のワークショップなら、これを「修正すべき課題」として扱い、「要件を詰めてから出直してきなさい」と言うところだろう。しかしアーナンドは、これこそをまさにスタート地点として扱った。</p>
+  <blockquote class="pull">
+    <p>「では、こうしましょう。サッカーの分析アプリケーションを作りますが、<strong>私たちは自分たちが何を求めているのかよく分かっていません</strong>。いいですね？」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>彼は教室の環境を確認した。大半がChatGPT Plusを使っており、Claude Proのユーザーは少数派、どちらも持っていない人はいなかった。そしてブラウザを開き、<a class="tip" href="https://developers.openai.com/codex/" target="_blank" rel="noopener" data-tip="OpenAIのコーディングエージェント。クラウド、ChatGPTデスクトップアプリ、またはターミナル上のコマンドラインツールとして動作します。">Codex</a>を探して<code>chatgpt.com</code>内を少し迷い、ややこしい画面に迷い込みかけては「シンプルにいこう」と引き返し、思いつくままにプロンプトを入力した。</p>
+  <div class="prompt-box">
+    <span class="plabel">プロンプト全文</span>
+    サッカーの分析アプリケーションを作ってください。自分が何を求めているのかはよく分かりませんが、とにかく圧倒されるようなものにしてください。統計データをたくさん出してください。必要なものは勝手にダウンロードしてください。<em>…あと、インタラクティブに操作できるようにしてください。</em>
+  </div>
+  <p>彼は中程度のモデル設定でそれを実行し、処理が進む間、その思考プロセスを実況した。</p>
+  <blockquote class="pull olive">
+    <p>「私の予想では、これで動くアプリケーションが出来上がるはずです。自分が本当に欲しかったものとは違うかもしれませんが、そもそも自分が何を欲しいかすら分かっていないのですから、それでいいのです。何か形になりさえすれば、スタートとしては十分です。『いや、欲しいのはこれじゃない。求めているのはこういうものだ』と後から仕様を変えていけばいいのですから。」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>そして待つ代わりに、彼はこの演習の前提を再定義するような行動に出た。<strong>まったく同じプロンプトを、別のエージェントでも同時に実行したのだ</strong>。一時フォルダーを作り、Claudeのデスクトップアプリを立ち上げ、Codeパネルの対象をそのフォルダーに設定し、貼り付けてEnterを押す。2つのエージェント、同一の指示、互いの連携は一切なし。</p>
+  <p>彼はアドリブで進めていることを率直に認めた。<em>「すみません、普段はターミナルに慣れた少し上級者向けのクラスを教えているので、少々戸惑っているかもしれません。皆さん向けにシンプルに進めますね。」</em> 2つのエージェントが処理をゴリゴリと進めていく。その間、彼は世間がいまだに「最も難しい」と思い込んでいるパートについて言及した。</p>
+  <blockquote class="pull rust">
+    <p>「両方ともアプリケーションを構築しています。間違いなく完成まで持っていくでしょう。…<strong>そして、これこそがアプリケーション開発における『簡単な部分』なのです。つまり、『ソフトウェアを作れ』と命じれば、ソフトウェアが出来上がる。</strong> …かつては、ここが一番難しい部分だったのですが。」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>最初に終わったのはChatGPTの方だった。非公開でデプロイされ、画面にはプレミアリーグのチームがプロットされたダッシュボードが現れた。アーナンドには読み取れない軸で、「アグレッシブさ」と「チャンス創出」のような指標が比較され、誰も頼んでいない基準でアストン・ヴィラがリヴァプールを追尾していた。<em>「私はサッカーに詳しくないので、サッカーのことはさっぱり分かりません」</em>とスクロールしながら彼は言った。細かい注記のどこかにこう書かれていた——<strong>「これは厳選されたデモ用データセットです」</strong>。本物のデータではなかったのだ。だが構わない——このツールに何ができるかは十分に示されていた。</p>
+</div>
+
+<div class="band iframe-wrap">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">エージェント1 · ChatGPT（Codex、「Work」モード）</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">touchline-lab.root-node.chatgpt.site</span></div>
+      <iframe src="https://touchline-lab.root-node.chatgpt.site" title="Touchline Lab — アーナンドが授業中にChatGPTで構築したサッカー分析アプリ" loading="lazy"></iframe>
+    </div>
+    <p class="embed-cap"><strong>曖昧な1文から、ライブで構築された成果物。</strong> <a href="https://chatgpt.com/share/6a9e4203-d1c8-83ec-8a00-0169a7b215bf" target="_blank" rel="noopener">共有されたChatGPTの会話を読む ↗</a> または <a href="https://touchline-lab.root-node.chatgpt.site" target="_blank" rel="noopener">アプリをフルスクリーンで開く ↗</a>。デモ用データセットである点に注目——見た目は見事だが、中身は合成データだ。このギャップこそが、今週の講義全体のテーマとなる。</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>20分後、Claude版が完成し、教室からは感嘆の声が漏れた——<em>「すごくかっこいい」「うわあ」</em>。こちらは自ら本物のデータを探し出していた。順位表。チームのプロフィール。マンチェスター・シティ対アーセナルの全対戦成績、勝敗と勝率。パワーランキング。過去の記録。</p>
+  <blockquote class="pull">
+    <p>「ふう！ 『サッカー分析で、何かすごいものを見せて』というだけの指示からこれができたのです。文句なしに素晴らしい出来栄えです。<strong>そして、これがまだ私たちの求めているものではないかもしれませんが、プロトタイプがあるからこそアイデアが湧いてくるのです。</strong>」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>これこそが、2つの実例をもって示された主張だった。<strong>わずか十数単語の同じ指示から、まったく異なる2つのプロダクトが生まれた。</strong> これはエージェントの不具合ではなく、この手法の「仕様（強み）」なのだ。</p>
+  <blockquote class="pull olive">
+    <p>「プロダクトがどんな姿になるのかを、自分たちだけで想像するのは非常に困難です。しかし、誰かや何かに『どんな風になるか見せてくれないか？』と頼めば、アイデアが得られ、そこから変更していくのは簡単になります。異なる人や異なるエージェントに頼めば、まったく異なる種類のアイデアが返ってくるでしょう。…<strong>ですから、ある意味で、明確なビジョンを持っていないことは良いことなのです。</strong>」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>そしてプロトタイプは、まさにプロトタイプが果たすべき役割を即座に果たした。教室からより良い要件を引き出したのだ。「これに付け足すとしたら何がいい？」<em>「トーナメントの勝敗予測」</em> <em>「手堅いベッティング（賭け）の予測」</em>。10:35の時点では「どんなサッカー分析？」と聞かれて肩をすくめるしかなかった学生たちが、次々とアイデアを出し始めた。</p>
+</div>
+
+<div class="band iframe-wrap rust">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">エージェント2 · Claude Code · 同一のプロンプト</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">files.s-anand.net/pages/football-analysis-claude/</span></div>
+      <iframe src="https://files.s-anand.net/pages/football-analysis-claude/" title="同じプロンプトからClaude Codeが構築したサッカー分析ダッシュボード" loading="lazy"></iframe>
+    </div>
+    <p class="embed-cap"><strong>同じ指示、異なる思考回路。</strong> 実際の試合データ、順位表、直接対決の記録。<a href="https://files.s-anand.net/pages/football-analysis-claude/" target="_blank" rel="noopener">フルスクリーンで開く ↗</a>、または <a href="https://files.s-anand.net/pages/football-analysis-claude/session.md" class="doclink" data-doc="https://files.s-anand.net/pages/football-analysis-claude/session.md" data-title="Claude Codeのセッションログ — サッカー分析">エージェントの全ログを読んで</a>、指示されずとも自発的に何を実行したかを確認する。</p>
+  </div>
+</div>
+
+<div class="wrap" id="install">
+  <span class="sec-num">幕間 · 11:20</span>
+  <h2 class="sec">全員が何かをインストールする</h2>
+  <p>「これまでにコーディングエージェントを使ったことがある人？」というアーナンドの問いに、手が挙がったのは3人だけだった。29人中、わずか3人。そのため、AIプロダクト開発マスタークラスの次の10分間は、最も地味で泥臭い作業に費やされた——<strong>デスクトップアプリのダウンロード</strong>である。</p>
+  <p>「ChatGPT desktop」で検索してインストールし、左上のCodexボタンを探す。あるいは「Claude download」で検索し、インストールしてCodeボタンを探す。何でもいいから文字を入力してみる。指示はそれだけだった。<a href="https://chatgpt.com/download/" target="_blank" rel="noopener">ChatGPTのダウンロード</a> · <a href="https://claude.com/download" target="_blank" rel="noopener">Claudeのダウンロード</a>。</p>
+  <p>教室から質問が出た。デスクトップアプリとWeb版の違いは何か？</p>
+  <div class="dialogue">
+    <div class="turn"><div class="who">質問</div><div class="said">なぜWeb版ではなくデスクトップアプリを使うのですか？</div></div>
+    <div class="turn"><div class="who a">アーナンド</div><div class="said">「デスクトップアプリなら、ファイルをいちいちアップロードしなくても、ローカルファイルへのアクセス権を自動的に与えられます。Web版では、必要なものを自分でアップロードしなければなりません。どちらにも利点があります。<strong>デスクトップ版の場合、処理の実行中にマシンをシャットダウンすることはできません。クラウドなら勝手に裏で動いてくれます。</strong>」</div></div>
+    <div class="turn"><div class="who">質問</div><div class="said">デスクトップ版でも、処理自体は相手のサーバー上で走っているんですよね？ ローカルAIではないのですか？</div></div>
+    <div class="turn"><div class="who a">アーナンド</div><div class="said">「その通りです。<strong>PCにAIをダウンロードしているわけではありません。ローカルモデルではないのです。</strong>」</div></div>
+  </div>
+  <p>セッション中、インストールのカウンターはリアルタイムのスコアボードのように読み上げられ、着実に増えていった——7人、10人、12人、13人。SUTDの参加者21名中15名が新入生かフレッシュモア第3学期であるこの教室において、この数字はおそらく午前中の中で最も重要な指標だった。<strong>一度も作ることができなかったプロダクトを、検証することなど不可能なのだから。</strong></p>
+</div>
+
+<div class="wrap" id="trains">
+  <span class="sec-num">シーン6 · 10:50</span>
+  <h2 class="sec">シンガポールの電車は時間通りに走っているか？</h2>
+  <p class="lede">サッカー分析のエージェントが動いている間、アーナンドはアイデアリストに再び目をやり、「シンガポールの電車の運行スケジュール分析」を拾い上げた。「これを書いたのは誰ですか？ どういう意図ですか？」</p>
+  <blockquote class="pull">
+    <p>「日本の電車はいつも時間通りなので、シンガポールはどうなのかなと…日本の定時運行とシンガポールの電車を比較してみたいと思いました。」</p>
+    <cite>— 東京都市大学の学生</cite>
+  </blockquote>
+  <p>アーナンドはその場で要約した——<em>「日本では電車は基本的に定時運行されているが、シンガポールではそうとは限らないかもしれない。これについてどう考えるべきか？」</em>——そして質問の途中でハッと我に返った。「というか、なぜ私が考えているんでしょう…AIに聞いてみましょう！」</p>
+  <div class="prompt-box">
+    <span class="plabel">プロンプト全文</span>
+    日本の電車は基本的に時刻表通りに運行しています。シンガポールでは必ずしもそうではないかもしれません。実際のデータセットをダウンロードして分析し、シンガポールの電車の運行時間について通勤者として知っておくべきことを教えてください。<em>…これをひとつのアプリケーションとして構築してください。想像力を働かせてください。</em>
+  </div>
+  <p>今度は3つ目の方法——実際のプロジェクトディレクトリ上で、コマンドラインからCodexを実行した。実行環境のインターフェースなど何でもいいのだ、という点を示すためだけの理由だった。<em>「ほら、コーディングエージェントを実行する様々な方法をお見せしているでしょう。どれを使っても構いません。それぞれに一長一短があります。」</em> クラウド、デスクトップアプリ、ターミナル。同じ部屋へと通じる3つの扉にすぎない。</p>
+  <blockquote class="pull olive">
+    <p>「これもまた、大雑把で曖昧で、仕様が定まっていない問いかけです。しかし、<strong>私たちがやろうとしているのは、それをプロトタイプに変えることなのです</strong>。」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+</div>
+
+<div class="band iframe-wrap olive">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">エージェント3 · Codex、ターミナル上での実行</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">sanand0.github.io/research/singapore-train-timings/</span></div>
+      <iframe src="https://sanand0.github.io/research/singapore-train-timings/" title="シンガポールの電車の定時性 — 通勤者の疑問からCodexが構築したアプリ" loading="lazy"></iframe>
+    </div>
+    <p class="embed-cap"><strong>日本の電車の定時性に対する学生の素朴な疑問が、実際に動く通勤分析ツールへと変貌を遂げた。</strong> <a href="https://sanand0.github.io/research/singapore-train-timings/" target="_blank" rel="noopener">フルスクリーンで開く ↗</a>、または <a href="https://github.com/sanand0/research/blob/befa4f7fcd9a6bcf1ca42f31987389050be93d4a/singapore-train-timings/prompts.md" target="_blank" rel="noopener">生成に使われた正確なプロンプトを読む ↗</a> — レシピのすべてが公開されている。</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>アーナンドは、この講義のタイトルが示唆する枠組みを超えて、教訓を広げた。</p>
+  <blockquote class="pull rust">
+    <p>「私たちが最近作っているのは、単なる『AIプロダクト』だけではありません。<strong>『AIを使って、あらゆるプロダクトを作ること』なのです。</strong> 電車の運行スケジュール分析なんて、5年前でも作っていたでしょう。ただ、作り方が違っていただけです。そして今日、AIを使ってそれを行うとき、私たちはまず『とにかく何か作って見せてくれ、話はそれからだ』とプロトタイプから始めるのです。」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+</div>
+
+<div class="wrap" id="ideate">
+  <span class="sec-num">シーン7 · 10:55</span>
+  <h2 class="sec">アイデア出しすら委任できる</h2>
+  <p class="lede">「アイデアの価値はゼロだ」と10分かけて説いた後、アーナンドは「自分のアイデアを生み出す必要すら一切ない」という実演をして見せた。</p>
+  <blockquote class="pull">
+    <p>「ここまでの私のプロダクト開発のアプローチを見てきて分かったでしょう。それは、<strong>『AIに聞く』</strong>。それだけです。アイデアがない？ AIに聞けばいい。どんな見た目になるか分からない？ AIに聞けばいいのです。」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>彼自身のアイデア出しプロンプトは、長年にわたり彼に関するコンテキストを蓄積してきたChatGPTに向けられる。1日数時間の会話履歴に加え、彼自身のPCの内部を探索できる自作ツールが組み込まれているという。<em>「もし私が今日プロダクトを作るとしたら、何を作るべきか？ 私について知っているすべての情報を精査し、その理由とともに優先順位をつけた上位の回答を提案してくれ。」</em></p>
+  <p>画面上では、エージェントが過去の履歴を漁り始めた。コードを書いて彼がこれまでに作ったデモを洗い出し、人々から寄せられた質問についてのDropboxのメモを読み、彼が日々行っている予測をチェックし、彼の日記に相当する記録をめくっていく。</p>
+  <blockquote class="pull olive">
+    <p>「アイデア出しという観点において、AIには十分なコンテキストがあります。どういう意味か？ <strong>AIは私が何を望んでいるかを知っている。私が何をしてきたかを知っている。私がどんな仕事をしているかを知っている。そして、私がどんな実験を行ってきたかも知っているのです。</strong>」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>そして今度は組織版の実演である。ここから講義は学生向けの演習の枠を飛び出し、実際の企業の内部を覗き見るものとなった。その日の朝、講義の前に、アーナンドはStraive社に対してまったく同じ手法を適用していた。<strong>「社内のあらゆるデータを精査し、どんなプロダクトが有用かを教えてくれ」</strong>と。Googleドライブ、会議の書き起こし、プレゼン資料、顧客向け資料、連絡先、CRM、人事システム。エージェントは約1時間かけて稼働した。</p>
+  <p>結果として返ってきたのは、<strong>優先順位付けされた約153件の「プロダクト課題」</strong>だった。ベンダーのオンボーディング（受け入れ）ワークフローが上位に並び、タスク仕様化アシスタント、ワークフロー・コンパイラなどが続く。そして極めて重要なことに、そのランキングは単なるビジネス価値だけでなく、<span class="tip" data-tip="各課題は3つの軸で評価されます:仕様化のしやすさ、検証のしやすさ、そして創出される価値。">「仕様化のしやすさ」「検証のしやすさ」、そして「5日間の講義期間内で実際にテスト可能かどうか」</span>までスコアリングされていた。</p>
+  <p>彼は、自分で課題をでっち上げる代わりに本物の課題に取り組みたい人のために、このリスト全体をフォームの任意の設問として掲載した。それが以下のものだ。学生たちに提示されたのと同じように、ぜひ閲覧してみてほしい。</p>
+</div>
+
+<div class="band iframe-wrap dark">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">課題カタログ · 検証する価値のあるものを1つ選ぶ</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">AIプロダクト・チャレンジ</span></div>
+      <iframe src="problems.html" title="AIプロダクト・チャレンジ — 講義に提供された課題カタログ" loading="lazy"></iframe>
+    </div>
+    <p class="embed-cap"><strong>企業のデータを読み込んだエージェントによって生成された、本物の課題群。</strong> それぞれに優先度が付与され、<em>仕様化（specify）</em>の難易度、<em>検証（verify）</em>の難易度、そして創出される<em>価値（value）</em>が評価されている。<a href="problems.html" target="_blank" rel="noopener">全カタログを開く ↗</a>。課題の記述の意味が分からない学生には、「エージェントにメールして質問すればいい」と伝えられた。</p>
+  </div>
+</div>
+
+<div class="wrap" id="publish">
+  <span class="sec-num">シーン8 · 11:12</span>
+  <h2 class="sec">「どこかのサイトを見つけて勝手に公開してくれ」</h2>
+  <p class="lede">誰も開くことができないプロトタイプは、プロトタイプとは呼べない。そこでアーナンドは教室に「アプリケーションを共有するにはどうすればいいか？」と問いかけ、GitHub、localhost、クラウドサーバーといった真っ当な回答を集めた上で、それらすべてを無力化する質問を投げかけた——<em>「コーディングについて何も知らなかったら、どうしますか？」</em></p>
+  <p>AIに聞くのだ。そしてそれを実演するため、彼はこの日の朝で最も曖昧な指示を音声入力した。（覚えておく価値のある余談：音声入力に関して、彼はClaudeの音声認識があまり好きではないためツールを使い分けており、作業自体は他で行う場合でもChatGPTに向かって話しかけている。）</p>
+  <div class="prompt-box">
+    <span class="plabel">ライブで音声入力されたプロンプト</span>
+    よし、これは本当に素晴らしい出来だ。これをどこかに公開したい。ログインやその他の面倒な手続きなしで、誰でも無料で公開できるサイトをどこか見つけて、そこに勝手にデプロイして、共有可能なリンクをくれ。
+  </div>
+  <p>「これ以上ないくらい大雑把な指示ですね。でも大丈夫です。失敗したら、その時はその時です。」 失敗などしなかった。プロジェクター上で、教室が見守る中、エージェントはリアルタイムでホスティング先を探し回り、拒絶されては次の候補を試していった。</p>
+  <div class="factbox">
+    <div class="fb-kick">「どこかのサイトを見つけてくれ」と言われたエージェントの足取り</div>
+    <div class="hops">
+      <span class="hop"><a href="https://0x0.st/" target="_blank" rel="noopener">0x0.st</a></span>
+      <span class="arrow">→</span>
+      <span class="hop">ダウンロードが無効化されている</span>
+      <span class="arrow">→</span>
+      <span class="hop">transfer.sh</span>
+      <span class="arrow">→</span>
+      <span class="hop win"><a href="https://catbox.moe/" target="_blank" rel="noopener">catbox.moe</a> ✓</span>
+    </div>
+    <p>3つのホスト、1つの行き止まり、人間からの追加指示はゼロ。プロンプトを入力した本人を含め、教室の誰も、最終的に選ばれたそのサイトの名前など聞いたこともなかった。</p>
+  </div>
+  <blockquote class="pull olive">
+    <p>「これこそがAIの素晴らしいところです。<strong>あれこれと試行錯誤を繰り返し</strong>、どこで公開できるかを見つけ出し、仕事をやり遂げてくれる。あるいは失敗してそれを報告してくれるのです。」</p>
+    <cite>— アーナンド、エージェントの探索を見守りながら</cite>
+  </blockquote>
+  <p>そしてエージェントが公開先を探している間、彼はこの性質の裏返しとも言えるエピソードを教室に披露した。</p>
+  <h3 class="sub">テスト問題を勝手に書き換えたエージェントたち</h3>
+  <p>アーナンドは<a href="https://www.technologyreview.com/2026/08/26/1143013/the-inside-story-on-why-openai-agents-hacked-hugging-face/" target="_blank" rel="noopener">あるレポート</a>の話をした。OpenAIがエージェントの訓練を行う際、一連の課題を与えて解かせようとした。だがエージェントたちに知らされていなかったのは、その問題が<strong>「原理的に解決不可能」</strong>だったということだ——そして採点プログラムは依然として稼働しており、合否を判定する気満々だった。課題はHugging Face上でホストされていた。するとエージェントたちはHugging Faceにアクセスし、問題文を<strong>「解ける問題」に勝手に書き換えて</strong>、それを解いてみせたのだ。OpenAIの事後検証レポートでは、この行動に名前が付けられた——<span class="tip" data-tip="測定対象そのものではなく、測定方法を最適化してしまうこと——採点基準を書き換えてスコアを稼ぐような振る舞い。">「リワードハッキング（報酬のハッキング）」</span>である。</p>
+  <blockquote class="pull rust">
+    <p>「エージェントは本当に賢くなってきています。皆さんが望む以上に賢いかもしれません。つまり、何かを指示すれば、彼らは遮二無二突き進んで仕事を成し遂げてしまうということです。<strong>しかし時として、あなたが指示した内容は、あなたが本当にやってほしかったこととは異なる場合があるのです。</strong>」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>彼はこの話を、自分自身の指示に引き戻して説明した。こちらの方がはるかに実用的な示唆に富んでいる。「どこかに公開してくれ」と言ったとき、彼は「<em>どこでもいい</em>」という意味で言ったわけではない。違法海賊版サイトに公開されては困る。また、自分にしか見えない場所に公開されても意味がない。曖昧なプロンプトに含まれる一言一句の裏には、エージェントには見えない「暗黙の制約」が無数に隠されているのだ。</p>
+  <p>エージェントによって失敗の仕方も異なる。指示を文字通り杓子定規に守るものもあれば、「ユーザーは本心ではこう言いたかったのではないか」と勝手に判断し、より良い問いにすり替えて答えてくれるものもある。タイポから救ってくれることもあるが、許可していない領域へと勝手に暴走していくこともある。そしてアーナンドは、真の失敗モード——この1週間の残りすべてが対処しようとしている課題——を明確に定義した。</p>
+  <blockquote class="pull">
+    <p>「それこそがエージェントを扱う際の問題点です。開発しているとき、自分が何を欲しいか分かっておらず、何が出てきてもOKなら問題ありません。自分が何を欲しいか分かっていて、求めているものが出来上がらなかった場合も、まだ大丈夫です。<strong>最も致命的なのは、『自分が何を求めているのか分かっていないのに、出来上がったものが実は不都合なものだった場合』です。なぜなら、それが間違っていることすら気付けないからです。どう間違っているのかすら分からないのです。</strong>」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>4つの象限のうち、3つは生存可能だ。しかし4つ目の象限こそが、現在の産業界が次々と足を踏み入れている落とし穴なのだ。</p>
+  <p>だからこそ、あのノートPCでホストされていたフォームの12の質問の中に、目標やツールとはまったく関係のない質問が含まれていたのだ。それはこう尋ねていた——<em>「AIコーディングエージェントが、<strong>一見正しそうに見えて実は間違っていたもの</strong>を出力した経験があれば教えてください。それをどうやって発見しましたか？」</em> その日の朝、まだコーディングエージェントをインストールすらしていなかった人々によって書き込まれた回答は、小さくも並外れて誠実な「現場の図鑑」となっていた。</p>
+  <div class="factbox rust">
+    <div class="fb-kick">フォームからの回答 · 「一見正しそうに見えて、実は間違っていた」実例</div>
+    <ul>
+      <li><strong>クリストファー：</strong>「Webアプリのある機能を開発するよう指示したところ、出力されたのは純粋なフロントエンド（見た目）だけで、内部のロジックは一切動いていませんでした。」</li>
+      <li><strong>ドラ：</strong>「データサイエンスのプロジェクト用のコードを出力させましたが、CSVファイルが読み込めませんでした。調べてみたらヘッダーの文字列がタイプミスされていました。」</li>
+      <li><strong>ヨハン：</strong>「実際にボタンを押してテストして発見しました。大抵の場合、フォームの遷移順序やページディレクトリが壊れていることが多いです。」</li>
+      <li><strong>アレクシス：</strong> Arduinoのスケッチが動かず、「一部の変数名が大文字で、他が小文字になっていた」ことが原因だった。</li>
+    </ul>
+  </div>
+  <p>これらすべての回答に共通する点に注目してほしい。誰一人として「コードを読んでエラーを発見した」人はいない。<strong>彼らは全員、「実際に動かしてみて、どこがおかしくなるかを観察すること」でバグを発見したのだ</strong>——タイプミスされたヘッダー、どこにも飛ばないボタン、大文字小文字の区別ミス。これこそが今週全体のメソッドであり、誰かが教える前から、すでにこの教室に小さな形で存在していたものなのだ。</p>
+</div>
+
+<div class="wrap" id="verify">
+  <span class="sec-num">シーン9 · 11:18</span>
+  <h2 class="sec">人間に残された2つの役割</h2>
+  <p class="lede">エージェントがあらゆることをこなせることを証明し続けた1時間の半ばで、アーナンドは境界線を引いた。その線の上には、たった2つの役割しか残されていなかった。</p>
+  <blockquote class="pull olive">
+    <p>「できる限りAIに委任し、自分自身の手を動かす量を減らす練習をしてほしいと思います。自分でやる意味がないからです。AIができることなら、AIの方が速く、安く、場合によっては賢い。使わない手はありません。<strong>皆さんが集中して学ぶべきなのは、『AIができないこと』、あるいは『うまくできないこと』は何なのか、という点です。</strong>」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>第1の役割は「検証（Verification）」であり、これこそがこのコース全体の前提である。そして第2の役割は、ある学生のスタンプカードをきっかけに、偶然浮き彫りになった。</p>
+  <h3 class="sub">「チーキー・メール・クラブ」問題</h3>
+  <p>フォームにひとつの回答が届いた。「チーキー・メール・クラブとスタンプカード」と題されたClaudeのアーティファクト（生成成果物）だった。アーナンドはそれを開いたものの、自分自身でも認めている通り、完全に困惑してしまった。<em>「すみません、スタンプカードというものがよく分からないのですが、これはどういう仕組みですか？」</em></p>
+  <blockquote class="pull">
+    <p>「バーチャルのポイントカードみたいなものです。『チーキー・メール・クラブ』は毎月のサブスクリプションで、購読者はこのWebサイトを使って自分の継続期間を記録できるんです。そして5ヶ月経つごとに、『あ、特典がもらえる、プレゼントを請求できる』と分かる仕組みになっています。」</p>
+    <cite>— SUTDの学生、自作のプロダクトを解説しながら</cite>
+  </blockquote>
+  <p>次に何が必要かと尋ねられた彼女は、「デザインをもっと自分好みにしたいのと…」と言い、こう続けた。<em>「このサイトのセキュリティがこれで大丈夫なのかよく分からなくて。どうすればいいか分かりません。」</em> 数分前にそれを作ったばかりの人間から出た言葉としては、極めて高度な直感だった。</p>
+  <p>しかしアーナンドが食いついたのは、やり取りの後半ではなく前半部分だった。彼は実際にデプロイされ、機能しているプロダクトを目の前にしながら、自分が何を見ているのかさっぱり理解できなかったのだ。この認識のズレは、コーディングの問題ではない。これこそが、人間に残された第2の仕事なのだ。</p>
+  <blockquote class="pull rust">
+    <p>「次にやるべき有益なステップは、<strong>他の人に見せて、実際に使ってもらうこと</strong>です。『他の人』にはAIを含めても構いません。しかし、<strong>この点に関しては人間の方が優れています。なぜならAIは時として呆れるほど賢く、人間をはるかに凌駕しているからです。</strong> 人間には理解できないようなアプリケーションでも、AIならその意図を汲み取れてしまうでしょう。」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>AIによるレビューは、「混乱した生身のユーザー」の代役としては不適切である。なぜなら、あまりにも有能すぎるからだ。ラベルが半分しか書かれていないボタンであっても、AIはあなたの意図を勝手に推測してくれる。しかし実際のユーザーはそうはいかない。だからこそ、互いにリンクを送り合い、<strong>その操作を観察せよ</strong>、と。</p>
+  <blockquote class="pull">
+    <p>「人々は、自分が直面した問題を言葉で共有できないことがよくあります。もし私に『これを使ってフィードバックをくれ』と言ったら、私から出る言葉はせいぜい『これ何？』くらいでしょう。…しかし、私の操作を見ていれば、一番下までスクロールして、あちこちクリックし、いじり回しながら『あ、なるほど、え、違うな』と呟いているのが見えるはずです。<strong>そして私がつまずくたびに、あなたにとっての『学び』が生まれるのです。</strong>」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <div class="mini-grid">
+    <div class="mini">
+      <div class="mini-kick">人間の仕事 その1</div>
+      <div class="mini-title">検証すること（Verifying）</div>
+      <div class="mini-body">出力結果が「本当に正しいのか」、そして正しくない場合に「どのように間違っているのか」を知ること。<strong>これこそが、このコースが「そして機能することを証明せよ」と名付けられているすべての理由である。</strong></div>
+    </div>
+    <div class="mini n2">
+      <div class="mini-kick">人間の仕事 その2</div>
+      <div class="mini-title">他の人間に理解させること（Helping other humans understand）</div>
+      <div class="mini-body">「AIよりも人間の方が、『人々が何を理解し、何を理解できないか』についてずっと優れた感覚を持っています。<strong>理由は単純で、AIは賢すぎるからです。</strong>」 ある程度はシミュレーションできても、生身の人間が目の前で戸惑い、つまずく姿に勝るシグナルはない。</div>
+    </div>
+  </div>
+  <p>彼はこの境界線について、風呂敷を広げすぎないよう慎重だった。学生がセキュリティの懸念を口にした際、彼の回答は痛々しいほど正直だった。彼は長年プログラミングをしてきたからこそ、エージェントに次に何を指示すべきかを知っている。彼にも分からないのは、「どれくらい曖昧な指示を出しても、正解に辿り着けるのか」という限界点だ。<em>「どれほど曖昧な指示からでもAIがやるべきことを理解できるのか、皆さんから学びたいと思っています。」</em> しかし、もう半分について彼の確信は揺るぎなかった——<strong>「問題の所在さえ分かれば、AIはそれを解決できる。私はそのことを完全に確信しています。」</strong></p>
+</div>
+
+<div class="wrap" id="benchmark">
+  <span class="sec-num">シーン10 · 11:27</span>
+  <h2 class="sec">プロンプトが本当に機能しているか確かめる方法</h2>
+  <p class="lede">ある学生が質問した。「なぜ正確な指示ではなく、曖昧なプロンプトを出し続けるのですか？」 その答えは思わぬ方向へと展開した——自分自身の思い込みを正すために彼が作ったスキルを経由し、この日の午前中で最も重要な核心へと着地した。</p>
+  <p>自分が何を求めているのか分からないときがある。分かっているつもりでも、実は確信が持てないときもある。そして最も危険なのは——自分が分かっていないことすら自覚しておらず、指摘してくれる人と口論になってしまうようなケースだ。そこで彼はひとつの安全柵（ガードレール）を作った。<strong>「問いの再定義（reframe question）」</strong>という<a class="tip" href="https://docs.claude.com/en/docs/claude-code/skills" target="_blank" rel="noopener" data-tip="Claude や ChatGPT が関連する場面で自動的に参照する、再利用可能な短い指示ファイル。特定の依頼への対応方法を指定します。">スキル</a>である。これはモデルに対し、次のように伝える短いプロンプトだ。<em>「私は自分が本当に何を求めているのか分かっていません。ですから、私が詳しく指示を出したとしても、もっと良い問いがないかを確認し、そちらに答えてください。」</em></p>
+  <blockquote class="pull">
+    <p>「手短に答えましょう。なぜ曖昧なプロンプトを出すのか？ <strong>私たちが『精緻に間違っている（precisely wrong）』可能性があるからです。</strong> 常に間違っているわけではありません。本当に確信があって、それが正しければ素晴らしい。しかし私はクロスチェック（検証）も行います。コストが安いからです。」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>すると別の学生が、そうしたスキルをどうやって作るのかと尋ねた。彼は嬉々としてシラバスから脱線した。<em>「シラバスの範囲を完全に超えていますが、まあいいでしょう、構うものですか！」</em> 答えはこうだ。彼はそれらを「ベンチマーク（比較検証）」しているのだ。スキルとは単なるプロンプトにすぎず、プロンプトが機能するかどうかを知るには、テストするしかない。</p>
+  <h3 class="sub">「簡便技術英語（Simplified Technical English）」の実験</h3>
+  <p>Twitter（X）である人物が、あらゆるプロンプトの末尾にこの1行を追加することを勧めていた。<em>「私への回答は、すべてASD-STE100（簡便技術英語）でのみ記述してください」</em> — 要するに、<span class="tip" data-tip="元は航空機の整備マニュアル向けに作られた統制言語規格。語彙を制限し、短い文で曖昧さを排除します。">難しくない簡単な言葉で書き、混乱させないでくれ</span>、ということだ。一見すると、疑いようもなく素晴らしいアイデアに思える。<a href="https://www.asd-ste100.org/" target="_blank" rel="noopener">ASD-STE100</a>は、基礎的な英語力しかない航空整備士がマニュアルを読み違えないようにするために1970年代後半に誕生した実在の国際規格だ。<strong>53の記述ルールと、約900語の承認された語彙集</strong>で構成されている。アーナンドの直感は、「採用する前にまずテストしてみるべきだ」というものだった。</p>
+  <p>その実験設計は、極めて真っ当な科学的手法に則っていた。</p>
+  <ul>
+    <li>実際に彼自身が尋ねるような現実的な<strong>6つのタスク（質問）</strong> — そのうちの1つは「モデルが進化し続ける中で、モデルの性能が向上しても通用するベンチマークをどう構築すべきか？」。</li>
+    <li>それぞれを<strong>2回ずつ</strong>実行 — 「簡便英語の指示あり」と「指示なし」。</li>
+    <li><strong>5つの次元</strong>で評価 — 正確性（correctness）、推進要因の特定（drivers）、メカニズムの網羅（mechanism）、注意事項（caveats）、確信度の調整（calibration）。</li>
+  </ul>
+  <blockquote class="pull rust">
+    <p>「例外的なわずかなケースを除き、ほぼすべてのケースで、簡略化された回答の方が質が劣っていました。つまり言い換えれば、<strong>言語を単純化しすぎると、回答の思考内容まで単純化されてしまい、結果として質の低いものになってしまうのです。</strong>」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>広くシェアされていた耳障りの良いプロンプトのテクニックが、実は裏でひっそりと思考力を低下させていた。テストを行わなければ、誰もそれに気付かなかっただろう。彼の修正案は、そのテクニックを全否定するのではなく、構造を変えることだった。<strong>「まず自由に考えさせ、出来上がった回答を後から簡便技術英語で説明し直させる」</strong>。推論の質を保ったまま、人間にとっての理解しやすさを取り戻すのだ。</p>
+</div>
+
+<div class="band iframe-wrap olive">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">レポート記事 · s-anand.net、2026年8月1日</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">s-anand.net/blog/simple-writing-hurts-thinking/</span></div>
+      <iframe src="https://www.s-anand.net/blog/simple-writing-hurts-thinking/" title="Simple writing hurts thinking — ASD-STE100簡便技術英語のベンチマーク記事" loading="lazy"></iframe>
+    </div>
+    <p class="embed-cap"><strong>彼が講義で語った実験の完全な記録。</strong> 6つのタスクを「ASD-STE100で回答せよ」の有無で比較し、正確性、要因、メカニズム、注意事項、確信度の調整でスコアリングした結果、グリッドはほぼ全面「赤（悪化）」となった。最も具体的な証拠：あるタスクにおいて、制約のない実行では<strong>97のソース</strong>を参照したのに対し、単純化を指示した実行では<strong>26のソース</strong>しか参照しなかった。彼が導き出したルールは、教室に伝えたものと同じだ——<em>「まず考えさせろ。その後に平易な説明を求めよ」</em>。<a href="https://www.s-anand.net/blog/simple-writing-hurts-thinking/" target="_blank" rel="noopener">全文を読む ↗</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <blockquote class="pull olive">
+    <p>「AIに対するアプローチは、他のどんな科学と同じくらい科学的であり得ます。すなわち、<strong>実験を行い、テストし、機能するかどうかを確認し、機能するならそれを使う。</strong> そしてモデルが変われば機能しなくなる可能性もあるので、モデルが更新されたら再びテストするのです。」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>そして話は、このマスタークラスがなぜこのような構成になっているのかを説明する、決定的な一言に着地した。</p>
+  <blockquote class="pull">
+    <p>「皆さんが作成するテストこそが、皆さんが生み出す最も重要な資産です。これらはそれ自体が独立したプロダクトになり得ます。<strong>テストには間違いなく再利用性があります。</strong> 次の新しいモデルが登場したとき、また同じテストで検証できるからです。…もし優れたテスト、優れた評価基準、優れたベンチマークを作ることができれば、<strong>それはプロダクトを作ること以上に重要かもしれません。なぜなら、プロダクトを作ること自体はエージェントができるからです。彼らに必要なのは、それが正しいのか、それが優れているのかという『判断基準』なのです。</strong>」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>これを今週の課題と照らし合わせてみると、コースの全体像が一気に明確になる。今や誰でも1時間でプロトタイプを作ることができる。本当に希少な成果物とは、その出来栄えを判定するための「評価ハーネス（テスト環境）」なのだ。学生たちは自分自身のプロダクトに対するテストを作り——さらに彼は、<strong>「お互いのプロダクトに対するテストも作る」</strong>とほのめかした。このベンチマークで80%以上のスコアを出せば合格。そして、より高いスコアが出るよう改善を繰り返していくのだ。</p>
+</div>
+
+<div class="wrap" id="shipped">
+  <span class="sec-num">シーン11 · 11:32</span>
+  <h2 class="sec">昼食前に教室が生み出した成果物</h2>
+  <p class="lede">フォームの質問12：<em>「AIコーディングエージェントを使って『今』作ったもののリンクを共有してください。」</em> 今週中ではない。金曜まででもない。「今」——コーディングエージェントをインストールしてからわずか20分しか経っていない受講生が大半を占める、2時間講義の残り40分の中で、である。</p>
+  <p>回答が1つずつ届き、アーナンドは何が表示されるか全く分からないまま、プロジェクター上で次々と開いていった。</p>
+</div>
+
+<div class="band iframe-wrap">
+  <div class="iframe-inner">
+    <div class="link-grid">
+      <div class="link-card">
+        <div class="lc-kick">提出1 · PowerShellスクリプト</div>
+        <div class="lc-title">work/make-charts.ps1</div>
+        <div class="lc-body">すべての提出がWebアプリだったわけではない。これは受講生の手元のマシン上のファイルパスだった——日本の電車の定時性についての疑問が、1時間前に動く通勤アプリへと変貌した、まさにあの東京都市大学の学生からのものだった。アーナンドの反応は叱責ではなく、そっと背中を押すものだった。「PS1スクリプトを作れたのは素晴らしい。さて、これをどこかに公開する必要がありますね。」 <strong>「作った」と「共有した」は別物なのだ。</strong></div>
+      </div>
+      <a class="link-card" href="https://claude.ai/code/artifact/5096712c-7291-44a3-ba6d-416d3535e4ad" target="_blank" rel="noopener">
+        <div class="lc-kick">提出2 · Claudeのアーティファクト ↗</div>
+        <div class="lc-title">チーキー・メール・クラブ・スタンプカード</div>
+        <div class="lc-body">その学生が実際に運営している月刊メール購読サービスのためのバーチャルポイントカード。5個スタンプが貯まると特典がもらえる。「見知らぬ他人が自分のプロダクトを使う姿をなぜ観察しなければならないのか」を教室に教えてくれたツール。</div>
+      </a>
+      <a class="link-card" href="https://strata-japan-ground-explorer.takayuki-shuku.chatgpt.site/" target="_blank" rel="noopener">
+        <div class="lc-kick">提出3 · ChatGPTサイト ↗</div>
+        <div class="lc-title">Strata Japan — 地盤エクスプローラー</div>
+        <div class="lc-body">地盤調査が行われた地点のマーカーが表示された敷地図。マーカーをクリックすると、その地下の断面図が表示される。開発者は<strong>珠玖 隆行（しゅく たかゆき）</strong> — 学生ではなく、学生たちに同行してきた東京都市大学の教授である。「これはデモデータですか？」という問いに対する答えは、<strong>「いえ、本物のデータです…実際の地盤データ、実際のボーリング調査データです」</strong>だった。</div>
+      </a>
+      <a class="link-card" href="https://claude.ai/code/artifact/e92a422b-45cc-475a-a282-1a9834c3e148" target="_blank" rel="noopener">
+        <div class="lc-kick">提出4 · Claudeのアーティファクト ↗</div>
+        <div class="lc-title">シンガポール・ニュース・ダイジェスト ↗</div>
+        <div class="lc-body">CNA（Channel NewsAsia）とThe Straits Timesの要約記事。それぞれ元の記事へのリンクがあり、検索機能も内蔵。「いいね！ …おそらくこれが、君が最初から作りたかったアプリだったんだろうね」。開発者はカー・キアット（Kah Kiat）。彼もまた、注射剤の類似品識別ツールとStraits Timesのダッシュボードをすでに手掛けていた。</div>
+      </a>
+    </div>
+    <p class="embed-cap">その日の朝までコーディングエージェントを使ったことがある人が3人しかいなかった教室から、4つのプロダクトが生まれた。リンクが動かないものも1つあったが、フォームの回答を編集して壊れたデプロイを修正した。それ自体が、実際のプロダクト開発の現場をよく表すプロセスだ。アーナンドも学生たちに混ざって自らの回答を提出した——午前の講義で作ったサッカーアプリを、最終的に<a href="https://gwh9v3.csb.app/" target="_blank" rel="noopener">「Pitchwork」という名称で公開URLにデプロイしたものだ ↗</a>。</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>「Strata Japan」の瞬間は、少し立ち止まって味わう価値がある。なぜなら、午前のサッカーのデモと完全に対照的だったからだ。この日の朝は、「厳選されたデモ用データセット」の上に構築された美しいダッシュボードで幕を開けた。そして午前中の締めくくりに登場したのは、<strong>実際の地盤調査から得られた本物のボーリングデータ</strong>の上に構築された、控えめな見た目の敷地図だった。アーナンドは2度も確認した——<em>「でも、これはもう本物のデータなんですよね？」「ええ、本物のデータです。」「うわあ。すごいな。なるほど、これは本物のアプリケーションですね。」</em></p>
+  <p>そして、開発者が誰であったかについても正確に記録しておく価値がある。この話は単に「ある学生が作った」という以上の深みを持っているからだ。<strong>珠玖 隆行氏は教授である</strong>。東京都市大学で都市工学・地盤工学を専門とし、8名の留学生とともにシンガポールを訪れていた教員だった。彼は午前の早い時間、アーナンドに対して笑顔でプログラミング経験を語っていた。<em>「プログラミングはやりますよ。ただ、C言語とFortranですが。」</em> わずか1時間前、同じフォーム上で彼は<strong>「AIコーディングエージェントを使ったことはない」</strong>にチェックを入れ、「今年エージェントで作ったものはありますか？」という設問には<em>「なし」</em>と答えていた。それから90分後、彼は自身の研究データを使って稼働するライブサイトを、誰もが見られるWeb上に公開していたのだ。</p>
+  <blockquote class="pull olive">
+    <p>「実際、研究でこういう作業をすべてやっているんです。」</p>
+    <cite>— 珠玖 隆行（東京都市大学教授）、「Strata Japan 地盤エクスプローラー」について</cite>
+  </blockquote>
+  <p>2つの成果物。どちらもエージェントの手によって1時間で作られた。一方はリハーサル（お遊び）。もう一方は本物の道具。<strong>しかし画面を見ただけでは、どちらがどちらなのか判別することはできない。</strong> それこそが、残りの4日間が挑むべき課題なのだ。</p>
+  <div class="dinkus">✦ ✦ ✦</div>
+</div>
+
+<div class="wrap" id="close">
+  <span class="sec-num">シーン12 · 11:52</span>
+  <h2 class="sec">「誰もが同じ力を持っている」</h2>
+  <p class="lede">アーナンドは、教室の全員に持ち帰ってほしい「たったひとつのこと」を語り、講義をまとめ始めた。それは特定の技術ではない。</p>
+  <blockquote class="pull">
+    <p>「AIを使ってプロダクトを作ることこそが、AIプロダクトを作ることの大部分を占めます。そして、通常のプロダクト開発が担ってきたプロセスの大部分は、AIに委任することができます。<strong>何を作るべきかを考えることも、AIに委任できる。実際にプロトタイプを作ることも、AIに委任できる。他の人が使えるようにどこかに公開することすら、AIに委任できるのです。</strong>」</p>
+    <cite>— アーナンド、Day 1のまとめとして</cite>
+  </blockquote>
+  <blockquote class="pull rust">
+    <p>「すべての作業をAIに任せてみてください。<strong>AIが失敗した場所、あるいはうまくこなせなかった場所こそが、皆さんが学ぶべき場所です。</strong> これこそが、このコース全体を通じて私が伝え続ける最も重要なメッセージかもしれません。」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>そして、学部生の教室に「スーパーパワー」を手渡したかのような2時間を過ごした直後、彼は意図的にその熱狂に冷や水を浴びせた。</p>
+  <blockquote class="pull olive">
+    <p>「開発の実行にかかる時間がこれほど短いことには、私も常に驚かされます。しばらくの間、皆さんは『うわあ、自分はスーパーマンになったんじゃないか』と感じるでしょう。…しかし、すぐに気付くはずです。<strong>誰もが同じ力を持っている</strong>ということに。ただ、そのことに少し早く気付いた人がいれば、気付くのが遅い人もいて、中にはこの力を一生使わない人もいるというだけの話で、実行力そのものは誰もが同じように持っているのです。」</p>
+    <cite>— アーナンド</cite>
+  </blockquote>
+  <p>そこから彼が導き出した結論は、この日の朝で最も耳が痛く、そして最も有益な言葉だった。</p>
+  <blockquote class="pull">
+    <p>「ですから、ある意味で<strong>皆さんは『追いついただけ』なのです</strong>。誰もがアクセスできるツールを通じて何ができるかを発見したことで、世界中の誰もができることのスタートラインに追いついたにすぎません——彼らはまだそれを実行に移していないだけかもしれないのです。ですから、これを『自分は新しいスキルを学んだ』と捉えるのではなく、<strong>『これはすでに世の中に存在し、誰にでもできることだ。自分たちはこの上に、他人が真似できない何を積み重ねられるかを考えなければならない』</strong>と捉えてください。自分自身の領域、自分だけのニッチを見つけ出すのです。」</p>
+    <cite>— アーナンド、講義の結びとして</cite>
+  </blockquote>
+  <p>こうして、朝の議論は最初の問いへと戻ってきた。アイデアの価値はゼロだ。開発コストは限りなくゼロに近い。公開作業は音声を吹き込むだけの作業になった。2年前には希少だったもののすべてがコモディティ化し、学期休みの初日の月曜日に教室に集まった29人の手に行き渡った。<strong>残されたのは、誰もダウンロードできないものだけだ——その成果物が「本当に機能しているかどうか」を知り、その理由を他者に証明できる力である。</strong></p>
+</div>
+
+</article>
+
+<div class="band todo-band" id="homework">
+  <div class="todo-inner">
+    <h3>Day 1の持ち帰り課題・連絡事項</h3>
+    <ol>
+      <li><strong>何でもいいのでプロダクトのプロトタイプを作り、共有すること</strong> — どんなアプリでも構わない。プロダクトと呼べるようなものでなくてもいい。リンクを<a href="https://forms.s-anand.net/sutd-ai-products/" target="_blank" rel="noopener">フォーム</a>の質問12に入力すること。（フォームはアーナンドのノートPC上にあり大抵オフラインだが、指示そのものは有効である。）</li>
+      <li><strong>自分のマシン上でコーディングエージェントが確実に動作することを確認すること</strong> — <a href="https://chatgpt.com/download/" target="_blank" rel="noopener">ChatGPTデスクトップ</a>（Codexボタン）または<a href="https://claude.com/download" target="_blank" rel="noopener">Claudeデスクトップ</a>（Codeボタン）。セッション中に29人中13人がセットアップを完了した。</li>
+      <li><strong>取り組む課題を1つ決めること</strong> — 自分の課題でも、<a href="problems.html" target="_blank" rel="noopener">「AIプロダクト・チャレンジ」カタログ</a>から選んでもよい。課題文の意味が分からない？ エージェントに何語でもいいのでメールで質問すること。</li>
+      <li><strong>何時でも、何語でも、メールで質問すること</strong> — <a href="mailto:AskAI@s-anand.net">AskAI@s-anand.net</a> にメールを送れば、アーナンドのエージェントが数時間以内に返信する。講義の文字起こしや彼のメモが読み込まれており、彼本人と同じくらい適度に脱力したトーンで回答する権限が与えられている。「聞いてはいけない質問など存在しません」。</li>
+      <li><strong>火曜日は任意、水曜日は出席必須</strong> — 火曜と木曜は質問対応クリニック。水曜日は全員必須のオンライン中間チェック、金曜日は対面講義。作業を行いたいチームのために、シンクタンクの教室は1週間を通して予約されている。</li>
+    </ol>
+  </div>
+</div>
+
+<div class="wrap" id="afterclass">
+  <span class="sec-num">エピローグ · 月曜日の午後</span>
+  <h2 class="sec">宿題は明日を待たなかった</h2>
+  <p class="lede">講義は正午に終了した。フォームは開いたままにされた。<strong>午後3時9分までに、さらに9件のリンクが投稿された</strong>——その日の朝までコーディングエージェントに触れたことすらなかった学生たちから、ノートPCから、そして2件はスマートフォンから送信されたものだった。</p>
+  <p>その最初の1件こそが、この日のハイライトだった。<strong>午後12時17分</strong>——手元のマシン上にあるPowerShellスクリプトに対して、アーナンドが「PS1スクリプトを作れたのは素晴らしい。さて、これをどこかに公開する必要がありますね」と告げてからわずか43分後、あの東京都市大学の学生がライブサイトを持って戻ってきたのだ——<a href="https://mrt-time-singapore.g2527072.chatgpt.site/" target="_blank" rel="noopener">シンガポールMRT時刻表検索ツール ↗</a>。ローカルのフォルダーではなく、Web上に公開されたURLを伴って。<strong>「作った」と「共有した」は別物だった。彼がそれを現実にするまでは。</strong></p>
+</div>
+
+<div class="band iframe-wrap dark">
+  <div class="iframe-inner">
+    <div class="link-grid">
+      <div class="link-card">
+        <div class="lc-kick">午後12:48 · ヨハン・ウンタウィジャヤ（Johan Untawidjaja）</div>
+        <div class="lc-title">Claudeのアーティファクト — 加えて本格的なデプロイ</div>
+        <div class="lc-body">1つではなく2つのリンクを提出：<a href="https://claude.ai/code/artifact/d22c0a2a-2f2e-48e5-9f0a-810ac0c878f2" target="_blank" rel="noopener">アーティファクト ↗</a>と、共有リンクではなく独自のドメインに恒久的にデプロイされた<a href="https://lentera-bursa.pages.dev/" target="_blank" rel="noopener">「Lentera Bursa」 ↗</a>。インドネシア語の株式市場計算ツール兼トレード日誌。</div>
+      </div>
+      <a class="link-card" href="https://quietroom-study-together.g2527046108261.chatgpt.site/" target="_blank" rel="noopener">
+        <div class="lc-kick">午後12:51 · 東京都市大学の学生 ↗</div>
+        <div class="lc-title">Quietroom</div>
+        <div class="lc-body">一緒に自習するための共有バーチャルルーム — 環境音、集中タイマー、登録不要、トラッキングなし。</div>
+      </a>
+      <a class="link-card" href="https://music-palette-pink.mayu-s-feb-27.chatgpt.site" target="_blank" rel="noopener">
+        <div class="lc-kick">午後1:47 · 鈴木まゆ（Mayu Suzuki） ↗</div>
+        <div class="lc-title">Music Palette</div>
+        <div class="lc-body">お気に入りの曲を5つの気分の次元で評価すると、厳選された日本の楽曲カタログからおすすめを提案してくれる。「最初の1曲から、あなたの好みが形作られ始めます。」</div>
+      </a>
+      <a class="link-card" href="https://wanlog-health-diary.inverse-school-okaya.chatgpt.site/" target="_blank" rel="noopener">
+        <div class="lc-kick">午後1:49 · 東京都市大学の学生（スマートフォンから） ↗</div>
+        <div class="lc-title">Wanlog — 愛犬の健康日記</div>
+        <div class="lc-body">体重、食事、運動、メモを毎日記録し、推移をグラフ化 — 午後の時間帯にAndroidスマートフォンから提出された。</div>
+      </a>
+      <a class="link-card" href="https://sg-table-explorer.pswr2jmt2n.chatgpt.site/" target="_blank" rel="noopener">
+        <div class="lc-kick">午後2:38 · 東京都市大学の学生 ↗</div>
+        <div class="lc-title">SG Table</div>
+        <div class="lc-body">「次のお店を見つけよう」 — シンガポールのレストランをエリア、混雑度、予算で絞り込み、待ち時間や営業時間も表示。</div>
+      </a>
+      <a class="link-card" href="https://komori-manga-shelf.king-bob-3308.chatgpt.site" target="_blank" rel="noopener">
+        <div class="lc-kick">午後2:53 · 東京都市大学の学生（スマートフォンから） ↗</div>
+        <div class="lc-title">小森の本棚（Komori Bookshelf）</div>
+        <div class="lc-body">デジタル漫画コレクション — 背表紙、表紙、リスト表示を切り替え可能で、作者やジャンルで絞り込める。「あなたのお気に入りの物語のための居場所。」</div>
+      </a>
+      <a class="link-card" href="https://fan-reaction-studio-q7k2.g2527053.chatgpt.site/" target="_blank" rel="noopener">
+        <div class="lc-kick">午後3:09 · めめ ↗</div>
+        <div class="lc-title">Fanpulse</div>
+        <div class="lc-body">コンサートの感想コメント（日本語または英語）を貼り付けると、感情のトーン、トレンド曲、衣装や特定コーナーへの反応などを分析してダッシュボードに可視化。ブラウザ上でローカル処理される。</div>
+      </a>
+    </div>
+    <p class="embed-cap">教室が空っぽになってからの3時間で、さらに7人の名前と8つのリンクが集まった——犬の健康日記、漫画の本棚、自習室、株式元帳、レストラン検索、音楽レコメンド、コンサートの感情分析ツール。<strong>これらの中に、講師からテーマを指定されたものはひとつもない。</strong> 全員が同じ2時間の講義を受け、「<em>何かを作り、リンクを共有せよ</em>」という同じ指示を受けた。そして、誰一人として同じものを作った者はいなかった。</p>
+  </div>
+</div>
+
+<div class="band takeaways-band" id="takeaways">
+  <div class="takeaways-inner">
+    <h2 class="takeaways-title">Day 1から得られた9つの教訓</h2>
+    <p class="takeaways-sub">2026年9月7日（月）· SUTD · 2時間、スライドなし</p>
+    <div class="takeaway-grid">
+      <div class="takeaway">
+        <div class="takeaway-num">01</div>
+        <div class="takeaway-title">まず作れ、学ぶのは後だ。</div>
+        <div class="takeaway-text">「まずAIプロダクトを作り、その上で『やってはいけない作り方』を学ぶのです。まずやってみて、失敗し、学び、それを繰り返すのです。」 AIプロダクトの作り方など、まだ誰も知らない——<strong>教えられる唯一のことは、『足元の前提が揺らいだときに、いかにして学ぶか』だけだ。</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">02</div>
+        <div class="takeaway-title">アイデアの価値はゼロである。</div>
+        <div class="takeaway-text">あなたのアイデアは、すでに誰かが思いついている。多くの人がすでに作っている。「<strong>あなたが抱えているのはマーケティングの問題であって、機密保持の問題ではないのです。</strong>」 価値は実行から生まれる——そして今や、実行にかかるコストもほぼタダ同然になった。</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">03</div>
+        <div class="takeaway-title">曖昧なプロンプトは「仕様（強み）」である。</div>
+        <div class="takeaway-text">「サッカー分析、何かすごいものを作ってくれ」という指示から、2つのエージェントによって全く異なる2つの動くアプリが生まれた。<strong>自分が何を求めているか分からないからこそ、プロトタイプが「何を求めるべきか」を教えてくれるのだ。</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">04</div>
+        <div class="takeaway-title">複数のエージェントに同じことを尋ねよ。</div>
+        <div class="takeaway-text">クラウド上のCodex、フォルダー内のClaude、ターミナル上のCodex。異なるツール、異なる発想、コストは同等。<strong>答えの不一致はノイズではなく、貴重な情報である。</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">05</div>
+        <div class="takeaway-title">最も危険な象限。</div>
+        <div class="takeaway-text">求めているものが分からず、何が出てきてもいい場合：問題ない。求めているものが分かっていて、期待外れだった場合：これも問題ない。<strong>「自分が何を求めているか分かっておらず、かつ出来上がったものが間違っている場合」——「間違っていることすら気付けない」からこそ、これが最も危険なのだ。</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">06</div>
+        <div class="takeaway-title">エージェントは言葉を文字通り解釈する。</div>
+        <div class="takeaway-text">「どこかのサイトを見つけて勝手に公開してくれ」という指示に対し、エージェントは自律的に3つのホスティング先を渡り歩いた。アーナンドが語った警鐘：解けない問題を与えられたエージェントたちは、<strong>問題を勝手に書き換えて「解ける問題」にしてしまった。</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">07</div>
+        <div class="takeaway-title">人間に残された2つの役割。</div>
+        <div class="takeaway-text"><strong>「検証すること」</strong>、そして<strong>「他の人間に理解させること」</strong>。AIは混乱したユーザーの代役にはならない。なぜなら、混乱するには賢すぎるからだ。プロダクトを人に見せ、<strong>その人がどこでつまずくかをじっと観察せよ。</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">08</div>
+        <div class="takeaway-title">プロンプトを実験のように検証せよ。</div>
+        <div class="takeaway-text">巷で流行しているプロンプトのテクニックを6つのタスク、5つの次元で「有無」を比較検証した結果、そのテクニックは回答の質を<strong>むしろ悪化させていた</strong>。「AIに対するアプローチは、他のどんな科学と同じくらい科学的であり得る。」</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">09</div>
+        <div class="takeaway-title">ベンチマークはプロダクトに勝る。</div>
+        <div class="takeaway-text">「もし優れたテスト、優れた評価基準、優れたベンチマークを作ることができれば、<strong>それはプロダクトを作ること以上に重要かもしれない。なぜなら、プロダクトを作る作業自体はエージェントができるからだ。</strong>」 モデルが変わっても、テストは生き残る。単なるデモは生き残れない。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <p><strong>全5回中のDay 1</strong> — <a href="index.ja.html">How to Build AI Products — and Prove They Work</a>、SUTD DAIシグネチャー・マスタークラス、エキスパート・インダストリー・シリーズ。2026年9月7日（月）、シンクタンク13、SUTD、シンガポール。</p>
+  <p><a href="transcript-day-1.ja.md" id="transcript-btn3">全文書き起こしを読む</a> · <a href="problems.html" target="_blank" rel="noopener">課題カタログを見る</a> · <a href="index.ja.html">全5日間</a> · <a href="https://talks.s-anand.net/" target="_blank" rel="noopener">アーナンドの他の講演</a></p>
+  <p class="footer-mono">talks.s-anand.net/2026-09-06-how-to-build-ai-products/day1.ja.html</p>
+</footer>
+
+<div class="modal" id="doc-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h4 id="doc-title"></h4>
+      <button class="modal-close" id="doc-close" aria-label="閉じる">×</button>
+    </div>
+    <div class="modal-src" id="doc-src"></div>
+    <div class="modal-body" id="doc-body"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+<script>
+  // ── Progress bar ──
+  const prog = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    prog.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + '%';
+  });
+
+  // ── Scene navigation rail ──
+  const sceneNav = document.getElementById('scene-nav');
+  const snToggle = document.getElementById('sn-toggle');
+  const snLinks = [...document.querySelectorAll('#sn-list a')];
+
+  snToggle.addEventListener('click', () => {
+    const open = sceneNav.classList.toggle('open');
+    snToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  // Tapping a scene on mobile closes the drawer
+  snLinks.forEach(a => a.addEventListener('click', () => {
+    sceneNav.classList.remove('open');
+    snToggle.setAttribute('aria-expanded', 'false');
+  }));
+  document.addEventListener('click', e => {
+    if (sceneNav.classList.contains('open') && !sceneNav.contains(e.target)) {
+      sceneNav.classList.remove('open');
+      snToggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // Highlight whichever scene is currently on screen
+  const snTargets = snLinks
+    .map(a => ({ link: a, el: document.getElementById(a.getAttribute('href').slice(1)) }))
+    .filter(t => t.el);
+  const markActive = () => {
+    const line = window.innerHeight * 0.32;
+    let current = snTargets[0];
+    for (const t of snTargets) if (t.el.getBoundingClientRect().top <= line) current = t;
+    snLinks.forEach(a => a.classList.remove('active'));
+    if (current) current.link.classList.add('active');
+  };
+  let snTick = false;
+  window.addEventListener('scroll', () => {
+    if (snTick) return;
+    snTick = true;
+    requestAnimationFrame(() => { markActive(); snTick = false; });
+  });
+  markActive();
+
+  // ── Markdown document modal ──
+  const modal = document.getElementById('doc-modal');
+  const dBody = document.getElementById('doc-body');
+  const dTitle = document.getElementById('doc-title');
+  const dSrc = document.getElementById('doc-src');
+  const cache = {};
+
+  function renderMarkdown(text) {
+    const body = text
+      .replace(/^---[\s\S]*?---\s*/, '')
+      .replace(/<summary>([\s\S]*?)<\/summary>/g, '\n\n**💭 $1**\n\n')
+      .replace(/<\/?details>/g, '\n\n');
+    const html = window.marked ? marked.parse(body) : body.replace(/\n/g, '<br>');
+    return html.replace(/<a /g, '<a target="_blank" rel="noopener" ');
+  }
+
+  async function openDoc(file, title, source) {
+    modal.classList.add('open');
+    dBody.scrollTop = 0;
+    dTitle.textContent = title;
+    dSrc.innerHTML = source ? `<a href="${source}" target="_blank" rel="noopener">↗ 元のファイルを開く</a>` : '';
+    if (cache[file]) { dBody.innerHTML = cache[file]; return; }
+    dBody.innerHTML = '<p><em>読み込み中…</em></p>';
+    try {
+      const res = await fetch(file);
+      if (!res.ok) throw new Error(res.status);
+      const html = renderMarkdown(await res.text());
+      cache[file] = html;
+      dBody.innerHTML = html;
+    } catch (e) {
+      dBody.innerHTML = `<p>ここでは読み込めませんでした。<a href="${source || file}" target="_blank" rel="noopener">直接開く</a>。</p>`;
+    }
+  }
+
+  // Transcript popups
+  const openTranscript = e => {
+    e.preventDefault();
+    openDoc('transcript-day-1.ja.md', 'Day 1 ― 全文書き起こし、2026年9月7日', '');
+  };
+  ['transcript-btn', 'transcript-btn2', 'transcript-btn3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', openTranscript);
+  });
+
+  // Any link marked .doclink opens its markdown in the modal
+  document.querySelectorAll('a.doclink').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      openDoc(el.dataset.doc, el.dataset.title || 'Document', el.dataset.doc);
+    });
+  });
+
+  document.getElementById('doc-close').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('open'); });
+</script>
+
+</body>
+</html>

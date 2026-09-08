@@ -3,68 +3,772 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Day 2 — coming soon | How to Build AI Products</title>
-<meta name="description" content="Day 2 of the SUTD DAI Signature Master Class, Tue 8 Sep 2026. An optional drop-in session: bring whatever broke while building your first prototype.">
+<title>Wow. Now So What? | Day 2 · How to Build AI Products — and Prove They Work</title>
+<meta name="description" content="Day 2 of the SUTD DAI Signature Master Class. Four students showed what they built in a day — a news app, a stock tracker, an AI pitch coach, a football shot map — and ran into the same wall from four directions: the demo worked, but nobody had asked who would actually use it.">
+<meta property="og:title" content="Wow. Now So What? — Day 2">
+<meta property="og:description" content="SUTD DAI Signature Master Class · How to Build AI Products — and Prove They Work · Tuesday 8 September 2026, remote.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Spectral:wght@300;400;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,600&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f4f1ea; --paper: #fffdf9; --ink: #1b1a22; --ink2: #3e3b48; --muted: #78717f;
-    --indigo: #4a3fa8; --indigo-dk: #2f2775; --rust: #b8471f; --olive-dk: #6a5d0f; --olive-soft: #f4eec8;
-    --border: #ded7c8; --night: #14121c;
+    --bg: #f4f1ea;
+    --paper: #fffdf9;
+    --ink: #1b1a22;
+    --ink2: #3e3b48;
+    --muted: #78717f;
+    --indigo: #4a3fa8;
+    --indigo-dk: #2f2775;
+    --indigo-soft: #e7e4f8;
+    --rust: #b8471f;
+    --rust-dk: #8a3315;
+    --rust-soft: #fbe1d6;
+    --olive: #8a7a17;
+    --olive-dk: #6a5d0f;
+    --olive-soft: #f4eec8;
+    --border: #ded7c8;
+    --night: #14121c;
+    --night2: #1d1a29;
     --font-display: 'Playfair Display', Georgia, serif;
     --font-body: 'Spectral', Georgia, serif;
     --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   }
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: var(--font-body); background: var(--bg); color: var(--ink); line-height: 1.76;
-    font-size: 19px; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; }
-  .masthead { background: rgba(244,241,234,.95); border-bottom: 1px solid var(--border); padding: .7rem 1.5rem; }
-  .masthead-inner { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: .8rem; flex-wrap: wrap; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.76;
+    font-size: 19px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    padding-bottom: 3rem;
+  }
+  [id] { scroll-margin-top: 4.6rem; }
+  img { max-width: 100%; display: block; }
+
+  #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--indigo), var(--olive), var(--rust)); z-index: 1000; transition: width .15s linear; }
+
+  /* ── Masthead ── */
+  .masthead { position: sticky; top: 0; z-index: 200; background: rgba(244,241,234,.95); border-bottom: 1px solid var(--border); padding: .7rem 1.5rem; backdrop-filter: blur(8px); }
+  .masthead-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: .8rem; flex-wrap: wrap; }
   .masthead-brand { font-family: var(--font-mono); font-size: .8rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
   .masthead-brand:hover { color: var(--indigo); }
+  .masthead-right { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
   .masthead-date { font-family: var(--font-mono); font-size: .68rem; color: var(--muted); }
-  main { flex: 1; max-width: 640px; margin: 0 auto; padding: 5rem 1.5rem 4rem; text-align: center; }
-  .kicker { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .2em; text-transform: uppercase; color: var(--rust); margin-bottom: 1.1rem; }
-  h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(2rem, 6vw, 3.2rem); line-height: 1.06; letter-spacing: -.025em; margin-bottom: 1.2rem; }
-  h1 em { font-style: italic; color: var(--indigo); font-weight: 700; }
-  .tag { display: inline-block; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
-    background: var(--olive-soft); color: var(--olive-dk); border: 1px solid rgba(106,93,15,.3); border-radius: 99px; padding: .38rem .9rem; margin-bottom: 1.6rem; }
-  p { color: var(--ink2); margin-bottom: 1.3rem; }
-  .back { display: inline-block; font-family: var(--font-mono); font-size: .74rem; text-decoration: none;
-    color: var(--indigo-dk); border: 1px solid var(--indigo); border-radius: 6px; padding: .5rem 1rem; transition: all .2s; margin-top: .6rem; }
-  .back:hover { background: var(--indigo); color: #fff; }
-  .footer { background: var(--night); color: #a8a2b6; padding: 2rem 1.5rem; text-align: center; }
-  .footer p { margin-bottom: .5rem; font-size: .88rem; color: #a8a2b6; }
+  .masthead-link { font-family: var(--font-mono); font-size: .67rem; color: var(--indigo-dk); text-decoration: none; border: 1px solid var(--indigo); border-radius: 4px; padding: .26rem .55rem; transition: all .2s; white-space: nowrap; }
+  .masthead-link:hover { background: var(--indigo); color: #fff; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 1.5rem; }
+  .wrap-wide { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ── Hero ── */
+  .hero { max-width: 860px; margin: 0 auto; padding: 3.4rem 1.5rem 1.2rem; text-align: center; }
+  .hero-kicker { font-family: var(--font-mono); font-size: .67rem; letter-spacing: .2em; text-transform: uppercase; color: var(--rust); margin-bottom: 1.1rem; line-height: 1.9; }
+  .hero h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(2.4rem, 7.2vw, 4.4rem); line-height: 1.02; letter-spacing: -.025em; margin-bottom: 1.1rem; }
+  .hero h1 em { font-style: italic; color: var(--indigo); font-weight: 700; }
+  .hero-sub { font-size: 1.16rem; color: var(--ink2); line-height: 1.62; max-width: 640px; margin: 0 auto 1.6rem; }
+  .hero-meta { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); line-height: 2; }
+  .hero-meta a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.4); }
+  .hero-meta a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+
+  .quick-links { margin: 1.7rem auto 0; display: flex; gap: .55rem; justify-content: center; flex-wrap: wrap; max-width: 780px; }
+  .quick-links a { font-family: var(--font-mono); font-size: .71rem; text-decoration: none; color: var(--ink2); background: var(--paper); border: 1px solid var(--border); border-radius: 99px; padding: .44rem .95rem; transition: all .2s; }
+  .quick-links a:hover { border-color: var(--indigo); color: var(--indigo-dk); transform: translateY(-1px); }
+
+  /* ── Bands ── */
+  .band { width: 100vw; margin-left: calc(50% - 50vw); margin-top: 3.2rem; margin-bottom: 3.2rem; }
+
+  /* ── Body text ── */
+  .wrap p, .wrap-wide > p { margin-bottom: 1.35rem; }
+  .wrap p a, .wrap li a, .wrap-wide > p a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.42); }
+  .wrap p a:hover, .wrap li a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+  .wrap strong { font-weight: 600; color: var(--ink); background: linear-gradient(transparent 62%, rgba(231,228,248,.95) 62%); }
+  .wrap ul, .wrap ol { margin: 0 0 1.35rem 1.3rem; }
+  .wrap li { margin-bottom: .55rem; }
+  .lede { font-size: 1.11rem; color: var(--ink2); }
+
+  .sec-num { display: block; font-family: var(--font-mono); font-size: .64rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--indigo); margin: 3.4rem 0 .55rem; line-height: 1.6; }
+  h2.sec { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.75rem, 4.6vw, 2.6rem); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 1.2rem; }
+  .wrap code { font-family: var(--font-mono); font-size: .82em; background: var(--olive-soft); padding: .08rem .32rem; border-radius: 4px; }
+  h3.sub { font-family: var(--font-display); font-weight: 700; font-size: 1.28rem; margin: 2.1rem 0 .7rem; color: var(--ink2); }
+  .dinkus { text-align: center; color: var(--indigo); letter-spacing: .75em; margin: 2.6rem 0; font-size: .8rem; }
+
+  /* ── Pull quotes ── */
+  blockquote.pull { margin: 2.1rem 0; padding: 1.3rem 1.55rem; background: var(--paper); border-left: 4px solid var(--indigo); border-radius: 0 7px 7px 0; box-shadow: 0 2px 14px rgba(27,26,34,.07); }
+  blockquote.pull p { font-family: var(--font-display); font-size: 1.2rem; font-weight: 400; font-style: italic; line-height: 1.5; margin-bottom: .55rem; color: var(--ink); }
+  blockquote.pull p:last-of-type { margin-bottom: .55rem; }
+  blockquote.pull cite { font-family: var(--font-mono); font-style: normal; font-size: .69rem; color: var(--muted); }
+  blockquote.pull.rust { border-left-color: var(--rust); }
+  blockquote.pull.olive { border-left-color: var(--olive); }
+
+  /* ── Dialogue exchange ── */
+  .dialogue { background: var(--paper); border: 1px solid var(--border); border-radius: 9px; padding: 1.2rem 1.4rem; margin: 1.8rem 0 2.1rem; font-size: .95rem; }
+  .dialogue .turn { display: grid; grid-template-columns: 5.6rem 1fr; gap: .8rem; margin-bottom: .55rem; line-height: 1.6; }
+  .dialogue .turn:last-child { margin-bottom: 0; }
+  .dialogue .who { font-family: var(--font-mono); font-size: .64rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: .32rem; }
+  .dialogue .who.a { color: var(--indigo); }
+  .dialogue .said strong { font-weight: 600; }
+  .dialogue .said em { color: var(--muted); font-size: .87em; }
+  @media (max-width: 560px) { .dialogue .turn { grid-template-columns: 1fr; gap: .1rem; } }
+
+  /* ── Inline cards ── */
+  .mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.6rem 0 2.2rem; }
+  @media (max-width: 640px) { .mini-grid { grid-template-columns: 1fr; } }
+  .mini { background: var(--paper); border: 1px solid var(--border); border-top: 3px solid var(--indigo); border-radius: 8px; padding: 1.05rem 1.2rem; }
+  .mini.n2 { border-top-color: var(--rust); }
+  .mini.n3 { border-top-color: var(--olive); }
+  .mini.n4 { border-top-color: var(--indigo-dk); }
+  .mini-kick { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: .35rem; }
+  .mini-title { font-family: var(--font-display); font-weight: 700; font-size: 1.04rem; margin-bottom: .4rem; line-height: 1.26; }
+  .mini-body { font-size: .87rem; line-height: 1.6; color: var(--ink2); }
+  .mini-body strong { color: var(--ink); font-weight: 600; }
+
+  /* ── Embeds (static screenshot, since claude.ai / pages.dev block framing) ── */
+  .iframe-wrap { padding: 2.4rem 1.5rem; background: var(--indigo-soft); }
+  .iframe-wrap.rust { background: var(--rust-soft); }
+  .iframe-wrap.olive { background: var(--olive-soft); }
+  .iframe-inner { max-width: 1000px; margin: 0 auto; }
+  .embed-frame { background: var(--paper); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(27,26,34,.1); }
+  .embed-frame .chrome { display: flex; align-items: center; gap: .45rem; padding: .6rem .85rem; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .embed-frame .chrome .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border); flex: none; }
+  .embed-frame .chrome .url { font-family: var(--font-mono); font-size: .67rem; color: var(--muted); margin-left: .5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .embed-frame a.shot-link { display: block; position: relative; }
+  .embed-frame img.shot { width: 100%; display: block; background: #fff; }
+  .embed-frame .shot-hint { position: absolute; right: .7rem; bottom: .7rem; font-family: var(--font-mono); font-size: .62rem; letter-spacing: .06em; text-transform: uppercase; background: rgba(20,18,28,.82); color: #f2eff8; padding: .35rem .7rem; border-radius: 99px; opacity: 0; transition: opacity .2s; }
+  .embed-frame a.shot-link:hover .shot-hint { opacity: 1; }
+  .embed-cap { font-family: var(--font-mono); font-size: .72rem; text-align: center; margin-top: 1rem; line-height: 1.75; color: var(--indigo-dk); }
+  .iframe-wrap.rust .embed-cap { color: var(--rust-dk); }
+  .iframe-wrap.olive .embed-cap { color: var(--olive-dk); }
+  .embed-cap strong { font-weight: 700; }
+  .embed-cap a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.45); }
+  .iframe-wrap.rust .embed-cap a { color: var(--rust-dk); border-bottom-color: rgba(138,51,21,.45); }
+  .iframe-wrap.olive .embed-cap a { color: var(--olive-dk); border-bottom-color: rgba(106,93,15,.5); }
+  .embed-cap a:hover { color: var(--rust); }
+  .embed-badge { display: flex; align-items: center; justify-content: center; gap: .6rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .embed-badge .pill { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; background: var(--indigo-dk); color: #fff; border-radius: 99px; padding: .38rem .9rem; }
+  .iframe-wrap.rust .embed-badge .pill { background: var(--rust-dk); }
+  .iframe-wrap.olive .embed-badge .pill { background: var(--olive-dk); }
+  @media (min-width: 1101px) { .iframe-wrap { padding-left: 5rem; padding-right: 5rem; } }
+
+  /* ── Link cards ── */
+  .link-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; max-width: 1080px; margin: 0 auto; }
+  .link-card { display: block; background: var(--paper); border: 1px solid var(--border); border-radius: 10px; padding: 1.15rem 1.3rem; text-decoration: none; color: inherit; transition: all .2s; }
+  .link-card:hover { border-color: var(--indigo); box-shadow: 0 4px 16px rgba(27,26,34,.12); transform: translateY(-2px); }
+  .link-card .lc-kick { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--rust); margin-bottom: .4rem; }
+  .link-card .lc-title { font-family: var(--font-display); font-weight: 700; font-size: 1.06rem; margin-bottom: .4rem; line-height: 1.26; color: var(--ink); }
+  .link-card .lc-body { font-size: .87rem; line-height: 1.6; color: var(--ink2); }
+  .link-card .lc-body em { color: var(--muted); font-style: italic; }
+
+  /* ── Tooltip ── */
+  .tip { border-bottom: 1px dotted var(--rust); cursor: help; position: relative; }
+  .tip::after {
+    content: attr(data-tip); position: absolute; bottom: 132%; left: 50%; transform: translateX(-50%);
+    background: var(--night); color: #f2eff8; padding: .55rem .8rem; border-radius: 6px; font-size: .78rem;
+    font-family: var(--font-body); line-height: 1.5; white-space: normal; width: 250px; pointer-events: none;
+    opacity: 0; transition: opacity .2s; z-index: 300; font-style: normal; text-align: left; box-shadow: 0 4px 18px rgba(0,0,0,.3);
+  }
+  .tip:hover::after { opacity: 1; }
+
+  /* ── Cite / popup trigger ── */
+  a.cite { border-bottom: 1px dotted var(--muted); cursor: pointer; color: inherit; text-decoration: none; }
+  a.cite::after { content: "†"; font-size: .7em; vertical-align: super; color: var(--indigo); }
+  a.cite:hover { color: var(--indigo-dk); }
+
+  /* ── Takeaways ── */
+  .takeaways-band { background: linear-gradient(140deg, #2f2775 0%, #1d1a29 52%, #8a3315 100%); padding: 3.4rem 1.5rem; }
+  .takeaways-inner { max-width: 1140px; margin: 0 auto; }
+  .takeaways-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.7rem, 4.2vw, 2.4rem); color: #fff; text-align: center; margin-bottom: .5rem; letter-spacing: -.02em; }
+  .takeaways-sub { text-align: center; color: #cfc7f0; font-size: .88rem; margin-bottom: 2.2rem; font-family: var(--font-mono); }
+  .takeaway-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+  .takeaway { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15); border-radius: 10px; padding: 1.25rem 1.35rem; }
+  .takeaway-num { font-family: var(--font-mono); font-size: .65rem; letter-spacing: .14em; color: #e0cf6b; margin-bottom: .45rem; }
+  .takeaway-title { font-family: var(--font-display); font-weight: 700; font-size: 1.06rem; color: #fff; margin-bottom: .45rem; line-height: 1.3; }
+  .takeaway-text { font-size: .9rem; line-height: 1.65; color: #e6e1f2; }
+  .takeaway-text strong { color: #fff; font-weight: 600; }
+  .takeaway-text a { color: #ffd9a8; text-decoration: none; border-bottom: 1px solid rgba(255,217,168,.55); }
+  .takeaway-text a:hover { color: #fff; border-bottom-color: #fff; }
+
+  /* ── Homework band ── */
+  .todo-band { background: var(--paper); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 2.8rem 1.5rem; }
+  .todo-inner { max-width: 800px; margin: 0 auto; }
+  .todo-inner h3 { font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; margin-bottom: 1rem; }
+  .todo-inner ol { margin: 0 0 0 1.3rem; }
+  .todo-inner li { margin-bottom: .7rem; line-height: 1.7; }
+  .todo-inner a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.42); }
+  .todo-inner a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+  .todo-inner strong { font-weight: 600; }
+
+  .footer { background: var(--night); color: #a8a2b6; padding: 2.6rem 1.5rem; text-align: center; }
+  .footer p { margin-bottom: .7rem; font-size: .92rem; }
   .footer a { color: #ffc98c; text-decoration: none; border-bottom: 1px solid rgba(255,201,140,.45); }
   .footer a:hover { color: #fff; border-bottom-color: #fff; }
-  @media (max-width: 640px) { body { font-size: 17.5px; } main { padding-top: 3.2rem; } }
+  .footer-mono { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .04em; color: #7f7891; }
+
+  /* ── Modal ── */
+  .modal { position: fixed; inset: 0; background: rgba(20,18,28,.9); display: none; align-items: center; justify-content: center; z-index: 900; padding: 1.4rem; }
+  .modal.open { display: flex; }
+  .modal-box { background: var(--paper); border-radius: 10px; max-width: 880px; width: 100%; max-height: 88vh; display: flex; flex-direction: column; overflow: hidden; }
+  .modal-head { padding: .95rem 1.3rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .modal-head h4 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; }
+  .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--muted); line-height: 1; padding: 0 .3rem; }
+  .modal-close:hover { color: var(--rust); }
+  .modal-body { padding: 1.25rem; overflow-y: auto; font-size: .93rem; line-height: 1.72; }
+  .modal-body h1, .modal-body h2, .modal-body h3 { font-family: var(--font-display); font-weight: 700; margin: 1.2rem 0 .55rem; line-height: 1.25; }
+  .modal-body h1 { font-size: 1.45rem; } .modal-body h2 { font-size: 1.22rem; } .modal-body h3 { font-size: 1.08rem; }
+  .modal-body p { margin-bottom: .8rem; }
+  .modal-body a { color: var(--indigo-dk); }
+  .modal-body ul, .modal-body ol { margin: 0 0 .8rem 1.2rem; }
+  .modal-body li { margin-bottom: .4rem; }
+  .modal-body pre { background: var(--bg); padding: .8rem; border-radius: 6px; overflow-x: auto; font-size: .8rem; }
+  .modal-body code { font-family: var(--font-mono); font-size: .84em; }
+  .modal-body blockquote { border-left: 3px solid var(--border); padding-left: .9rem; margin: .8rem 0; color: var(--ink2); }
+  .modal-body table { display: block; overflow-x: auto; border-collapse: collapse; }
+  .modal-body th, .modal-body td { border: 1px solid var(--border); padding: .4rem .6rem; }
+  .modal-src { font-family: var(--font-mono); font-size: .7rem; padding: .35rem 1.3rem 0; }
+  .modal-src a { color: var(--rust-dk); }
+
+  /* ── Comic / visual summary band ── */
+  .comic-band { background: var(--night); padding: 2.6rem 1.5rem 2.4rem; }
+  .comic-inner { max-width: 780px; margin: 0 auto; }
+  .comic-kick { font-family: var(--font-mono); font-size: .64rem; letter-spacing: .2em; text-transform: uppercase; color: #e0cf6b; text-align: center; margin-bottom: 1.1rem; }
+  .comic-inner a.comic-link { display: block; border-radius: 10px; overflow: hidden; box-shadow: 0 8px 34px rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.12); }
+  .comic-inner img { width: 100%; max-width: 100%; height: auto; display: block; }
+  .comic-cap { font-family: var(--font-mono); font-size: .72rem; line-height: 1.8; text-align: center; color: #cfc9dd; margin-top: 1.1rem; }
+  .comic-cap strong { color: #fff; font-weight: 700; }
+  .comic-cap a { color: #ffc98c; text-decoration: none; border-bottom: 1px solid rgba(255,201,140,.5); }
+  .comic-cap a:hover { color: #fff; border-bottom-color: #fff; }
+
+  /* ── Aside / fact box ── */
+  .factbox { background: var(--paper); border: 1px solid var(--border); border-left: 4px solid var(--olive); border-radius: 0 9px 9px 0; padding: 1.15rem 1.35rem; margin: 2rem 0 2.2rem; }
+  .factbox.indigo { border-left-color: var(--indigo); }
+  .factbox.rust { border-left-color: var(--rust); }
+  .factbox .fb-kick { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); margin-bottom: .55rem; }
+  .factbox .fb-title { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; line-height: 1.3; margin-bottom: .6rem; color: var(--ink); }
+  .factbox ol, .factbox ul { margin: 0 0 0 1.15rem; }
+  .factbox li { font-size: .9rem; line-height: 1.62; margin-bottom: .45rem; color: var(--ink2); }
+  .factbox li:last-child { margin-bottom: 0; }
+  .factbox li strong { font-weight: 600; color: var(--ink); }
+  .factbox p { font-size: .9rem; line-height: 1.62; color: var(--ink2); margin-bottom: .6rem; }
+  .factbox ul + p, .factbox ol + p { margin-top: .9rem; }
+  .factbox p:last-child { margin-bottom: 0; }
+  .factbox a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.42); }
+  .factbox a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+  .factbox code { font-family: var(--font-mono); font-size: .82em; background: var(--olive-soft); padding: .08rem .32rem; border-radius: 4px; }
+
+  /* ── Scene navigation rail ── */
+  #scene-nav { position: fixed; z-index: 180; right: .7rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: flex-end; gap: .45rem; max-width: min(19rem, 84vw); }
+  #sn-toggle { display: none; }
+  #sn-list { list-style: none; margin: 0; padding: .35rem; display: flex; flex-direction: column; gap: 1px; background: rgba(255,253,249,.94); border: 1px solid var(--border); border-radius: 11px; box-shadow: 0 4px 22px rgba(27,26,34,.14); backdrop-filter: blur(8px); max-height: 80vh; overflow-y: auto; overflow-x: hidden; }
+  #sn-list li { margin: 0; }
+  #sn-list a { display: flex; align-items: baseline; gap: .5rem; text-decoration: none; padding: .24rem .42rem; border-radius: 6px; }
+  #sn-list a b { font-family: var(--font-mono); font-size: .62rem; font-weight: 500; letter-spacing: .04em; color: var(--muted); flex: none; width: 1.3rem; text-align: right; }
+  #sn-list a i { font-family: var(--font-body); font-style: normal; font-size: .72rem; line-height: 1.4; color: var(--ink2); white-space: nowrap; max-width: 0; overflow: hidden; opacity: 0; transition: max-width .28s ease, opacity .2s ease; }
+  #scene-nav:hover #sn-list a i, #scene-nav:focus-within #sn-list a i { max-width: 15rem; opacity: 1; }
+  #sn-list a:hover, #sn-list a:focus-visible { background: var(--indigo-soft); outline: none; }
+  #sn-list a:hover b, #sn-list a:hover i { color: var(--indigo-dk); }
+  #sn-list a.active { background: var(--indigo-soft); }
+  #sn-list a.active b { color: var(--indigo-dk); font-weight: 700; }
+  #sn-list a.active i { color: var(--indigo-dk); }
+
+  @media (min-width: 1101px) {
+    .wrap-wide, .comic-band, .todo-band, .takeaways-band { padding-left: 5rem; padding-right: 5rem; }
+  }
+
+  @media (max-width: 1100px) {
+    #scene-nav { top: auto; bottom: 1rem; right: .8rem; transform: none; }
+    #sn-toggle { display: inline-flex; align-items: center; gap: .45rem; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; background: var(--night); color: #f2eff8; border: 0; border-radius: 99px; padding: .55rem .95rem; cursor: pointer; box-shadow: 0 3px 16px rgba(27,26,34,.35); }
+    #sn-list { display: none; order: -1; max-height: 58vh; }
+    #scene-nav.open #sn-list { display: flex; }
+    #scene-nav.open #sn-list a i { max-width: 13rem; opacity: 1; white-space: normal; }
+  }
+
+  @media (max-width: 640px) {
+    body { font-size: 17.5px; }
+    .comic-band { padding: 1.8rem .9rem 1.6rem; }
+  }
 </style>
 </head>
 <body>
+<div id="progress"></div>
 
 <header class="masthead">
   <div class="masthead-inner">
     <a class="masthead-brand" href="https://talks.s-anand.net/">S Anand · Talks</a>
-    <span class="masthead-date">Day 2 · Tue 8 Sep 2026 · SUTD</span>
-    <span class="masthead-date"><a href="day2.ja.html" style="color:inherit">日本語</a></span>
+    <div class="masthead-right">
+      <span class="masthead-date">Day 2 · 8 Sep 2026 · SUTD</span>
+      <span class="masthead-date"><a href="day2.ja.html" style="color:inherit">日本語</a></span>
+      <a class="masthead-link" href="index.html">All five days</a>
+      <a class="masthead-link" href="transcript-day-2.md" id="transcript-btn">Transcript</a>
+    </div>
   </div>
 </header>
 
-<main>
-  <div class="kicker">SUTD DAI Signature Master Class · Day 2 of 5</div>
-  <h1>Not <em>yet</em>.</h1>
-  <div class="tag">Tue 8 Sep 2026 · Remote · 1 hour · optional query clinic</div>
-  <p>An optional drop-in session: bring whatever broke while building your first prototype.</p>
-  <p>This session hasn't happened yet. Notes will appear here afterwards.</p>
-  <p><a class="back" href="day1.html">Read Day 1 →</a> &nbsp; <a class="back" href="index.html">← All five days</a></p>
-</main>
+<div class="hero" id="top">
+  <div class="hero-kicker">SUTD DAI Signature Master Class · Expert Industry Series · Day 2 of 5</div>
+  <h1>Wow. Now <em>So What?</em></h1>
+  <p class="hero-sub">Four students volunteered to show what they'd built in a single day. Every one of them had already cleared the bar that seemed impossible on Monday — a working app, built in an hour. What nobody had cleared yet was the harder bar: <strong>would anyone actually use it, and why?</strong></p>
+  <p class="hero-meta">Remote · optional query clinic · Tuesday 8 September 2026<br>Anand S, Head of Innovation at <a href="https://www.straive.com/" target="_blank" rel="noopener">Straive</a> · <a href="transcript-day-2.md" id="transcript-btn2">read the full transcript</a></p>
+  <div class="quick-links">
+    <a href="#comic">▤ The day, in eight panels</a>
+    <a href="#sowhat">😐 "Uh, okay"</a>
+    <a href="#feedback">🔁 The feedback loop</a>
+    <a href="#whyapp">🤔 Why does this app exist?</a>
+    <a href="#cantshare">🔒 The app that couldn't be shared</a>
+    <a href="#kosei">⚽ A coach's-eye view, in two languages</a>
+    <a href="#persona">🎭 Ask an AI to review the AI</a>
+    <a href="#takeaways">🗒️ Takeaways</a>
+  </div>
+</div>
+
+<nav id="scene-nav" aria-label="Jump to a scene">
+  <button id="sn-toggle" type="button" aria-expanded="false" aria-controls="sn-list">☰ Scenes</button>
+  <ol id="sn-list">
+    <li><a href="#top"><b>↑</b><i>Top of the page</i></a></li>
+    <li><a href="#comic"><b>▤</b><i>The day, in eight panels</i></a></li>
+    <li><a href="#sowhat"><b>01</b><i>"Wow, you did this in an hour?" · "Uh, okay."</i></a></li>
+    <li><a href="#feedback"><b>02</b><i>Record the feedback, hand it to the AI</i></a></li>
+    <li><a href="#whyapp"><b>03</b><i>Why does this app deserve to exist?</i></a></li>
+    <li><a href="#cantshare"><b>04</b><i>The app that couldn't be shared</i></a></li>
+    <li><a href="#kosei"><b>05</b><i>A coach's-eye view, in two languages</i></a></li>
+    <li><a href="#persona"><b>06</b><i>Ask an AI to review the AI</i></a></li>
+    <li><a href="#homework"><b>HW</b><i>What Tuesday left for Wednesday</i></a></li>
+    <li><a href="#takeaways"><b>★</b><i>Eight things from Day 2</i></a></li>
+  </ol>
+</nav>
+
+<div class="band comic-band" id="comic">
+  <div class="comic-inner">
+    <div class="comic-kick">Day 2, in eight panels</div>
+    <a class="comic-link" href="comic-page-day-2.avif" target="_blank" rel="noopener" title="Open the full-size comic in a new tab">
+      <img src="comic-page-day-2.avif" width="1055" height="1491" alt="An eight-panel comic titled with the day's arc: students built apps fast and got a 'wow, you did this in an hour?!' — then came the real question, 'so what, who will actually use this, and why?' The hard part isn't building features, it's finding a real problem, real user, real use. So show it to people, record their reactions, and let feedback — not guesswork — say what to build next. Don't stuff in a thousand features just because AI can add them; only add what real use pulls forward. Ask the uncomfortable question: if a general AI assistant can already do this, why does this app deserve to exist? When an app uses AI for real, new challenges appear — deployment, sharing, cost, logins — so run experiments in parallel and learn from failures. That's how a cool demo becomes a product: verify it, make it useful, deploy it, share it, protect it, and review it with both humans and AI personas.">
+    </a>
+    <p class="comic-cap"><strong>The whole clinic, drawn.</strong> Eight panels: the wow wears off fast, the real problem was never the feature list, and a cool demo only becomes a product once someone outside the room has used it and told you why. <a href="comic-page-day-2.avif" target="_blank" rel="noopener">Open it full size ↗</a></p>
+  </div>
+</div>
+
+<article class="article">
+
+<div class="wrap" id="sowhat">
+  <span class="sec-num">Scene one</span>
+  <h2 class="sec">"Wow, you did this in an hour?" · "Uh, okay."</h2>
+  <p class="lede">Day 1 had ended with one piece of homework: show what you built to someone outside the room, and come back with what they said. Tuesday's session — an optional, remote, hour-long <span class="tip" data-tip="Tuesday and Thursday are the two optional drop-in 'query clinics' in the five-day schedule; Monday and Friday are the in-person sessions, Wednesday is the required remote checkpoint.">query clinic</span> — opened with Anand asking who had, and what they'd seen.</p>
+  <p>KK went first. His app from Day 1 <span class="tip" data-tip="A news-summary web app, built and shared on Day 1 — the first one KK showed the room.">summarised the news</span>. He hadn't managed the two students the assignment asked for, so he showed it to his parents instead.</p>
+  <div class="dialogue">
+    <div class="turn"><div class="who a">KK</div><div class="said">"I mean, they played around with it a bit. I think the most impressive thing, <strong>the 'wow' factor, was like: 'You did this within one hour?'</strong> But otherwise, it was like: <strong>'Uh, okay.'</strong>"</div></div>
+  </div>
+  <p>Anand's own reaction, watching the same handoff play out, was identical — right down to the shrug at the end of it:</p>
+  <blockquote class="pull">
+    <p>"Wow, okay, this is great. I can get a summary of the news very quickly. Then... <strong>so what?</strong> Or what do I do with it? Would I really use it?"</p>
+    <cite>— Anand, reacting to KK's news app the way KK's parents had</cite>
+  </blockquote>
+</div>
+
+<div class="band iframe-wrap">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">KK · Singapore News Digest</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">claude.ai/code/artifact/e92a422b…</span></div>
+      <a class="shot-link" href="https://claude.ai/code/artifact/e92a422b-45cc-475a-a282-1a9834c3e148" target="_blank" rel="noopener" title="Open the live app in a new tab — Claude's sharing settings block it from being framed here">
+        <img class="shot" src="shot-kk-news.webp" width="1280" height="800" alt="Singapore News Digest — KK's news-summary app, showing offline-summarised headlines from CNA, The Straits Times, Mothership and The Independent Singapore">
+        <span class="shot-hint">Open live app ↗</span>
+      </a>
+    </div>
+    <p class="embed-cap">Claude's own sharing policy blocks this artifact from being framed on another page — so here's the live screenshot instead. <a href="https://claude.ai/code/artifact/e92a422b-45cc-475a-a282-1a9834c3e148" target="_blank" rel="noopener">Open the working app ↗</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>It's a useful moment precisely because nothing went wrong. The app worked. The demo landed. The <em>wow</em> arrived on schedule, right where the comic panel puts it — and then evaporated, because impressiveness and usefulness turned out to be two different things measured on two different axes. <strong>Once you get over "oh, this is really impressive," what do you do next?</strong> That became the question the rest of the hour circled.</p>
+  <p>KK's own answer, when pressed, was to reach for the oldest reflex in the room:</p>
+  <div class="dialogue">
+    <div class="turn"><div class="who a">KK</div><div class="said">"Introduce monetization?"</div></div>
+    <div class="turn"><div class="who">Anand</div><div class="said">"Interesting. So what you're saying is: I've got something, I'm not sure if it's useful, so let me charge for it." <em>[laughter]</em></div></div>
+  </div>
+  <p>The joke lands, but underneath it is the actual lesson: <strong>you can't monetise your way out of not knowing whether something is useful.</strong> Anand's redirect was gentler than the punchline — pricing is a real thing worth exploring later, but it doesn't answer the question in front of you. The question in front of you is a harder, more upstream one:</p>
+  <blockquote class="pull olive">
+    <p>"Finding problems is hard. Being able to <strong>verbalize</strong> problems is hard. Once you know what the problem is, AI can help you solve them."</p>
+    <cite>— Anand</cite>
+  </blockquote>
+  <p>That's the whole thesis of the week compressed into two sentences, and it's also panel three of the comic: a magnifying glass over a question mark labelled <em>real problem</em>, sitting next to two other puzzle pieces — <em>real user</em>, <em>real use</em> — with a pile of unused, problem-less features dumped in a bin beside them. Building has stopped being the bottleneck. Knowing what's worth building hasn't.</p>
+</div>
+
+<div class="wrap" id="feedback">
+  <span class="sec-num">Scene two</span>
+  <h2 class="sec">Record the feedback, hand it to the AI</h2>
+  <p class="lede">Johan went next, sharing his screen — apologising in advance that the app was in Indonesian. It was a stock-tracking tool, also built for his parents: real-time prices pulled from Yahoo Finance, a CSV export of trading history, a position tracker that calculated margins automatically, a break-even calculator, even a "Saving Plan" feature that walked a user through how much to set aside so they wouldn't trade impulsively.</p>
+  <p>One feature surprised its own creator:</p>
+  <blockquote class="pull olive">
+    <p>"This is a dictionary — which is funny because I told it that I was a beginner in stock trading, and then it added this in, which I didn't give it any specific instructions. So this was a surprise to me."</p>
+    <cite>— Johan, on a glossary his AI coding agent added unprompted</cite>
+  </blockquote>
+</div>
+
+<div class="band iframe-wrap rust">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">Johan · Lentera Bursa</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">lentera-bursa.pages.dev</span></div>
+      <a class="shot-link" href="https://lentera-bursa.pages.dev/" target="_blank" rel="noopener" title="Open the live app in a new tab — its host blocks framing on other sites">
+        <img class="shot" src="shot-lentera-bursa.webp" width="1280" height="800" alt="Lentera Bursa — Johan's Indonesian-language stock tracker, showing live IDX prices, a watchlist, and a stock detail panel for BBCA">
+        <span class="shot-hint">Open live app ↗</span>
+      </a>
+    </div>
+    <p class="embed-cap">"Alat hitung saham IDX" — an IDX stock calculator. Its host sets <code>X-Frame-Options: SAMEORIGIN</code>, so it can't be framed here either — <a href="https://lentera-bursa.pages.dev/" target="_blank" rel="noopener">open the working app ↗</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>His parents' actual feedback was more mixed: some essential features — reading charts, getting predictions — were missing or watered down, because the model he'd built it with declined to give financial predictions, calling itself an unlicensed advisor. Other features nobody needed were still sitting there, cluttering the interface. <strong>Confusing at times</strong>, Johan called it — too much of what wasn't needed, not enough of what was.</p>
+  <p>That gap — between what got built and what got used — is where Anand spent the rest of the segment. His answer had two parts, and both of them route around the instinct to sit and think harder about the product yourself.</p>
+  <div class="mini-grid">
+    <div class="mini">
+      <div class="mini-kick">Technique one</div>
+      <div class="mini-title">Record the meeting, don't try to remember it</div>
+      <div class="mini-body">"Sometimes when we are getting feedback, it's easy to miss what's being said. So I usually do these on Teams or Google Meet or whatever so that I can capture a recording of it, possibly with video, and pass it to Claude or ChatGPT. <strong>I may have remembered ten things; it may tell me five that I forgot.</strong>"</div>
+    </div>
+    <div class="mini n2">
+      <div class="mini-kick">Technique two</div>
+      <div class="mini-title">Let the feedback edit the app directly</div>
+      <div class="mini-body">"I can short-circuit my thinking process and say: <strong>'Here's the feedback. You fix it.'</strong> In other words, the users start shaping the application directly instead of having to go through you."</div>
+    </div>
+  </div>
+  <p>Anand pushed the first idea further than a tip for founders — he described it as the default posture for anyone starting a job today:</p>
+  <blockquote class="pull">
+    <p>"One of the things that I tell the interns who join Straive is: <strong>get into meetings, record the meeting, don't even try and think about it because you won't understand half of what's being said.</strong> Just take the recording and pass it to Claude or ChatGPT and tell it to build the app. That's it. You will learn in the process, but let's not assume that you know more than these systems in many areas. We may not."</p>
+    <cite>— Anand</cite>
+  </blockquote>
+  <p>Johan asked the natural follow-up: should he add an in-app feedback form, so users could report problems without him being in the room? Anand's answer doubled back to the theme from Scene One — that <strong>ease of building is not the same as usefulness</strong>:</p>
+  <blockquote class="pull olive">
+    <p>"It's very easy to add any feature. It's easy to create a version with feedback, without feedback. It's easy to do anything. That being the case, there are a thousand things that you can do. You could literally ask it: 'Think of a thousand features and add it.' But <strong>which of those will be useful becomes an important question</strong>. […] What should we add comes from feedback from real usage."</p>
+    <cite>— Anand</cite>
+  </blockquote>
+  <p>This is panel five of the comic, almost verbatim: a hand held up in a <em>stop</em> gesture against a swarm of tempting, easy-to-add features — charts, alerts, dark mode, social login, multi-language — with the caption <em>don't stuff in a thousand features just because AI can add them; only add what real use pulls forward.</em> The constraint on a product was never engineering effort. It's judgment about what real use actually asks for — and that judgment, unlike the coding, still has to come from watching someone use the thing.</p>
+</div>
+
+<div class="wrap" id="whyapp">
+  <span class="sec-num">Scene three</span>
+  <h2 class="sec">Why does this app deserve to exist?</h2>
+  <p class="lede">Before moving to the next volunteer, Anand paused on a question that cuts underneath the feature-list conversation entirely: given that everyone already has ChatGPT or Claude sitting in a browser tab, <strong>why build a dedicated app at all?</strong></p>
+  <blockquote class="pull rust">
+    <p>"Look, everybody has ChatGPT, everybody has Claude. You can build an application; they can build an application too, just as easily. <strong>Why do we even need an application?</strong>"</p>
+    <cite>— Anand</cite>
+  </blockquote>
+  <p>He made it concrete with Johan's own domain: what would it take to just ask Claude or ChatGPT, directly, "What should I trade on next?" Tell it to maintain a portfolio ledger on a spreadsheet somewhere, and go fetch whatever market data it thinks is relevant. No app required.</p>
+  <blockquote class="pull">
+    <p>"We are so used to specialized software doing things that <strong>we forget there's one general-purpose software now — a few, like Claude and ChatGPT — that can do the work of most software.</strong> If I wanted news summarized, I would just go to ChatGPT and say 'Summarize the news for me,' and it gives me the same summary. <strong>Why do I need an app for that?</strong> Which is not to say that we shouldn't have an app — it is to say that we have a similar capability elsewhere, and we need to think about why <em>this</em> is different and useful."</p>
+    <cite>— Anand</cite>
+  </blockquote>
+  <p>It's the sharpest reframe of the hour, and it folds KK's news app, Johan's tracker, and every app the room would build for the rest of the week into one test. Panel six of the comic draws it as a side-by-side: a specialised app's pros — curated, clean visual, focused on one niche — set against a general AI assistant that can already summarise, analyse, compare and chat about anything. The caption underneath doesn't split the difference: <strong>differentiate, don't just duplicate.</strong></p>
+</div>
+
+<div class="wrap" id="cantshare">
+  <span class="sec-num">Scene four</span>
+  <h2 class="sec">The app that couldn't be shared</h2>
+  <p class="lede">Christopher tried to go next and hit a wall before he'd said a word about his app: the share link was greyed out. He'd built what he described as <strong>an AI VC</strong> — a pitch-refining coach that used Claude itself, mid-conversation, to evaluate a founder's answers and push back on them. And Claude would not let him make it public.</p>
+  <p>Johan, watching, recognised the symptom from his own build the day before: Claude's terms don't allow an artifact that offers downloadable files to be shared with anyone but its creator. His fix had been to tell Claude the problem and let it change "Download" to "Export" — solved in one prompt. But Christopher's block turned out to be different: it wasn't a download feature, it was the AI-in-the-loop evaluation itself that made the artifact unshareable, and moving the code to Vercel or another host only exported the bare HTML, not the working app behind it.</p>
+  <div class="dialogue">
+    <div class="turn"><div class="who a">Christopher</div><div class="said">"My application is basically like an AI VC. […] This app helps you to refine your pitch. I think it uses Claude itself to evaluate whatever you [say]…"</div></div>
+    <div class="turn"><div class="who">Anand</div><div class="said">"Got you. And how would we solve that?"</div></div>
+    <div class="turn"><div class="who a">Christopher</div><div class="said">"I have no clue. I mean I can ask, but I did ask and they gave me several options here which I don't know what to choose."</div></div>
+  </div>
+  <p>Anand's response wasn't a fix — it was a reframe of what the moment was for:</p>
+  <blockquote class="pull">
+    <p>"Which is a good place to be, because now again <strong>you've discovered a problem that's worth solving</strong>."</p>
+    <cite>— Anand, on hitting a wall live</cite>
+  </blockquote>
+  <p>What followed was a short, live tutorial in how to debug by delegating rather than by deciding — four moves, stacked on top of each other, none of which asked Christopher to know the answer in advance.</p>
+  <div class="factbox indigo">
+    <div class="fb-kick">Four ways to attack a problem you don't understand yet</div>
+    <ol>
+      <li><strong>Branch the conversation.</strong> "Pick any point that you want and you can have different conversations on — maybe try approach A, maybe try approach B, approach C."</li>
+      <li><strong>Run the branches in parallel.</strong> "You can say: 'Run experiment A.' While that's running, run experiment B. And while that's running, run experiment C."</li>
+      <li><strong>Hand it the browser and get out of the way.</strong> "Tell it to take control of your browser. And if it needs to log into Netlify or Vercel and create accounts or whatever, tell it to go ahead. […] Try to avoid having to make decisions. Let it run. You're watching it anyway, so if it does anything that you don't want it to do, you can always stop it."</li>
+      <li><strong>Ask it to redesign around the constraint you forgot to mention.</strong> "If you had to rebuild this from scratch so that I can easily deploy it, how would you do it?" — or start over with one extra sentence up front: "I want to be able to share this."</li>
+    </ol>
+  </div>
+  <p>The through-line across all four is the same one from Scene Two: stop trying to out-think the tool, and start giving it room to run. Christopher's actual fix mattered less than the fact that the room now had a general method for the next unsolvable-looking problem, whatever it turned out to be.</p>
+  <p>Anand drew two lessons out of the episode, and pitched them at the whole room, not just Christopher:</p>
+  <div class="mini-grid">
+    <div class="mini n3">
+      <div class="mini-kick">Lesson one</div>
+      <div class="mini-title">AI-in-the-loop apps are more powerful — and harder to ship</div>
+      <div class="mini-body">"If you have AI being used as part of the application itself, that lends itself to more powerful use cases. But the questions then become: <strong>How and where do I deploy it? What if it costs too much? Who should pay for it?</strong>"</div>
+    </div>
+    <div class="mini n4">
+      <div class="mini-kick">Lesson two</div>
+      <div class="mini-title">Deployment is itself the interesting design problem</div>
+      <div class="mini-body">"How do you deploy a more complicated application where people do have to log in, we do have to track what they're doing, we do have to store an API key maybe? Those sorts of things become interesting. <strong>Push the bounds.</strong>"</div>
+    </div>
+  </div>
+  <p>He closed the segment with the homework that would define Wednesday's checkpoint — not "what worked," but the opposite:</p>
+  <blockquote class="pull rust">
+    <p>"One thing that I definitely like to hear when we catch up tomorrow is: <strong>'What are the failures? What did you try that didn't work?'</strong> As many of them as you can, because again, collectively we will learn from that. […] Even if you eventually succeeded — where did it do something wrong? Where did you have to step in? Why did you have to tell the agent to do something differently?"</p>
+    <cite>— Anand</cite>
+  </blockquote>
+  <p>Failures — Christopher's un-shareable artifact chief among them — had just become the curriculum's actual raw material, on equal footing with the wins.</p>
+</div>
+
+<div class="wrap" id="kosei">
+  <span class="sec-num">Scene five</span>
+  <h2 class="sec">A coach's-eye view, in two languages</h2>
+  <p class="lede">The last volunteer was a student Anand didn't have a name for yet — the meeting only showed a student ID. He shared his screen anyway: a map of shot positions across the English Premier League's 2025–26 season, every team, every player, plotted against how often a shot from that spot became a goal.</p>
+  <p>He introduced it in Japanese, and the room's own interpreter — Takayuki Shuku, the visiting <span class="tip" data-tip="Tokyo City University sent eight students on exchange to join the 21 SUTD students for the week.">Tokyo City University</span> professor accompanying the exchange students — supplied the translation:</p>
+  <div class="dialogue">
+    <div class="turn"><div class="who a">Kosei</div><div class="said">"僕はこのサイトを作りました。…イングランドのプロサッカーリーグ、プレミアリーグにおけるシュートの位置とゴールの可能性の関係を示したものです。"<br><em>"I created this site. It shows the relationship between shot positions and the probability of goals in the English Premier League — the 2025–26 season, all 20 teams, every player."</em></div></div>
+  </div>
+  <p>Anand's reaction was immediate and specific: <strong>a coach would find this genuinely useful.</strong> But rather than translate his own next sentence and wait, he tried something the room hadn't seen yet — he opened ChatGPT's voice mode and asked it to interpret for him in real time.</p>
+  <div class="dialogue">
+    <div class="turn"><div class="who">Anand</div><div class="said">"The application would be really useful to a coach. You might want to show this to a real coach and see if they can use it in a practical way. Do you know any coaches that you could show it to?"</div></div>
+    <div class="turn"><div class="who a">ChatGPT (voice)</div><div class="said">"アプリケーションはコーチにとって本当に役立つと思います。…それを見せられるコーチを誰か知っていますか？"</div></div>
+    <div class="turn"><div class="who a">Kosei</div><div class="said">"えっと、僕自身が紹介できる実在のコーチはいないんだ。ただ、もし実際に試すなら、サッカーやバスケのコーチ、学校の部活コーチ、パーソナルトレーナー、スポーツアナリストなんかが良さそう。"<br><em>"I don't personally know a real coach I could introduce. But if I tried it for real, soccer or basketball coaches, school club coaches, personal trainers, or sports analysts would be good candidates."</em></div></div>
+  </div>
+  <p>It's easy to read past how strange this moment actually was: a live class, an audio interpreter with no script, translating one professor's advice about product feedback into another language in real time, mid-lecture — because it was faster than waiting for a human to do it. The tool the class was there to learn about had just quietly become the thing running the class.</p>
+  <p>Takayuki stepped in to sharpen what Kosei had actually built and for whom:</p>
+  <div class="dialogue">
+    <div class="turn"><div class="who a">Takayuki</div><div class="said">"I think he doesn't think that kind of stuff yet. I think this is just statistics."</div></div>
+    <div class="turn"><div class="who">Anand</div><div class="said">"Absolutely. But who is it useful for?"</div></div>
+    <div class="turn"><div class="who a">Takayuki</div><div class="said">"Okay, basically coach and team and some kind of director of the team."</div></div>
+  </div>
+  <p>Anand's closing suggestion tied the moment back to the day's central move — from artefact to product is a change of vantage point, not a change of code:</p>
+  <blockquote class="pull">
+    <p>"Just mentally wearing the hat of a coach: <strong>'How would we use it?'</strong> and make actual suggestions. Maybe add a few people to the team, tell these people to play from here, some people are stronger in certain areas, make passes on that side. In other words, <strong>once it starts becoming useful, that's when it turns into a product.</strong>"</p>
+    <cite>— Anand</cite>
+  </blockquote>
+</div>
+
+<div class="wrap" id="persona">
+  <span class="sec-num">Scene six</span>
+  <h2 class="sec">Ask an AI to review the AI</h2>
+  <p class="lede">As the session was winding down, KK came back with a question that had clearly been building since the "why does this app exist" detour:</p>
+  <blockquote class="pull rust">
+    <p>"Wait, wait, one — I just thought, because you said AI, right? <strong>Can we pass the app to like ChatGPT or something, then get <em>that</em> AI to evaluate it?</strong>"</p>
+    <cite>— KK</cite>
+  </blockquote>
+  <p>Anand's answer was an unqualified yes, followed immediately by a technique for making the evaluation actually useful — assigning it a point of view rather than asking for a generic opinion:</p>
+  <blockquote class="pull">
+    <p>"Absolutely! And you could ask it to play the role of different personas as well. You could say: 'Look, for instance, I want you to act as a football coach; review this app. I want you to act as a football enthusiast; review this app.' I would ask it what other persona [it suggests], and it may say, 'Oh, maybe we could be a media company or a sports channel,' and review this like a sports channel. You could almost do a survey, you could have it do a business strategy."</p>
+    <cite>— Anand</cite>
+  </blockquote>
+  <p>He didn't oversell it. Weaker models, he noted, "may not be right, it may not be good" at holding a persona convincingly — <span class="tip" data-tip="A verbatim aside from the transcript naming two Claude models by their internal codenames — a reminder that Anand, as Straive's Head of Innovation, works close enough to frontier labs to reach for specific model names rather than generic ones.">"the smarter models may do a better job. I'd say Astra or Fable will probably do the best job if you have enough credits"</span> — but even a persona review that isn't perfect beats no review at all. And it doesn't replace people:</p>
+  <blockquote class="pull olive">
+    <p>"It may not be perfect. So <strong>human feedback is going to be important</strong>. But yes, they are pretty good at this sort of review as well."</p>
+    <cite>— Anand</cite>
+  </blockquote>
+  <p>It closes a neat loop with Scene Three's "why does this app exist" question. If a general-purpose AI can already do the work your app does, it can also — wearing a different hat — critique the work your app does. The same capability that threatens to make a dedicated app redundant is also the cheapest QA panel anyone in the room will ever assemble.</p>
+</div>
+
+<div class="band todo-band" id="homework">
+  <div class="todo-inner">
+    <h3>What Tuesday left for Wednesday</h3>
+    <p>Anand closed the hour by naming exactly what he wanted to see at the next checkpoint — and, notably, none of it was "ship more features."</p>
+    <ol>
+      <li>Show the app to a few more people, and this time <strong>record it</strong> — video if possible — rather than trying to remember the feedback afterwards.</li>
+      <li>Report back on <strong>where you needed to tell the agent to do something different, or extra, and why.</strong></li>
+      <li>Report the <strong>failures</strong>, specifically — not just what shipped, but what didn't work and had to be abandoned or rebuilt.</li>
+      <li>Come prepared for the pivot Wednesday's required checkpoint is built around: <strong>"How do we know the app is working? How do we verify it? How do we make it useful? How do we go about deploying it? How do we share it? How do we protect it?"</strong></li>
+    </ol>
+    <p>Questions in the meantime, Anand said, could go to <code>askai@straive.net</code> — the address he dropped in the chat as the students signed off, one by one, in English and in Japanese.</p>
+  </div>
+</div>
+
+</article>
+
+<div class="wrap-wide" style="margin: 3rem auto;">
+  <span class="sec-num" style="text-align:center">What the room showed each other</span>
+  <h2 class="sec" style="text-align:center">Four apps, four lessons</h2>
+  <div class="link-grid">
+    <a class="link-card" href="https://claude.ai/code/artifact/e92a422b-45cc-475a-a282-1a9834c3e148" target="_blank" rel="noopener">
+      <div class="lc-kick">KK · Singapore News Digest</div>
+      <div class="lc-title">Impressive, then "so what?"</div>
+      <div class="lc-body">The app that opened the session — a fast, accurate news summariser that his parents were genuinely wowed by, and then had no further use for. <em>Screenshot in Scene One above ↑</em></div>
+    </a>
+    <a class="link-card" href="https://lentera-bursa.pages.dev/" target="_blank" rel="noopener">
+      <div class="lc-kick">Johan · Lentera Bursa</div>
+      <div class="lc-title">A stock tracker his mother might actually use</div>
+      <div class="lc-body">Real-time Yahoo Finance data, a saving-plan calculator, and a glossary the AI added on its own — built for his parents, tuned by their feedback. <em>Screenshot in Scene Two above ↑</em></div>
+    </a>
+    <div class="link-card" style="cursor:default">
+      <div class="lc-kick">Christopher · AI VC pitch coach</div>
+      <div class="lc-title">Too powerful to publish — for now</div>
+      <div class="lc-body">An AI-evaluated pitch-refinement tool that Claude's sharing settings wouldn't let out of its creator's account — turned, live, into a lesson on parallel debugging. No public link exists yet; that unshareability was the whole story.</div>
+    </div>
+    <div class="link-card" style="cursor:default">
+      <div class="lc-kick">Kosei · Premier League shot map</div>
+      <div class="lc-title">Real statistics, waiting for a real coach</div>
+      <div class="lc-body">A full-season shot-location dataset for all 20 Premier League teams — impressive analysis in search of the practitioner who'd know what to do with it. Shown live in class; no public link was submitted.</div>
+    </div>
+  </div>
+</div>
+
+<div class="band takeaways-band" id="takeaways">
+  <div class="takeaways-inner">
+    <h2 class="takeaways-title">Eight things from Day 2</h2>
+    <p class="takeaways-sub">Tuesday 8 September 2026 · SUTD · one hour, remote, optional</p>
+    <div class="takeaway-grid">
+      <div class="takeaway">
+        <div class="takeaway-num">01</div>
+        <div class="takeaway-title">"Wow" is not "useful."</div>
+        <div class="takeaway-text">Every app in the room cleared the impressiveness bar. None had yet cleared the harder one. <strong>"Wow, okay, this is great... then so what?"</strong> is the question that separates a demo from a product.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">02</div>
+        <div class="takeaway-title">You can't monetise your way past not knowing.</div>
+        <div class="takeaway-text">Asked how to make an app more useful, the first instinct was "introduce monetization." <strong>Finding the real problem comes before pricing it</strong> — and finding it is the hard part.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">03</div>
+        <div class="takeaway-title">Record everything, remember nothing.</div>
+        <div class="takeaway-text">"You won't understand half of what's being said." Capture the meeting, hand the recording to Claude or ChatGPT, and let it tell you the five things you missed. <strong>Then let the feedback edit the app directly.</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">04</div>
+        <div class="takeaway-title">A thousand features are a thousand distractions.</div>
+        <div class="takeaway-text">Adding anything is easy now — that's exactly the danger. <strong>What should we add comes from feedback from real usage</strong>, not from a brainstorm of everything AI makes possible.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">05</div>
+        <div class="takeaway-title">Ask why the app should exist at all.</div>
+        <div class="takeaway-text">Anyone can already ask ChatGPT to summarise the news or track a portfolio. <strong>"We need to think about why this is different and useful"</strong> — differentiate, don't just duplicate a chat window.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">06</div>
+        <div class="takeaway-title">Don't debug alone — branch, parallelise, delegate.</div>
+        <div class="takeaway-text">Facing an unsolvable-looking sharing bug: fork the chat into competing approaches, run them simultaneously, and <strong>hand the agent your browser</strong> rather than approving every step yourself.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">07</div>
+        <div class="takeaway-title">AI inside the app raises the stakes both ways.</div>
+        <div class="takeaway-text">Putting AI to work <em>inside</em> a product unlocks more powerful use cases — and immediately raises harder questions: <strong>deployment, cost, logins, who pays.</strong> Push the bounds anyway.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">08</div>
+        <div class="takeaway-title">Let an AI review the AI — with a persona.</div>
+        <div class="takeaway-text">"I want you to act as a football coach; review this app." Assigning a point of view turns a generic opinion into a usable critique. <strong>It's not a replacement for people — but it's the cheapest panel you'll ever assemble.</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <footer class="footer">
-  <p><strong>How to Build AI Products — and Prove They Work</strong> · SUTD, 7–11 September 2026</p>
-  <p><a href="index.html">Series overview</a> · <a href="day1.html">Day 1</a> · <a href="https://talks.s-anand.net/" target="_blank" rel="noopener">More talks by Anand</a></p>
+  <p><strong>Day 2 of 5</strong> — <a href="index.html">How to Build AI Products — and Prove They Work</a>, the SUTD DAI Signature Master Class, Expert Industry Series. Tuesday 8 September 2026, remote.</p>
+  <p><a href="transcript-day-2.md" id="transcript-btn3">Read the full transcript</a> · <a href="day1.html">Day 1</a> · <a href="index.html">All five days</a> · <a href="https://talks.s-anand.net/" target="_blank" rel="noopener">More talks by Anand</a></p>
+  <p class="footer-mono">talks.s-anand.net/2026-09-06-how-to-build-ai-products/day2.html</p>
 </footer>
+
+<div class="modal" id="doc-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h4 id="doc-title"></h4>
+      <button class="modal-close" id="doc-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-src" id="doc-src"></div>
+    <div class="modal-body" id="doc-body"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+<script>
+  // ── Progress bar ──
+  const prog = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    prog.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + '%';
+  });
+
+  // ── Scene navigation rail ──
+  const sceneNav = document.getElementById('scene-nav');
+  const snToggle = document.getElementById('sn-toggle');
+  const snLinks = [...document.querySelectorAll('#sn-list a')];
+
+  snToggle.addEventListener('click', () => {
+    const open = sceneNav.classList.toggle('open');
+    snToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  snLinks.forEach(a => a.addEventListener('click', () => {
+    sceneNav.classList.remove('open');
+    snToggle.setAttribute('aria-expanded', 'false');
+  }));
+  document.addEventListener('click', e => {
+    if (sceneNav.classList.contains('open') && !sceneNav.contains(e.target)) {
+      sceneNav.classList.remove('open');
+      snToggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  const snTargets = snLinks
+    .map(a => ({ link: a, el: document.getElementById(a.getAttribute('href').slice(1)) }))
+    .filter(t => t.el);
+  const markActive = () => {
+    const line = window.innerHeight * 0.32;
+    let current = snTargets[0];
+    for (const t of snTargets) if (t.el.getBoundingClientRect().top <= line) current = t;
+    snLinks.forEach(a => a.classList.remove('active'));
+    if (current) current.link.classList.add('active');
+  };
+  let snTick = false;
+  window.addEventListener('scroll', () => {
+    if (snTick) return;
+    snTick = true;
+    requestAnimationFrame(() => { markActive(); snTick = false; });
+  });
+  markActive();
+
+  // ── Markdown document modal ──
+  const modal = document.getElementById('doc-modal');
+  const dBody = document.getElementById('doc-body');
+  const dTitle = document.getElementById('doc-title');
+  const dSrc = document.getElementById('doc-src');
+  const cache = {};
+
+  function renderMarkdown(text) {
+    const body = text
+      .replace(/^---[\s\S]*?---\s*/, '')
+      .replace(/<summary>([\s\S]*?)<\/summary>/g, '\n\n**💭 $1**\n\n')
+      .replace(/<\/?details>/g, '\n\n');
+    const html = window.marked ? marked.parse(body) : body.replace(/\n/g, '<br>');
+    return html.replace(/<a /g, '<a target="_blank" rel="noopener" ');
+  }
+
+  async function openDoc(file, title, source) {
+    modal.classList.add('open');
+    dBody.scrollTop = 0;
+    dTitle.textContent = title;
+    dSrc.innerHTML = source ? `<a href="${source}" target="_blank" rel="noopener">↗ Open the original</a>` : '';
+    if (cache[file]) { dBody.innerHTML = cache[file]; return; }
+    dBody.innerHTML = '<p><em>Loading…</em></p>';
+    try {
+      const res = await fetch(file);
+      if (!res.ok) throw new Error(res.status);
+      const html = renderMarkdown(await res.text());
+      cache[file] = html;
+      dBody.innerHTML = html;
+    } catch (e) {
+      dBody.innerHTML = `<p>Could not load this file here. <a href="${source || file}" target="_blank" rel="noopener">Open it directly</a>.</p>`;
+    }
+  }
+
+  const openTranscript = e => {
+    e.preventDefault();
+    openDoc('transcript-day-2.md', 'Day 2 — full transcript, 8 September 2026', '');
+  };
+  ['transcript-btn', 'transcript-btn2', 'transcript-btn3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', openTranscript);
+  });
+
+  document.querySelectorAll('a.doclink').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      openDoc(el.dataset.doc, el.dataset.title || 'Document', el.dataset.doc);
+    });
+  });
+
+  document.getElementById('doc-close').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('open'); });
+</script>
 
 </body>
 </html>

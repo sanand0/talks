@@ -3,66 +3,772 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Day 2 (準備中) | How to Build AI Products</title>
-<meta name="description" content="SUTD DAIシグネチャー・マスタークラス Day 2(2026年9月8日、火曜)。オプションのリモート質問クリニック。まだ開催されていません。">
+<title>「すごい！」の次は、「だから何？」 | Day 2 · How to Build AI Products — and Prove They Work</title>
+<meta name="description" content="SUTD DAIシグネチャー・マスタークラス Day 2。4人の学生が1日で作り上げたもの――ニュースアプリ、株価トラッカー、AIピッチコーチ、サッカーのシュートマップ――を披露し、4つの方向から同じ壁にぶつかった。デモは動いたが、誰も「実際に誰が使うのか」を問うていなかった。">
+<meta property="og:title" content="「すごい！」の次は、「だから何？」 — Day 2">
+<meta property="og:description" content="SUTD DAIシグネチャー・マスタークラス · How to Build AI Products — and Prove They Work · 2026年9月8日（火）、リモート開催。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Spectral:wght@300;400;600&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,600&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f4f1ea; --paper: #fffdf9; --ink: #1b1a22; --ink2: #3e3b48; --muted: #78717f;
-    --indigo: #4a3fa8; --indigo-dk: #2f2775; --rust: #b8471f; --olive-dk: #6a5d0f; --olive-soft: #f4eec8;
-    --border: #ded7c8; --night: #14121c;
-    --font-display: "Playfair Display", "Noto Serif JP", Georgia, serif;
-    --font-body: "Spectral", "Noto Sans JP", Georgia, serif;
-    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --bg: #f4f1ea;
+    --paper: #fffdf9;
+    --ink: #1b1a22;
+    --ink2: #3e3b48;
+    --muted: #78717f;
+    --indigo: #4a3fa8;
+    --indigo-dk: #2f2775;
+    --indigo-soft: #e7e4f8;
+    --rust: #b8471f;
+    --rust-dk: #8a3315;
+    --rust-soft: #fbe1d6;
+    --olive: #8a7a17;
+    --olive-dk: #6a5d0f;
+    --olive-soft: #f4eec8;
+    --border: #ded7c8;
+    --night: #14121c;
+    --night2: #1d1a29;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'Spectral', Georgia, serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   }
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: var(--font-body); background: var(--bg); color: var(--ink); line-height: 1.9;
-    font-size: 18px; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; }
-  .masthead { background: rgba(244,241,234,.95); border-bottom: 1px solid var(--border); padding: .7rem 1.5rem; }
-  .masthead-inner { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: .8rem; flex-wrap: wrap; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.76;
+    font-size: 19px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    padding-bottom: 3rem;
+  }
+  [id] { scroll-margin-top: 4.6rem; }
+  img { max-width: 100%; display: block; }
+
+  #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--indigo), var(--olive), var(--rust)); z-index: 1000; transition: width .15s linear; }
+
+  /* ── Masthead ── */
+  .masthead { position: sticky; top: 0; z-index: 200; background: rgba(244,241,234,.95); border-bottom: 1px solid var(--border); padding: .7rem 1.5rem; backdrop-filter: blur(8px); }
+  .masthead-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: .8rem; flex-wrap: wrap; }
   .masthead-brand { font-family: var(--font-mono); font-size: .8rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
   .masthead-brand:hover { color: var(--indigo); }
+  .masthead-right { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
   .masthead-date { font-family: var(--font-mono); font-size: .68rem; color: var(--muted); }
-  .lang-switch { font-family: var(--font-mono); font-size: .68rem; }
-  .lang-switch a { color: var(--muted); text-decoration: none; }
-  .lang-switch a.current { color: var(--ink); font-weight: 700; }
-  .lang-switch a:hover { color: var(--indigo); }
-  main { flex: 1; max-width: 640px; margin: 0 auto; padding: 5rem 1.5rem 4rem; text-align: center; }
-  .kicker { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--rust); margin-bottom: 1.1rem; }
-  h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(1.8rem, 6vw, 3rem); line-height: 1.3; letter-spacing: -.01em; margin-bottom: 1.2rem; }
-  .tag { display: inline-block; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .04em;
-    background: var(--olive-soft); color: var(--olive-dk); border: 1px solid rgba(106,93,15,.3); border-radius: 99px; padding: .38rem .9rem; margin-bottom: 1.6rem; }
-  p { color: var(--ink2); margin-bottom: 1.3rem; }
-  .back { display: inline-block; font-family: var(--font-mono); font-size: .74rem; text-decoration: none;
-    color: var(--indigo-dk); border: 1px solid var(--indigo); border-radius: 6px; padding: .5rem 1rem; transition: all .2s; margin: .3rem; }
-  .back:hover { background: var(--indigo); color: #fff; }
-  .footer { background: var(--night); color: #a8a2b6; padding: 2rem 1.5rem; text-align: center; }
-  .footer p { margin-bottom: .5rem; font-size: .88rem; color: #a8a2b6; }
+  .masthead-link { font-family: var(--font-mono); font-size: .67rem; color: var(--indigo-dk); text-decoration: none; border: 1px solid var(--indigo); border-radius: 4px; padding: .26rem .55rem; transition: all .2s; white-space: nowrap; }
+  .masthead-link:hover { background: var(--indigo); color: #fff; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 1.5rem; }
+  .wrap-wide { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ── Hero ── */
+  .hero { max-width: 860px; margin: 0 auto; padding: 3.4rem 1.5rem 1.2rem; text-align: center; }
+  .hero-kicker { font-family: var(--font-mono); font-size: .67rem; letter-spacing: .2em; text-transform: uppercase; color: var(--rust); margin-bottom: 1.1rem; line-height: 1.9; }
+  .hero h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(2.4rem, 7.2vw, 4.4rem); line-height: 1.02; letter-spacing: -.025em; margin-bottom: 1.1rem; }
+  .hero h1 em { font-style: italic; color: var(--indigo); font-weight: 700; }
+  .hero-sub { font-size: 1.16rem; color: var(--ink2); line-height: 1.62; max-width: 640px; margin: 0 auto 1.6rem; }
+  .hero-meta { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); line-height: 2; }
+  .hero-meta a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.4); }
+  .hero-meta a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+
+  .quick-links { margin: 1.7rem auto 0; display: flex; gap: .55rem; justify-content: center; flex-wrap: wrap; max-width: 780px; }
+  .quick-links a { font-family: var(--font-mono); font-size: .71rem; text-decoration: none; color: var(--ink2); background: var(--paper); border: 1px solid var(--border); border-radius: 99px; padding: .44rem .95rem; transition: all .2s; }
+  .quick-links a:hover { border-color: var(--indigo); color: var(--indigo-dk); transform: translateY(-1px); }
+
+  /* ── Bands ── */
+  .band { width: 100vw; margin-left: calc(50% - 50vw); margin-top: 3.2rem; margin-bottom: 3.2rem; }
+
+  /* ── Body text ── */
+  .wrap p, .wrap-wide > p { margin-bottom: 1.35rem; }
+  .wrap p a, .wrap li a, .wrap-wide > p a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.42); }
+  .wrap p a:hover, .wrap li a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+  .wrap strong { font-weight: 600; color: var(--ink); background: linear-gradient(transparent 62%, rgba(231,228,248,.95) 62%); }
+  .wrap ul, .wrap ol { margin: 0 0 1.35rem 1.3rem; }
+  .wrap li { margin-bottom: .55rem; }
+  .lede { font-size: 1.11rem; color: var(--ink2); }
+
+  .sec-num { display: block; font-family: var(--font-mono); font-size: .64rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--indigo); margin: 3.4rem 0 .55rem; line-height: 1.6; }
+  h2.sec { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.75rem, 4.6vw, 2.6rem); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 1.2rem; }
+  .wrap code { font-family: var(--font-mono); font-size: .82em; background: var(--olive-soft); padding: .08rem .32rem; border-radius: 4px; }
+  h3.sub { font-family: var(--font-display); font-weight: 700; font-size: 1.28rem; margin: 2.1rem 0 .7rem; color: var(--ink2); }
+  .dinkus { text-align: center; color: var(--indigo); letter-spacing: .75em; margin: 2.6rem 0; font-size: .8rem; }
+
+  /* ── Pull quotes ── */
+  blockquote.pull { margin: 2.1rem 0; padding: 1.3rem 1.55rem; background: var(--paper); border-left: 4px solid var(--indigo); border-radius: 0 7px 7px 0; box-shadow: 0 2px 14px rgba(27,26,34,.07); }
+  blockquote.pull p { font-family: var(--font-display); font-size: 1.2rem; font-weight: 400; font-style: italic; line-height: 1.5; margin-bottom: .55rem; color: var(--ink); }
+  blockquote.pull p:last-of-type { margin-bottom: .55rem; }
+  blockquote.pull cite { font-family: var(--font-mono); font-style: normal; font-size: .69rem; color: var(--muted); }
+  blockquote.pull.rust { border-left-color: var(--rust); }
+  blockquote.pull.olive { border-left-color: var(--olive); }
+
+  /* ── Dialogue exchange ── */
+  .dialogue { background: var(--paper); border: 1px solid var(--border); border-radius: 9px; padding: 1.2rem 1.4rem; margin: 1.8rem 0 2.1rem; font-size: .95rem; }
+  .dialogue .turn { display: grid; grid-template-columns: 5.6rem 1fr; gap: .8rem; margin-bottom: .55rem; line-height: 1.6; }
+  .dialogue .turn:last-child { margin-bottom: 0; }
+  .dialogue .who { font-family: var(--font-mono); font-size: .64rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: .32rem; }
+  .dialogue .who.a { color: var(--indigo); }
+  .dialogue .said strong { font-weight: 600; }
+  .dialogue .said em { color: var(--muted); font-size: .87em; }
+  @media (max-width: 560px) { .dialogue .turn { grid-template-columns: 1fr; gap: .1rem; } }
+
+  /* ── Inline cards ── */
+  .mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.6rem 0 2.2rem; }
+  @media (max-width: 640px) { .mini-grid { grid-template-columns: 1fr; } }
+  .mini { background: var(--paper); border: 1px solid var(--border); border-top: 3px solid var(--indigo); border-radius: 8px; padding: 1.05rem 1.2rem; }
+  .mini.n2 { border-top-color: var(--rust); }
+  .mini.n3 { border-top-color: var(--olive); }
+  .mini.n4 { border-top-color: var(--indigo-dk); }
+  .mini-kick { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: .35rem; }
+  .mini-title { font-family: var(--font-display); font-weight: 700; font-size: 1.04rem; margin-bottom: .4rem; line-height: 1.26; }
+  .mini-body { font-size: .87rem; line-height: 1.6; color: var(--ink2); }
+  .mini-body strong { color: var(--ink); font-weight: 600; }
+
+  /* ── Embeds (static screenshot, since claude.ai / pages.dev block framing) ── */
+  .iframe-wrap { padding: 2.4rem 1.5rem; background: var(--indigo-soft); }
+  .iframe-wrap.rust { background: var(--rust-soft); }
+  .iframe-wrap.olive { background: var(--olive-soft); }
+  .iframe-inner { max-width: 1000px; margin: 0 auto; }
+  .embed-frame { background: var(--paper); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(27,26,34,.1); }
+  .embed-frame .chrome { display: flex; align-items: center; gap: .45rem; padding: .6rem .85rem; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .embed-frame .chrome .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border); flex: none; }
+  .embed-frame .chrome .url { font-family: var(--font-mono); font-size: .67rem; color: var(--muted); margin-left: .5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .embed-frame a.shot-link { display: block; position: relative; }
+  .embed-frame img.shot { width: 100%; display: block; background: #fff; }
+  .embed-frame .shot-hint { position: absolute; right: .7rem; bottom: .7rem; font-family: var(--font-mono); font-size: .62rem; letter-spacing: .06em; text-transform: uppercase; background: rgba(20,18,28,.82); color: #f2eff8; padding: .35rem .7rem; border-radius: 99px; opacity: 0; transition: opacity .2s; }
+  .embed-frame a.shot-link:hover .shot-hint { opacity: 1; }
+  .embed-cap { font-family: var(--font-mono); font-size: .72rem; text-align: center; margin-top: 1rem; line-height: 1.75; color: var(--indigo-dk); }
+  .iframe-wrap.rust .embed-cap { color: var(--rust-dk); }
+  .iframe-wrap.olive .embed-cap { color: var(--olive-dk); }
+  .embed-cap strong { font-weight: 700; }
+  .embed-cap a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.45); }
+  .iframe-wrap.rust .embed-cap a { color: var(--rust-dk); border-bottom-color: rgba(138,51,21,.45); }
+  .iframe-wrap.olive .embed-cap a { color: var(--olive-dk); border-bottom-color: rgba(106,93,15,.5); }
+  .embed-cap a:hover { color: var(--rust); }
+  .embed-badge { display: flex; align-items: center; justify-content: center; gap: .6rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .embed-badge .pill { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; background: var(--indigo-dk); color: #fff; border-radius: 99px; padding: .38rem .9rem; }
+  .iframe-wrap.rust .embed-badge .pill { background: var(--rust-dk); }
+  .iframe-wrap.olive .embed-badge .pill { background: var(--olive-dk); }
+  @media (min-width: 1101px) { .iframe-wrap { padding-left: 5rem; padding-right: 5rem; } }
+
+  /* ── Link cards ── */
+  .link-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; max-width: 1080px; margin: 0 auto; }
+  .link-card { display: block; background: var(--paper); border: 1px solid var(--border); border-radius: 10px; padding: 1.15rem 1.3rem; text-decoration: none; color: inherit; transition: all .2s; }
+  .link-card:hover { border-color: var(--indigo); box-shadow: 0 4px 16px rgba(27,26,34,.12); transform: translateY(-2px); }
+  .link-card .lc-kick { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--rust); margin-bottom: .4rem; }
+  .link-card .lc-title { font-family: var(--font-display); font-weight: 700; font-size: 1.06rem; margin-bottom: .4rem; line-height: 1.26; color: var(--ink); }
+  .link-card .lc-body { font-size: .87rem; line-height: 1.6; color: var(--ink2); }
+  .link-card .lc-body em { color: var(--muted); font-style: italic; }
+
+  /* ── Tooltip ── */
+  .tip { border-bottom: 1px dotted var(--rust); cursor: help; position: relative; }
+  .tip::after {
+    content: attr(data-tip); position: absolute; bottom: 132%; left: 50%; transform: translateX(-50%);
+    background: var(--night); color: #f2eff8; padding: .55rem .8rem; border-radius: 6px; font-size: .78rem;
+    font-family: var(--font-body); line-height: 1.5; white-space: normal; width: 250px; pointer-events: none;
+    opacity: 0; transition: opacity .2s; z-index: 300; font-style: normal; text-align: left; box-shadow: 0 4px 18px rgba(0,0,0,.3);
+  }
+  .tip:hover::after { opacity: 1; }
+
+  /* ── Cite / popup trigger ── */
+  a.cite { border-bottom: 1px dotted var(--muted); cursor: pointer; color: inherit; text-decoration: none; }
+  a.cite::after { content: "†"; font-size: .7em; vertical-align: super; color: var(--indigo); }
+  a.cite:hover { color: var(--indigo-dk); }
+
+  /* ── Takeaways ── */
+  .takeaways-band { background: linear-gradient(140deg, #2f2775 0%, #1d1a29 52%, #8a3315 100%); padding: 3.4rem 1.5rem; }
+  .takeaways-inner { max-width: 1140px; margin: 0 auto; }
+  .takeaways-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.7rem, 4.2vw, 2.4rem); color: #fff; text-align: center; margin-bottom: .5rem; letter-spacing: -.02em; }
+  .takeaways-sub { text-align: center; color: #cfc7f0; font-size: .88rem; margin-bottom: 2.2rem; font-family: var(--font-mono); }
+  .takeaway-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+  .takeaway { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15); border-radius: 10px; padding: 1.25rem 1.35rem; }
+  .takeaway-num { font-family: var(--font-mono); font-size: .65rem; letter-spacing: .14em; color: #e0cf6b; margin-bottom: .45rem; }
+  .takeaway-title { font-family: var(--font-display); font-weight: 700; font-size: 1.06rem; color: #fff; margin-bottom: .45rem; line-height: 1.3; }
+  .takeaway-text { font-size: .9rem; line-height: 1.65; color: #e6e1f2; }
+  .takeaway-text strong { color: #fff; font-weight: 600; }
+  .takeaway-text a { color: #ffd9a8; text-decoration: none; border-bottom: 1px solid rgba(255,217,168,.55); }
+  .takeaway-text a:hover { color: #fff; border-bottom-color: #fff; }
+
+  /* ── Homework band ── */
+  .todo-band { background: var(--paper); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 2.8rem 1.5rem; }
+  .todo-inner { max-width: 800px; margin: 0 auto; }
+  .todo-inner h3 { font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; margin-bottom: 1rem; }
+  .todo-inner ol { margin: 0 0 0 1.3rem; }
+  .todo-inner li { margin-bottom: .7rem; line-height: 1.7; }
+  .todo-inner a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.42); }
+  .todo-inner a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+  .todo-inner strong { font-weight: 600; }
+
+  .footer { background: var(--night); color: #a8a2b6; padding: 2.6rem 1.5rem; text-align: center; }
+  .footer p { margin-bottom: .7rem; font-size: .92rem; }
   .footer a { color: #ffc98c; text-decoration: none; border-bottom: 1px solid rgba(255,201,140,.45); }
   .footer a:hover { color: #fff; border-bottom-color: #fff; }
-  @media (max-width: 640px) { body { font-size: 16.5px; } main { padding-top: 3.2rem; } }
+  .footer-mono { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .04em; color: #7f7891; }
+
+  /* ── Modal ── */
+  .modal { position: fixed; inset: 0; background: rgba(20,18,28,.9); display: none; align-items: center; justify-content: center; z-index: 900; padding: 1.4rem; }
+  .modal.open { display: flex; }
+  .modal-box { background: var(--paper); border-radius: 10px; max-width: 880px; width: 100%; max-height: 88vh; display: flex; flex-direction: column; overflow: hidden; }
+  .modal-head { padding: .95rem 1.3rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .modal-head h4 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; }
+  .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--muted); line-height: 1; padding: 0 .3rem; }
+  .modal-close:hover { color: var(--rust); }
+  .modal-body { padding: 1.25rem; overflow-y: auto; font-size: .93rem; line-height: 1.72; }
+  .modal-body h1, .modal-body h2, .modal-body h3 { font-family: var(--font-display); font-weight: 700; margin: 1.2rem 0 .55rem; line-height: 1.25; }
+  .modal-body h1 { font-size: 1.45rem; } .modal-body h2 { font-size: 1.22rem; } .modal-body h3 { font-size: 1.08rem; }
+  .modal-body p { margin-bottom: .8rem; }
+  .modal-body a { color: var(--indigo-dk); }
+  .modal-body ul, .modal-body ol { margin: 0 0 .8rem 1.2rem; }
+  .modal-body li { margin-bottom: .4rem; }
+  .modal-body pre { background: var(--bg); padding: .8rem; border-radius: 6px; overflow-x: auto; font-size: .8rem; }
+  .modal-body code { font-family: var(--font-mono); font-size: .84em; }
+  .modal-body blockquote { border-left: 3px solid var(--border); padding-left: .9rem; margin: .8rem 0; color: var(--ink2); }
+  .modal-body table { display: block; overflow-x: auto; border-collapse: collapse; }
+  .modal-body th, .modal-body td { border: 1px solid var(--border); padding: .4rem .6rem; }
+  .modal-src { font-family: var(--font-mono); font-size: .7rem; padding: .35rem 1.3rem 0; }
+  .modal-src a { color: var(--rust-dk); }
+
+  /* ── Comic / visual summary band ── */
+  .comic-band { background: var(--night); padding: 2.6rem 1.5rem 2.4rem; }
+  .comic-inner { max-width: 780px; margin: 0 auto; }
+  .comic-kick { font-family: var(--font-mono); font-size: .64rem; letter-spacing: .2em; text-transform: uppercase; color: #e0cf6b; text-align: center; margin-bottom: 1.1rem; }
+  .comic-inner a.comic-link { display: block; border-radius: 10px; overflow: hidden; box-shadow: 0 8px 34px rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.12); }
+  .comic-inner img { width: 100%; max-width: 100%; height: auto; display: block; }
+  .comic-cap { font-family: var(--font-mono); font-size: .72rem; line-height: 1.8; text-align: center; color: #cfc9dd; margin-top: 1.1rem; }
+  .comic-cap strong { color: #fff; font-weight: 700; }
+  .comic-cap a { color: #ffc98c; text-decoration: none; border-bottom: 1px solid rgba(255,201,140,.5); }
+  .comic-cap a:hover { color: #fff; border-bottom-color: #fff; }
+
+  /* ── Aside / fact box ── */
+  .factbox { background: var(--paper); border: 1px solid var(--border); border-left: 4px solid var(--olive); border-radius: 0 9px 9px 0; padding: 1.15rem 1.35rem; margin: 2rem 0 2.2rem; }
+  .factbox.indigo { border-left-color: var(--indigo); }
+  .factbox.rust { border-left-color: var(--rust); }
+  .factbox .fb-kick { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); margin-bottom: .55rem; }
+  .factbox .fb-title { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; line-height: 1.3; margin-bottom: .6rem; color: var(--ink); }
+  .factbox ol, .factbox ul { margin: 0 0 0 1.15rem; }
+  .factbox li { font-size: .9rem; line-height: 1.62; margin-bottom: .45rem; color: var(--ink2); }
+  .factbox li:last-child { margin-bottom: 0; }
+  .factbox li strong { font-weight: 600; color: var(--ink); }
+  .factbox p { font-size: .9rem; line-height: 1.62; color: var(--ink2); margin-bottom: .6rem; }
+  .factbox ul + p, .factbox ol + p { margin-top: .9rem; }
+  .factbox p:last-child { margin-bottom: 0; }
+  .factbox a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.42); }
+  .factbox a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+  .factbox code { font-family: var(--font-mono); font-size: .82em; background: var(--olive-soft); padding: .08rem .32rem; border-radius: 4px; }
+
+  /* ── Scene navigation rail ── */
+  #scene-nav { position: fixed; z-index: 180; right: .7rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: flex-end; gap: .45rem; max-width: min(19rem, 84vw); }
+  #sn-toggle { display: none; }
+  #sn-list { list-style: none; margin: 0; padding: .35rem; display: flex; flex-direction: column; gap: 1px; background: rgba(255,253,249,.94); border: 1px solid var(--border); border-radius: 11px; box-shadow: 0 4px 22px rgba(27,26,34,.14); backdrop-filter: blur(8px); max-height: 80vh; overflow-y: auto; overflow-x: hidden; }
+  #sn-list li { margin: 0; }
+  #sn-list a { display: flex; align-items: baseline; gap: .5rem; text-decoration: none; padding: .24rem .42rem; border-radius: 6px; }
+  #sn-list a b { font-family: var(--font-mono); font-size: .62rem; font-weight: 500; letter-spacing: .04em; color: var(--muted); flex: none; width: 1.3rem; text-align: right; }
+  #sn-list a i { font-family: var(--font-body); font-style: normal; font-size: .72rem; line-height: 1.4; color: var(--ink2); white-space: nowrap; max-width: 0; overflow: hidden; opacity: 0; transition: max-width .28s ease, opacity .2s ease; }
+  #scene-nav:hover #sn-list a i, #scene-nav:focus-within #sn-list a i { max-width: 15rem; opacity: 1; }
+  #sn-list a:hover, #sn-list a:focus-visible { background: var(--indigo-soft); outline: none; }
+  #sn-list a:hover b, #sn-list a:hover i { color: var(--indigo-dk); }
+  #sn-list a.active { background: var(--indigo-soft); }
+  #sn-list a.active b { color: var(--indigo-dk); font-weight: 700; }
+  #sn-list a.active i { color: var(--indigo-dk); }
+
+  @media (min-width: 1101px) {
+    .wrap-wide, .comic-band, .todo-band, .takeaways-band { padding-left: 5rem; padding-right: 5rem; }
+  }
+
+  @media (max-width: 1100px) {
+    #scene-nav { top: auto; bottom: 1rem; right: .8rem; transform: none; }
+    #sn-toggle { display: inline-flex; align-items: center; gap: .45rem; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; background: var(--night); color: #f2eff8; border: 0; border-radius: 99px; padding: .55rem .95rem; cursor: pointer; box-shadow: 0 3px 16px rgba(27,26,34,.35); }
+    #sn-list { display: none; order: -1; max-height: 58vh; }
+    #scene-nav.open #sn-list { display: flex; }
+    #scene-nav.open #sn-list a i { max-width: 13rem; opacity: 1; white-space: normal; }
+  }
+
+  @media (max-width: 640px) {
+    body { font-size: 17.5px; }
+    .comic-band { padding: 1.8rem .9rem 1.6rem; }
+  }
 </style>
 </head>
 <body>
+<div id="progress"></div>
+
 <header class="masthead">
   <div class="masthead-inner">
     <a class="masthead-brand" href="https://talks.s-anand.net/">S Anand · Talks</a>
-    <span class="masthead-date">Day 2 · 2026年9月8日(火) · SUTD</span>
-    <span class="lang-switch"><a href="day2.html">EN</a> · <a href="#" class="current">日本語</a></span>
+    <div class="masthead-right">
+      <span class="masthead-date">Day 2 · 2026年9月8日 · SUTD</span>
+      <span class="masthead-date"><a href="day2.html" style="color:inherit">EN</a></span>
+      <a class="masthead-link" href="index.ja.html">全5日間</a>
+      <a class="masthead-link" href="transcript-day-2.ja.md" id="transcript-btn">文字起こし</a>
+    </div>
   </div>
 </header>
-<main>
-  <div class="kicker">SUTD DAIシグネチャー・マスタークラス · Day 2 / 5</div>
-  <h1>まだ<em>開催前</em>です。</h1>
-  <div class="tag">リモート · 1時間 · 任意参加(質問クリニック)</div>
-  <p>最初のプロトタイプ制作中に生じた問題を持ち寄る、任意参加のドロップインセッションです。</p><p>このセッションはまだ開催されていません。終了後にここへ記録を追加します。</p>
-  <p><a class="back" href="day1.ja.html">Day 1を読む →</a><a class="back" href="index.ja.html">← 全5日間</a></p>
-</main>
+
+<div class="hero" id="top">
+  <div class="hero-kicker">SUTD DAI シグネチャー・マスタークラス · エキスパート業界シリーズ · 5日間の2日目</div>
+  <h1>「すごい！」の次は、<em>「だから何？」</em></h1>
+  <p class="hero-sub">わずか1日で作り上げた成果物を披露するため、4人の学生が名乗りを上げた。月曜日には不可能に思えたハードル――「わずか1時間で動くアプリを作る」こと――は、全員がすでに軽々とクリアしていた。だが、その先にある、より高いハードルを越えられた者はまだ一人もいなかった。すなわち、<strong>「実際に誰かがそれを使ってくれるのか？ そして、なぜ使うのか？」</strong>という問いだ。</p>
+  <p class="hero-meta">リモート形式 · 自由参加の質疑応答クリニック · 2026年9月8日（火）<br>アナンド・S（Anand S）／ <a href="https://www.straive.com/" target="_blank" rel="noopener">Straive</a> イノベーション部門ヘッド · <a href="transcript-day-2.ja.md" id="transcript-btn2">文字起こし全文を読む</a></p>
+  <div class="quick-links">
+    <a href="#comic">▤ 1日のハイライト（8コマ漫画）</a>
+    <a href="#sowhat">😐「あ、そう」</a>
+    <a href="#feedback">🔁 フィードバックループ</a>
+    <a href="#whyapp">🤔 なぜこのアプリが存在するのか？</a>
+    <a href="#cantshare">🔒 共有できなかったアプリ</a>
+    <a href="#kosei">⚽ 2つの言語で見る、コーチの視点</a>
+    <a href="#persona">🎭 AIにAIをレビューさせる</a>
+    <a href="#takeaways">🗒️ 学びと要点</a>
+  </div>
+</div>
+
+<nav id="scene-nav" aria-label="Jump to a scene">
+  <button id="sn-toggle" type="button" aria-expanded="false" aria-controls="sn-list">☰ シーン一覧</button>
+  <ol id="sn-list">
+    <li><a href="#top"><b>↑</b><i>ページの先頭</i></a></li>
+    <li><a href="#comic"><b>▤</b><i>1日のハイライト（8コマ漫画）</i></a></li>
+    <li><a href="#sowhat"><b>01</b><i>「うわっ、1時間でこれ作ったの？」・「あ、そう」</i></a></li>
+    <li><a href="#feedback"><b>02</b><i>フィードバックを記録し、AIに丸投げせよ</i></a></li>
+    <li><a href="#whyapp"><b>03</b><i>なぜこのアプリが存在する価値があるのか？</i></a></li>
+    <li><a href="#cantshare"><b>04</b><i>共有できなかったアプリ</i></a></li>
+    <li><a href="#kosei"><b>05</b><i>2つの言語で見る、コーチの視点</i></a></li>
+    <li><a href="#persona"><b>06</b><i>AIにAIをレビューさせる</i></a></li>
+    <li><a href="#homework"><b>HW</b><i>火曜日から水曜日への宿題</i></a></li>
+    <li><a href="#takeaways"><b>★</b><i>Day 2からの8つの学び</i></a></li>
+  </ol>
+</nav>
+
+<div class="band comic-band" id="comic">
+  <div class="comic-inner">
+    <div class="comic-kick">Day 2のハイライト（8コマ漫画）</div>
+    <a class="comic-link" href="comic-page-day-2.ja.avif" target="_blank" rel="noopener" title="漫画を新しいタブでフルサイズ表示">
+      <img src="comic-page-day-2.ja.avif" width="1055" height="1491" alt="この日のストーリーを描いた8コマ漫画：学生たちはアプリを素早く作り上げ、「うわっ、これを1時間で作ったの！？」と驚嘆される――しかし、その直後に本質的な問いが突きつけられる。「だから何？ 誰が実際に使うの？ そしてなぜ？」難しいのは機能を構築することではなく、真の課題、真のユーザー、真の用途を見つけ出すことだ。だからこそ、人にプロダクトを見せ、その反応を記録し、当て推量ではなくフィードバックに基づいて次に作るべきものを決めよう。AIなら作れるからといって機能を1000個も詰め込んではいけない。実際の利用から求められるものだけを追加するのだ。そして、耳の痛い問いを投げかけよう。「汎用AIアシスタントがすでにこれをできるなら、なぜこのアプリが存在する価値があるのか？」アプリが本格的にAIを組み込むと、デプロイ、共有、コスト、ログインといった新たな課題が生じる。だからこそ実験を並行して走らせ、失敗から学ぼう。クールなデモが本物のプロダクトへと変わるのはそうしたプロセスを通じてだ。検証し、役立つものにし、デプロイし、共有し、保護し、生身の人間とAIペルソナの双方でレビューする。">
+    </a>
+    <p class="comic-cap"><strong>クリニックの全貌をイラスト化。</strong> 8つのコマが語るもの：「すごい！」という興奮はすぐに冷める。真の課題は機能の多さなどでは決してなかった。そして、クールなデモが本物のプロダクトに化けるのは、部屋の外の誰かがそれを実際に使い、その理由を語ってくれたときだけだ。<a href="comic-page-day-2.ja.avif" target="_blank" rel="noopener">フルサイズで開く ↗</a></p>
+  </div>
+</div>
+
+<article class="article">
+
+<div class="wrap" id="sowhat">
+  <span class="sec-num">シーン1</span>
+  <h2 class="sec">「うわっ、1時間でこれ作ったの？」・「あ、そう」</h2>
+  <p class="lede">1日目は、あるひとつの宿題で締めくくられていた。「自分が作ったものを、この部屋の外の誰かに見せ、相手が何と言ったかを持ち帰ること」。火曜日のセッション――1時間の自由参加・リモート形式による<span class="tip" data-tip="5日間のスケジュールのうち、火曜日と木曜日は自由参加のドロップイン形式「質疑応答クリニック」。月曜日と金曜日は対面セッション、水曜日は必須のリモート・チェックポイント。">質疑応答クリニック</span>――は、アナンドが「誰かやってみた人はいるかい？ どんな反応があった？」と問いかけるところから始まった。</p>
+  <p>トップバッターはKKだった。彼が1日目に作ったアプリは<span class="tip" data-tip="1日目に作られ、教室で共有されたニュース要約Webアプリ。KKが最初に披露したものだ。">ニュース要約アプリ</span>だ。課題で指定されていた「2人の学生に見せる」ことはできなかったため、代わりに両親に見せたという。</p>
+  <div class="dialogue">
+    <div class="turn"><div class="who a">KK</div><div class="said">「ええと、両親は少し触ってはくれました。一番響いたこと、いわゆる『うわっ！』という要素は、<strong>『えっ、これ1時間で作ったの？』という驚き</strong>だったと思います。でも、それ以外は<strong>『あ、そう』</strong>って感じの反応でした」</div></div>
+  </div>
+  <p>そのやり取りを聞いていたアナンドの反応も、最後に肩をすくめるところまでまったく同じだった。</p>
+  <blockquote class="pull">
+    <p>「すごいね、なるほど、素晴らしいよ。ニュースの要約がものすごく素早く手に入る。それで……<strong>だから何？</strong> これで何をすればいいんだろう？ 本当にこれを使うだろうか？」</p>
+    <cite>―― KKの両親とまったく同じ反応を示すアナンド</cite>
+  </blockquote>
+</div>
+
+<div class="band iframe-wrap">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">KK · Singapore News Digest</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">claude.ai/code/artifact/e92a422b…</span></div>
+      <a class="shot-link" href="https://claude.ai/code/artifact/e92a422b-45cc-475a-a282-1a9834c3e148" target="_blank" rel="noopener" title="新しいタブで実際のアプリを開く（Claudeの共有設定によりこのページには埋め込めない）">
+        <img class="shot" src="shot-kk-news.webp" width="1280" height="800" alt="Singapore News Digest — KKのニュース要約アプリ。CNA、The Straits Times、Mothership、The Independent Singaporeの見出しをオフラインで要約して表示している">
+        <span class="shot-hint">実際のアプリを開く ↗</span>
+      </a>
+    </div>
+    <p class="embed-cap">このArtifactはClaude自身の共有ポリシーにより他ページへの埋め込みがブロックされているため、代わりに実際の画面のスクリーンショットを掲載している。<a href="https://claude.ai/code/artifact/e92a422b-45cc-475a-a282-1a9834c3e148" target="_blank" rel="noopener">実際に動くアプリを開く ↗</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>これは、何ひとつ失敗が起きていないからこそ、極めて示唆に富む瞬間だ。アプリは動いた。デモは成功した。漫画のコマ通り、期待通りの「うわっ！」という驚きは訪れた――そして、あっけなく消え去った。「感心させられること（impressiveness）」と「役に立つこと（usefulness）」は、まったく別の軸で測られる別物だと判明したからだ。<strong>「わあ、本当にすごいね」という驚きを通り過ぎた後、次に何をすべきなのか？</strong> この問いが、このセッションの残り時間ずっと議論の中心であり続けることになった。</p>
+  <p>問い詰められたKKは、誰もが陥りがちな一番ありがちな反射的反応を示した。</p>
+  <div class="dialogue">
+    <div class="turn"><div class="who a">KK</div><div class="said">「マネタイズ（収益化）を導入するとか？」</div></div>
+    <div class="turn"><div class="who">アナンド</div><div class="said">「面白いね。つまり君が言っているのはこういうことだ。『何かを作ったけれど、役に立つかどうかは分からない。だから課金してみよう』と」 <em>［笑い］</em></div></div>
+  </div>
+  <p>笑いが起きたが、その冗談の底には本質的な教訓が潜んでいる。<strong>「役に立つかどうか分からない」という根本的な問題を、マネタイズで解決することはできない。</strong> アナンドの軌道修正は、そのオチよりもずっと穏やかだった――価格設定は後から検討する価値のある現実的な課題だが、今目の前にある問いへの答えにはならない。目の前にあるのは、もっと難しく、より上流にある問いなのだ。</p>
+  <blockquote class="pull olive">
+    <p>「課題を見つけることは難しい。課題を<strong>言語化</strong>することは難しい。だが、課題が何であるかさえ分かれば、AIはその解決を手助けしてくれる」</p>
+    <cite>―― アナンド</cite>
+  </blockquote>
+  <p>これこそが、この週全体のテーマをわずか2文に凝縮したものであり、漫画の第3コマに描かれている光景そのものでもある。<em>真の課題（real problem）</em>とラベルの貼られたクエスチョンマークの上に虫眼鏡がかざされ、その隣には<em>真のユーザー（real user）</em>、<em>真の用途（real use）</em>という2つのパズルのピースが置かれている。そしてその脇のゴミ箱には、使われるあてのない、課題意識の欠如した機能の山が投げ捨てられているのだ。「作ること（構築）」はもはやボトルネックではない。だが、「何を作る価値があるのかを知ること」は、依然として最大のボトルネックのままなのだ。</p>
+</div>
+
+<div class="wrap" id="feedback">
+  <span class="sec-num">シーン2</span>
+  <h2 class="sec">フィードバックを記録し、AIに丸投げせよ</h2>
+  <p class="lede">次はヨハン（Johan）が画面共有を行った。アプリがインドネシア語表記であることをあらかじめ断りながら。それは彼もまた両親のために作った株式管理ツールだった。Yahoo Financeから取得したリアルタイム株価、取引履歴のCSVエクスポート、証拠金を自動計算するポジション管理機能、損益分岐点計算機、さらには感情的な衝動買いを防ぐためにいくら貯蓄に回すべきかを案内する「貯蓄プラン」機能まで備えていた。</p>
+  <p>その中には、作った本人さえ驚かせた機能もあった。</p>
+  <blockquote class="pull olive">
+    <p>「これは用語辞典なんですが、面白いことに、AIに『僕は株式投資の初心者だ』と伝えただけで、具体的な指示は何も出していないのに勝手にこれを追加してきたんです。これには驚きました」</p>
+    <cite>―― AIコーディングエージェントが指示なしで追加した用語集について語るヨハン</cite>
+  </blockquote>
+</div>
+
+<div class="band iframe-wrap rust">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">ヨハン · Lentera Bursa</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">lentera-bursa.pages.dev</span></div>
+      <a class="shot-link" href="https://lentera-bursa.pages.dev/" target="_blank" rel="noopener" title="新しいタブで実際のアプリを開く（ホスト側の設定によりこのページには埋め込めない）">
+        <img class="shot" src="shot-lentera-bursa.webp" width="1280" height="800" alt="Lentera Bursa — ヨハンが作ったインドネシア語表記の株価トラッカー。リアルタイムのIDX株価、ウォッチリスト、BBCAの銘柄詳細パネルを表示している">
+        <span class="shot-hint">実際のアプリを開く ↗</span>
+      </a>
+    </div>
+    <p class="embed-cap">「Alat hitung saham IDX」――IDX株式計算ツール。このホストも <code>X-Frame-Options: SAMEORIGIN</code> を設定しているため、ここには埋め込めない。<a href="https://lentera-bursa.pages.dev/" target="_blank" rel="noopener">実際に動くアプリを開く ↗</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>両親の実際のフィードバックは賛否入り混じるものだった。チャートの読み解きや将来予測といった一部の重要機能は、実装されていなかったり中途半端だったりした。彼が使用したモデルが「金融アドバイザーの資格がない」という理由で将来予測の出力を拒否したためだ。その一方で、誰も求めていない機能がインターフェースに居座り、画面を乱雑にしていた。ヨハン自身が<strong>「時に混乱を招く」</strong>と表現したように――不要なものが多すぎ、必要なものが足りていなかったのだ。</p>
+  <p>この「作られたもの」と「実際に使われたもの」のギャップこそ、アナンドがこのパートの残り時間を使って掘り下げた論点だった。彼の提示した解決策は2つの要素から成り、どちらも「机に向かって自分でうーんと深く考え直す」という人間の本能的な悪癖を迂回するものだった。</p>
+  <div class="mini-grid">
+    <div class="mini">
+      <div class="mini-kick">テクニック1</div>
+      <div class="mini-title">会議を録画・録音せよ。記憶に頼るな</div>
+      <div class="mini-body">「フィードバックをもらっている最中、相手が言ったことを聞き逃してしまうのはよくあることです。だから私は普段、TeamsやGoogle Meetなどを使って、できる限り映像付きで録画・録音を残すようにしています。そしてそれをClaudeやChatGPTに渡すのです。<strong>自分は10個のことを覚えているつもりでも、AIは自分が聞き逃していた別の5つのことを教えてくれるかもしれません</strong>」</div>
+    </div>
+    <div class="mini n2">
+      <div class="mini-kick">テクニック2</div>
+      <div class="mini-title">フィードバックに直接アプリを編集させよ</div>
+      <div class="mini-body">「自分の思考プロセスをショートカットして、こう言えばいいのです。<strong>『これがフィードバックだ。直してくれ』</strong>と。言い換えれば、あなたという人間を介することなく、ユーザーが直接アプリケーションを形作り始めるわけです」</div>
+    </div>
+  </div>
+  <p>アナンドはこの1つ目のアイデアを、単なる創業者向けのノウハウにとどまらず、今日から新社会人として働き始めるすべての人にとっての「デフォルトの行動様式」であると力説した。</p>
+  <blockquote class="pull">
+    <p>「Straiveに入社するインターン生によく言っていることがあります。<strong>『ミーティングに参加したら、録画・録音を取りなさい。そこで自分の頭で一生懸命理解しようとなんてしなくていい。どうせ言われていることの半分も理解できないのだから。</strong> ただその記録を持ってClaudeやChatGPTに渡し、「アプリを作れ」と指示すればいい。それだけだ。その過程で学べることはたくさんある。だが、多くの領域において自分たちがこれらAIシステムよりも物事を知っているなどと思い上がってはいけない。実際、知るわけがないのだから』」</p>
+    <cite>―― アナンド</cite>
+  </blockquote>
+  <p>ヨハンは自然な流れとして、次の質問を投げかけた。自分がその場にいなくてもユーザーが問題を報告できるように、アプリ内にフィードバックフォームを追加すべきだろうか？ アナンドの回答は、シーン1のテーマ――<strong>「簡単に作れること」と「役に立つこと」は別物である</strong>――へと再び立ち返るものだった。</p>
+  <blockquote class="pull olive">
+    <p>「どんな機能を追加するのも極めて簡単です。フィードバック機能付きのバージョンを作るのも、外したバージョンを作るのも簡単。何をするのも簡単です。だとすれば、できることは何千通りもあります。文字通りAIに『1000個の機能を考えて追加してくれ』と頼むことだってできる。しかし、<strong>そのうちのどれが本当に役立つのかが極めて重要な問いになるのです</strong>。［…］何を追加すべきかは、実際の利用から得られるフィードバックからしか導き出せません」</p>
+    <cite>―― アナンド</cite>
+  </blockquote>
+  <p>これは漫画の第5コマの内容そのものだ。チャート、通知、ダークモード、ソーシャルログイン、多言語対応といった、簡単に追加できる魅惑的な機能の群れに対して「ストップ」の手を掲げるイラスト。そこには<em>「AIが追加できるからといって1000個もの機能を詰め込むな。実際の利用が引き寄せる（真に求めている）ものだけを追加せよ」</em>というキャプションが添えられている。プロダクト開発における制約要因は、もはやエンジニアリングの工数などではない。「実際の使われ方が何を求めているか」を見極める判断力こそが制約なのだ。そしてその判断力は、コーディングとは異なり、誰かが実際にそのプロダクトを使っている姿をつぶさに観察することからしか得られない。</p>
+</div>
+
+<div class="wrap" id="whyapp">
+  <span class="sec-num">シーン3</span>
+  <h2 class="sec">なぜこのアプリが存在する価値があるのか？</h2>
+  <p class="lede">次の志願者に進む前に、アナンドは機能一覧の議論の根底を揺るがす本質的な問いを投げかけた。誰もがブラウザのタブにChatGPTやClaudeを開いているこの時代に、<strong>そもそもなぜ専用のアプリを作る必要があるのか？</strong></p>
+  <blockquote class="pull rust">
+    <p>「いいかい、誰もがChatGPTを持ち、誰もがClaudeを使える。君がアプリケーションを作れるように、彼らだってまったく同じ手軽さでアプリケーションを作れる。<strong>では、なぜそもそもアプリケーションが必要なんだろうか？</strong>」</p>
+    <cite>―― アナンド</cite>
+  </blockquote>
+  <p>彼はヨハンの作った領域を例に、具体的に語った。ClaudeやChatGPTに直接「次に何を取引すべき？」と尋ねるだけで済むとしたらどうだろう？ どこかのスプレッドシートにポートフォリオの記録を付けさせ、関連すると思われる市場データを勝手に取ってこさせればいい。アプリなど一切不要だ。</p>
+  <blockquote class="pull">
+    <p>「私たちは特定の機能に特化した専用ソフトウェアを使うことに慣れすぎていて、<strong>今や大半のソフトウェアの仕事を代替できる汎用ソフトウェア――ClaudeやChatGPTなどの少数の存在――が手元にあることを忘れがちです</strong>。ニュースの要約が欲しければ、ChatGPTに行って『ニュースを要約して』と言えば、同じ要約を返してくれます。<strong>なぜそのためにわざわざアプリが必要なんでしょう？</strong> これはアプリを作ってはいけないと言っているのではなく、同様の能力がすでに他所で手に入るのだから、なぜ『この』アプリが他と違っていて有用なのかを考え抜かなければならない、ということなのです」</p>
+    <cite>―― アナンド</cite>
+  </blockquote>
+  <p>これはセッション中で最も鋭い視点の転換（リフレーミング）であり、KKのニュースアプリ、ヨハンの株価トラッカー、そしてこの先教室の全員が今週作るであろうあらゆるアプリを、たったひとつの試金石にかけるものだった。漫画の第6コマでは、これが左右の対比として描かれている。左側には専用アプリの強み――厳選された情報、洗練されたビジュアル、単一のニッチ領域への特化。右側には、すでに何でも要約し、分析し、比較し、対話できる汎用AIアシスタント。その下に添えられたキャプションは、妥協を許さない。<strong>「単なる複製ではなく、差別化せよ」</strong></p>
+</div>
+
+<div class="wrap" id="cantshare">
+  <span class="sec-num">シーン4</span>
+  <h2 class="sec">共有できなかったアプリ</h2>
+  <p class="lede">次に発表しようとしたクリストファー（Christopher）は、アプリの説明を一言も口にする前に壁にぶち当たった。共有リンクがグレーアウトして押せなくなっていたのだ。彼が作ったのは、自ら<strong>AI VC</strong>と呼ぶアプリだった。ピッチ（事業提案）をブラッシュアップするためのコーチングツールで、会話の途中でClaude自身を使って創業者の回答を評価し、突っ込みを入れるというものだ。だが、Claudeはその成果物を一般公開させてくれなかった。</p>
+  <p>見ていたヨハンは、前日の自らの開発経験からその兆候に気づいた。Claudeの規約では、ファイルのダウンロード機能を提供するArtifact（成果物）は作成者以外と共有できない仕組みになっているのだ。ヨハンの場合は、その問題をClaudeに伝えて「ダウンロード」を「エクスポート」に変えさせることで、プロンプト1回で解決していた。しかしクリストファーのケースは違っていた。ダウンロード機能が原因ではなく、「AIイン・ザ・ループ（アプリ内部でAIを呼び出してリアルタイムに評価させる構造）」そのものがArtifactを共有不可にしていたのだ。しかもコードをVercelや他のホスティングサービスに移そうとしても、エクスポートされるのは単なるHTMLだけで、裏で動くはずのアプリケーションロジックは移行できなかった。</p>
+  <div class="dialogue">
+    <div class="turn"><div class="who a">クリストファー</div><div class="said">「僕のアプリは要するにAI VCのようなものです。［…］ピッチを磨く手助けをしてくれます。ユーザーが［話した］内容を評価するのに、Claude自身を使っているんだと思います……」</div></div>
+    <div class="turn"><div class="who">アナンド</div><div class="said">「なるほど。で、それをどう解決しようか？」</div></div>
+    <div class="turn"><div class="who a">クリストファー</div><div class="said">「まったく見当もつきません。AIに聞くことはできるし、実際聞いてみたらここにいくつかの選択肢を出してくれたんですが、どれを選べばいいのか分からなくて」</div></div>
+  </div>
+  <p>アナンドの答えは単なる修正方法の提示ではなく、その状況の持つ意味を再定義するものだった。</p>
+  <blockquote class="pull">
+    <p>「それは素晴らしい状態だよ。なぜなら君はまたしても、<strong>解決する価値のある課題を発見した</strong>のだから」</p>
+    <cite>―― ライブ講義中に壁にぶつかった状況について語るアナンド</cite>
+  </blockquote>
+  <p>ここから、「自分で決定するのではなく、委任することによってデバッグする」実践チュートリアルが始まった。クリストファーがあらかじめ答えを知っている必要がまったくない、4つの連続したアプローチだ。</p>
+  <div class="factbox indigo">
+    <div class="fb-kick">まだ理解できていない課題を攻略する4つの手法</div>
+    <ol>
+      <li><strong>対話を分岐させる。</strong> 「好きな時点を選んで、別々の会話を走らせることができる。『アプローチAを試す』『アプローチBを試す』『アプローチCを試す』というようにね」</li>
+      <li><strong>分岐を並行して走らせる。</strong> 「『実験Aを実行して』と指示する。それが走っている間に実験Bを実行し、さらにその裏で実験Cを実行する」</li>
+      <li><strong>ブラウザの操作権限を渡し、邪魔をせず任せる。</strong> 「AIにブラウザのコントロールを任せてしまうんだ。NetlifyやVercelにログインしてアカウントを作る必要があるなら、『勝手にやってくれ』と言えばいい。［…］自分でいちいち判断を下すのを避けるんだ。任せて走らせておけばいい。どうせ見守っているのだから、もし望まない挙動をしたら、いつでも止められる」</li>
+      <li><strong>伝え忘れていた制約を踏まえて再設計させる。</strong> 「『簡単にデプロイできるようにゼロから作り直すとしたら、どう作る？』と尋ねる。あるいは、冒頭に『これを他の人と共有できるようにしたい』という一文を付け足して最初からやり直すんだ」</li>
+    </ol>
+  </div>
+  <p>これら4つのアプローチに通底するのは、シーン2で示された教訓と同じだ。「ツールよりも賢く立ち回ろうとするのをやめ、ツールが自律して走れる余白を与えること」。クリストファーのバグが実際にどう直ったか以上に重要だったのは、教室にいた全員が、今後現れるであろう「一見解決不能に見える課題」に対処するための汎用的な手法を手に入れたことだ。</p>
+  <p>アナンドはこのエピソードから2つの教訓を引き出し、クリストファー個人だけでなくクラス全員に向けて語りかけた。</p>
+  <div class="mini-grid">
+    <div class="mini n3">
+      <div class="mini-kick">レッスン1</div>
+      <div class="mini-title">AIイン・ザ・ループのアプリは強力だが、リリースの難易度も跳ね上がる</div>
+      <div class="mini-body">「アプリケーション自体の内部処理としてAIを組み込めば、より強力なユースケースを生み出せます。しかしそうなると、次のような問いが浮上します。<strong>『どうやって、どこにデプロイするのか？ コストがかさみすぎたらどうする？ 費用は誰が負担するのか？』</strong>」</div>
+    </div>
+    <div class="mini n4">
+      <div class="mini-kick">レッスン2</div>
+      <div class="mini-title">デプロイそれ自体が、極めて興味深い設計課題である</div>
+      <div class="mini-body">「ユーザーにログインを求め、その行動を追跡し、場合によってはAPIキーを安全に保持しなければならないような複雑なアプリケーションを、どうデプロイするか？ そうしたことこそが面白くなってくる部分です。<strong>限界を押し広げてください。</strong>」</div>
+    </div>
+  </div>
+  <p>彼は、水曜日のチェックポイントを決定づける宿題を提示してこのパートを締めくくった。それは「何がうまくいったか」ではなく、その正反対の問いだった。</p>
+  <blockquote class="pull rust">
+    <p>「明日みんなと顔を合わせたときに、ぜひ聞きたいことがひとつあります。それは<strong>『どんな失敗をしたか？ 試してうまくいかなかったことは何か？』</strong>ということです。できる限りたくさん持ってきてください。なぜなら、私たちはそこから集団として学ぶことができるからです。［…］最終的に成功したとしても――AIはどこでミスをしたのか？ あなたはどこで介入せざるを得なかったのか？ なぜエージェントにやり方を変えるよう指示しなければならなかったのか？」</p>
+    <cite>―― アナンド</cite>
+  </blockquote>
+  <p>クリストファーの「共有できないArtifact」を筆頭とする失敗の数々が、成功体験とまったく同等の重みを持つ「カリキュラムの本質的な生教材」へと昇華した瞬間だった。</p>
+</div>
+
+<div class="wrap" id="kosei">
+  <span class="sec-num">シーン5</span>
+  <h2 class="sec">2つの言語で見る、コーチの視点</h2>
+  <p class="lede">最後の志願者は、アナンドがまだ名前を把握していなかった学生だった（ミーティング画面には学生IDしか表示されていなかった）。彼はそのまま画面を共有した。イングランド・プレミアリーグの2025–26シーズンにおけるシュート位置のマップだ。全20チーム、全選手のデータが、どの位置からのシュートがどれくらいの確率でゴールに結びついたかとともにプロットされていた。</p>
+  <p>彼は日本語で発表を始め、留学生に同行していた<span class="tip" data-tip="東京都市大学から8名の学生が交換留学生としてSUTDの21名の学生たちと合流し、この週を共にした。">東京都市大学</span>の客員教授、宿貴之（Takayuki Shuku）氏が通訳を務めた。</p>
+  <div class="dialogue">
+    <div class="turn"><div class="who a">航成</div><div class="said">「僕はこのサイトを作りました。…イングランドのプロサッカーリーグ、プレミアリーグにおけるシュートの位置とゴールの可能性の関係を示したものです」<br><em>「僕はこのサイトを作りました。プレミアリーグ（2025–26シーズン、全20チーム、全選手）におけるシュート位置とゴールの確率の関係を示しています」</em></div></div>
+  </div>
+  <p>アナンドの反応は即座かつ具体的だった。<strong>コーチならこれを心から役立つと感じるはずだ。</strong> だが、自分の次の発言を誰かに通訳してもらうのを待つ代わりに、彼は教室の誰も見たことのない試みに打って出た。ChatGPTの音声モードを起動し、リアルタイムに通訳させたのだ。</p>
+  <div class="dialogue">
+    <div class="turn"><div class="who">アナンド</div><div class="said">「このアプリケーションはコーチにとって本当に役立つと思います。実際のコーチに見せて、実践的に使えるかどうか確かめてみるといいでしょう。誰か見せられそうなコーチを知っていますか？」</div></div>
+    <div class="turn"><div class="who a">ChatGPT（音声）</div><div class="said">「アプリケーションはコーチにとって本当に役立つと思います。…それを見せられるコーチを誰か知っていますか？」</div></div>
+    <div class="turn"><div class="who a">航成</div><div class="said">「えっと、僕自身が紹介できる実在のコーチはいないんだ。ただ、もし実際に試すなら、サッカーやバスケのコーチ、学校の部活コーチ、パーソナルトレーナー、スポーツアナリストなんかが良さそう」<br><em>「個人的に紹介できる本物のコーチはいません。でも実際に試すなら、サッカーやバスケのコーチ、学校の部活の指導者、パーソナルトレーナー、あるいはスポーツアナリストなどが適任だと思います」</em></div></div>
+  </div>
+  <p>この瞬間がいかに異様なものであったかは、文面だけでは見落とされがちだ。生講義の真っ只中に、台本もない音声AI通訳が、プロダクトへのフィードバックに関する講師のアドバイスをリアルタイムに異言語へと翻訳していく――人間が通訳するのを待つよりもその方が速いから、という理由で。受講生たちが学びに来ていたはずのそのツールが、講義そのものを静かに回し始めた瞬間だった。</p>
+  <p>宿教授が割って入り、航成が実際に作ったものと、それが誰のためのものなのかを明確にした。</p>
+  <div class="dialogue">
+    <div class="turn"><div class="who a">宿教授</div><div class="said">「彼はまだそういった（ユーザーの）ことまでは考えていないと思います。これは純粋な統計データですね」</div></div>
+    <div class="turn"><div class="who">アナンド</div><div class="said">「まったくその通りです。ですが、これは誰にとって役立つのでしょうか？」</div></div>
+    <div class="turn"><div class="who a">宿教授</div><div class="said">「なるほど、基本的にはコーチやチーム、あるいはチームのディレクター陣ですね」</div></div>
+  </div>
+  <p>アナンドの最後の提案は、このやり取りをこの日のメインテーマへと結びつけた。「成果物（Artifact）」から「プロダクト（製品）」への移行とは、コードの変更ではなく、視点の変更なのだ。</p>
+  <blockquote class="pull">
+    <p>「頭の中でコーチの帽子をかぶってみるのです。<strong>『自分ならこれをどう使うか？』</strong>と考え、具体的な提案をしてみる。『チームに数人の選手を加えよう』『この選手たちにはここからプレーさせよう』『この選手はあるエリアで強みを発揮するから、そちらサイドにパスを集めよう』といったように。言い換えれば、<strong>それが実用的な価値を持ち始めたときこそが、プロダクトへと変貌する瞬間なのです</strong>」</p>
+    <cite>―― アナンド</cite>
+  </blockquote>
+</div>
+
+<div class="wrap" id="persona">
+  <span class="sec-num">シーン6</span>
+  <h2 class="sec">AIにAIをレビューさせる</h2>
+  <p class="lede">セッションが終わりに近づいた頃、KKがひとつの質問を投げかけた。「なぜこのアプリが存在するのか？」という議論以来、ずっと頭の中で温めていた疑問であることは明白だった。</p>
+  <blockquote class="pull rust">
+    <p>「ちょっと待ってください、ひとつ思いついたんですが……さっきAIとおっしゃいましたよね？ <strong>このアプリをChatGPTか何かに渡して、そのAIに評価してもらうことってできますか？</strong>」</p>
+    <cite>―― KK</cite>
+  </blockquote>
+  <p>アナンドの回答は完全な「YES」だった。そしてすぐさま、その評価を真に実用的なものにするためのテクニックを伝授した。漠然とした感想を求めるのではなく、「独自の視点（ペルソナ）」を割り当てることだ。</p>
+  <blockquote class="pull">
+    <p>「もちろん！ それに、異なるペルソナ（役割）を演じさせることだってできますよ。たとえばこう指示するんです。『サッカーのコーチとして振る舞って、このアプリをレビューしてくれ』『熱狂的なサッカーファンとしてレビューしてくれ』と。さらに『他にどんなペルソナが考えられるか？』と尋ねてみるのもいい。するとAIは『メディア企業やスポーツ専門チャンネルの立場はどうでしょう』と答えて、スポーツチャンネルの視点でレビューしてくれるかもしれない。アンケート調査のようなことだって、ビジネス戦略の立案だってさせられます」</p>
+    <cite>―― アナンド</cite>
+  </blockquote>
+  <p>彼は過剰な期待を抱かせることもしなかった。能力の低いモデルではペルソナになりきる精度が甘く「不正確だったりイマイチだったりするかもしれない」と指摘した――<span class="tip" data-tip="文字起こしからの逐語引用で、2つのClaudeモデルを社内コードネームで呼んでいる。アナンドがStraiveのイノベーション部門ヘッドとして、フロンティア研究所に近い立場から一般名ではなく具体的なモデル名を挙げていることの表れでもある。">「より賢いモデルのほうがうまくこなすでしょう。クレジットに余裕があるなら、AstraやFableあたりが最高の仕事をしてくれるはずです」</span>。だが、たとえ完璧でないペルソナレビューであっても、まったくレビューされないよりは遥かにマシだ。そしてそれは、生身の人間を置き換えるものではない。</p>
+  <blockquote class="pull olive">
+    <p>「完璧ではないかもしれません。だからこそ<strong>人間のフィードバックが重要</strong>になります。それでも、AIはこの手のレビューにおいても極めて優れた力を発揮してくれます」</p>
+    <cite>―― アナンド</cite>
+  </blockquote>
+  <p>これは、シーン3の「なぜこのアプリが存在するのか？」という問いと見事な円環を描いて結びつく。汎用AIがすでにあなたのアプリと同じ仕事を行えるのなら、別の帽子をかぶせることで、あなたのアプリの仕事を批評することだってできるのだ。専用アプリの存在意義を脅かすその同じ能力が、教室の誰もが即座に揃えられる「史上もっとも安価な品質評価（QA）パネル」にもなるのである。</p>
+</div>
+
+<div class="band todo-band" id="homework">
+  <div class="todo-inner">
+    <h3>火曜日から水曜日への宿題</h3>
+    <p>アナンドは、次のチェックポイントで確認したい事項を正確に挙げてセッションを締めくくった。そして注目すべきは、その中に「機能をもっと増やせ」という項目がひとつも含まれていなかったことだ。</p>
+    <ol>
+      <li>アプリをさらに数人に見せること。そして今回は、後からフィードバックを思い出そうとするのではなく、<strong>録画・録音（可能なら動画）を残すこと。</strong></li>
+      <li><strong>エージェントに通常と異なる指示や追加の指示を出さざるを得なかった場面、およびその理由</strong>について報告すること。</li>
+      <li>特に<strong>「失敗」</strong>について報告すること。完成したものだけでなく、何がうまくいかず、何を諦めたり作り直したりせざるを得なかったのかを報告すること。</li>
+      <li>水曜日の必須チェックポイントの核となる転換（ピボット）に向けて準備してくること：<strong>「アプリが正しく動いているとどうやって知るのか？ どうやって検証するのか？ どうやって役立つものにするのか？ どうやってデプロイを進めるのか？ どうやって共有するのか？ どうやって保護するのか？」</strong></li>
+    </ol>
+    <p>それまでの質問は <code>askai@straive.net</code> へ送ってほしいとアナンドは伝えた。学生たちが英語や日本語で一人また一人と退室していく中、チャット欄にそのアドレスが投じられた。</p>
+  </div>
+</div>
+
+</article>
+
+<div class="wrap-wide" style="margin: 3rem auto;">
+  <span class="sec-num" style="text-align:center">参加者たちが披露し合ったもの</span>
+  <h2 class="sec" style="text-align:center">4つのアプリ、4つの教訓</h2>
+  <div class="link-grid">
+    <a class="link-card" href="https://claude.ai/code/artifact/e92a422b-45cc-475a-a282-1a9834c3e148" target="_blank" rel="noopener">
+      <div class="lc-kick">KK · Singapore News Digest</div>
+      <div class="lc-title">「すごい！」、その後の「だから何？」</div>
+      <div class="lc-body">セッションの幕開けを飾ったアプリ。素早く正確なニュース要約ツールで、両親を心から驚かせたものの、その先で使われることはなかった。<em>スクリーンショットはシーン1参照 ↑</em></div>
+    </a>
+    <a class="link-card" href="https://lentera-bursa.pages.dev/" target="_blank" rel="noopener">
+      <div class="lc-kick">ヨハン · Lentera Bursa</div>
+      <div class="lc-title">母親が実際に使うかもしれない株価トラッカー</div>
+      <div class="lc-body">リアルタイムのYahoo Financeデータ、貯蓄プラン計算機能、AIが独断で追加した用語集。両親のために作られ、彼らのフィードバックによって調整された。<em>スクリーンショットはシーン2参照 ↑</em></div>
+    </a>
+    <div class="link-card" style="cursor:default">
+      <div class="lc-kick">クリストファー · AI VC ピッチコーチ</div>
+      <div class="lc-title">強力すぎて公開できない――今のところは</div>
+      <div class="lc-body">ピッチを磨き上げるAI評価型ツール。Claudeの共有制限により作成者のアカウント外に出せなかったが、ライブ授業の中で「並行デバッグ」の実践講義へと昇華した。公開リンクは存在しない――その「共有できなさ」自体が物語のすべてだった。</div>
+    </div>
+    <div class="link-card" style="cursor:default">
+      <div class="lc-kick">航成 · プレミアリーグ・シュートマップ</div>
+      <div class="lc-title">本物のコーチを待ちわびる、本物の統計データ</div>
+      <div class="lc-body">プレミアリーグ全20チームのシーズンを通じたシュート位置データセット。その使い道を知る実践者（指導者）を求めている、圧巻の分析ツール。授業内で披露されたのみで、公開リンクの提出はなかった。</div>
+    </div>
+  </div>
+</div>
+
+<div class="band takeaways-band" id="takeaways">
+  <div class="takeaways-inner">
+    <h2 class="takeaways-title">Day 2からの8つの学び</h2>
+    <p class="takeaways-sub">2026年9月8日（火） · SUTD · 1時間、リモート、自由参加</p>
+    <div class="takeaway-grid">
+      <div class="takeaway">
+        <div class="takeaway-num">01</div>
+        <div class="takeaway-title">「すごい」と「役に立つ」は違う。</div>
+        <div class="takeaway-text">教室内のどのアプリも「人を驚かせる」ハードルはクリアしていた。だが、その先にあるより高いハードルを越えたものはまだなかった。<strong>「すごいね、なるほど、素晴らしい……で、だから何？」</strong>という問いこそが、デモとプロダクトを分かつ境界線だ。</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">02</div>
+        <div class="takeaway-title">「有用性の欠如」をマネタイズでごまかすことはできない。</div>
+        <div class="takeaway-text">アプリをより役立つものにするにはどうすればいいかと尋ねられ、真っ先に出た反射的な答えは「マネタイズの導入」だった。<strong>値付けをする前に、真の課題を見つけること</strong>――そして、その課題を見つけることこそが最も困難なのだ。</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">03</div>
+        <div class="takeaway-title">すべてを記録し、記憶に頼るな。</div>
+        <div class="takeaway-text">「どうせ言われていることの半分も理解できない」。会議を録画・録音し、その記録をClaudeやChatGPTに渡して、自分が見落とした5つの指摘をAIに炙り出させよう。<strong>そして、そのフィードバックに直接アプリを修正させるのだ。</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">04</div>
+        <div class="takeaway-title">1000個の機能は、1000個のノイズになる。</div>
+        <div class="takeaway-text">今やどんな機能も簡単に追加できる――それこそが危険なのだ。<strong>何を追加すべきかは、実際の利用から得られるフィードバックから導かれるべきであり</strong>、AIが可能にする機能のブレインストーミングから生まれるべきではない。</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">05</div>
+        <div class="takeaway-title">なぜそのアプリが存在すべきなのかを問え。</div>
+        <div class="takeaway-text">今や誰もがChatGPTにニュースの要約や資産ポートフォリオの管理を頼むことができる。<strong>「なぜこれが他と違っていて有用なのかを考え抜く必要がある」</strong>――チャット画面をただ模倣するのではなく、明確に差別化せよ。</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">06</div>
+        <div class="takeaway-title">1人でデバッグするな――分岐させ、並行して走らせ、委任せよ。</div>
+        <div class="takeaway-text">一見解決できそうにない共有エラーに直面したら、対話を分岐させて複数のアプローチを並行して試そう。一歩一歩自分で判断を下すのではなく、<strong>エージェントにブラウザの操作を委ねてしまうのだ。</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">07</div>
+        <div class="takeaway-title">アプリ内部にAIを組み込むと、可能性もハードルも跳ね上がる。</div>
+        <div class="takeaway-text">プロダクトの「内部」でAIを動かせば、より強力なユースケースが開かれる。だが同時に、より困難な問いが突きつけられる。<strong>デプロイ、コスト、ログイン認証、費用の負担者。</strong> それでも、限界を押し広げ続けよ。</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">08</div>
+        <div class="takeaway-title">ペルソナを与えて、AIにAIをレビューさせよ。</div>
+        <div class="takeaway-text">「サッカーのコーチとして振る舞い、このアプリをレビューしてくれ」。独自の視点を与えることで、ありきたりな感想が実用的な批評へと変わる。<strong>それは生身の人間の代わりにはならないが、あなたが今すぐ招集できるもっとも安価な評価パネルなのだ。</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <footer class="footer">
-  <p><strong>How to Build AI Products — and Prove They Work</strong> · SUTD, 2026年9月7日〜11日</p>
-  <p><a href="index.ja.html">シリーズ概要</a> · <a href="day1.ja.html">Day 1</a> · <a href="https://talks.s-anand.net/" target="_blank" rel="noopener">Anandの他の講演</a></p>
+  <p><strong>全5回中のDay 2</strong> — <a href="index.ja.html">How to Build AI Products — and Prove They Work</a>、SUTD DAIシグネチャー・マスタークラス、エキスパート・インダストリー・シリーズ。2026年9月8日（火）、リモート開催。</p>
+  <p><a href="transcript-day-2.ja.md" id="transcript-btn3">全文書き起こしを読む</a> · <a href="day1.ja.html">Day 1</a> · <a href="index.ja.html">全5日間</a> · <a href="https://talks.s-anand.net/" target="_blank" rel="noopener">アーナンドの他の講演</a></p>
+  <p class="footer-mono">talks.s-anand.net/2026-09-06-how-to-build-ai-products/day2.ja.html</p>
 </footer>
+
+<div class="modal" id="doc-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h4 id="doc-title"></h4>
+      <button class="modal-close" id="doc-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-src" id="doc-src"></div>
+    <div class="modal-body" id="doc-body"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+<script>
+  // ── Progress bar ──
+  const prog = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    prog.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + '%';
+  });
+
+  // ── Scene navigation rail ──
+  const sceneNav = document.getElementById('scene-nav');
+  const snToggle = document.getElementById('sn-toggle');
+  const snLinks = [...document.querySelectorAll('#sn-list a')];
+
+  snToggle.addEventListener('click', () => {
+    const open = sceneNav.classList.toggle('open');
+    snToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  snLinks.forEach(a => a.addEventListener('click', () => {
+    sceneNav.classList.remove('open');
+    snToggle.setAttribute('aria-expanded', 'false');
+  }));
+  document.addEventListener('click', e => {
+    if (sceneNav.classList.contains('open') && !sceneNav.contains(e.target)) {
+      sceneNav.classList.remove('open');
+      snToggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  const snTargets = snLinks
+    .map(a => ({ link: a, el: document.getElementById(a.getAttribute('href').slice(1)) }))
+    .filter(t => t.el);
+  const markActive = () => {
+    const line = window.innerHeight * 0.32;
+    let current = snTargets[0];
+    for (const t of snTargets) if (t.el.getBoundingClientRect().top <= line) current = t;
+    snLinks.forEach(a => a.classList.remove('active'));
+    if (current) current.link.classList.add('active');
+  };
+  let snTick = false;
+  window.addEventListener('scroll', () => {
+    if (snTick) return;
+    snTick = true;
+    requestAnimationFrame(() => { markActive(); snTick = false; });
+  });
+  markActive();
+
+  // ── Markdown document modal ──
+  const modal = document.getElementById('doc-modal');
+  const dBody = document.getElementById('doc-body');
+  const dTitle = document.getElementById('doc-title');
+  const dSrc = document.getElementById('doc-src');
+  const cache = {};
+
+  function renderMarkdown(text) {
+    const body = text
+      .replace(/^---[\s\S]*?---\s*/, '')
+      .replace(/<summary>([\s\S]*?)<\/summary>/g, '\n\n**💭 $1**\n\n')
+      .replace(/<\/?details>/g, '\n\n');
+    const html = window.marked ? marked.parse(body) : body.replace(/\n/g, '<br>');
+    return html.replace(/<a /g, '<a target="_blank" rel="noopener" ');
+  }
+
+  async function openDoc(file, title, source) {
+    modal.classList.add('open');
+    dBody.scrollTop = 0;
+    dTitle.textContent = title;
+    dSrc.innerHTML = source ? `<a href="${source}" target="_blank" rel="noopener">↗ Open the original</a>` : '';
+    if (cache[file]) { dBody.innerHTML = cache[file]; return; }
+    dBody.innerHTML = '<p><em>Loading…</em></p>';
+    try {
+      const res = await fetch(file);
+      if (!res.ok) throw new Error(res.status);
+      const html = renderMarkdown(await res.text());
+      cache[file] = html;
+      dBody.innerHTML = html;
+    } catch (e) {
+      dBody.innerHTML = `<p>Could not load this file here. <a href="${source || file}" target="_blank" rel="noopener">Open it directly</a>.</p>`;
+    }
+  }
+
+  const openTranscript = e => {
+    e.preventDefault();
+    openDoc('transcript-day-2.ja.md', 'Day 2 ― 全文書き起こし、2026年9月8日', '');
+  };
+  ['transcript-btn', 'transcript-btn2', 'transcript-btn3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', openTranscript);
+  });
+
+  document.querySelectorAll('a.doclink').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      openDoc(el.dataset.doc, el.dataset.title || 'Document', el.dataset.doc);
+    });
+  });
+
+  document.getElementById('doc-close').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('open'); });
+</script>
+
 </body>
 </html>

@@ -1,6 +1,32 @@
 # Prompts
 
-## Story, 3 Aug 2026
+## Day 2, 8 Sep 2026
+
+<!--
+cd ~/code/talks/
+dev.sh -p ~/Documents/data:ro,~/code:ro,~/r2:ro -- claude --dangerously-skip-permissions --model sonnet --effort medium
+-->
+
+Update the narrative story at 2026-09-06-how-to-build-ai-products/ to include day 2 content from transcript-day-2.md and comic-page-day-2.avif.
+
+Read the prompts.md and other related files for context. Follow the same structure and instructions / style as for Day 1.
+
+Do not create day2.ja.html yet - I'll provide a translation AFTER you create day2.html. But you can update other files (e.g. if index.html needs changes, etc.)
+
+---
+
+Embed (or link, if embedding doesn't work) their websites where possible. Find the links from the responses.tsv.
+
+`day2.ja.md` has the Japanese translation of day2.html. Use this wisely to create day2.ja.html. Then delete day2.ja.md.
+
+<!-- claude --resume 0ced6de6-b0f2-4725-bc05-7f961b7c39c1 --dangerously-skip-permissions -->
+<!--
+Comic page: https://chatgpt.com/c/6a9f778d-de68-83ec-a74f-5fd6cf5f31a7
+Manga page: https://chatgpt.com/c/6a9f7905-1da0-83ec-bbc1-acec0c5f12b2
+Manga page v2 (unused): https://chatgpt.com/c/6a9f79fc-d0e4-83ec-b840-504d3e46d240
+-->
+
+## Day 1, 7 Sep 2026
 
 <!--
 cd ~/code/talks/
@@ -48,4 +74,7 @@ The epilog has a problem. Take a look at the cards - at least one (maybe more) o
 `day1.ja.md` has the Japanese translation of day1.html. Use this wisely to create day1.ja.html. Then delete day1.ja.md.
 
 <!-- claude --resume 5c050392-5806-402d-920f-0cf0c712ec0b --dangerously-skip-permissions -->
-<!-- Comic page: https://chatgpt.com/c/6a9e6332-361c-83ec-b48b-422641b246b6 -->
+<!--
+Comic page: https://chatgpt.com/c/6a9e6332-361c-83ec-b48b-422641b246b6
+Manga page: https://chatgpt.com/c/6a9e70bb-7d14-83ec-a5ef-35e9d0b3d60f
+-->

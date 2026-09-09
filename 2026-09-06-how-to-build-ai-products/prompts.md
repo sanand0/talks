@@ -1,5 +1,47 @@
 # Prompts
 
+## Day 3, 9 Sep 2026
+
+<!--
+cd ~/code/talks/
+dev.sh -p ~/Documents/data:ro,~/code:ro,~/r2:ro -- claude --dangerously-skip-permissions --model sonnet --effort medium
+-->
+
+Update the narrative story at 2026-09-06-how-to-build-ai-products/ to include day 3 content from transcript-day-3.md and comic-page-day-3.avif.
+Include links from links-day-3.md as mentioned.
+
+Read the prompts.md and other related files for context. Follow the same structure and instructions / style as for Day 1.
+
+Do not create day3.ja.html yet - I'll provide a translation AFTER you create day3.html. But you can update other files (e.g. if index.html needs changes, etc.)
+
+---
+
+The underlining inside `a.shot-link` doesn't look good.
+Break the monotony of long blocks: EMBED these sites:
+
+- [City, By You](https://city-by-you-mayusuzuki-20260908.mayu-s-feb-27.chatgpt.site/) - If you could build a city, what kind of city would you create?. Tell us a little about you, then make eight small decisions. We will turn them into your own corner of the world.
+- [Study Walker](https://yuriciv.github.io/study-walker/)
+- Embed test-automation-codex/playwright-report/index.html
+
+... and find other ways to break the monotony of long blocks of text. Rendered blocks (maybe with different widths / colors / ... - like `.band`) from the market research, test cases, etc. might help.
+
+Across all three days, include the audio files at https://github.com/sanand0/talks/releases/download/talks/2026-09-07-how-to-build-ai-products-day-{1,2,3}.opus similar to how audio files are included in other talks.
+
+---
+
+`day3.ja.md` has the Japanese translation of day3.html. Use this wisely to create day3.ja.html. Then delete day3.ja.md.
+
+---
+
+`day3.html` doesn't have the `.masthead-date` link to `day3.ja.html` yet.
+This indicates that there may be other bugs and inconsistencies. Investigate carefully and fix them.
+
+<!-- claude --resume ff6c07a0-b3b6-4fd0-b9fb-667c939855d1 --dangerously-skip-permissions -->
+<!--
+Comic page: https://chatgpt.com/c/6aa0ecbd-1e5c-83ec-a6c8-fa66367a03ad
+Manga page: https://chatgpt.com/c/6aa0ee70-8908-83ec-b902-30d9af2dcc38
+-->
+
 ## Day 2, 8 Sep 2026
 
 <!--

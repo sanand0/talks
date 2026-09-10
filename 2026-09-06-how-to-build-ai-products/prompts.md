@@ -1,5 +1,31 @@
 # Prompts
 
+## Day 3, 10 Sep 2026
+
+<!--
+cd ~/code/talks/
+dev.sh -p ~/Documents/data:ro,~/code:ro,~/r2:ro -- claude --dangerously-skip-permissions --model sonnet --effort medium
+-->
+
+Update the narrative story at 2026-09-06-how-to-build-ai-products/ to include day 4 content from transcript-day-4.md and comic-page-day-4.avif.
+Include links from links-day-4.md as mentioned.
+Include any other relevant links or stats from https://docs.google.com/spreadsheets/d/1069Qs1tt_fuSDJryagebnFLIyG-KqRoni-nyLYml4pc/edit
+
+Read the prompts.md and other related files for context.
+Follow the same structure and instructions / style as for past days and avoid mistakes that required me to correct you.
+
+Do not create day4.ja.html yet - I'll provide a translation AFTER you create day4.html. But you can update other files (e.g. if index.html needs changes, etc.)
+
+---
+
+`day4.ja.md` has the Japanese translation of day4.html. Use this wisely to create day4.ja.html - using the Japanese script and comic. Then delete day4.ja.md.
+
+<!-- claude --resume d782aef8-b169-4db1-8e85-aa2cdaf9507c --dangerously-skip-permissions -->
+<!--
+Comic page: https://chatgpt.com/c/6aa21d11-3590-83ec-a50f-5025abf79694
+Manga page: https://chatgpt.com/c/6aa21dc0-ed88-83ec-a72a-4d2e86aabee5
+-->
+
 ## Day 3, 9 Sep 2026
 
 <!--

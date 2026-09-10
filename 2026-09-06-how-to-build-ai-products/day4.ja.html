@@ -3,66 +3,750 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Day 4 (準備中) | How to Build AI Products</title>
-<meta name="description" content="SUTD DAIシグネチャー・マスタークラス Day 4(2026年9月10日、木曜)。オプションのリモート質問クリニック。まだ開催されていません。">
+<title>プロトタイプから「プロダクト」へ | Day 4 · How to Build AI Products — and Prove They Work</title>
+<meta name="description" content="SUTD DAIシグネチャー・マスタークラス Day 4。12人の受講生が一晩で走らせたエージェント市場調査を振り返り、そして「完成」の定義を静かに書き換える短い任意参加クリニック——エージェントや友人でのテストはやめて、見知らぬ他人を探しに行く。">
+<meta property="og:title" content="プロトタイプから「プロダクト」へ — Day 4">
+<meta property="og:description" content="SUTD DAIシグネチャー・マスタークラス · How to Build AI Products — and Prove They Work · 2026年9月10日（木）、リモート開催。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Spectral:wght@300;400;600&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,600&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f4f1ea; --paper: #fffdf9; --ink: #1b1a22; --ink2: #3e3b48; --muted: #78717f;
-    --indigo: #4a3fa8; --indigo-dk: #2f2775; --rust: #b8471f; --olive-dk: #6a5d0f; --olive-soft: #f4eec8;
-    --border: #ded7c8; --night: #14121c;
-    --font-display: "Playfair Display", "Noto Serif JP", Georgia, serif;
-    --font-body: "Spectral", "Noto Sans JP", Georgia, serif;
-    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --bg: #f4f1ea;
+    --paper: #fffdf9;
+    --ink: #1b1a22;
+    --ink2: #3e3b48;
+    --muted: #78717f;
+    --indigo: #4a3fa8;
+    --indigo-dk: #2f2775;
+    --indigo-soft: #e7e4f8;
+    --rust: #b8471f;
+    --rust-dk: #8a3315;
+    --rust-soft: #fbe1d6;
+    --olive: #8a7a17;
+    --olive-dk: #6a5d0f;
+    --olive-soft: #f4eec8;
+    --border: #ded7c8;
+    --night: #14121c;
+    --night2: #1d1a29;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'Spectral', Georgia, serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   }
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: var(--font-body); background: var(--bg); color: var(--ink); line-height: 1.9;
-    font-size: 18px; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; }
-  .masthead { background: rgba(244,241,234,.95); border-bottom: 1px solid var(--border); padding: .7rem 1.5rem; }
-  .masthead-inner { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: .8rem; flex-wrap: wrap; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.76;
+    font-size: 19px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    padding-bottom: 3rem;
+  }
+  [id] { scroll-margin-top: 4.6rem; }
+  img { max-width: 100%; display: block; }
+
+  #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--indigo), var(--olive), var(--rust)); z-index: 1000; transition: width .15s linear; }
+
+  /* ── Masthead ── */
+  .masthead { position: sticky; top: 0; z-index: 200; background: rgba(244,241,234,.95); border-bottom: 1px solid var(--border); padding: .7rem 1.5rem; backdrop-filter: blur(8px); }
+  .masthead-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: .8rem; flex-wrap: wrap; }
   .masthead-brand { font-family: var(--font-mono); font-size: .8rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
   .masthead-brand:hover { color: var(--indigo); }
+  .masthead-right { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
   .masthead-date { font-family: var(--font-mono); font-size: .68rem; color: var(--muted); }
-  .lang-switch { font-family: var(--font-mono); font-size: .68rem; }
-  .lang-switch a { color: var(--muted); text-decoration: none; }
-  .lang-switch a.current { color: var(--ink); font-weight: 700; }
-  .lang-switch a:hover { color: var(--indigo); }
-  main { flex: 1; max-width: 640px; margin: 0 auto; padding: 5rem 1.5rem 4rem; text-align: center; }
-  .kicker { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--rust); margin-bottom: 1.1rem; }
-  h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(1.8rem, 6vw, 3rem); line-height: 1.3; letter-spacing: -.01em; margin-bottom: 1.2rem; }
-  .tag { display: inline-block; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .04em;
-    background: var(--olive-soft); color: var(--olive-dk); border: 1px solid rgba(106,93,15,.3); border-radius: 99px; padding: .38rem .9rem; margin-bottom: 1.6rem; }
-  p { color: var(--ink2); margin-bottom: 1.3rem; }
-  .back { display: inline-block; font-family: var(--font-mono); font-size: .74rem; text-decoration: none;
-    color: var(--indigo-dk); border: 1px solid var(--indigo); border-radius: 6px; padding: .5rem 1rem; transition: all .2s; margin: .3rem; }
-  .back:hover { background: var(--indigo); color: #fff; }
-  .footer { background: var(--night); color: #a8a2b6; padding: 2rem 1.5rem; text-align: center; }
-  .footer p { margin-bottom: .5rem; font-size: .88rem; color: #a8a2b6; }
+  .masthead-link { font-family: var(--font-mono); font-size: .67rem; color: var(--indigo-dk); text-decoration: none; border: 1px solid var(--indigo); border-radius: 4px; padding: .26rem .55rem; transition: all .2s; white-space: nowrap; }
+  .masthead-link:hover { background: var(--indigo); color: #fff; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 1.5rem; }
+  .wrap-wide { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ── Hero ── */
+  .hero { max-width: 860px; margin: 0 auto; padding: 3.4rem 1.5rem 1.2rem; text-align: center; }
+  .hero-kicker { font-family: var(--font-mono); font-size: .67rem; letter-spacing: .2em; text-transform: uppercase; color: var(--rust); margin-bottom: 1.1rem; line-height: 1.9; }
+  .hero h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(2.4rem, 7.2vw, 4.4rem); line-height: 1.02; letter-spacing: -.025em; margin-bottom: 1.1rem; }
+  .hero h1 em { font-style: italic; color: var(--indigo); font-weight: 700; }
+  .hero-sub { font-size: 1.16rem; color: var(--ink2); line-height: 1.62; max-width: 640px; margin: 0 auto 1.6rem; }
+  .hero-meta { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); line-height: 2; }
+  .hero-meta a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.4); }
+  .hero-meta a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+
+  .quick-links { margin: 1.7rem auto 0; display: flex; gap: .55rem; justify-content: center; flex-wrap: wrap; max-width: 780px; }
+  .quick-links a { font-family: var(--font-mono); font-size: .71rem; text-decoration: none; color: var(--ink2); background: var(--paper); border: 1px solid var(--border); border-radius: 99px; padding: .44rem .95rem; transition: all .2s; }
+  .quick-links a:hover { border-color: var(--indigo); color: var(--indigo-dk); transform: translateY(-1px); }
+
+  /* ── Bands ── */
+  .band { width: 100vw; margin-left: calc(50% - 50vw); margin-top: 3.2rem; margin-bottom: 3.2rem; }
+
+  /* ── Body text ── */
+  .wrap p, .wrap-wide > p { margin-bottom: 1.35rem; }
+  .wrap p a, .wrap li a, .wrap-wide > p a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.42); }
+  .wrap p a:hover, .wrap li a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+  .wrap strong { font-weight: 600; color: var(--ink); background: linear-gradient(transparent 62%, rgba(231,228,248,.95) 62%); }
+  .wrap ul, .wrap ol { margin: 0 0 1.35rem 1.3rem; }
+  .wrap li { margin-bottom: .55rem; }
+  .lede { font-size: 1.11rem; color: var(--ink2); }
+
+  .sec-num { display: block; font-family: var(--font-mono); font-size: .64rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--indigo); margin: 3.4rem 0 .55rem; line-height: 1.6; }
+  h2.sec { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.75rem, 4.6vw, 2.6rem); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 1.2rem; }
+  .wrap code { font-family: var(--font-mono); font-size: .82em; background: var(--olive-soft); padding: .08rem .32rem; border-radius: 4px; }
+  h3.sub { font-family: var(--font-display); font-weight: 700; font-size: 1.28rem; margin: 2.1rem 0 .7rem; color: var(--ink2); }
+  .dinkus { text-align: center; color: var(--indigo); letter-spacing: .75em; margin: 2.6rem 0; font-size: .8rem; }
+
+  /* ── Pull quotes ── */
+  blockquote.pull { margin: 2.1rem 0; padding: 1.3rem 1.55rem; background: var(--paper); border-left: 4px solid var(--indigo); border-radius: 0 7px 7px 0; box-shadow: 0 2px 14px rgba(27,26,34,.07); }
+  blockquote.pull p { font-family: var(--font-display); font-size: 1.2rem; font-weight: 400; font-style: italic; line-height: 1.5; margin-bottom: .55rem; color: var(--ink); }
+  blockquote.pull p:last-of-type { margin-bottom: .55rem; }
+  blockquote.pull cite { font-family: var(--font-mono); font-style: normal; font-size: .69rem; color: var(--muted); }
+  blockquote.pull.rust { border-left-color: var(--rust); }
+  blockquote.pull.olive { border-left-color: var(--olive); }
+
+  /* ── Inline cards ── */
+  .mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.6rem 0 2.2rem; }
+  @media (max-width: 640px) { .mini-grid { grid-template-columns: 1fr; } }
+  .mini { background: var(--paper); border: 1px solid var(--border); border-top: 3px solid var(--indigo); border-radius: 8px; padding: 1.05rem 1.2rem; }
+  .mini.n2 { border-top-color: var(--rust); }
+  .mini.n3 { border-top-color: var(--olive); }
+  .mini.n4 { border-top-color: var(--indigo-dk); }
+  .mini-kick { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: .35rem; }
+  .mini-title { font-family: var(--font-display); font-weight: 700; font-size: 1.04rem; margin-bottom: .4rem; line-height: 1.26; }
+  .mini-body { font-size: .87rem; line-height: 1.6; color: var(--ink2); }
+  .mini-body strong { color: var(--ink); font-weight: 600; }
+
+  /* ── Embeds ── */
+  .iframe-wrap { padding: 2.4rem 1.5rem; background: var(--indigo-soft); }
+  .iframe-wrap.rust { background: var(--rust-soft); }
+  .iframe-wrap.olive { background: var(--olive-soft); }
+  .iframe-inner { max-width: 1000px; margin: 0 auto; }
+  .embed-frame { background: var(--paper); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(27,26,34,.1); }
+  .embed-frame .chrome { display: flex; align-items: center; gap: .45rem; padding: .6rem .85rem; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .embed-frame .chrome .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border); flex: none; }
+  .embed-frame .chrome .url { font-family: var(--font-mono); font-size: .67rem; color: var(--muted); margin-left: .5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .embed-frame a.shot-link { display: block; position: relative; text-decoration: none; color: inherit; }
+  .embed-frame a.shot-link:hover { text-decoration: none; }
+  .embed-frame img.shot { width: 100%; display: block; background: #fff; }
+  .embed-frame .shot-hint { position: absolute; right: .7rem; bottom: .7rem; font-family: var(--font-mono); font-size: .62rem; letter-spacing: .06em; text-transform: uppercase; background: rgba(20,18,28,.82); color: #f2eff8; padding: .35rem .7rem; border-radius: 99px; opacity: 0; transition: opacity .2s; }
+  .embed-frame a.shot-link:hover .shot-hint { opacity: 1; }
+  .embed-frame iframe { width: 100%; height: 82vh; border: 0; display: block; background: #fff; }
+  .embed-cap { font-family: var(--font-mono); font-size: .72rem; text-align: center; margin-top: 1rem; line-height: 1.75; color: var(--indigo-dk); }
+  .iframe-wrap.rust .embed-cap { color: var(--rust-dk); }
+  .iframe-wrap.olive .embed-cap { color: var(--olive-dk); }
+  .embed-cap strong { font-weight: 700; }
+  .embed-cap a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.45); }
+  .iframe-wrap.rust .embed-cap a { color: var(--rust-dk); border-bottom-color: rgba(138,51,21,.45); }
+  .iframe-wrap.olive .embed-cap a { color: var(--olive-dk); border-bottom-color: rgba(106,93,15,.5); }
+  .embed-cap a:hover { color: var(--rust); }
+  .embed-badge { display: flex; align-items: center; justify-content: center; gap: .6rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .embed-badge .pill { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; background: var(--indigo-dk); color: #fff; border-radius: 99px; padding: .38rem .9rem; }
+  .iframe-wrap.rust .embed-badge .pill { background: var(--rust-dk); }
+  .iframe-wrap.olive .embed-badge .pill { background: var(--olive-dk); }
+  @media (min-width: 1101px) { .iframe-wrap { padding-left: 5rem; padding-right: 5rem; } }
+
+  /* ── Stat row ── */
+  .stat-row { display: flex; flex-wrap: wrap; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 1rem; }
+  .stat { flex: 1 1 120px; background: var(--paper); padding: 1rem 1.1rem; text-align: center; }
+  .stat-num { font-family: var(--font-mono); font-weight: 700; font-size: 1.7rem; color: var(--ink); line-height: 1; }
+  .stat-num.good { color: var(--olive-dk); }
+  .stat-num.warn { color: var(--rust-dk); }
+  .stat-label { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-top: .4rem; }
+
+  /* ── Persona / data table ── */
+  .wrap-wide table.data-table, .wrap table.data-table { width: 100%; border-collapse: collapse; margin: 1.6rem 0 2.2rem; font-size: .9rem; background: var(--paper); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .data-table th, .data-table td { padding: .7rem .9rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .data-table th { font-family: var(--font-mono); font-size: .64rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); background: var(--bg); }
+  .data-table tr:last-child td { border-bottom: 0; }
+  .data-table td strong { color: var(--ink); }
+
+  /* ── Audio card ── */
+  .audio-wrap { max-width: 660px; margin: 1.7rem auto 0; padding: 0 1.5rem; }
+  .audio-card { background: var(--night); color: #ede6d6; padding: 1.05rem 1.35rem; border-radius: 9px; display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; box-shadow: 0 6px 24px rgba(27,26,34,.18); }
+  .audio-icon { font-size: 1.6rem; flex-shrink: 0; }
+  .audio-info { flex: 1; min-width: 140px; }
+  .audio-title { font-family: var(--font-display); font-size: .95rem; font-weight: 700; margin-bottom: .15rem; }
+  .audio-sub { font-size: .72rem; color: #a8a2b6; font-family: var(--font-mono); }
+  .audio-card audio { max-width: 100%; height: 32px; }
+  @media (max-width: 480px) { .audio-card audio { width: 100%; } }
+
+  /* ── Link cards ── */
+  .link-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; max-width: 1080px; margin: 0 auto; }
+  .link-card { display: block; background: var(--paper); border: 1px solid var(--border); border-radius: 10px; padding: 1.15rem 1.3rem; text-decoration: none; color: inherit; transition: all .2s; }
+  .link-card:hover { border-color: var(--indigo); box-shadow: 0 4px 16px rgba(27,26,34,.12); transform: translateY(-2px); }
+  .link-card .lc-kick { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--rust); margin-bottom: .4rem; }
+  .link-card .lc-title { font-family: var(--font-display); font-weight: 700; font-size: 1.06rem; margin-bottom: .4rem; line-height: 1.26; color: var(--ink); }
+  .link-card .lc-body { font-size: .87rem; line-height: 1.6; color: var(--ink2); }
+  .link-card .lc-body em { color: var(--muted); font-style: italic; }
+
+  /* ── Tooltip ── */
+  .tip { border-bottom: 1px dotted var(--rust); cursor: help; position: relative; }
+  .tip::after {
+    content: attr(data-tip); position: absolute; bottom: 132%; left: 50%; transform: translateX(-50%);
+    background: var(--night); color: #f2eff8; padding: .55rem .8rem; border-radius: 6px; font-size: .78rem;
+    font-family: var(--font-body); line-height: 1.5; white-space: normal; width: 250px; pointer-events: none;
+    opacity: 0; transition: opacity .2s; z-index: 300; font-style: normal; text-align: left; box-shadow: 0 4px 18px rgba(0,0,0,.3);
+  }
+  .tip:hover::after { opacity: 1; }
+
+  /* ── Takeaways ── */
+  .takeaways-band { background: linear-gradient(140deg, #2f2775 0%, #1d1a29 52%, #8a3315 100%); padding: 3.4rem 1.5rem; }
+  .takeaways-inner { max-width: 1140px; margin: 0 auto; }
+  .takeaways-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.7rem, 4.2vw, 2.4rem); color: #fff; text-align: center; margin-bottom: .5rem; letter-spacing: -.02em; }
+  .takeaways-sub { text-align: center; color: #cfc7f0; font-size: .88rem; margin-bottom: 2.2rem; font-family: var(--font-mono); }
+  .takeaway-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+  .takeaway { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15); border-radius: 10px; padding: 1.25rem 1.35rem; }
+  .takeaway-num { font-family: var(--font-mono); font-size: .65rem; letter-spacing: .14em; color: #e0cf6b; margin-bottom: .45rem; }
+  .takeaway-title { font-family: var(--font-display); font-weight: 700; font-size: 1.06rem; color: #fff; margin-bottom: .45rem; line-height: 1.3; }
+  .takeaway-text { font-size: .9rem; line-height: 1.65; color: #e6e1f2; }
+  .takeaway-text strong { color: #fff; font-weight: 600; }
+  .takeaway-text a { color: #ffd9a8; text-decoration: none; border-bottom: 1px solid rgba(255,217,168,.55); }
+  .takeaway-text a:hover { color: #fff; border-bottom-color: #fff; }
+
+  /* ── Homework band ── */
+  .todo-band { background: var(--paper); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 2.8rem 1.5rem; }
+  .todo-inner { max-width: 800px; margin: 0 auto; }
+  .todo-inner h3 { font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; margin-bottom: 1rem; }
+  .todo-inner ol { margin: 0 0 0 1.3rem; }
+  .todo-inner li { margin-bottom: .7rem; line-height: 1.7; }
+  .todo-inner a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.42); }
+  .todo-inner a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+  .todo-inner strong { font-weight: 600; }
+
+  .footer { background: var(--night); color: #a8a2b6; padding: 2.6rem 1.5rem; text-align: center; }
+  .footer p { margin-bottom: .7rem; font-size: .92rem; }
   .footer a { color: #ffc98c; text-decoration: none; border-bottom: 1px solid rgba(255,201,140,.45); }
   .footer a:hover { color: #fff; border-bottom-color: #fff; }
-  @media (max-width: 640px) { body { font-size: 16.5px; } main { padding-top: 3.2rem; } }
+  .footer-mono { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .04em; color: #7f7891; }
+
+  /* ── Modal ── */
+  .modal { position: fixed; inset: 0; background: rgba(20,18,28,.9); display: none; align-items: center; justify-content: center; z-index: 900; padding: 1.4rem; }
+  .modal.open { display: flex; }
+  .modal-box { background: var(--paper); border-radius: 10px; max-width: 880px; width: 100%; max-height: 88vh; display: flex; flex-direction: column; overflow: hidden; }
+  .modal-head { padding: .95rem 1.3rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .modal-head h4 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; }
+  .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--muted); line-height: 1; padding: 0 .3rem; }
+  .modal-close:hover { color: var(--rust); }
+  .modal-body { padding: 1.25rem; overflow-y: auto; font-size: .93rem; line-height: 1.72; }
+  .modal-body h1, .modal-body h2, .modal-body h3 { font-family: var(--font-display); font-weight: 700; margin: 1.2rem 0 .55rem; line-height: 1.25; }
+  .modal-body h1 { font-size: 1.45rem; } .modal-body h2 { font-size: 1.22rem; } .modal-body h3 { font-size: 1.08rem; }
+  .modal-body p { margin-bottom: .8rem; }
+  .modal-body a { color: var(--indigo-dk); }
+  .modal-body ul, .modal-body ol { margin: 0 0 .8rem 1.2rem; }
+  .modal-body li { margin-bottom: .4rem; }
+  .modal-body pre { background: var(--bg); padding: .8rem; border-radius: 6px; overflow-x: auto; font-size: .8rem; }
+  .modal-body code { font-family: var(--font-mono); font-size: .84em; }
+  .modal-body blockquote { border-left: 3px solid var(--border); padding-left: .9rem; margin: .8rem 0; color: var(--ink2); }
+  .modal-body table { display: block; overflow-x: auto; border-collapse: collapse; }
+  .modal-body th, .modal-body td { border: 1px solid var(--border); padding: .4rem .6rem; }
+  .modal-src { font-family: var(--font-mono); font-size: .7rem; padding: .35rem 1.3rem 0; }
+  .modal-src a { color: var(--rust-dk); }
+
+  /* ── Comic / visual summary band ── */
+  .comic-band { background: var(--night); padding: 2.6rem 1.5rem 2.4rem; }
+  .comic-inner { max-width: 780px; margin: 0 auto; }
+  .comic-kick { font-family: var(--font-mono); font-size: .64rem; letter-spacing: .2em; text-transform: uppercase; color: #e0cf6b; text-align: center; margin-bottom: 1.1rem; }
+  .comic-inner a.comic-link { display: block; border-radius: 10px; overflow: hidden; box-shadow: 0 8px 34px rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.12); }
+  .comic-inner img { width: 100%; max-width: 100%; height: auto; display: block; }
+  .comic-cap { font-family: var(--font-mono); font-size: .72rem; line-height: 1.8; text-align: center; color: #cfc9dd; margin-top: 1.1rem; }
+  .comic-cap strong { color: #fff; font-weight: 700; }
+  .comic-cap a { color: #ffc98c; text-decoration: none; border-bottom: 1px solid rgba(255,201,140,.5); }
+  .comic-cap a:hover { color: #fff; border-bottom-color: #fff; }
+
+  /* ── Aside / fact box ── */
+  .factbox { background: var(--paper); border: 1px solid var(--border); border-left: 4px solid var(--olive); border-radius: 0 9px 9px 0; padding: 1.15rem 1.35rem; margin: 2rem 0 2.2rem; }
+  .factbox.indigo { border-left-color: var(--indigo); }
+  .factbox.rust { border-left-color: var(--rust); }
+  .factbox .fb-kick { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); margin-bottom: .55rem; }
+  .factbox .fb-title { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; line-height: 1.3; margin-bottom: .6rem; color: var(--ink); }
+  .factbox ol, .factbox ul { margin: 0 0 0 1.15rem; }
+  .factbox li { font-size: .9rem; line-height: 1.62; margin-bottom: .45rem; color: var(--ink2); }
+  .factbox li:last-child { margin-bottom: 0; }
+  .factbox li strong { font-weight: 600; color: var(--ink); }
+  .factbox p { font-size: .9rem; line-height: 1.62; color: var(--ink2); margin-bottom: .6rem; }
+  .factbox ul + p, .factbox ol + p { margin-top: .9rem; }
+  .factbox p:last-child { margin-bottom: 0; }
+  .factbox a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.42); }
+  .factbox a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+  .factbox code { font-family: var(--font-mono); font-size: .82em; background: var(--olive-soft); padding: .08rem .32rem; border-radius: 4px; }
+
+  /* ── Scene navigation rail ── */
+  #scene-nav { position: fixed; z-index: 180; right: .7rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: flex-end; gap: .45rem; max-width: min(19rem, 84vw); }
+  #sn-toggle { display: none; }
+  #sn-list { list-style: none; margin: 0; padding: .35rem; display: flex; flex-direction: column; gap: 1px; background: rgba(255,253,249,.94); border: 1px solid var(--border); border-radius: 11px; box-shadow: 0 4px 22px rgba(27,26,34,.14); backdrop-filter: blur(8px); max-height: 80vh; overflow-y: auto; overflow-x: hidden; }
+  #sn-list li { margin: 0; }
+  #sn-list a { display: flex; align-items: baseline; gap: .5rem; text-decoration: none; padding: .24rem .42rem; border-radius: 6px; }
+  #sn-list a b { font-family: var(--font-mono); font-size: .62rem; font-weight: 500; letter-spacing: .04em; color: var(--muted); flex: none; width: 1.3rem; text-align: right; }
+  #sn-list a i { font-family: var(--font-body); font-style: normal; font-size: .72rem; line-height: 1.4; color: var(--ink2); white-space: nowrap; max-width: 0; overflow: hidden; opacity: 0; transition: max-width .28s ease, opacity .2s ease; }
+  #scene-nav:hover #sn-list a i, #scene-nav:focus-within #sn-list a i { max-width: 15rem; opacity: 1; }
+  #sn-list a:hover, #sn-list a:focus-visible { background: var(--indigo-soft); outline: none; }
+  #sn-list a:hover b, #sn-list a:hover i { color: var(--indigo-dk); }
+  #sn-list a.active { background: var(--indigo-soft); }
+  #sn-list a.active b { color: var(--indigo-dk); font-weight: 700; }
+  #sn-list a.active i { color: var(--indigo-dk); }
+
+  @media (min-width: 1101px) {
+    .wrap-wide, .comic-band, .todo-band, .takeaways-band { padding-left: 5rem; padding-right: 5rem; }
+  }
+
+  @media (max-width: 1100px) {
+    #scene-nav { top: auto; bottom: 1rem; right: .8rem; transform: none; }
+    #sn-toggle { display: inline-flex; align-items: center; gap: .45rem; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; background: var(--night); color: #f2eff8; border: 0; border-radius: 99px; padding: .55rem .95rem; cursor: pointer; box-shadow: 0 3px 16px rgba(27,26,34,.35); }
+    #sn-list { display: none; order: -1; max-height: 58vh; }
+    #scene-nav.open #sn-list { display: flex; }
+    #scene-nav.open #sn-list a i { max-width: 13rem; opacity: 1; white-space: normal; }
+  }
+
+  @media (max-width: 640px) {
+    body { font-size: 17.5px; }
+    .comic-band { padding: 1.8rem .9rem 1.6rem; }
+    .embed-frame iframe { height: 70vh; }
+  }
 </style>
 </head>
 <body>
+<div id="progress"></div>
+
 <header class="masthead">
   <div class="masthead-inner">
     <a class="masthead-brand" href="https://talks.s-anand.net/">S Anand · Talks</a>
-    <span class="masthead-date">Day 4 · 2026年9月10日(木) · SUTD</span>
-    <span class="lang-switch"><a href="day4.html">EN</a> · <a href="#" class="current">日本語</a></span>
+    <div class="masthead-right">
+      <span class="masthead-date">Day 4 · 2026年9月10日 · SUTD</span>
+      <span class="masthead-date"><a href="day4.html" style="color:inherit">EN</a></span>
+      <a class="masthead-link" href="index.ja.html">全5日間</a>
+      <a class="masthead-link" href="transcript-day-4.ja.md" id="transcript-btn">文字起こし</a>
+    </div>
   </div>
 </header>
-<main>
-  <div class="kicker">SUTD DAIシグネチャー・マスタークラス · Day 4 / 5</div>
-  <h1>まだ<em>開催前</em>です。</h1>
-  <div class="tag">リモート · 1時間 · 任意参加(質問クリニック)</div>
-  <p>金曜日の最終発表に向けて、証拠(エビデンス)を仕上げるための任意参加セッションです。</p><p>このセッションはまだ開催されていません。終了後にここへ記録を追加します。</p>
-  <p><a class="back" href="day1.ja.html">Day 1を読む →</a><a class="back" href="index.ja.html">← 全5日間</a></p>
-</main>
+
+<div class="hero" id="top">
+  <div class="hero-kicker">SUTD DAIシグネチャー・マスタークラス · エキスパート・インダストリー・シリーズ · 5日間のうちの4日目（Day 4/5）</div>
+  <h1>プロトタイプから<em>「プロダクト」</em>へ</h1>
+  <p class="hero-sub">今週の中で最も短いセッションでありながら、説明は最小限、求められるハードルは最も高い回となった。12人の受講生は前夜、すでにサブエージェントを使った市場調査を走らせていた。今日の任意参加クリニックでは、その調査から返ってきた結果を確認し、そして<strong>「完成（Done）」の定義を静かに書き換えた</strong>。すなわち、自分がコントロールできるエージェントや顔見知りの友人でのテストはもうやめて、実際にそれを使ってくれる「見知らぬ赤の他人」を探しに行くのだ。</p>
+  <p class="hero-meta">リモート · 任意参加の質問クリニック · 2026年9月10日（木）<br>アーナンド・S（Anand S）／ <a href="https://www.straive.com/" target="_blank" rel="noopener">Straive</a> イノベーション責任者 · <a href="transcript-day-4.ja.md" id="transcript-btn2">文字起こし全文を読む</a></p>
+  <div class="audio-wrap">
+    <div class="audio-card">
+      <span class="audio-icon">🎧</span>
+      <div class="audio-info">
+        <div class="audio-title">クリニックの音声全編を聴く</div>
+        <div class="audio-sub">ライブ録音 · リモート · SUTD</div>
+      </div>
+      <audio controls preload="none">
+        <source src="https://github.com/sanand0/talks/releases/download/talks/2026-09-07-how-to-build-ai-products-day-4.opus" type="audio/ogg; codecs=opus">
+        お使いのブラウザは音声再生に対応していません。
+      </audio>
+    </div>
+  </div>
+  <div class="quick-links">
+    <a href="#comic">▤ 今日の流れ（コミック）</a>
+    <a href="#iterate">🔁「何回やれば十分なのか？」</a>
+    <a href="#research">🔬 13件の提出、3つのエージェント調査を読み解く</a>
+    <a href="#feedback">🎥 ミスも含めて、自分の姿を見る</a>
+    <a href="#strangers">🚀 さあ、見知らぬ人たちを探しに行こう</a>
+    <a href="#logs">🔗 チャットログも一緒に公開する</a>
+    <a href="#takeaways">🗒️ 学びのポイント</a>
+  </div>
+</div>
+
+<nav id="scene-nav" aria-label="シーンへジャンプ">
+  <button id="sn-toggle" type="button" aria-expanded="false" aria-controls="sn-list">☰ シーン</button>
+  <ol id="sn-list">
+    <li><a href="#top"><b>↑</b><i>ページの先頭</i></a></li>
+    <li><a href="#comic"><b>▤</b><i>今日の流れ（コミック）</i></a></li>
+    <li><a href="#iterate"><b>01</b><i>「何回やれば十分なのか？」</i></a></li>
+    <li><a href="#research"><b>02</b><i>13件の提出、3つのエージェント調査を読み解く</i></a></li>
+    <li><a href="#feedback"><b>03</b><i>ミスも含めて、自分の姿を見る</i></a></li>
+    <li><a href="#strangers"><b>04</b><i>さあ、見知らぬ人たちを探しに行こう</i></a></li>
+    <li><a href="#logs"><b>05</b><i>チャットログも一緒に公開する</i></a></li>
+    <li><a href="#homework"><b>HW</b><i>金曜日までの提出物</i></a></li>
+    <li><a href="#takeaways"><b>★</b><i>Day 4の学び</i></a></li>
+  </ol>
+</nav>
+
+<div class="band comic-band" id="comic">
+  <div class="comic-inner">
+    <div class="comic-kick">4日目：コミックで振り返る</div>
+    <a class="comic-link" href="comic-page-day-4.ja.avif" target="_blank" rel="noopener" title="別タブでフルサイズコミックを開く">
+      <img src="comic-page-day-4.ja.avif" alt="「From Prototype to Product（プロトタイプからプロダクトへ）」と題されたコミック。Anandがアイディア、構築、テスト、リリースのロードマップを示す。Johanが「完成するまでに何回イテレーションを回すべきですか？」と質問する。Anandが答える：「自動テストは1回、多くても2回実行して、あとはリグレッション防止用のチェックとして保持しておくこと。ペルソナ評価は最低1回だが、実際のユーザーテストに終わりはない」。4人のペルソナ（字幕翻訳者、配送コーディネーター、学生、一般ユーザー）が、バッテリー消費、フィードバックの欠如、レート制限、混乱などの課題を報告する。アイディア、プロトタイプ、エージェントや人間のフィードバック、修正という大きなループが閉じる。そしてコミックの視点は外の世界へ向かう。アプリを公開し、メール、SNS、ブログ、コミュニティでシェアして、見知らぬ人たちに使ってもらう。アナリティクスを導入し、人々がどのように使い、どこでつまずき、次に何を改善すべきかを可視化する。最後のコマには翌日の5つの成果物がリストアップされている。アプリの更新、2分間の製品デモ動画、2〜3分の学びの振り返り動画、セッションログの共有、同じシートへのリンク追加。「AI製品開発のライフサイクル全体が完了。これをポートフォリオに加えよう」と締めくくられる。">
+    </a>
+    <p class="comic-cap"><strong>クリニックの全容をコミックで表現。</strong> アイディアからローンチまでのロードマップ、同じ4つの壁にぶつかり続けた4つのペルソナ、そして「エージェントを使ったテスト」から「見知らぬユーザーへの提供」への転換。<a href="comic-page-day-4.ja.avif" target="_blank" rel="noopener">フルサイズで開く ↗</a></p>
+  </div>
+</div>
+
+<article class="article">
+
+<div class="wrap" id="iterate">
+  <span class="sec-num">シーン1</span>
+  <h2 class="sec">「何回やれば十分なのか？」</h2>
+  <p class="lede">Anandは、あらかじめ用意した予定はほとんどないと言って口火を切った。<strong>「今日のセッションは基本的に、皆さんからの質問に答えることと、昨日カバーした内容にプラスして1つだけ追加のタスクを出す程度になります」</strong>。Johanがその機会を捉え、エージェントを使って改善を繰り返すすべての受講生が必ず突き当たる疑問をぶつけた。</p>
+  <blockquote class="pull rust">
+    <p>「イテレーションを回し、AIを使ってプロダクトを検証しなければいけないとのことでしたが、<strong>完成と言うまでに何回それをやればいいのでしょうか？</strong>」</p>
+    <cite>— Johan</cite>
+  </blockquote>
+  <p>その回答は、2つのまったく異なる「十分」へと明確に切り分けられた。水曜日のチェックポイントで扱った2種類の検証は、目指すゴールラインが異なるからだ。</p>
+  <div class="mini-grid">
+    <div class="mini">
+      <div class="mini-kick">自動テストスイート</div>
+      <div class="mini-title">最低1回。おそらく2回やれば十分。</div>
+      <div class="mini-body">「まずは仕組みを把握するために1回実行し、プロダクトの主要機能がほぼ仕上がったら、<strong>後で何か変更を加えたときにテストが壊れていないか確認できるように、自動テストセットとして残しておく</strong>ことをお勧めします」</div>
+    </div>
+    <div class="mini n2">
+      <div class="mini-kick">ペルソナ／ユーザー評価</div>
+      <div class="mini-title">最低1回。上限は実質なし。</div>
+      <div class="mini-body">「異なるペルソナとしての評価は、完全に皆さんにお任せします。最低1回は必要ですが、もう一度やり直してもいいですし、機能を変えてさらに繰り返してもいい。<strong>ユーザーテストに終わりはありません。</strong>」</div>
+    </div>
+  </div>
+  <p>テストスイートは一度作って再利用する「防護フェンス」のようなものだが、ユーザーテストはプロダクトの提供をやめるまで続く「対話」なのだ。そしてこの両方が、わずか1時間のうちに逆の順序で重要性を持つことになる。</p>
+</div>
+
+<div class="wrap" id="research">
+  <span class="sec-num">シーン2</span>
+  <h2 class="sec">13件の提出、3つのエージェント調査を読み解く</h2>
+  <p class="lede">Anandはクラスの共有スプレッドシート（今週のすべての提出物が集約されているシート）を開き、個別のエントリーを掘り下げる前に手早く出席状況を確認した。</p>
+  <blockquote class="pull">
+    <p>「13件——おや、12名で13件の提出がありますね。まったく問題ありません、1人で複数提出しても構わないので。<strong>そして多くの方がすでにエージェントによるリサーチ結果をリンクしてくれています。全員に完了してもらいたいところですが</strong>、まずはそのうちの1つを見て、エージェント調査から何が明らかになったのかを見てみましょう」</p>
+    <cite>— Anand</cite>
+  </blockquote>
+  <p>クリニックの時点でシートに記載されていた内訳：</p>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-num">12</div><div class="stat-label">受講生</div></div>
+    <div class="stat"><div class="stat-num good">13</div><div class="stat-label">アプリのエントリー（Mikuが2つ提出）</div></div>
+    <div class="stat"><div class="stat-num">8</div><div class="stat-label">すでにエージェントリサーチがリンク済み</div></div>
+    <div class="stat"><div class="stat-num warn">1</div><div class="stat-label">アプリが未提出 — KK</div></div>
+  </div>
+  <p>KKの未提出には、優しく直接的な声かけがあった。<em>「KKがまだ記入していませんね——ああ、KKは……そうか、昨日もアプリがまだでしたね。完成させたいか、ひと声かけてあげたほうがいいかもしれません」</em>。続いてAnandはブラウザのタブに開かれたエージェントリサーチのリンクを順次めくりながら、<em>「なるほど、これはClaudeのアーティファクトですね……こちらもChatGPTサイト……OK、これはGitHub Pagesですね」</em> と実況のように読み上げていき、クラス全体でじっくり読み解く対象として3つのレポートを選び出した。</p>
+</div>
+
+<div class="band iframe-wrap">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">Miku · Pocket Trails — エージェント市場調査</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">pocket-trails-user-perspectives.pswr2jmt2n.chatgpt.site</span></div>
+      <iframe src="https://pocket-trails-user-perspectives.pswr2jmt2n.chatgpt.site/" loading="lazy" title="Agent Market Research for Pocket Trails"></iframe>
+    </div>
+    <p class="embed-cap">散策・発見アプリ<a href="https://roam-pocket-trails.pswr2jmt2n.chatgpt.site/" target="_blank" rel="noopener">Pocket Trails</a>を3つのサブエージェント・ペルソナが体験。<a href="https://pocket-trails-user-perspectives.pswr2jmt2n.chatgpt.site/" target="_blank" rel="noopener">別タブで開く ↗</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>これはAnandが最初に読み上げた「お散歩アプリ」であり、設定された3人の架空のペルソナ（フリーランスの字幕翻訳者、自治体の記録係、機械工学科の学生）は、彼がその場で指摘した通りのフリクション（摩擦・不満）を的確に突いていた。</p>
+  <blockquote class="pull olive">
+    <p>「ここではフリーランスの字幕翻訳者、自治体の公文書記録係、機械工学部の学生が使われています。［…］<strong>『スマホがロックされていても画面が表示されたままだと、バッテリーの消耗が激しくなる恐れがある』</strong>。その通りですね。<strong>『（自分の）街角の［位置情報］を共有することへのためらい』</strong>。まさに。<strong>『アプリ間の連携が大きなストレスになり得る』</strong>。ええ、素晴らしい着眼点の数々です」</p>
+    <cite>— レポートを生で読み上げるAnand</cite>
+  </blockquote>
+  <p>詳細レポートには名前も記されている。<strong>Hana Cho</strong>（34歳、夜に散策を楽しむフリーランスの字幕翻訳者）は、画面を見るためにスマホのロックを解除したままにしておくとバッテリーを食うと指摘。<strong>Darnell Price</strong>（58歳、自治体の公文書記録係）は、アプリが外部のスポット検索サービスに自分の座標を送信した瞬間に躊躇した。<strong>Lucía Ferretti</strong>（21歳、普段からGoogleマップを使い倒している工学生）は、リンクをGoogleマップにコピーして外部遷移することで、発見そのものの自発的なワクワク感が削がれてしまうと感じた。レポート自体の1行のまとめは、人間のテスター単独ではここまで明快に言語化できなかったであろう洞察だった。<em>「好奇心を引き出すのは簡単だが、安心感を築くにはもっと手間がかかる（Curiosity is easy. Confidence takes more work.）」</em> 人々は気軽に散策するが、アプリから何かを記録したり、共有したり、信用を求められた瞬間に躊躇してしまうのだ。</p>
+</div>
+
+<div class="band iframe-wrap rust">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">dora · RouteDraw — エージェント市場調査</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">claude.ai/code/artifact/e32e9731…</span></div>
+      <a class="shot-link" href="https://claude.ai/code/artifact/e32e9731-79b2-476b-8458-f4b2dd8a079d" target="_blank" rel="noopener" style="padding:1.4rem 1.2rem;">
+        <div style="font-family:var(--font-mono); font-size:.86rem; color:var(--ink2); line-height:1.7;">
+          <strong style="color:var(--ink)">3つのペルソナ、3つのルート案内への不満</strong><br>
+          一括配送のコーディネーター、リタイアしたGoogleマップユーザー、自転車ギグワーカー——それぞれが異なる壁に直面した。
+        </div>
+        <span class="shot-hint">アーティファクトを開く ↗</span>
+      </a>
+    </div>
+    <p class="embed-cap"><a href="https://claude.ai/code/artifact/e32e9731-79b2-476b-8458-f4b2dd8a079d" target="_blank" rel="noopener">元のアーティファクトを開く ↗</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>2番目に読み上げられたのはdoraのルート作成ダッシュボード<a href="https://routedraw-dashboard.surge.sh/" target="_blank" rel="noopener">RouteDraw</a>で、今回は同じ欠陥のバリエーションではなく、ペルソナごとにまったく異なる不具合が発見された。</p>
+  <blockquote class="pull">
+    <p>「Route Drawでは、一括配送コーディネーターのペルソナが、なるほど、<strong>『前のルートが消えてしまう』</strong>ことを見つけています。リタイアしたGoogleマップユーザーは、<strong>『クリックしても何の反応（フィードバック）もない』</strong>と。いい指摘ですね。そして自転車ギグワーカーは、<strong>『バックエンドを経由せず、ブラウザから直接OpenStreetMapへルーティングのリクエストを送っている』</strong>——ああ、なるほど、利用が増えたときに利用制限がかかるリスクがありますね。的を射た指摘です」</p>
+    <cite>— レポートを生で読み上げるAnand</cite>
+  </blockquote>
+  <p>3人のペルソナ、3つの異なる業務、3つの関連性のない障害パターン——人間のテスターが1人で作業していたら、これらを洗い出すには3回の個別セッションが必要だったはずだ。</p>
+</div>
+
+<div class="band iframe-wrap olive">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">Yuri · Study Walker — エージェント市場調査</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">yuriciv.github.io/study-walker/research.html</span></div>
+      <iframe src="https://yuriciv.github.io/study-walker/research.html" loading="lazy" title="Agent Market Research for Study Walker"></iframe>
+    </div>
+    <p class="embed-cap">GitHub Pagesのレポート：大学生、英語学習を再開した社会人、簿記学習を再開した人の3者。<a href="https://yuriciv.github.io/study-walker/research.html" target="_blank" rel="noopener">別タブで開く ↗</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>3つ目は——そしてAnandがアプリだけでなく「学習という行為」そのものについての発見として注目したのが——Yuriが一晩で追究した<a href="https://yuriciv.github.io/study-walker/" target="_blank" rel="noopener">Study Walker</a>の追加調査だ。これは水曜日にAnand自身の3つのサブエージェントが調査したのと同じアプリである。今回は新たに3人のペルソナが用いられた。個人サイトを作ろうとしている未経験の学生、日常英会話をやり直している若手社会人、そして日商簿記3級の勉強を再開した大学生だ。</p>
+  <blockquote class="pull rust">
+    <p>「そしてこちらは大学生、英語を学ぶ社会人、そして簿記をやり直している人が、<strong>それぞれの勉強習慣を探求しています</strong>。素晴らしいですね。これこそまさに受講生にやってもらいたいリサーチそのものです。とても有益ですから、ぜひ最後までやり切ってください」</p>
+    <cite>— Anand</cite>
+  </blockquote>
+  <div class="factbox indigo">
+    <div class="fb-kick">同じバグが、別々に2度発見される</div>
+    <p>簿記ペルソナのセッションで奇妙な不具合が発生した。簿記に関する提案ではなく、前のテストで残っていた「ウェブサイトの構築」という提案が何度も表示されてしまったのだ。レポートは短絡的に「目標の分類機能のバグ」とは断定しなかった。エージェント間で共有された同一ブラウザセッションにおいて、前回のテスト実行時の保存データが混ざり合って残っていたことが原因だと突き止め、これを<strong>プロダクト自体のバグではなく「テスト環境（テストハーネス）に起因するアーティファクト」</strong>として正しく分類した。その上で、「実際のユーザーがどの保存済み目標を再開しているのかを一目でわかるようにする」という本来必要な改善点もしっかりと提示した。</p>
+    <p>これは、<a href="day3.ja.html#survey">Day 3の統合レポート</a>で捉えられたニアミスとほぼ同じ構造だ。2つのペルソナが独立して直面した「致命的なバグ」が、実際には製品の欠陥ではなくテスト用ストレージの共有による衝突だった、というケースである。<strong>「ギョッとするような発見があったときは、優先順位を書き換える前にまず事実確認をする」</strong>という姿勢は、Anandが一度実演しただけでなく、受講生たち自身の手にも確実に根づき始めている。</p>
+  </div>
+  <p>このレポートが導き出した最も重要な結論は、簡潔な言葉でこうまとめられていた。アプリのコアとなるアイディア自体はすでに機能している。崩れてしまうのはその直後の瞬間だ——<em>「外部ツールや既存の教材を開いた途端に、ガイダンスが不十分になってしまう」</em>。アドバイスは「何をすべきか」を教えてくれるが、そこへ移動した後に「具体的にどこをクリックすべきか」まではまだ教えてくれない。これは全面リデザインに比べればはるかに小さく安上がりな修正であり、まさに水曜日の課題が生み出すことを意図していた、具体的で実行可能なフィードバックそのものだった。</p>
+</div>
+
+<div class="wrap" id="feedback">
+  <span class="sec-num">シーン3</span>
+  <h2 class="sec">ミスも含めて、自分の姿を見る</h2>
+  <p class="lede">本日のメインとなる転換点に移る前に、Anandは水曜日に出されていたピアフィードバック課題（受講生同士で交換し合う動画ウォークスルー）の進捗を確認した。全員が完了していたわけではないが、誰もが何かしらのフィードバックを手にしていた。</p>
+  <blockquote class="pull">
+    <p>「Johan、あなたのところには——なるほど、Noahから1件来ていて、Koseiからはまだですね。声をかけてみてもいいかもしれません。［…］Hinataも少なくとも1件届いていますね。Nanamiも両方のアプリに届いています。［…］Noahも。Mioもですね。よし。<strong>つまり全員が、何らかの形で取り入れ可能なフィードバックを少なくとも1つは受け取れている状態です</strong>」</p>
+    <cite>— Anand</cite>
+  </blockquote>
+  <p>続いて彼は、提出された動画のうち2本をその場で初見のまま再生した。その2本の動画の対比が、思いがけず「どのようなフィードバックが本当に役に立つのか」を浮き彫りにした。</p>
+</div>
+
+<div class="mini-grid" style="max-width:720px; margin-left:auto; margin-right:auto;">
+  <div class="mini">
+    <div class="mini-kick">1本目 · 音声なし</div>
+    <div class="mini-title">無音の画面録画</div>
+    <div class="mini-body">「私のパソコンの音声がおかしいのかな？ いや、音声自体が入っていませんね。［…］これは自分が何をしてどこをクリックしたかだけを見せるウォークスルーで、ナレーションがありません。<strong>そこをもっと明確に指示しておくべきでしたね。何を考えて操作しているのか声で聞こえたほうが、いつだって遥かに参考になりますから。</strong> でもまあ、どう操作したのかのウォークスルーがあるだけでも十分です」 <a href="https://streamable.com/0ricne" target="_blank" rel="noopener">動画を見る ↗</a></div>
+  </div>
+  <div class="mini n2">
+    <div class="mini-kick">2本目 · 日本語のナレーション付き</div>
+    <div class="mini-title">「ここまで作業してみての感想…」</div>
+    <div class="mini-body">受講生がポイントカードを追加する店舗を選び——<em>「ユニクロを選択します」</em>——そしてこう語る。<em>「ここまで作業してみての感想…」</em>。Anand：<strong>「素晴らしいですね。ユーザーの生の声や入力を掴むには、5分という長さも実にちょうどいい」</strong> <a href="https://drive.google.com/file/d/1YFhJlzIafPcKYTe_Pf5ye1QPyiZHcduJ/view" target="_blank" rel="noopener">動画を見る ↗</a></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>どちらの動画も洗練されたピッチなどではない。一方はまったく声がなく、もう一方は台本なしで他人のアプリをクリックしていく生の5分間だった。それ自体が、Anandが数分後に言葉にして伝える前に静かに強調していたポイントだった。綺麗に整えられたものより、ナレーション付きの率直でリアルタイムな反応のほうが、いつだって圧倒的に勝るのだ。</p>
+</div>
+
+<div class="wrap" id="strangers">
+  <span class="sec-num">シーン4</span>
+  <h2 class="sec">さあ、見知らぬ人たちを探しに行こう</h2>
+  <p class="lede">確認を終えると、Anandは今週ここまでの歩みを1行で要約し、その先を指し示しながら、今日の本当の転換点を提示した。</p>
+  <blockquote class="pull">
+    <p>「私たちがこれまでやってきたのは、エージェントが生成できるアイディアを取り上げ、同じくエージェントの力を借りてプロトタイプを実装し、エージェントや仲間からフィードバックをもらい、今はエージェントの助けを借りてその修正版を作っている段階です。<strong>そして最後のステージとなるのが——適切な言葉が見当たらないのでこう表現しますが——『マーケティング（市場への展開）』です</strong>」</p>
+    <cite>— Anand</cite>
+  </blockquote>
+  <p>彼は誤解が生じないよう、すぐにその言葉を噛み砕いて説明した。「マーケティング」とは、お金を請求することでも、フォロワー数を追いかけることでもない。</p>
+  <blockquote class="pull olive">
+    <p>「私がプロダクトと言うとき、有料である必要はありません。無料のプロダクトでまったく構わないのです。<strong>誰が、どのようにそれを使っているのかを突き止め、そのプロセスから学び、改善できるかどうかを試してみてください</strong>」</p>
+    <cite>— Anand</cite>
+  </blockquote>
+  <p>この言葉の根底にある視点の転換こそが、このシーンの真の核心だ。これまでのテスター——水曜日にペルソナを演じた3つのHaikuサブエージェントも、今週フィードバックをくれたクラスメイトたちも——全員が受講生自身によって選ばれ、前提を説明され、ある程度はこちらに好意的な存在だった。だが、次のテスターはそうではない。</p>
+  <blockquote class="pull rust">
+    <p>「これまでは、知り合いに動画の録画を頼んだり、エージェントに試してもらったりしました。<strong>ここからは、見知らぬ人たちに使ってもらうことになります。</strong> だからこそ、皆さんのアプリには、誰がアクセスしてきたのか、あるいは仮にそれが分からなくても、<strong>彼らが何をしているのか、何がうまくいっていて、何がつまずいているのかを把握する仕組み</strong>が必要になるのです」</p>
+    <cite>— Anand</cite>
+  </blockquote>
+  <p>そして水曜日のやり方に倣い、「どうやるか」はあえて細かく指示せず、受講生自身の手に委ねられた。<em>「どうやってそれをやるか？ エージェントに聞いてください。ツールは世の中にいくらでもあります。『どうやるか』はもはや重要な問いではありません。重要になり始めるのは『何をすべきか』です」</em>。これにより生まれた成果物は極めて具体的であり、そして今週初めて「誰も誤魔化すことのできない指標」を中心とした課題となった。</p>
+  <div class="factbox indigo">
+    <div class="fb-kick">検証方法の反転</div>
+    <p>月曜日から水曜日までは「エージェントが作れるか、壊せるか、テストできるか、調査できるか？」が問われていた。木曜日に突きつけられたのは、それとはまったく異なる問いだ——<strong>「あなたに何の義理もない見知らぬ他人が、わざわざそれを使ってくれるか？ そして、その使われ方をあなたは把握できるか？」</strong>。「私も皆さんのアプリを訪れますし、皆さんもお互いのアプリを訪れます。アプリが使われる中で、『このアプリはこのように使われた』というフィードバックが手に入り、それをもとに学び、次のイテレーションとして改善できるようになっている必要があります」。</p>
+  </div>
+  <p>同じ「公開して観察する」というロジックに沿って、金曜日の「ポートフォリオ完成」を見据えた成果物がさらに2つ課された。完成したアプリの2分間のウォークスルー動画——<em>「単に『私のアプリはこういうことができます』と紹介するウォークスルー」</em>——これは単なる成績評価用ではなく、実際に外部へ公開することを前提としたものだ。そして、プロセス自体を振り返るもう1本の短い動画である。</p>
+  <blockquote class="pull">
+    <p>「もう1つ、<strong>これを使うプロセスから何を学んだか</strong>についての2分、長くても3分程度の短い動画も共有してほしいと思います。つまり、エージェントをどのように使い、何がうまくいき、何がうまくいかなかったのか、そしてそこから何を持ち帰ろうとしているのか、ということです」</p>
+    <cite>— Anand</cite>
+  </blockquote>
+  <p>後にJohanが課題の意図を正しく理解できているか確認した際、Anandの返答はそのまま課題全体の評価基準を一息で言い表すものとなった。<em>「自分が何をしたか、何がうまくいったか、何がうまくいかなかったか、そしてそこから何を学んだか。基本的にはそれだけです」</em>。</p>
+</div>
+
+<div class="wrap" id="logs">
+  <span class="sec-num">シーン5</span>
+  <h2 class="sec">チャットログも一緒に公開する</h2>
+  <p class="lede">さらにもう1つ、控えめながら重要な4つ目の成果物があった。それは水曜日のブラックボックス議論を締めくくった「ギャップから学ぶ」という論理と同じものだ。Anandは完成した結果だけでなく、エージェントとの実際のやり取りの記録を求めた。軌道修正の過程にこそ学びがあり、その修正の足跡が見える場所こそがチャットログだからだ。</p>
+  <blockquote class="pull olive">
+    <p>「エージェントと長時間やり取りしたセッションのうち、1つの共有トランスクリプトを添えて提出してほしいと思います。［…］ChatGPTやClaude上で直接やり取りしていた場合は、共有ボタンをクリックするだけで済みます。［…］『リンクを知っている全員』が閲覧できるように設定して保存してください。『公開リンクをコピー』をクリックすれば、リンクが取得できます」</p>
+    <cite>— Anand</cite>
+  </blockquote>
+  <p>Claude CodeやCodexのセッションなど、仕組み上共有がやや面倒なケースについては、「エージェントに聞けば解決することを人間が先回りして解決しない」という今週の一貫したテーマに沿って、ツール自身に解決させればいいとさらりとかわした。<em>「セッションをエクスポートしてくれとエージェントに指示すれば、エクスポートしてくれます。正直、それだけで簡単にできますよ」</em>。その時、Johanが計画の抜け穴をその場で指摘した。</p>
+  <blockquote class="pull rust">
+    <p>Johan：「チャットのログ以外は、すべてメールで送る形ですか？」<br>
+    Anand：「あ、いや、いい指摘ですね。<strong>例の同じシートに追加してもらうことにしましょう。</strong> それは実に素晴らしいアイディアです」</p>
+    <cite>— 実際のやり取り</cite>
+  </blockquote>
+  <p>Anandはその場で共有スプレッドシートを作り変え、各受講生の行の横に<strong>「製品動画リンク」</strong>、<strong>「学びの動画リンク」</strong>、<strong>「チャットログリンク」</strong>という3つの新しい列を追加した。これにより、メールで散乱しそうだった成果物が、クラス全員の取り組みの証跡（Proof of Work）として一元化され、誰でも公に見比べられる生きた台帳へと生まれ変わった。<em>「気づかせてくれてありがとう、Johan」</em>。</p>
+</div>
+
+<div class="band todo-band" id="homework">
+  <div class="todo-inner">
+    <h3>金曜日までの成果物</h3>
+    <p>Anandはリストを2度繰り返した——1度目は記憶をたどりながら順番を取り違えつつ、2度目はJohanの助けを借りて補完しながら。それ自体が、受講生たちが作る動画がお手本とすべき「完璧ではなくても明確に伝えるコミュニケーション」の小さく誠実な実演となっていた。</p>
+    <ol>
+      <li><strong>アプリの更新</strong>：これまでに集めたすべてのフィードバックをもとに、自分で「良くなった」と納得できるレベルまでアプリを改修する。</li>
+      <li><strong>2分間の製品デモ動画</strong>：アプリの機能を紹介するウォークスルー。実際に外部（ブログ、SNS、家族へのメールなど）に公開できるクオリティのもの。</li>
+      <li><strong>2〜3分の学びの振り返り動画</strong>：自分が何をしたか、エージェントの何が機能し、何が機能しなかったか、このプロセスから何を得たか。</li>
+      <li><strong>アプリへのアナリティクス導入</strong>：見知らぬユーザーが使ったときに、どう使われたかを把握し、そのシグナルから改善できるように計測を仕込む。</li>
+      <li><strong>チャットログのリンク共有</strong>：エージェントと長時間対話したセッションの公開共有リンク、またはエクスポートしたトランスクリプトを、2つの動画リンクと並べてクラスの共有スプレッドシートに記入する。</li>
+    </ol>
+    <p>すべての位置づけについて、Anandは最後にこう語って締めくくった。<strong>「これによって、明日の授業中、遅くとも明日中には、AI製品開発のライフサイクル全体を一通り完走したことになります。そしてこれは、絶対に皆さん自身のポートフォリオとして公開すべきです」</strong>。それまでの質問は <code>askai@s-anand.net</code> で受け付ける。クラスは金曜日、同じ教室、同じ時間に再び対面で集合する。</p>
+  </div>
+</div>
+
+</article>
+
+<div class="band takeaways-band" id="takeaways">
+  <div class="takeaways-inner">
+    <h2 class="takeaways-title">Day 4のポイント</h2>
+    <p class="takeaways-sub">2026年9月10日（木） · SUTD · 任意参加の質問クリニック（リモート）</p>
+    <div class="takeaway-grid">
+      <div class="takeaway">
+        <div class="takeaway-num">01</div>
+        <div class="takeaway-title">テストスイートは「防護柵」、ユーザーテストは「対話」。</div>
+        <div class="takeaway-text">自動テストスイートは「最低1回、多くても2回程度」走らせ、あとはリグレッション防止用として保持する。一方で<strong>「ユーザーテストに終わりはない」</strong>。この2つの「十分」は、問われている次元がまったく違う。</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">02</div>
+        <div class="takeaway-title">3人のサブエージェント・ペルソナは、1人の人間テスターよりも多角的な検証ができる。</div>
+        <div class="takeaway-text">Pocket Trailsの3人の架空ユーザーは、一晩の実行だけでバッテリー、プライバシー、作業フローという別々の摩擦点を突いてみせた。<strong>「好奇心を引き出すのは簡単だが、安心感を築くにはもっと手間がかかる」</strong>。</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">03</div>
+        <div class="takeaway-title">受講生自身の手で独自に見つけられた「ギョッとするような異常値の検証」。</div>
+        <div class="takeaway-text">YuriのStudy Walkerのリサーチでは、テストエージェント間でのストレージ共有による衝突が発生した。そしてそれを製品のバグではなく、テスト環境のアーティファクトであると正しく見抜いた。<strong>Day 3で学んだスキルが、教え込まれるまでもなく自然と受講生たちに浸透している。</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">04</div>
+        <div class="takeaway-title">ナレーション付きのリアルな5分間は、無音の洗練された動画に勝る。</div>
+        <div class="takeaway-text">あるフィードバック動画には音声がまったく入っていなかった。<strong>「何を考えているのか声で聞こえたほうが、いつだって遥かに参考になる」</strong>。クリックの軌跡だけでなく、その瞬間の生の反応こそが価値あるシグナルだ。</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">05</div>
+        <div class="takeaway-title">検証フェーズの反転：エージェントや友人から「見知らぬ他人」へ。</div>
+        <div class="takeaway-text">「これまでは動画の撮影を頼んだり、エージェントに試してもらったりしました。<strong>ここからは、見知らぬ人たちに使ってもらうことになります</strong>」。それにより、アプリ自体が何を計測・伝達できなければならないかの要件が変わる。</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">06</div>
+        <div class="takeaway-title">「どうやるか」は、もはや面白い問いではない。</div>
+        <div class="takeaway-text">見知らぬユーザーの利用状況を可視化するためにアプリへ計測タグを埋め込む方法など、検索すればいくらでも解決できる既知の課題だ。<strong>「重要になり始めるのは『何をすべきか』だ」</strong>——何を測定すべきかを決めることこそが、真のスキルとなる。</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">07</div>
+        <div class="takeaway-title">アプリだけでなく、チャットログも提出・公開せよ。</div>
+        <div class="takeaway-text">エージェントとの長時間のセッションログの中にこそ、修正のプロセス——すなわち学びの過程——が記録されている。<strong>プロダクトと並べて、対話のログも公開すること。</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">08</div>
+        <div class="takeaway-title">1つのスプレッドシート、1つの台帳、メールでの催促は不要。</div>
+        <div class="takeaway-text">「これらはメールで送るのですか？」という受講生のその場での指摘がきっかけで、バラバラになりかけていた3つの提出物が、全員に見える1つのシートの3列へと統合された。<strong>優れたプロセスとは、欠落に気づいたその瞬間に修正されるものだ。</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <footer class="footer">
-  <p><strong>How to Build AI Products — and Prove They Work</strong> · SUTD, 2026年9月7日〜11日</p>
-  <p><a href="index.ja.html">シリーズ概要</a> · <a href="day1.ja.html">Day 1</a> · <a href="https://talks.s-anand.net/" target="_blank" rel="noopener">Anandの他の講演</a></p>
+  <p><strong>Day 4 of 5</strong> — <a href="index.ja.html">How to Build AI Products — and Prove They Work</a>、SUTD DAIシグネチャー・マスタークラス、エキスパート・インダストリー・シリーズ。2026年9月10日（木）、リモート、任意参加。</p>
+  <p><a href="transcript-day-4.ja.md" id="transcript-btn3">全文書き起こしを読む</a> · <a href="day3.ja.html">Day 3</a> · <a href="index.ja.html">全5日間</a> · <a href="https://talks.s-anand.net/" target="_blank" rel="noopener">アーナンドの他の講演</a></p>
+  <p class="footer-mono">talks.s-anand.net/2026-09-06-how-to-build-ai-products/day4.ja.html</p>
 </footer>
+
+<div class="modal" id="doc-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h4 id="doc-title"></h4>
+      <button class="modal-close" id="doc-close" aria-label="閉じる">×</button>
+    </div>
+    <div class="modal-src" id="doc-src"></div>
+    <div class="modal-body" id="doc-body"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+<script>
+  // ── Progress bar ──
+  const prog = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    prog.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + '%';
+  });
+
+  // ── Scene navigation rail ──
+  const sceneNav = document.getElementById('scene-nav');
+  const snToggle = document.getElementById('sn-toggle');
+  const snLinks = [...document.querySelectorAll('#sn-list a')];
+
+  snToggle.addEventListener('click', () => {
+    const open = sceneNav.classList.toggle('open');
+    snToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  snLinks.forEach(a => a.addEventListener('click', () => {
+    sceneNav.classList.remove('open');
+    snToggle.setAttribute('aria-expanded', 'false');
+  }));
+  document.addEventListener('click', e => {
+    if (sceneNav.classList.contains('open') && !sceneNav.contains(e.target)) {
+      sceneNav.classList.remove('open');
+      snToggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  const snTargets = snLinks
+    .map(a => ({ link: a, el: document.getElementById(a.getAttribute('href').slice(1)) }))
+    .filter(t => t.el);
+  const markActive = () => {
+    const line = window.innerHeight * 0.32;
+    let current = snTargets[0];
+    for (const t of snTargets) if (t.el.getBoundingClientRect().top <= line) current = t;
+    snLinks.forEach(a => a.classList.remove('active'));
+    if (current) current.link.classList.add('active');
+  };
+  let snTick = false;
+  window.addEventListener('scroll', () => {
+    if (snTick) return;
+    snTick = true;
+    requestAnimationFrame(() => { markActive(); snTick = false; });
+  });
+  markActive();
+
+  // ── Markdown document modal ──
+  const modal = document.getElementById('doc-modal');
+  const dBody = document.getElementById('doc-body');
+  const dTitle = document.getElementById('doc-title');
+  const dSrc = document.getElementById('doc-src');
+  const cache = {};
+
+  function renderMarkdown(text) {
+    const body = text
+      .replace(/^---[\s\S]*?---\s*/, '')
+      .replace(/<summary>([\s\S]*?)<\/summary>/g, '\n\n**💭 $1**\n\n')
+      .replace(/<\/?details>/g, '\n\n');
+    const html = window.marked ? marked.parse(body) : body.replace(/\n/g, '<br>');
+    return html.replace(/<a /g, '<a target="_blank" rel="noopener" ');
+  }
+
+  async function openDoc(file, title, source) {
+    modal.classList.add('open');
+    dBody.scrollTop = 0;
+    dTitle.textContent = title;
+    dSrc.innerHTML = source ? `<a href="${source}" target="_blank" rel="noopener">↗ Open the original</a>` : '';
+    if (cache[file]) { dBody.innerHTML = cache[file]; return; }
+    dBody.innerHTML = '<p><em>Loading…</em></p>';
+    try {
+      const res = await fetch(file);
+      if (!res.ok) throw new Error(res.status);
+      const html = renderMarkdown(await res.text());
+      cache[file] = html;
+      dBody.innerHTML = html;
+    } catch (e) {
+      dBody.innerHTML = `<p>Could not load this file here. <a href="${source || file}" target="_blank" rel="noopener">Open it directly</a>.</p>`;
+    }
+  }
+
+  const openTranscript = e => {
+    e.preventDefault();
+    openDoc('transcript-day-4.ja.md', 'Day 4 ― 全文書き起こし、2026年9月10日', '');
+  };
+  ['transcript-btn', 'transcript-btn2', 'transcript-btn3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', openTranscript);
+  });
+
+  document.querySelectorAll('a.doclink').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      openDoc(el.dataset.doc, el.dataset.title || 'Document', el.dataset.doc);
+    });
+  });
+
+  document.getElementById('doc-close').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('open'); });
+</script>
+
 </body>
 </html>

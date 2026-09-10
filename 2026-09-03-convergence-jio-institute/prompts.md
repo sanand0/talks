@@ -1,5 +1,18 @@
 # Prompts
 
+## Embed video, 10 Sep 2026
+
+<!--
+cd ~/code/talks/
+dev.sh -- claude --dangerously-skip-permissions --model sonnet --effort medium
+-->
+
+The video for the talk at 2026-09-03-convergence-jio-institute/ is now being published at https://youtu.be/liS63TzFJIU.
+Embed this similar to how other recent talks have embedded videos.
+Update README.md. Check if there are any other updates / changes required - based on other talks - and implement what's needed.
+
+<!-- claude --resume 5d916583-21bb-460e-ac34-f44d4cbbb9a1 -->
+
 ## Story, 3 Aug 2026
 
 <!--

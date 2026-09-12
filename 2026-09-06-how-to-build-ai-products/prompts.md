@@ -1,6 +1,68 @@
 # Prompts
 
-## Day 3, 10 Sep 2026
+## Corrections, 12 Sep 2026
+
+<!--
+cd ~/code/talks/2026-09-06-how-to-build-ai-products/
+dev.sh -p ~/Documents/data:ro,~/code:ro,~/r2:ro -- claude --dangerously-skip-permissions --model sonnet --effort medium
+-->
+
+I plan to move the submissions/ page elsewhere. So copy from submissions/ that are used in this directory to ./ and re-reference those in the HTML files.
+
+<!-- claude --resume 5d32e82d-7ef5-4461-9ef5-9a9be8e1cf9d --dangerously-skip-permissions -->
+
+## Day 5, 12 Sep 2026
+
+<!--
+cd ~/code/talks/
+dev.sh -p ~/Documents/data:ro,~/code:ro,~/r2:ro -- claude --dangerously-skip-permissions --model sonnet --effort medium
+-->
+
+Update the narrative story at 2026-09-06-how-to-build-ai-products/ to include day 5 content from transcript-day-5.md and comic-page-day-5.avif.
+Read the prompts.md and other related files for context.
+Follow the same structure and instructions / style as for past days and avoid mistakes that required me to correct you.
+
+Read ~/r2/private/straivex-methodology/ as context for the StraiveX methodology but do not reproduce the slide or any sensitive material.
+Weave in content from chat-day5.md. It has multiple chats used during the day. Show individual chats, formatted as HTML in a popup, linked from the main narrative.
+Also weave in submissions/evaluation-prompt-original.md which was revised using submissions/evaluation-prompt-feedback.csv (see chat-day5.md for details) into evaluation-prompt.md.
+Include the above files (show them, formatted, in a popup; incorporate content into the narrative) but do not incorporate any actual evaluations based on these.
+Include any other relevant links or stats from https://docs.google.com/spreadsheets/d/1069Qs1tt_fuSDJryagebnFLIyG-KqRoni-nyLYml4pc/edit
+Embed (and link to) the pages the students presented.
+
+Do not create day5.ja.html yet - I'll provide a translation AFTER you create day5.html. But you can update other files (e.g. if index.html needs changes, etc.)
+
+---
+
+Place the StraiveX cards in a single line when possible.
+Break the flow of long blocks of text in the first half using more .band blocks in the first half.
+Link to and weave in my [reframe-question](https://github.com/sanand0/blog/blob/main/pages/skills/reframe-question/SKILL.md) skill under "A meta-prompt from everyone's chats".
+
+Fix these AND SIMILAR ERRORS:
+- On hover, .doclink text has poor contrast and is almost unreadable.
+- Clicking the .doclink "Open the original chat" does not open the link.
+- The popup showing the raw feedback CSV doesn't look good because the "Suggestion" column which has the bulk of the text is squeezed at the end and takes up too many rows.
+
+---
+
+Make the StraiveX methodology a .band that can take up the full width.
+Strike-throughs on "False victories the rubric explicitly rejects" make it hard to read.
+
+---
+
+`day5.ja.md` has the Japanese translation of day5.html. Use this wisely to create day5.ja.html - using the Japanese script and comic. Then delete day5.ja.md.
+
+---
+
+Update 2026-09-06-how-to-build-ai-products/{index.html,index.ja.html} based on the overall content of the 5-day talk series.
+Not too much - maybe just correct what's required, improve the flow to reflect reality, and end with a short takeaway.
+
+<!-- claude --resume 4e7667ad-3563-400c-9e39-ae38a5b3f908 --dangerously-skip-permissions -->
+<!--
+Comic page: https://chatgpt.com/c/6aa50c4c-e45c-83ec-b098-45f91a9502b2
+Manga page: https://chatgpt.com/c/6aa50fa4-44d8-83ec-8709-17e03f7f5a52
+-->
+
+## Day 4, 10 Sep 2026
 
 <!--
 cd ~/code/talks/

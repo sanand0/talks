@@ -3,66 +3,1087 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Day 5 (準備中) | How to Build AI Products</title>
-<meta name="description" content="SUTD DAIシグネチャー・マスタークラス Day 5(2026年9月11日、金曜)。対面での最終発表。まだ開催されていません。">
+<title>ループは決して終わらない | Day 5 · How to Build AI Products — and Prove They Work</title>
+<meta name="description" content="SUTD DAIシグネチャー・マスタークラス Day 5。クラスは自分たち自身の1週間から再利用可能なアセットを掘り起こす——全員のチャットログから抽出したメタプロンプト、受講生がハックできるAI作成の評価ルーブリック——そして7人の受講生が発表を行う。">
+<meta property="og:title" content="ループは決して終わらない — Day 5">
+<meta property="og:description" content="SUTD DAIシグネチャー・マスタークラス · How to Build AI Products — and Prove They Work · 2026年9月11日（金）、対面開催。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Spectral:wght@300;400;600&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,600&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f4f1ea; --paper: #fffdf9; --ink: #1b1a22; --ink2: #3e3b48; --muted: #78717f;
-    --indigo: #4a3fa8; --indigo-dk: #2f2775; --rust: #b8471f; --olive-dk: #6a5d0f; --olive-soft: #f4eec8;
-    --border: #ded7c8; --night: #14121c;
-    --font-display: "Playfair Display", "Noto Serif JP", Georgia, serif;
-    --font-body: "Spectral", "Noto Sans JP", Georgia, serif;
-    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --bg: #f4f1ea;
+    --paper: #fffdf9;
+    --ink: #1b1a22;
+    --ink2: #3e3b48;
+    --muted: #78717f;
+    --indigo: #4a3fa8;
+    --indigo-dk: #2f2775;
+    --indigo-soft: #e7e4f8;
+    --rust: #b8471f;
+    --rust-dk: #8a3315;
+    --rust-soft: #fbe1d6;
+    --olive: #8a7a17;
+    --olive-dk: #6a5d0f;
+    --olive-soft: #f4eec8;
+    --border: #ded7c8;
+    --night: #14121c;
+    --night2: #1d1a29;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'Spectral', Georgia, serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   }
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: var(--font-body); background: var(--bg); color: var(--ink); line-height: 1.9;
-    font-size: 18px; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; }
-  .masthead { background: rgba(244,241,234,.95); border-bottom: 1px solid var(--border); padding: .7rem 1.5rem; }
-  .masthead-inner { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: .8rem; flex-wrap: wrap; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.76;
+    font-size: 19px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    padding-bottom: 3rem;
+  }
+  [id] { scroll-margin-top: 4.6rem; }
+  img { max-width: 100%; display: block; }
+
+  #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--indigo), var(--olive), var(--rust)); z-index: 1000; transition: width .15s linear; }
+
+  /* ── Masthead ── */
+  .masthead { position: sticky; top: 0; z-index: 200; background: rgba(244,241,234,.95); border-bottom: 1px solid var(--border); padding: .7rem 1.5rem; backdrop-filter: blur(8px); }
+  .masthead-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: .8rem; flex-wrap: wrap; }
   .masthead-brand { font-family: var(--font-mono); font-size: .8rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
   .masthead-brand:hover { color: var(--indigo); }
+  .masthead-right { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
   .masthead-date { font-family: var(--font-mono); font-size: .68rem; color: var(--muted); }
-  .lang-switch { font-family: var(--font-mono); font-size: .68rem; }
-  .lang-switch a { color: var(--muted); text-decoration: none; }
-  .lang-switch a.current { color: var(--ink); font-weight: 700; }
-  .lang-switch a:hover { color: var(--indigo); }
-  main { flex: 1; max-width: 640px; margin: 0 auto; padding: 5rem 1.5rem 4rem; text-align: center; }
-  .kicker { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--rust); margin-bottom: 1.1rem; }
-  h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(1.8rem, 6vw, 3rem); line-height: 1.3; letter-spacing: -.01em; margin-bottom: 1.2rem; }
-  .tag { display: inline-block; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .04em;
-    background: var(--olive-soft); color: var(--olive-dk); border: 1px solid rgba(106,93,15,.3); border-radius: 99px; padding: .38rem .9rem; margin-bottom: 1.6rem; }
-  p { color: var(--ink2); margin-bottom: 1.3rem; }
-  .back { display: inline-block; font-family: var(--font-mono); font-size: .74rem; text-decoration: none;
-    color: var(--indigo-dk); border: 1px solid var(--indigo); border-radius: 6px; padding: .5rem 1rem; transition: all .2s; margin: .3rem; }
-  .back:hover { background: var(--indigo); color: #fff; }
-  .footer { background: var(--night); color: #a8a2b6; padding: 2rem 1.5rem; text-align: center; }
-  .footer p { margin-bottom: .5rem; font-size: .88rem; color: #a8a2b6; }
+  .masthead-link { font-family: var(--font-mono); font-size: .67rem; color: var(--indigo-dk); text-decoration: none; border: 1px solid var(--indigo); border-radius: 4px; padding: .26rem .55rem; transition: all .2s; white-space: nowrap; }
+  .masthead-link:hover { background: var(--indigo); color: #fff; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 1.5rem; }
+  .wrap-wide { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ── Hero ── */
+  .hero { max-width: 860px; margin: 0 auto; padding: 3.4rem 1.5rem 1.2rem; text-align: center; }
+  .hero-kicker { font-family: var(--font-mono); font-size: .67rem; letter-spacing: .2em; text-transform: uppercase; color: var(--rust); margin-bottom: 1.1rem; line-height: 1.9; }
+  .hero h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(2.4rem, 7.2vw, 4.4rem); line-height: 1.02; letter-spacing: -.025em; margin-bottom: 1.1rem; }
+  .hero h1 em { font-style: italic; color: var(--indigo); font-weight: 700; }
+  .hero-sub { font-size: 1.16rem; color: var(--ink2); line-height: 1.62; max-width: 660px; margin: 0 auto 1.6rem; }
+  .hero-meta { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); line-height: 2; }
+  .hero-meta a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.4); }
+  .hero-meta a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+
+  .quick-links { margin: 1.7rem auto 0; display: flex; gap: .55rem; justify-content: center; flex-wrap: wrap; max-width: 820px; }
+  .quick-links a { font-family: var(--font-mono); font-size: .71rem; text-decoration: none; color: var(--ink2); background: var(--paper); border: 1px solid var(--border); border-radius: 99px; padding: .44rem .95rem; transition: all .2s; }
+  .quick-links a:hover { border-color: var(--indigo); color: var(--indigo-dk); transform: translateY(-1px); }
+
+  /* ── Bands ── */
+  .band { width: 100vw; margin-left: calc(50% - 50vw); margin-top: 3.2rem; margin-bottom: 3.2rem; }
+
+  /* ── Body text ── */
+  .wrap p, .wrap-wide > p { margin-bottom: 1.35rem; }
+  .wrap p a, .wrap li a, .wrap-wide > p a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.42); }
+  .wrap p a:hover, .wrap li a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+  .wrap strong { font-weight: 600; color: var(--ink); background: linear-gradient(transparent 62%, rgba(231,228,248,.95) 62%); }
+  .wrap ul, .wrap ol { margin: 0 0 1.35rem 1.3rem; }
+  .wrap li { margin-bottom: .55rem; }
+  .lede { font-size: 1.11rem; color: var(--ink2); }
+
+  .sec-num { display: block; font-family: var(--font-mono); font-size: .64rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--indigo); margin: 3.4rem 0 .55rem; line-height: 1.6; }
+  h2.sec { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.75rem, 4.6vw, 2.6rem); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 1.2rem; }
+  .wrap code { font-family: var(--font-mono); font-size: .82em; background: var(--olive-soft); padding: .08rem .32rem; border-radius: 4px; }
+  h3.sub { font-family: var(--font-display); font-weight: 700; font-size: 1.28rem; margin: 2.1rem 0 .7rem; color: var(--ink2); }
+  .dinkus { text-align: center; color: var(--indigo); letter-spacing: .75em; margin: 2.6rem 0; font-size: .8rem; }
+
+  /* ── Pull quotes ── */
+  blockquote.pull { margin: 2.1rem 0; padding: 1.3rem 1.55rem; background: var(--paper); border-left: 4px solid var(--indigo); border-radius: 0 7px 7px 0; box-shadow: 0 2px 14px rgba(27,26,34,.07); }
+  blockquote.pull p { font-family: var(--font-display); font-size: 1.2rem; font-weight: 400; font-style: italic; line-height: 1.5; margin-bottom: .55rem; color: var(--ink); }
+  blockquote.pull p:last-of-type { margin-bottom: .55rem; }
+  blockquote.pull cite { font-family: var(--font-mono); font-style: normal; font-size: .69rem; color: var(--muted); }
+  blockquote.pull.rust { border-left-color: var(--rust); }
+  blockquote.pull.olive { border-left-color: var(--olive); }
+
+  /* ── Inline cards ── */
+  .mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.6rem 0 2.2rem; }
+  @media (max-width: 640px) { .mini-grid { grid-template-columns: 1fr; } }
+  .mini-grid.n3 { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 900px) { .mini-grid.n3 { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 640px) { .mini-grid.n3 { grid-template-columns: 1fr; } }
+  .mini-grid.n5 { grid-template-columns: repeat(5, 1fr); gap: .8rem; }
+  @media (max-width: 1100px) { .mini-grid.n5 { grid-template-columns: repeat(3, 1fr); gap: 1rem; } }
+  @media (max-width: 640px) { .mini-grid.n5 { grid-template-columns: 1fr; } }
+
+  /* ── Cycle band (full-bleed strip for the StraiveX cards) ── */
+  .cycle-band { background: var(--paper); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 2.3rem 1.5rem 2.5rem; }
+  .cycle-band-inner { max-width: 1360px; margin: 0 auto; }
+  .cycle-band .mini-grid.n5 { margin: 0; }
+  .mini { background: var(--paper); border: 1px solid var(--border); border-top: 3px solid var(--indigo); border-radius: 8px; padding: 1.05rem 1.2rem; }
+  .mini.n2 { border-top-color: var(--rust); }
+  .mini.n3 { border-top-color: var(--olive); }
+  .mini.n4 { border-top-color: var(--indigo-dk); }
+  .mini.n5 { border-top-color: var(--rust-dk); }
+  .mini-kick { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: .35rem; }
+  .mini-title { font-family: var(--font-display); font-weight: 700; font-size: 1.04rem; margin-bottom: .4rem; line-height: 1.26; }
+  .mini-body { font-size: .87rem; line-height: 1.6; color: var(--ink2); }
+  .mini-body strong { color: var(--ink); font-weight: 600; }
+  .mini-body a { color: var(--indigo-dk); }
+
+  /* ── Embeds ── */
+  .iframe-wrap { padding: 2.4rem 1.5rem; background: var(--indigo-soft); }
+  .iframe-wrap.rust { background: var(--rust-soft); }
+  .iframe-wrap.olive { background: var(--olive-soft); }
+  .iframe-inner { max-width: 1000px; margin: 0 auto; }
+  .embed-frame { background: var(--paper); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(27,26,34,.1); }
+  .embed-frame .chrome { display: flex; align-items: center; gap: .45rem; padding: .6rem .85rem; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .embed-frame .chrome .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border); flex: none; }
+  .embed-frame .chrome .url { font-family: var(--font-mono); font-size: .67rem; color: var(--muted); margin-left: .5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .embed-frame a.shot-link { display: block; position: relative; text-decoration: none; color: inherit; }
+  .embed-frame a.shot-link:hover { text-decoration: none; }
+  .embed-frame img.shot { width: 100%; display: block; background: #fff; }
+  .embed-frame .shot-hint { position: absolute; right: .7rem; bottom: .7rem; font-family: var(--font-mono); font-size: .62rem; letter-spacing: .06em; text-transform: uppercase; background: rgba(20,18,28,.82); color: #f2eff8; padding: .35rem .7rem; border-radius: 99px; opacity: 0; transition: opacity .2s; }
+  .embed-frame a.shot-link:hover .shot-hint { opacity: 1; }
+  .embed-frame iframe { width: 100%; height: 82vh; border: 0; display: block; background: #fff; }
+  .embed-cap { font-family: var(--font-mono); font-size: .72rem; text-align: center; margin-top: 1rem; line-height: 1.75; color: var(--indigo-dk); }
+  .iframe-wrap.rust .embed-cap { color: var(--rust-dk); }
+  .iframe-wrap.olive .embed-cap { color: var(--olive-dk); }
+  .embed-cap strong { font-weight: 700; }
+  .embed-cap a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.45); }
+  .iframe-wrap.rust .embed-cap a { color: var(--rust-dk); border-bottom-color: rgba(138,51,21,.45); }
+  .iframe-wrap.olive .embed-cap a { color: var(--olive-dk); border-bottom-color: rgba(106,93,15,.5); }
+  .embed-cap a:hover { color: var(--rust); }
+  .embed-badge { display: flex; align-items: center; justify-content: center; gap: .6rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .embed-badge .pill { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; background: var(--indigo-dk); color: #fff; border-radius: 99px; padding: .38rem .9rem; }
+  .iframe-wrap.rust .embed-badge .pill { background: var(--rust-dk); }
+  .iframe-wrap.olive .embed-badge .pill { background: var(--olive-dk); }
+  @media (min-width: 1101px) { .iframe-wrap { padding-left: 5rem; padding-right: 5rem; } }
+
+  /* ── Stat row ── */
+  .stat-row { display: flex; flex-wrap: wrap; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 1rem; }
+  .stat { flex: 1 1 120px; background: var(--paper); padding: 1rem 1.1rem; text-align: center; }
+  .stat-num { font-family: var(--font-mono); font-weight: 700; font-size: 1.7rem; color: var(--ink); line-height: 1; }
+  .stat-num.good { color: var(--olive-dk); }
+  .stat-num.warn { color: var(--rust-dk); }
+  .stat-label { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-top: .4rem; }
+
+  /* ── data table ── */
+  .wrap-wide table.data-table, .wrap table.data-table { width: 100%; border-collapse: collapse; margin: 1.6rem 0 2.2rem; font-size: .9rem; background: var(--paper); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .data-table th, .data-table td { padding: .7rem .9rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .data-table th { font-family: var(--font-mono); font-size: .64rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); background: var(--bg); }
+  .data-table tr:last-child td { border-bottom: 0; }
+  .data-table td strong { color: var(--ink); }
+
+  /* ── Audio card ── */
+  .audio-wrap { max-width: 660px; margin: 1.7rem auto 0; padding: 0 1.5rem; }
+  .audio-card { background: var(--night); color: #ede6d6; padding: 1.05rem 1.35rem; border-radius: 9px; display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; box-shadow: 0 6px 24px rgba(27,26,34,.18); }
+  .audio-icon { font-size: 1.6rem; flex-shrink: 0; }
+  .audio-info { flex: 1; min-width: 140px; }
+  .audio-title { font-family: var(--font-display); font-size: .95rem; font-weight: 700; margin-bottom: .15rem; }
+  .audio-sub { font-size: .72rem; color: #a8a2b6; font-family: var(--font-mono); }
+  .audio-card audio { max-width: 100%; height: 32px; }
+  @media (max-width: 480px) { .audio-card audio { width: 100%; } }
+
+  /* ── Link cards ── */
+  .link-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; max-width: 1080px; margin: 0 auto; }
+  .link-card { display: block; background: var(--paper); border: 1px solid var(--border); border-radius: 10px; padding: 1.15rem 1.3rem; text-decoration: none; color: inherit; transition: all .2s; }
+  .link-card:hover { border-color: var(--indigo); box-shadow: 0 4px 16px rgba(27,26,34,.12); transform: translateY(-2px); }
+  .link-card .lc-kick { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--rust); margin-bottom: .4rem; }
+  .link-card .lc-title { font-family: var(--font-display); font-weight: 700; font-size: 1.06rem; margin-bottom: .4rem; line-height: 1.26; color: var(--ink); }
+  .link-card .lc-body { font-size: .87rem; line-height: 1.6; color: var(--ink2); }
+  .link-card .lc-body em { color: var(--muted); font-style: italic; }
+
+  /* ── Tooltip ── */
+  .tip { border-bottom: 1px dotted var(--rust); cursor: help; position: relative; }
+  .tip::after {
+    content: attr(data-tip); position: absolute; bottom: 132%; left: 50%; transform: translateX(-50%);
+    background: var(--night); color: #f2eff8; padding: .55rem .8rem; border-radius: 6px; font-size: .78rem;
+    font-family: var(--font-body); line-height: 1.5; white-space: normal; width: 250px; pointer-events: none;
+    opacity: 0; transition: opacity .2s; z-index: 300; font-style: normal; text-align: left; box-shadow: 0 4px 18px rgba(0,0,0,.3);
+  }
+  .tip:hover::after { opacity: 1; }
+
+  /* ── doclink chip ── */
+  a.doclink { display: inline-flex; align-items: center; gap: .35rem; font-family: var(--font-mono); font-size: .68rem; text-decoration: none; color: var(--indigo-dk); background: var(--indigo-soft); border: 1px solid rgba(74,63,168,.3); border-radius: 99px; padding: .3rem .75rem; margin: .15rem .3rem .15rem 0; white-space: nowrap; }
+  a.doclink:hover, .wrap p a.doclink:hover, .wrap li a.doclink:hover { background: var(--indigo) !important; color: #fff !important; border-color: var(--indigo) !important; }
+  a.doclink::before { content: "📄"; font-size: .8em; }
+
+  /* ── Quote band (full-bleed pull-quote) ── */
+  .quote-band { padding: 3.2rem 1.5rem; text-align: center; }
+  .quote-band.indigo { background: linear-gradient(135deg, #2f2775, #4a3fa8); }
+  .quote-band.rust { background: linear-gradient(135deg, #6e2810, #b8471f); }
+  .quote-band.olive { background: linear-gradient(135deg, #4d4310, #8a7a17); }
+  .quote-band blockquote { max-width: 780px; margin: 0 auto; }
+  .quote-band blockquote p { font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: clamp(1.28rem, 3.2vw, 1.9rem); line-height: 1.48; color: #fff; margin-bottom: 1rem; }
+  .quote-band blockquote cite { font-family: var(--font-mono); font-style: normal; font-size: .74rem; color: rgba(255,255,255,.78); }
+
+  /* ── Stat band (full-bleed stat strip) ── */
+  .stat-band { padding: 2.6rem 1.5rem; background: var(--paper); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .stat-band-inner { max-width: 900px; margin: 0 auto; text-align: center; }
+  .stat-band-inner .stat-row { max-width: 780px; margin: 0 auto 1rem; }
+  .stat-band-cap { font-family: var(--font-mono); font-size: .78rem; color: var(--muted); line-height: 1.7; }
+
+  /* ── Chip band (full-bleed chip strip) ── */
+  .chip-band { padding: 2.8rem 1.5rem; }
+  .chip-band.rust { background: var(--rust-soft); }
+  .chip-band.indigo { background: var(--indigo-soft); }
+  .chip-band.olive { background: var(--olive-soft); }
+  .chip-band-inner { max-width: 900px; margin: 0 auto; text-align: center; }
+  .chip-band-kick { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .16em; text-transform: uppercase; color: var(--rust-dk); margin-bottom: 1.1rem; }
+  .chip-band.indigo .chip-band-kick { color: var(--indigo-dk); }
+  .chip-band.olive .chip-band-kick { color: var(--olive-dk); }
+  .chip-wrap { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; }
+  .chip { display: inline-flex; align-items: center; gap: .4rem; font-family: var(--font-mono); font-size: .76rem; background: var(--paper); border: 1px solid var(--border); border-radius: 99px; padding: .42rem .95rem; color: var(--ink2); }
+  .chip::before { content: "✗"; color: var(--rust); font-weight: 700; font-size: .85em; }
+  .chip-band-cap { margin-top: 1.2rem; font-size: .96rem; color: var(--ink2); font-style: italic; line-height: 1.6; }
+  .chip-band-cap strong { color: var(--ink); font-style: normal; }
+
+  /* ── Takeaways ── */
+  .takeaways-band { background: linear-gradient(140deg, #2f2775 0%, #1d1a29 52%, #8a3315 100%); padding: 3.4rem 1.5rem; }
+  .takeaways-inner { max-width: 1140px; margin: 0 auto; }
+  .takeaways-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.7rem, 4.2vw, 2.4rem); color: #fff; text-align: center; margin-bottom: .5rem; letter-spacing: -.02em; }
+  .takeaways-sub { text-align: center; color: #cfc7f0; font-size: .88rem; margin-bottom: 2.2rem; font-family: var(--font-mono); }
+  .takeaway-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+  .takeaway { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15); border-radius: 10px; padding: 1.25rem 1.35rem; }
+  .takeaway-num { font-family: var(--font-mono); font-size: .65rem; letter-spacing: .14em; color: #e0cf6b; margin-bottom: .45rem; }
+  .takeaway-title { font-family: var(--font-display); font-weight: 700; font-size: 1.06rem; color: #fff; margin-bottom: .45rem; line-height: 1.3; }
+  .takeaway-text { font-size: .9rem; line-height: 1.65; color: #e6e1f2; }
+  .takeaway-text strong { color: #fff; font-weight: 600; }
+  .takeaway-text a { color: #ffd9a8; text-decoration: none; border-bottom: 1px solid rgba(255,217,168,.55); }
+  .takeaway-text a:hover { color: #fff; border-bottom-color: #fff; }
+
+  /* ── Homework band ── */
+  .todo-band { background: var(--paper); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 2.8rem 1.5rem; }
+  .todo-inner { max-width: 800px; margin: 0 auto; }
+  .todo-inner h3 { font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; margin-bottom: 1rem; }
+  .todo-inner ol { margin: 0 0 0 1.3rem; }
+  .todo-inner li { margin-bottom: .7rem; line-height: 1.7; }
+  .todo-inner a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.42); }
+  .todo-inner a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+  .todo-inner strong { font-weight: 600; }
+
+  .footer { background: var(--night); color: #a8a2b6; padding: 2.6rem 1.5rem; text-align: center; }
+  .footer p { margin-bottom: .7rem; font-size: .92rem; }
   .footer a { color: #ffc98c; text-decoration: none; border-bottom: 1px solid rgba(255,201,140,.45); }
   .footer a:hover { color: #fff; border-bottom-color: #fff; }
-  @media (max-width: 640px) { body { font-size: 16.5px; } main { padding-top: 3.2rem; } }
+  .footer-mono { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .04em; color: #7f7891; }
+
+  /* ── Modal ── */
+  .modal { position: fixed; inset: 0; background: rgba(20,18,28,.9); display: none; align-items: center; justify-content: center; z-index: 900; padding: 1.4rem; }
+  .modal.open { display: flex; }
+  .modal-box { background: var(--paper); border-radius: 10px; max-width: 880px; width: 100%; max-height: 88vh; display: flex; flex-direction: column; overflow: hidden; }
+  .modal-head { padding: .95rem 1.3rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .modal-head h4 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; }
+  .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--muted); line-height: 1; padding: 0 .3rem; }
+  .modal-close:hover { color: var(--rust); }
+  .modal-body { padding: 1.25rem; overflow-y: auto; font-size: .93rem; line-height: 1.72; }
+  .modal-body h1, .modal-body h2, .modal-body h3 { font-family: var(--font-display); font-weight: 700; margin: 1.2rem 0 .55rem; line-height: 1.25; }
+  .modal-body h1 { font-size: 1.45rem; } .modal-body h2 { font-size: 1.22rem; } .modal-body h3 { font-size: 1.08rem; }
+  .modal-body p { margin-bottom: .8rem; }
+  .modal-body a { color: var(--indigo-dk); }
+  .modal-body ul, .modal-body ol { margin: 0 0 .8rem 1.2rem; }
+  .modal-body li { margin-bottom: .4rem; }
+  .modal-body pre { background: var(--bg); padding: .8rem; border-radius: 6px; overflow-x: auto; font-size: .8rem; }
+  .modal-body code { font-family: var(--font-mono); font-size: .84em; }
+  .modal-body blockquote { border-left: 3px solid var(--border); padding-left: .9rem; margin: .8rem 0; color: var(--ink2); }
+  .modal-body table { display: block; overflow-x: auto; border-collapse: collapse; width: 100%; }
+  .modal-body th, .modal-body td { border: 1px solid var(--border); padding: .4rem .6rem; text-align: left; vertical-align: top; }
+  .modal-body table.csv-table { font-size: .82rem; }
+  .modal-body table.csv-table th { background: var(--bg); font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .04em; }
+  .csv-cards { display: flex; flex-direction: column; gap: .9rem; }
+  .csv-card { border: 1px solid var(--border); border-left: 3px solid var(--indigo); border-radius: 8px; padding: .85rem 1rem; background: var(--bg); }
+  .csv-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: .6rem; flex-wrap: wrap; margin-bottom: .3rem; }
+  .csv-card-name { font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; color: var(--ink); }
+  .csv-card-tag { font-family: var(--font-mono); font-size: .64rem; letter-spacing: .05em; text-transform: uppercase; background: var(--indigo-soft); color: var(--indigo-dk); border-radius: 99px; padding: .22rem .65rem; white-space: nowrap; }
+  .csv-card-meta { font-family: var(--font-mono); font-size: .66rem; color: var(--muted); margin-bottom: .55rem; }
+  .csv-card-body { font-size: .92rem; line-height: 1.62; color: var(--ink2); }
+  .modal-src { font-family: var(--font-mono); font-size: .7rem; padding: .35rem 1.3rem 0; }
+  .modal-src a { color: var(--rust-dk); }
+
+  /* ── Comic / visual summary band ── */
+  .comic-band { background: var(--night); padding: 2.6rem 1.5rem 2.4rem; }
+  .comic-inner { max-width: 900px; margin: 0 auto; }
+  .comic-kick { font-family: var(--font-mono); font-size: .64rem; letter-spacing: .2em; text-transform: uppercase; color: #e0cf6b; text-align: center; margin-bottom: 1.1rem; }
+  .comic-inner a.comic-link { display: block; border-radius: 10px; overflow: hidden; box-shadow: 0 8px 34px rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.12); }
+  .comic-inner img { width: 100%; max-width: 100%; height: auto; display: block; }
+  .comic-cap { font-family: var(--font-mono); font-size: .72rem; line-height: 1.8; text-align: center; color: #cfc9dd; margin-top: 1.1rem; }
+  .comic-cap strong { color: #fff; font-weight: 700; }
+  .comic-cap a { color: #ffc98c; text-decoration: none; border-bottom: 1px solid rgba(255,201,140,.5); }
+  .comic-cap a:hover { color: #fff; border-bottom-color: #fff; }
+
+  /* ── Aside / fact box ── */
+  .factbox { background: var(--paper); border: 1px solid var(--border); border-left: 4px solid var(--olive); border-radius: 0 9px 9px 0; padding: 1.15rem 1.35rem; margin: 2rem 0 2.2rem; }
+  .factbox.indigo { border-left-color: var(--indigo); }
+  .factbox.rust { border-left-color: var(--rust); }
+  .factbox .fb-kick { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); margin-bottom: .55rem; }
+  .factbox .fb-title { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; line-height: 1.3; margin-bottom: .6rem; color: var(--ink); }
+  .factbox ol, .factbox ul { margin: 0 0 0 1.15rem; }
+  .factbox li { font-size: .9rem; line-height: 1.62; margin-bottom: .45rem; color: var(--ink2); }
+  .factbox li:last-child { margin-bottom: 0; }
+  .factbox li strong { font-weight: 600; color: var(--ink); }
+  .factbox p { font-size: .9rem; line-height: 1.62; color: var(--ink2); margin-bottom: .6rem; }
+  .factbox ul + p, .factbox ol + p { margin-top: .9rem; }
+  .factbox p:last-child { margin-bottom: 0; }
+  .factbox a { color: var(--indigo-dk); text-decoration: none; border-bottom: 1px solid rgba(74,63,168,.42); }
+  .factbox a:hover { color: var(--rust); border-bottom-color: var(--rust); }
+  .factbox code { font-family: var(--font-mono); font-size: .82em; background: var(--olive-soft); padding: .08rem .32rem; border-radius: 4px; }
+
+  /* ── Scene navigation rail ── */
+  #scene-nav { position: fixed; z-index: 180; right: .7rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: flex-end; gap: .45rem; max-width: min(19rem, 84vw); }
+  #sn-toggle { display: none; }
+  #sn-list { list-style: none; margin: 0; padding: .35rem; display: flex; flex-direction: column; gap: 1px; background: rgba(255,253,249,.94); border: 1px solid var(--border); border-radius: 11px; box-shadow: 0 4px 22px rgba(27,26,34,.14); backdrop-filter: blur(8px); max-height: 80vh; overflow-y: auto; overflow-x: hidden; }
+  #sn-list li { margin: 0; }
+  #sn-list a { display: flex; align-items: baseline; gap: .5rem; text-decoration: none; padding: .24rem .42rem; border-radius: 6px; }
+  #sn-list a b { font-family: var(--font-mono); font-size: .62rem; font-weight: 500; letter-spacing: .04em; color: var(--muted); flex: none; width: 1.3rem; text-align: right; }
+  #sn-list a i { font-family: var(--font-body); font-style: normal; font-size: .72rem; line-height: 1.4; color: var(--ink2); white-space: nowrap; max-width: 0; overflow: hidden; opacity: 0; transition: max-width .28s ease, opacity .2s ease; }
+  #scene-nav:hover #sn-list a i, #scene-nav:focus-within #sn-list a i { max-width: 15rem; opacity: 1; }
+  #sn-list a:hover, #sn-list a:focus-visible { background: var(--indigo-soft); outline: none; }
+  #sn-list a:hover b, #sn-list a:hover i { color: var(--indigo-dk); }
+  #sn-list a.active { background: var(--indigo-soft); }
+  #sn-list a.active b { color: var(--indigo-dk); font-weight: 700; }
+  #sn-list a.active i { color: var(--indigo-dk); }
+
+  @media (min-width: 1101px) {
+    .wrap-wide, .comic-band, .todo-band, .takeaways-band, .cycle-band { padding-left: 5rem; padding-right: 5rem; }
+  }
+
+  @media (max-width: 1100px) {
+    #scene-nav { top: auto; bottom: 1rem; right: .8rem; transform: none; }
+    #sn-toggle { display: inline-flex; align-items: center; gap: .45rem; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; background: var(--night); color: #f2eff8; border: 0; border-radius: 99px; padding: .55rem .95rem; cursor: pointer; box-shadow: 0 3px 16px rgba(27,26,34,.35); }
+    #sn-list { display: none; order: -1; max-height: 58vh; }
+    #scene-nav.open #sn-list { display: flex; }
+    #scene-nav.open #sn-list a i { max-width: 13rem; opacity: 1; white-space: normal; }
+  }
+
+  @media (max-width: 640px) {
+    body { font-size: 17.5px; }
+    .comic-band { padding: 1.8rem .9rem 1.6rem; }
+    .embed-frame iframe { height: 70vh; }
+  }
 </style>
 </head>
 <body>
+<div id="progress"></div>
+
 <header class="masthead">
   <div class="masthead-inner">
     <a class="masthead-brand" href="https://talks.s-anand.net/">S Anand · Talks</a>
-    <span class="masthead-date">Day 5 · 2026年9月11日(金) · SUTD</span>
-    <span class="lang-switch"><a href="day5.html">EN</a> · <a href="#" class="current">日本語</a></span>
+    <div class="masthead-right">
+      <span class="masthead-date">Day 5 · 2026年9月11日 · SUTD</span>
+      <span class="masthead-date"><a href="day5.html" style="color:inherit">EN</a></span>
+      <a class="masthead-link" href="index.ja.html">全5日間</a>
+      <a class="masthead-link" href="transcript-day-5.ja.md" id="transcript-btn">文字起こし</a>
+    </div>
   </div>
 </header>
-<main>
-  <div class="kicker">SUTD DAIシグネチャー・マスタークラス · Day 5 / 5</div>
-  <h1>まだ<em>開催前</em>です。</h1>
-  <div class="tag">対面 · 2時間 · 必須 · Think Tank 13</div>
-  <p>最終発表日。各チームがプロトタイプと、それが信頼できることを示す証拠の両方を発表します。</p><p>このセッションはまだ開催されていません。終了後にここへ記録を追加します。</p>
-  <p><a class="back" href="day1.ja.html">Day 1を読む →</a><a class="back" href="index.ja.html">← 全5日間</a></p>
-</main>
+
+<div class="hero" id="top">
+  <div class="hero-kicker">SUTD DAIシグネチャー・マスタークラス · Expert Industry Series · Day 5 of 5</div>
+  <h1>ループは決して<em>終わらない</em></h1>
+  <p class="hero-sub">最終講義は、一週間の振り返りを装った「ある告白」から始まった。アイデア出しからプロトタイプ作成、フィードバック、修正、そしてローンチに至るまで、今週実践してきたプロセスのすべては、アナンドがStraive社でプロダクト開発に用いている「StraiveXメソドロジー」そのものだというのだ。そしてアナンドは一方的な講義を行う代わりに、午前中の時間を受講生たち自身がこの一週間で排出した「作業の副産物」を掘り起こすことに費やした。全員のチャットログから抽出されたメタプロンプト、受講生たちに「ハック」することが許されたAI作成の評価ルーブリック、そして合成ペルソナには見つけられて生身の人間には見つけられないもののライブ比較——。そうした探求を経て、最後には7人の受講生が登壇し、自ら世に送り出したプロダクトのデモを披露した。</p>
+  <p class="hero-meta">対面実施 · SUTD Think Tank 13 · 2026年9月11日（金）<br>アナンド・S、<a href="https://www.straive.com/" target="_blank" rel="noopener">Straive</a> イノベーション責任者 · <a href="transcript-day-5.ja.md" id="transcript-btn2">全文書き起こしを読む</a></p>
+  <div class="audio-wrap">
+    <div class="audio-card">
+      <span class="audio-icon">🎧</span>
+      <div class="audio-info">
+        <div class="audio-title">最終セッションの音声を聴く</div>
+        <div class="audio-sub">現地ライブ録音 · 対面 · SUTD</div>
+      </div>
+      <audio controls preload="none">
+        <source src="https://github.com/sanand0/talks/releases/download/talks/2026-09-07-how-to-build-ai-products-day-5.opus" type="audio/ogg; codecs=opus">
+        お使いのブラウザは音声再生に対応していません。
+      </audio>
+    </div>
+  </div>
+  <div class="quick-links">
+    <a href="#comic">▤ 1週間のすべてを10コマで</a>
+    <a href="#cycle">🔁 ライブで体感するStraiveXサイクル</a>
+    <a href="#assets">🧰 アセット、スキル、そしてフック</a>
+    <a href="#lessons">✍️ 全員のチャットから生まれたメタプロンプト</a>
+    <a href="#rubric">📋 AIが自ら書く評価ルーブリック</a>
+    <a href="#hack">🕹️ 自分の評価基準をハックせよ</a>
+    <a href="#synthetic">🤖 合成ユーザー vs リアルな人間ユーザー</a>
+    <a href="#showcase">🎤 受講生7名によるプロダクト発表</a>
+    <a href="#takeaways">🗒️ 学びと持ち帰り</a>
+  </div>
+</div>
+
+<nav id="scene-nav" aria-label="Jump to a scene">
+  <button id="sn-toggle" type="button" aria-expanded="false" aria-controls="sn-list">☰ シーン</button>
+  <ol id="sn-list">
+    <li><a href="#top"><b>↑</b><i>ページ上部</i></a></li>
+    <li><a href="#comic"><b>▤</b><i>1週間のすべてを10コマで</i></a></li>
+    <li><a href="#cycle"><b>01</b><i>ライブで体感するStraiveXサイクル</i></a></li>
+    <li><a href="#assets"><b>02</b><i>アセット、スキル、そしてフック</i></a></li>
+    <li><a href="#lessons"><b>03</b><i>全員のチャットから生まれたメタプロンプト</i></a></li>
+    <li><a href="#rubric"><b>04</b><i>AIが自ら書く評価ルーブリック</i></a></li>
+    <li><a href="#hack"><b>05</b><i>自分の評価基準をハックせよ</i></a></li>
+    <li><a href="#synthetic"><b>06</b><i>合成ユーザー vs リアルな人間ユーザー</i></a></li>
+    <li><a href="#learnings"><b>07</b><i>クラス全員が学んだこと</i></a></li>
+    <li><a href="#showcase"><b>08</b><i>受講生7名によるプロダクト発表</i></a></li>
+    <li><a href="#close"><b>09</b><i>すべてを委任せよ。そして残されたものを見よ。</i></a></li>
+    <li><a href="#takeaways"><b>★</b><i>5日目のポイント</i></a></li>
+  </ol>
+</nav>
+
+<div class="band comic-band" id="comic">
+  <div class="comic-inner">
+    <div class="comic-kick">1週間のすべてを10コマで</div>
+    <a class="comic-link" href="comic-page-day-5.ja.avif" target="_blank" rel="noopener" title="別タブでフルサイズコミックを開く">
+      <img src="comic-page-day-5.ja.avif" alt="「つくって、学んで、もっと遠くへ！——AIで広がる、みんなの可能性」と題された10コマ漫画。コマ1：「今日は『作って終わり』ではなく、『学んで進化し続ける』日だ」。アナンドが受講生たちに、ここまでの成果を振り返り次の一歩へつなげようと語りかける。コマ2：StraiveXの最初の一歩は、過去の資料や仕事の経験をスキャンして「本当に作るべきもの」を見つけること——「AIがスキャン！発見」。コマ3：昔は提案書を書き、承認までに数か月かかった。今はまず作る——数時間で試せる。コマ4：作ったら人に見せて検証し、そのまま公開してスケールさせる（検証→公開→スケール）。コマ5：本日の主役は「Run & Evolve」。利用状況を観察し、AIエージェントが発見・構築・検証・公開のループを24時間回し続ける。コマ6：この循環の副産物が「資産」。生成ログ、プロンプト履歴、利用データが、スキル（役立つガイド）とフック（乗り越えるべき関門）に姿を変え、次の挑戦の武器になる。コマ7：だから自分のチャット履歴を掘り返す——うまくいった型と失敗した型を見比べ、そこから抽出できる再利用ルールを見つける。コマ8：見えてきた上位の教訓は5つ——「提案は仮説として扱う」「最も危険な前提を先に試す」「失敗したらまず原因追跡」「現実とダミーを混同しない」「フィードバックは全体に再統合する」。コマ9：評価すらAIで回せる。しかも学生は評価基準そのものにフィードバックでき、評価プロンプトラボが仕組みをハックして良くしていく。コマ10：結論は明快——AIが実行を加速し、人間は判断力を磨く。7つのアプリ（勉強サポート、サッカーシュートマップ、旅の思い出アプリ、釣りスポットアプリ、株価トラッカー、読書管理アプリ、VC模擬ピッチアプリ）のアイコンが並び、最後にアナンドが「実行（AI）」と「判断（人間）」の二つのダイヤルを手に、「できるだけ委ね、できないことを見極めよ」「つくろう。学び続けよう。一緒に、もっと面白い未来を！」と締めくくる。">
+    </a>
+    <p class="comic-cap"><strong>10コマで振り返る、この1週間のすべて。</strong> チャットログという「資産」の発見から、評価ルーブリックそのものをハックできる仕組みまで、そして最後に並ぶ7つのプロダクト——「AIが実行を加速し、人間は判断力を磨く」という結び。 <a href="comic-page-day-5.ja.avif" target="_blank" rel="noopener">フルサイズで開く ↗</a></p>
+  </div>
+</div>
+
+<article class="article">
+
+<div class="wrap" id="cycle">
+  <span class="sec-num">シーン1</span>
+  <h2 class="sec">ライブで体感するStraiveXサイクル</h2>
+  <p class="lede">アナンドはその日の講義を当日の予定から始めるのではなく、受講生たちがこの1週間過ごしてきた日々に「名前」をつけることから始めた。<strong>「私が皆さんにお見せしてきたプロセスは、私たちがStraiveでプロダクトを開発する際に実践している『StraiveXメソドロジー』とほぼ同等のものです」</strong>。彼によれば、従来の5つのフェーズは静かに5つの新たなフェーズへと置き換わったという。それは目的が変わったからではなく、各フェーズにかかる時間をAIが劇的に圧縮してしまったからだ。</p>
+</div>
+
+<div class="band cycle-band">
+<div class="cycle-band-inner">
+  <div class="mini-grid n5">
+    <div class="mini">
+      <div class="mini-kick">発掘 → <strong class="tip" data-tip="問題を探して回る代わりに、すでに手元にあるデータや経験をスキャンする。">感知</strong></div>
+      <div class="mini-body">「以前なら、見込みを探るために様々な質問を投げかけていました。しかし今では質問をする必要すらありません。手元にあるデータをスキャンするだけで、どんなプロダクトを作るべきかの感覚を自動的に掴むことができるからです」。第1週において、それはアナンド自身の<a href="day1.html">PCやGoogleドライブから掘り起こされた約150個のプロダクトアイデアのリスト</a>を意味していた。受講生たちにとっては、自分自身の直感を掘り起こすことを意味していた。</div>
+    </div>
+    <div class="mini n2">
+      <div class="mini-kick">提案 → <strong class="tip" data-tip="ピッチ会議を省略する。まず作ってしまい、人々の反応を見る。">鍛造</strong></div>
+      <div class="mini-body">「かつてはソリューションを提案していました……『これなら3ヶ月で作れます』と。しかし今やそれは3時間に短縮されました。もはや提案書を書く必要などありません。いきなりソリューションそのものを鍛造して作り上げてしまえばいいのです」。承認待ちのゲートなど存在しない——実際、何人もの受講生が1日のうちに複数の方向性を作り、そして捨て去った。</div>
+    </div>
+    <div class="mini n3">
+      <div class="mini-kick">構築 → <strong class="tip" data-tip="遅い正式な要件定義プロセスの代わりに、まず出荷してから実際の人々に感想を聞く。">検証</strong></div>
+      <div class="mini-body">「かつて3つ目のステップは正式な構築プロセスでした……しかし皆さんはそれを反転させました。まず作り、それを何人かに見せて『どう思う？』と尋ねたのです」。これこそが、まさに教科書通りの順序を逆転させて実行された<a href="day2.html">2日目</a>と<a href="day4.html">4日目</a>のフィードバックループだ。</div>
+    </div>
+    <div class="mini n4">
+      <div class="mini-kick">納品 → <strong class="tip" data-tip="完成品をクライアントに引き渡すのではなく、直接公開して見知らぬ実ユーザーに届ける。">拡大</strong></div>
+      <div class="mini-body">「今日では、単にデプロイして直接スケールさせます」——プロダクトの動画を公開し、アプリのリンクを公に放ち、実際に誰が使ってくれているのかを突き止める。これこそが木曜日の中心的な転換点だった：<a href="day4.html#strangers">見知らぬ他者を探しに行け</a>。</div>
+    </div>
+    <div class="mini n5">
+      <div class="mini-kick">保守 → 稼働と進化</div>
+      <div class="mini-body">「かつてプロダクトは手作業で保守されていました……今日では、人々がそれをどう使っているか、何がうまくいっていて何がダメなのかをエージェントに自動監視させ、それをもとに次世代のプロダクトを構築し、進化させることができます」。5日目という日そのものが、まさにこのステージに属している。</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="wrap">
+  <p>このサイクルに終わりはない。<strong>「進化させたバージョンができたら、そのデータを使って新たなプロダクトが必要とされているかを感知し……また最初から反復をやり直すことができます。プロダクト開発とは、1回のサイクルで終わるようなものではなく、回し続けなければならないものなのです」</strong>。AIによって高速化され、そして——アナンドは言葉を選びながら言い添えた——「また、おそらく以前より簡単になっているとも言えます……たぶん。勝手が違うので戸惑うこともありますが、結果として現在のプロダクト開発のサイクルをはるかに容易なものにしてくれます」。</p>
+  <div class="factbox indigo">
+    <div class="fb-kick">スライドではなく、実践の呼び名として</div>
+    <p>StraiveXメソドロジーとは、アナンドがイノベーション責任者を務めるStraive社がクライアント向けにAIプロダクトを構築する手法につけられた社内での呼称だ——感知、鍛造、検証、拡大、稼働＆進化。従来の「発掘・提案・構築・納品・保守」というパイプラインを置き換える。メソドロジーを説明するスライド自体は社外秘だが、このクラスにとって重要だったのはその論理の骨格であり、アナンドはその名を明かすことなく、すでに1週間にわたってそれを教えていたのだ。</p>
+  </div>
+</div>
+
+<div class="band quote-band indigo">
+  <blockquote>
+    <p>「プロダクト開発とは、1回のサイクルで終わるようなものではなく、回し続けなければならないものなのです」</p>
+    <cite>— アナンド</cite>
+  </blockquote>
+</div>
+
+<div class="wrap" id="assets">
+  <span class="sec-num">シーン2</span>
+  <h2 class="sec">アセット、スキル、そしてフック</h2>
+  <p class="lede">アナンドの次の一手は、このループを単なる繰り返しではなく「複利で進化するもの」たらしめている要素に名前を与えることだった。<strong>「副産物として生み出されるものの一つ、それがアセットです。私たちはある作業を行い、その作業から何かを学び、それを次回再利用したり、あるいは他の誰かが次回再利用できるようにしたりします」</strong>。誰もが見過ごしていた目の前に、2つのアセット候補が転がっていた。全員のチャットログと、全員のセッションの文字起こし記録だ。</p>
+  <blockquote class="pull">
+    <p>「皆さんがプロンプトを入力していたセッションログを取り上げてみましょう。そこから全員で学び合い、それらのセッションログを活用するためのベストプラクティスがあるかどうかを見つけ出すことができるはずです」</p>
+    <cite>— アナンド</cite>
+  </blockquote>
+  <p>この概念を具体化するために、彼は2種類の再利用可能なアセットの間に境界線を引いた。「リクエストされ、通常は守られるもの」と、「強制され、常に守られるもの」の2つだ。</p>
+  <div class="mini-grid">
+    <div class="mini">
+      <div class="mini-kick">スキル</div>
+      <div class="mini-title">求められるもの。大抵は実行される。</div>
+      <div class="mini-body">「他のプロンプトと組み合わせて使えるプロンプトのことです……チーム全体に渡して『これは多くの人が忘れがちな5つのミスだから、常にプロンプトにこれを加えておいてくれ』と伝えるようなものです。スキルとは、何かを行うよう指示し、99%の確率でその通りに実行されるものを指します」。</div>
+    </div>
+    <div class="mini n2">
+      <div class="mini-kick">フック</div>
+      <div class="mini-title">強制されるもの。プログラム的に毎回確実に実行される。</div>
+      <div class="mini-body">「機能をリクエストするたびに、必ずテストケースを書け……フックとは、開発プロセスの最中に『これを必ず実行しなければならない』と命じ、それがプログラムによって厳格に実行される仕組みのことです。ミスは起きません」。<em>（アナンドの補足：「ただ、それが常に良いアイデアだとは限りませんが」——厳格だからといって、フックが常に適切なツールであるとは限らない。）</em></div>
+    </div>
+  </div>
+  <p>そして彼は、クラス自身の素材を「粗鉱石」として使い、即座にライブで演習へと仕立て上げた。受講生全員のチャット履歴そのものが、マイニング可能なデータセットであるという即興の実演だ。<strong>「うまく機能したプロンプティングのパターンは何だったか？ あまりうまくいかなかったパターンは何だったか？ メタプロンプトとして使えるような、最も優先度の高い教訓トップ5を抽出してみてほしいのです」</strong>。最も重要だった指示はこれだ。<strong>「エージェントがすでに知っているようなことや、人間がとっくに分かっているようなことは含めないでください。この経験ならではの、普通とは違う意外な洞察を入れてください」</strong>。</p>
+</div>
+
+<div class="band stat-band">
+  <div class="stat-band-inner">
+    <div class="stat-row">
+      <div class="stat"><div class="stat-num">15</div><div class="stat-label">共有シートの行数</div></div>
+      <div class="stat"><div class="stat-num good">14</div><div class="stat-label">記入されたアプリリンク</div></div>
+      <div class="stat"><div class="stat-num">11</div><div class="stat-label">プロダクト紹介動画</div></div>
+      <div class="stat"><div class="stat-num">11</div><div class="stat-label">学びを語る動画</div></div>
+      <div class="stat"><div class="stat-num warn">10</div><div class="stat-label">チャットログのリンク</div></div>
+    </div>
+    <p class="stat-band-cap">この1週間、すべての提出物が集約されてきたスプレッドシート。セッションの最中にリアルタイムで読み込まれ、今まさに2つの新しい列と、新たな2枚目のシートが追加されようとしていた。</p>
+  </div>
+</div>
+
+<div class="wrap" id="lessons">
+  <span class="sec-num">シーン3</span>
+  <h2 class="sec">全員のチャットから生まれたメタプロンプト</h2>
+  <p class="lede">バックグラウンドで分析が実行される間——一部のチャットログがきれいにダウンロードされずアナンドのブラウザ上で開いていたため、受講生たちの素材に対してローカルファイルやブラウザタブ経由でアクセスしながら——彼は分析内容だけでなくその進行プロセスも実況した。<em>「何かおかしいな、クリックできないぞ……なるほど、チャットログがまだ生成されておらず、ダウンロード中か……よし、これは手動でやろう」</em>。そして出力された結果こそ、このセッション全体で最も汎用性の高い成果物となった。今後のあらゆるプロジェクトの冒頭に誰もがそのまま貼り付けて使える、「5つのルールからなるプロンプト」である。</p>
+  <p>やり取りの全文を読む：<a class="doclink" href="#" data-chat="chat-day5.md" data-section="Learnings from Prompts" data-title="プロンプトからの学び — ChatGPT, 2026年9月11日">プロンプトからの学び</a> <a class="doclink" href="https://chatgpt.com/share/6aa368bb-3108-83ec-846b-8e6490c6d8fe" target="_blank" rel="noopener">元のチャットを開く ↗</a></p>
+  <blockquote class="pull rust">
+    <p>「<strong>私が提案する解決策を、仕様ではなく「仮説」として扱え。</strong> これは、最も重要なプロンプトの提案の一つかもしれません。私たちは何気なく要求をするとき、うまく言語化できていないことが非常に多いのです……自分の真のニーズの『たたき台』だと捉えてほしい。Xを要求したとしても、それに近いYを返してくれて構わない。ただし、いい仕事をしてくれ、ということです」</p>
+    <cite>— アナンド、最も評価の高かった教訓を声に出して読み上げながら</cite>
+  </blockquote>
+  <p>彼はそれを、自分自身が最も多用している習慣が形式化されたものだと即座に見抜いた。<em>「私には『質問のリフレーミング（reframe question）』というスキルがあります。そして例外なく、ほぼすべてのプロンプトにまさにこれを入れているのです」</em>。これは実際に公開されているスキル——<a href="https://github.com/sanand0/blog/blob/main/pages/skills/reframe-question/SKILL.md" target="_blank" rel="noopener">reframe-question</a>——のことであり、アナンドが説明した通りの挙動をする。すなわち、文字通りの要求を真のニーズのたたき台として扱い、文字通り入力された質問ではなく、その底にある「より優れた本質的な問い」に答えるのだ。残る4つの教訓も、受講生たち自身の納得と反省を呼び起こした。</p>
+  <div class="mini-grid">
+    <div class="mini n2">
+      <div class="mini-kick">2 — アナンドにとっても新たな視点</div>
+      <div class="mini-title">何一つ磨き上げる前に、最もリスクの高い仮説をエンドツーエンドで検証せよ。</div>
+      <div class="mini-body">「アプリの書き直しに苦労した人が何人かいましたね……これは非常に有益な前提です。これは私のスキルリストには入っていませんでしたが、私自身が今まさに学んでいることです。『ああ、頭では分かっていたけれど、エージェントには一度もそう指示していなかったな』と気づかされました」。</div>
+    </div>
+    <div class="mini n3">
+      <div class="mini-kick">3</div>
+      <div class="mini-title">何かが失敗したときは、いじる前に原因をトレースせよ。</div>
+      <div class="mini-body">「皆さんの多くが『よし、これが動かないからここを変えよう』と言いがちです。しかし、変更すべき箇所は本当にそこだったのでしょうか？ まず分析が必要かもしれません。『なぜこれが失敗したのか？』を突き止め、その上で変更を提案すべきなのです」。</div>
+    </div>
+    <div class="mini n4">
+      <div class="mini-kick">4</div>
+      <div class="mini-title">現実とシミュレーションを決して曖昧にするな。</div>
+      <div class="mini-body">「エージェントがダミーデータやサンプルデータを作成した際……それがまるで実データであるかのように提示されてしまうことがあります。それでは一部のユーザーを混乱させてしまいます。明確にラベル付けされるべきです」。</div>
+    </div>
+    <div class="mini n5">
+      <div class="mini-kick">5</div>
+      <div class="mini-title">フィードバックは単なる「追加」の口実ではなく、「全体を再統合」する契機と捉えよ。</div>
+      <div class="mini-body">「ユーザーから『このアプリは分かりにくい、このボタンは何をするもの？』と言われたとき、あなたのプロンプトは『このボタンの役割を説明して』になってしまいがちです。しかし、彼らが理解できていないボタンは他にも20個あるかもしれないのです。あなたのプロンプトは、その1つのボタンだけでなく、<strong>アプリ全体をより分かりやすくしてくれ</strong>であるべきなのです」。</div>
+    </div>
+  </div>
+  <p>ある受講生が当然の疑問を口にした。これらの教訓は普遍的なものなのか、それとも特定のモデルに特有のものなのか？ アナンドの答えは、安易な普遍化を退けつつも、極めて示唆に富む着地点を示した。</p>
+  <blockquote class="pull">
+    <p>「あらゆるプロンプトの提案には賞味期限があります。その特定のコンテキストにおいてのみ意味を持つものです……手短に言えば『テストしてみてくれ』ということです。私にも分かりませんし、普遍的な正解などありません……ですが私の経験から手短に答えるなら、プロンプティングのコツは大体どのモデルでも共通しています。<strong>それらはモデルがどう応答するかというより、私たちがどうプロンプトを出すかによる部分が大きいからです。つまり、モデルのミスやフレームワークのミスを防ぐというより、人間のミスを防ぐためのものなのです</strong>」</p>
+    <cite>— アナンド</cite>
+  </blockquote>
+  <p>とはいえ、彼はエージェントにその傾向の違いを検証させてみた。そして暫定的ながらも興味深い回答が得られた。<strong>「失敗をエンドツーエンドでトレースすること」と「最もリスクの高い仮説を真っ先に検証すること」</strong>の2つは、ChatGPTよりもClaude Codeを用いたセッションでより顕著に現れていたのだ。おそらく、Claude Codeがファイル、シェル、ブラウザへのアクセス権を持っているため、「失敗を計測・特定して修正する」ワークフローが異例なほど効果を発揮するからだろう。もっとも、アナンドは断定を避けて慎重に補足した。<em>「これが、Claudeを使う人がそうプロンプトを出す傾向にあるからなのか、Claude自身がそうしたミスをしがちだからなのかは分かりません。今ここで結論を出すべきではないでしょう」</em>。</p>
+</div>
+
+<div class="band quote-band rust">
+  <blockquote>
+    <p>「それらはモデルがどう応答するかというより、私たちがどうプロンプトを出すかによる部分が大きい。モデルのミスやフレームワークのミスを防ぐというより、人間のミスを防ぐためのものなのだ」</p>
+    <cite>— アナンド（プロンプトの教訓はモデル固有のものかという問いに対して）</cite>
+  </blockquote>
+</div>
+
+<div class="wrap" id="rubric">
+  <span class="sec-num">シーン4</span>
+  <h2 class="sec">AIが自ら書く評価ルーブリック</h2>
+  <p class="lede">続いてアナンドは、まったく同じ手法をこの講義そのものに向けた。<strong>「さて、次に進めるのは、この演習で私たちがどれだけうまくやれたかを確認することです。実質的には、この講義の評価の部分ですね。そして皆さんにも、その評価基準に対して発言権があります」</strong>。彼はエージェントに対し、あらかじめ知る由もないルーブリック（評価基準）を提案させるために必要なすべての情報を流し込んだ。毎日の文字起こし記録、全受講生の提出物、事前のヒアリングシート、そして極めて重要な要素として、彼自身が過去に「AI時代において何が重要か」について交わしてきた膨大な会話ログである。</p>
+  <blockquote class="pull olive">
+    <p>「私はChatGPTやClaudeなどと数え切れないほどの対話をし、それをローカルに保存してきました。AIやエージェントがこれほど強力になった時代に人間が何を学ぶべきかについて、私なりの持論があります……私はエージェントに『すべての情報、すべての提出物を取得し、評価基準を特定せよ』と指示しました。どうなるかは分かりません。私にも視点があるし、エージェントにも視点があるでしょう。しかし、エージェントが利用できる情報量は、私がその場の思いつきで考え出せるものを間違いなく超えています」</p>
+    <cite>— アナンド</cite>
+  </blockquote>
+  <p>出力されたのは7つの評価基準だった。彼はそれを一つひとつ読み上げた。「優れた課題の選定」「自明ではないものをリリースできたか」「リアルユーザーによる証拠と、証拠に基づいた反復」「検証可能で信頼できる成果物」「AIを使いこなし、失敗から学んでいるか」「説明責任と現実世界の判断力」、そして「コミュニケーション」。<em>「この2つ——『証拠』と『検証』——がおそらく最も重要な基準です」</em>。この出力は<code>evaluation-prompt-original.md</code>となり、この7つの基準という構造は、その後のあらゆる改定を経ても維持されることになった。</p>
+  <p>実際のドキュメントを読む——初版のルーブリック、改訂版、および各変更の背後にある根拠（配点は終始 15/10/20/20/15/10/10 のまま変更なし）：</p>
+  <p>
+    <a class="doclink" href="#" data-doc="evaluation-prompt-original.md" data-title="評価プロンプト — 初版">初版：evaluation-prompt-original.md</a>
+    <a class="doclink" href="#" data-doc="evaluation-prompt.md" data-title="評価プロンプト — 現行版">現行版：evaluation-prompt.md</a>
+    <a class="doclink" href="#" data-doc="evaluation-prompt-revision-notes.md" data-title="何がどう変わったか">改訂履歴ノート</a>
+  </p>
+  <div class="factbox rust">
+    <div class="fb-kick">ルーブリックの根底を貫く一文</div>
+    <p>どのバージョンでも、「証拠の核となる単位」は共通して維持されている。それは文字起こし記録の最後の言葉とほぼ一言一句違わず一致している：<strong>「ここにプロダクトがある。これができること、できないことはこれだ。その証拠はここにある。これを信頼すべき理由、あるいは信頼すべきでない理由はここにある」</strong></p>
+  </div>
+</div>
+
+<div class="band chip-band rust">
+  <div class="chip-band-inner">
+    <div class="chip-band-kick">ルーブリックが明確に拒絶する「見せかけの勝利」</div>
+    <div class="chip-wrap">
+      <span class="chip">きれいなUI ＝ 良いプロダクト</span>
+      <span class="chip">機能の多さ ＝ 野心</span>
+      <span class="chip">長いチャット ＝ 高いAIスキル</span>
+      <span class="chip">テストの多さ ＝ 優れた検証</span>
+      <span class="chip">AIペルソナ ＝ 市場の検証</span>
+      <span class="chip">「アナリティクス追加」＝ 証拠</span>
+      <span class="chip">洗練された振り返り ＝ 証明</span>
+      <span class="chip">技術的な複雑さ ＝ 判断力</span>
+      <span class="chip">失敗がないこと ＝ 優秀さ</span>
+      <span class="chip">過去のAI経験 ＝ 熟達</span>
+    </div>
+    <p class="chip-band-cap">これらは単体では、そのプロダクトが実際に信頼に足るものであることの証拠とはみなされない。<strong>的確に原因が分析された失敗実験は、何の苦労もなく得られた成功よりもはるかに強力な証拠になり得るのだ。</strong></p>
+  </div>
+</div>
+
+<div class="wrap" id="hack">
+  <span class="sec-num">シーン5</span>
+  <h2 class="sec">自分の評価基準をハックせよ</h2>
+  <p class="lede">アナンドは単に完成したルーブリックを受講生に言い渡すのではなく、その場で——講義の真っ最中に、開発の過程を実況しながら——受講生全員がそのルーブリックに異議を唱えられる小さなアプリを構築した。<strong>「これから作るのは、すべてのフィードバックを受け取り、『このフィードバックは採用すべきだ』『この部分は採用しない』といった返答を返してくれるアプリケーションです」</strong>。教室の前方から、ほぼそのままエージェントに与えられた要件指示は次の通りだ。</p>
+  <blockquote class="pull">
+    <p>「アップロードした評価プロンプトに対する変更提案を受講生が提出できるアプリケーションを作成してほしい。受講生がテキストフィールドに好きなだけ詳細を入力して保存できるようにすること。各自が自分の回答を編集でき、複数のフィードバックを提出できるようにすること。可能であれば、そのフィードバック全体または評価プロセスの変更を一部または全部取り入れることが、どれほど適切か、あるいは有用かについての見解も提示してほしい」</p>
+    <cite>— アナンド、要件をその場でリアルタイムに指示しながら</cite>
+  </blockquote>
+  <p>アプリがリリースされる前に、受講生のヨハンが計画の不備を指摘した。成果物がメール、動画、そして今度のアプリへとあちこちに散らばり、一元管理できる場所がなかったのだ。<em>「チャットの文字起こし以外の成果物は、すべてメールで送るのですか？」</em>。アナンド：<strong>「あ、いや、鋭い指摘ですね。同じシートに全部追加しましょう。それは実に素晴らしいアイデアです」</strong>。彼はその場で共有スプレッドシートの構造を即座に作り直した。まさにこの講義が1週間を通じて体現してきた、「問題に気づいたらその場ですぐにプロセスを修正する」という習慣の実践だった。</p>
+  <p>アプリのビルド中、アナンドはクラスの目の前で、付属のチャット機能を使って小さなセルフテストを試みた。根拠の乏しい意見に対してどう振る舞うかを確かめるため、わざと曖昧な不満を投げかけてみたのだ。<em>「これは学生が理解するには複雑すぎませんか？ もっとシンプルな評価の仕組みやルーブリックにはできませんか？」</em>。返ってきたのは、迎合するのではなく毅然と押し返す回答だった。</p>
+  <blockquote class="pull rust">
+    <p>「『懸念は重要かもしれませんが、具体的なスコアリングやルーブリックの変更点が明確ではありません』。つまりアプリは私にこう言っているわけです。『いいかいアナンド、そう変えたいのは分かったけれど、具体的に何を提案しているんだい？』と。それが明確でない。そして確かに、私はプロンプトが良くないと言えるだけの証拠を何も提示していません……極めてまっとうなフィードバックです。もし私がもっと深く考えていたなら、きちんと根拠を持って変更を求めていたでしょうね」</p>
+    <cite>— アナンド、自作アプリからの手厳しい反論に反応して</cite>
+  </blockquote>
+  <p>そして、彼は茶目っ気たっぷりに受講生たちをけしかけた。<strong>「自分たちにできるだけ高い点数がつくような評価基準になるよう試してみてください。遠慮はいりません、ハックしてください」</strong>。教室は10分間の休憩に入り、その間、このツール——<strong><a href="https://evaluation-prompt-feedback.root-node.chatgpt.site/" target="_blank" rel="noopener">SUTD Evaluation Prompt Lab</a></strong>——は、自分たちを採点するルーブリックそのものをどう変更すべきかという受講生たちのライブな意見を次々と受け止めた。</p>
+  <div class="mini-grid" style="max-width:720px; margin-left:auto; margin-right:auto;">
+    <div class="mini">
+      <div class="mini-kick">実際に採用された変更点</div>
+      <div class="mini-title">意図的に範囲を絞った5つの変更</div>
+      <div class="mini-body">平易な言葉による「1分でわかるルーブリック」、AIに何を委任し人間の判断として何を保持したかを明示的に採点するというユリの提案、適切に選ばれた代理の人間によるフィードバックは一般的なピアフィードバックよりも価値が高いというノアの指摘、適切に保護された管理者ページを「機能の欠落」と見なすべきではないというヨハンの指摘、そして曖昧な主張に対しては勝手に推測して補完するのではなく「推測せず質問せよ」と改めた点。</div>
+    </div>
+    <div class="mini n2">
+      <div class="mini-kick">見送られた提案とその理由</div>
+      <div class="mini-title">個別プロダクトへのフィードバックは、ルーブリックへのフィードバックではない</div>
+      <div class="mini-body">モバイル端末でのテストを明示的に加点してほしいという要求は、個別のプロダクト特有の事情であり、ルーブリック自体の不備ではないため却下された。また、7つの基準を4つに統合するという提案は、7つに分けたことによって保たれている重要な区別——ユーザーからの学習と検証、実行と説明責任など——を曖昧にしてしまうため見送られた。</div>
+    </div>
+  </div>
+  <p>受講生が実際に提案した内容と、変更の理由を読む：<a class="doclink" href="#" data-csv="evaluation-prompt-feedback.csv" data-title="評価プロンプトへの学生からのフィードバック">生のフィードバック（CSV）</a> <a class="doclink" href="#" data-doc="evaluation-prompt-revision-notes.md" data-title="何がどう変わったか">改訂履歴ノート全文</a></p>
+  <p class="lede" style="font-size:.95rem; color:var(--muted); font-style:italic;">※このページには、ルーブリックによって算出された実際のスコア、順位、各受講生の評価結果などは意図的に掲載しておらず、ルーブリック自体がどのように構築され改定されたかのみを記録している。</p>
+</div>
+
+<div class="wrap" id="synthetic">
+  <span class="sec-num">シーン6</span>
+  <h2 class="sec">合成ユーザー vs リアルな人間ユーザー</h2>
+  <p class="lede">ふとした思いつきのように、アナンドはある希少なものがクラス内に偶然蓄積されていることに気づいた。「ペアデータ（対となるデータ）」である。受講生全員が自らのアプリに対してAIペルソナによる調査を行い、<em>さらにその後</em>、同じアプリに対して生身の人間からのフィードバックを収集していたのだ。<strong>「皆さんはエージェントを使ってプロダクトをチェックしました。また、人間を使ってプロダクトをチェックしました。この両者の違いは何だったでしょうか？ これは非常に強力で、興味深い学びです」</strong>。</p>
+  <p>彼はエージェントに対し、存在しない結果をでっち上げないよう厳格に指示した上で、両者を直接比較させた。<em>「具体的に、それらの違いの例を挙げてください……そして、再利用可能な教訓となるように一般化を試みてください」</em>。6つのプロダクトにわたって事例ごとにコード化された詳細な比較を読む：<a class="doclink" href="#" data-chat="chat-day5.md" data-section="Other Assets" data-title="その他のアセット — ChatGPT, 2026年9月11日（ブレインストーム＋合成ユーザーとリアルユーザーの比較）">その他のアセット — チャット全文</a></p>
+  <div class="factbox indigo">
+    <div class="fb-kick">再利用可能な教訓</div>
+    <p><strong>「合成ユーザーは『どこを見るべきか』を教えてくれる。生身の人間は『何が重要か』を教えてくれる」</strong>。AIペルソナが指摘した問題の約55%は、その後の人間のテスターによっても指摘されていた。この規模の自然実験としては高い一致率だが、AIの正確さを証明するものとは言えない。合成エージェントは、ドメインの制約やワークフローの摩擦を見つけ出すことには異常なほど長けていた（ユリの「Study Walker」の研究では、人間のテスターが直面した問題をほぼ正確に予測していた）。しかし、<em>「顕著性（salience）」</em>——その欠点が単に技術的に見つけられるというだけでなく、実際にユーザーの体験全体を支配してしまうほどの問題になるかどうか——を予測することに関しては、はるかに劣っていた。</p>
+    <p>アプリのテストに限らず、あらゆるAI支援型の検証における一般原則として言い換えるなら、<strong>「AIは重要性よりも可能性を推し量る方がはるかに得意である」</strong>ということだ。さらに鋭く言えば、こうなる。<em>「AIにユーザーの『ふり』をさせるな。テストエージェントとして振る舞わせろ」</em>——ペルソナがどう「感じる」かといった架空の感想を捏造させるのではなく、明確なゴールと実物を渡し、失敗モードや反証可能な予測を洗い出させるのだ。</p>
+  </div>
+  <p>この日のために描かれた漫画も、まったく同じ対比を1コマで表現している。<strong>生身の人間ユーザーは人間的な問題</strong>——分かりにくいUX、曖昧な文言、信頼性——<strong>を捉える</strong>のに対し、<strong>合成AIユーザーは技術的な問題</strong>——網羅されていないフロー、遅いレスポンス、見落とされたエッジケース——<strong>を捉える</strong>。どちらか一方が他方を置き換えるものではない。漫画のコマにある言葉を借りれば、<em>「組み合わせることで、より強いプロダクトになる」</em>のだ。</p>
+</div>
+
+<div class="wrap" id="learnings">
+  <span class="sec-num">シーン7</span>
+  <h2 class="sec">クラス全員が学んだこと</h2>
+  <p class="lede">並行してアナンドは、全員の「学びの振り返り動画」に対しても同様の手法を適用した。9本の動画が文字起こしされ、エージェントによって読み込まれ、教訓の出現頻度と重要度によって順位付けされた。<strong>「これらに目を通し、影響度が大きく出現頻度の高いトップの学びを特定してほしい」</strong>。ランク付けされた完全な分析を読む：<a class="doclink" href="#" data-chat="chat-day5.md" data-section="Student Learnings" data-title="受講生の学び — ChatGPT, 2026年9月11日">受講生の学び — チャット全文</a></p>
+  <ol>
+    <li><strong>AIは実行の大部分を担うことができるが、ボトルネックとなるのは人間の判断力である。</strong> 「フィードバックを共有してくれた9人のうち約7〜8人がこれに言及していました……間違いなく、これが最も重要な教訓です」</li>
+    <li><strong>AIはソフトウェア構築のハードルを劇的に下げる。</strong> 「変化の本質は『自分にこれが実装できるか？』ではなく、『AIに何をすべきか指示できるか？ 出力を見て、それを検証し、改善できるか？』にシフトしたことです」</li>
+    <li><strong>明確な目的と具体的な指示は、曖昧なプロンプティングに勝る</strong> ——ただし、あえて逆の教訓も付け加えられた。「私が非常に曖昧なプロンプトを出しているのを見てきたはずです……反対側の教訓も忘れないでください。ループを回し、何度も修正を重ねるその試行錯誤のプロセスそのものが、学ぶ価値のある何かを教えてくれているかもしれないのです。無理に具体性を強要しないでください。それがかえって間違った方向へと導いてしまうこともあります」</li>
+    <li><strong>現実世界の制約は、単に回避するのではなく、プロダクト自体を変化させるべきである。</strong> 「APIのコスト、モデルの制限、デプロイの制約、不安定なGPS、セキュリティ、納期……何が可能で何が不可能なのかを最初から把握しておかなければ、事態はますます困難になります」。これはシーン3の教訓2「最もリスクの高い仮説を真っ先に検証せよ」に直結している。</li>
+    <li><strong>生身のユーザーは、AIや開発者には見えない問題を暴き出す。</strong> 「混乱を招くUI、意味不明なボタン、感情的な反応——これらこそ人間が気づき、AIには気づけない典型的な問題です。AI自身は混乱することがなく、この手のものを理屈として理解してしまうからです」</li>
+  </ol>
+  <p>アナンドはこの演習の本質を「二重に行われた事後検証（ポストモーテム）」と定義した。そしてその2層目こそが新しいものだった。<strong>「ここから2つの次元のポストモーテムが浮かび上がってきました。1つ目：エージェントがポストモーテムを実行し、私たちが何をすべきかを教えてくれること。2つ目：エージェントは、私たちがどのようなポストモーテムを行うべきかまで教えてくれるということです……『ポストモーテムを行いたい、再利用可能なアセットが欲しいのだ』と指示を出す仕様設計能力——それこそが皆さんに残るスキルであり、皆さん全員が教訓として学んだことそのものなのです」</strong></p>
+  <p>統合された分析結果の中からアナンドが声に出して読み上げた一文は、この講義全体のメインテーマと呼ぶにふさわしいものだった。<em>「AIはものづくりのコストを劇的に下げた。その結果、目的意識、判断力、コミュニケーション、テスト、ユーザー観察、そして方向転換を恐れない姿勢が、かつてないほど重要になった」</em></p>
+</div>
+
+<div class="wrap" id="showcase">
+  <span class="sec-num">シーン8</span>
+  <h2 class="sec">受講生7名によるプロダクト発表</h2>
+  <p class="lede">休憩の後、教室はプレゼンテーションの舞台へと変わった。<strong>「最後に、皆さんに前に出てきてもらい、開発したアプリケーションを発表してもらいます」</strong>。受講生7名、持ち時間は各5分以内、使用言語は自由——何人かはデモの途中で日本語に切り替え、翻訳ツールに残りを委ねた。アナンドが聴衆である受講生たちに伝えた言葉は、デモそのものと同じくらい重要だった。<em>「発表を聞くときは、アプリケーションの機能だけでなく、それを構築するに至ったプロセスにも意識を向けてください」</em>。</p>
+</div>
+
+<div class="band iframe-wrap">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">Yuri · Study Walker</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">yuriciv.github.io/study-walker</span></div>
+      <iframe src="https://yuriciv.github.io/study-walker/" loading="lazy" title="Study Walker, by Yuri"></iframe>
+    </div>
+    <p class="embed-cap">Codexで開発。<a href="https://yuriciv.github.io/study-walker/" target="_blank" rel="noopener">別タブで開く ↗</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p><strong>Study Walker</strong>は、「目標はあるけれど、何から手をつければいいか分からない」という人が、今日できる小さく具体的なアクションを1つ踏み出すのを手助けするアプリだ。ユリは「英語は苦手」と言いながらもほぼ全編英語でプレゼンを行い、実際のフローを披露した。目標を入力し（「ゲーム制作を……始めたい」）、現在の出発点を選び、使える時間を選び、今手元にあるリソースを選ぶ——するとアプリが、完全な初心者が検索すべきドンピシャの検索キーワードとともに、次に取るべきたった1つの具体的なアクションを提示してくれる。彼女いわく、「初心者だと、その行動を始めるための方法すら分からないから」だ。</p>
+  <blockquote class="pull">
+    <p>「機能的には、それほど複雑なアプリケーションではありません。しかし、その実行スピードは今や劇的に圧縮されています。ユリはこれをたった1日で作り上げました……実際、私にとっても非常に役立つものでした。試してみたところ、Rust言語の初歩を学ぶことができたのです。ずっとやりたいと思いながら、ほぼ2年間先延ばしにしていたことでした」</p>
+    <cite>— アナンド</cite>
+  </blockquote>
+  <p>なお、Study Walkerは、<a href="day4.html#research">一晩で行われた合成ユーザー調査</a>が、その後の実際のテスターがつまずいたポイントを最も正確に予見していたアプリでもあった（<a href="#synthetic">シーン6</a>参照）。</p>
+</div>
+
+<div class="band iframe-wrap olive">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">コウセイ · Shot Atlas / Premier Shot Lab</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">premier-shot-lab-202526…chatgpt.site</span></div>
+      <iframe src="https://premier-shot-lab-202526.miyakokoko-842.chatgpt.site/" loading="lazy" title="Shot Atlas, by Kosei"></iframe>
+    </div>
+    <p class="embed-cap">サッカーのシュート位置分析ツール。<a href="https://premier-shot-lab-202526.miyakokoko-842.chatgpt.site/" target="_blank" rel="noopener">別タブで開く ↗</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p><strong>Shot Atlas</strong>は、シュートが放たれた位置とゴールが決まる確率の相関関係をマッピングするツールだ。オープンプレー、セットプレー、PKで絞り込みができ、前半・後半での比較も可能。<span lang="ja">この黒いバーはシュートの位置からゴールまでを表します</span>——「この黒いバーはシュートの位置からゴールまでを表します」とコウセイは説明した。ドットの大きさと色でゴールの確率が視覚化されており、赤が高い確率、黄色が低い確率を示している。</p>
+  <blockquote class="pull rust">
+    <p>「アプリケーション内でエビデンスが直接提示されており、それ自体がデータドリブンであるため、検証が極めて容易です。『なぜこのアプリを信頼できるのか？』と問う必要はなく、クリックして自分の目で数値を確認するだけで済みます……一方で、データを提示することは出発点に過ぎません。次のステップは『これをどう意思決定に活かすか？ それは本当に機能するのか？』という問いになります。そこから、このアプリがまだ答えを出せていない一連の新たな問いが生まれてくるのです——そして、それでいいのです」</p>
+    <cite>— アナンド</cite>
+  </blockquote>
+</div>
+
+<div class="band iframe-wrap">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">ミク · Roam</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">roam-solo-trip-journal…chatgpt.site</span></div>
+      <iframe src="https://roam-solo-trip-journal.pswr2jmt2n.chatgpt.site/" loading="lazy" title="Roam, by Miku"></iframe>
+    </div>
+    <p class="embed-cap">写真ベースの旅日記。GPS主体のv1から再構築。<a href="https://roam-solo-trip-journal.pswr2jmt2n.chatgpt.site/" target="_blank" rel="noopener">別タブで開く ↗</a> · 初期のバージョン：<a href="https://roam-pocket-trails.pswr2jmt2n.chatgpt.site/" target="_blank" rel="noopener">Pocket Trails ↗</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p><strong>Roam</strong>は、旅行者が旅の途中で写真を使って素早く旅程を記録できるアプリだ。ミクは教室で英語を話すことに緊張しながらも、「旅を始める」、名前を「SUTD」、目的地を「シンガポール」と設定し、旅の記録を入力するというライブデモを実演した。この発表で注目すべきはデモそのものではなく、その背後にある「作り直しのプロセス」だった。</p>
+  <blockquote class="pull olive">
+    <p>「最初のイテレーションは、少し毛色の違うアプリでした。GPSの座標を使って現在地を特定し、思い出を記録しようとしていたのです。しかし何度か試作を繰り返す中で、ミクは技術的な問題でそれがうまく機能しないことに気づきました。そこで彼女は方向転換し、『代わりに写真や思い出を中心にしたアプリを作ろう』と決断したのです。ある方向を目指して進んでも、うまくいかないことはあります。それでいいのです、ピボットすればいい。AIのおかげで作成コストが劇的に下がったため、新しいものを作るのも簡単ですし、古いものを投げ捨てるのも簡単なのです」</p>
+    <cite>— アナンド</cite>
+  </blockquote>
+</div>
+
+<div class="band iframe-wrap olive">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">ナナミ · Kanto Fishing Map（関東釣り場マップ）</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">kanto-fishing-map…chatgpt.site</span></div>
+      <iframe src="https://kanto-fishing-map.g2527053.chatgpt.site/" loading="lazy" title="Kanto Fishing Map, by Nanami"></iframe>
+    </div>
+    <p class="embed-cap">東京近郊の釣り場、魚種、釣具店マップ。<a href="https://kanto-fishing-map.g2527053.chatgpt.site/" target="_blank" rel="noopener">別タブで開く ↗</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>ナナミは日本語でプレゼンを行い、リアルタイム翻訳で伝えた。<span lang="ja">「私は東京周辺の、関東エリアという場所の釣り場についてのサイトを作りました」</span>。父親が無類の釣り好きで、父や他の初心者が実際に使えるものを作りたいと思ったのがきっかけだった。場所や狙う魚からの検索、初心者向けガイド、釣果ログ、父親の助言で追加した周辺の釣具店情報、そして初心者である彼女自身が魚を見分ける練習をするためのゲーム機能などが備わっている。</p>
+  <blockquote class="pull">
+    <p>「ナナミがこれを何人かに共有してフィードバックをもらった際、『いや、この情報は間違っているよ』という指摘が含まれていました。詳しく調べてみると、AIが生成した事実ではない情報だったことが分かったのです。それを受けてナナミはアプリを改修し、エビデンス（根拠）を明示するようにしました。『この情報は◯月◯日に取得されたもので、一次情報へのリンクはこちら』といった具合です。何が正しく、情報源がどれほど検証可能であるかを確実に把握すること——それは開発プロセスにおいて極めて重要です」</p>
+    <cite>— アナンド</cite>
+  </blockquote>
+</div>
+
+<div class="band iframe-wrap rust">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">ヨハン · Jurnal Lentera Bursa</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">alat-jurnal-lentera-bursa.pages.dev</span></div>
+      <a class="shot-link" href="https://alat-jurnal-lentera-bursa.pages.dev/" target="_blank" rel="noopener" style="padding:1.8rem 1.3rem;">
+        <div style="font-family:var(--font-mono); font-size:.88rem; color:var(--ink2); line-height:1.75;">
+          <strong style="color:var(--ink)">インドネシアの個人投資家向け株式トレード日誌</strong><br>
+          取引内容と損益を記録し、証券会社の手数料を追跡。ヨハン専用の管理画面で誰がどう使っているかを確認可能。
+        </div>
+        <span class="shot-hint">アプリを開く ↗</span>
+      </a>
+    </div>
+    <p class="embed-cap"><a href="https://alat-jurnal-lentera-bursa.pages.dev/" target="_blank" rel="noopener">別タブで開く ↗</a> <em>（サイトが埋め込みをブロックしているため、直接開きます）</em></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p><strong>Jurnal Lentera Bursa</strong>は、インドネシアの株式トレーダー向けに作られたインドネシア語のサイトだ。銘柄や購入ロット数を記録するとリアルタイムで損益が更新され、さらに他にはない特徴として、<strong>証券会社が取引や利益から実際にどれほどの手数料を差し引いているかを可視化</strong>できる。各ユーザーのデータは保護された個人アカウントに紐づけられており、管理者画面（ヨハン用）では個人の取引データを覗き見ることなく、誰がログインし、どのくらいの時間、どんな操作をしたかという集計利用状況を把握できる。</p>
+  <blockquote class="pull rust">
+    <p>「最後の部分が、私にとってはおそらく最も興味深い点でした。個々のユーザーにとって役立つアプリケーションであるだけでなく、あるユーザーが他者の利用から恩恵を受けられるプラットフォームへと進化する可能性を秘めているからです。ヨハンは誰が何をしているか、うまく使いこなせているかどうかの情報を得られるため、中央集権的にも、集約された情報を通じても、アプリをより強力に進化させることができます……これは、他者の利用に基づいてアプリが自律的に改善していく未来への第一歩です」</p>
+    <cite>— アナンド</cite>
+  </blockquote>
+</div>
+
+<div class="band iframe-wrap">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">ミオ · Komori —— マンガ・本棚アプリ</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">komori-manga-shelf-next…chatgpt.site</span></div>
+      <iframe src="https://komori-manga-shelf-next.king-bob-3308.chatgpt.site/" loading="lazy" title="Komori, by Mio"></iframe>
+    </div>
+    <p class="embed-cap">背表紙ビューを備えた、所持している本やマンガの整理アプリ。<a href="https://komori-manga-shelf-next.king-bob-3308.chatgpt.site/" target="_blank" rel="noopener">別タブで開く ↗</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>ミオは日本語でプレゼンを行い、リアルタイム翻訳で解説した。自身が集めている書籍やマンガのコレクションを整理するために開発したアプリだ。ガイド付きのオンボーディング、好きなジャンルや著者を設定できるプロフィール、検索やスマホでのバーコードスキャンによる本の追加、ジャンルに基づく自動おすすめ、既読／未読・判型・お気に入りでのフィルタリング、そして彼女自身が最もこだわった「まるで本物の本棚のように」背表紙が並び、まだ持っていない本まで並べられる背表紙ビュー表示などを備えている。</p>
+  <blockquote class="pull olive">
+    <p>「このアプリで面白かったのは、やはりテスターからのフィードバックでした。ある人は使い方が理解できず、別の人は小説を追加しようとして複数の版や複数のジャンルが存在することに悪戦苦闘していました。しかし最後には『この機能、すごくいいね』と言ってくれたのです。また別の人は『でも待って、この機能ってAmazonにすでにない？』と言いました。私はこのフィードバックに対するミオの振り返りが非常に気に入っています。<strong>多くの場合、指示を出すこと（何をすべきかAIに伝えること）こそが難しい。実際に作ること自体は難しくないのだ</strong>と」</p>
+    <cite>— アナンド</cite>
+  </blockquote>
+</div>
+
+<div class="band iframe-wrap rust">
+  <div class="iframe-inner">
+    <div class="embed-badge"><span class="pill">クリストファー · VC Partner Meeting Simulator</span></div>
+    <div class="embed-frame">
+      <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">ai-vc-masterclass.netlify.app</span></div>
+      <iframe src="https://ai-vc-masterclass.netlify.app/" loading="lazy" title="VC Partner Meeting Simulator, by Christopher"></iframe>
+    </div>
+    <p class="embed-cap">投資家向けピッチを練習し、最後にフィードバックと評価を受け取る。<a href="https://ai-vc-masterclass.netlify.app/" target="_blank" rel="noopener">別タブで開く ↗</a></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>クリストファーのアプリは、初めて起業するファウンダー向けの質疑応答ピッチ練習シミュレーターだ。スライドや会社情報をアップロードすると、実際のピッチ内容に即した質問をAIが生成する。本番さながらのプレッシャーを再現するカウントダウンタイマーが作動し、投資家目線の7つの質問に対してマイクまたはテキストで回答していく。終了後には項目ごとのスコア、良かった点と最大の欠点の分析、そして対話の文字起こし記録をPDFとして保存できる。</p>
+  <blockquote class="pull">
+    <p>「最初のバージョンでは、AIが1問ごとにフィードバックを返していました。クリストファーは『待てよ、実際のVCとの面談はそんな風には進まない。スライド1枚ごとにフィードバックをくれるわけではなく、最後まで待つはずだ』と気づいたのです。これこそが、その領域に対する自身の知識や実体験が活きる瞬間です。そうした知見が注ぎ込まれたとき、プロセス全体の質が一段引き上げられるのです」</p>
+    <cite>— アナンド</cite>
+  </blockquote>
+</div>
+
+<div class="wrap" id="close">
+  <span class="sec-num">シーン9</span>
+  <h2 class="sec">すべてを委任せよ。そして何が残るかを見届けよ。</h2>
+  <p class="lede">残り時間がわずかとなる中、アナンドはまとめのスライドを見せる代わりに、わずか3文節でこの1週間を締めくくった。</p>
+  <blockquote class="pull rust">
+    <p>「皆さんがすでに身をもって学び、共有された教訓からも明らかなのは、AIが『実行』を極めて快適に肩代わりできるということです。<strong>残るのは、皆さんの判断力です。何を指示すべきか、いかに伝えるべきか、いかに検証するか、いかにプロセスから学び続けて次回をより高速に反復できるようにするか。</strong>」</p>
+    <cite>— アナンド</cite>
+  </blockquote>
+  <p>そして、講義終了後の宿題として、あえて明確な答えを定めず、教室の枠を越えた課題が1つだけ出された。</p>
+  <blockquote class="pull">
+    <p>「皆さんに実践してみてほしいことが1つだけあります。<strong>できる限り、あらゆることをAIに委任してみてください。そして、AIに『できない』ことは何かを見極めてください。それを学ぶことに集中してください。それこそが、これからより重要になるスキルです</strong>」</p>
+    <cite>— アナンド、講義の結びとして</cite>
+  </blockquote>
+</div>
+
+</article>
+
+<div class="band takeaways-band" id="takeaways">
+  <div class="takeaways-inner">
+    <h2 class="takeaways-title">5日目のポイント</h2>
+    <p class="takeaways-sub">2026年9月11日（金） · SUTD · 最終セッション、対面</p>
+    <div class="takeaway-grid">
+      <div class="takeaway">
+        <div class="takeaway-num">01</div>
+        <div class="takeaway-title">この1週間のプロセスには名前がある：「感知、鍛造、検証、拡大、稼働＆進化」</div>
+        <div class="takeaway-text">「私が皆さんにお見せしてきたプロセスは、StraiveXメソドロジーとほぼ同等のものです」。旧来のパイプライン（発掘、提案、構築、納品、保守）は目標が変わったのではない。AIによって各ステージの所要時間が劇的に圧縮されたのだ。</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">02</div>
+        <div class="takeaway-title">スキルは「求められるもの」、フックは「強制されるもの」</div>
+        <div class="takeaway-text">「スキルとは、指示を出せば99%の確率で実行してくれるもの。フックとは、必ず実行せよと命じ、プログラムによって強制されるもの」。チャットログやセッションの文字起こし記録そのものが、再利用可能なアセットとなる。</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">03</div>
+        <div class="takeaway-title">自分自身の要求を、仕様ではなく「仮説」として扱え</div>
+        <div class="takeaway-text">クラス全員のチャットログから抽出された最も評価の高い教訓であり、アナンド自身が最も多用しているスキルでもある。<strong>「Xを要求したとしても、それに近いYを返してくれて構わない。ただし、いい仕事をしてくれ」</strong></div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">04</div>
+        <div class="takeaway-title">評価ルーブリックはAIが書き、意図的に「ハック可能」に設計されていた</div>
+        <div class="takeaway-text">受講生たちは講義中に作られたツールを通じて、自分たちを採点するルーブリックそのものに対してリアルタイムで異議を申し立てることができた。<strong>「遠慮はいりません、ハックしてください」</strong>。アプリが返してきた「単なる不満ではなく証拠を出せ」という反論そのものが、大きな学びだった。</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">05</div>
+        <div class="takeaway-title">合成ユーザーは「どこを見るべきか」を教え、人間は「何が重要か」を教える</div>
+        <div class="takeaway-text">AIペルソナは、その後の人間のテスターが見つけた問題の約55%を予測した。可能性を見つけ出すことには強いが、実際に誰かにとって何が重要になるかを見極めることには弱い。両者は互いを代替するものではない。</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">06</div>
+        <div class="takeaway-title">7つのアプリ、生々しい摩擦から生まれた7つのピボット</div>
+        <div class="takeaway-text">動かなかったGPS機能は写真日記へと生まれ変わった。1つのボタンの説明を求めるプロンプトは「アプリ全体を分かりやすくする」指示へと進化した。スライドごとにダメ出しするボットは、本物のVC面談と同じ「最後にまとめてフィードバックする」方式へと改められた。</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">07</div>
+        <div class="takeaway-title">「AIはものづくりのコストを下げた。その結果、判断力がより重要になった」</div>
+        <div class="takeaway-text">受講生9名の学びの動画から統合され、ほぼそのまま読み上げられた言葉。アナンドから教えられたのではなく、受講生たちが自力で発見した真実だ。</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">08</div>
+        <div class="takeaway-title">たった1つの宿題：AIにいまだ「できない」ことを見つけ出せ</div>
+        <div class="takeaway-text">「できる限り、あらゆることをAIに委任してみてください。そして、AIに何が『できない』のかを見極めてください。それを学ぶことに集中してください。それこそが、より重要になるスキルです」。講義を締めくくる最後の一言であり、これこそが真の最終試験である。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <footer class="footer">
-  <p><strong>How to Build AI Products — and Prove They Work</strong> · SUTD, 2026年9月7日〜11日</p>
-  <p><a href="index.ja.html">シリーズ概要</a> · <a href="day1.ja.html">Day 1</a> · <a href="https://talks.s-anand.net/" target="_blank" rel="noopener">Anandの他の講演</a></p>
+  <p><strong>Day 5 of 5 — 最終回</strong> — <a href="index.ja.html">How to Build AI Products — and Prove They Work</a>、SUTD DAIシグネチャー・マスタークラス、Expert Industry Series。2026年9月11日（金）、対面開催。</p>
+  <p><a href="transcript-day-5.ja.md" id="transcript-btn3">全文書き起こしを読む</a> · <a href="day4.ja.html">Day 4</a> · <a href="index.ja.html">全5日間</a> · <a href="https://talks.s-anand.net/" target="_blank" rel="noopener">アーナンドの他の講演</a></p>
+  <p class="footer-mono">talks.s-anand.net/2026-09-06-how-to-build-ai-products/day5.ja.html</p>
 </footer>
+
+<div class="modal" id="doc-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h4 id="doc-title"></h4>
+      <button class="modal-close" id="doc-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-src" id="doc-src"></div>
+    <div class="modal-body" id="doc-body"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+<script>
+  // ── Progress bar ──
+  const prog = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    prog.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + '%';
+  });
+
+  // ── Scene navigation rail ──
+  const sceneNav = document.getElementById('scene-nav');
+  const snToggle = document.getElementById('sn-toggle');
+  const snLinks = [...document.querySelectorAll('#sn-list a')];
+
+  snToggle.addEventListener('click', () => {
+    const open = sceneNav.classList.toggle('open');
+    snToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  snLinks.forEach(a => a.addEventListener('click', () => {
+    sceneNav.classList.remove('open');
+    snToggle.setAttribute('aria-expanded', 'false');
+  }));
+  document.addEventListener('click', e => {
+    if (sceneNav.classList.contains('open') && !sceneNav.contains(e.target)) {
+      sceneNav.classList.remove('open');
+      snToggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  const snTargets = snLinks
+    .map(a => ({ link: a, el: document.getElementById(a.getAttribute('href').slice(1)) }))
+    .filter(t => t.el);
+  const markActive = () => {
+    const line = window.innerHeight * 0.32;
+    let current = snTargets[0];
+    for (const t of snTargets) if (t.el.getBoundingClientRect().top <= line) current = t;
+    snLinks.forEach(a => a.classList.remove('active'));
+    if (current) current.link.classList.add('active');
+  };
+  let snTick = false;
+  window.addEventListener('scroll', () => {
+    if (snTick) return;
+    snTick = true;
+    requestAnimationFrame(() => { markActive(); snTick = false; });
+  });
+  markActive();
+
+  // ── Markdown document modal ──
+  const modal = document.getElementById('doc-modal');
+  const dBody = document.getElementById('doc-body');
+  const dTitle = document.getElementById('doc-title');
+  const dSrc = document.getElementById('doc-src');
+  const cache = {};
+
+  function renderMarkdown(text) {
+    const body = text
+      .replace(/^---[\s\S]*?---\s*/, '')
+      .replace(/<summary>([\s\S]*?)<\/summary>/g, '\n\n**💭 $1**\n\n')
+      .replace(/<\/?details>/g, '\n\n')
+      .replace(/^Source:\s*https?:\/\/(chatgpt\.com\/c\/|claude\.ai\/chat\/|gemini\.google\.com\/app).*$/gim, '');
+    const html = window.marked ? marked.parse(body) : body.replace(/\n/g, '<br>');
+    return html
+      .replace(/<a href="https?:\/\/(chatgpt\.com\/c\/|claude\.ai\/chat\/|gemini\.google\.com\/app)[^"]*">([\s\S]*?)<\/a>/g, '$2')
+      .replace(/<a /g, '<a target="_blank" rel="noopener" ');
+  }
+
+  function extractSection(md, heading) {
+    const lines = md.split('\n');
+    let start = -1, end = lines.length;
+    for (let i = 0; i < lines.length; i++) {
+      if (start === -1 && /^#\s+/.test(lines[i]) && lines[i].replace(/^#\s+/, '').trim() === heading) {
+        start = i + 1;
+      } else if (start !== -1 && /^#\s+/.test(lines[i])) {
+        end = i;
+        break;
+      }
+    }
+    if (start === -1) return md;
+    return lines.slice(start, end).join('\n');
+  }
+
+  function parseCSV(text) {
+    const rows = [];
+    let row = [], field = '', inQuotes = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i], n = text[i + 1];
+      if (inQuotes) {
+        if (c === '"' && n === '"') { field += '"'; i++; }
+        else if (c === '"') { inQuotes = false; }
+        else { field += c; }
+      } else {
+        if (c === '"') inQuotes = true;
+        else if (c === ',') { row.push(field); field = ''; }
+        else if (c === '\r') { /* skip */ }
+        else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+        else { field += c; }
+      }
+    }
+    if (field.length || row.length) { row.push(field); rows.push(row); }
+    return rows.filter(r => r.length > 1 || r[0] !== '');
+  }
+
+  function csvToCards(text) {
+    const rows = parseCSV(text);
+    if (!rows.length) return '<p><em>No data.</em></p>';
+    const [header, ...body] = rows;
+    const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    const nl = s => esc(s).replace(/\n+/g, '<br>');
+    // The long free-text column (e.g. "Suggestion") becomes the card body; short columns become compact meta.
+    const bodyIdx = header.findIndex(h => /suggestion|comment|feedback|note/i.test(h));
+    const skip = new Set(['Email']);
+    const nameIdx = header.findIndex(h => /^(student|name)$/i.test(h)) >= 0
+      ? header.findIndex(h => /^(student|name)$/i.test(h)) : 0;
+    const tagIdx = header.findIndex(h => /recommendation|status|verdict/i.test(h));
+    let html = '<div class="csv-cards">';
+    for (const r of body) {
+      const name = esc(r[nameIdx] || '');
+      const tag = tagIdx >= 0 ? esc(r[tagIdx] || '') : '';
+      const metaCols = header
+        .map((h, i) => ({ h, v: r[i], i }))
+        .filter(({ h, i }) => !skip.has(h) && i !== nameIdx && i !== tagIdx && i !== bodyIdx && (r[i] || '').trim());
+      const meta = metaCols.map(({ h, v }) => `${esc(h)}: ${esc(v)}`).join(' · ');
+      const bodyText = bodyIdx >= 0 ? nl(r[bodyIdx] || '') : '';
+      html += '<div class="csv-card">';
+      html += `<div class="csv-card-head"><span class="csv-card-name">${name || '—'}</span>${tag ? `<span class="csv-card-tag">${tag}</span>` : ''}</div>`;
+      if (meta) html += `<div class="csv-card-meta">${meta}</div>`;
+      if (bodyText) html += `<div class="csv-card-body">${bodyText}</div>`;
+      html += '</div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  async function openDoc(opts) {
+    const { file, title, source, anchor, isCsv } = opts;
+    modal.classList.add('open');
+    dBody.scrollTop = 0;
+    dTitle.textContent = title;
+    dSrc.innerHTML = source ? `<a href="${source}" target="_blank" rel="noopener">↗ Open the original</a>` : '';
+    const cacheKey = file + '::' + (anchor || '');
+    if (cache[cacheKey]) { dBody.innerHTML = cache[cacheKey]; return; }
+    dBody.innerHTML = '<p><em>Loading…</em></p>';
+    try {
+      const res = await fetch(file);
+      if (!res.ok) throw new Error(res.status);
+      const raw = await res.text();
+      let html;
+      if (isCsv) {
+        html = csvToCards(raw);
+      } else {
+        const section = anchor ? extractSection(raw, anchor) : raw;
+        html = renderMarkdown(section);
+      }
+      cache[cacheKey] = html;
+      dBody.innerHTML = html;
+    } catch (e) {
+      dBody.innerHTML = `<p>Could not load this file here. <a href="${source || file}" target="_blank" rel="noopener">Open it directly</a>.</p>`;
+    }
+  }
+
+  const openTranscript = e => {
+    e.preventDefault();
+    openDoc({ file: 'transcript-day-5.ja.md', title: 'Day 5 ― 全文書き起こし、2026年9月11日' });
+  };
+  ['transcript-btn', 'transcript-btn2', 'transcript-btn3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', openTranscript);
+  });
+
+  document.querySelectorAll('a.doclink').forEach(el => {
+    const d = el.dataset;
+    if (!(d.chat || d.csv || d.doc)) return; // plain external link — let it navigate normally
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      if (d.chat) {
+        openDoc({ file: d.chat, title: d.title || d.section, anchor: d.section });
+      } else if (d.csv) {
+        openDoc({ file: d.csv, title: d.title || 'Data', isCsv: true });
+      } else if (d.doc) {
+        openDoc({ file: d.doc, title: d.title || 'Document' });
+      }
+    });
+  });
+
+  document.getElementById('doc-close').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('open'); });
+</script>
+
 </body>
 </html>

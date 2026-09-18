@@ -22,10 +22,18 @@ context.md file.
 ### 1. Inventory
 
 Resolve the talk directory (from the prompt, `$ARGUMENTS`, or cwd). List its contents.
-Typical assets: `transcript.md` (primary content), `summary.avif` / `sketchnote.avif` /
-`comic-page.avif` (visual summary), `slide-NN.avif`, `*.pdf`, supporting `.md` files
-(chat exports like `Codex-chat.md`, `chatgpt-*.md`, `preparation.md`), survey data
-(`form.yaml`, `responses.tsv`), extra `.html` pages, images, videos.
+Typical assets: transcript files (sometimes multiple/per-day, occasionally in `README.md`),
+`summary.avif` / `sketchnote.avif` / `comic-page.avif` (visual summary), `slide-NN.avif`,
+`*.pdf`, supporting `.md` files (chat exports like `claude-chat.md`, `chatgpt-*.md`,
+`preparation.md`), survey data (`form.yaml`, `responses.tsv`), extra `.html` pages, images,
+videos.
+
+Respect the output shape in the prompt/existing directory: it may be one story, a landing page
+plus `story.html`, companion pages, or a multi-day/multilingual microsite. Existing companion
+pages such as surveys, demos, or data stories may be deliberate parts of the talk; inspect and
+link/embed them rather than automatically folding everything into the main story. When updating
+an existing story, preserve its structure and patch it rather than regenerating it unless a
+rewrite is requested.
 
 Defaults derivable from the directory name `<talk-dir>`:
 - Deployment URL: `https://talks.s-anand.net/<talk-dir>/`
@@ -34,11 +42,13 @@ Defaults derivable from the directory name `<talk-dir>`:
 ### 2. Gather context
 
 Read, in this order:
-1. The transcript(s). Multiple transcripts of the same talk: use only content unambiguously
-   inferrable from both.
+1. The transcript(s). Multiple transcripts of the same session are noisy versions of the same
+   source: reconcile phonetic errors, timestamps, and speaker labels using both; don't discard a
+   useful passage just because only one captured it clearly.
 2. Supporting `.md` files and survey data in the directory — mine them for quotes, insights,
    and narrative material.
-3. Links in the transcript/prompt that are readable (GitHub → raw, blog posts, local files).
+3. Links in the prompt, transcript, and supporting files that are readable (GitHub → raw,
+   blog posts, local files). Follow useful ones for context and material worth weaving in.
 4. The example talks named in the prompt (default: the 3 most recent `index.html`/`story.html`
    in this repo). Read ~300 lines of each for design reference — follow LOOSELY, not strictly.
    Vary the palette and fonts per talk; don't clone one design forever.
@@ -46,8 +56,10 @@ Read, in this order:
 Use sub-agents for token efficiency: delegate bulk reading/summarising of long chat exports,
 survey analysis, and link research to cheaper models; keep the main context for writing.
 
-Search the web and LIBERALLY add inline links: everything mentioned directly or indirectly in
-the talk (tools, papers, people, companies, concepts) plus material giving the reader context.
+Search the web and LIBERALLY add useful inline links. Link named tools, papers, people,
+companies, concepts, demos, and relevant context where they are discussed. Do not rely only on
+the URLs explicitly listed in the prompt; mine the transcript/supporting files too. Avoid a
+link-dump: links should help the reader at the point they appear.
 
 ### 3. Convert / capture assets (only if needed)
 
@@ -82,7 +94,9 @@ Structure and media conventions:
 
 Link conventions:
 - Every link the prompt lists MUST appear, at the right place (narrative, caption, or card).
-- Use SHARE links only: `chatgpt.com/share/...`, `Codex.ai/share/...` or `/public/artifacts/`,
+  Also preserve/use relevant links discovered in transcripts and supporting files rather than
+  silently dropping them.
+- Use SHARE links only: `chatgpt.com/share/...`, `claude.ai/share/...` or `/public/artifacts/`,
   `gemini.google.com/share/...`. Links inside `<!-- HTML comments -->` in the prompt or
   transcript are PRIVATE — never include them.
 - Honour DO NOT LINK instructions: mention the thing, omit the hyperlink.
@@ -98,7 +112,7 @@ Link conventions:
 
 ### 5. Generate in chunks
 
-Codex stalls generating large HTML in one shot. Write the file in small chunks or layered
+Claude stalls generating large HTML in one shot. Write the file in small chunks or layered
 edits (≤100KB each, practically ~200–400 lines): scaffold+head+hero first, then narrative
 sections, then closing (takeaways, footer, overlays, scripts). Save and sanity-check after
 each chunk; end every chunk at a complete element boundary.
@@ -115,13 +129,31 @@ each chunk; end every chunk at a complete element boundary.
    `width: 100vw; margin-left: calc(50% - 50vw)` breakout pattern.
    `grep -n 'margin.*-[0-9]*vw' <file>` must return nothing.
 5. **All links present.** Grep the output for every URL the prompt required.
-6. **No private links leaked.** `grep -nE 'chatgpt\.com/c/|Codex\.ai/chat/|gemini\.google\.com/app' <file>`
+6. **No private links leaked.** `grep -nE 'chatgpt\.com/c/|claude\.ai/chat/|gemini\.google\.com/app' <file>`
    must return nothing.
 7. **Popups/lightbox work.** Every `openPopup('X')` has a matching `id="X"`; audio uses a
    `<source>` element; no leftover TODOs.
 
-### 7. Finish
+### 7. Update the catalog and finish
 
-- Update the repo `README.md` with this talk, matching the existing format.
-- Report: what was generated, quotes whose attribution you're unsure about, links you could
-  not resolve, and anything skipped.
+Update `config.json`, not the generated talk list in `README.md`. Find and update the existing
+talk row; add one only for a genuinely new talk. Preserve the one-talk-object-per-line format.
+
+- Talk fields: `date`, `title`, `categories`, `links`; optional `details`, `event`, `location`,
+  `speakers`, `images`. Categories are `latest`, `archive`, `videos`, `others`.
+- `details`: one concise sentence with the talk's thesis/insight.
+- `event`: `{name, url?}`; `location`: text; `speakers`: `[{name, url?}]`.
+- `links`: `{type, url, label?, minutes?, primary?, ignore?}`. Types: `page`, `video`, `audio`,
+  `transcript`, `slides`, `screencast`, `code`, `chat`. At most one `primary:true`; it becomes
+  the title link. `label` overrides the default label. `minutes` is whole elapsed minutes.
+  `ignore:true` marks the generated Markdown link `:ignore` for link checking; it does not hide it.
+- `images`: only the one/few prominent `{type, url, label?}` images, not every slide/frame.
+  Current types: `comic`, `sketchnote`, `illustration`, `screenshot`, `chart`, `visualization`,
+  `poster`.
+- Top-level `youtube_playlist` is catalog metadata; change it only if the playlist changes.
+
+Run `just build` after editing `config.json`; it regenerates the catalog in `README.md` and root
+`index.html`. Do not hand-edit generated catalog entries.
+
+Report: what was generated, quotes whose attribution you're unsure about, links you could not
+resolve, anything skipped, and the `just build` result.

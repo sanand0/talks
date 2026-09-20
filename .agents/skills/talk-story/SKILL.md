@@ -24,9 +24,8 @@ context.md file.
 Resolve the talk directory (from the prompt, `$ARGUMENTS`, or cwd). List its contents.
 Typical assets: transcript files (sometimes multiple/per-day, occasionally in `README.md`),
 `summary.avif` / `sketchnote.avif` / `comic-page.avif` (visual summary), `slide-NN.avif`,
-`*.pdf`, supporting `.md` files (chat exports like `claude-chat.md`, `chatgpt-*.md`,
-`preparation.md`), survey data (`form.yaml`, `responses.tsv`), extra `.html` pages, images,
-videos.
+`*.pdf`, supporting `.md` files (chat exports like `*chat*.md`, `preparation.md`),
+survey data (`form.yaml`, `responses.tsv`), extra `.html` pages, images, videos.
 
 Respect the output shape in the prompt/existing directory: it may be one story, a landing page
 plus `story.html`, companion pages, or a multi-day/multilingual microsite. Existing companion
@@ -49,12 +48,12 @@ Read, in this order:
    and narrative material.
 3. Links in the prompt, transcript, and supporting files that are readable (GitHub → raw,
    blog posts, local files). Follow useful ones for context and material worth weaving in.
-4. The example talks named in the prompt (default: the 3 most recent `index.html`/`story.html`
-   in this repo). Read ~300 lines of each for design reference — follow LOOSELY, not strictly.
+4. Recent `index.html`/`story.html` files in this repo. Follow these LOOSELY, not strictly.
    Vary the palette and fonts per talk; don't clone one design forever.
 
 Use sub-agents for token efficiency: delegate bulk reading/summarising of long chat exports,
-survey analysis, and link research to cheaper models; keep the main context for writing.
+survey analysis, and link research to cheaper models; complex tasks requiring judgement
+(planning, analysis, storyline, etc.) to advanced models; keep the main context for writing.
 
 Search the web and LIBERALLY add useful inline links. Link named tools, papers, people,
 companies, concepts, demos, and relevant context where they are discussed. Do not rely only on
@@ -77,6 +76,10 @@ Style (applies always, even if the prompt doesn't repeat it):
   Quotes must be VERBATIM from the transcript — no paraphrase, no punch-up.
 - Highlight what was insightful or funny.
 - Use **bold** for scannability: reading only the bolded text should summarise the article.
+- Keep a visual cadence: never run more than ~3–4 plain paragraphs before something breaks the
+  column — a band, pull quote, image, embed, card group, or rendered artefact. "Monotonous long
+  blocks of text" and "too long, undifferentiated" are standing complaints, and they arrive
+  section by section, so check the WHOLE page, not just the opening.
 - End with top takeaways rendered as cards.
 
 Structure and media conventions:
@@ -86,8 +89,15 @@ Structure and media conventions:
 - Visual summary (`summary.avif` / sketchnote / comic page): prominent, max-width 100%;
   clicking opens the full-size image in a new tab.
 - Full-width breakout bands with contrasting backgrounds create rhythm — and every band,
-  wrap, and embed gets a bottom margin.
-- Card groups get extra width so 3–4 cards fit per row on desktop.
+  wrap, and embed gets a bottom margin. By default let visual elements (comic page, videos,
+  embedded content, galleries) expand past the main column, even to full width, each on a
+  distinct background colour so it pops.
+- Card groups get extra width so 3–4 cards fit per row on desktop, and the column count must not
+  strand a single card alone in the last row (see generation-guide.md).
+- Section jump navigation: ALWAYS include a way to jump to any section from anywhere on the page
+  (a fixed prev/next bar with a "Jump to…" menu). Ship the HTML markup and JS wiring, not just the
+  CSS. This is a required default, not an optional flourish. See generation-guide.md for the
+  pattern and how to find the current best example.
 - Tooltips: context for non-obvious terms; extra context for references.
 - Popups: citations (cite the key point, link to the source) and supporting material
   (extended quotes, chat excerpts, extracts).
@@ -96,14 +106,26 @@ Link conventions:
 - Every link the prompt lists MUST appear, at the right place (narrative, caption, or card).
   Also preserve/use relevant links discovered in transcripts and supporting files rather than
   silently dropping them.
-- Use SHARE links only: `chatgpt.com/share/...`, `claude.ai/share/...` or `/public/artifacts/`,
-  `gemini.google.com/share/...`. Links inside `<!-- HTML comments -->` in the prompt or
-  transcript are PRIVATE — never include them.
+- Use SHARE links only: `chatgpt.com/share/...` or `chatgpt.com/s/...`, `claude.ai/share/...` or
+  `/public/artifacts/`, `gemini.google.com/share/...`. Links inside `<!-- HTML comments -->` in the
+  prompt or transcript are PRIVATE — never include them.
 - Honour DO NOT LINK instructions: mention the thing, omit the hyperlink.
 - Images: include with a caption; image and caption link to the associated URL if any,
   else open the full-size image in a new tab.
 - Website embeds: IFRAME in a full-width container, slightly under 100vh (inspect content for
   the right aspect ratio), with a caption linking to the source in a new window.
+- Check embeddability BEFORE writing the iframe — many sites refuse framing via
+  `X-Frame-Options`/CSP `frame-ancestors` and render blank. `curl -sI <url> | grep -i
+  'x-frame-options\|content-security-policy'`, or load it and look. Known refusers include
+  `claude.ai`, `chatgpt.com`, `github.com`, `agentskills.io`, most SaaS dashboards. Fallbacks, in
+  order: screenshot + link card (generation-guide.md); for GitHub/raw Markdown, fetch the raw file
+  and render it in a popup; plain link last. Conversely, don't assume a resource is permanently
+  gated: if a source file records someone offering to publish it, flag that to the user ("this is
+  private — make it public and I'll embed it?") instead of writing the restriction into the story.
+- Where a talk has a primary speaker and a secondary host/organiser/co-presenter, the secondary
+  party gets ONE hyperlinked mention (usually the first substantive one) and plain-text mentions
+  thereafter. The same external link repeated in nav, hero, body and footer reads as promoting
+  someone who isn't the subject of the story.
 - Local `.md` files: open in a popup, rendered as HTML (skip or prettify YAML frontmatter).
 - Local `.html` files: embed full-width at ~90vh.
 - Clickable elements that lead somewhere are `<a>` tags (so right-click → open in new tab
@@ -115,15 +137,24 @@ Link conventions:
 Claude stalls generating large HTML in one shot. Write the file in small chunks or layered
 edits (≤100KB each, practically ~200–400 lines): scaffold+head+hero first, then narrative
 sections, then closing (takeaways, footer, overlays, scripts). Save and sanity-check after
-each chunk; end every chunk at a complete element boundary.
+each chunk; end every chunk at a complete element boundary. The sanity check includes tag
+balance — run it after EVERY chunk, especially right after any edit that closes `.wrap` to
+insert a full-width band and reopens it afterwards (the highest-risk pattern for a dropped or
+duplicated `</div>`, which silently breaks the layout of everything below).
 
 ### 6. QA pass (do this without being asked)
 
 1. **Quote attribution fact-check.** Transcripts frequently mislabel speakers. Re-check every
    quote and attributed statement against the transcript; flag ambiguous attributions to the
-   user in your final report. This has been the #1 source of corrections.
-2. **Contrast sweep.** Check text, links, `strong`, and captions inside every coloured band
-   in both dark and light contexts. Low-contrast links inside bands are the #2 recurring bug.
+   user in your final report. This has been the #1 source of corrections. Errors cluster in
+   panels and multi-speaker sessions — list the speakers first, then verify per speaker, and
+   check narrative attributions too ("X's demo", "Y raises the objection", "Z's 70 students"),
+   not just text inside quotation marks. One found error means more: re-verify all of them.
+2. **Contrast sweep.** Check text, links, `strong`, captions, `figcaption`s and band labels
+   inside every coloured band, in resting AND hover/focus states, in both dark and light
+   contexts. Don't eyeball the declared colours — trace the cascade: a more specific prose rule
+   elsewhere can override a component's own colour (see generation-guide.md's specificity trap).
+   Low-contrast links inside bands are the #2 recurring bug.
 3. **Spacing.** Bands/wraps/embeds have bottom margins; sections breathe.
 4. **No horizontal scroll.** `body { overflow-x: hidden }` plus only the
    `width: 100vw; margin-left: calc(50% - 50vw)` breakout pattern.
@@ -133,6 +164,14 @@ each chunk; end every chunk at a complete element boundary.
    must return nothing.
 7. **Popups/lightbox work.** Every `openPopup('X')` has a matching `id="X"`; audio uses a
    `<source>` element; no leftover TODOs.
+8. **Tag balance.** Every opened tag is closed exactly once. Parse the file, or count:
+   `grep -o '<div' <file> | wc -l` must equal `grep -o '</div>' <file> | wc -l` (repeat for
+   `section`, `article`, `figure`). Unbalanced `div`s break every section below the mismatch.
+
+Fix the CLASS, not the instance. Every defect above generalises: when you find — or the user
+reports — one low-contrast link, one missing margin, one dead click, one wrong attribution, sweep
+the whole file for others of the same kind before replying. "Fix these AND SIMILAR ERRORS" and
+"find similar issues and fix them" recur in the prompts because single-instance fixes don't hold.
 
 ### 7. Update the catalog and finish
 
@@ -145,13 +184,12 @@ talk row; add one only for a genuinely new talk. Preserve the one-talk-object-pe
   minutes for the session itself. Omit `time`/`duration` rather than guessing.
 - `details`: one concise sentence with the talk's thesis/insight.
 - `event`: `{name, url?}`; `location`: text; `speakers`: `[{name, url?}]`.
-- `links`: `{type, url, label?, minutes?, primary?, ignore?}`. Types: `page`, `video`, `audio`,
-  `transcript`, `slides`, `screencast`, `code`, `chat`. At most one `primary:true`; it becomes
-  the title link. `label` overrides the default label. `minutes` is whole elapsed minutes.
+- `links`: `{type, url, label?, minutes?, primary?, ignore?}`. At most one `primary:true`; it
+  becomes the title link. `label` overrides the default label. `minutes` is whole elapsed minutes.
   `ignore:true` marks the generated Markdown link `:ignore` for link checking; it does not hide it.
 - `images`: only the one/few prominent `{type, url, label?}` images, not every slide/frame.
-  Current types: `comic`, `sketchnote`, `illustration`, `screenshot`, `chart`, `visualization`,
-  `poster`.
+- Reuse an existing `type` rather than inventing one — list what's in use with
+  `jaq -r '[.talks[].links[].type] + [.talks[].images[]?.type] | unique | join(" ")' config.json`.
 - Top-level `youtube_playlist` is catalog metadata; change it only if the playlist changes.
 
 Run `just build` after editing `config.json`; it regenerates the catalog in `README.md` and root

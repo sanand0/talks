@@ -2,6 +2,13 @@
 
 This reference is loaded by the `talk-story` skill when generating `index.html`.
 
+**Reference implementations go stale; this file's rules don't.** Where a component below names a
+specific talk, that was the best example *when written* — the pattern has usually improved since.
+Before copying one, find the newest talk that has it and prefer that:
+`grep -l 'class="jump"' 20*/index.html | sort | tail -2` (swap in the class you need; `sort` matters
+— `grep` here may be a ugrep wrapper that returns matches out of order). Copy the markup and JS from the live example; take the *rules* below as the constraints
+that example must satisfy — if they disagree, the rule here wins and the example is the stale one.
+
 ## Table of contents
 
 1. [Design philosophy](#design-philosophy)
@@ -94,6 +101,10 @@ body {
   <!-- Footer -->
   <footer>...</footer>
 
+  <!-- Section jump nav: fixed bottom bar, prev/next + "Jump to…" menu -->
+  <div class="jump-backdrop" id="jump-backdrop"></div>
+  <nav class="jump" aria-label="Jump to section">...</nav>
+
   <!-- Lightbox overlay (for image popups) -->
   <div id="lightbox" class="lightbox" onclick="closeLightbox()">
     <img id="lightbox-img" src="" alt="">
@@ -149,31 +160,10 @@ and ideally wider than the main column so they feel like a pause in the reading 
 </blockquote>
 ```
 
-```css
-blockquote.pull-quote {
-  border-left: 4px solid var(--accent);
-  padding: 1.25rem 2rem;
-  /* Extend 10% past each side of the column — visually striking, not full-width */
-  margin: 2.5rem -10%;
-  font-style: italic;
-  font-size: 1.2rem;
-  line-height: 1.65;
-  background: var(--highlight-bg);
-  border-radius: 0 4px 4px 0;
-}
-blockquote.pull-quote cite {
-  display: block;
-  margin-top: 0.75rem;
-  font-size: 0.9rem;
-  font-style: normal;
-  color: var(--muted);
-  letter-spacing: 0.03em;
-}
-/* On narrow viewports, don't overflow the screen */
-@media (max-width: 600px) {
-  blockquote.pull-quote { margin-left: 0; margin-right: 0; }
-}
-```
+Crib the styling from a recent talk's `.pull-quote`. The rules that matter: a negative horizontal
+margin (~`-10%`) so it breaks the column without going full-width; larger, italic, accent border;
+`cite` un-italicised and quieter; and a `@media (max-width: 600px)` rule zeroing those negative
+margins so it doesn't overflow a phone.
 
 ### Slide thumbnail grid
 
@@ -188,11 +178,8 @@ blockquote.pull-quote cite {
 </div>
 ```
 
-```css
-.slide-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem; max-width: 1100px; margin: 0 auto; }
-.slide-card { cursor: zoom-in; border-radius: 4px; overflow: hidden; margin: 0; }
-.slide-card img { width: 100%; display: block; }
-```
+`.slide-grid` is a centred `max-width: 1100px` grid of ~200px thumbnails with `cursor: zoom-in`.
+`auto-fill` is fine here — it's one grid with nothing to align against (unlike the jump menu).
 
 ### Audio player
 
@@ -206,6 +193,21 @@ Audio files are always `.opus`. Place the player in the hero meta section (near 
   </audio>
 </div>
 ```
+
+### Video
+
+YouTube → the iframe card below. A hosted recording (`.webm`, usually on `media.s-anand.net`) →
+a `<video>` element with a nested `<source>`, in a full-width container near the top:
+
+```html
+<video controls preload="metadata" width="100%">
+  <source src="https://media.s-anand.net/<talk>.webm" type='video/webm; codecs="vp9, opus"'>
+</video>
+```
+
+Short demo clips woven into the narrative (a tool in action, a render, a screen capture) play
+themselves — `autoplay muted loop playsinline` with no controls — and carry a caption linking to
+the demo, or to the video itself if there's no demo page.
 
 ### Tooltip
 
@@ -240,20 +242,26 @@ Do NOT use `vertical-align: super` (breaks line spacing) or remove the border en
 </div>
 ```
 
-```css
-.cite-btn {
-  background: none;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  padding: 0.1rem 0.35rem;
-  border-radius: 3px;
-  font-size: 0.72rem;
-  cursor: pointer;
-  font-family: var(--font-mono);
-  line-height: 1;
-}
-.cite-btn:hover { background: var(--accent); color: #fff; }
+Style `.cite-btn` as a small monospace chip: transparent, 1px accent border, accent text,
+`line-height: 1`, inverting on hover. Crib exact values from a recent talk.
+
+### Chat / prompt excerpt
+
+Verbatim prompts and AI responses are some of the best material in these talks — show them inline
+in a block visibly distinct from `.pull-quote` (mono face, labelled "Prompt" / "Response", its own
+background), not buried in a popup. Pair the snippet with a popup holding the fuller chat
+(a local `.md` rendered as HTML) and a link to the SHARE URL of the original chat.
+
+```html
+<div class="prompt-box">
+  <div class="plabel">Prompt</div>
+  <p>Verbatim prompt text…</p>
+  <a href="chat-thing.md" onclick="openPopup('chat-thing'); return false;">Read the full chat ↗</a>
+</div>
 ```
+
+`.prompt-box a` must set its own colour — and the base prose link rule must not out-specify it
+(see the specificity trap in Common pitfalls).
 
 ### YouTube embed card
 
@@ -276,12 +284,48 @@ Do NOT use `vertical-align: super` (breaks line spacing) or remove the border en
 </a>
 ```
 
-```css
-.link-card { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; text-decoration: none; color: inherit; transition: box-shadow 0.2s; }
-.link-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
-.link-card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
-.link-card-body { padding: 0.75rem 1rem; }
+A bordered column: 16/9 `object-fit: cover` screenshot above a padded body, `color: inherit`, lifting
+on hover. This is also the fallback for any page that refuses to be framed — screenshot it (CDP at
+localhost:9222, or `uvx rodney`) and card it instead of shipping a blank iframe.
+
+### Section jump navigation
+
+Always include a way to jump to any section from anywhere — a required default, not a decorative
+extra, and the CSS alone is useless: copy the markup and the JS wiring too. A fixed bottom bar with
+prev/next buttons plus a current-section label that opens a menu listing every section, grouped by
+act. Current best example: `2026-09-19-shree-niketan-schools/index.html` (fixed columns,
+left-aligned menu) — but find the newest per the pointer rule at the top of this file:
+`grep -l 'class="jump"' 20*/index.html | sort | tail -2`. Older ones still carry the `auto-fit` bug
+below.
+
+```html
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump" aria-label="Jump to section">
+  <button id="jump-prev" aria-label="Previous section">‹</button>
+  <span class="jump-cur" id="jump-cur">Opening <span class="caret">▾</span></span>
+  <button id="jump-next" aria-label="Next section">›</button>
+  <div class="jump-menu" id="jump-menu">
+    <div class="jm-group">Opening</div>
+    <div class="jump-grid"><a href="#sec-1">Title<small>subtitle</small></a>…</div>
+    <!-- repeat group heading + grid per act -->
+  </div>
+</nav>
 ```
+
+The JS tracks the active section (`IntersectionObserver` or scroll position), updates `#jump-cur`
+and the `.is-cur` link, wires prev/next, and toggles `.open` on the menu and backdrop.
+
+```css
+/* FIXED column count — NOT auto-fit/auto-fill */
+.jump-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .35rem; }
+@media (max-width: 640px) { .jump-grid { grid-template-columns: repeat(2, 1fr); } }
+```
+
+**Why fixed columns**: `repeat(auto-fit, minmax(170px, 1fr))` sizes each grid container
+independently, so a 2-item group, a 3-item group and a 1-item group each get a different column
+count and their edges don't line up — the menu reads as ragged. Any repeating grid split across
+sibling containers that must align with each other (grouped nav menus, multi-section card grids)
+needs an explicit `repeat(N, 1fr)`.
 
 ### Animated SVG (for process explanations)
 
@@ -360,6 +404,50 @@ black `strong` on dark red, dark-yellow links on light yellow, accent-coloured l
 faint captions and band labels. After generating, walk through each band class and check every
 descendant style in both light and dark contexts.
 
+**The usual root cause**: `--muted` and `--accent` are tuned against `--paper`, then inherited
+unchanged inside a band with a different background. Captions, `figcaption`, band labels and
+`.card` subtitles are the repeat offenders (`.sketchnote-caption`, `.band-label`,
+`.full-embed-label a`, `.wf-grid figcaption` have all had to be corrected). Give each band its own
+muted/link/label tokens rather than reusing the page-level ones, and size band labels for the
+prominence they deserve — "too light AND too small" is one complaint, not two.
+
+**Check hover and focus too**, not just the resting state: a `:hover` rule that swaps background
+or colour can land text on a near-identical background (`.doclink` on hover was unreadable). Every
+interactive element needs contrast in all of resting, hover, and keyboard-focus states.
+
+### Prose link colour beating a component's own link colour (specificity trap)
+
+**Root cause**: a base rule like `.wrap p a, .wrap li a, .wrap-wide > p a { color: var(--teal-dk); }`
+scores (0,1,2) — *higher* than a component override like `.prompt-box a { color: #9fd8e6; }` (0,1,1).
+Component markup normally wraps its text in `<p>`, so the prose rule wins and the link renders dark
+teal on a near-black box: invisible. A per-band contrast sweep misses this unless it traces the cascade.
+
+**The fix**: scope prose link/text rules to the wrapper alone — never add a `p`/`li`/`h*` qualifier —
+and define them *before* component rules so source order settles equal-specificity ties:
+```css
+.wrap a, .wrap-wide a { color: var(--teal-dk); }   /* base — defined FIRST, lowest specificity */
+.prompt-box a { color: #9fd8e6; }                  /* any component override now wins */
+```
+Verify: `grep -nE '\.wrap[a-z-]*( *>)? +(p|li|h[1-6])[^,{]* a[ ,{]' index.html` must return nothing.
+
+### Markdown rendered into a modal/popup loses list indentation
+
+**Root cause**: the reset `*, *::before, *::after { margin: 0; padding: 0 }` zeroes the browser's
+default `<ul>/<ol>` indent everywhere. `.wrap ul, .wrap ol { … }` restores it for hand-authored prose,
+but `.modal-body` / `#popup-content` are *siblings* of `.wrap`, not descendants, so those rules never
+reach them — bullets in a fetched `.md` chat log render flush left with no marker visible.
+
+**The fix**: every container that renders externally-sourced Markdown (marked.js output) needs its own
+complete set of element rules — headings, paragraphs, lists, blockquotes, code:
+```css
+.modal-body h2, .modal-body h3 { margin: 1.2rem 0 .5rem; }
+.modal-body p  { margin: 0 0 .8rem; }
+.modal-body ul, .modal-body ol { margin: 0 0 .8rem 1.4rem; }  /* the reset killed the indent */
+.modal-body li { margin-bottom: .35rem; }
+.modal-body blockquote { margin: 0 0 .8rem; padding-left: .9rem; border-left: 3px solid var(--border); }
+```
+Verify by opening a popup whose source `.md` file contains a bulleted or numbered list.
+
 ### Missing bottom margins (the #3 recurring issue)
 
 `.band`, `.wrap`, `.embed`, `.stat-band`, `.gallery-band` and similar full-width sections need
@@ -374,6 +462,11 @@ correction.
   right-click → open in new tab works), with the click intercepted for popups.
 - **Cramped cards**: give card groups extra width (breakout container) so 3–4 fit per row on
   desktop; render takeaways as cards, not a plain list.
+- **Orphan card in the last row** (distinct from cramped cards — a count bug, not a width bug):
+  for N cards and C columns, if `N mod C == 1` the final row holds one lonely card. Check this
+  per card group before settling the CSS, then either pick a C that divides N (5 cards → 5 across
+  on wide screens, or a deliberate 2+3 split), or add/merge a card so the rows fill. Extra width
+  alone does not fix it.
 - **Private links leaked**: `chatgpt.com/c/`, `claude.ai/chat/`, `gemini.google.com/app` must
   never appear — use the share links; anything in `<!-- comments -->` stays out.
 - **Broken popup JS**: The `openPopup(id)` function should copy `innerHTML` of `#id` into `#popup-content`. Check that every `openPopup('X')` call has a matching `id="X"` element.

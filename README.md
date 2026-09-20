@@ -19,6 +19,9 @@ I speak regularly at:
 <!-- BEGIN GENERATED TALKS -->
 ## Latest talks
 
+- 19 Sep 2026. **[Even the AI Guy Couldn't Find the Chat Button](2026-09-19-shree-niketan-schools/ ":ignore")** at [Shree Niketan Schools — Teachers' AI Q&A](https://www.facebook.com/ShreeNiketanSchools/), Shree Niketan Schools, Chennai / Zoom.  
+  Treat AI as a collaborator, not a vending machine: ask it to interview you before it builds a lesson plan, log what actually happens after you use its output, and benchmark any fix before trusting it.  
+  [💬 Transcript](2026-09-19-shree-niketan-schools/transcript.md)
 - 11 Sep 2026. **[How to Build AI Products — and Prove They Work](2026-09-06-how-to-build-ai-products/ ":ignore")** at [SUTD DAI Signature Master Class · Expert Industry Series](https://www.sutd.edu.sg/), Singapore University of Technology and Design, Singapore.  
   Build AI products around evidence, not ideas: prototype quickly, test with agents and real users, and iterate until the product proves its value.  
   [📖 Day 1](2026-09-06-how-to-build-ai-products/day1.html ":ignore") · [📖 Day 2](2026-09-06-how-to-build-ai-products/day2.html ":ignore") · [📖 Day 3](2026-09-06-how-to-build-ai-products/day3.html ":ignore") · [📖 Day 4](2026-09-06-how-to-build-ai-products/day4.html ":ignore") · [📖 Day 5](2026-09-06-how-to-build-ai-products/day5.html ":ignore") · [💬 Transcript Day 1](2026-09-06-how-to-build-ai-products/transcript-day-1.md) · [💬 Transcript Day 2](2026-09-06-how-to-build-ai-products/transcript-day-2.md) · [💬 Transcript Day 3](2026-09-06-how-to-build-ai-products/transcript-day-3.md) · [💬 Transcript Day 4](2026-09-06-how-to-build-ai-products/transcript-day-4.md) · [💬 Transcript Day 5](2026-09-06-how-to-build-ai-products/transcript-day-5.md)

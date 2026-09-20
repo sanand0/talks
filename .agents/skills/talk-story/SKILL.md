@@ -139,8 +139,10 @@ each chunk; end every chunk at a complete element boundary.
 Update `config.json`, not the generated talk list in `README.md`. Find and update the existing
 talk row; add one only for a genuinely new talk. Preserve the one-talk-object-per-line format.
 
-- Talk fields: `date`, `title`, `categories`, `links`; optional `details`, `event`, `location`,
-  `speakers`, `images`. Categories are `latest`, `archive`, `videos`, `others`.
+- Talk fields: `date`, `title`, `categories`, `links`; optional `time`, `duration`, `details`,
+  `event`, `location`, `speakers`, `images`. Categories are `latest`, `archive`, `videos`, `others`.
+- `date`: `YYYY-MM-DD`. `time`: offset-aware ISO 8601 start time when known. `duration`: whole elapsed
+  minutes for the session itself. Omit `time`/`duration` rather than guessing.
 - `details`: one concise sentence with the talk's thesis/insight.
 - `event`: `{name, url?}`; `location`: text; `speakers`: `[{name, url?}]`.
 - `links`: `{type, url, label?, minutes?, primary?, ignore?}`. Types: `page`, `video`, `audio`,

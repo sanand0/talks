@@ -27,3 +27,6 @@ There were no conventional slides: Anand drove the workshop through live browser
 A few moments are especially worth considering as narrative anchors: the audience member saying “We don't know”; the room correctly predicting reasoning as the useful prompt technique; the live decision-tree sequence 86.0% → 31.8% → 67.3%; “benchmark more where things are important”; and the final audience reminder, “if you're too excited, don't forget to verify!”
 
 Search/link additional public context when it genuinely enhances the story, as the skill prescribes. Do not expose private ChatGPT/Claude browser URLs.
+
+<!-- Comic page: https://chatgpt.com/c/6ab4a61f-baa4-83ec-b446-2aed7e87485b -->
+<!-- claude --resume 4513ceb0-39da-4729-8dad-3fc69dc34f25 -->

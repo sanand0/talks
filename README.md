@@ -19,6 +19,9 @@ I speak regularly at:
 <!-- BEGIN GENERATED TALKS -->
 ## Latest talks
 
+- 24 Sep 2026. **[If You're Too Excited, Don't Forget to Verify](2026-09-24-iis-ph-evidence-to-impact/ ":ignore")** at [International IT-BPM Summit (IIS) 2026](https://iis.com.ph/), Function Rooms #1 & #2, 3rd Floor Pearl Wing, Okada Manila, Parañaque City, Philippines.  
+  AI is too weird and fast-moving to trust by intuition alone: question advice, verify with a second model, calibrate confidence, benchmark what matters, and turn surviving evidence into deterministic rules.  
+  [💬 Transcript](2026-09-24-iis-ph-evidence-to-impact/transcript.md) · [🎧 Audio (60m)](https://github.com/sanand0/talks/releases/download/talks/2026-09-24-iis-ph-evidence-to-impact.opus ":ignore")
 - 19 Sep 2026. **[Even the AI Guy Couldn't Find the Chat Button](2026-09-19-shree-niketan-schools/ ":ignore")** at [Shree Niketan Schools — Teachers' AI Q&A](https://www.facebook.com/ShreeNiketanSchools/), Shree Niketan Schools, Chennai / Zoom.  
   Treat AI as a collaborator, not a vending machine: ask it to interview you before it builds a lesson plan, log what actually happens after you use its output, and benchmark any fix before trusting it.  
   [💬 Transcript](2026-09-19-shree-niketan-schools/transcript.md)

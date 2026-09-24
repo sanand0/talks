@@ -1,5 +1,16 @@
 # Prompts
 
+## Fix aspect ratio, 24 Sep 2026
+
+<!--
+cd ~/code/talks/
+dev.sh -- claude --dangerously-skip-permissions --model sonnet --effort medium
+-->
+
+The aspect ratio of the comic in 2026-09-03-convergence-jio-institute/index.html isn't right. Fix it.
+
+<!--- claude --resume 69b978bb-d02f-4b50-9be8-5be3d054ba16 -->
+
 ## Embed video, 10 Sep 2026
 
 <!--

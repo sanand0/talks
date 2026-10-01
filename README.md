@@ -19,6 +19,9 @@ I speak regularly at:
 <!-- BEGIN GENERATED TALKS -->
 ## Latest talks
 
+- 01 Oct 2026. **[Let's Test: Use AI Empirically](2026-10-01-use-ai-emperically/ ":ignore")** at [DBS Technology India — TechVerse Session 4: Agentic AI](https://www.dbs.com/dbstechindia/), Remote / Webex.  
+  Treat AI advice, models and agent workflows as hypotheses: test them on your own work, mine your logs for evidence, and make verification part of the workflow.  
+  [💬 Transcript](2026-10-01-use-ai-emperically/transcript.md) · [🎧 Audio (90m)](https://github.com/sanand0/talks/releases/download/talks/2026-10-01-use-ai-emperically.opus ":ignore")
 - 24 Sep 2026. **[If You're Too Excited, Don't Forget to Verify](2026-09-24-iis-ph-evidence-to-impact/ ":ignore")** at [International IT-BPM Summit (IIS) 2026](https://iis.com.ph/), Function Rooms #1 & #2, 3rd Floor Pearl Wing, Okada Manila, Parañaque City, Philippines.  
   AI is too weird and fast-moving to trust by intuition alone: question advice, verify with a second model, calibrate confidence, benchmark what matters, and turn surviving evidence into deterministic rules.  
   [💬 Transcript](2026-09-24-iis-ph-evidence-to-impact/transcript.md) · [🎧 Audio (60m)](https://github.com/sanand0/talks/releases/download/talks/2026-09-24-iis-ph-evidence-to-impact.opus ":ignore")

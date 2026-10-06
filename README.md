@@ -19,6 +19,9 @@ I speak regularly at:
 <!-- BEGIN GENERATED TALKS -->
 ## Latest talks
 
+- 05 Oct 2026. **[Get the Job Done — and Verify It](2026-10-05-tds-orientation/ ":ignore")** at [Tools in Data Science — Sep 2026 Orientation](https://tds.s-anand.net/), Remote.  
+  TDS treats exams as the curriculum and agents as executors: students learn to specify, orchestrate, collaborate, notice, adapt and verify while the tools keep changing.  
+  [⏯️ Video (77m)](https://media.s-anand.net/2026-10-05-tds-orientation.webm ":ignore") · [💬 Transcript](2026-10-05-tds-orientation/transcript.md) · [🎧 Audio (77m)](https://github.com/sanand0/talks/releases/download/talks/2026-10-05-tds-orientation.opus ":ignore")
 - 01 Oct 2026. **[Let's Test: Use AI Empirically](2026-10-01-use-ai-emperically/ ":ignore")** at [DBS Technology India — TechVerse Session 4: Agentic AI](https://www.dbs.com/dbstechindia/), Remote / Webex.  
   Treat AI advice, models and agent workflows as hypotheses: test them on your own work, mine your logs for evidence, and make verification part of the workflow.  
   [💬 Transcript](2026-10-01-use-ai-emperically/transcript.md) · [🎧 Audio (90m)](https://github.com/sanand0/talks/releases/download/talks/2026-10-01-use-ai-emperically.opus ":ignore")

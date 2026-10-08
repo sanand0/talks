@@ -119,3 +119,5 @@ The benchmark is a means to the lesson—not the lesson itself. The best outcome
 
 By default, the video on the right has too small a height. The width is fine. But the aspect ratio of the video seems to suggest that we can increase the height for a better UI.
 Are the images compressed as much as possible? If not, compress further.
+
+<!-- claude --resume f5cd4843-3740-4fd1-bba6-c57096470c32 --dangerously-skip-permissions -->

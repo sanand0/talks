@@ -11,6 +11,9 @@ fi
 node generate.mjs
 "$BIN/markdown-to-html" --source README.md --output index.html
 node enhance-index.mjs
+mkdir -p bio
+"$BIN/markdown-to-html" --source bio.md --output bio/index.html --title "Bio for talks | S Anand"
+node enhance-bio.mjs
 
 if [[ ! -f 2025-06-pycon-sg/llm-cli.html || 2025-06-pycon-sg/llm-cli.md -nt 2025-06-pycon-sg/llm-cli.html ]]
 then

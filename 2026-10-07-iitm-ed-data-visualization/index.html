@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Looks Right. Isn’t. · ED5518 Data Visualization, IIT Madras · 7 Oct 2026</title>
+<meta name="description" content="In one 73-minute class, a teacher, an answer key, three AI models and a coding agent each read a picture confidently — and each got something wrong. What changes when pictures are cheap to make and the reader may be a machine.">
+<meta property="og:title" content="Looks Right. Isn’t.">
+<meta property="og:description" content="AI has made pictures easier to create and harder to trust. Anand’s second ED5518 guest class at IIT Madras, 7 Oct 2026.">
+<meta property="og:image" content="https://talks.s-anand.net/2026-10-07-iitm-ed-data-visualization/comic-page.avif">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23173a6b'/%3E%3Cpath d='M12 46 L28 18 L44 46 Z' fill='none' stroke='%23e8eef8' stroke-width='4' stroke-linejoin='round'/%3E%3Cpath d='M38 30 l14 14 M52 30 l-14 14' stroke='%23ff7a66' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&amp;family=IBM+Plex+Sans+Condensed:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;600&amp;family=Caveat:wght@600&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script>
+  (() => {
+    let t = null;
+    try { t = localStorage.getItem("ed5518-oct-theme"); } catch (e) {}
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  })();
+</script>
+<style>
+/* =========================================================
+   Design note: the page is styled as an engineering drawing sheet —
+   drafting vellum, drafting-blue linework, an ISO-style title block
+   whose "Checked" box stays empty, and the checker's red pencil for
+   every misreading. Inspired by the gNucleus CAD Bench drawing shown
+   in class (its title block has Drawn / Checked / Approved fields).
+   Blue = what was drawn or said. Red = what a check caught.
+   ========================================================= */
+:root {
+  --paper: #f4f2ec;
+  --paper2: #ebe8df;
+  --card: #fbfaf6;
+  --ink: #16202e;
+  --ink2: #2e3a4c;
+  --muted: #586274;
+  --line: #d3d0c4;
+  --grid: rgba(31, 79, 143, .07);
+  --blue: #1f4f8f;
+  --blue-soft: #e3eaf4;
+  --red: #b3372a;
+  --red-soft: #f6e2dc;
+  --amber: #8a5a00;
+  --amber-soft: #f6ecd3;
+  --green: #2f6b3a;
+  --green-soft: #e1eedf;
+  --bp: #142847;          /* blueprint band */
+  --bp2: #1c355c;
+  --on-bp: #e9eef6;
+  --on-bp-muted: #b4c2d8;
+  --on-bp-link: #a9cbff;
+  --on-bp-red: #ff9a8a;
+  --shadow: 0 1px 2px rgba(20, 30, 50, .06), 0 10px 30px rgba(20, 30, 50, .10);
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-body: "Newsreader", Georgia, serif;
+  --font-ui: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-hand: "Caveat", cursive;
+  --measure: 40rem;
+  --pad: clamp(1rem, 3vw, 2.2rem);
+  --dock-w: 390px;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0e1522; --paper2: #131c2c; --card: #162133; --ink: #e8ecf2; --ink2: #c9d1de; --muted: #9ba7ba;
+    --line: #2b384d; --grid: rgba(143, 180, 234, .06);
+    --blue: #8fb4ea; --blue-soft: #1a2a44; --red: #ff8f7f; --red-soft: #3a2220; --amber: #f0c36a; --amber-soft: #352a14;
+    --green: #8fd19a; --green-soft: #1b2e20; --bp: #0a1a33; --bp2: #12274a;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px rgba(0,0,0,.35); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0e1522; --paper2: #131c2c; --card: #162133; --ink: #e8ecf2; --ink2: #c9d1de; --muted: #9ba7ba;
+  --line: #2b384d; --grid: rgba(143, 180, 234, .06);
+  --blue: #8fb4ea; --blue-soft: #1a2a44; --red: #ff8f7f; --red-soft: #3a2220; --amber: #f0c36a; --amber-soft: #352a14;
+  --green: #8fd19a; --green-soft: #1b2e20; --bp: #0a1a33; --bp2: #12274a;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px rgba(0,0,0,.35); color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; font-family: var(--font-body); font-size: 19px; line-height: 1.68; color: var(--ink); overflow-x: hidden;
+  background-color: var(--paper);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  font-optical-sizing: auto;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--blue); text-decoration-thickness: 1px; text-underline-offset: .18em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; border-radius: 3px; }
+strong { font-weight: 600; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.05; margin: 0; letter-spacing: -.01em; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: -999px; top: 0; background: var(--ink); color: var(--paper); padding: .5rem 1rem; z-index: 2000; }
+.skip:focus { left: .5rem; top: .5rem; }
+.mono { font-family: var(--font-mono); }
+.muted { color: var(--muted); }
+.small { font-size: .85rem; }
+kbd { font-family: var(--font-mono); font-size: .8em; border: 1px solid var(--line); border-radius: 4px; padding: 0 .3em; background: var(--card); }
+
+/* ---------- progress + top bar ---------- */
+.progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--red); z-index: 1500; }
+.topbar {
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .6rem var(--pad);
+  font-family: var(--font-ui); font-size: .82rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+  border-bottom: 1px solid var(--line);
+}
+.topbar a { color: var(--ink); text-decoration: none; font-weight: 600; }
+.tb-right { display: flex; align-items: center; gap: .8rem; }
+.icon-btn {
+  appearance: none; border: 1px solid var(--line); background: var(--card); color: var(--ink); width: 2.2rem; height: 2.2rem;
+  border-radius: 50%; cursor: pointer; display: inline-grid; place-items: center; font-size: 1rem;
+}
+.icon-btn:hover { border-color: var(--blue); color: var(--blue); }
+
+/* ---------- hero: a drawing sheet ---------- */
+.hero {
+  max-width: 1320px; margin: 0 auto; padding: clamp(1.5rem, 4vw, 3.5rem) var(--pad) 2.5rem;
+  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .9fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start;
+}
+.kicker { font-family: var(--font-ui); font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--blue); margin-bottom: 1.2rem; display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; }
+.kicker .dot { width: 6px; height: 6px; background: var(--red); border-radius: 50%; display: inline-block; }
+.hero h1 { font-size: clamp(3.4rem, 9vw, 7.4rem); line-height: .9; letter-spacing: -.03em; }
+.hero h1 .isnt { display: inline-block; color: var(--red); font-style: italic; position: relative; }
+.hero h1 .isnt::after {
+  content: ""; position: absolute; left: -2%; right: -4%; bottom: .08em; height: .09em; background: var(--red); opacity: .85;
+  transform: rotate(-2deg); transform-origin: left; animation: strike 1s .6s var(--ease) both;
+}
+@keyframes strike { from { transform: rotate(-2deg) scaleX(0); } to { transform: rotate(-2deg) scaleX(1); } }
+.deck { font-size: clamp(1.15rem, 1.9vw, 1.4rem); line-height: 1.5; color: var(--ink2); margin: 1.6rem 0 1.4rem; max-width: 36rem; }
+.who { font-size: .98rem; color: var(--muted); margin: 0 0 1.4rem; max-width: 38rem; }
+.who a { color: var(--ink); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.2rem; }
+.btn {
+  display: inline-flex; align-items: center; gap: .5rem; font-family: var(--font-ui); font-weight: 600; font-size: .95rem; letter-spacing: .02em;
+  padding: .6rem 1.05rem; border-radius: 4px; border: 1.5px solid var(--ink); background: var(--ink); color: var(--paper); text-decoration: none; cursor: pointer;
+}
+.btn:hover { background: var(--blue); border-color: var(--blue); color: #fff; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover { background: var(--blue-soft); color: var(--ink); border-color: var(--blue); }
+.audio-line { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; font-family: var(--font-ui); font-size: .85rem; color: var(--muted); margin-bottom: 1.6rem; }
+.audio-line audio { height: 36px; flex: 1 1 260px; max-width: 420px; }
+
+/* title block, ISO-ish */
+.titleblock {
+  display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; border: 1.5px solid var(--ink); background: var(--card); font-family: var(--font-ui);
+  max-width: 40rem; box-shadow: var(--shadow);
+}
+.titleblock > div { border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); padding: .35rem .55rem; min-height: 3.1rem; }
+.titleblock > div:nth-child(4n) { border-right: 0; }
+.titleblock > div:nth-last-child(-n+4) { border-bottom: 0; }
+.titleblock small { display: block; font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.titleblock b { font-weight: 600; font-size: .95rem; }
+.titleblock .wide { grid-column: span 2; }
+.titleblock .chk b { font-family: var(--font-hand); font-size: 1.45rem; color: var(--red); line-height: 1; }
+.titleblock .empty b { color: var(--muted); letter-spacing: .3em; }
+
+.comic { margin: 0; position: relative; }
+.comic a { display: block; background: #fff; padding: 10px; border: 1px solid var(--line); box-shadow: var(--shadow); transform: rotate(.8deg); transition: transform .4s var(--ease); cursor: zoom-in; }
+.comic a:hover, .comic a:focus-visible { transform: rotate(0) scale(1.01); }
+.comic img { width: 100%; height: auto; aspect-ratio: 1055 / 1491; }
+.comic figcaption { font-family: var(--font-ui); font-size: .82rem; color: var(--muted); margin-top: .9rem; line-height: 1.45; }
+.comic .tag {
+  position: absolute; top: -16px; left: -12px; z-index: 2; font-family: var(--font-hand); font-size: 1.45rem; color: var(--red);
+  background: var(--paper); border: 2px solid var(--red); border-radius: 6px; padding: 0 .6rem; transform: rotate(-6deg);
+}
+
+/* ---------- reading room: story + dock ---------- */
+.room { display: flex; align-items: flex-start; max-width: 1600px; margin: 0 auto; border-top: 1.5px solid var(--ink); }
+.story { flex: 1 1 0; min-width: 0; padding: 0 var(--pad) 7rem; transition: font-size .45s var(--ease); }
+.dock {
+  flex: 0 0 var(--dock-w); position: sticky; top: .8rem; align-self: flex-start; margin: .8rem var(--pad) 0 0;
+  max-height: calc(100vh - 1.6rem); display: flex; flex-direction: column; gap: .65rem;
+  background: var(--bp); color: var(--on-bp); border: 1px solid rgba(255,255,255,.14); border-radius: 6px; padding: .75rem; box-shadow: var(--shadow); z-index: 300;
+  transition: flex-basis .5s var(--ease);
+  background-image: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+body.watch .dock { flex-basis: 60%; }
+.dock a { color: var(--on-bp-link); }
+.dock-head { display: flex; justify-content: space-between; gap: .5rem; font-family: var(--font-ui); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--on-bp-muted); }
+.dock-head b { color: var(--on-bp); font-weight: 600; }
+.vwrap { position: relative; flex: none; background: #000; aspect-ratio: 16 / 9; border-radius: 3px; overflow: hidden; }
+.dock-head, .now, .dock-ctrls { flex: none; }
+.vwrap video { width: 100%; height: 100%; object-fit: contain; display: block; }
+.resume { position: absolute; inset: auto 0 0 0; display: none; justify-content: center; padding: .9rem; background: linear-gradient(transparent, rgba(0,0,0,.75)); }
+.resume.show { display: flex; }
+.resume button { font-family: var(--font-ui); font-weight: 600; font-size: .95rem; background: var(--on-bp); color: var(--bp); border: 0; border-radius: 3px; padding: .5rem 1rem; cursor: pointer; }
+.now { font-size: .9rem; line-height: 1.4; min-height: 2.6em; font-family: var(--font-ui); }
+.now .t { font-family: var(--font-mono); color: var(--on-bp-link); margin-right: .45rem; }
+.now .in-story { display: block; font-size: .8rem; color: var(--on-bp-muted); margin-top: .15rem; }
+.dock-ctrls { display: flex; flex-wrap: wrap; gap: .4rem; }
+.dbtn {
+  appearance: none; border: 1px solid #3a5480; background: var(--bp2); color: var(--on-bp); border-radius: 3px; padding: .42rem .7rem;
+  font: 600 .82rem var(--font-ui); cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; text-decoration: none;
+}
+.dock a.dbtn { color: var(--on-bp); }
+.dbtn:hover, .dock a.dbtn:hover { background: #2a4677; color: #fff; }
+.dbtn.mode { background: var(--on-bp); color: var(--bp); border-color: var(--on-bp); }
+.dbtn.mode:hover { background: #ffd9d2; color: #3a0f08; border-color: #ffd9d2; }
+.chapters { overflow-y: auto; min-height: 0; flex: 1 1 auto; scrollbar-width: thin; }
+.chapters summary { font-family: var(--font-ui); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--on-bp-muted); cursor: pointer; padding: .25rem 0; }
+.chapters ol { list-style: none; margin: .2rem 0 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 1px; }
+body.watch .chapters ol { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: .6rem; }
+.chapters li a { display: flex; gap: .55rem; align-items: baseline; padding: .3rem .45rem; border-radius: 3px; text-decoration: none; color: var(--on-bp); font: .86rem/1.3 var(--font-ui); }
+.dock .chapters li a { color: var(--on-bp); }
+.chapters li a .ct { font-family: var(--font-mono); font-size: .74rem; color: var(--on-bp-link); flex: 0 0 auto; }
+.chapters li a:hover { background: var(--bp2); }
+.chapters li a.is-now { background: var(--on-bp); color: var(--bp); }
+.dock .chapters li a.is-now { color: var(--bp); }
+.chapters li a.is-now .ct { color: #9c2a1d; }
+.dock .dock-min { display: none; }
+body.watch .story { font-size: 16.5px; }
+body.watch .story .chap { opacity: .6; transition: opacity .3s; }
+body.watch .story .chap.is-now, body.watch .story .chap:hover, body.watch .story .chap:focus-within { opacity: 1; }
+
+/* ---------- story typography ---------- */
+.chap { position: relative; padding: 3rem 0 1rem; scroll-margin-top: 1rem; }
+.chap > * { max-width: var(--measure); margin-left: auto; margin-right: auto; }
+.chap > .wide, .chap > .band, .chap > .bleed { max-width: none; }
+.chap p { margin: 0 auto 1.15rem; }
+.act {
+  font-family: var(--font-ui); font-size: .76rem; letter-spacing: .16em; text-transform: uppercase; color: var(--blue);
+  display: flex; align-items: center; gap: .7rem; margin-bottom: .9rem;
+}
+.act::before { content: attr(data-n); font-family: var(--font-mono); color: var(--red); border: 1.5px solid var(--red); border-radius: 50%; width: 1.8rem; height: 1.8rem; display: inline-grid; place-items: center; letter-spacing: 0; font-size: .74rem; }
+.act::after { content: ""; flex: 1; height: 0; border-top: 1px dashed var(--line); }
+.chap h2 { font-size: clamp(2.3rem, 4.6vw, 3.6rem); margin-bottom: 1.3rem; letter-spacing: -.02em; }
+.chap h2 em { color: var(--red); }
+.lede { font-size: 1.16em; line-height: 1.55; }
+.lede::first-letter { font-family: var(--font-display); float: left; font-size: 4.1em; line-height: .78; margin: .08em .1em 0 0; color: var(--blue); }
+
+/* timestamp chips */
+a.ts {
+  display: inline-flex; align-items: center; gap: .18rem; font: 600 .74rem/1 var(--font-mono); color: var(--blue); background: var(--blue-soft);
+  border: 1px solid transparent; padding: .22rem .42rem .2rem .3rem; border-radius: 3px; text-decoration: none; vertical-align: .12em; white-space: nowrap;
+}
+a.ts:hover { border-color: var(--blue); }
+a.ts .bi { font-size: .9em; }
+a.ts.flash { animation: flash 1.4s var(--ease); }
+@keyframes flash { 0%, 40% { background: var(--red); color: #fff; } 100% { background: var(--blue-soft); } }
+
+/* quotes */
+.say { margin: 2rem auto; padding: .2rem 0 .2rem 1.4rem; border-left: 3px solid var(--blue); }
+.say p { font-family: var(--font-display); font-size: clamp(1.45rem, 2.6vw, 1.85rem); line-height: 1.22; margin: 0 0 .6rem; }
+.say footer { font: .86rem var(--font-ui); color: var(--muted); }
+.say footer a.ts { margin-left: .35rem; }
+.say footer b { color: var(--ink); font-weight: 600; }
+.say.red { border-color: var(--red); }
+.say.big { max-width: 52rem; border: 0; padding: 0; text-align: center; }
+.say.big p { font-size: clamp(2rem, 4.4vw, 3.3rem); line-height: 1.08; }
+.say.big footer { text-align: center; }
+
+/* bands that break the column */
+.band { width: 100vw; margin-left: calc(50% - 50vw); padding: clamp(2.2rem, 5vw, 4rem) var(--pad); margin-top: 2.2rem; margin-bottom: 2.4rem; }
+.band > .inner { max-width: 1120px; margin: 0 auto; }
+.band.bp {
+  background: var(--bp); color: var(--on-bp);
+  background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.band.bp a { color: var(--on-bp-link); }
+.band.bp .muted, .band.bp figcaption, .band.bp .cap { color: var(--on-bp-muted); }
+.band.bp strong { color: #fff; }
+.band.paper2 { background: var(--paper2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.band.white { --red: #b3372a; --blue: #1f4f8f; --blue-soft: #e3eaf4; --ink: #16202e; --ink2: #2e3a4c; --muted: #586274; --line: #d3d0c4; --card: #fbfaf6; background: #fff; color: #16202e; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.band.white a { color: #1f4f8f; }
+.band.white .cap, .band.white figcaption { color: #4f5a6b; }
+/* when a story column is narrower than the viewport (dock open), bleed only across the story */
+@media (min-width: 1000px) { .room .band { width: calc(100% + 2 * var(--pad)); margin-left: calc(-1 * var(--pad)); } }
+.wide { max-width: 58rem !important; }
+.band-label { font: 600 .76rem var(--font-ui); letter-spacing: .16em; text-transform: uppercase; margin-bottom: .8rem; display: flex; gap: .5rem; align-items: center; }
+.band.bp .band-label { color: var(--on-bp-red); }
+.band.paper2 .band-label, .band.white .band-label { color: var(--red); }
+.band h3 { font-size: clamp(1.7rem, 3vw, 2.4rem); margin-bottom: .8rem; }
+.cap { font: .84rem/1.5 var(--font-ui); color: var(--muted); margin-top: .7rem; }
+figure { margin: 2rem auto; }
+figure img { width: 100%; height: auto; border-radius: 2px; }
+figure.zoom img { cursor: zoom-in; }
+figcaption { font: .84rem/1.5 var(--font-ui); color: var(--muted); margin-top: .65rem; }
+.sheet { background: #fff; border: 1px solid var(--line); padding: .6rem; box-shadow: var(--shadow); }
+
+/* red-pencil margin note */
+.pencil {
+  position: relative; margin: 2rem auto; padding: 1rem 1.2rem 1rem 3.2rem; background: var(--red-soft); border-radius: 3px; font-size: .97rem; line-height: 1.55;
+}
+.pencil::before { content: "\F4CA"; font-family: "bootstrap-icons"; position: absolute; left: 1rem; top: .95rem; color: var(--red); font-size: 1.3rem; }
+.pencil b.h { display: block; font: 600 .76rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--red); margin-bottom: .25rem; }
+.pencil a { color: var(--red); }
+.note {
+  margin: 2rem auto; padding: 1rem 1.2rem; border: 1px solid var(--line); border-left: 4px solid var(--blue); background: var(--card); font-size: .95rem; line-height: 1.55;
+}
+.note b.h { display: block; font: 600 .76rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--blue); margin-bottom: .25rem; }
+
+/* cite chip */
+.cite { font: 600 .66rem/1 var(--font-mono); color: var(--blue); border: 1px solid var(--blue); border-radius: 3px; padding: .14rem .3rem; text-decoration: none; vertical-align: .25em; margin-left: .12rem; }
+.cite:hover { background: var(--blue); color: var(--paper); }
+.tip { border-bottom: 1px dotted var(--blue); cursor: help; position: relative; }
+.tip::after {
+  content: attr(data-tip); position: absolute; left: 50%; bottom: 135%; transform: translateX(-50%); width: min(260px, 70vw); padding: .55rem .7rem;
+  background: var(--ink); color: var(--paper); font: .8rem/1.45 var(--font-ui); border-radius: 3px; opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 50;
+}
+.tip:hover::after, .tip:focus::after { opacity: 1; }
+
+/* ---------- live demo frames (screenshot first, load on demand) ---------- */
+.live { margin: 2.2rem auto; }
+.live .frame { position: relative; background: #0b1220; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; aspect-ratio: 16 / 10; box-shadow: var(--shadow); }
+.live .frame img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.live .frame iframe { width: 100%; height: 100%; border: 0; background: #fff; }
+.live .frame .load {
+  position: absolute; left: 50%; bottom: 1rem; transform: translateX(-50%); font: 600 .9rem var(--font-ui); background: var(--paper); color: var(--ink);
+  border: 1.5px solid var(--ink); border-radius: 3px; padding: .55rem 1rem; cursor: pointer; display: inline-flex; gap: .45rem; align-items: center; box-shadow: var(--shadow); white-space: nowrap;
+}
+.live .frame .load:hover { background: var(--ink); color: var(--paper); }
+.live .bar { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font: .84rem/1.45 var(--font-ui); color: var(--muted); margin-top: .65rem; }
+.live .bar a { font-weight: 600; }
+.band.bp .live .bar { color: var(--on-bp-muted); }
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1rem, 2.5vw, 2rem); align-items: start; }
+.pair figure, .pair .live { margin: 0; }
+.trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+
+/* ---------- three eras strip ---------- */
+.eras { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 1fr); gap: 1.2rem; align-items: stretch; }
+.era { background: var(--card); border: 1px solid var(--line); padding: .8rem; display: flex; flex-direction: column; gap: .6rem; }
+.band.bp .era { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.14); }
+.era .yr { font: 600 .74rem var(--font-mono); letter-spacing: .1em; color: var(--on-bp-red); }
+.era h4 { margin: 0; font: 400 1.5rem/1.1 var(--font-display); color: var(--on-bp); }
+.era p { margin: 0; font: .9rem/1.5 var(--font-ui); color: var(--on-bp-muted); }
+.era .img { background: #fff; border-radius: 2px; overflow: hidden; }
+.era .img img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: top left; }
+.xlgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 10px; background: #fff; aspect-ratio: 4 / 3; align-content: center; }
+.xlgrid span { display: block; height: 52px; background: linear-gradient(90deg, #d9e2ef 0 100%); position: relative; border: 1px solid #c6d1e2; }
+.xlgrid span::after { content: ""; position: absolute; left: 12%; right: 12%; bottom: 6px; top: 30%; background: repeating-linear-gradient(90deg, #4a78bd 0 9px, transparent 9px 14px); clip-path: polygon(0 60%, 25% 30%, 50% 50%, 75% 10%, 100% 35%, 100% 100%, 0 100%); }
+.xlgrid span:nth-child(2n)::after { background: #4a78bd; clip-path: polygon(0 100%, 0 70%, 30% 50%, 60% 55%, 100% 15%, 100% 100%); opacity: .8; }
+.xlgrid span:nth-child(3n)::after { border-radius: 50%; background: conic-gradient(#4a78bd 0 40%, #e08b3a 0 70%, #9bb5dc 0); clip-path: none; left: 30%; right: 30%; top: 8%; bottom: 8%; }
+
+/* ---------- unit chart ---------- */
+.units { background: var(--card); border: 1px solid var(--line); padding: 1rem; box-shadow: var(--shadow); }
+.units-ctrl { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; margin-bottom: .8rem; font: .85rem var(--font-ui); }
+.units-ctrl span { color: var(--muted); margin-right: .3rem; }
+.seg { appearance: none; border: 1px solid var(--line); background: var(--paper); color: var(--ink); font: 600 .84rem var(--font-ui); padding: .35rem .75rem; border-radius: 3px; cursor: pointer; }
+.seg[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.units canvas { width: 100%; height: auto; display: block; }
+.units-legend { display: flex; flex-wrap: wrap; gap: .3rem 1rem; font: .8rem var(--font-ui); color: var(--muted); margin-top: .7rem; }
+.units-legend i { display: inline-block; width: .7rem; height: .7rem; border-radius: 2px; margin-right: .3rem; vertical-align: -.05rem; }
+
+/* ---------- map-label reveal ---------- */
+.legendcheck { position: relative; }
+.legendcheck .cover {
+  position: absolute; top: 1.6%; right: 1.1%; width: 23%; height: 4.6%; background: #0d1828; border: 1.5px dashed #ff9a8a; border-radius: 3px;
+  display: grid; place-items: center; font: 600 clamp(.42rem, 1.1vw, .72rem) var(--font-ui); color: #ffcfc7; letter-spacing: .04em; overflow: hidden; white-space: nowrap; transition: opacity .5s var(--ease);
+}
+.legendcheck.revealed .cover { opacity: 0; pointer-events: none; }
+.legendcheck .ring { position: absolute; top: .4%; right: .2%; width: 25.5%; height: 7%; border: 3px solid #ff5a44; border-radius: 50%; opacity: 0; transform: scale(1.3) rotate(-3deg); transition: all .6s var(--ease) .2s; }
+.legendcheck.revealed .ring { opacity: 1; transform: scale(1) rotate(-3deg); }
+.choice { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: 1rem 0 .4rem; font: .95rem var(--font-ui); }
+.choice b { margin-right: .3rem; }
+.pick { appearance: none; border: 1.5px solid var(--ink); background: var(--card); color: var(--ink); padding: .45rem .9rem; font: 600 .9rem var(--font-ui); border-radius: 3px; cursor: pointer; }
+.band.bp .pick { background: transparent; color: var(--on-bp); border-color: var(--on-bp-muted); }
+.pick:hover { border-color: var(--red); }
+.pick[aria-pressed="true"] { background: var(--red); border-color: var(--red); color: #fff; }
+.verdict { min-height: 1.5em; font: .98rem/1.5 var(--font-ui); margin-top: .6rem; }
+.verdict b { color: var(--red); }
+.band.bp .verdict b { color: var(--on-bp-red); }
+
+/* ---------- bookshelf ---------- */
+.shelf { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(1.2rem, 3vw, 2.5rem); align-items: start; }
+.shelf figure { margin: 0; }
+.shelf .photo { position: relative; }
+.shelf .photo img { border-radius: 2px; cursor: zoom-in; }
+.slope svg { width: 100%; height: auto; font-family: var(--font-ui); }
+.slope .ax { stroke: #c8ced8; }
+.slope text { fill: #3a4558; font-size: 13px; }
+.slope .lbl { font-weight: 600; }
+.slope .hl line, .slope .hl circle { stroke-width: 3.5; }
+
+/* ---------- chart quiz ---------- */
+.quiz { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(1.2rem, 3vw, 2.6rem); align-items: start; }
+.quiz .chart { position: sticky; top: 1rem; background: #fff; padding: .5rem; border-radius: 3px; }
+.quiz .chart img { width: 100%; height: auto; }
+.quiz .chart svg { position: absolute; inset: .5rem; width: calc(100% - 1rem); height: calc(100% - 1rem); pointer-events: none; }
+.quiz .ov { opacity: 0; transition: opacity .6s var(--ease); }
+.quiz .ov.on { opacity: 1; }
+.quiz h3 { font-size: clamp(1.6rem, 2.8vw, 2.2rem); }
+.quiz .q { font-family: var(--font-body); font-style: italic; font-size: 1.12rem; margin: .4rem 0 .2rem; }
+.answers { list-style: none; padding: 0; margin: 1rem 0 0; display: none; gap: .3rem; }
+.answers.on { display: grid; }
+.answers li { display: grid; grid-template-columns: 9.5rem 1fr; gap: .6rem; align-items: baseline; padding: .4rem .6rem; border-radius: 3px; background: rgba(255,255,255,.06); font: .92rem/1.35 var(--font-ui); animation: rise .5s var(--ease) both; }
+.answers li:nth-child(2) { animation-delay: .1s; } .answers li:nth-child(3) { animation-delay: .2s; } .answers li:nth-child(4) { animation-delay: .3s; } .answers li:nth-child(5) { animation-delay: .4s; }
+.answers li span:first-child { color: var(--on-bp-muted); }
+.answers li b { font-family: var(--font-mono); font-weight: 600; }
+.answers li.key { background: rgba(255,154,138,.16); }
+.answers li.you { outline: 1px dashed var(--on-bp-muted); }
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.twist { display: none; margin-top: 1.4rem; padding: 1rem 1.1rem; border: 1.5px solid var(--on-bp-red); border-radius: 3px; font: .98rem/1.55 var(--font-body); }
+.twist.on { display: block; animation: rise .6s var(--ease) both; }
+.twist .band-label { margin-bottom: .3rem; }
+.minis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem; margin-top: 2.6rem; }
+.mini { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.14); padding: .9rem; border-radius: 3px; display: flex; flex-direction: column; gap: .6rem; }
+.mini .img { background: #fff; padding: .35rem; border-radius: 2px; }
+.mini .q { font-style: italic; font-size: 1rem; margin: 0; }
+.mini details summary { cursor: pointer; font: 600 .88rem var(--font-ui); color: var(--on-bp-link); }
+.mini details[open] summary { margin-bottom: .5rem; }
+.mini dl { display: grid; grid-template-columns: 8.5rem 1fr; gap: .25rem .6rem; margin: 0; font: .88rem/1.4 var(--font-ui); }
+.mini dt { color: var(--on-bp-muted); }
+.mini dd { margin: 0; font-family: var(--font-mono); font-size: .84rem; }
+.mini p.m { font: .9rem/1.5 var(--font-ui); color: var(--on-bp-muted); margin: .6rem 0 0; }
+
+/* dumbbell */
+.dumb svg { width: 100%; height: auto; font-family: var(--font-ui); }
+.dumb text { fill: var(--ink2); font-size: 13px; }
+.dumb .ax { stroke: var(--line); }
+
+/* ---------- the room's answers ---------- */
+.answers-wall { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.sticky {
+  background: #fdf4c9; color: #2b2410; padding: 1rem 1rem .8rem; box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 8px 18px rgba(0,0,0,.08); position: relative;
+  font: 1.02rem/1.45 var(--font-body); transform: rotate(var(--r, -.6deg));
+}
+.sticky:nth-child(2n) { --r: .7deg; background: #e3f0fb; }
+.sticky:nth-child(3n) { --r: -.3deg; background: #f9e1da; }
+.sticky .who { font: 600 .78rem var(--font-ui); letter-spacing: .08em; text-transform: uppercase; color: #5b4b1d; margin: .7rem 0 0; display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; }
+.sticky:nth-child(2n) .who { color: #23476e; }
+.sticky:nth-child(3n) .who { color: #7a2a1d; }
+.sticky a.ts { background: rgba(0,0,0,.07); color: #1b2a40; }
+.sticky .kind { position: absolute; top: -.7rem; right: .7rem; font: 600 .68rem var(--font-ui); letter-spacing: .1em; text-transform: uppercase; background: #16202e; color: #fff; padding: .15rem .45rem; border-radius: 2px; }
+
+/* ---------- relay chain ---------- */
+.relay { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; counter-reset: r; }
+.relay li { position: relative; padding: 1rem .9rem 1rem 1rem; border-top: 3px solid var(--blue); background: var(--card); margin-right: 14px; font: .9rem/1.45 var(--font-ui); }
+.relay li::after { content: "\F285"; font-family: "bootstrap-icons"; position: absolute; right: -16px; top: 42%; color: var(--blue); font-size: 1rem; }
+.relay li:nth-child(5n)::after { content: none; }
+.relay li b { display: block; font: 400 1.25rem/1.1 var(--font-display); margin-bottom: .3rem; }
+.relay li .lost { display: block; margin-top: .4rem; color: var(--red); font-family: var(--font-mono); font-size: .76rem; }
+.relay li.end { border-top-color: var(--red); background: var(--red-soft); }
+.relay-outcome { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center; margin-top: 1.4rem; font: 1rem/1.4 var(--font-ui); }
+.relay-outcome .big { font: 400 clamp(2.4rem, 5vw, 3.8rem)/1 var(--font-display); color: var(--red); text-align: center; }
+.contrast3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 2rem; }
+.contrast3 > div { border: 1px solid var(--line); background: var(--card); padding: .9rem 1rem; font: .92rem/1.5 var(--font-ui); }
+.contrast3 b { display: block; font: 400 1.25rem var(--font-display); margin-bottom: .2rem; }
+.contrast3 .k { font: 600 .7rem var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--green); }
+.contrast3 .k.bad { color: var(--red); }
+
+/* ---------- connection lost ---------- */
+.lost-band { text-align: center; padding: 3rem 1rem; font: .95rem var(--font-ui); color: var(--muted); }
+.lost-band .bi { font-size: 2.2rem; display: block; margin-bottom: .5rem; color: var(--red); animation: blink 1.4s steps(2) infinite; }
+.lost-band .bars { font-family: var(--font-mono); letter-spacing: .3em; color: var(--line); font-size: 1.4rem; }
+@keyframes blink { 50% { opacity: .25; } }
+
+/* ---------- CAD ---------- */
+.cad-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.cad-steps figure { margin: 0; background: #fff; border: 1px solid #d8dbe2; padding: .4rem; }
+.cad-steps figcaption { color: #4f5a6b; padding: 0 .3rem .2rem; }
+.cad-steps .stamp { display: inline-block; font: 600 .7rem var(--font-mono); padding: .12rem .4rem; border-radius: 2px; margin-right: .3rem; }
+.stamp.pass { background: #dff0de; color: #1f5a2a; }
+.stamp.fail { background: #f8dcd6; color: #8c2215; }
+.wipe { --cut: 50%; position: relative; aspect-ratio: 1; background: #fff; border: 1px solid #d8dbe2; overflow: hidden; touch-action: pan-y; }
+.wipe img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.wipe .cand { clip-path: inset(0 calc(100% - var(--cut)) 0 0); }
+.wipe .divider { position: absolute; top: 0; bottom: 0; left: var(--cut); width: 2px; background: #b3372a; transform: translateX(-1px); pointer-events: none; }
+.wipe .divider::after { content: "\2039\00a0\203A"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #b3372a; color: #fff; width: 2.1rem; height: 2.1rem; border-radius: 50%; display: grid; place-items: center; font: 600 1rem/1 var(--font-ui); }
+.wipe .badge { position: absolute; top: .7rem; z-index: 2; font: 600 .7rem var(--font-ui); letter-spacing: .1em; text-transform: uppercase; padding: .25rem .55rem; border-radius: 2px; background: rgba(255,255,255,.92); border: 1px solid #d8dbe2; }
+.wipe .badge.l { left: .7rem; color: #8c2215; }
+.wipe .badge.r { right: .7rem; color: #1f4f8f; }
+.wipe-range { width: 100%; margin-top: .7rem; accent-color: #b3372a; }
+.cad-compare { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(1.2rem, 3vw, 2.4rem); align-items: start; }
+.diff-legend { display: flex; gap: 1rem; flex-wrap: wrap; font: .82rem var(--font-ui); color: #4f5a6b; }
+.diff-legend i { display: inline-block; width: .8rem; height: .8rem; border-radius: 2px; margin-right: .3rem; vertical-align: -.1rem; }
+
+.scorecard { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; border: 1.5px solid var(--on-bp-muted); }
+.scorecard > div { padding: 1.1rem 1.2rem; }
+.scorecard > div + div { border-left: 1.5px solid var(--on-bp-muted); }
+.scorecard h4 { margin: 0 0 .8rem; font: 600 .78rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; }
+.scorecard .self h4 { color: #a8e0b0; }
+.scorecard .hidden h4 { color: var(--on-bp-red); }
+.scorecard ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; font: .95rem/1.4 var(--font-ui); }
+.scorecard li { display: grid; grid-template-columns: 1.4rem 1fr auto; gap: .5rem; align-items: baseline; }
+.scorecard li .bi-check-circle-fill { color: #8fd19a; }
+.scorecard li .bi-x-circle-fill { color: var(--on-bp-red); }
+.scorecard li b { font-family: var(--font-mono); font-weight: 600; }
+.bignum { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem; margin: 1.6rem 0 1rem; }
+.bignum > div { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.bignum .n { font: 400 clamp(3.5rem, 9vw, 6.5rem)/.9 var(--font-display); }
+.bignum .n.ok { color: #a8e0b0; }
+.bignum .n.bad { color: var(--on-bp-red); }
+.bignum .l { font: .95rem/1.4 var(--font-ui); color: var(--on-bp-muted); max-width: 16rem; }
+.ladder { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; margin-top: 1.6rem; }
+.ladder div { padding: .8rem .9rem; border-radius: 3px; font: .88rem/1.45 var(--font-ui); background: rgba(255,255,255,.06); }
+.ladder div b { display: block; font: 400 1.2rem/1.15 var(--font-display); color: var(--on-bp); margin-bottom: .2rem; }
+.ladder .y { border-top: 3px solid #8fd19a; }
+.ladder .n { border-top: 3px solid var(--on-bp-red); }
+
+/* ---------- ledger ---------- */
+.ledger { width: 100%; border-collapse: collapse; font: .92rem/1.45 var(--font-ui); background: var(--card); border: 1.5px solid var(--ink); }
+.ledger th { text-align: left; font: 600 .7rem var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: .55rem .7rem; border-bottom: 1.5px solid var(--ink); background: var(--paper2); }
+.ledger td { padding: .65rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+.ledger tr:last-child td { border-bottom: 0; }
+.ledger td:first-child { font-weight: 600; white-space: nowrap; }
+.ledger .caught { color: var(--red); }
+.ledger .said { font-family: var(--font-body); font-style: italic; }
+
+/* ---------- experiment + takeaways ---------- */
+.experiment { border: 1.5px dashed var(--red); padding: 1.3rem 1.4rem; background: var(--card); border-radius: 3px; }
+.experiment ol { margin: .6rem 0 0; padding-left: 1.3rem; display: grid; gap: .45rem; }
+.experiment .band-label { color: var(--red); }
+.takeaways { background: var(--bp); color: var(--on-bp); padding: clamp(3rem, 6vw, 5rem) var(--pad); scroll-margin-top: 1rem;
+  background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px); background-size: 24px 24px; }
+.takeaways .inner { max-width: 1120px; margin: 0 auto; }
+.takeaways h2 { font-size: clamp(2.4rem, 5vw, 3.8rem); margin-bottom: .6rem; }
+.takeaways .sub { color: var(--on-bp-muted); margin: 0 0 2rem; font-size: 1.05rem; }
+.takeaways a { color: var(--on-bp-link); }
+.cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.card { border: 1px solid rgba(255,255,255,.18); padding: 1.1rem; border-radius: 3px; background: rgba(255,255,255,.04); font: .95rem/1.5 var(--font-ui); color: var(--on-bp-muted); }
+.card .num { font: 400 2.4rem/1 var(--font-display); color: var(--on-bp-red); }
+.card h3 { font-size: 1.45rem; color: var(--on-bp); margin: .5rem 0 .5rem; }
+.card a.ts { background: rgba(255,255,255,.1); color: var(--on-bp-link); }
+.finale { margin: 2.8rem auto 0; max-width: 46rem; text-align: center; }
+.finale p { font: 400 clamp(1.7rem, 3.4vw, 2.5rem)/1.15 var(--font-display); margin: 0 0 .8rem; color: #fff; }
+.finale footer { font: .9rem var(--font-ui); color: var(--on-bp-muted); }
+.band.bp a.ts, .takeaways a.ts { background: rgba(255,255,255,.12); color: var(--on-bp-link); }
+
+footer.site { max-width: 1120px; margin: 0 auto; padding: 2.5rem var(--pad) 6.5rem; font: .88rem/1.65 var(--font-ui); color: var(--muted); display: grid; gap: .6rem; }
+footer.site a { color: var(--ink); }
+
+/* ---------- jump nav ---------- */
+.jump {
+  position: fixed; left: 1rem; bottom: 1rem; z-index: 900; display: flex; align-items: stretch; background: var(--ink); color: var(--paper);
+  border-radius: 4px; box-shadow: var(--shadow); transition: opacity .3s, transform .3s var(--ease); font-family: var(--font-ui);
+}
+.jump.on-hero { opacity: 0; transform: translateY(12px); pointer-events: none; }
+.jump button { appearance: none; background: transparent; border: 0; color: inherit; cursor: pointer; padding: .55rem .7rem; font: 600 .88rem var(--font-ui); }
+.jump button:hover { background: rgba(127,127,127,.25); }
+.jump button:disabled { opacity: .35; cursor: default; }
+.jump .jump-cur { border-left: 1px solid rgba(127,127,127,.4); border-right: 1px solid rgba(127,127,127,.4); max-width: 17rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; gap: .45rem; align-items: center; }
+.jump-backdrop { position: fixed; inset: 0; background: rgba(10,15,25,.35); z-index: 880; display: none; }
+.jump-backdrop.open { display: block; }
+.jump-menu {
+  position: fixed; left: 1rem; bottom: 4.2rem; z-index: 890; width: min(46rem, calc(100vw - 2rem)); max-height: 70vh; overflow: auto; display: none;
+  background: var(--card); color: var(--ink); border: 1.5px solid var(--ink); border-radius: 4px; padding: 1rem 1.1rem; box-shadow: var(--shadow);
+}
+.jump-menu.open { display: block; animation: rise .3s var(--ease) both; }
+.jm-group { font: 600 .7rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--red); margin: .7rem 0 .35rem; }
+.jm-group:first-child { margin-top: 0; }
+.jump-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .35rem; }
+.jump-grid a { display: block; padding: .45rem .55rem; border: 1px solid var(--line); border-radius: 3px; text-decoration: none; color: var(--ink); font: 600 .88rem/1.25 var(--font-ui); }
+.jump-grid a small { display: block; font-weight: 400; color: var(--muted); font-size: .76rem; margin-top: .15rem; }
+.jump-grid a:hover { border-color: var(--blue); }
+.jump-grid a.is-cur { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.jump-grid a.is-cur small { color: var(--paper); opacity: .8; }
+
+/* ---------- dialogs ---------- */
+dialog.pop { border: 1.5px solid var(--ink); border-radius: 4px; padding: 0; width: min(780px, 94vw); max-height: 88vh; background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+dialog.pop::backdrop { background: rgba(10,15,25,.55); }
+.pop-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .8rem 1.1rem; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--card); z-index: 2; }
+.pop-head h3 { font-size: 1.6rem; }
+.pop-search { padding: .6rem 1.1rem; border-bottom: 1px solid var(--line); display: none; gap: .6rem; align-items: center; font: .85rem var(--font-ui); color: var(--muted); position: sticky; top: 3.6rem; background: var(--card); z-index: 2; }
+.pop-search.on { display: flex; }
+.pop-search input { flex: 1; font: 1rem var(--font-ui); padding: .4rem .6rem; border: 1px solid var(--line); border-radius: 3px; background: var(--paper); color: var(--ink); }
+.pop-body { padding: 1rem 1.2rem 1.5rem; font-size: 1rem; line-height: 1.6; overflow: auto; }
+.pop-body h1, .pop-body h2, .pop-body h3 { font-family: var(--font-display); margin: 1rem 0 .5rem; }
+.pop-body p { margin: 0 0 .8rem; }
+.pop-body ul, .pop-body ol { margin: 0 0 .8rem 1.4rem; padding: 0; }
+.pop-body li { margin-bottom: .3rem; }
+.pop-body blockquote { margin: 0 0 .8rem; padding-left: .9rem; border-left: 3px solid var(--line); }
+.pop-body hr { border: 0; border-top: 1px dashed var(--line); margin: 1.2rem 0; }
+.pop-body .hide { display: none; }
+.pop-body mark { background: #ffe08a; color: #16202e; }
+.pop-body .src-link { display: inline-block; margin-top: .4rem; font-weight: 600; font-family: var(--font-ui); }
+dialog.lightbox { border: 0; padding: 0; background: transparent; max-width: 96vw; max-height: 96vh; overflow: visible; }
+dialog.lightbox::backdrop { background: rgba(5,8,14,.88); }
+dialog.lightbox img { max-width: 96vw; max-height: 86vh; width: auto; height: auto; background: #fff; }
+.lb-bar { display: flex; justify-content: space-between; gap: 1rem; align-items: center; color: #e8ecf2; font: .9rem var(--font-ui); margin-top: .6rem; }
+.lb-bar a { color: #a9cbff; }
+.lb-bar button { background: transparent; color: #fff; border: 1px solid #667; border-radius: 3px; padding: .3rem .7rem; cursor: pointer; font: 600 .85rem var(--font-ui); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1200px) { :root { --dock-w: 330px; } .relay { grid-template-columns: repeat(3, minmax(0, 1fr)); } .relay li:nth-child(5n)::after { content: "\F285"; } .relay li:nth-child(3n)::after { content: none; } }
+@media (max-width: 999px) {
+  .hero { grid-template-columns: 1fr; }
+  .comic { max-width: 540px; width: 100%; margin: 1rem auto 0; }
+  .room { display: block; }
+  .dock {
+    position: fixed; right: .7rem; bottom: 4.3rem; top: auto; margin: 0; width: min(48vw, 260px); max-height: none; padding: .45rem; gap: .4rem;
+    transition: width .4s var(--ease);
+  }
+  .dock .dock-head, .dock .now, .dock .chapters, .dock .dock-ctrls .wide-only { display: none; }
+  .dock .dbtn { padding: .35rem .5rem; font-size: .76rem; flex: 1 1 auto; justify-content: center; }
+  .dock .dock-min { display: inline-flex; }
+  body.dock-collapsed:not(.watch) .dock .vwrap { display: none; }
+  body.dock-collapsed:not(.watch) .dock { width: auto; }
+  body.dock-collapsed:not(.watch) .dock #share-btn { display: none; }
+  body.watch .dock { left: 0; right: 0; top: 0; bottom: auto; width: auto; border-radius: 0 0 6px 6px; padding: .5rem .6rem .6rem; }
+  body.watch .dock .now { display: block; font-size: .8rem; min-height: 0; }
+  body.watch .dock .now .in-story { display: none; }
+  body.watch .dock .dock-min { display: none; }
+  body.watch { padding-top: var(--dock-h, 0px); }
+  body.watch .chap { scroll-margin-top: calc(var(--dock-h, 0px) + .5rem); }
+  body.watch .story .chap { opacity: .85; }
+  .eras, .shelf, .quiz, .cad-compare { grid-template-columns: minmax(0, 1fr); }
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .answers-wall { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ladder { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .jump { left: .7rem; bottom: .7rem; }
+  .jump-menu { left: .7rem; bottom: 3.9rem; width: calc(100vw - 1.4rem); }
+}
+@media (max-width: 640px) {
+  body { font-size: 17.5px; }
+  .pair, .trio, .minis, .cad-steps, .contrast3, .answers-wall, .scorecard, .bignum { grid-template-columns: minmax(0, 1fr); }
+  .scorecard > div + div { border-left: 0; border-top: 1.5px solid var(--on-bp-muted); }
+  .relay { grid-template-columns: minmax(0, 1fr); }
+  .relay li { margin: 0 0 14px; }
+  .relay li::after, .relay li:nth-child(5n)::after { content: "\F282"; right: auto; left: 50%; top: auto; bottom: -17px; }
+  .relay li:last-child::after { content: none; }
+  .relay-outcome { grid-template-columns: 1fr; text-align: center; }
+  .cards { grid-template-columns: minmax(0, 1fr); }
+  .titleblock { grid-template-columns: 1fr 1fr; }
+  .titleblock > div:nth-child(4n) { border-right: 1px solid var(--ink); }
+  .titleblock > div:nth-child(2n) { border-right: 0; }
+  .titleblock > div:nth-last-child(-n+4) { border-bottom: 1px solid var(--ink); }
+  .titleblock > div:nth-last-child(-n+2) { border-bottom: 0; }
+  .titleblock .wide { grid-column: span 2; border-right: 0 !important; }
+  .jump-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .answers li { grid-template-columns: 7.5rem 1fr; }
+  .mini dl { grid-template-columns: 7rem 1fr; }
+  .ledger thead { display: none; }
+  .ledger, .ledger tbody, .ledger tr, .ledger td { display: block; width: 100%; }
+  .ledger tr { border-bottom: 1.5px solid var(--ink); padding: .4rem 0; }
+  .ledger td { border: 0; padding: .2rem .7rem; }
+  .ledger td[data-h]::before { content: attr(data-h) " · "; font: 600 .68rem var(--font-ui); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .topbar .long { display: none; }
+  .say { padding-left: 1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+  .comic a { transform: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#story">Skip to the story</a>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<header class="topbar">
+  <a href="../"><span class="long">Talks · </span>S Anand</a>
+  <div class="tb-right">
+    <span class="long">7 Oct 2026 · 74 min video</span>
+    <button class="icon-btn" id="theme-btn" type="button" aria-label="Toggle dark mode"><i class="bi bi-moon-stars" aria-hidden="true"></i></button>
+  </div>
+</header>
+
+<section class="hero" aria-labelledby="title">
+  <div>
+    <div class="kicker"><span>ED5518 · Data Visualization for Engineers</span><span class="dot"></span><span>IIT Madras</span><span class="dot"></span><span>7 Oct 2026</span></div>
+    <h1 id="title">Looks right. <span class="isnt">Isn’t.</span></h1>
+    <p class="deck">AI has made pictures cheap to create and expensive to trust. In one 73-minute class, <strong>a teacher, an answer key, three AI models and a coding agent each read a picture with confidence — and each got something wrong.</strong> What caught them, every time, was a check none of them had written.</p>
+    <p class="who">A remote guest class by <strong><a href="https://www.s-anand.net/">Anand S</a></strong> for <a href="https://ed.iitm.ac.in/~palramu/">Dr Palaniappan Ramu</a>’s course in the <a href="https://ed.iitm.ac.in/">Department of Engineering Design</a> — his second this term, after August’s <a href="../2026-08-12-iitm-ed-data-visualization/">“Why are you even sitting in this class?”</a></p>
+    <div class="hero-actions">
+      <a class="btn" href="?view=video" id="hero-watch"><i class="bi bi-play-btn-fill" aria-hidden="true"></i> Watch alongside</a>
+      <a class="btn ghost" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+      <a class="btn ghost" href="#bracket"><i class="bi bi-book" aria-hidden="true"></i> Start reading</a>
+    </div>
+    <div class="audio-line">
+      <span><i class="bi bi-headphones" aria-hidden="true"></i> Audio only</span>
+      <audio controls preload="none" aria-label="Audio recording of the class">
+        <source src="https://github.com/sanand0/talks/releases/download/talks/2026-10-07-iitm-ed-data-visualization.opus" type="audio/ogg; codecs=opus">
+      </audio>
+    </div>
+    <div class="titleblock" role="group" aria-label="Drawing title block">
+      <div><small>Title</small><b>Looks right. Isn’t.</b></div>
+      <div><small>Course</small><b>ED5518</b></div>
+      <div><small>Date</small><b>07-Oct-26</b></div>
+      <div><small>Sheet</small><b>2 of 2</b></div>
+      <div><small>Drawn</small><b>Anyone, now</b></div>
+      <div class="chk"><small>Checked</small><b>by whom?</b></div>
+      <div class="empty"><small>Approved</small><b>___</b></div>
+      <div><small>Length</small><b>73 min</b></div>
+    </div>
+  </div>
+  <figure class="comic">
+    <span class="tag" aria-hidden="true">the comic version</span>
+    <a href="comic-page.avif" data-lightbox data-caption="The class as an AI-drawn comic page." aria-label="Enlarge the comic page">
+      <img src="comic-page.avif" width="1055" height="1491" alt="Eight-panel comic titled 'AI changes visualization twice: first as the tool, then as the audience.' Panels: tools shape charts from hand-drawn to spreadsheet to AI; non-coders build a cyber castle, a football shot map, a Chennai satellite grid and a moving dot atlas; principles outlast tools; people upload charts for a model to explain; models see unevenly and stumble when asked to estimate; design for human and model eyes by showing the numbers; an AI's CAD model passes its own tests yet misses the lower fork; use AI boldly, know its biases, validate with explicit criteria.">
+    </a>
+    <figcaption>The class as an AI-drawn comic page — tap to enlarge. A fitting caveat: it is a summary, not evidence. The Chennai panel’s “after flood” is the illustrator’s invention, and as you’ll see, even the real map was misread.</figcaption>
+  </figure>
+</section>
+
+<div class="room" id="room">
+<main class="story" id="story">
+
+<!-- ================= COLD OPEN ================= -->
+<section class="chap" id="bracket" data-act="Cold open" data-title="The bracket that passed">
+  <div class="act" data-n="0">Cold open</div>
+  <h2>The bracket that <em>passed</em></h2>
+  <p class="lede">Sixty-four minutes into the class, Anand put an engineering drawing on screen: a forked mounting bracket in three views, every edge dimensioned. 150 mm wide. 88 mm tall. A Ø20.3 bore through a boss whose centre sits 66.82 mm up. <a class="ts" href="?t=64:01">64:01</a></p>
+  <p>He had given that drawing — and nothing else — to <a href="https://openai.com/codex/">Codex</a>, OpenAI’s coding agent, along with <a href="https://www.freecad.org/">FreeCAD</a> and a way to render whatever it built. No reference model. No answer key.</p>
+  <figure class="wide zoom">
+    <div class="sheet"><img src="assets/cad/drawing.avif" width="1569" height="862" loading="lazy" data-lightbox data-caption="CAD Bench V3 task f32bdb2966 — the forked mounting bracket drawing given to Codex." alt="Dimensioned engineering drawing of a forked mounting bracket: front view with a 150 mm base, 90 mm upper width, a round boss with Ø35.98 and Ø20.3 circles, radii R12, R6 and R3, and a side view 48 mm deep with a 35 mm step."></div>
+    <figcaption>The agent’s only input: task f32bdb2966 from gNucleus’s <a href="https://www.gnucleus.ai/cad-bench/news/cad-bench-v3">CAD Bench V3</a>. Tap to enlarge — and notice the R3 and R6 radii near the bottom. They matter later.</figcaption>
+  </figure>
+  <p>Codex built a model. Then it did what we keep telling students to do: <strong>it wrote tests for itself</strong>. Is the envelope 150 × 48 × 88 mm? Is it a single valid solid? It looked again, decided one support was the wrong depth, rebuilt it, and checked again.</p>
+  <div class="say">
+    <p>“The interesting thing is that it passed all of its own tests… If I were to look at it, I would probably say, ‘Huh, this kind of looks like that. I’m not sure I know much better.’”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=65:16">65:16</a></footer>
+  </div>
+  <p><strong>It was the wrong bracket.</strong> How wrong, and how anyone could tell, is where the class ended — and where this story ends too. To get there, the students first had to admire a parade of pictures that would have been impossible to make a few years ago, watch their teacher misread one, and answer a question nobody enjoys: <em>so what will you do about it?</em></p>
+</section>
+
+<!-- ================= ACT I ================= -->
+<section class="chap" id="castle" data-act="I · Making is cheap" data-title="Anyone can draw a castle">
+  <div class="act" data-n="1">Making is cheap</div>
+  <h2>When anyone can draw <em>a castle</em></h2>
+  <p class="lede">Anand began with history. When <a href="https://en.wikipedia.org/wiki/William_Playfair">William Playfair</a> engraved the first line and bar charts in the 1780s, “there was more variety, more flexibility, and fewer people could create it.” Spreadsheets flipped that: everyone could chart, and the charts began to look alike. <a class="ts" href="?t=03:04">03:04</a></p>
+
+  <div class="band bp">
+    <div class="inner">
+      <div class="band-label"><i class="bi bi-rulers" aria-hidden="true"></i> Three ways a chart gets made</div>
+      <div class="eras">
+        <div class="era">
+          <div class="img"><img src="assets/playfair-1786.avif" width="1324" height="957" loading="lazy" data-lightbox data-caption="William Playfair, Chart of Imports and Exports of England to and from all North America, 1770–1782 (1786). Public domain, via Wikimedia Commons." alt="Playfair's hand-coloured 1786 chart: a red exports line and a yellow imports line over 1770–1782, with the gap between them shaded blue and labelled 'Ballance in favour of England', briefly pink where the balance turns against England."></div>
+          <span class="yr">1786 · by hand</span>
+          <h4>Engraved, then hand-coloured</h4>
+          <p>Playfair didn’t make readers subtract imports from exports. He <strong>shaded the gap</strong> and wrote “Ballance” on it. Hold that thought. <a href="https://commons.wikimedia.org/wiki/File:1786_Playfair_-_Chart_of_import_and_exports_of_England_to_and_from_all_North_America_from_the_year_1770_to_1782.jpg">Commons</a> · <a href="https://archive.org/details/bim_eighteenth-century_the-commercial-and-polit_corry-james_1786">1786 atlas scan</a></p>
+        </div>
+        <div class="era">
+          <div class="img xlgrid" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          <span class="yr">1990s → · the chart menu</span>
+          <h4>Pick a template</h4>
+          <p>Cheap, fast, uniform. Anyone could chart; most charts came from the same dozen shapes. A metaphor, not a law — custom charts never died, they just cost more.</p>
+        </div>
+        <div class="era">
+          <div class="img"><img src="assets/jev-keep.avif" width="1400" height="875" loading="lazy" data-lightbox data-caption="Jev's Keep — every web request is a dot flying at a castle." alt="Jev's Keep: a night sky of green dots flying towards a castle wall whose battlements hold a ranked list of blocked attack types."></div>
+          <span class="yr">2026 · by conversation</span>
+          <h4>Describe it, iterate</h4>
+          <p>“With AI creating more visual formats these days, we have a lot more of the kinds of visual variety that we used to see before.”</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p>The first modern exhibit was that castle. One of Anand’s colleagues, fresh out of college, had used Jev — a small, fast model that can only answer yes/no, pick a category or produce a number — to screen web requests for attacks. <strong>Every request became a dot flying at a castle.</strong> Legitimate ones pass through the gate; attacks hit the wall and climb a live leaderboard, “effectively creating a dynamic bar chart race.” <a class="ts" href="?t=04:44">04:44</a></p>
+  <p>He had never heard of a bar chart race. The castle, the race and the streaming simulation all “emerged as part of the discussion that he was having with the model.”</p>
+
+  <div class="live wide">
+    <div class="frame" data-src="https://eshwarpotturi.github.io/soc-analyst-jev/">
+      <img src="assets/jev-keep.avif" width="1400" height="875" loading="lazy" alt="Screenshot of Jev's Keep mid-replay: 76 incoming, 35 admitted, 6 repelled; SQL injection and path traversal lead the blocked-attack board.">
+      <button class="load" type="button"><i class="bi bi-play-circle" aria-hidden="true"></i> Run the castle here</button>
+    </div>
+    <div class="bar"><span>Jev’s Keep replays two real runs: 884 requests; by the page’s own count, 125 of 144 attacks caught with 4 false alarms. Try the 25× speed.</span><a href="https://eshwarpotturi.github.io/soc-analyst-jev/" target="_blank" rel="noopener">Open full screen <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></div>
+  </div>
+
+  <div class="say">
+    <p>“Why does visualization have to be static when the medium that we are using these days can support dynamic formats?”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=06:52">06:52</a></footer>
+  </div>
+
+  <p>The second exhibit came from a first-year student who, Anand said, “knows no programming” — but knows football. <a class="ts" href="?t=07:03">07:03</a> <a href="https://premier-shot-lab-202526.miyakokoko-842.chatgpt.site/">Shot Atlas</a> maps the 2025/26 Premier League: 6,926 open-play shots, 700 goals, every pitch zone coloured by how often its shots became goals, with each goal replayable in motion. Anand described it as a heat map of goals; strictly, it’s a map of shots and their conversion.</p>
+
+  <figure class="wide zoom">
+    <img src="assets/shot-atlas.avif" width="1400" height="700" loading="lazy" data-lightbox data-caption="Shot Atlas: first-half versus second-half shot maps, Premier League 2025/26." alt="Two football half-pitches side by side, first half and second half, gridded into zones coloured from blue (low conversion) to red (high), with 2,932 shots and 281 goals in the first half and 2,981 shots and 318 goals in the second.">
+    <figcaption>Shot Atlas, first half vs second half: 9.6% vs 10.7% of shots became goals. <a href="https://premier-shot-lab-202526.miyakokoko-842.chatgpt.site/">Explore it live</a> (English / 日本語).</figcaption>
+  </figure>
+
+  <p>“The tool ceases to be a constraint,” Anand said. <a class="ts" href="?t=09:24">09:24</a> People with “a strong domain sense probably have a bit of an edge.” The bottleneck moves from <em>can you build it</em> to:</p>
+  <div class="say">
+    <p>“Do you have a good enough story to tell and do you have an interesting way of telling those stories?”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=09:48">09:48</a></footer>
+  </div>
+</section>
+
+<section class="chap" id="claims" data-act="I · Making is cheap" data-title="2,295 claims, one dot each">
+  <div class="act" data-n="1">Making is cheap</div>
+  <h2>Two thousand claims, <em>one dot each</em></h2>
+  <p class="lede">The third exhibit took a format most of the room had never used. <a class="ts" href="?t=14:28">14:28</a> McKinsey has published its Global Energy Perspective every year since 2018: 27 reports, deep dives and companions in all. Anand’s team broke every one into individual claims — “Power sector gas demand in 2035 will be less than 100 BCM because renewables are going to be more competitive” — <strong>2,295 of them, each a square.</strong></p>
+  <p>Then they let the squares move. That is the idea behind <a href="https://github.com/microsoft/SandDance">Microsoft Research’s SandDance</a>: one mark per row, and when you regroup, every mark flies to its new home so your eye can follow it. These are the real claims. Regroup them.</p>
+
+  <div class="units wide" id="units">
+    <div class="units-ctrl" role="group" aria-label="Group the claims">
+      <span>Group by</span>
+      <button class="seg" type="button" data-g="all" aria-pressed="true">All 2,295</button>
+      <button class="seg" type="button" data-g="type" aria-pressed="false">Claim type</button>
+      <button class="seg" type="button" data-g="tier" aria-pressed="false">Watchability</button>
+      <button class="seg" type="button" data-g="year" aria-pressed="false">Report year</button>
+    </div>
+    <canvas id="units-canvas" width="1100" height="520" role="img" aria-label="Unit chart of 2,295 claims from McKinsey's Global Energy Perspective reports, one square per claim, coloured by claim type. Counts: forecast 1,370; estimate 238; fact 231; causal 169; assumption 121; synthesis 104; recommendation 62. By watchability: high 1,250, medium 846, low 199."></canvas>
+    <div class="units-legend" id="units-legend"></div>
+  </div>
+  <p class="cap" style="max-width:58rem">Data: the 2,295 claims behind the public <a href="https://files.s-anand.net/pages/mckinsey-gep-validation/">Live GEP</a> demo shown in class (<a href="#" data-lightbox="assets/class-units.avif" data-caption="The same claims on screen in class, grouped by watchability.">the class view</a>). “Watchability” is how cleanly a claim could be checked later on a 0–100 rubric — not whether it is true. Claims are extracted forecasts and statements, not verified facts.</p>
+
+  <p>Grouped by type, the reports are mostly forecasts: 1,370 of 2,295. Grouped by watchability, 1,250 could be cleanly checked later. Neither view comes out of a spreadsheet’s chart menu — and Anand’s point was who made them: “almost all of these were created by people who were not able to create visualizations but knew the domain.” <a class="ts" href="?t=18:12">18:12</a> A public cousin of this format plots <a href="https://sanand0.github.io/datastories/imf-gdp-forecast-errors/">one dot per IMF growth forecast, by how far it missed</a>.</p>
+
+  <div class="note">
+    <b class="h">What this second class adds</b>
+    In <a href="../2026-08-12-iitm-ed-data-visualization/">August</a>, Anand asked why anyone should sit in a data-viz class when AI can draw the charts — and answered: for framing, critique and verification. This time he took cheap charts as given and asked the next question. If making is easy, what’s hard? His first answer: <strong>stop investing in tools, invest in technique</strong> — “the lessons both of history and the principles that we learn might last a little longer.” His second answer was about the reader.
+  </div>
+  <div class="say">
+    <p>“Treat what you’re studying from a tools perspective with a little bit of skepticism.”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=20:28">20:28</a></footer>
+  </div>
+</section>
+<!-- ================= ACT II ================= -->
+<section class="chap" id="greenery" data-act="II · Reading is hard" data-title="“Greenery?”">
+  <div class="act" data-n="2">Reading is hard</div>
+  <h2>“Greenery?”</h2>
+  <p class="lede">Between the castle and the claims, there had been a map. <a class="ts" href="?t=09:56">09:56</a> Anand opened an <a href="https://pythonicvarun.github.io/olmoearth-change-insights/">OlmoEarth change monitor</a> for Chennai: the city in 2015 and in 2025, cut into a grid, each cell coloured by how much a geospatial AI model estimates it changed. He explained the colours — “green means water coverage has increased, red means water coverage has decreased” — then zoomed towards a bright green strip and asked the room what it was. <a class="ts" href="?t=12:24">12:24</a></p>
+  <p>Here is the frame from the recording. Two labels are covered. What does the green show?</p>
+
+  <div class="band bp">
+    <div class="inner">
+      <div class="band-label"><i class="bi bi-eye" aria-hidden="true"></i> You read it first</div>
+      <div class="legendcheck" id="legendcheck">
+        <img src="assets/class-chennai.avif" width="1440" height="900" loading="lazy" alt="Frame from the class video: the OlmoEarth Monitor showing Chennai's coast as a grid of cells shaded from brown to green, with a bright green strip running inland along a river. The map's focus label in the top-right corner and the change-signal description in the left panel are covered.">
+        <div class="cover" style="top:2.4%; right:1%; width:20%; height:4.4%">label hidden</div>
+        <div class="cover" style="top:43.3%; left:1.4%; right:auto; width:17.5%; height:4.8%">label hidden</div>
+        <div class="ring" aria-hidden="true"></div>
+      </div>
+      <div class="choice" role="group" aria-label="What does the green strip show?">
+        <b>The green strip shows…</b>
+        <button class="pick" type="button" data-pick="water" aria-pressed="false">more water</button>
+        <button class="pick" type="button" data-pick="veg" aria-pressed="false">more vegetation</button>
+        <button class="pick" type="button" data-pick="unsure" aria-pressed="false">can’t tell without the legend</button>
+      </div>
+      <p class="verdict" id="legend-verdict" aria-live="polite"></p>
+      <p class="cap">Frame at <a class="ts" href="?t=12:52">12:52</a> of the class recording. Explore the same map yourself: the <a href="https://pythonicvarun.github.io/olmoearth-change-insights/outputs/chennai/?basemap=esri_imagery&amp;metric=vegetation_delta&amp;unit=cells&amp;period=10y&amp;opacity=0.95&amp;historical=timeline&amp;speed=1200&amp;lat=13.08321&amp;lng=80.22025&amp;zoom=13.40&amp;historicalDate=2025-12-18&amp;renderMode=variation">vegetation layer shown in class</a>, or the <a href="https://pythonicvarun.github.io/olmoearth-change-insights/outputs/chennai/?basemap=esri_imagery&amp;metric=water_delta&amp;unit=cells&amp;period=10y&amp;opacity=0.15&amp;historical=timeline&amp;speed=1200&amp;lat=13.01385&amp;lng=80.26315&amp;zoom=16.00&amp;historicalDate=2015-01-21&amp;renderMode=variation">water layer</a> Anand was describing.</p>
+    </div>
+  </div>
+
+  <p>A student answered first: “Greenery?” “It’s water,” said Anand, “but where is it?” Palani tried “Adyar Poonga?” — the restored eco-park on the Adyar estuary. “Exactly. The Adyar River.” <a class="ts" href="?t=13:08">13:08</a></p>
+  <p>Now read the corner of the frame. <strong>The layer on screen, for the whole segment, was <em>Vegetation Delta</em>.</strong> The student who said “greenery” was reading the picture correctly. The speaker — a career in data visualisation, narrating a map his own team had built — was describing the water layer, one dropdown away. A minute later he offered to look at it “from a vegetation perspective as well, or greenery as you looked at” — the view that was already on screen. <a class="ts" href="?t=14:16">14:16</a></p>
+
+  <div class="pencil">
+    <b class="h">What this map can and can’t say</b>
+    The cells are displayed at 160 m, comparing a December 2015 frame with December 2025. Each value is a model’s estimate of change, not a measurement — season, tide, cloud and classification error can all paint a cell. So the map can’t show that the Adyar “has certainly become a lot wetter” (Anand’s words, <a class="ts" href="?t=13:44">13:44</a>) or greener; it shows <em>where to look</em>. Underneath is Ai2’s <a href="https://allenai.org/olmoearth">OlmoEarth</a> foundation model (<a href="https://arxiv.org/abs/2511.13655">paper</a>).
+  </div>
+
+  <p>Nobody in the room noticed. It’s an easy slip — same map, same palette, a different dropdown — which is exactly why it matters. Hold on to the shape of it: <strong>an expert, a confident reading, and a label that said otherwise.</strong> It was about to happen again. This time the reader would be a machine.</p>
+</section>
+
+<section class="chap" id="circuits" data-act="II · Reading is hard" data-title="The audience has circuits">
+  <div class="act" data-n="2">Reading is hard</div>
+  <h2>The audience has <em>circuits</em></h2>
+  <p class="lede">Anand’s second theme arrived as a confession. “Half the time when somebody sends me a presentation which probably has a bunch of charts, I just upload it to ChatGPT and say, ‘Tell me what they’re saying.’” <a class="ts" href="?t=21:44">21:44</a></p>
+  <div class="say">
+    <p>“Agents are increasingly a consumer of our visualizations as well.”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=21:40">21:40</a></footer>
+  </div>
+  <p>“Half the time” is his habit, not a survey of anyone else’s. But it turns the course’s classic lesson — <a href="https://doi.org/10.1080/01621459.1984.10478080">Cleveland and McGill’s 1984 experiments</a>, which found people judge position on a common scale more accurately than length, angle or area <a class="ts" href="?t=20:56">20:56</a> — into a two-reader problem. You know roughly how a person misreads a pie chart. <strong>How does the other reader misread?</strong></p>
+
+  <div class="band white">
+    <div class="inner">
+      <div class="band-label"><i class="bi bi-book-half" aria-hidden="true"></i> Can a model read a bookshelf?</div>
+      <div class="shelf">
+        <figure class="photo">
+          <img src="assets/shelf-hard.avif" width="1350" height="1800" loading="lazy" data-lightbox data-caption="Photo e, the 'hard' shelf: 108 books in the answer key. From Atharva's Bookshelf Benchmark." alt="A grey metal rack of stacked paperbacks, spines facing out at many angles: Dan Brown, Jojo Moyes, Sidney Sheldon, Harry Potter and the Cursed Child, Atomic Habits, Alex Ferguson's Leading, and dozens more, some in Hindi, many partly hidden.">
+          <figcaption>The “hard” shelf: 108 books in the answer key. Tap to enlarge and try to list them.</figcaption>
+        </figure>
+        <div>
+          <h3>Same prompt, very different eyes</h3>
+          <p>Atharva — another colleague fresh out of college — photographed six real shelves, listed all 295 books by hand, and asked Claude, Gemini and GPT in their ordinary chat apps to list every title they could read. <a class="ts" href="?t=22:35">22:35</a></p>
+          <div class="slope" id="slope"></div>
+          <p class="cap">F1 score (books found vs. books invented) on an easy shelf and the hard shelf, run 1, each model at its higher-effort setting. Source: <a href="https://atharva-729.github.io/bookshelf-benchmark/">Bookshelf Benchmark</a>, early Oct 2026 — a six-photo test of consumer apps, not a general ranking.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p>Overall, Claude Opus 5.5 at high effort scored 0.86, Sonnet 5.5 0.80 and Gemini 3.8 Flash 0.70 — and “none of the models could get all of the books right.” <a class="ts" href="?t=24:04">24:04</a> The shelf-by-shelf view is stranger. <strong>Gemini 3.8 Flash was the best reader of a tidy shelf and one of the worst on the messy one.</strong> A model doesn’t have one eyesight. It has an eyesight per picture.</p>
+  <p>The pricier setups tended to read better <a class="ts" href="?t=25:20">25:20</a> — though nobody knew the cost for certain. “Oh Anand, I didn’t measure it,” Atharva told him. <a class="ts" href="?t=26:36">26:36</a> The chat apps hide their reasoning, so a model estimated each run’s cost from the transcripts and Atharva drew the doubt as a whisker on each point: “an uncertainty estimate by a model of a model’s cost.”</p>
+  <div class="say">
+    <p>“Does the person whom I’m going to send a visualization to have a model that’s going to read it? If so, do they have a better model? Do they have a worse model?”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=25:52">25:52</a></footer>
+  </div>
+</section>
+
+<section class="chap" id="wind" data-act="II · Reading is hard" data-title="Read it before the machines">
+  <div class="act" data-n="2">Reading is hard</div>
+  <h2>Read this chart <em>before the machines do</em></h2>
+  <p class="lede">Next came <a href="https://aclanthology.org/2025.findings-acl.978/">ChartQAPro</a> <a class="ts" href="?t=28:00">28:00</a> — a 2025 benchmark of 1,948 questions on 1,341 real charts, infographics and dashboards. About an hour before class, Anand had asked ChatGPT to download it, find which questions models get wrong, “and give me a story about it.” <a class="ts" href="?t=29:40">29:40</a> Reading that story live, for the first time, he reached this question. Answer it before you scroll.</p>
+
+  <div class="band bp" id="quiz-band">
+    <div class="inner">
+      <div class="quiz">
+        <div class="chart">
+          <img src="assets/chart-wind.avif" width="627" height="442" alt="Stacked bar chart of electricity capacity in gigawatts from 2023-24 to 2049-50. Layers from bottom: coal, gas, peaking, hydro, storage, coordinated and distributed storage (purple), wind (green), utility-scale solar (orange) and distributed PV (yellow) on top. Totals rise from about 85 to about 285 GW. A dashed line marks dispatchable capacity around 40 to 60 GW.">
+          <svg viewBox="0 0 627 442" aria-hidden="true">
+            <g class="ov" id="ov-top">
+              <line x1="55" x2="505" y1="260" y2="260" stroke="#b3372a" stroke-width="2" stroke-dasharray="6 4"/>
+              <text x="58" y="254" fill="#b3372a" font-size="13" font-family="IBM Plex Sans Condensed" font-weight="600">100 GW</text>
+              <circle cx="300" cy="254" r="9" fill="none" stroke="#b3372a" stroke-width="3"/>
+              <text x="244" y="236" fill="#b3372a" font-size="12.5" font-family="IBM Plex Sans Condensed" font-weight="600">stack top passes 100</text>
+            </g>
+            <g class="ov" id="ov-thick">
+              <line x1="512" x2="512" y1="195" y2="289" stroke="#1f4f8f" stroke-width="3"/>
+              <line x1="506" x2="518" y1="195" y2="195" stroke="#1f4f8f" stroke-width="3"/>
+              <line x1="506" x2="518" y1="289" y2="289" stroke="#1f4f8f" stroke-width="3"/>
+              <rect x="430" y="300" width="96" height="22" fill="#fff" opacity=".92"/>
+              <text x="434" y="316" fill="#1f4f8f" font-size="14" font-family="IBM Plex Sans Condensed" font-weight="600">wind ≈ 68 GW</text>
+            </g>
+          </svg>
+        </div>
+        <div>
+          <div class="band-label"><i class="bi bi-question-diamond" aria-hidden="true"></i> ChartQAPro, question 1</div>
+          <h3>When does wind capacity first exceed 100 GW?</h3>
+          <p class="q">“Estimate the year in which wind capacity first exceeds 100 GW based on the trend shown in the chart.”</p>
+          <div class="choice" role="group" aria-label="Your answer">
+            <button class="pick" type="button" data-wind="never" aria-pressed="false">Never</button>
+            <button class="pick" type="button" data-wind="2033-34" aria-pressed="false">2033–34</button>
+            <button class="pick" type="button" data-wind="2035-36" aria-pressed="false">2035–36</button>
+            <button class="pick" type="button" data-wind="2037-38" aria-pressed="false">2037–38</button>
+          </div>
+          <ol class="answers" id="wind-answers" aria-live="polite">
+            <li class="you"><span>You</span><b id="wind-you">—</b></li>
+            <li><span>Anand, first look</span><b>“never” <a class="ts" href="?t=30:48">30:48</a></b></li>
+            <li class="key"><span>Answer key</span><b>2037–38</b></li>
+            <li><span>Qwen2.5-VL-3B</span><b>2024–2025</b></li>
+            <li><span>Qwen2.5-VL-7B</span><b>2035</b></li>
+            <li><span>START-RL-7B</span><b>2033–34</b></li>
+          </ol>
+          <div id="wind-after" hidden>
+            <p style="margin:1rem 0 .6rem">Anand saw the key and conceded: “Oh, okay fine. I should have looked at it cumulatively then.” <a class="ts" href="?t=31:08">31:08</a> “I assumed that the thickness or the height of the green is the wind… Which is my mistake, but the models seem to have done better than me in any case, for sure.”</p>
+            <button class="pick" type="button" id="wind-measure" aria-pressed="false"><i class="bi bi-rulers" aria-hidden="true"></i> Now measure the green</button>
+          </div>
+          <div class="twist" id="wind-twist" aria-live="polite">
+            <div class="band-label"><i class="bi bi-exclamation-octagon" aria-hidden="true"></i> Wait, really?</div>
+            Wind is the green band. Its <strong>thickness</strong> — top minus bottom — peaks at roughly <strong>68 GW in 2049–50</strong> (our pixel measurement against the chart’s own axis). It never reaches 100. What crosses 100 GW in 2037–38 is the <em>top</em> of the green band: wind <em>plus</em> the coal, gas, hydro and storage stacked beneath it. <strong>The answer key read the stack. So did every model. Anand’s first answer — “never” — is the one that survives a ruler.</strong> Playfair shaded his gap in 1786 so readers wouldn’t have to do this subtraction. This chart made everyone do it, and the benchmark got it wrong.
+          </div>
+        </div>
+      </div>
+
+      <div class="minis">
+        <div class="mini">
+          <div class="img"><img src="assets/chart-services.avif" width="590" height="463" loading="lazy" data-lightbox data-caption="ChartQAPro row 30 — UK ONS monthly index of services." alt="Line chart, UK monthly index of services Feb 2020 to Jan 2022, three dark-blue lines: Index of Services, Consumer facing services (dips to about 60), and All other services."></div>
+          <p class="q">“What is the label of the line that remains in the middle most of the time?”</p>
+          <details><summary>Reveal the answers</summary>
+            <dl><dt>Answer key</dt><dd>Index of Services</dd><dt>Qwen2.5-VL-3B</dt><dd>All other services</dd><dt>Qwen2.5-VL-7B</dt><dd>Consumer facing services</dd><dt>START-RL-7B</dt><dd>Consumer facing services</dd></dl>
+            <p class="m">Here the key is right and all three models are wrong. They can read the legend; they can’t <strong>bind</strong> it to the right line among three near-identical blues.</p>
+          </details>
+        </div>
+        <div class="mini">
+          <div class="img"><img src="assets/chart-cooking.avif" width="1200" height="847" loading="lazy" data-lightbox data-caption="ChartQAPro row 148 — Our World in Data (CC BY): people with and without access to clean cooking fuels." alt="Stacked area chart from Our World in Data: number of people with and without access to clean cooking fuels, world, 2000 to 2016. 'Without' stays near 3 billion; 'with clean fuels' sits on top; the total rises from about 6.1 to 7.4 billion."></div>
+          <p class="q">“Approximately when did the number of people with electricity access surpass 7 billion?”</p>
+          <details><summary>Reveal the answers</summary>
+            <dl><dt>Answer key</dt><dd>2011</dd><dt>Qwen2.5-VL-3B</dt><dd>unanswerable</dd><dt>Qwen2.5-VL-7B</dt><dd>2014</dd><dt>START-RL-7B</dt><dd>2016</dd></dl>
+            <p class="m">Look again. The chart is about <em>clean cooking fuels</em>, not electricity, and the “with” band never passes about 4.4 billion. 2011 is roughly when the <em>stack total</em> — with and without — crosses 7 billion. The smallest model’s “unanswerable” may be the most honest answer here.</p>
+          </details>
+        </div>
+      </div>
+      <p class="cap" style="margin-top:1.4rem">Questions, charts and answer keys from <a href="https://github.com/vis-nlp/ChartQAPro">ChartQAPro</a> (rows 0, 30 and 148). Model answers from public per-question prediction files released by <a href="https://github.com/dragonlzm/START">START</a> (Qwen2.5-VL-7B, START-RL-7B) and <a href="https://github.com/amirmohsenai/chartqapro-evidence-first">chartqapro-evidence-first</a> (Qwen2.5-VL-3B). Pixel measurements of the wind band are ours.</p>
+    </div>
+  </div>
+</section>
+
+<section class="chap" id="infer" data-act="II · Reading is hard" data-title="Don’t make them infer">
+  <div class="act" data-n="2">Reading is hard</div>
+  <h2>Don’t make the reader <em>infer</em></h2>
+  <p class="lede">The analysis ChatGPT produced that afternoon had one headline, and Anand read it aloud: “if the question contains words like ‘approximate,’ ‘estimate,’ or ‘roughly,’ then the models need to infer a number rather than just copy the printed label. And that kind of inference they seem to be doing much worse at.” <a class="ts" href="?t=32:24">32:24</a></p>
+
+  <figure class="dumb wide" id="dumb" aria-labelledby="dumb-cap"></figure>
+  <p class="cap" id="dumb-cap" style="max-width:58rem">Median relative error on numeric ChartQAPro answers, among answers that parse as numbers. “Estimate” questions are those containing words like <em>approximately</em>, <em>estimate</em> or <em>roughly</em> — a keyword tag, not a gold label. Three open models whose per-question answers are public; not 2026 frontier models. Analysis run with ChatGPT/Codex on 7 Oct 2026.</p>
+
+  <p>Look at START-RL-7B, a model trained to reason better about charts. On questions where the number is printed, its typical error shrank to <strong>2.8%</strong>. On questions where it must estimate from the shape, it stayed at <strong>33%</strong> — no better than the model it improved on. <strong>Reasoning improved more than seeing.</strong></p>
+  <div class="say red">
+    <p>“Never have the user infer a number, just show it there. That’s reflected for models as well.”</p>
+    <footer><b>Anand</b>, on advice he gives his own team <a class="ts" href="?t=33:32">33:32</a></footer>
+  </div>
+
+  <div class="pencil">
+    <b class="h">Two corrections to the live commentary</b>
+    “Nobody seems to have published a paper based on that,” Anand said of model biases on ChartQAPro <a class="ts" href="?t=29:40">29:40</a>. In fact <a href="https://aclanthology.org/2025.findings-acl.978/">the ChartQAPro paper</a> includes its own error analysis across 21 models; what was new that afternoon was a look at <em>later</em> models’ public per-question answers. For a direct human comparison, <a href="https://arxiv.org/abs/2505.13444">ChartMuseum</a> (NeurIPS 2025) found people scored 93% on its 1,162 expert questions against 63% for the best model tested, with the widest gap on visual reasoning. And the second correction you’ve already made yourself: the wind chart.
+  </div>
+
+  <p>Anand closed the first half with two lines. <a class="ts" href="?t=35:03">35:03</a> <strong>AI is able to create visualizations</strong>, so focus on technique over tools. <strong>AI is going to be the audience</strong>, so learn its biases the way you learned Cleveland and McGill’s. Then he asked the question the students had been dreading.</p>
+</section>
+<!-- ================= ACT III ================= -->
+<section class="chap" id="wait" data-act="III · So what?" data-title="“I’ll wait.”">
+  <div class="act" data-n="3">So what?</div>
+  <h2>“I’ll <em>wait</em>.”</h2>
+  <p class="lede">“What does this mean? As a result of this, what are you going to do about it?” <a class="ts" href="?t=35:52">35:52</a> Silence. Palani repeated it, then rephrased it. Anand pressed: “What’s the point of learning if you’re not going to do something about it?” <a class="ts" href="?t=37:12">37:12</a></p>
+  <div class="say">
+    <p>“I wish you’d answer that! Throughout the course we’ve been asking this question again and again.”</p>
+    <footer><b>Palani</b>, to the room <a class="ts" href="?t=37:20">37:20</a></footer>
+  </div>
+  <p>The answers came slowly. Read them as a set: <strong>every one is true, and none of them is yet an action.</strong></p>
+
+  <div class="answers-wall wide">
+    <div class="sticky"><span class="kind">Understand</span>“Whatever LLM will rather generate for each of us, are we going to bank upon the same thing or are we going to analyze further?”<p class="who">A student <a class="ts" href="?t=37:48">37:48</a></p></div>
+    <div class="sticky"><span class="kind">Survive</span>“The first is survival: whether we are able to survive or not.” Then, once stable: “Is what it’s going to give me really good? Is it really bad?”<p class="who">A student <a class="ts" href="?t=39:19">39:19</a></p></div>
+    <div class="sticky"><span class="kind">Wait</span>“I’ll wait. Sometimes it’s worth pushing.”<p class="who">Anand, to the silence <a class="ts" href="?t=40:46">40:46</a></p></div>
+    <div class="sticky"><span class="kind">Apply</span>“It’s not about static data; it is about components that are coming in, machines are running, and you’ll have to monitor this… real-time.”<p class="who">Palani, on IoT and manufacturing <a class="ts" href="?t=40:55">40:55</a></p></div>
+    <div class="sticky"><span class="kind">Optimise</span>“Optimize the cost versus accuracy.”<p class="who">A student, relayed by Palani <a class="ts" href="?t=42:42">42:42</a></p></div>
+    <div class="sticky"><span class="kind">Decide</span>“At the end, what we are going to do is we are the ones who will be deciding on whether to completely rely on it or how we go about the final decision.”<p class="who">Harini <a class="ts" href="?t=43:51">43:51</a></p></div>
+  </div>
+
+  <p>Palani’s was the most concrete: the castle’s streaming dots are what a factory floor needs when “machines are running.” Harini’s went deepest: when models draw and models read, a person still owns the decision. Anand asked her the follow-up — “what do you think you would want to do differently?” — and she landed on “assessing the answers which it gave.” <a class="ts" href="?t=44:08">44:08</a> Keep that phrase. The class comes back to it.</p>
+  <p>Then Anand said something about himself. He learns because he has a problem; students sit in rooms because there’s an exam. <a class="ts" href="?t=45:09">45:09</a></p>
+  <div class="say big">
+    <p>“When I don’t know why I’m learning something, I learn a lot less.”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=45:38">45:38</a></footer>
+  </div>
+  <p>So he spent the one freedom he had. “Let’s flip this around… What would you like to know about?” <a class="ts" href="?t=46:52">46:52</a> Palani translated the invitation into a licence: “Please be selfish in your questions… ‘Why should I care?’ is a valid question.” <a class="ts" href="?t=48:12">48:12</a></p>
+</section>
+
+<section class="chap" id="dashboard" data-act="III · So what?" data-title="The half-million-dollar dashboard">
+  <div class="act" data-n="3">So what?</div>
+  <h2>The half-million-dollar <em>dashboard</em></h2>
+  <p class="lede">The first question was honest and practical: “Is it compulsory that we need to entirely know the problem definition before we really start visualizing something?” <a class="ts" href="?t=48:47">48:47</a> Anand’s answer began with a line that got a laugh and wasn’t entirely a joke: “In practice, every dashboard that I’ve seen is created by someone who has no idea what they’re trying to visualize.” <a class="ts" href="?t=49:03">49:03</a></p>
+
+  <div class="band paper2">
+    <div class="inner">
+      <div class="band-label"><i class="bi bi-diagram-3" aria-hidden="true"></i> How a question dies in transit <a class="ts" href="?t=49:24">49:24</a></div>
+      <ol class="relay">
+        <li><b>Business owner</b>“Which of my machines are likely to fail in the next three months?” Ten questions like this.</li>
+        <li><b>Project manager</b>Understands 20% of them. Writes it down.<span class="lost">−80% of the question</span></li>
+        <li><b>The RFP</b>“I want to be able to answer 10 such questions and 30 more of any kind.”<span class="lost">+30 imaginary questions</span></li>
+        <li><b>Vendor sales</b>“Knows nothing about operations, who knows nothing about data visualization, but has a quota.”</li>
+        <li class="end"><b>Developer</b>Knows Power BI or Tableau. Not operations. Produces 20 charts.<span class="lost">“What rubbish.” → 30 more charts</span></li>
+      </ol>
+      <div class="relay-outcome">
+        <div>The boss’s boss asks: <em>“You spent half a million dollars already, right? Are you getting value for it?”</em> <a class="ts" href="?t=51:16">51:16</a></div>
+        <div class="big">1 of 10</div>
+        <div>questions answered, by stitching parts of two charts. “Okay. Project has been a success.” <a class="ts" href="?t=51:28">51:28</a></div>
+      </div>
+      <p class="cap">Anand’s caricature, not an audit — but every engineer in the room recognised a link in it.</p>
+    </div>
+  </div>
+
+  <p>The contrast was where the question sits. In a newsroom like <em>The New York Times</em>, “the graphics designer does not need to know what the problem is, but the editor is sitting right next to them.” <a class="ts" href="?t=51:56">51:56</a> A person buying a laptop plots features against price and knows exactly what they want. <a class="ts" href="?t=52:58">52:58</a></p>
+  <div class="contrast3 wide">
+    <div><span class="k">Works</span><b>Newsroom</b>The person holding the question sits beside the person drawing.</div>
+    <div><span class="k">Works</span><b>Citizen analyst</b>You are the audience, so you can iterate until it answers you.</div>
+    <div><span class="k bad">Fails</span><b>The relay</b>Everybody is drawing; nobody is holding the question.</div>
+  </div>
+  <p>(He also said “90% of visualizations today are created by people who don’t know the problem, and you can still make a living out of it.” <a class="ts" href="?t=53:40">53:40</a> Take that as the punchline it was, not a statistic.)</p>
+</section>
+
+<section class="chap" id="cook" data-act="III · So what?" data-title="Taste fifty dishes">
+  <div class="act" data-n="3">So what?</div>
+  <h2>Taste fifty <em>dishes</em></h2>
+  <p class="lede">The student wasn’t satisfied, and pushing revealed his real question. <a class="ts" href="?t=55:00">55:00</a> Not <em>must I know the problem</em>, but: text can be visualised now, satellite images can be visualised, numbers can be visualised — “how do you really hone in on a very specific kind of data to, you know, visualize?”</p>
+  <div class="say big">
+    <p>“To be a good cook, you don’t have to cook every dish. You certainly ought to taste a lot of dishes and cook a few.”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=56:32">56:32</a></footer>
+  </div>
+  <p>Which recasts the first half of the class. The castle, the shot map and the claim cloud weren’t there to be admired. They were dishes to taste — <strong>each one tasted with the same question</strong>: “How can I use this?” <a class="ts" href="?t=57:00">57:00</a> Not more time looking at visualisations; the same time, spent asking what each one is for.</p>
+</section>
+
+<div class="lost-band" role="note" aria-label="Connection dropped">
+  <i class="bi bi-wifi-off" aria-hidden="true"></i>
+  <div class="bars" aria-hidden="true">· · · · · ·</div>
+  <p style="margin:.6rem 0 0">At <a class="ts" href="?t=57:44">57:44</a> the campus Wi-Fi drops. Two minutes later, on mobile data, a stranger tries to join the call.<br>“We didn’t share the link with anyone,” says Palani. “More the merrier!” says Anand. “Let them join. What do we lose?” <a class="ts" href="?t=60:36">60:36</a></p>
+</div>
+
+<!-- ================= ACT IV ================= -->
+<section class="chap" id="believe" data-act="IV · Checking" data-title="“How can I believe it?”">
+  <div class="act" data-n="4">Checking</div>
+  <h2>“How can I believe <em>its accuracy</em>?”</h2>
+  <p class="lede">Then a student asked the question the whole class had been circling.</p>
+  <div class="say red">
+    <p>“LLMs can generate visualizations or some plots, and then it can interpret also. But it may or may not be correct… So is there any validation technique there? Because it can give the plot, it can give the trends, but how can I believe its accuracy of values?”</p>
+    <footer><b>A student</b>, at the room microphone <a class="ts" href="?t=62:17">62:17</a></footer>
+  </div>
+  <p>“Thank you,” said Anand. “Now I will go to the third part of what I was going to cover because this is it.” <a class="ts" href="?t=62:40">62:40</a> But first he made the student say how he’d use the answer — and, when the reply was vague, told him so kindly: “Still weak, but that’s not a judgment. What I’m saying is that if you had a clearer idea of your question, the answer will land more strongly.” <a class="ts" href="?t=63:28">63:28</a></p>
+  <p>Then he went back to the bracket.</p>
+
+  <div class="band white">
+    <div class="inner">
+      <div class="band-label"><i class="bi bi-gear-wide-connected" aria-hidden="true"></i> What Codex built, and what it checked</div>
+      <div class="cad-steps">
+        <figure><img src="assets/cad/drawing.avif" width="1569" height="862" loading="lazy" data-lightbox data-caption="The input drawing." alt="The input engineering drawing, small." style="aspect-ratio:1;object-fit:contain"><figcaption><span class="stamp pass">input</span>The drawing — the only geometry it was given. A first run got lost cropping and zooming the image and built nothing. <a class="ts" href="?t=64:50">64:50</a></figcaption></figure>
+        <figure><img src="assets/cad/first.avif" width="900" height="900" loading="lazy" data-lightbox data-caption="Codex's first CAD model." alt="Line render of Codex's first model: an upright plate with a square-ish block and round boss, on a base with two bolt-hole feet."><figcaption><span class="stamp pass">✓ 150 × 48 × 88</span><span class="stamp pass">✓ one solid</span>A valid, editable FreeCAD model on the next try.</figcaption></figure>
+        <figure><img src="assets/cad/codex.avif" width="900" height="900" loading="lazy" data-lightbox data-caption="Codex's final, self-corrected CAD model." alt="Line render of Codex's final model: the boss is now a slimmer support stem with a deeper circular eye, on the same plate and base."><figcaption><span class="stamp pass">✓ self-review</span><span class="stamp pass">✓ rebuilt</span>It re-read the drawing, split the eye from a 35 mm-deep support, rebuilt and re-checked. <a class="ts" href="?t=65:48">65:48</a></figcaption></figure>
+      </div>
+    </div>
+  </div>
+  <div class="say">
+    <p>“But it looked at it closer and said, ‘No, I’m not happy with this.’”</p>
+    <footer><b>Anand</b>, on Codex’s self-correction <a class="ts" href="?t=65:48">65:48</a></footer>
+  </div>
+  <p>That is <strong>genuine self-correction</strong> — an agent noticing its own mistake without being told. Its final verdict, as Anand relayed it: “I can’t find any mistakes in my operations. It looks like the right kind of bracket.”</p>
+</section>
+
+<section class="chap" id="reveal" data-act="IV · Checking" data-title="The hidden reference">
+  <div class="act" data-n="4">Checking</div>
+  <h2>The hidden <em>reference</em></h2>
+  <p class="lede">The benchmark had a reference model Codex never saw. “This is what it was supposed to produce.” <a class="ts" href="?t=66:24">66:24</a> Drag the red line across both.</p>
+
+  <div class="band white">
+    <div class="inner cad-compare">
+      <div>
+        <div class="wipe" id="wipe">
+          <img src="assets/cad/reference.avif" width="900" height="900" alt="Reference model, line render: the lower part of the plate has curved fork profiles cut beneath the boss.">
+          <img class="cand" src="assets/cad/codex.avif" width="900" height="900" alt="">
+          <div class="divider" aria-hidden="true"></div>
+          <span class="badge l">Codex</span><span class="badge r">Hidden reference</span>
+        </div>
+        <label class="sr-only" for="wipe-range">Wipe between Codex's model and the hidden reference</label>
+        <input class="wipe-range" id="wipe-range" type="range" min="0" max="100" value="50">
+      </div>
+      <div>
+        <figure style="margin:0"><img src="assets/cad/diff.avif" width="900" height="900" loading="lazy" data-lightbox data-caption="Aligned outline difference: dark = overlap, blue = reference only, red = Codex only." alt="Overlay of both outlines: shared edges in dark grey, reference-only curved fork edges in blue along the lower body, Codex-only straight edges in red."><figcaption class="diff-legend"><span><i style="background:#333337"></i>both</span><span><i style="background:#2d5fbe"></i>reference only</span><span><i style="background:#c33c32"></i>Codex only</span></figcaption></figure>
+        <p style="margin-top:1rem">“Very similar, but they are not the same object.” The reference has a <strong>curved lower fork profile</strong> under the boss — the R3 and R6 radii on the drawing. Codex built straight, rectangular blocks there instead. “What it missed was this lower fork profile, which it could not see clearly enough.” <a class="ts" href="?t=67:48">67:48</a></p>
+        <p class="cap">Both models rigidly aligned and rendered with the same camera, centre and scale, from Anand’s write-up <a href="https://sanand0.github.io/research/2026-10-ed-viz/">“Can AI read an engineering drawing?”</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chap" id="kit" data-act="IV · Checking" data-title="Who wrote the test?">
+  <div class="act" data-n="4">Checking</div>
+  <h2>Who wrote <em>the test</em>?</h2>
+  <p class="lede">“But what is more interesting,” Anand said, “is that the tests for this that it created were insufficient as well.” <a class="ts" href="?t=67:55">67:55</a> Codex checked what it thought to check. The benchmark checked what the designer intended.</p>
+
+  <div class="band bp">
+    <div class="inner">
+      <div class="scorecard">
+        <div class="self">
+          <h4><i class="bi bi-person-check" aria-hidden="true"></i> Codex’s own checks</h4>
+          <ul>
+            <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Envelope 150 × 48 × 88 mm</span><b>exact</b></li>
+            <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>One valid closed solid</span><b>yes</b></li>
+            <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Editable tree: 7 sketches, 7 operations</span><b>yes</b></li>
+            <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Render looks like the drawing</span><b>yes</b></li>
+            <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Self-review found and fixed an error</span><b>yes</b></li>
+          </ul>
+        </div>
+        <div class="hidden">
+          <h4><i class="bi bi-shield-lock" aria-hidden="true"></i> CAD Bench V3 hidden verifier</h4>
+          <ul>
+            <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Bounding-box difference</span><b>0.0%</b></li>
+            <li><i class="bi bi-x-circle-fill" aria-hidden="true"></i><span>Volume difference</span><b>13.7%</b></li>
+            <li><i class="bi bi-x-circle-fill" aria-hidden="true"></i><span>Surface-type difference</span><b>20.2%</b></li>
+            <li><i class="bi bi-x-circle-fill" aria-hidden="true"></i><span>Principal-moment difference</span><b>16.8%</b></li>
+            <li><i class="bi bi-x-circle-fill" aria-hidden="true"></i><span>Point-cloud alignment error (RMSE)</span><b>8.4 mm</b></li>
+          </ul>
+        </div>
+      </div>
+      <div class="bignum">
+        <div><span class="n ok">27/30</span><span class="l">specification parameters reported consistent (2 inconsistent, 1 not found)</span></div>
+        <div><span class="n bad">0.042</span><span class="l">geometry similarity, out of 1. Combined task score: 0.080</span></div>
+      </div>
+      <p>Read those two numbers together. <strong>27 of 30 is not “90% correct.”</strong> The spec checker searches a pool of measurements, so a value can match the wrong feature — and the three misses were exactly the lower-fork radii and reference width. The geometry score compares volume, surface types, mass distribution and point-by-point alignment, and it says what the wipe shows: a different object.</p>
+      <div class="ladder" role="list" aria-label="Four levels of 'right'">
+        <div class="y" role="listitem"><b>Looks right</b>A casual reviewer — Anand included — would accept it.</div>
+        <div class="y" role="listitem"><b>Passes its own tests</b>Envelope, validity, self-review.</div>
+        <div class="y" role="listitem"><b>Matches most dimensions</b>27 of 30 spec parameters.</div>
+        <div class="n" role="listitem"><b>Is the right part</b>Geometry 0.042. It is not.</div>
+      </div>
+      <p class="cap" style="margin-top:1.4rem">In class Anand called it “a CAD benchmark called FreeCAD” <a class="ts" href="?t=67:55">67:55</a>. FreeCAD is the CAD program; the benchmark and hidden verifier are gNucleus’s <a href="https://www.gnucleus.ai/cad-bench/news/cad-bench-v3">CAD Bench V3</a> (100 tasks; this is one of its 40 image-to-CAD tasks). One task, one frozen run: a verdict on this bracket, not on Codex or on AI-generated CAD. Raw scores in the <a href="https://sanand0.github.io/research/2026-10-ed-viz/">experiment write-up</a>.</p>
+    </div>
+  </div>
+
+  <p>Anand drew three lessons. <a class="ts" href="?t=68:52">68:52</a> First, given a picture, models “these days” can produce something — “not only produce something, it is also able to correct mistakes in what it produces.” Second:</p>
+  <div class="say">
+    <p>“I am not able to tell the difference. You already saw me reading a chart worse than even a basic model. I’ve been reading charts for decades.”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=69:20">69:20</a></footer>
+  </div>
+  <p>Third, benchmarks like CAD Bench are a template for correctness: “I will consider this correct only if it meets all of these criteria, and I have to sit and create those criteria.” <a class="ts" href="?t=69:56">69:56</a></p>
+  <p>Take the second lesson seriously — and notice its irony. The chart he cited as proof that he misreads was the wind chart, where his <em>first</em> reading is the one that survives a ruler. He didn’t lose to a better reader. He lost to a more <em>confident</em> one: an answer key. Which is the third lesson in miniature. <strong>Neither the teacher’s eye nor the model’s is the check. The check is the ruler you decide on before you look.</strong></p>
+</section>
+<!-- ================= CLOSE ================= -->
+<section class="chap" id="ledger" data-act="Close" data-title="Every reader misread">
+  <div class="act" data-n="5">The ledger</div>
+  <h2>Every reader <em>misread</em> something</h2>
+  <p class="lede">Count the readers in one 73-minute class, and what each one was sure of.</p>
+  <div class="wide">
+    <table class="ledger">
+      <thead><tr><th>Reader</th><th>Looked at</th><th>Was sure that…</th><th>What a check showed</th><th>When</th></tr></thead>
+      <tbody>
+        <tr><td>Anand</td><td data-h="Looked at">Chennai change map</td><td data-h="Sure that" class="said">“green means water coverage has increased”</td><td data-h="Check" class="caught">Legend: Vegetation Delta</td><td><a class="ts" href="?t=12:24">12:24</a></td></tr>
+        <tr><td>Answer key</td><td data-h="Looked at">Stacked wind chart</td><td data-h="Sure that" class="said">wind passes 100 GW in 2037–38</td><td data-h="Check" class="caught">Wind band peaks ≈ 68 GW; 100 is the stack top</td><td><a class="ts" href="?t=30:31">30:31</a></td></tr>
+        <tr><td>Anand, again</td><td data-h="Looked at">The same key</td><td data-h="Sure that" class="said">“I should have looked at it cumulatively”</td><td data-h="Check" class="caught">His first answer, “never”, fits the ruler</td><td><a class="ts" href="?t=31:08">31:08</a></td></tr>
+        <tr><td>Three open models</td><td data-h="Looked at">Wind, services, cooking charts</td><td data-h="Sure that" class="said">2024–25 · 2035 · 2033–34; the wrong line</td><td data-h="Check" class="caught">Wrong against the key and the ruler</td><td><a class="ts" href="?t=30:31">30:31</a></td></tr>
+        <tr><td>Anand</td><td data-h="Looked at">The research record</td><td data-h="Sure that" class="said">“Nobody seems to have published a paper”</td><td data-h="Check" class="caught">The ChartQAPro paper has an error analysis</td><td><a class="ts" href="?t=29:40">29:40</a></td></tr>
+        <tr><td>Codex</td><td data-h="Looked at">Engineering drawing</td><td data-h="Sure that" class="said">“I can’t find any mistakes in my operations”</td><td data-h="Check" class="caught">Hidden verifier: geometry 0.042</td><td><a class="ts" href="?t=65:48">65:48</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin-top:1.6rem">Nobody was careless. Everybody was fluent. And in every row, <strong>what caught the error sat outside the reader</strong>: a legend, a ruler, a paper, a hidden reference model. The student at <a class="ts" href="?t=62:17">62:17</a> asked how to believe a model’s reading of a chart. The class’s answer, assembled over 73 minutes, is that you shouldn’t believe anyone’s — yours included — until something independent agrees.</p>
+</section>
+
+<section class="chap" id="court" data-act="Close" data-title="In your court">
+  <div class="act" data-n="5">The ending</div>
+  <h2>The question is <em>in your court</em></h2>
+  <p class="lede">Anand finished his three lessons and turned it round: “But what are your takeaways?” <a class="ts" href="?t=70:20">70:20</a> “The question is in your court now,” said Palani — and then, glancing at the clock, “So Anand, actually, we are sort of done with the class time.” <a class="ts" href="?t=70:36">70:36</a> They agreed to leave it as an open question. Anand asked if he could set homework. “Yeah, yeah, absolutely! Why not?” <a class="ts" href="?t=71:04">71:04</a></p>
+  <p>The homework will arrive by email. Here is an experiment in its spirit — <strong>ours, not his</strong> — for anyone who has read this far.</p>
+  <div class="experiment wide">
+    <div class="band-label"><i class="bi bi-clipboard-check" aria-hidden="true"></i> A suggested reader experiment</div>
+    <ol>
+      <li>Pick a chart you made recently. Write one sentence: <strong>the decision it should support.</strong></li>
+      <li>From the underlying data — not the picture — write the answer a reader should reach. <strong>That’s your ruler.</strong></li>
+      <li>Show only the picture to a friend and to a model. Ask both the same question.</li>
+      <li>Compare all three answers with your ruler. Then change one thing — print the number, unstack the bars, fix the legend — and run it again.</li>
+    </ol>
+    <p style="margin:.9rem 0 0">Which reader failed? Which change fixed it? And would you have caught it at all if you hadn’t written step 2 <em>before</em> you looked?</p>
+  </div>
+</section>
+
+</main>
+
+<aside class="dock" id="dock" aria-label="Video of the class">
+  <div class="dock-head"><span><b>Class video</b> · 74 min</span><span id="dock-mode-label">Story focus</span></div>
+  <div class="vwrap">
+    <video id="vid" controls preload="metadata" playsinline>
+      <source src="https://media.s-anand.net/2026-10-07-iitm-ed-data-visualization.webm" type="video/webm">
+      <track kind="captions" src="captions.vtt" srclang="en" label="English (auto-generated)">
+      <a href="https://media.s-anand.net/2026-10-07-iitm-ed-data-visualization.webm">Download the video</a>
+    </video>
+    <div class="resume" id="resume"><button type="button" id="resume-btn"><i class="bi bi-play-fill" aria-hidden="true"></i> <span>Play</span></button></div>
+  </div>
+  <div class="now" id="now" aria-live="polite"><span class="t" id="now-t">00:00</span><span id="now-title">Press play, or tap any ▶ time in the story</span><span class="in-story" id="now-story"></span></div>
+  <div class="dock-ctrls">
+    <button class="dbtn mode" id="mode-btn" type="button" aria-pressed="false"><i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span></button>
+    <button class="dbtn" id="share-btn" type="button"><i class="bi bi-link-45deg" aria-hidden="true"></i> <span>Share moment</span></button>
+    <a class="dbtn wide-only" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+    <button class="dbtn dock-min" id="min-btn" type="button" aria-expanded="true" aria-label="Hide the mini video"><i class="bi bi-chevron-down" aria-hidden="true"></i></button>
+  </div>
+  <details class="chapters" open>
+    <summary>Chapters · tap to jump</summary>
+    <ol id="chapters"></ol>
+  </details>
+</aside>
+</div>
+
+<section class="takeaways" id="takeaways" data-act="Close" data-title="What to carry out" aria-labelledby="tk-h">
+  <div class="inner">
+    <div class="band-label" style="color:var(--on-bp-red)">Takeaways</div>
+    <h2 id="tk-h">Three questions for every picture</h2>
+    <p class="sub">What is it for? Who — or what — will read it? How will you know they got it right?</p>
+    <div class="cards">
+      <div class="card"><div class="num">1</div><h3>Making is cheap; judgment isn’t</h3><p>Domain sense and taste now draw the castle. Hold tools loosely and technique tightly. <a class="ts" href="?t=20:28">20:28</a></p></div>
+      <div class="card"><div class="num">2</div><h3>Design for two readers</h3><p>Assume your chart will be uploaded to a model. Print the number; don’t make anyone — person or model — infer it from a shape. <a class="ts" href="?t=33:32">33:32</a></p></div>
+      <div class="card"><div class="num">3</div><h3>Ask “How can I use this?”</h3><p>Taste many visualisations, cook a few. A picture without a decision behind it is a half-million-dollar dashboard. <a class="ts" href="?t=56:32">56:32</a></p></div>
+      <div class="card"><div class="num">4</div><h3>Write the ruler first</h3><p>Self-checks pass what they were written to pass. Decide the independent criteria before you look — then let them overrule everyone. <a class="ts" href="?t=69:56">69:56</a></p></div>
+    </div>
+    <div class="finale">
+      <p>“The question is in your court now.”</p>
+      <footer>— Palani, closing the class <a class="ts" href="?t=70:28">70:28</a></footer>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div><strong>Looks right. Isn’t.</strong> · Anand S’s guest class in <a href="https://ed.iitm.ac.in/">IIT Madras ED5518 Data Visualization for Engineers</a>, hosted by Dr Palaniappan Ramu · Wednesday 7 Oct 2026, remote.</div>
+  <div>Media: <a href="https://media.s-anand.net/2026-10-07-iitm-ed-data-visualization.webm">video (webm)</a> · <a href="https://github.com/sanand0/talks/releases/download/talks/2026-10-07-iitm-ed-data-visualization.opus">audio (opus)</a> · <a href="transcript.md" data-transcript>transcript</a> · <a href="captions.vtt">captions</a> · <a href="comic-page.avif" data-lightbox data-caption="The class as an AI-drawn comic page.">comic page</a> · previous class: <a href="../2026-08-12-iitm-ed-data-visualization/">12 Aug 2026</a></div>
+  <div>Demos: <a href="https://eshwarpotturi.github.io/soc-analyst-jev/">Jev’s Keep</a> · <a href="https://premier-shot-lab-202526.miyakokoko-842.chatgpt.site/">Shot Atlas</a> · <a href="https://pythonicvarun.github.io/olmoearth-change-insights/">OlmoEarth change insights</a> · <a href="https://files.s-anand.net/pages/mckinsey-gep-validation/">Live GEP claims</a> · <a href="https://sanand0.github.io/datastories/imf-gdp-forecast-errors/">IMF forecast errors</a> · <a href="https://atharva-729.github.io/bookshelf-benchmark/">Bookshelf Benchmark</a> · <a href="https://sanand0.github.io/research/2026-10-ed-viz/">Can AI read an engineering drawing?</a></div>
+  <div>Research: <a href="https://aclanthology.org/2025.findings-acl.978/">ChartQAPro paper</a> (<a href="https://github.com/vis-nlp/ChartQAPro">code</a>, <a href="https://huggingface.co/datasets/ahmed-masry/ChartQAPro">data</a>) · <a href="https://arxiv.org/abs/2505.13444">ChartMuseum</a> · <a href="https://doi.org/10.1080/01621459.1984.10478080">Cleveland &amp; McGill 1984</a> · <a href="https://github.com/microsoft/SandDance">SandDance</a> · <a href="https://arxiv.org/abs/2511.13655">OlmoEarth</a> · <a href="https://www.gnucleus.ai/cad-bench/news/cad-bench-v3">CAD Bench V3</a> · <a href="https://www.freecad.org/">FreeCAD</a> · <a href="https://commons.wikimedia.org/wiki/File:1786_Playfair_-_Chart_of_import_and_exports_of_England_to_and_from_all_North_America_from_the_year_1770_to_1782.jpg">Playfair 1786 (public domain)</a></div>
+  <div class="muted">Quotes are verbatim from the transcript, trimmed with ellipses; speakers checked against the recording’s captions. Times follow the video: after the Wi-Fi drop, moments come about two minutes earlier in the video than in the original transcript’s timestamps, so the transcript here is re-timed to the video. Photos and screenshots belong to their creators; the bookshelf photo is from Atharva’s benchmark. Keyboard: <kbd>V</kbd> toggles video focus, <kbd>[</kbd> / <kbd>]</kbd> move between sections.</div>
+</footer>
+
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump on-hero" aria-label="Jump to section">
+  <button id="jump-prev" type="button" aria-label="Previous section"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+  <button class="jump-cur" id="jump-cur" type="button" aria-expanded="false" aria-controls="jump-menu"><i class="bi bi-list-ul" aria-hidden="true"></i><span id="jump-cur-label">Cold open</span></button>
+  <button id="jump-next" type="button" aria-label="Next section"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+</nav>
+<div class="jump-menu" id="jump-menu" role="dialog" aria-label="All sections"></div>
+
+<dialog class="pop" id="pop" aria-labelledby="pop-title">
+  <div class="pop-head"><h3 id="pop-title">Source</h3><button class="icon-btn" type="button" id="pop-close" aria-label="Close"><i class="bi bi-x-lg" aria-hidden="true"></i></button></div>
+  <div class="pop-search" id="pop-search"><i class="bi bi-search" aria-hidden="true"></i><label class="sr-only" for="pop-q">Search the transcript</label><input id="pop-q" type="search" placeholder="Search the transcript…" autocomplete="off"><span id="pop-count"></span></div>
+  <div class="pop-body" id="pop-body"></div>
+</dialog>
+
+<dialog class="lightbox" id="lightbox" aria-label="Enlarged image">
+  <img id="lb-img" alt="">
+  <div class="lb-bar"><span id="lb-cap"></span><span><a id="lb-open" href="#" target="_blank" rel="noopener">Open full size <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a> <button type="button" id="lb-close">Close</button></span></div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@15/marked.min.js" defer></script>
+<script>
+// 2,295 claims from the public Live GEP demo (files.s-anand.net/pages/mckinsey-gep-validation/data/claims.json).
+// Three digits per claim: type index, watchability tier index, report-year index.
+window.GEP_UNITS = "410410410420420420410410420300300300210300300210300300300300210300300310300100620000620000000100000000100100100300100000000000100300300300300300100300100100000300300300300000100000310000300000100310300300000100310310100100300300300000100000100410300000100100410410210100620100410300110100310300300300300300300300300300300300300300220210220520520300300300300310000000310100310300300300300300300300300300300300000000000000000000000300300000300410300100000310520300300310100300300300210210300300100100100100100100100300100100100100100100100210100300300300300300300300300300300300300300300300520000300210210000520300300300300300300100520620620300300100300300300300300210310310520520520210300310300300300300300300300300300300300300000100010620210210010310410210010310000310310420300300210210210300300300300300300300300300300300210100310210300210300520000300300310210520310320300300300300300300300300310310210620100100210300310310300300300310310210300300000000210310100310310520320300300310300300010310210300300310310310310300300210310300011001301211301301211621001011301311211211621301301301211211301301621301301301301301301301301301301301301301301211101001301301311311301311311301301301311211211301311301311211301301211311211301301211301311101311301101001301311211311211301301301301301301211301211301211211301301301311301301301301211301301621211301001301301211301301301301211301211211311301301301211301211521521101621301101301311301101621301301301301301311311301311311301311301211621011011001011011621621101311101411411411311311001301301311311411301311301311111301311101101301311101101311301301101311621101311521521521621521521521521222002002002102012422422422422422622622622622522322312112312322322302312302312222222302212322222302302122302302302302302312522622312312212002212622302302312212112312212302302302302302322312302302412102522622312312212302312212302212322522002002002012012012012002012412102212302312302302302212302212302302302302302302102302212302302302212102102102302312002002302302302212302102302102302302312002102312302312302002302312312312312312312312312312312312102102312312312012002002002002002002312312312312312102312312312102312312302312102102102312002002312102312102102312012012003303313303213303303313303303313003003003003003303213303303303313003303103303303303303623213213313003623623313623523013213623003213003013623623003013213003103003303313313313303303213313303623313523303303313623223223013003003003013013003013003013413423413413413413413413413413413303303303303303303213213213303303303303303303623303313303303303303113303623303303303213313313313303303303303303313313303303303303303213313003303303303213303303303303303303003313003003003003303303303313213323623303303303313313313213313213303303213303303413303303313313303303303003103303303523523523003323313623303303313303313303303113213103303303303303313303003303103313313213313313313303103303303303623303313313623313103313313313303303303303103303303313303313303313303623523523303303313303213303303303303303303303303303303303303303303103313103003003003213103003103103003213003303303213303103413303413413413303303303303303303303303013213313313113303313303303413313623303303313103303103313523015625305105315305315005005005105305315115625315315315305315105105105105315105315525625315625315005105215005105305005305215005105105005315105005005005005005105305415305305305105305005215625305315305305305305225105005105105525005005215625625005015105005305305305315305305315305215315305305625005005005305215315315305305315305305305305315315315315315305105105105315315315525315305305315625525004004304014424524004014414414304414414304414414304414414304414414304414414414414624314524304314214304304214304304304314314304304304314314624624314314104004004004004104104004004004004304304304104104104304304304304304304304304304214304304304304304214214304304304304304304304624314314314304304314214104304304304304304304304304304304304304304304304304304304314304304304314314214304304304304304304304304304304304304304314314314104304314214304304304304304304304304304304314304304214224304624304114624314304304304304304304414414414304304304304304414414304304304304304304304304304304304524624624624624304304304304304304304304304304304304304304304304304304304304414414314314315625215215305305315105015315005315305305315215625315215315315315315315315315305315305105305215625315315525005215005625005315315315305305305215315215315315305315315305315315315305315005315315315625215315215625215315315315005305305215305305305315315315315305005305415415315315105105005315305305105305305305305315415105525215315315315315305305305315305305315315305315315315315315315315305305305315305315305305315315305305305305305305305315105105105315315315525315315315525215525315305215625305415315415415415305415105005105305305005105215315315305305305315625105105315315415005315215315215315315315315315315625315315315315115315315625215305305215305215315315305305105305305315315115215315315315015105215625215105315015315215625015015005015005015625215015015005625625005005005005305305005005005005105105415215315305305305305305005625115415105105105105105315115315105105115105005105315305305315315305315525105105105105105525525525525525525525005015015015415415625525105315015115315625015415015005015015015415415415415415305305305305305305415415415415315415415315305315215215305305305305305005625305315215315315315315305305215315315305315105315215315625105315105215305305105315305305105105105315305005525625315215315305305305305305305305305305305305305315305305305315315305315305305315315305315315315315315315315215005005305315105215315105305315305305305315305305005305315315315315315315315105315305315315305215215415315315315315315315315625315215315305315315105305305305305305315305305305305305105315105315315215105305305305305305305305215315315105315215105625105315305305305105105105105315315315315315305305105105105105105105105105315315625215305525315015016306626316316316306626626526626316626016016316626626216316626016016016416006316316316316316106306306306306306306416416416416316316316316316316316316316316316526416416416416016316416416416416416416416416416416416416416416416016416016626626216626316106106316106626306316306306306306306306306306306306416416306316006306306306316306306316116316306306306316306306306306316306106106016216216316316316306316306306306316316316316316316306306306316626316306216316316316316306306306306306306306306306306306306306316316316316306306306306306306306306306306106306306306306306306306306306306306306306306306626306106306306306416316316306306306306016316306316316306306306306306306306306306306306306306306306306316316316316316106316316316316106306306306306306306306306306316306306306316306306306316306306316006316316316316316316316316316316316316306306316316106106316306316306306306306306306316316106106106626526316106106106106106106106106106106106106106106106106316316016316216626106626316526626526316626526006016006016016016";
+</script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const body = document.body;
+  const vid = $("#vid");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isNarrow = () => matchMedia("(max-width: 999px)").matches;
+  const cssVar = (n) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(n)) || 0;
+
+  // ---------- time helpers ----------
+  const parseT = (s) => {
+    if (s == null || s === "") return null;
+    if (/^\d+(\.\d+)?$/.test(s)) return +s;
+    const p = String(s).split(":").map(Number);
+    if (p.some(isNaN)) return null;
+    return p.reduce((a, b) => a * 60 + b, 0);
+  };
+  const fmt = (t) => {
+    t = Math.max(0, Math.floor(t));
+    const m = Math.floor(t / 60), s = t % 60;
+    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  };
+  // transcript.md timestamps → video time. The video drops ~2 min of the Wi-Fi outage.
+  const trToVideo = (t) => (t < 3473 ? t + 2 : t - 118);
+
+  // ---------- theme ----------
+  const themeBtn = $("#theme-btn");
+  const isDark = () => document.documentElement.dataset.theme
+    ? document.documentElement.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  const syncThemeIcon = () => {
+    themeBtn.innerHTML = `<i class="bi ${isDark() ? "bi-sun" : "bi-moon-stars"}" aria-hidden="true"></i>`;
+    themeBtn.setAttribute("aria-label", `Switch to ${isDark() ? "light" : "dark"} mode`);
+  };
+  themeBtn.addEventListener("click", () => {
+    const next = isDark() ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem("ed5518-oct-theme", next); } catch (e) {}
+    syncThemeIcon();
+    drawUnits && drawUnits();
+  });
+  syncThemeIcon();
+
+  // ---------- chapters (video time → story section) ----------
+  const CHAPTERS = [
+    ["03:04", "Tools shape charts", "castle"], ["04:00", "Jev’s Keep: the castle", "castle"], ["07:03", "Shot Atlas", "castle"],
+    ["09:56", "Chennai change map", "greenery"], ["12:24", "“Greenery?”", "greenery"], ["14:28", "2,295 claims, one dot each", "claims"],
+    ["20:28", "Tools vs technique", "claims"], ["20:56", "Graphical perception", "circuits"], ["21:40", "AI as the reader", "circuits"],
+    ["22:35", "Bookshelf benchmark", "circuits"], ["25:20", "Cost vs accuracy", "circuits"], ["28:00", "ChartQAPro", "wind"],
+    ["30:31", "The wind chart", "wind"], ["32:24", "Approximation is hard", "infer"], ["35:03", "Two themes so far", "infer"],
+    ["35:52", "So what will you do?", "wait"], ["39:19", "Survival", "wait"], ["40:46", "“I’ll wait.”", "wait"],
+    ["40:55", "Palani: real-time", "wait"], ["42:42", "Cost vs accuracy", "wait"], ["43:51", "Harini decides", "wait"],
+    ["45:38", "Learning with purpose", "wait"], ["46:52", "Flipping the class", "wait"], ["48:47", "Must I know the problem?", "dashboard"],
+    ["49:24", "The dashboard relay", "dashboard"], ["51:16", "Half a million dollars", "dashboard"], ["51:56", "Newsrooms & analysts", "dashboard"],
+    ["55:00", "Which data to visualize?", "cook"], ["55:52", "Taste fifty dishes", "cook"], ["57:44", "Wi-Fi drops", "cook"],
+    ["62:17", "How can I believe it?", "believe"], ["64:01", "Drawing → CAD", "believe"], ["65:16", "It passed its own tests", "believe"],
+    ["66:24", "The hidden reference", "reveal"], ["67:55", "The tests were insufficient", "kit"], ["68:52", "Three lessons", "kit"],
+    ["70:20", "In your court", "court"], ["71:04", "Homework", "court"],
+  ].map(([t, title, sec]) => ({ t: parseT(t), label: t, title, sec }));
+  const chapOl = $("#chapters");
+  chapOl.innerHTML = CHAPTERS.map((c, i) =>
+    `<li><a href="?t=${c.label}" data-chap="${i}" class="ts-chap"><span class="ct">${c.label}</span><span>${c.title}</span></a></li>`).join("");
+
+  const sections = $$(".chap, #takeaways");
+  const secTitle = (id) => { const s = document.getElementById(id); return s ? s.dataset.title : ""; };
+
+  // ---------- URL state: ?t=mm:ss&view=video#section ----------
+  const urlState = () => {
+    const u = new URL(location.href);
+    return { t: parseT(u.searchParams.get("t")), view: u.searchParams.get("view"), hash: u.hash.slice(1) };
+  };
+  const buildUrl = ({ t, hash } = {}) => {
+    const u = new URL(location.href);
+    if (t != null) u.searchParams.set("t", fmt(t)); else if (t === null) u.searchParams.delete("t");
+    if (body.classList.contains("watch")) u.searchParams.set("view", "video"); else u.searchParams.delete("view");
+    if (hash !== undefined) u.hash = hash ? "#" + hash : "";
+    return u.pathname + u.search.replace(/%3A/gi, ":") + u.hash;
+  };
+  let urlT = urlState().t;
+
+  // ---------- player ----------
+  const resume = $("#resume"), resumeBtn = $("#resume-btn");
+  const seek = (t) => new Promise((res) => {
+    const go = () => { vid.currentTime = t; res(); };
+    if (vid.readyState >= 1) go(); else vid.addEventListener("loadedmetadata", go, { once: true });
+  });
+  const showResume = (t) => { resumeBtn.querySelector("span").textContent = `Play from ${fmt(t)}`; resume.classList.add("show"); };
+  const ensureDockVisible = () => {
+    if (isNarrow()) { body.classList.remove("dock-collapsed"); syncMin(); return; }
+    const r = $("#dock").getBoundingClientRect();
+    if (r.top > innerHeight - 80 || r.bottom < 60) $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  };
+  const playAt = async (t, { push = false, el = null } = {}) => {
+    if (push) {
+      const sec = el && el.closest(".chap, #takeaways");
+      history.pushState({ t }, "", buildUrl({ t, hash: sec ? sec.id : undefined }));
+      urlT = t;
+    }
+    await seek(t);
+    ensureDockVisible();
+    try { await vid.play(); resume.classList.remove("show"); } catch (e) { showResume(t); }
+    if (el) { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+  };
+  resumeBtn.addEventListener("click", () => { vid.play(); resume.classList.remove("show"); });
+  vid.addEventListener("play", () => resume.classList.remove("show"));
+
+  const enhanceTs = (root = document) => {
+    $$("a.ts", root).forEach((a) => {
+      if (a.dataset.t) return;
+      const t = parseT(new URL(a.href, location.href).searchParams.get("t"));
+      a.dataset.t = t;
+      a.insertAdjacentHTML("afterbegin", '<i class="bi bi-play-fill" aria-hidden="true"></i>');
+      a.setAttribute("aria-label", `Play the class video from ${a.textContent.trim()}`);
+    });
+  };
+  enhanceTs();
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a.ts, a.ts-chap");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const t = a.classList.contains("ts-chap") ? CHAPTERS[+a.dataset.chap].t : +a.dataset.t;
+    const dlg = a.closest("dialog");
+    if (dlg) dlg.close();
+    playAt(t, { push: true, el: a.classList.contains("ts") && !dlg ? a : null });
+  });
+
+  // now-playing sync
+  const nowT = $("#now-t"), nowTitle = $("#now-title"), nowStory = $("#now-story");
+  const chapLinks = $$("#chapters a");
+  let curChap = -1;
+  const onTime = () => {
+    const t = vid.currentTime;
+    nowT.textContent = fmt(t);
+    let i = -1;
+    for (let k = 0; k < CHAPTERS.length; k++) if (CHAPTERS[k].t <= t + 0.5) i = k;
+    if (i === curChap) return;
+    curChap = i;
+    chapLinks.forEach((a, k) => { a.classList.toggle("is-now", k === i); if (k === i) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
+    if (i >= 0) {
+      const c = CHAPTERS[i];
+      nowTitle.textContent = c.title;
+      nowStory.innerHTML = `In the story: <a href="#${c.sec}">${secTitle(c.sec)} ↓</a>`;
+      sections.forEach((s) => s.classList.toggle("is-now", s.id === c.sec));
+      const link = chapLinks[i], box = link.closest(".chapters");
+      if (box && box.scrollHeight > box.clientHeight) {
+        const lr = link.getBoundingClientRect(), br = box.getBoundingClientRect();
+        if (lr.top < br.top || lr.bottom > br.bottom) box.scrollTop += lr.top - br.top - box.clientHeight / 3;
+      }
+    }
+  };
+  vid.addEventListener("timeupdate", onTime);
+  vid.addEventListener("seeked", onTime);
+
+  const shareBtn = $("#share-btn");
+  shareBtn.addEventListener("click", async () => {
+    const t = Math.floor(vid.currentTime || 0);
+    const sec = curChap >= 0 ? CHAPTERS[curChap].sec : "";
+    const u = new URL(location.href);
+    u.search = "?t=" + fmt(t); u.hash = sec ? "#" + sec : "";
+    const label = shareBtn.querySelector("span");
+    try { await navigator.clipboard.writeText(u.href); label.textContent = `Copied ${fmt(t)}`; }
+    catch (e) { history.replaceState(history.state, "", u.pathname + u.search + u.hash); label.textContent = "Link in address bar"; }
+    setTimeout(() => (label.textContent = "Share moment"), 2200);
+  });
+
+  // ---------- story ⇄ video emphasis (same <video>, never remounted) ----------
+  const modeBtn = $("#mode-btn"), modeLabel = $("#dock-mode-label");
+  const pickAnchor = () => {
+    const top = 80 + (isNarrow() && body.classList.contains("watch") ? cssVar("--dock-h") : 0);
+    return $$(".chap > *, #takeaways").find((el) => el.getBoundingClientRect().bottom > top);
+  };
+  const setMode = (watch, { replace = true } = {}) => {
+    if (body.classList.contains("watch") === watch) return;
+    const anchor = pickAnchor();
+    const before = anchor ? anchor.getBoundingClientRect().top : 0;
+    const storyVisible = $("#room").getBoundingClientRect().top < innerHeight * 0.5;
+    body.classList.toggle("watch", watch);
+    modeBtn.setAttribute("aria-pressed", String(watch));
+    modeBtn.innerHTML = watch
+      ? '<i class="bi bi-book" aria-hidden="true"></i> <span>Focus story</span>'
+      : '<i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span>';
+    modeLabel.textContent = watch ? "Video focus" : "Story focus";
+    if (replace) history.replaceState(history.state, "", buildUrl());
+    updateDockH();
+    if (anchor && storyVisible) {
+      const start = performance.now();
+      const keep = () => {
+        const d = anchor.getBoundingClientRect().top - before;
+        if (Math.abs(d) > 1) window.scrollBy({ top: d, behavior: "instant" });
+        if (performance.now() - start < 750) requestAnimationFrame(keep);
+      };
+      requestAnimationFrame(keep);
+    }
+  };
+  modeBtn.addEventListener("click", () => setMode(!body.classList.contains("watch")));
+  $("#hero-watch").addEventListener("click", (e) => {
+    e.preventDefault();
+    setMode(true);
+    $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  });
+
+  const updateDockH = () => {
+    const h = isNarrow() && body.classList.contains("watch") ? $("#dock").offsetHeight : 0;
+    document.documentElement.style.setProperty("--dock-h", h + "px");
+  };
+  new ResizeObserver(updateDockH).observe($("#dock"));
+  addEventListener("resize", updateDockH);
+  const minBtn = $("#min-btn");
+  const syncMin = () => {
+    const c = body.classList.contains("dock-collapsed");
+    minBtn.setAttribute("aria-expanded", String(!c));
+    minBtn.setAttribute("aria-label", c ? "Show the mini video" : "Hide the mini video");
+    minBtn.innerHTML = `<i class="bi ${c ? "bi-chevron-up" : "bi-chevron-down"}" aria-hidden="true"></i>`;
+  };
+  minBtn.addEventListener("click", () => { body.classList.toggle("dock-collapsed"); syncMin(); });
+  if (isNarrow()) { body.classList.add("dock-collapsed"); syncMin(); }
+  vid.addEventListener("play", () => { if (body.classList.contains("dock-collapsed")) { body.classList.remove("dock-collapsed"); syncMin(); } });
+
+  // ---------- history ----------
+  addEventListener("popstate", () => {
+    const { t, view } = urlState();
+    setMode(view === "video", { replace: false });
+    if (t != null && t !== urlT) seek(t).then(() => { if (vid.paused) showResume(t); });
+    urlT = t;
+  });
+
+  // ---------- section jump nav ----------
+  const menu = $("#jump-menu"), backdrop = $("#jump-backdrop"), curBtn = $("#jump-cur"), curLabel = $("#jump-cur-label");
+  const groups = [];
+  sections.forEach((s) => {
+    const g = s.dataset.act;
+    if (!groups.length || groups[groups.length - 1].name !== g) groups.push({ name: g, items: [] });
+    groups[groups.length - 1].items.push(s);
+  });
+  menu.innerHTML = groups.map((g) => `<div class="jm-group">${g.name}</div><div class="jump-grid">${
+    g.items.map((s) => { const h = ((s.querySelector("h2") || {}).textContent || "").trim(); const same = h.replace(/\W/g, "").toLowerCase() === s.dataset.title.replace(/\W/g, "").toLowerCase(); return `<a href="#${s.id}" data-sec="${s.id}">${s.dataset.title}${same ? "" : `<small>${h}</small>`}</a>`; }).join("")}</div>`).join("");
+  const openMenu = (open) => {
+    menu.classList.toggle("open", open); backdrop.classList.toggle("open", open);
+    curBtn.setAttribute("aria-expanded", String(open));
+    if (open) (menu.querySelector("a.is-cur") || menu.querySelector("a")).focus();
+  };
+  curBtn.addEventListener("click", () => openMenu(!menu.classList.contains("open")));
+  backdrop.addEventListener("click", () => openMenu(false));
+  menu.addEventListener("click", (e) => { if (e.target.closest("a")) openMenu(false); });
+  let curIdx = 0;
+  const goSec = (i) => {
+    i = Math.max(0, Math.min(sections.length - 1, i));
+    sections[i].scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+    history.pushState(history.state, "", buildUrl({ hash: sections[i].id }));
+  };
+  $("#jump-prev").addEventListener("click", () => goSec(curIdx - 1));
+  $("#jump-next").addEventListener("click", () => goSec(curIdx + 1));
+  const progress = $("#progress"), jumpNav = $(".jump");
+  const onScroll = () => {
+    const line = innerHeight * 0.3 + cssVar("--dock-h");
+    let i = 0;
+    sections.forEach((s, k) => { if (s.getBoundingClientRect().top <= line) i = k; });
+    if (i !== curIdx || !curLabel.dataset.init) {
+      curIdx = i; curLabel.dataset.init = 1;
+      curLabel.textContent = sections[i].dataset.title;
+      $$("a", menu).forEach((a) => a.classList.toggle("is-cur", a.dataset.sec === sections[i].id));
+      $("#jump-prev").disabled = i === 0;
+      $("#jump-next").disabled = i === sections.length - 1;
+    }
+    jumpNav.classList.toggle("on-hero", $("#room").getBoundingClientRect().top > innerHeight * 0.75 && !menu.classList.contains("open"));
+    const h = document.documentElement.scrollHeight - innerHeight;
+    progress.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%";
+  };
+  let ticking = false;
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { onScroll(); ticking = false; }); } }, { passive: true });
+  onScroll();
+
+  // ---------- popups + transcript ----------
+  const pop = $("#pop"), popBody = $("#pop-body"), popTitle = $("#pop-title"), popSearch = $("#pop-search"), popQ = $("#pop-q"), popCount = $("#pop-count");
+  let popReturn = null;
+  const openPop = (title, html, { search = false } = {}) => {
+    popReturn = document.activeElement;
+    popTitle.textContent = title; popBody.innerHTML = html; enhanceTs(popBody);
+    popSearch.classList.toggle("on", search); popQ.value = ""; popCount.textContent = "";
+    pop.showModal(); popBody.scrollTop = 0; pop.scrollTop = 0;
+    if (search) popQ.focus();
+  };
+  pop.addEventListener("close", () => { if (popReturn && popReturn.focus) popReturn.focus(); });
+  $("#pop-close").addEventListener("click", () => pop.close());
+  pop.addEventListener("click", (e) => { if (e.target === pop) pop.close(); });
+  const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  popQ.addEventListener("input", () => {
+    const q = popQ.value.trim();
+    const blocks = $$(":scope > p, :scope > ol, :scope > ul, :scope > hr", popBody).filter((b) => !b.classList.contains("intro"));
+    $$("mark", popBody).forEach((m) => m.replaceWith(m.textContent));
+    popBody.normalize();
+    let n = 0;
+    blocks.forEach((b) => {
+      const hit = !q || b.textContent.toLowerCase().includes(q.toLowerCase());
+      b.classList.toggle("hide", !hit || (q && b.tagName === "HR"));
+      if (hit && q) {
+        n++;
+        const re = new RegExp(escRe(q), "gi");
+        const walker = document.createTreeWalker(b, NodeFilter.SHOW_TEXT);
+        const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach((node) => {
+          if (!re.test(node.nodeValue)) return; re.lastIndex = 0;
+          const span = document.createElement("span");
+          span.innerHTML = node.nodeValue.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])).replace(re, (m) => `<mark>${m}</mark>`);
+          node.replaceWith(...span.childNodes);
+        });
+      }
+    });
+    popCount.textContent = q ? `${n} passage${n === 1 ? "" : "s"}` : "";
+  });
+  let transcriptHtml = null;
+  document.addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-transcript]");
+    if (!a || e.metaKey || e.ctrlKey) return;
+    e.preventDefault();
+    if (!transcriptHtml) {
+      try {
+        let md = await (await fetch("transcript.md")).text();
+        md = md.replace(/<!--[\s\S]*?-->/g, "")
+          .replace(/\[(\d{1,3}):(\d{2})(?:\s*-\s*(\d{1,3}):(\d{2}))?\]/g, (m, a1, b1) => {
+            const t = trToVideo(+a1 * 60 + +b1);
+            return `<a class="ts" href="?t=${fmt(t)}">${fmt(t)}</a>`;
+          });
+        transcriptHtml = window.marked ? marked.parse(md) : `<pre style="white-space:pre-wrap">${md.replace(/</g, "&lt;")}</pre>`;
+        transcriptHtml = '<p class="muted small intro">AI transcription; timestamps re-timed to the video, so tap any to play that moment. “Gwen” is Qwen. Speaker labels can err — around 70:36, “So Anand, actually, we are sort of done” is Palani, and the reply about homework is Anand.</p>' + transcriptHtml;
+      } catch (err) { location.href = a.href; return; }
+    }
+    openPop("Transcript", transcriptHtml, { search: true });
+  });
+
+  // ---------- lightbox ----------
+  const lb = $("#lightbox"), lbImg = $("#lb-img"), lbCap = $("#lb-cap"), lbOpen = $("#lb-open");
+  let lbReturn = null;
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-lightbox]");
+    if (!el || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    const src = (el.dataset.lightbox && el.dataset.lightbox !== "true" ? el.dataset.lightbox : null) || el.getAttribute("href") || el.currentSrc || el.src;
+    const img = el.tagName === "IMG" ? el : el.querySelector("img");
+    lbImg.src = src; lbImg.alt = img ? img.alt : (el.dataset.caption || "");
+    lbCap.textContent = el.dataset.caption || "";
+    lbOpen.href = src;
+    lbReturn = document.activeElement;
+    lb.showModal();
+  });
+  $$("img[data-lightbox]").forEach((img) => { img.tabIndex = 0; img.setAttribute("role", "button"); img.setAttribute("aria-label", "Enlarge: " + (img.dataset.caption || img.alt)); });
+  document.addEventListener("keydown", (e) => { if ((e.key === "Enter" || e.key === " ") && e.target.matches("img[data-lightbox]")) { e.preventDefault(); e.target.click(); } });
+  $("#lb-close").addEventListener("click", () => lb.close());
+  lb.addEventListener("click", (e) => { if (e.target === lb || e.target === lbImg) lb.close(); });
+  lb.addEventListener("close", () => { if (lbReturn && lbReturn.focus) lbReturn.focus(); });
+
+  // ---------- screenshot → live page ----------
+  $$(".live .load").forEach((btn) => btn.addEventListener("click", () => {
+    const frame = btn.closest(".frame");
+    const ifr = document.createElement("iframe");
+    ifr.src = frame.dataset.src; ifr.title = "Live demo: " + frame.dataset.src; ifr.loading = "lazy";
+    frame.querySelector("img").remove(); btn.remove(); frame.appendChild(ifr);
+    ifr.focus();
+  }));
+
+  // ---------- 1. the map legend check ----------
+  const lc = $("#legendcheck"), lv = $("#legend-verdict");
+  const LEGEND = {
+    water: "That’s how Anand described it. <b>But the hidden label reads “Vegetation Delta.”</b> The map on screen was the vegetation layer.",
+    veg: "That’s what the student said — “Greenery?” — <b>and the label agrees: “Vegetation Delta.”</b>",
+    unsure: "The most careful answer. <b>The hidden label reads “Vegetation Delta”</b> — not the water layer being described.",
+  };
+  $$("[data-pick]").forEach((b) => b.addEventListener("click", () => {
+    $$("[data-pick]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    lc.classList.add("revealed");
+    lv.innerHTML = LEGEND[b.dataset.pick];
+  }));
+
+  // ---------- 2. bookshelf slope chart ----------
+  (() => {
+    const D = [
+      ["Claude Opus 5.5", .79, .86, "#b5562e"], ["Claude Sonnet 5.5", .82, .76, "#d08a5c"],
+      ["Gemini 3.8 Flash", .94, .31, "#2f6fd0", true], ["Gemini 3.1 Pro", .71, .33, "#7ea3df"], ["GPT 5.6 Luna", .30, .47, "#1a8a5e"],
+    ];
+    const W = 560, H = 360, x0 = 150, x1 = 410, y = (v) => 320 - (v - .2) / .8 * 280;
+    const spread = (arr) => { arr.sort((a, b) => a.y - b.y); for (let i = 1; i < arr.length; i++) if (arr[i].y - arr[i - 1].y < 16) arr[i].y = arr[i - 1].y + 16; return arr; };
+    const L = spread(D.map((d) => ({ d, y: y(d[1]) }))), R = spread(D.map((d) => ({ d, y: y(d[2]) })));
+    const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Slope chart of F1 score from an easy shelf to the hard shelf. Gemini 3.8 Flash falls from 0.94 to 0.31; Gemini 3.1 Pro from 0.71 to 0.33; Claude Sonnet 5.5 from 0.82 to 0.76; Claude Opus 5.5 rises from 0.79 to 0.86; GPT 5.6 Luna rises from 0.30 to 0.47.">
+      <line class="ax" x1="${x0}" x2="${x0}" y1="30" y2="325"/><line class="ax" x1="${x1}" x2="${x1}" y1="30" y2="325"/>
+      <text x="${x0}" y="348" text-anchor="middle" class="lbl">Easy shelf (a, 65 books)</text>
+      <text x="${x1}" y="348" text-anchor="middle" class="lbl">Hard shelf (e, 108 books)</text>
+      ${D.map((d) => `<g class="${d[4] ? "hl" : ""}"><line x1="${x0}" x2="${x1}" y1="${y(d[1])}" y2="${y(d[2])}" stroke="${d[3]}" stroke-width="${d[4] ? 3.5 : 2}"/>
+        <circle cx="${x0}" cy="${y(d[1])}" r="${d[4] ? 5.5 : 4}" fill="${d[3]}"/><circle cx="${x1}" cy="${y(d[2])}" r="${d[4] ? 5.5 : 4}" fill="${d[3]}"/></g>`).join("")}
+      ${L.map(({ d, y: yy }) => `<text x="${x0 - 10}" y="${yy + 4}" text-anchor="end"${d[4] ? ' class="lbl"' : ""}>${d[0].replace(/^(Claude|Gemini|GPT) /, "")} ${d[1].toFixed(2)}</text>`).join("")}
+      ${R.map(({ d, y: yy }) => `<text x="${x1 + 10}" y="${yy + 4}"${d[4] ? ' class="lbl"' : ""}>${d[2].toFixed(2)} ${d[0]}</text>`).join("")}
+    </svg>`;
+    $("#slope").innerHTML = svg;
+  })();
+
+  // ---------- 3. the wind chart ----------
+  const windAns = $("#wind-answers"), windAfter = $("#wind-after"), windTwist = $("#wind-twist"), windMeasure = $("#wind-measure");
+  const WIND_LABEL = { "never": "Never", "2033-34": "2033–34", "2035-36": "2035–36", "2037-38": "2037–38" };
+  $$("[data-wind]").forEach((b) => b.addEventListener("click", () => {
+    $$("[data-wind]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    $("#wind-you").textContent = WIND_LABEL[b.dataset.wind];
+    windAns.classList.add("on");
+    windAfter.hidden = false;
+  }));
+  windMeasure.addEventListener("click", () => {
+    const on = windMeasure.getAttribute("aria-pressed") !== "true";
+    windMeasure.setAttribute("aria-pressed", String(on));
+    $$("#quiz-band .ov").forEach((g) => g.classList.toggle("on", on));
+    windTwist.classList.toggle("on", on);
+  });
+
+  // ---------- 4. dumbbell: printed vs estimated numbers ----------
+  (() => {
+    const D = [["Qwen2.5-VL-3B", 34.6, 45.8], ["Qwen2.5-VL-7B", 13.7, 33.3], ["START-RL-7B", 2.8, 33.3]];
+    const W = 760, H = 200, x0 = 150, x1 = 720, x = (v) => x0 + v / 50 * (x1 - x0);
+    const blue = "var(--blue)", red = "var(--red)";
+    const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Median relative error. Qwen2.5-VL-3B: 34.6% on printed-number questions, 45.8% on estimate questions. Qwen2.5-VL-7B: 13.7% versus 33.3%. START-RL-7B: 2.8% versus 33.3%.">
+      ${[0, 10, 20, 30, 40, 50].map((v) => `<line class="ax" x1="${x(v)}" x2="${x(v)}" y1="40" y2="170"/><text x="${x(v)}" y="190" text-anchor="middle" style="fill:var(--muted)">${v}%</text>`).join("")}
+      <circle cx="${x0 + 6}" cy="16" r="6" fill="${blue}"/><text x="${x0 + 18}" y="20">number printed on the chart</text>
+      <circle cx="${x0 + 250}" cy="16" r="6" fill="${red}"/><text x="${x0 + 262}" y="20">“approximately / estimate / roughly”</text>
+      ${D.map((d, i) => { const yy = 62 + i * 46; return `<text x="${x0 - 14}" y="${yy + 5}" text-anchor="end" style="font-weight:600">${d[0]}</text>
+        <line x1="${x(d[1])}" x2="${x(d[2])}" y1="${yy}" y2="${yy}" stroke="var(--line)" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="${x(d[1])}" cy="${yy}" r="8" fill="${blue}"/><circle cx="${x(d[2])}" cy="${yy}" r="8" fill="${red}"/>
+        <text x="${x(d[1]) - (d[1] < 6 ? 0 : 13)}" y="${yy + (d[1] < 6 ? -14 : 5)}" text-anchor="${d[1] < 6 ? "middle" : "end"}" style="fill:var(--blue);font-weight:600">${d[1]}%</text>
+        <text x="${x(d[2]) + 13}" y="${yy + 5}" style="fill:var(--red);font-weight:600">${d[2]}%</text>`; }).join("")}
+    </svg>`;
+    $("#dumb").innerHTML = svg;
+  })();
+
+  // ---------- 5. CAD wipe ----------
+  const wipe = $("#wipe"), wipeRange = $("#wipe-range");
+  const setCut = (v) => { v = Math.max(0, Math.min(100, v)); wipe.style.setProperty("--cut", v + "%"); wipeRange.value = v; };
+  wipeRange.addEventListener("input", () => setCut(+wipeRange.value));
+  let dragging = false;
+  const fromPointer = (e) => { const r = wipe.getBoundingClientRect(); setCut(((e.clientX - r.left) / r.width) * 100); };
+  wipe.addEventListener("pointerdown", (e) => { dragging = true; wipe.setPointerCapture(e.pointerId); fromPointer(e); });
+  wipe.addEventListener("pointermove", (e) => { if (dragging) fromPointer(e); });
+  wipe.addEventListener("pointerup", () => (dragging = false));
+
+  // ---------- 6. unit chart of 2,295 claims ----------
+  const TYPES = [["fact", "Fact", "#3f8f5a"], ["estimate", "Estimate", "#d39a2c"], ["causal", "Causal", "#8a5cb8"], ["forecast", "Forecast", "#4a78bd"],
+    ["assumption", "Assumption", "#d0708f"], ["recommendation", "Recommendation", "#c4473a"], ["synthesis", "Synthesis", "#2f9a9a"]];
+  const TIERS = ["High", "Medium", "Low"], YEARS = ["2018", "2019", "2021", "2022", "2023", "2024", "2025"];
+  const TYPE_ORDER = [3, 1, 0, 2, 4, 6, 5]; // forecast first, then by size
+  const raw = window.GEP_UNITS || "";
+  const units = [];
+  for (let i = 0; i + 2 < raw.length; i += 3) units.push({ type: +raw[i], tier: +raw[i + 1], year: +raw[i + 2], x: 0, y: 0, x0: 0, y0: 0, tx: 0, ty: 0 });
+  $("#units-legend").innerHTML = TYPE_ORDER.map((k) => `<span><i style="background:${TYPES[k][2]}"></i>${TYPES[k][1]} ${units.filter((u) => u.type === k).length.toLocaleString()}</span>`).join("");
+  const cv = $("#units-canvas"), ctx = cv.getContext("2d");
+  const CW = 1100, CH = 520, CELL = 10, SQ = 8, BASE = CH - 46;
+  let labels = [], animStart = 0, anim = false, drawUnits = null;
+  const layout = (g) => {
+    labels = [];
+    const groupsOf = {
+      all: [{ name: "", keys: units.map((_, i) => i) }],
+      type: TYPE_ORDER.map((k) => ({ name: TYPES[k][1], keys: units.map((u, i) => (u.type === k ? i : -1)).filter((i) => i >= 0) })),
+      tier: [0, 1, 2].map((k) => ({ name: TIERS[k] + " watchability", keys: units.map((u, i) => (u.tier === k ? i : -1)).filter((i) => i >= 0) })),
+      year: YEARS.map((yr, k) => ({ name: yr, keys: units.map((u, i) => (u.year === k ? i : -1)).filter((i) => i >= 0) })),
+    }[g];
+    const rowsMax = g === "all" ? Math.ceil(units.length / Math.floor(CW / CELL)) : Math.floor((BASE - 20) / CELL);
+    const cols = groupsOf.map((gr) => Math.ceil(gr.keys.length / rowsMax));
+    const totalW = cols.reduce((a, c) => a + c * CELL, 0);
+    const gap = groupsOf.length > 1 ? Math.min(40, (CW - totalW) / (groupsOf.length - 1)) : 0;
+    let x = (CW - totalW - gap * (groupsOf.length - 1)) / 2;
+    groupsOf.forEach((gr, gi) => {
+      const c = cols[gi];
+      const order = g === "all" ? gr.keys : gr.keys.slice().sort((a, b) => TYPE_ORDER.indexOf(units[a].type) - TYPE_ORDER.indexOf(units[b].type) || a - b);
+      order.forEach((ui, j) => {
+        const u = units[ui], col = j % c, row = Math.floor(j / c);
+        u.x0 = u.x; u.y0 = u.y; u.tx = x + col * CELL; u.ty = g === "all" ? (BASE - rowsMax * CELL) / 2 + 10 + row * CELL : BASE - (row + 1) * CELL;
+      });
+      if (gr.name) labels.push({ x: x + (c * CELL) / 2, name: gr.name, n: gr.keys.length, w: c * CELL });
+      x += c * CELL + gap;
+    });
+  };
+  const ease = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  drawUnits = () => {
+    const dpr = Math.min(2, devicePixelRatio || 1);
+    if (cv.width !== CW * dpr) { cv.width = CW * dpr; cv.height = CH * dpr; }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, CW, CH);
+    const now = performance.now();
+    let busy = false;
+    units.forEach((u, i) => {
+      let p = anim ? (now - animStart - (i / units.length) * 350) / 900 : 1;
+      p = Math.max(0, Math.min(1, p)); if (p < 1) busy = true;
+      const e = ease(p);
+      u.x = u.x0 + (u.tx - u.x0) * e; u.y = u.y0 + (u.ty - u.y0) * e;
+      ctx.fillStyle = TYPES[u.type][2];
+      ctx.fillRect(u.x, u.y, SQ, SQ);
+    });
+    const ink = getComputedStyle(document.body).color, muted = getComputedStyle(document.documentElement).getPropertyValue("--muted").trim();
+    ctx.textAlign = "center";
+    labels.forEach((l) => {
+      ctx.fillStyle = ink; ctx.font = "600 13px 'IBM Plex Sans Condensed', sans-serif";
+      ctx.fillText(l.name, l.x, BASE + 18, Math.max(l.w + 34, 92));
+      ctx.fillStyle = muted; ctx.font = "12px 'IBM Plex Mono', monospace";
+      ctx.fillText(l.n.toLocaleString(), l.x, BASE + 34);
+    });
+    if (busy) requestAnimationFrame(drawUnits); else anim = false;
+  };
+  const group = (g, { animate = true } = {}) => {
+    $$("#units .seg").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.g === g)));
+    layout(g);
+    if (animate && !reduced) { anim = true; animStart = performance.now(); }
+    else units.forEach((u) => { u.x0 = u.x = u.tx; u.y0 = u.y = u.ty; });
+    requestAnimationFrame(drawUnits);
+  };
+  layout("all"); units.forEach((u) => { u.x = u.x0 = u.tx; u.y = u.y0 = u.ty; });
+  // start from a scatter so the first view arrives in motion when scrolled into view
+  let introDone = false;
+  new IntersectionObserver((ents, ob) => {
+    if (!ents[0].isIntersecting || introDone) return;
+    introDone = true; ob.disconnect();
+    if (reduced) return drawUnits();
+    units.forEach((u) => { u.x = Math.random() * CW; u.y = -20 - Math.random() * 200; });
+    group("all");
+  }, { threshold: .25 }).observe(cv);
+  drawUnits();
+  $$("#units .seg").forEach((b) => b.addEventListener("click", () => group(b.dataset.g)));
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawUnits);
+
+  // ---------- keyboard ----------
+  addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && menu.classList.contains("open")) { openMenu(false); curBtn.focus(); return; }
+    if (e.metaKey || e.ctrlKey || e.altKey || pop.open || lb.open) return;
+    if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.target.isContentEditable) return;
+    if (e.key === "v" || e.key === "V") setMode(!body.classList.contains("watch"));
+    else if (e.key === "]") goSec(curIdx + 1);
+    else if (e.key === "[") goSec(curIdx - 1);
+  });
+
+  // ---------- initial state from URL (never autoplays) ----------
+  const init = urlState();
+  if (init.view === "video") setMode(true, { replace: false });
+  if (init.t != null) {
+    seek(init.t).then(() => {
+      showResume(init.t);
+      onTime();
+      const scope = (init.hash && document.getElementById(init.hash)) || document;
+      const link = $$("a.ts", scope).find((a) => +a.dataset.t === init.t) || $$("a.ts").find((a) => +a.dataset.t === init.t);
+      if (link) { link.scrollIntoView({ block: "center" }); link.classList.add("flash"); }
+      else if (init.hash) document.getElementById(init.hash)?.scrollIntoView();
+      if (!isNarrow() && !link) ensureDockVisible();
+      if (isNarrow()) { body.classList.remove("dock-collapsed"); syncMin(); }
+    });
+  }
+  updateDockH();
+})();
+</script>
+</body>
+</html>

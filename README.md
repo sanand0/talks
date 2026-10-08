@@ -19,6 +19,9 @@ I speak regularly at:
 <!-- BEGIN GENERATED TALKS -->
 ## Latest talks
 
+- 07 Oct 2026. **[Looks Right. Isn’t.](2026-10-07-iitm-ed-data-visualization/ ":ignore")** at [ED5518: Data Visualization for Engineers](https://ed.iitm.ac.in/), Department of Engineering Design, IIT Madras, Chennai (remote).  
+  AI makes pictures cheap to create but harder to trust: the reader may be another AI, and a chart, map or CAD model that looks right still needs an independent check.  
+  [⏯️ Video (73m)](https://media.s-anand.net/2026-10-07-iitm-ed-data-visualization.webm ":ignore") · [💬 Transcript](2026-10-07-iitm-ed-data-visualization/transcript.md) · [🎧 Audio (73m)](https://github.com/sanand0/talks/releases/download/talks/2026-10-07-iitm-ed-data-visualization.opus ":ignore")
 - 05 Oct 2026. **[Get the Job Done — and Verify It](2026-10-05-tds-orientation/ ":ignore")** at [Tools in Data Science — Sep 2026 Orientation](https://tds.s-anand.net/), Remote.  
   TDS treats exams as the curriculum and agents as executors: students learn to specify, orchestrate, collaborate, notice, adapt and verify while the tools keep changing.  
   [⏯️ Video (77m)](https://media.s-anand.net/2026-10-05-tds-orientation.webm ":ignore") · [💬 Transcript](2026-10-05-tds-orientation/transcript.md) · [🎧 Audio (77m)](https://github.com/sanand0/talks/releases/download/talks/2026-10-05-tds-orientation.opus ":ignore")

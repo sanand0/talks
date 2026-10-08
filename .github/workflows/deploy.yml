@@ -26,6 +26,13 @@ jobs:
       # Checkout the repository
       - uses: actions/checkout@v4
 
+      # Pin and cache the build tools instead of fetching via npx on each use.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+
       # Build pages (same path used by `just build`)
       - run: bash setup.sh
 
@@ -40,6 +47,9 @@ jobs:
               if "data-goatcounter" not in html and "</head>" in html:
                   path.write_text(html.replace("</head>", snippet + "\n</head>", 1))
           PY
+
+      # node_modules is for building, not part of the published static site.
+      - run: rm -rf node_modules
 
       # Upload a specific page to GitHub Pages. Defaults to _site
       - uses: actions/upload-pages-artifact@v3

@@ -1,15 +1,22 @@
 set -euo pipefail
 shopt -s nullglob
 
+# Dependencies are installed once with `npm ci` (locally and in CI).
+BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/node_modules/.bin"
+if [[ ! -x "$BIN/markdown-to-html" || ! -x "$BIN/marp" ]]; then
+  echo "Missing build tools: run npm ci first" >&2
+  exit 1
+fi
+
 node generate.mjs
-npx -y --package markdown-to-html-cli markdown-to-html --source README.md --output index.html
+"$BIN/markdown-to-html" --source README.md --output index.html
 node enhance-index.mjs
 
 if [[ ! -f 2025-06-pycon-sg/llm-cli.html || 2025-06-pycon-sg/llm-cli.md -nt 2025-06-pycon-sg/llm-cli.html ]]
 then
   (
     cd 2025-06-pycon-sg
-    npx -y --package markdown-to-html-cli markdown-to-html \
+    "$BIN/markdown-to-html" \
       --source llm-cli.md \
       --output llm-cli.html \
       --title 'Cool LLM CLI Python uses'
@@ -26,6 +33,6 @@ do
   grep --quiet "^marp:\s*true" "$readme" || continue
   if [[ ! -f "$index" || "$readme" -nt "$index" ]]
   then
-    (cd "$d" && npx -y @marp-team/marp-cli@latest --theme-set ../marpessa.css --html README.md -o index.html)
+    (cd "$d" && "$BIN/marp" --theme-set ../marpessa.css --html README.md -o index.html)
   fi
 done

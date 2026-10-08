@@ -571,7 +571,7 @@ I don't charge or pay a fee for public talks. I only accept dry fruits, [Wikiped
 
 <!--
 
-Build process: `just build` (also used by `.github/workflows/deploy.yml` via `setup.sh`)
+Build process: `npm ci` once, then `just build` (also used by `.github/workflows/deploy.yml` via `setup.sh`). Build tools are pinned in `package-lock.json`.
 
 PPTX / Audio / ... are at https://github.com/sanand0/talks/releases/tag/talks
 

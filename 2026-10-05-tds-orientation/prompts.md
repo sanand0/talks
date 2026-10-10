@@ -1,5 +1,20 @@
 # Prompt
 
+## Fix video aspect ratio, 10 Oct 2026
+
+<!--
+cd ~/code/talks/
+dev.sh -p  ~/code:ro,~/r2/media:ro,~/Dropbox/notes/transcripts:ro -- claude --dangerously-skip-permissions --model opus --effort medium
+-->
+
+In 2026-10-05-tds-orientation/, the video on the right has too small a height. The width is fine. But the aspect ratio of the video seems to suggest that we can increase the height for a better UI.
+
+We already did made this fix in 2026-10-07-iitm-ed-data-visualization/ - so it might be copy-able.
+
+Also, in both cases, as we scroll through the story, if there is a relevant video timestamp / moment, could we highlight that on the chapters on the right and make sure it's visible? I don't want to change the .is-now selection. I want another, less obtrusive, highlight that shows what video moments are visible in the story on the left - and subtly highlight where they fit on the right. There may be multiple moments visible on the screen. If I hover over one of the .ts moments, it would be nice to highlight the corresponding .ts-cap while the .ts is hovered or focused (and make sure it's scrolled into view if required) so that we know where among the chapters clicking us will take us to.
+
+<!-- claude --resume 2dfcaae7-c33d-49ad-838d-20a66aedd05c --dangerously-skip-permissions -->
+
 ## Initial Story, 06 Oct 2026
 
 <!--

@@ -215,6 +215,9 @@ body.watch .chapters ol { grid-template-columns: repeat(2, minmax(0, 1fr)); colu
 .chapters li a.is-now { background: var(--on-bp); color: var(--bp); }
 .dock .chapters li a.is-now { color: var(--bp); }
 .chapters li a.is-now .ct { color: #9c2a1d; }
+.chapters li a.in-view { box-shadow: inset 3px 0 0 var(--on-bp-link); }
+.chapters li a.is-target { outline: 1px dashed var(--on-bp-link); outline-offset: -1px; }
+.chapters li a.is-target:not(.is-now) { background: var(--bp2); }
 .dock .dock-min { display: none; }
 body.watch .story { font-size: 16.5px; }
 body.watch .story .chap { opacity: .6; transition: opacity .3s; }
@@ -1431,6 +1434,44 @@ window.GEP_UNITS = "410410410420420420410410420300300300210300300210300300300300
   };
   vid.addEventListener("timeupdate", onTime);
   vid.addEventListener("seeked", onTime);
+
+  // ---------- story → chapter hints: .in-view = moments visible in the story; .is-target = hovered/focused .ts ----------
+  const chapFor = (t) => { let i = -1; for (let k = 0; k < CHAPTERS.length; k++) if (CHAPTERS[k].t <= t + 0.5) i = k; return i; };
+  // Scroll the chapter list so links first..last are visible: centred if they fit, else top-aligned
+  const revealChap = (first, last = first, pad = 8) => {
+    const box = first.closest(".chapters");
+    if (!box || box.scrollHeight <= box.clientHeight) return;
+    const top = first.getBoundingClientRect().top, bottom = last.getBoundingClientRect().bottom, br = box.getBoundingClientRect();
+    if (top >= br.top + pad && bottom <= br.bottom - pad) return;
+    box.scrollTop += bottom - top > br.height - 2 * pad ? top - br.top - pad : (top + bottom) / 2 - (br.top + br.bottom) / 2;
+  };
+  const tsSeen = new Set();
+  let hintKey = "", hintRaf = 0, tsHover = null;
+  const syncHints = () => {
+    hintRaf = 0;
+    const idx = [...new Set([...tsSeen].map((a) => chapFor(+a.dataset.t)).filter((i) => i >= 0))].sort((a, b) => a - b);
+    const key = idx.join();
+    if (key === hintKey) return;
+    hintKey = key;
+    chapLinks.forEach((a, k) => a.classList.toggle("in-view", idx.includes(k)));
+    // While playing, the .is-now auto-scroll owns the list; while paused, show the visible moments
+    if (idx.length && vid.paused && !tsHover) { revealChap(chapLinks[idx[0]], chapLinks[idx.at(-1)]); }
+  };
+  const tsIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? tsSeen.add(e.target) : tsSeen.delete(e.target)));
+    hintRaf ||= requestAnimationFrame(syncHints);
+  });
+  $$("a.ts").filter((a) => !a.closest("dialog, .dock")).forEach((a) => tsIO.observe(a));
+  const setTarget = (a) => {
+    if (tsHover === a) return;
+    tsHover = a;
+    chapLinks.forEach((l) => l.classList.remove("is-target"));
+    const i = a ? chapFor(+a.dataset.t) : -1;
+    if (i >= 0) { chapLinks[i].classList.add("is-target"); revealChap(chapLinks[i]); }
+  };
+  document.addEventListener("mouseover", (e) => setTarget(e.target.closest?.("a.ts") || (document.activeElement?.matches?.("a.ts") ? document.activeElement : null)));
+  document.addEventListener("focusin", (e) => setTarget(e.target.closest?.("a.ts") || null));
+  document.addEventListener("focusout", (e) => { if (e.target.matches?.("a.ts")) setTarget(null); });
 
   const shareBtn = $("#share-btn");
   shareBtn.addEventListener("click", async () => {

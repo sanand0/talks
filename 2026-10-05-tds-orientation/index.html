@@ -160,7 +160,8 @@ body.watch .dock { flex-basis: 62%; }
 .dock a { color: var(--on-navy-link); }
 .dock-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--on-navy-muted); }
 .dock-head .live { color: var(--on-navy); }
-.vwrap { position: relative; border-radius: 8px; overflow: hidden; background: #000; aspect-ratio: 16 / 9; }
+.dock-head, .now, .dock-ctrls { flex: none; }
+.vwrap { position: relative; flex: none; border-radius: 8px; overflow: hidden; background: #000; aspect-ratio: 16 / 9; }
 .vwrap video { width: 100%; height: 100%; object-fit: contain; }
 .resume {
   position: absolute; inset: auto 0 0 0; display: none; align-items: center; justify-content: center; padding: .9rem;
@@ -195,6 +196,9 @@ body.watch .chapters ol { grid-template-columns: repeat(2, minmax(0, 1fr)); colu
 .chapters li a:hover { background: var(--navy2); }
 .chapters li a.is-now { background: var(--on-navy); color: var(--navy); }
 .chapters li a.is-now .ct { color: var(--red); }
+.chapters li a.in-view { box-shadow: inset 3px 0 0 var(--mustard); }
+.chapters li a.is-target { outline: 1px dashed var(--on-navy-link); outline-offset: -1px; }
+.chapters li a.is-target:not(.is-now) { background: var(--navy2); }
 .dock .dock-min { display: none; }
 
 /* watch mode: story becomes a companion */
@@ -1436,6 +1440,44 @@ dialog.pop::backdrop { background: rgba(10, 14, 22, .6); backdrop-filter: blur(2
   };
   vid.addEventListener("timeupdate", onTime);
   vid.addEventListener("seeked", onTime);
+
+  // ---------- story → chapter hints: .in-view = moments visible in the story; .is-target = hovered/focused .ts ----------
+  const chapFor = (t) => { let i = -1; for (let k = 0; k < CHAPTERS.length; k++) if (CHAPTERS[k].t <= t + 0.5) i = k; return i; };
+  // Scroll the chapter list so links first..last are visible: centred if they fit, else top-aligned
+  const revealChap = (first, last = first, pad = 8) => {
+    const box = first.closest(".chapters");
+    if (!box || box.scrollHeight <= box.clientHeight) return;
+    const top = first.getBoundingClientRect().top, bottom = last.getBoundingClientRect().bottom, br = box.getBoundingClientRect();
+    if (top >= br.top + pad && bottom <= br.bottom - pad) return;
+    box.scrollTop += bottom - top > br.height - 2 * pad ? top - br.top - pad : (top + bottom) / 2 - (br.top + br.bottom) / 2;
+  };
+  const tsSeen = new Set();
+  let hintKey = "", hintRaf = 0, tsHover = null;
+  const syncHints = () => {
+    hintRaf = 0;
+    const idx = [...new Set([...tsSeen].map((a) => chapFor(+a.dataset.t)).filter((i) => i >= 0))].sort((a, b) => a - b);
+    const key = idx.join();
+    if (key === hintKey) return;
+    hintKey = key;
+    chapLinks.forEach((a, k) => a.classList.toggle("in-view", idx.includes(k)));
+    // While playing, the .is-now auto-scroll owns the list; while paused, show the visible moments
+    if (idx.length && vid.paused && !tsHover) { revealChap(chapLinks[idx[0]], chapLinks[idx.at(-1)]); }
+  };
+  const tsIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? tsSeen.add(e.target) : tsSeen.delete(e.target)));
+    hintRaf ||= requestAnimationFrame(syncHints);
+  });
+  $$("a.ts").filter((a) => !a.closest("dialog, .dock")).forEach((a) => tsIO.observe(a));
+  const setTarget = (a) => {
+    if (tsHover === a) return;
+    tsHover = a;
+    chapLinks.forEach((l) => l.classList.remove("is-target"));
+    const i = a ? chapFor(+a.dataset.t) : -1;
+    if (i >= 0) { chapLinks[i].classList.add("is-target"); revealChap(chapLinks[i]); }
+  };
+  document.addEventListener("mouseover", (e) => setTarget(e.target.closest?.("a.ts") || (document.activeElement?.matches?.("a.ts") ? document.activeElement : null)));
+  document.addEventListener("focusin", (e) => setTarget(e.target.closest?.("a.ts") || null));
+  document.addEventListener("focusout", (e) => { if (e.target.matches?.("a.ts")) setTarget(null); });
 
   // share the current moment
   const shareBtn = $("#share-btn");

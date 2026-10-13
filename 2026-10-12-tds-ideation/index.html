@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Exam Is a Hypothesis · TDS open design meeting · 12 Oct 2026</title>
+<meta name="description" content="Inside an open IIT Madras Tools in Data Science design meeting: the instructors invent agent-friendly assessments live, a student asks what they will measure, and the exam itself turns out to need an exam.">
+<meta property="og:title" content="The Exam Is a Hypothesis">
+<meta property="og:description" content="How do you set an exam when AI can take it? Inside an open TDS course-design meeting, 12 Oct 2026.">
+<meta property="og:image" content="https://talks.s-anand.net/2026-10-12-tds-ideation/comic-page.avif">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23f6f1e4'/%3E%3Cpath d='M14 34 l10 10 l26 -26' fill='none' stroke='%23c8372d' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ctext x='44' y='56' font-family='serif' font-size='22' fill='%232b3f8f'%3E%3F%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&amp;family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&amp;family=Schibsted+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;family=Kalam:wght@700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script>
+  (() => {
+    let t = null;
+    try { t = localStorage.getItem("tds-ideation-theme"); } catch (e) {}
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  })();
+</script>
+<style>
+/* =========================================================
+   Design note: the page is an answer booklet being marked.
+   Cream ruled paper with a red examiner's margin. Indigo is
+   what the teachers proposed; green is what a student asked
+   back; red is what a check caught. Amber marks anything
+   hypothetical. The examiner is also being examined.
+   ========================================================= */
+:root {
+  --paper: #f6f1e4; --paper2: #efe7d3; --card: #fffaf0; --ink: #1d1a16; --muted: #5d5548; --line: #d6cbb2; --rule: rgba(43,63,143,.07);
+  --red: #b8322a; --red-soft: #f6dcd6; --indigo: #2b3f8f; --indigo-soft: #e2e6f6; --green: #1d6a48; --green-soft: #dcefe4; --amber: #8a5600; --amber-soft: #f7e6c4;
+  --slate: #1c2331; --slate2: #273046; --on-slate: #f1ebdc; --on-slate-muted: #b7b2a6; --on-slate-link: #ffc9a8;
+  --font-display: "Young Serif", Georgia, serif; --font-body: "Literata", Georgia, serif; --font-ui: "Schibsted Grotesk", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace; --font-hand: "Kalam", "Comic Sans MS", cursive;
+  --measure: 40rem; --pad: clamp(1rem, 3vw, 2.4rem); --dock-w: 400px; --ease: cubic-bezier(.2,.7,.2,1);
+  --shadow: 0 1px 0 rgba(0,0,0,.04), 0 12px 32px -18px rgba(40,30,10,.35);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #15130f; --paper2: #1d1a15; --card: #211e18; --ink: #ede6d6; --muted: #b0a794; --line: #3b352b; --rule: rgba(157,176,255,.05);
+    --red: #ff8a7a; --red-soft: #3d1f1b; --indigo: #a9b8ff; --indigo-soft: #232a45; --green: #7fd9ab; --green-soft: #18332a; --amber: #f3be62; --amber-soft: #3a2c12;
+    --slate: #0e121b; --slate2: #1b2232; --shadow: 0 12px 32px -18px rgba(0,0,0,.8);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #15130f; --paper2: #1d1a15; --card: #211e18; --ink: #ede6d6; --muted: #b0a794; --line: #3b352b; --rule: rgba(157,176,255,.05);
+  --red: #ff8a7a; --red-soft: #3d1f1b; --indigo: #a9b8ff; --indigo-soft: #232a45; --green: #7fd9ab; --green-soft: #18332a; --amber: #f3be62; --amber-soft: #3a2c12;
+  --slate: #0e121b; --slate2: #1b2232; --shadow: 0 12px 32px -18px rgba(0,0,0,.8);
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; font-family: var(--font-body); font-size: 18.5px; line-height: 1.74; color: var(--ink); overflow-x: hidden;
+  background-color: var(--paper);
+  background-image: linear-gradient(var(--rule) 1px, transparent 1px);
+  background-size: 100% 2.1rem;
+}
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height: 1.12; margin: 0; }
+a { color: var(--indigo); text-decoration-thickness: 1px; text-underline-offset: .18em; }
+a:hover { text-decoration-thickness: 2px; }
+strong { font-weight: 600; }
+img { max-width: 100%; height: auto; }
+:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; border-radius: 2px; }
+.skip { position: absolute; left: -9999px; top: 0; background: var(--ink); color: var(--paper); padding: .5rem 1rem; z-index: 1000; }
+.skip:focus { left: .5rem; top: .5rem; }
+.sr-only { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.muted { color: var(--muted); }
+.small { font-size: .85rem; }
+kbd { font: .8em var(--font-mono); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 3px; padding: 0 .3em; background: var(--card); }
+
+.progress { position: fixed; left: 0; top: 0; height: 3px; width: 0; background: var(--red); z-index: 900; }
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .7rem var(--pad); font: 500 .85rem var(--font-ui); border-bottom: 1px solid var(--line); }
+.topbar a { color: var(--ink); text-decoration: none; }
+.tb-right { display: flex; align-items: center; gap: .8rem; color: var(--muted); }
+.icon-btn { appearance: none; border: 1px solid var(--line); background: var(--card); color: var(--ink); width: 2.2rem; height: 2.2rem; border-radius: 50%; cursor: pointer; display: inline-grid; place-items: center; }
+.icon-btn:hover { border-color: var(--ink); }
+
+/* ---------- hero ---------- */
+.hero { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: clamp(1.5rem, 4vw, 4rem); max-width: 1320px; margin: 0 auto; padding: clamp(2rem, 5vw, 4.5rem) var(--pad) 3.5rem; align-items: start; }
+.kicker { display: flex; flex-wrap: wrap; gap: .3rem .7rem; align-items: center; font: 600 .78rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.3rem; }
+.kicker .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--red); }
+.hero h1 { font-size: clamp(3rem, 8.4vw, 6.6rem); line-height: .98; letter-spacing: -.02em; margin-bottom: 1.6rem; }
+.hero h1 em { font-style: normal; color: var(--red); position: relative; white-space: nowrap; }
+.hero h1 em::after { content: ""; position: absolute; left: -.04em; right: -.06em; bottom: .02em; height: .1em; background: var(--red); opacity: .35; border-radius: 2px; transform: rotate(-1.2deg); }
+.deck { font-size: clamp(1.15rem, 2vw, 1.38rem); line-height: 1.5; max-width: 38rem; margin: 0 0 1.2rem; }
+.who { font-size: 1rem; color: var(--muted); max-width: 38rem; margin: 0 0 1.6rem; line-height: 1.6; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.4rem; }
+.btn { display: inline-flex; align-items: center; gap: .5rem; font: 600 .95rem var(--font-ui); padding: .7rem 1.1rem; border-radius: 4px; text-decoration: none; background: var(--ink); color: var(--paper); border: 1.5px solid var(--ink); cursor: pointer; }
+.btn:hover { background: var(--red); border-color: var(--red); color: #fff; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.audio-line { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem; font: .85rem var(--font-ui); color: var(--muted); margin-bottom: 1.8rem; }
+.audio-line audio { height: 36px; max-width: 100%; }
+/* answer-booklet cover */
+.booklet { border: 1.5px solid var(--ink); background: var(--card); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); font-family: var(--font-ui); max-width: 40rem; box-shadow: var(--shadow); position: relative; }
+.booklet > div { padding: .5rem .7rem; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); min-width: 0; }
+.booklet > div:nth-child(4n) { border-right: 0; }
+.booklet > div:nth-last-child(-n+4) { border-bottom: 0; }
+.booklet small { display: block; font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.booklet b { font-weight: 600; font-size: .92rem; line-height: 1.3; display: block; }
+.booklet .wide { grid-column: span 2; }
+.booklet .hand b { font: 700 1.25rem/1.1 var(--font-hand); color: var(--red); }
+.booklet .stamp { position: absolute; right: -10px; top: -18px; font: 700 1.05rem var(--font-hand); color: var(--red); border: 2px solid var(--red); border-radius: 6px; padding: 0 .55rem; background: var(--paper); transform: rotate(5deg); }
+
+.comic { margin: 0; position: relative; }
+.comic a { display: block; background: #fff; padding: 9px; border: 1px solid var(--line); box-shadow: var(--shadow); transform: rotate(-.7deg); transition: transform .4s var(--ease); cursor: zoom-in; }
+.comic a:hover, .comic a:focus-visible { transform: rotate(0) scale(1.01); }
+.comic img { width: 100%; height: auto; aspect-ratio: 1055 / 1491; display: block; }
+.comic figcaption { font: .84rem/1.5 var(--font-ui); color: var(--muted); margin-top: .9rem; }
+.comic .tag { position: absolute; top: -16px; right: -8px; z-index: 2; font: 700 1.3rem var(--font-hand); color: var(--indigo); background: var(--paper); border: 2px solid var(--indigo); border-radius: 6px; padding: 0 .6rem; transform: rotate(4deg); }
+
+/* evidence key */
+.evkey { max-width: 1320px; margin: 0 auto 2.5rem; padding: 0 var(--pad); }
+.evkey-inner { border-top: 1.5px solid var(--ink); border-bottom: 1px solid var(--line); padding: .9rem 0; display: flex; flex-wrap: wrap; gap: .6rem 1.4rem; align-items: center; font: .85rem var(--font-ui); color: var(--muted); }
+.evkey-inner > span:first-child { font-weight: 600; color: var(--ink); letter-spacing: .1em; text-transform: uppercase; font-size: .72rem; }
+.ev { display: inline-block; font: 600 .66rem/1 var(--font-ui); letter-spacing: .1em; text-transform: uppercase; padding: .28rem .45rem .24rem; border-radius: 3px; vertical-align: .2em; white-space: nowrap; border: 1px solid currentColor; }
+.ev-w { color: var(--indigo); background: var(--indigo-soft); }
+.ev-x { color: var(--green); background: var(--green-soft); }
+.ev-i { color: var(--muted); background: var(--paper2); }
+.ev-p { color: var(--amber); background: var(--amber-soft); }
+
+/* ---------- reading room: story + dock ---------- */
+.room { display: flex; align-items: flex-start; max-width: 1640px; margin: 0 auto; }
+.story { flex: 1 1 0; min-width: 0; padding: 0 var(--pad) 7rem; }
+.dock {
+  flex: 0 0 var(--dock-w); position: sticky; top: .8rem; align-self: flex-start; margin: .8rem var(--pad) 0 0;
+  max-height: calc(100vh - 1.6rem); display: flex; flex-direction: column; gap: .65rem;
+  background: var(--slate); color: var(--on-slate); border-radius: 6px; padding: .75rem; box-shadow: var(--shadow); z-index: 300;
+  transition: flex-basis .5s var(--ease);
+}
+body.watch .dock { flex-basis: 60%; }
+.dock a { color: var(--on-slate-link); }
+.dock-head { display: flex; justify-content: space-between; gap: .5rem; font: .72rem var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--on-slate-muted); }
+.dock-head b { color: var(--on-slate); font-weight: 600; }
+.vwrap { position: relative; flex: none; background: #000; aspect-ratio: 16 / 9; border-radius: 3px; overflow: hidden; }
+.dock-head, .now, .dock-ctrls { flex: none; }
+.vwrap video { width: 100%; height: 100%; object-fit: contain; display: block; }
+.resume { position: absolute; inset: auto 0 0 0; display: none; justify-content: center; padding: .9rem; background: linear-gradient(transparent, rgba(0,0,0,.75)); }
+.resume.show { display: flex; }
+.resume button { font: 600 .95rem var(--font-ui); background: var(--on-slate); color: var(--slate); border: 0; border-radius: 3px; padding: .5rem 1rem; cursor: pointer; }
+.now { font: .9rem/1.4 var(--font-ui); min-height: 2.6em; }
+.now .t { font-family: var(--font-mono); color: var(--on-slate-link); margin-right: .45rem; }
+.now .in-story { display: block; font-size: .8rem; color: var(--on-slate-muted); margin-top: .15rem; }
+.dock-ctrls { display: flex; flex-wrap: wrap; gap: .4rem; }
+.dbtn { appearance: none; border: 1px solid #45506a; background: var(--slate2); color: var(--on-slate); border-radius: 3px; padding: .42rem .7rem; font: 600 .82rem var(--font-ui); cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; text-decoration: none; }
+.dock a.dbtn { color: var(--on-slate); }
+.dbtn:hover, .dock a.dbtn:hover { background: #38435e; color: #fff; }
+.dbtn.mode { background: var(--on-slate); color: var(--slate); border-color: var(--on-slate); }
+.dbtn.mode:hover { background: #ffd9cc; color: #2a0f08; border-color: #ffd9cc; }
+.chapters { overflow-y: auto; min-height: 0; flex: 1 1 auto; scrollbar-width: thin; }
+.chapters summary { font: .72rem var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--on-slate-muted); cursor: pointer; padding: .25rem 0; }
+.chapters ol { list-style: none; margin: .2rem 0 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 1px; }
+body.watch .chapters ol { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: .6rem; }
+.chapters li a { display: flex; gap: .55rem; align-items: baseline; padding: .3rem .45rem; border-radius: 3px; text-decoration: none; font: .86rem/1.3 var(--font-ui); }
+.dock .chapters li a { color: var(--on-slate); }
+.chapters li a .ct { font-family: var(--font-mono); font-size: .74rem; color: var(--on-slate-link); flex: 0 0 auto; }
+.chapters li a:hover { background: var(--slate2); }
+.dock .chapters li a.is-now { background: var(--on-slate); color: var(--slate); }
+.chapters li a.is-now .ct { color: #9c2a1d; }
+.chapters li a.in-view { box-shadow: inset 3px 0 0 var(--on-slate-link); }
+.chapters li a.is-target { outline: 1px dashed var(--on-slate-link); outline-offset: -1px; }
+.chapters li a.is-target:not(.is-now) { background: var(--slate2); }
+.dock .dock-min { display: none; }
+body.watch .story { font-size: 16.5px; }
+body.watch .story .chap { opacity: .62; transition: opacity .3s; }
+body.watch .story .chap.is-now, body.watch .story .chap:hover, body.watch .story .chap:focus-within { opacity: 1; }
+
+/* ---------- story typography ---------- */
+.chap { position: relative; padding: 3.2rem 0 1rem; scroll-margin-top: 1rem; }
+.chap > * { max-width: var(--measure); margin-left: auto; margin-right: auto; }
+.chap > .wide { max-width: 62rem; }
+.chap p { margin: 0 auto 1.15rem; }
+.act { font: 600 .76rem var(--font-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--indigo); display: flex; align-items: center; gap: .7rem; margin-bottom: .9rem; }
+.act::before { content: attr(data-n); font: 700 1.05rem var(--font-hand); color: var(--red); letter-spacing: 0; }
+.act::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
+.chap h2 { font-size: clamp(2.1rem, 4.4vw, 3.4rem); margin-bottom: 1.3rem; letter-spacing: -.015em; }
+.chap h2 em { font-style: normal; color: var(--red); }
+.chap h3 { font-size: 1.5rem; margin: 2rem auto .7rem; }
+.lede { font-size: 1.14em; line-height: 1.6; }
+.lede::first-letter { font-family: var(--font-display); float: left; font-size: 3.9em; line-height: .8; margin: .09em .1em 0 0; color: var(--red); }
+.act-open { padding-top: 5rem; }
+.act-open::before { content: attr(data-roman); display: block; max-width: var(--measure); margin: 0 auto 1rem; font: 400 clamp(4rem, 9vw, 7rem)/1 var(--font-display); color: var(--line); }
+
+/* timestamp chips */
+a.ts { display: inline-flex; align-items: center; gap: .18rem; font: 600 .74rem/1 var(--font-mono); color: var(--indigo); background: var(--indigo-soft); border: 1px solid transparent; padding: .24rem .42rem .2rem .3rem; border-radius: 3px; text-decoration: none; vertical-align: .12em; white-space: nowrap; }
+a.ts:hover { border-color: var(--indigo); }
+a.ts .bi { font-size: .9em; }
+a.ts.flash { animation: flash 1.4s var(--ease); }
+@keyframes flash { 0%, 40% { background: var(--red); color: #fff; } 100% { background: var(--indigo-soft); } }
+
+/* quotes: teacher (indigo), student (green), grader (red) */
+.say { margin: 2rem auto; padding: .2rem 0 .2rem 1.4rem; border-left: 3px solid var(--indigo); }
+.say p { font-family: var(--font-display); font-size: clamp(1.4rem, 2.5vw, 1.8rem); line-height: 1.25; margin: 0 0 .6rem; }
+.say footer { font: .86rem var(--font-ui); color: var(--muted); }
+.say footer a.ts { margin-left: .35rem; }
+.say footer b { color: var(--ink); font-weight: 600; }
+.say.stu { border-color: var(--green); }
+.say.stu footer b { color: var(--green); }
+.say.red { border-color: var(--red); }
+.say.big { border: 0; padding: 0; text-align: center; max-width: 50rem; margin: 3rem auto; }
+.say.big p { font-size: clamp(1.9rem, 4.2vw, 3.1rem); line-height: 1.1; }
+.exch { margin: 2rem auto; border-left: 3px solid var(--line); padding-left: 1.2rem; }
+.exch p { margin: 0 0 .55rem; font-size: 1.02rem; line-height: 1.5; }
+.exch b { font: 600 .78rem var(--font-ui); letter-spacing: .08em; text-transform: uppercase; color: var(--indigo); margin-right: .35rem; }
+.exch .s b { color: var(--green); }
+.aside { font: .93rem/1.6 var(--font-ui); color: var(--muted); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: .9rem 0; margin: 1.8rem auto; }
+.aside strong { color: var(--ink); }
+.marg { font: 700 1.15rem/1.2 var(--font-hand); color: var(--red); display: block; margin: -.3rem auto .9rem; transform: rotate(-1deg); }
+
+/* figures */
+.shot { margin: 2rem auto 2.4rem; }
+.shot a { display: block; cursor: zoom-in; }
+.shot img { display: block; width: 100%; border: 1px solid var(--line); border-radius: 4px; background: #111; box-shadow: var(--shadow); }
+.shot figcaption, .lab-cap { font: .84rem/1.5 var(--font-ui); color: var(--muted); margin-top: .7rem; }
+.shot figcaption a.ts { margin-left: .2rem; }
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
+.pair figure { margin: 0; }
+.pair img { max-height: 300px; object-fit: contain; }
+.pair .lbl { font: 600 .72rem var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: .4rem; }
+
+/* interactive lab: a "worked question" on squared paper */
+.lab { margin: 2.4rem auto 2.8rem; background: var(--card); border: 1.5px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow); font-family: var(--font-ui); }
+.lab-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1rem; align-items: baseline; padding: .8rem 1.1rem; border-bottom: 1px solid var(--line); }
+.lab-head h3 { font-family: var(--font-display); font-size: 1.35rem; margin: 0; }
+.lab-body { padding: 1rem 1.1rem 1.2rem; font-size: .96rem; line-height: 1.55; }
+.lab-body p { margin: 0 0 .8rem; }
+.seg { display: flex; flex-wrap: wrap; gap: .35rem; margin: 0 0 1rem; }
+.seg button, .chip { appearance: none; font: 600 .86rem var(--font-ui); padding: .45rem .75rem; border-radius: 3px; border: 1.5px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; }
+.seg button[aria-pressed="true"], .chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.seg button:hover, .chip:hover { border-color: var(--red); }
+.verdict { border-left: 3px solid var(--red); padding: .5rem .8rem; background: var(--red-soft); margin: .8rem 0 0; border-radius: 0 3px 3px 0; }
+.verdict strong { color: var(--ink); }
+
+/* six tests grid */
+.tests { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; }
+.test { border: 1px solid var(--line); border-radius: 4px; padding: .65rem .75rem; background: var(--paper); min-width: 0; }
+.test h4 { font: 600 .9rem var(--font-ui); margin: 0 0 .25rem; display: flex; justify-content: space-between; gap: .4rem; align-items: baseline; }
+.test p { font-size: .84rem; margin: 0; color: var(--muted); line-height: 1.45; }
+.test .st { font: 700 .7rem var(--font-ui); letter-spacing: .08em; text-transform: uppercase; padding: .15rem .4rem; border-radius: 3px; white-space: nowrap; }
+.test.pass .st { background: var(--green-soft); color: var(--green); }
+.test.fail .st { background: var(--red-soft); color: var(--red); }
+.test.part .st { background: var(--amber-soft); color: var(--amber); }
+.test.fail { border-color: var(--red); }
+
+/* bars (external data) */
+.bars svg { width: 100%; height: auto; display: block; font-family: var(--font-ui); }
+.bars text { fill: var(--ink); font-size: 13px; }
+.bars .ax { stroke: var(--line); }
+.bars .m { fill: var(--muted); }
+
+/* invoice network */
+.net { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1.1rem; align-items: start; }
+.net svg { width: 100%; height: auto; display: block; touch-action: manipulation; }
+.net .node { cursor: pointer; }
+.net .node circle { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; transition: fill .25s; }
+.net .node text { font: 600 12px var(--font-ui); fill: var(--ink); pointer-events: none; }
+.net .node.hint circle { stroke: var(--indigo); stroke-dasharray: 4 3; stroke-width: 2.5; }
+.net .node.asked circle { fill: var(--paper2); }
+.net .node.got circle { fill: var(--green-soft); stroke: var(--green); }
+.net .node.silent circle { fill: var(--red-soft); stroke: var(--red); }
+.net .node:focus-visible circle { stroke: var(--red); stroke-width: 3.5; }
+.net .node:focus { outline: none; }
+.net .edge { stroke: var(--line); stroke-width: 1.2; }
+.net .edge.on { stroke: var(--green); stroke-width: 2.2; }
+.net .me circle { fill: var(--ink); }
+.net .me text { fill: var(--paper); }
+.ledger { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: .3rem; margin: .4rem 0 .9rem; }
+.inv { border: 1.5px dashed var(--line); border-radius: 3px; text-align: center; padding: .35rem 0; font: 600 .78rem var(--font-mono); color: var(--muted); }
+.inv small { display: block; font: .66rem var(--font-ui); }
+.inv.got { border-style: solid; border-color: var(--green); background: var(--green-soft); color: var(--green); }
+.meter { font-size: .88rem; display: grid; grid-template-columns: auto 1fr; gap: .2rem .8rem; margin-bottom: .8rem; }
+.meter dt { color: var(--muted); }
+.meter dd { margin: 0; font-weight: 600; }
+
+/* market chart */
+.mkt svg { width: 100%; height: auto; display: block; font-family: var(--font-ui); }
+.mkt text { fill: var(--ink); font-size: 12px; }
+.mkt .ax { stroke: var(--line); }
+.mkt .grid { stroke: var(--line); stroke-dasharray: 2 4; }
+.score2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; margin-top: .8rem; }
+.score2 > div { border: 1px solid var(--line); border-radius: 4px; padding: .6rem .75rem; background: var(--paper); }
+.score2 b { font: 600 1.45rem var(--font-display); display: block; }
+.score2 small { color: var(--muted); }
+
+/* pointless table */
+.pt { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.pt th { text-align: left; font: 600 .7rem var(--font-ui); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); border-bottom: 1.5px solid var(--ink); padding: .4rem .5rem; }
+.pt td { border-bottom: 1px solid var(--line); padding: .45rem .5rem; vertical-align: top; }
+.pt td.num { font-family: var(--font-mono); text-align: right; white-space: nowrap; }
+.pt .bad { color: var(--red); font-weight: 600; }
+.pt .ok { color: var(--green); font-weight: 600; }
+.pt .fam { display: inline-block; font: 600 .7rem var(--font-ui); padding: .1rem .35rem; border-radius: 3px; background: var(--indigo-soft); color: var(--indigo); }
+.pt .barcell { width: 32%; }
+.pt .sbar { height: .7rem; background: var(--indigo); border-radius: 2px; transition: width .4s var(--ease); }
+.pt tr.top td { background: var(--amber-soft); }
+
+/* histogram */
+.hist svg { width: 100%; height: auto; display: block; font-family: var(--font-ui); }
+.hist text { fill: var(--ink); font-size: 12px; }
+
+/* hypotheses grid (tangram) */
+.hyp { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+.hyp button { appearance: none; text-align: left; font: inherit; color: inherit; background: var(--paper); border: 1.5px solid var(--line); border-radius: 4px; padding: .7rem .8rem; cursor: pointer; }
+.hyp button:hover { border-color: var(--ink); }
+.hyp button[aria-expanded="true"] { border-color: var(--red); background: var(--card); }
+.hyp b { font: 600 .95rem var(--font-ui); display: block; }
+.hyp .ans { display: none; margin-top: .45rem; font-size: .87rem; color: var(--muted); }
+.hyp button[aria-expanded="true"] .ans { display: block; }
+.hyp .ans em { font-style: normal; color: var(--red); font-weight: 600; }
+
+/* protocol worksheet */
+.proto { counter-reset: step; list-style: none; padding: 0; margin: 0; }
+.proto li { counter-increment: step; display: grid; grid-template-columns: 2.4rem minmax(0, 1fr); gap: .3rem .8rem; padding: .9rem 0; border-bottom: 1px solid var(--line); }
+.proto li::before { content: counter(step); font: 700 1.6rem/1 var(--font-hand); color: var(--red); grid-row: span 3; padding-top: .1rem; }
+.proto h4 { font: 600 1rem var(--font-ui); margin: 0; }
+.proto p { margin: 0; font-size: .88rem; color: var(--muted); }
+.proto textarea { width: 100%; min-height: 3.4rem; font: .92rem/1.45 var(--font-body); color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 3px; padding: .5rem .6rem; resize: vertical; }
+.proto textarea:focus { border-color: var(--ink); outline: none; box-shadow: 0 0 0 3px var(--red-soft); }
+.proto-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; align-items: center; }
+
+/* bands */
+.band { max-width: none !important; margin: 3rem calc(-1 * var(--pad)) 3rem; padding: 2.4rem var(--pad); background: var(--slate); color: var(--on-slate); }
+.band > * { max-width: var(--measure); margin-left: auto; margin-right: auto; }
+.band a { color: var(--on-slate-link); }
+.band .say p { color: var(--on-slate); }
+.band .say footer, .band .say footer b { color: var(--on-slate-muted); }
+.band a.ts { background: var(--slate2); color: var(--on-slate-link); }
+.band-label { font: 600 .74rem var(--font-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--on-slate-link); margin-bottom: .8rem; }
+.band .ev-w, .band .ev-x, .band .ev-i, .band .ev-p { background: transparent; color: var(--on-slate-link); }
+.band .tension { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: .5rem 1rem; font: 1rem/1.4 var(--font-ui); max-width: 46rem; }
+.band .tension span:nth-child(3n+2) { color: var(--on-slate-link); font-family: var(--font-hand); font-weight: 700; text-align: center; }
+.band .tension span:nth-child(3n+1) { text-align: right; }
+
+/* takeaways */
+.takeaways { --paper: #f6f1e4; --ink: #1d1a16; --muted: #5d5548; --red: #b8322a; --line: #d6cbb2; --indigo: #2b3f8f; --indigo-soft: #e2e6f6; background: #1d1a16; color: #f6f1e4; padding: 4.5rem var(--pad) 4rem; scroll-margin-top: 0; }
+.takeaways .inner { max-width: 1240px; margin: 0 auto; }
+.takeaways h2 { font-size: clamp(2.1rem, 4.4vw, 3.3rem); margin-bottom: .6rem; }
+.takeaways .sub { color: var(--line); max-width: 44rem; margin: 0 0 2.2rem; font-size: 1.1rem; }
+.takeaways .band-label { color: #ffb4a6; }
+.cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.card { background: var(--paper); color: var(--ink); border-radius: 4px; padding: 1.2rem 1.2rem 1.1rem; font-family: var(--font-ui); position: relative; }
+.card .num { font: 700 2rem/1 var(--font-hand); color: var(--red); margin-bottom: .4rem; }
+.card h3 { font-family: var(--font-display); font-size: 1.3rem; margin-bottom: .5rem; }
+.card p { margin: 0; font-size: .93rem; line-height: 1.5; color: var(--muted); }
+.finale { text-align: center; margin: 3.4rem auto 0; max-width: 46rem; }
+.finale p { font: 400 clamp(1.6rem, 3.4vw, 2.4rem)/1.2 var(--font-display); margin: 0 0 .6rem; }
+.finale footer { font: .9rem var(--font-ui); color: var(--line); }
+.takeaways a { color: #ffc9a8; }
+.takeaways a.ts { background: #3a342b; color: #ffd9c6; }
+.takeaways .card a { color: var(--indigo); }
+.takeaways .card a.ts { background: var(--indigo-soft); color: var(--indigo); }
+
+footer.site { max-width: 1240px; margin: 0 auto; padding: 2.5rem var(--pad) 6rem; font: .86rem/1.6 var(--font-ui); color: var(--muted); display: grid; gap: .7rem; }
+footer.site strong { color: var(--ink); }
+
+/* ---------- jump nav ---------- */
+.jump { position: fixed; left: 1rem; bottom: 1rem; z-index: 800; display: flex; gap: 0; background: var(--ink); border-radius: 4px; box-shadow: var(--shadow); transition: opacity .3s, transform .3s; }
+.jump.on-hero { opacity: 0; transform: translateY(10px); pointer-events: none; }
+.jump button { appearance: none; background: transparent; color: var(--paper); border: 0; font: 600 .84rem var(--font-ui); padding: .6rem .7rem; cursor: pointer; display: inline-flex; align-items: center; gap: .45rem; }
+.jump button:disabled { opacity: .35; cursor: default; }
+.jump button:hover:not(:disabled) { color: #ffb4a6; }
+.jump-cur { max-width: 15rem; border-left: 1px solid #4a443b !important; border-right: 1px solid #4a443b !important; }
+.jump-cur span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.jump-backdrop { position: fixed; inset: 0; z-index: 790; background: rgba(20,15,5,.25); display: none; }
+.jump-backdrop.open { display: block; }
+.jump-menu { position: fixed; left: 1rem; bottom: 4rem; z-index: 810; width: min(560px, calc(100vw - 2rem)); max-height: 70vh; overflow: auto; background: var(--card); border: 1.5px solid var(--ink); border-radius: 4px; padding: .8rem; display: none; font-family: var(--font-ui); box-shadow: var(--shadow); }
+.jump-menu.open { display: block; }
+.jm-group { font: 600 .68rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: .5rem .3rem .3rem; }
+.jump-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .3rem; }
+.jump-grid a { display: block; padding: .45rem .6rem; border-radius: 3px; text-decoration: none; color: var(--ink); font-size: .9rem; line-height: 1.3; border: 1px solid var(--line); }
+.jump-grid a small { display: block; color: var(--muted); font-size: .75rem; }
+.jump-grid a:hover { border-color: var(--ink); }
+.jump-grid a.is-cur { background: var(--ink); color: var(--paper); }
+.jump-grid a.is-cur small { color: var(--line); }
+
+/* ---------- dialogs ---------- */
+dialog.pop { border: 1.5px solid var(--ink); border-radius: 4px; padding: 0; width: min(780px, 94vw); max-height: 88vh; background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+dialog.pop::backdrop { background: rgba(15,12,5,.55); }
+.pop-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .8rem 1.1rem; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--card); z-index: 2; }
+.pop-head h3 { font-size: 1.5rem; }
+.pop-search { padding: .6rem 1.1rem; border-bottom: 1px solid var(--line); display: none; gap: .6rem; align-items: center; font: .85rem var(--font-ui); color: var(--muted); position: sticky; top: 3.6rem; background: var(--card); z-index: 2; }
+.pop-search.on { display: flex; }
+.pop-search input { flex: 1; min-width: 0; font: 1rem var(--font-ui); padding: .4rem .6rem; border: 1px solid var(--line); border-radius: 3px; background: var(--paper); color: var(--ink); }
+.pop-body { padding: 1rem 1.2rem 1.5rem; font-size: 1rem; line-height: 1.6; overflow: auto; }
+.pop-body h1, .pop-body h2, .pop-body h3 { font-family: var(--font-display); margin: 1rem 0 .5rem; }
+.pop-body p { margin: 0 0 .8rem; }
+.pop-body ul, .pop-body ol { margin: 0 0 .8rem 1.4rem; padding: 0; }
+.pop-body hr { border: 0; border-top: 1px dashed var(--line); margin: 1.2rem 0; }
+.pop-body .hide { display: none; }
+.pop-body mark { background: #ffe08a; color: #16202e; }
+.pop-body table { border-collapse: collapse; font-size: .88rem; margin-bottom: 1rem; width: 100%; }
+.pop-body th, .pop-body td { border: 1px solid var(--line); padding: .3rem .45rem; text-align: left; vertical-align: top; }
+dialog.lightbox { border: 0; padding: 0; background: transparent; max-width: 96vw; max-height: 96vh; overflow: visible; }
+dialog.lightbox::backdrop { background: rgba(8,6,2,.9); }
+dialog.lightbox img { max-width: 96vw; max-height: 86vh; width: auto; height: auto; background: #fff; display: block; }
+.lb-bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .6rem 1rem; align-items: center; color: #efe9dc; font: .9rem var(--font-ui); margin-top: .6rem; }
+.lb-bar a { color: #ffc9a8; }
+.lb-bar button { background: transparent; color: #fff; border: 1px solid #776f62; border-radius: 3px; padding: .3rem .7rem; cursor: pointer; font: 600 .85rem var(--font-ui); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1200px) { :root { --dock-w: 330px; } .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 999px) {
+  .hero { grid-template-columns: 1fr; }
+  .comic { max-width: 540px; width: 100%; margin: 1rem auto 0; }
+  .room { display: block; }
+  .dock { position: fixed; right: .7rem; bottom: 4.3rem; top: auto; margin: 0; width: min(48vw, 260px); max-height: none; padding: .45rem; gap: .4rem; transition: width .4s var(--ease); }
+  .dock .dock-head, .dock .now, .dock .chapters, .dock .dock-ctrls .wide-only { display: none; }
+  .dock .dbtn { padding: .35rem .5rem; font-size: .76rem; flex: 1 1 auto; justify-content: center; }
+  .dock .dock-min { display: inline-flex; }
+  body.dock-collapsed:not(.watch) .dock .vwrap { display: none; }
+  body.dock-collapsed:not(.watch) .dock { width: auto; }
+  body.dock-collapsed:not(.watch) .dock #share-btn { display: none; }
+  body.watch .dock { left: 0; right: 0; top: 0; bottom: auto; width: auto; border-radius: 0 0 6px 6px; padding: .5rem .6rem .6rem; }
+  body.watch .dock .now { display: block; font-size: .8rem; min-height: 0; }
+  body.watch .dock .now .in-story { display: none; }
+  body.watch .dock .dock-min { display: none; }
+  body.watch { padding-top: var(--dock-h, 0px); }
+  body.watch .chap { scroll-margin-top: calc(var(--dock-h, 0px) + .5rem); }
+  body.watch .story .chap { opacity: .85; }
+  .net { grid-template-columns: minmax(0, 1fr); }
+  .tests { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .jump { left: .7rem; bottom: .7rem; }
+  .jump-menu { left: .7rem; bottom: 3.9rem; width: calc(100vw - 1.4rem); }
+}
+@media (max-width: 640px) {
+  body { font-size: 17.5px; }
+  .pair, .hyp, .score2 { grid-template-columns: minmax(0, 1fr); }
+  .tests { grid-template-columns: minmax(0, 1fr); }
+  .cards { grid-template-columns: minmax(0, 1fr); }
+  .ledger { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .booklet { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .booklet > div:nth-child(4n) { border-right: 1px solid var(--line); }
+  .booklet > div:nth-child(2n) { border-right: 0; }
+  .booklet > div:nth-last-child(-n+4) { border-bottom: 1px solid var(--line); }
+  .booklet > div:nth-last-child(-n+2) { border-bottom: 0; }
+  .booklet .wide { grid-column: span 2; border-right: 0 !important; }
+  .jump-grid { grid-template-columns: minmax(0, 1fr); }
+  .topbar .long { display: none; }
+  .say { padding-left: 1rem; }
+  .band .tension { grid-template-columns: minmax(0, 1fr); text-align: center; }
+  .band .tension span:nth-child(3n+1) { text-align: center; }
+  .pt .barcell { display: none; }
+  .lab-body { padding: .9rem .8rem 1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; animation-iteration-count: 1 !important; }
+  .comic a { transform: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#story">Skip to the story</a>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<header class="topbar">
+  <a href="../"><span class="long">Talks · </span>S Anand</a>
+  <div class="tb-right">
+    <span class="long">12 Oct 2026 · 69 min video</span>
+    <button class="icon-btn" id="theme-btn" type="button" aria-label="Toggle dark mode"><i class="bi bi-moon-stars" aria-hidden="true"></i></button>
+  </div>
+</header>
+
+<section class="hero" aria-labelledby="title">
+  <div>
+    <div class="kicker"><span>Tools in Data Science</span><span class="dot"></span><span>IIT Madras</span><span class="dot"></span><span>Open design meeting</span><span class="dot"></span><span>12 Oct 2026</span></div>
+    <h1 id="title">The exam is a <em>hypothesis</em>.</h1>
+    <p class="deck">How do you set an exam when any student may hand it to an agent, or to a friend? <strong>For one Monday evening, the TDS teachers invented their next assessments in front of the students — and a student examined them back.</strong></p>
+    <p class="who">An unrehearsed working session of the <a href="https://tds.s-anand.net/">Tools in Data Science</a> course team at IIT Madras: <a href="https://www.s-anand.net/">Anand S</a>, JK, Carlton and TAs Hritik, Mayank and Jaideep, streamed live to students of the September 2026 term. Nothing in it was decided. That is the point.</p>
+    <div class="hero-actions">
+      <a class="btn" href="?view=video" id="hero-watch"><i class="bi bi-play-btn-fill" aria-hidden="true"></i> Watch alongside</a>
+      <a class="btn ghost" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+      <a class="btn ghost" href="#cold"><i class="bi bi-book" aria-hidden="true"></i> Start reading</a>
+    </div>
+    <div class="audio-line">
+      <span><i class="bi bi-headphones" aria-hidden="true"></i> Audio only</span>
+      <audio controls preload="none" aria-label="Audio recording of the meeting">
+        <source src="https://github.com/sanand0/talks/releases/download/talks/2026-10-12-tds-ideation.opus" type="audio/ogg; codecs=opus">
+      </audio>
+    </div>
+    <div class="booklet" role="group" aria-label="Answer booklet cover">
+      <span class="stamp" aria-hidden="true">draft!</span>
+      <div class="wide"><small>Paper</small><b>Project 1, GA3 &amp; beyond</b></div>
+      <div><small>Date</small><b>12-Oct-26</b></div>
+      <div><small>Duration</small><b>69 min</b></div>
+      <div class="wide"><small>Permitted aids</small><b>Any agent. Any friend.</b></div>
+      <div class="wide"><small>Status</small><b>“Not yet decided”</b></div>
+      <div class="wide"><small>Examiner</small><b>The course team</b></div>
+      <div class="wide hand"><small>Examined by</small><b>a student, at 39:28</b></div>
+    </div>
+  </div>
+  <figure class="comic">
+    <span class="tag" aria-hidden="true">the comic version</span>
+    <a href="comic-page.avif" data-lightbox data-caption="The meeting as an AI-drawn eight-panel comic: an interpretation, not a record." aria-label="Enlarge the comic page">
+      <img src="comic-page.avif" width="1055" height="1491" alt="Eight-panel comic of the meeting. 1: the course team designs assessments live while students watch. 2: assume every student has an AI sidekick; good questions must still teach something real. 3: each idea runs an obstacle course of six hurdles: real learning, no easy forwarding, no solver sharing, a human in the loop, hard to game, easy to grade. 4: a toolkit of durable skills: identity, negotiation, real-world validation, hidden requirements, deployment, verification, metacognition. 5: invoices scattered among students who trade and negotiate to reconstruct each client, with rate limits and no shared folder. 6: a prediction market on AI Pipe token spend where students update beliefs as signals arrive. 7: reward the correct outlier, pulling agents away from the bland average. 8: the bigger lesson: framing, steering agents, verifying and refining the rules together, with vignettes of the Tangram precision issue, the collapsed-question fix, USB-debugging a phone and a Google Meet collaboration.">
+    </a>
+    <figcaption>Tap to enlarge. <strong>An interpretation, not evidence:</strong> the comic’s market prices, “$50K in March” and tidy hurdles are the illustrator’s. The video is what happened; the comic is what it felt like.</figcaption>
+  </figure>
+</section>
+
+<div class="evkey" role="note" aria-label="How to read the evidence on this page">
+  <div class="evkey-inner">
+    <span>How to read this page</span>
+    <span><span class="ev ev-w">Witnessed</span> said or shown on the call</span>
+    <span><span class="ev ev-x">Research</span> an external finding</span>
+    <span><span class="ev ev-i">Inference</span> our reading of it</span>
+    <span><span class="ev ev-p">Hypothetical</span> invented to think with, not TDS data</span>
+  </div>
+</div>
+
+<div class="room" id="room">
+<main class="story" id="story">
+
+<!-- ================= COLD OPEN ================= -->
+<section class="chap" id="cold" data-act="Cold open" data-title="It looked right">
+  <div class="act" data-n="✎">Cold open · 66:06</div>
+  <h2>It looked right. <em>It didn’t pass.</em></h2>
+  <p class="lede">An hour and six minutes into the meeting, after most of the teachers had left, a student named Shreenish asked to share their screen. Shreenish was careful about the word. <strong>“It’s not a bug,”</strong> they said, <strong>“but I’m facing this issue like just if — if I’m doing something wrong.”</strong> <a class="ts" href="?t=65:49">65:49</a></p>
+  <p>On the screen was a question from the course’s first graded assignment: a Tangram. Seven flat pieces, one black target silhouette — a figure carrying a tray. On the game board in the next tab, Shreenish had built it. To the eye, it was the same shape.</p>
+  <div class="pair wide">
+    <figure class="shot"><div class="lbl">The target, as the portal showed it</div><a href="assets/tangram-target.webp" data-lightbox data-caption="The assigned target silhouette, cropped from Shreenish’s screen share at 66:08 (low resolution in the recording)."><img src="assets/tangram-target.webp" width="474" height="354" alt="A black tangram silhouette on white: a figure with a square head, a long diagonal body, a leg, and a triangular tray held out to the right." loading="lazy"></a></figure>
+    <figure class="shot"><div class="lbl">The arrangement, on the game board</div><a href="assets/tangram-board.webp" data-lightbox data-caption="The arrangement on the Tangram board at 66:36. Visually close; geometrically unknown."><img src="assets/tangram-board.webp" width="520" height="340" alt="Seven pale tangram pieces on a dark board forming the same figure with a square head, diagonal body, leg and tray." loading="lazy"></a></figure>
+  </div>
+  <p>Shreenish pasted the board’s signed answer into the exam. The exam replied, in red: <strong>“The submitted arrangement does not match your assigned target silhouette.”</strong> They had nudged the pieces one step at a time, they said, <strong>“but it is still showing incorrect.”</strong> <a class="ts" href="?t=66:32">66:32</a></p>
+  <p>Fifteen minutes earlier the same student had made a different kind of complaint — that solved questions should collapse out of the way — and the professor had fixed it, more or less, on the spot, by dictating it to an AI. <a class="ts" href="?t=51:05">51:05</a> One kind of feedback took a sentence to act on. The other <strong>nobody on the call could settle</strong>. Was the arrangement off by a hair? Was the tolerance invisible? Was the checker wrong? <span class="ev ev-w">Witnessed</span> All the recording proves is that it looked right and didn’t pass.</p>
+  <p>That gap — between <strong>work that looks done and evidence that something was learned</strong> — is what the whole meeting was about. To see why, rewind an hour.</p>
+</section>
+
+<!-- ================= ACT I ================= -->
+<section class="chap act-open" id="room" data-roman="I" data-act="I · What are we examining?" data-title="Listening in">
+  <div class="act" data-n="1">Act I · What are we examining?</div>
+  <h2>“An internal ideation meeting you happen to be <em>listening in on</em>”</h2>
+  <p class="lede">The meeting began the way most meetings do: waiting for people who were late. Then Anand gave up waiting and told the students on the stream what they had walked into. <a class="ts" href="?t=01:09">01:09</a> The course team was going to discuss future graded assignments (GAs), projects and the remote online exam (ROE), out loud, with no agenda prepared for an audience.</p>
+  <div class="say"><p>“So, it’s almost like an internal ideation meeting you happen to be listening in on.”</p><footer><b>Anand</b>, instructor <a class="ts" href="?t=01:09">01:09</a></footer></div>
+  <p>Tools in Data Science has an unusual rule. The <a href="https://tds.s-anand.net/">course page</a> says it plainly: <strong>“You <em>CAN</em> copy from friends and AI. In fact, it’s part of the curriculum.”</strong> Share code, work in groups, use ChatGPT — in assignments, projects and the online exam; only the final in-person exam is closed. So the usual question-setter’s question, <em>how do we stop them cheating?</em>, is off the table. Anand stated the replacement in the first minute of substance.</p>
+  <div class="say"><p>“Look, people can and should use an agent to solve it. And they should collaborate, not just sharing answers but sharing tools that let it solve the problem.”</p><footer><b>Anand</b> <a class="ts" href="?t=03:17">03:17</a></footer></div>
+  <p>If agents and friends are permitted, a question that an agent or a friend can finish teaches nothing. But a question nobody can finish teaches nothing either. <strong>The design problem is to find work that agents help with but cannot trivially complete without the student becoming more capable</strong> — and to grade it, at the scale of an online degree, cheaply.</p>
+  <p class="aside"><strong>What this adds to the earlier talks.</strong> At the <a href="../2026-10-05-tds-orientation/">5 October orientation</a> the same team told students what to do: <em>get the job done — and verify it</em>. The <a href="../2026-08-10-tds-ama/">August AMA</a> asked what the course is really teaching; <a href="../2026-06-12-let-ai-take-your-exams/">Let AI Take Your Exams</a> made the case for letting agents sit the paper; and Anand’s essay <a href="https://www.s-anand.net/blog/how-i-use-ai-to-teach/">How I use AI to teach</a> explains the habit behind it. This meeting is the other side of the desk: <strong>the teachers trying to turn that philosophy into questions, and finding out how hard it is.</strong></p>
+</section>
+
+<section class="chap" id="tests" data-act="I · What are we examining?" data-title="Six ways to break a question">
+  <div class="act" data-n="2">Six ways to break a question</div>
+  <h2>Before inventing questions, write the tests they must <em>survive</em></h2>
+  <p class="lede">Anand had come with a draft, open in an editor: a prompt Anand planned to give an AI that would draft new questions and check them. It opened with a checklist. Anand read it out. <a class="ts" href="?t=03:54">03:54</a></p>
+  <figure class="shot wide"><a href="assets/six-tests.webp" data-lightbox data-caption="Anand’s six tests for a question, on screen at 04:20."><img src="assets/six-tests.webp" width="880" height="470" alt="A VS Code note titled 'Students may collaborate with each other' listing six tests: 1 Learning test: is the step the student must do themselves the skill we want, and not just pointless difficulty? 2 Forward test: does one student's submission score for another? 3 Solver test: would one shared tool score for everyone? 4 Agent test: could Codex solve the question with the student's logged-in browser or terminal? 5 Faking test: is faking costlier than doing it honestly, and does faking still teach? 6 Oracle test: is grading server-side, robust and rate-limited or revealed after the test? Below: aim for about 50% of students scoring correct, with a wide spread." loading="lazy"></a><figcaption><span class="ev ev-w">Witnessed</span> The draft on screen at <a class="ts" href="?t=04:20">04:20</a>. Spoken, the agent test became: <strong>“If I just toss an agent at it, it should not trivially solve the problem without me learning something in the process.”</strong> And the oracle test: <strong>“I don’t want our life to become difficult.”</strong> <a class="ts" href="?t=03:54">03:54</a></figcaption></figure>
+  <p>Notice what the tests are not. None asks whether the question is hard. Two ask whether it can be passed on (an answer, a solver). One asks whether an agent can do it alone. One asks whether gaming it costs more than doing it — <em>and whether gaming it still teaches</em>, which is a generous idea of cheating. One asks whether it can be graded without pain. And the first asks whether the effortful part is the skill at all, <strong>“and not just pointless difficulty.”</strong></p>
+  <p>Try them. Below are three versions of the same toy task, each a little better defended than the last. <span class="ev ev-p">Hypothetical</span> The verdicts are our reading, not the course’s.</p>
+
+  <div class="lab wide" id="attack">
+    <div class="lab-head"><h3>Attack a question</h3><span class="ev ev-p">Hypothetical questions</span></div>
+    <div class="lab-body">
+      <div class="seg" role="group" aria-label="Choose a question version">
+        <button type="button" data-q="0" aria-pressed="true">v1 · Same CSV for all</button>
+        <button type="button" data-q="1" aria-pressed="false">v2 · Your own CSV</button>
+        <button type="button" data-q="2" aria-pressed="false">v3 · Deploy it, live-checked</button>
+      </div>
+      <p id="attack-q" aria-live="polite"></p>
+      <div class="tests" id="attack-tests"></div>
+      <p class="verdict" id="attack-verdict" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <p>The lab makes one thing obvious that the list hides: <strong>personalising a question fixes forwarding, not agents.</strong> Each defence pushes the work somewhere else — into the student’s own account, own data, own deployment — and the agent follows it there. Anand knew this. The draft listed patterns that help, and sorted them by how long they would last.</p>
+  <div class="pair wide">
+    <figure class="shot"><a href="assets/patterns.webp" data-lightbox data-caption="Patterns that last, on screen at 06:20."><img src="assets/patterns.webp" width="880" height="470" alt="Notes listing patterns that last: Identity, the student is the evidence, e.g. a 60-second voice note teaching a family member who explains it back; Interaction, needs other people's independent action; Real-world data, lock a prediction and measure it; Uniqueness, grade against classmates for distinctness and correctness; Adversarial AI, beat or convince an AI that also improves; Presence, a short unassisted check on a fresh case." loading="lazy"></a><figcaption>“Patterns that last” <a class="ts" href="?t=05:08">05:08</a> — including <strong>Presence: a short unassisted check on a fresh case.</strong></figcaption></figure>
+    <figure class="shot"><a href="assets/decaying.webp" data-lightbox data-caption="Patterns that decay as agents improve, on screen at 07:40."><img src="assets/decaying.webp" width="880" height="470" alt="Notes listing patterns that teach agent-driving but decay as agents improve: Environments (stateful, server-graded, per-student sessions such as GitHub, Cloudflare, Tangram, a graph game); Constraints on budget, tools or queries; Incompleteness, where the missing fact must come from a person or the world; Verification, finding or fixing a bug, which lasts only when verifying against the physical world or a prior prediction." loading="lazy"></a><figcaption>“…but decay as agents improve” <a class="ts" href="?t=07:11">07:11</a> — the Tangram lives here, under <strong>Environments</strong>.</figcaption></figure>
+  </div>
+  <p>Two lines on screen deserve a margin note. One is the target: <strong>“Aim for ~50% of students scoring correct, with a wide spread.”</strong> Anand called that <strong>“the sweet spot for learning”</strong> <a class="ts" href="?t=04:47">04:47</a> — <span class="ev ev-i">Inference</span> a working heuristic for item difficulty, not an established optimum; what a 50% item teaches depends on what the other 50% were missing. The other is a sentence Anand spoke rather than wrote: <strong>“Ultimately, in the future, your identity is an agent-proof skill.”</strong> <a class="ts" href="?t=05:08">05:08</a> <span class="ev ev-x">Research</span> The US standards body for digital identity is less sure: <a href="https://pages.nist.gov/800-63-4/sp800-63a/ial-general/">NIST SP 800-63-4</a> spends pages on forged media, injected video and synthetic voices. Identity is a useful <em>constraint</em> today. It is not a proof.</p>
+</section>
+
+<section class="chap" id="learn" data-act="I · What are we examining?" data-title="The seventh test">
+  <div class="act" data-n="3">The seventh test</div>
+  <h2>JK’s question: do they know <em>how</em> they learned it?</h2>
+  <p class="lede">JK — Jayakrishnan, who joined a few minutes late — listened to the checklist and agreed these were skills worth having: <strong>“we want it to transfer — both durable and transferable.”</strong> <a class="ts" href="?t=06:55">06:55</a> Then JK added one Anand had not written down.</p>
+  <div class="say"><p>“The metaskill of metacognition, right? Are they able to do a ‘how they learned it’, right, either from agent or from their peer?”</p><footer><b>JK</b> <a class="ts" href="?t=07:53">07:53</a></footer></div>
+  <p>Anand’s reply is worth quoting in full because it is so unusual from someone setting an exam: <strong>“Good point. Don’t know, worth evaluating, agreed.”</strong> <a class="ts" href="?t=08:26">08:26</a></p>
+  <p>The conversation then took a turn that sharpened JK’s point. Hritik, a TA, shared news that Adobe-style apps had been rebuilt with AI and released for every platform — <strong>“a small company is able to release a state-of-the-art application”</strong> <a class="ts" href="?t=09:28">09:28</a>. Anand said one of them, a PDF editor, was in use <strong>“left, right, and center as an Adobe Acrobat replacement.”</strong> <a class="ts" href="?t=09:00">09:00</a> If one person with an agent can build an Acrobat, what is left to teach? Anand admitted not knowing: <strong>“what ambition is required to build software that … one person with an agent will struggle with?”</strong> Anand asked. <strong>“I can’t think of anything just yet.”</strong> <a class="ts" href="?t=09:44">09:44</a> JK answered with the requirement nobody says out loud. Ask an agent for an Acrobat replacement and you may not think to mention signatures.</p>
+  <div class="say"><p>“How do you make implicit explicit? Exactly the exercise that we are doing right now.”</p><footer><b>JK</b> <a class="ts" href="?t=11:43">11:43</a></footer></div>
+  <p>That is the most transferable sentence of the evening, and it described the meeting itself: a room of people trying to write down what they meant by “learning”. Anand agreed it should be taught and was candid about the gap: <strong>“it is not yet clear how. Let’s explore.”</strong> <a class="ts" href="?t=12:16">12:16</a></p>
+  <p>There is a reason to take JK’s seventh test seriously, and a reason not to trust the easy version of it. <span class="ev ev-x">Research</span> The National Academies’ <a href="https://www.nationalacademies.org/read/24783/chapter/6"><em>How People Learn II</em></a> treats monitoring and regulating one’s own learning as central to expertise. But a polished reflection can itself be written by an agent. And the starkest evidence on AI help comes from a classroom where everything <em>looked</em> like learning.</p>
+
+  <div class="lab wide bars" id="bastani">
+    <div class="lab-head"><h3>Help that looked like learning</h3><span class="ev ev-x">Research · real data</span></div>
+    <div class="lab-body">
+      <div id="bastani-svg"></div>
+      <p class="lab-cap">Change in grades relative to students with no AI, from <a href="https://doi.org/10.1073/pnas.2422633122">Bastani et al., <em>PNAS</em> 2025</a>: nearly 1,000 high-school maths students in Turkey, four 90-minute sessions. “GPT Base” was an ordinary chat interface; “GPT Tutor” was prompted with teacher hints and told not to hand over answers. With access, both groups did far better on practice problems. <strong>When access was taken away, the GPT Base group scored 17% lower than students who never had it.</strong> The tutor group’s exam effect was statistically indistinguishable from zero — the safeguards mostly removed the harm, though they did not produce a measurable gain.</p>
+    </div>
+  </div>
+  <p><span class="ev ev-i">Inference</span> TDS is not a high-school maths class, and its exam is not unassisted: the skill it wants may <em>be</em> working with agents. But the lesson carries. <strong>A correct submission made with help is evidence about the submission, not the student.</strong> Anand’s own “Presence” pattern — a short unassisted check on a fresh case — is the kind of measure that could tell the two apart. The meeting did not get to how it would be used.</p>
+</section>
+
+<!-- ================= ACT II ================= -->
+<section class="chap act-open" id="invoices" data-roman="II" data-act="II · Change the shape of the task" data-title="Trading for information">
+  <div class="act" data-n="4">Act II · Change the shape of the task, not the solver</div>
+  <h2>The invoices are in <em>someone else’s</em> pocket</h2>
+  <p class="lede">With the tests on the table, Anand turned to Project 1. The first idea did not try to out-think the agent. It changed where the information lived. <a class="ts" href="?t=13:12">13:12</a></p>
+  <div class="say"><p>“Keeping that interaction principle in mind, one exercise that I’m considering for projects is: trading for information.”</p><footer><b>Anand</b> <a class="ts" href="?t=13:12">13:12</a></footer></div>
+  <p>Each student would process the invoices of one client — except that the invoices would be <strong>scattered across other students</strong>. (The numbers moved during the conversation: 50,000 invoices for 1,000 clients at first, a different figure later. They were brainstorming quantities, not a spec.) What would people trade? Invoices, tokens, marks — <strong>“something to explore to see what kinds of real-world strategies a human and an agent can come up with for large-scale collaboration as well as defection.”</strong> <a class="ts" href="?t=14:18">14:18</a> Anand’s summary of the human part was blunter: <strong>“you don’t like somebody, you don’t want to give them your invoice, let’s deal with it.”</strong></p>
+  <p>The agent can do the parsing. It can even plan the negotiation. Anand’s bet was on something earlier: <strong>“Knowing to ask these questions is probably the important part today.”</strong> <a class="ts" href="?t=14:18">14:18</a></p>
+  <p>Then came the most interesting disagreement of the evening. JK, speaking from a context JK knew well, suggested giving students <strong>pointers</strong>: tell them that <strong>“your invoice 13, 14, and 15 have been sent to so-and-so people,”</strong> so they learn which nodes to search first. <a class="ts" href="?t=16:22">16:22</a> Anand pushed back. Left alone, students would self-organise — a shared sheet, a shared folder — <strong>“except for the 20% holdouts”</strong> who show up the day before the deadline. Hand them the map and you lose that.</p>
+  <div class="say"><p>“The providing of that information can possibly eliminate a self-organizing mechanism that might evolve otherwise.”</p><footer><b>Anand</b> <a class="ts" href="?t=17:31">17:31</a></footer></div>
+  <div class="exch">
+    <p><b>Anand</b> I’m not saying no, let us not provide any signals. I’m saying let us not provide the <em>answer</em> itself as a signal. <a class="ts" href="?t=18:14">18:14</a></p>
+    <p><b>JK</b> Certain people <em>will</em> have more information. That is the information asymmetry, so to speak. <a class="ts" href="?t=18:21">18:21</a></p>
+    <p><b>Anand</b> If there is a cost to fetch the invoice, even if it is a rate limit … the original idea of how do you search for information comes into the skillset directly. <a class="ts" href="?t=18:39">18:39</a></p>
+    <p><b>JK</b> Classic knowledge management problem. <a class="ts" href="?t=19:31">19:31</a></p>
+  </div>
+  <p>Neither was wrong; they were choosing what the task would measure. Try the three versions yourself. You need the eight invoices of your client. They are held by your classmates; you can afford six requests. <span class="ev ev-p">Hypothetical</span> The 20% holdouts are Anand’s illustration, not a measured rate.</p>
+
+  <div class="lab wide" id="invoice-lab">
+    <div class="lab-head"><h3>Find your client’s invoices</h3><span class="ev ev-p">Hypothetical network</span></div>
+    <div class="lab-body">
+      <div class="seg" role="group" aria-label="How much do the teachers reveal?">
+        <button type="button" data-mode="none" aria-pressed="true">No map</button>
+        <button type="button" data-mode="hints" aria-pressed="false">JK’s pointers</button>
+        <button type="button" data-mode="folder" aria-pressed="false">Class shared folder</button>
+      </div>
+      <div class="net">
+        <div><svg id="net-svg" viewBox="0 0 400 360" role="group" aria-label="Ten classmates around you. Select a classmate to request your invoices."></svg></div>
+        <div>
+          <div class="ledger" id="ledger" aria-label="Your client’s eight invoices"></div>
+          <dl class="meter">
+            <dt>Requests used</dt><dd id="m-asks">0 / 6</dd>
+            <dt>Invoices found</dt><dd id="m-found">0 / 8</dd>
+            <dt>Auditor’s gap</dt><dd id="m-gap">100% of value missing</dd>
+          </dl>
+          <p id="net-msg" aria-live="polite" class="small"></p>
+          <button type="button" class="chip" id="net-reset">Start again</button>
+        </div>
+      </div>
+      <p class="verdict" id="net-verdict" aria-live="polite"></p>
+    </div>
+  </div>
+  <p>Play it a few times and the trade-off becomes concrete. <strong>With no map, the task measures search under a budget. With pointers, it measures following clues. With a shared folder, it measures almost nothing — except who the holdouts are.</strong> And in every version, one invoice sits with a classmate who never replies. No strategy recovers it. <span class="ev ev-i">Inference</span> That is realistic, and it is also a grading problem we will meet again in Act III: <strong>your score now depends on someone else’s behaviour.</strong> The meeting ended this thread with a promise, not a decision — Anand would take <strong>“a shot at sharpening this”</strong> for the Wednesday call <a class="ts" href="?t=19:46">19:46</a>, and JK framed what should survive any rewrite: <strong>“there is an information distribution and the idea is to self-organize and figure out.”</strong> <a class="ts" href="?t=20:02">20:02</a></p>
+</section>
+
+<section class="chap" id="market" data-act="II · Change the shape of the task" data-title="A market you can move">
+  <div class="act" data-n="5">A market you can move</div>
+  <h2>Predict the number. Or <em>push</em> it.</h2>
+  <p class="lede">The second idea grounded a prediction in something real: how much students would spend through <a href="https://aipipe.org/">AI Pipe</a>, the proxy that gives the class its LLM tokens. <a class="ts" href="?t=20:14">20:14</a> Students would buy and sell claims on future spend, like a stock market — and Anand saw the flaw in the same breath.</p>
+  <div class="say"><p>“A: this is influenceable, at least partly, because if I want to increase the spend … I can push. I can get a whole bunch of people to push it up.”</p><footer><b>Anand</b> <a class="ts" href="?t=20:14">20:14</a></footer></div>
+  <p>JK sharpened it: <strong>“Or you can have a network of people work to push it up.”</strong> <a class="ts" href="?t=21:18">21:18</a> Anand did not treat this as a bug. Coordinating on a number and then coordinating to hit it, with an agent advising on the trades — <strong>“that becomes powerful.”</strong> JK wanted <strong>“a dashboard which talks about the AI pipe token on a daily basis”</strong> <a class="ts" href="?t=22:06">22:06</a>, and raised the mess of reality: students on their own keys, a day the credit balance ran out. <strong>“But that’s what happens with the stock market,”</strong> said Anand. <a class="ts" href="?t=23:18">23:18</a></p>
+  <p>Anand wanted the pattern more than the instance: <strong>“Prediction is probably one of the key skills we have to learn.”</strong> <a class="ts" href="?t=23:44">23:44</a> Who would teach it? Not the TAs, Anand decided: <strong>“We should get a super-forecaster to teach.”</strong> <a class="ts" href="?t=24:59">24:59</a> JK suggested the experts might already be in the class, working professionals who trade, with TAs <strong>“converting it into agentic format.”</strong> <a class="ts" href="?t=25:58">25:58</a> (Later, Carlton ran a poll; three people said they had trading experience. <a class="ts" href="?t=45:58">45:58</a>)</p>
+  <p>Here is the problem in one chart. Two students forecast the month’s spend. One forecasts. The other forecasts high, then spends credits to make it true. <span class="ev ev-p">Hypothetical numbers</span></p>
+
+  <div class="lab wide mkt" id="market-lab">
+    <div class="lab-head"><h3>Forecast versus control</h3><span class="ev ev-p">Hypothetical spend</span></div>
+    <div class="lab-body">
+      <div class="seg" role="group" aria-label="Market rule">
+        <button type="button" data-push="0" aria-pressed="true">Nobody pushes</button>
+        <button type="button" data-push="1" aria-pressed="false">Ben may spend to push</button>
+      </div>
+      <div id="mkt-svg"></div>
+      <div class="score2">
+        <div><small>Asha · forecast, updated on day 15</small><b id="err-a">—</b><small>error at settlement</small></div>
+        <div><small>Ben · forecast once, high</small><b id="err-b">—</b><small>error at settlement</small></div>
+      </div>
+      <p class="verdict" id="mkt-verdict" aria-live="polite"></p>
+    </div>
+  </div>
+  <p><span class="ev ev-x">Research</span> Markets are not magic here. A <a href="https://arxiv.org/abs/2503.03312">2025 field experiment</a> that randomly shocked prices in 817 real prediction markets found the effects were still detectable 60 days later; bigger, more liquid markets were harder to move. That is manipulation of the <em>price</em>. The TDS idea invites something closer to manipulating the <em>outcome</em>, which a <a href="https://arxiv.org/abs/2606.31675">2026 working paper on settlement manipulation</a> studies in contracts whose settling price traders can move. <span class="ev ev-i">Inference</span> Both can be good lessons. They are different lessons. <strong>If influence is the skill, grade coordination. If forecasting is the skill, grade calibration on a number students cannot move</strong> — with a <a href="https://doi.org/10.1146/annurev-statistics-042424-050626">proper scoring rule</a>, not profit. The meeting left pricing, payout and settlement rules open. Multiplayer games went to the bonus pile, so the team could see <strong>“how students are interacting”</strong> first. <a class="ts" href="?t=26:54">26:54</a></p>
+</section>
+
+<section class="chap" id="pointless" data-act="II · Change the shape of the task" data-title="Correct, and nobody else said it">
+  <div class="act" data-n="6">Correct, and nobody else said it</div>
+  <h2>Calvin scores 957. <em>On a double word.</em></h2>
+  <p class="lede">The third idea came from a weekend re-reading <em>Calvin and Hobbes</em>. In one strip Calvin plays ZQFMGB in Scrabble and claims 957 points on a double word score. <a class="ts" href="?t=28:19">28:19</a> Anand’s first reaction was arithmetic: <strong>“Wait, hold on, double word score means even numbers.”</strong> <a class="ts" href="?t=28:53">28:53</a> Then Anand asked Claude to find a game in which it could happen anyway.</p>
+  <figure class="shot"><a href="https://files.s-anand.net/blog/2026-01-11-calvin-957-in-scrabble/how-calvin-got-957.html"><img src="assets/scrabble-calvinball.webp" width="500" height="620" alt="A dark Scrabble board from the replay at move 25 of 33, titled 'Act IV, Calvinball rules', crowded with Z-heavy words like FIZZZ, JAZZZ and BUZZZZZ. Calvin plays MOEISAJERK for 122 points, flagged 'not a word'. Hobbes: 'That's a sentence.' Calvin: 'It's one word if you say it fast.' Score: Calvin 1,398, Hobbes 1,212." loading="lazy"></a><figcaption>Anand’s <a href="https://files.s-anand.net/blog/2026-01-11-calvin-957-in-scrabble/how-calvin-got-957.html">replay</a>, on screen at <a class="ts" href="?t=30:20">30:20</a>, from the <a href="https://www.s-anand.net/blog/calvin-957-in-scrabble/">11 Oct blog post</a>. Note the “Cheat-o-meter”: the game starts legal and then bends — a bottomless bag of tiles, an evolving dictionary, and finally Calvinball. <strong>It is a creative construction, not a legal Scrabble game</strong>, and we have not independently re-scored it. (We link to the original strip rather than reproduce it.)</figcaption></figure>
+  <p>The trick is the crosswords: one move scores every word it touches, so the total need not be even. But the point Anand drew was not about Scrabble. Agents now find counterexamples by deep search, and a search problem has many needles. So reward <em>different</em> needles.</p>
+  <div class="say"><p>“If you have the same counter-example as someone else, both of you get zero … allowing us to teach how to get an agent to find what is away from the mode.”</p><footer><b>Anand</b> <a class="ts" href="?t=30:45">30:45</a></footer></div>
+  <p>Hritik recognised the format at once: the BBC quiz <a href="https://en.wikipedia.org/wiki/Pointless"><em>Pointless</em></a>, where a hundred people are surveyed and the best answer is one none of them gave. <strong>“Oh, it should be a correct answer, but it should be a pointless.”</strong> <a class="ts" href="?t=32:04">32:04</a> JK liked that it was <strong>“rewarding outliers.”</strong> <a class="ts" href="?t=33:07">33:07</a> Later Anand put the rationale in one line: <strong>“Since models typically generate the average of human knowledge, your ability to push this away from that as far as possible while still maintaining correctness is the uniqueness skill.”</strong> <a class="ts" href="?t=41:26">41:26</a></p>
+  <p><span class="ev ev-x">Research</span> There is real support for the worry. In a <a href="https://doi.org/10.1126/sciadv.adn5290"><em>Science Advances</em> experiment</a>, writers given AI ideas produced stories rated more creative individually — and <strong>more similar to each other</strong>. That supports homogenisation in some settings, not a literal “average”. But scoring rules for rarity have their own failure modes. Here is a cohort of 25 answers to a classic: <em>find an n for which n² + n + 41 is not prime.</em> <span class="ev ev-p">Hypothetical answers</span></p>
+
+  <div class="lab wide" id="pointless-lab">
+    <div class="lab-head"><h3>Score the outliers</h3><span class="ev ev-p">Hypothetical cohort of 25</span></div>
+    <div class="lab-body">
+      <div class="seg" role="group" aria-label="Scoring rule">
+        <button type="button" data-rule="rare" aria-pressed="true">Rarest scores highest</button>
+        <button type="button" data-rule="zero" aria-pressed="false">Duplicates score zero</button>
+        <button type="button" data-rule="valid" aria-pressed="false">Valid first, then rare</button>
+        <button type="button" data-rule="family" aria-pressed="false">Rare by mechanism</button>
+      </div>
+      <div style="overflow-x:auto"><table class="pt" id="pt"><caption class="sr-only">Answers, how many students gave each, whether it is valid, and its score under the chosen rule</caption><thead><tr><th scope="col" style="text-transform:none">n</th><th scope="col">Students</th><th scope="col" style="text-transform:none">n² + n + 41</th><th scope="col">Score</th><th scope="col" class="barcell"><span class="sr-only">Score bar</span></th></tr></thead><tbody></tbody></table></div>
+      <p class="verdict" id="pt-verdict" aria-live="polite"></p>
+    </div>
+  </div>
+  <p><strong>Rarity without validity rewards noise. Duplicates-score-zero punishes the honest majority and rewards hiding answers. And distinct numbers are not distinct ideas</strong>: 40 and 81 fail for the same reason. <span class="ev ev-i">Inference</span> The defensible version scores correctness first, then distance between <em>mechanisms</em>, which needs a validator that understands the domain — the kind of automatic checker that makes systems like DeepMind’s <a href="https://deepmind.google/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/">AlphaEvolve</a> work. Anand’s instinct for the format was a GA question asking for <strong>“a prompt that we can benchmark”</strong> rather than an answer. <a class="ts" href="?t=32:57">32:57</a> Anand made a note to add it. <a class="ts" href="?t=33:24">33:24</a></p>
+</section>
+
+<!-- ================= ACT III ================= -->
+<section class="chap act-open" id="outcome" data-roman="III" data-act="III · The students audit the examiners" data-title="What will you measure?">
+  <div class="act" data-n="7">Act III · The students audit the examiners</div>
+  <h2>“What is the objective in terms of what the learning outcome is <em>supposed to be</em>?”</h2>
+  <p class="lede">Thirty-eight minutes in, JK turned to the audience. <strong>“Till now it was a closed game between us. So any questions, suggestions?”</strong> <a class="ts" href="?t=38:09">38:09</a> Nothing happened.</p>
+  <div class="exch">
+    <p><b>Carlton</b> I think they’re just stunned silence. <a class="ts" href="?t=38:36">38:36</a></p>
+    <p><b>Anand</b> It’s a normal session.</p>
+    <p><b>Hritik</b> Like most of the things they’re like going over their head.</p>
+    <p><b>Anand</b> That is also normal for us.</p>
+    <p><b>Anand</b> And crazy is not bad. You not understanding what you’re saying is also not bad. <a class="ts" href="?t=39:21">39:21</a></p>
+  </div>
+  <p>Then a student unmuted and asked the question a curriculum committee would ask.</p>
+  <div class="say stu"><p>“If you could just briefly summarize what is the objective in terms of what the learning outcome is supposed to be? That might be helpful.”</p><footer><b>Shreenish</b>, student <a class="ts" href="?t=39:28">39:28</a></footer></div>
+  <p>Anand answered crisply, idea by idea. The invoices: <strong>“The objective is to strategize information sourcing when you are not completely aware what information resides where”</strong> — the skill, Anand added, that “we hired an entire team of consultants for” and were and was <strong>“selling like hotcakes.”</strong> <a class="ts" href="?t=39:42">39:42</a> The market: <strong>“make good predictions, and revise your predictions as information changes.”</strong> <a class="ts" href="?t=40:33">40:33</a> Pointless: push away from the average <strong>“while still maintaining correctness.”</strong> <a class="ts" href="?t=41:26">41:26</a></p>
+  <p>Shreenish did not stop at objectives, and asked what any student asks of any rubric.</p>
+  <div class="say stu"><p>“Students will have some expectation, right? That if I do X, Y, and Z or if I achieve this, then I get a certain score. So what will — what do you suggest?”</p><footer><b>Shreenish</b> <a class="ts" href="?t=42:29">42:29</a></footer></div>
+  <p>This was the moment the evening turned from philosophy into assessment. Anand reached for a real-world grader: <strong>“I would act as and evaluate as auditors.”</strong> An accountant who misses invoices is judged by the value of the gap and the number of missing entries — <strong>“There probably are a few other factors involved here.”</strong> And then, unusually: <strong>“Should I simplify that?”</strong> <a class="ts" href="?t=42:55">42:55</a></p>
+  <div class="say stu"><p>“I think as when you create the spec on Wednesday, then we’ll probably have a better handle on whether the marking scheme will work or not.”</p><footer><b>Shreenish</b> <a class="ts" href="?t=43:40">43:40</a></footer></div>
+  <p>That is a reviewer’s verdict, delivered politely: <strong>come back with the spec.</strong> <span class="ev ev-i">Inference</span> The auditor’s loss function is a good start — it is what the “Auditor’s gap” in the invoice lab above computes — but it does not yet say what the full set is, how duplicates count, or what happens when the gap is a classmate who never replied. Those are the questions that decide whether a grade is fair.</p>
+
+  <div class="band">
+    <div class="band-label">The meeting’s honest status</div>
+    <div class="say"><p>“Project 1 is not yet decided yet. So if you have any other ideas, you could present them here.”</p><footer><b>Hritik</b>, TA <a class="ts" href="?t=44:12">44:12</a></footer></div>
+    <div class="say"><p>“We wanted to loop you in partly to understand how and why we create the questions we create, and the level of ignorance that we have in as fast a changing field as this.”</p><footer><b>Anand</b> <a class="ts" href="?t=48:32">48:32</a></footer></div>
+  </div>
+  <p>JK compared it to a wedding: speak now or forever hold your peace. Anand preferred <strong>“If you want to change the rules of the game in your favor —”</strong> <a class="ts" href="?t=44:52">44:52</a> The invitation had a deadline (post on Discourse before the Wednesday 9:30 meeting <a class="ts" href="?t=45:30">45:30</a>) and a condition. Carlton said the sessions would only continue if students used them: <strong>“make use of this opportunity to at least, you know, express your thoughts or feelings or opinions.”</strong> <a class="ts" href="?t=50:26">50:26</a> Anand offered a reason even for people who had nothing to suggest: <strong>“it will be practice for you to see how you can steer a discussion where you have very little context.”</strong> <a class="ts" href="?t=49:59">49:59</a></p>
+</section>
+
+<section class="chap" id="fix" data-act="III · The students audit the examiners" data-title="Specify, delegate, verify">
+  <div class="act" data-n="8">Specify, delegate, verify</div>
+  <h2>A student files a feature request. The professor <em>dictates it</em> to an agent.</h2>
+  <p class="lede">Shreenish took Carlton at their word. There were two complaints about the exam portal. First, solved questions should collapse: <strong>“if we have completed a question, we can just like pull up — pull it up, so it will go up and it will appear as a single line.”</strong> <a class="ts" href="?t=51:05">51:05</a> Second, one question had needed software that would not run on Shreenish’s laptop; it was solved on a college PC, and could not be resubmitted later from the laptop.</p>
+  <div class="say"><p>“The second is intentional. The first … let’s fix now.”</p><footer><b>Anand</b> <a class="ts" href="?t=51:52">51:52</a></footer></div>
+  <p>Anand shared the screen, opened ChatGPT, and spoke the request into it. What Anand said is a small masterclass in delegation: the problem, the user’s suggestion, a constraint, a quality bar, and a check.</p>
+  <figure class="shot wide"><a href="assets/ui-prompt.webp" data-lightbox data-caption="The dictated request in ChatGPT, on screen at 53:30."><img src="assets/ui-prompt.webp" width="520" height="178" alt="A ChatGPT message box containing dictated text: '…clear, strong enough visual indicator that the question has been solved. And one of the students suggested that we might perhaps collapse the question by default. Of course, somebody can expand it, clearly visually indicating that it is collapsed because it's solved, etc. We don't want to change the UI too much. It's a minimal, elegant solution for this. Explore and implement in a way that doesn't modify the code too much, and inspect the screenshots to see if that, from a usability perspective, is the right kind of change.'" loading="lazy"></a><figcaption><span class="ev ev-w">Witnessed</span> The dictated prompt at <a class="ts" href="?t=53:30">53:30</a>. Note the last clause: <strong>“inspect the screenshots to see if that, from a usability perspective, is the right kind of change.”</strong> The verification step is part of the spec.</figcaption></figure>
+  <p>Carlton asked why Anand used ordinary ChatGPT rather than its Work mode, which is pitched for coding. The answer was economics, not capability: <strong>“Work charges me or drains my tokens. Chat does not.”</strong> <a class="ts" href="?t=54:02">54:02</a></p>
+  <p>Did it work? <span class="ev ev-i">Inference</span> The call does not show a result. The exam engine’s repository history shows a commit that evening titled <em>“Collapse solved exam questions with clear status badge.”</em> Whether that is live, and whether students find it clearer, is a separate test — the same one the prompt asked the agent to run. What the scene does show is the course’s loop performed by both sides of the desk: <strong>a student specifies, a teacher delegates, an agent builds, and someone still has to check.</strong></p>
+  <p class="aside"><strong>And the second complaint?</strong> “Intentional” means a design choice, not an oversight. <span class="ev ev-i">Inference</span> But it is also a hint of the fairness question to come: when a question needs a capable laptop, the score partly measures the laptop.</p>
+</section>
+
+<section class="chap" id="fence" data-act="III · The students audit the examiners" data-title="The fence keeps moving">
+  <div class="act" data-n="9">The fence keeps moving</div>
+  <h2>Every “agents can’t do this” has a <em>shelf life</em></h2>
+  <p class="lede">Earlier, Anand had floated an idea for Project 2: at a set time, join a Google Meet and <strong>“literally stand and hold hands so that you touch your neighbor.”</strong> Why? <strong>“I don’t see an agent being able to do that just yet.”</strong> <a class="ts" href="?t=34:15">34:15</a> JK immediately raised the problem of evaluating it: <strong>“I don’t know how you are going to evaluate it.”</strong> <a class="ts" href="?t=36:46">36:46</a></p>
+  <p>Twenty minutes later, a TA quietly moved the fence.</p>
+  <div class="say"><p>“I have once managed a ChatGPT chat to operate my mobile.”</p><footer><b>Jaideep</b>, TA <a class="ts" href="?t=55:00">55:00</a></footer></div>
+  <p>How? <strong>“USB debugging. Just a Type-C cable.”</strong> <a class="ts" href="?t=55:20">55:20</a> With Android’s <a href="https://developer.android.com/tools/adb">adb</a> command-line tool, the chat built a mobile app, took screenshots from the phone and tested it. Anand had a mobile agent tool on a to-try list and hadn’t tried it yet, and went straight to an assessment: <strong>“take a selfie with a classmate at a physical location using an application that we write.”</strong> <a class="ts" href="?t=57:17">57:17</a> Jaideep asked whether app-store rules would get in the way <a class="ts" href="?t=58:49">58:49</a>; Anand’s goal was more modest — an app on a student’s own developer phone. (Anand also speculated about unikernels and app-store politics; those were opinions, not findings.)</p>
+  <p>At the very end, Carlton moved it again for the Tangram, suggesting Shreenish <strong>“give MCP access to your browser to GPT, and then it can literally look at the code that is underlying the application itself.”</strong> <a class="ts" href="?t=68:11">68:11</a></p>
+  <p><span class="ev ev-i">Inference</span> The patterns that “last” are not walls; they are <strong>interfaces agents haven’t been given yet</strong> — a phone, a camera, a browser, a meeting. Each time a student plugs one in, last week’s human-only task becomes this week’s delegation. That is good for the course’s stated aims. It is bad for any assessment whose validity rests on “agents can’t”. And “physical presence” tasks carry costs the meeting did not discuss: consent for photos, students who cannot travel or appear on camera, and <a href="https://www.w3.org/WAI/standards-guidelines/wcag/">accessibility</a>.</p>
+</section>
+
+<section class="chap" id="grader" data-act="III · The students audit the examiners" data-title="The exam’s own exam">
+  <div class="act" data-n="10">The exam’s own exam</div>
+  <h2>Brute force, a histogram, and <em>a Tangram</em></h2>
+  <p class="lede">At the hour, Anand closed the meeting. <a class="ts" href="?t=60:10">60:10</a> Carlton stayed on with a disclaimer: <strong>“there’s no promises that I have answers either because much of this what they’ve discussed today is new to us as well.”</strong> <a class="ts" href="?t=60:52">60:52</a> Shreenish had three more things to say, and each one examined the examiners.</p>
+  <div class="say stu"><p>“There was one question which answer was 71. So I just like tried brute force till 71 and got it correct. So I think, like, it can be made a bit harder.”</p><footer><b>Shreenish</b> <a class="ts" href="?t=61:02">61:02</a></footer></div>
+  <p>A student asking for a <em>harder</em> question is the faking test, run by the student. Carlton’s answer, through a connection that kept dropping, was that GA0 had been kept <strong>virtually the same as last term</strong> on purpose: JK wanted a baseline to see whether knowledge from previous cohorts was being carried over, <strong>“by looking at the distribution of the scores of GA0.”</strong> <a class="ts" href="?t=63:25">63:25</a> Some questions are easy by design, so that everyone can do something. And then Carlton said something that sounds reasonable and isn’t.</p>
+  <div class="say red"><p>“If we get a bimodal normal distribution, we know that the evaluation is roughly fair.”</p><footer><b>Carlton</b>, instructor <a class="ts" href="?t=64:41">64:41</a></footer></div>
+  <p>Carlton was candid about the pressures behind it — complaints from students and from the programme if marks are too low. But <span class="ev ev-x">Research</span> the <a href="https://ncme.org/involvement/committees/classroom-assessment/classroom-assessment-standards/">NCME classroom assessment standards</a> locate fairness in <em>what a score means for whom</em>: whether it measures the intended skill, consistently, without bias, with accommodation and appeal. A histogram’s shape cannot show any of that. Here is why. <span class="ev ev-p">Hypothetical cohorts</span></p>
+
+  <div class="lab wide hist" id="hist-lab">
+    <div class="lab-head"><h3>Same histogram, two stories</h3><span class="ev ev-p">Hypothetical 200 students</span></div>
+    <div class="lab-body">
+      <div class="seg" role="group" aria-label="Colour the students by">
+        <button type="button" data-h="none" aria-pressed="true">Just the scores</button>
+        <button type="button" data-h="a" aria-pressed="false">Cohort A: who prepared</button>
+        <button type="button" data-h="b" aria-pressed="false">Cohort B: whose laptop ran the tool</button>
+      </div>
+      <div id="hist-svg"></div>
+      <p class="verdict" id="hist-verdict" aria-live="polite"></p>
+    </div>
+  </div>
+  <p>The same caution applies to the GA0 baseline. <span class="ev ev-i">Inference</span> If this term’s distribution shifts, it could be transfer from last term — or shared answers, better models, a different cohort, or a smoother portal. <strong>Telling them apart needs a fresh variant, not a reused one.</strong></p>
+  <p>Then came the Tangram from the top of this story. Shreenish had been pointed to Agrim, the TA who integrated the question; Agrim did not seem to be on the call. <a class="ts" href="?t=66:41">66:41</a> Carlton relayed what the team had been told about it.</p>
+  <div class="say"><p>“Sometimes it can be off by a very small amount and students will still get the wrong answer. The idea is to actually get an agent to solve the question. Because an agent will do it very precisely, whereas if a human does it, you’re almost always likely to get it wrong.”</p><footer><b>Carlton</b>, relaying Anand’s intent <a class="ts" href="?t=66:56">66:56</a></footer></div>
+  <p>That is a legitimate design — the question sits under “Environments” in Anand’s list of patterns that teach agent-driving. But from the outside, a precision failure and a broken checker look identical. Which of these explanations can you rule out from the screenshots? <span class="ev ev-i">Our analysis</span></p>
+
+  <div class="lab wide" id="hyp-lab">
+    <div class="lab-head"><h3>Why didn’t it pass?</h3><span class="ev ev-i">Four hypotheses</span></div>
+    <div class="lab-body">
+      <div class="hyp" id="hyp">
+        <button type="button" aria-expanded="false"><b>1 · The pieces were off by a hair</b><span class="ans"><em>Can’t rule out.</em> Pixels can’t show sub-tick offsets. Evidence needed: the exact submitted poses compared with the target polygon.</span></button>
+        <button type="button" aria-expanded="false"><b>2 · A tolerance the student couldn’t see</b><span class="ans"><em>Can’t rule out.</em> Rotations, flips and snapping can differ while silhouettes look the same. Evidence needed: the validator’s stated tolerance and canonicalisation, shown to students.</span></button>
+        <button type="button" aria-expanded="false"><b>3 · The intended tool wasn’t available</b><span class="ans"><em>Partly visible.</em> The board’s own status line read <em>“WebMCP: Not available here: this browser does not expose the WebMCP modelContext API.”</em> If the question assumes an agent, a student without one is solving a different problem. Evidence needed: whether a manual path is expected to work.</span></button>
+        <button type="button" aria-expanded="false"><b>4 · The checker is wrong</b><span class="ans"><em>Can’t rule out.</em> Evidence needed: replay this payload against the validator, and confirm a reference solution passes.</span></button>
+      </div>
+      <p class="verdict">From the screenshots alone, <strong>none can be ruled out.</strong> That is the finding. Carlton’s advice was the right one: post it on Discourse, <strong>“because if there is a bug, others may be facing it.”</strong> <a class="ts" href="?t=68:51">68:51</a></p>
+    </div>
+  </div>
+  <p>And then, the last exchange of the evening — the one that answers the question the meeting kept asking. Shreenish said GA1 had changed their workflow. In GA0 they had copied code into GitHub by hand and deployed it on Vercel; now <strong>“I can give ChatGPT the access of like Vercel and GitHub. So I just like submitted it and the ChatGPT like does it everything in the background.”</strong> <a class="ts" href="?t=67:41">67:41</a> <span class="ev ev-i">Inference</span> That is one self-reported change in workflow — real, specific, and exactly what the course hopes for. It is not yet evidence that Shreenish could do it with a different stack next month. <strong>That would be the next test.</strong></p>
+</section>
+
+<!-- ================= CLOSE ================= -->
+<section class="chap act-open" id="protocol" data-roman="✓" data-act="Close" data-title="Run your question through this">
+  <div class="act" data-n="✓">Close · The exam is a hypothesis</div>
+  <h2>Every question you set is <em>a claim about learning</em></h2>
+  <p class="lede">Strip away the invoices, the markets and the Scrabble, and the meeting was doing something rare in public: <strong>stating a hypothesis about what a task will teach, then letting people attack it.</strong> The teachers attacked it with six tests. JK attacked it with a seventh. A student attacked it with three questions — <em>what will they learn, how will you grade it, why didn’t this pass</em> — and every one of them landed.</p>
+  <p>The meeting left most of its contradictions open. They are worth keeping in view, because each is a design choice, not a mistake:</p>
+  <div class="band">
+    <div class="band-label">Tensions the room did not resolve</div>
+    <div class="tension">
+      <span>Collaborate openly</span><span>vs</span><span>don’t reward answer-swapping</span>
+      <span>Harder questions</span><span>vs</span><span>no pointless friction</span>
+      <span>Identity as a constraint</span><span>vs</span><span>deepfakes &amp; accessibility</span>
+      <span>Novel answers</span><span>vs</span><span>correct answers</span>
+      <span>Autonomous agents</span><span>vs</span><span>evidence of human learning</span>
+      <span>Ideate in public</span><span>vs</span><span>stable, announced marking rules</span>
+      <span>Cheap automatic checks</span><span>vs</span><span>validators that are themselves right</span>
+      <span>A market on real data</span><span>vs</span><span>students who can move the data</span>
+    </div>
+  </div>
+  <p>What would settle them is not a better idea but a better <em>procedure</em>. Here is the one this story suggests, built from the meeting’s own tests plus what the student added. <span class="ev ev-p">Proposed next experiment</span> Nothing in the meeting shows whether any of these assessments teaches its claimed skill. This is how you would find out.</p>
+
+  <div class="lab wide" id="proto-lab">
+    <div class="lab-head"><h3>An assessment design protocol</h3><span class="small muted">Your notes stay in this browser</span></div>
+    <div class="lab-body">
+      <ol class="proto">
+        <li><h4>Name the human capability</h4><p>What should the student be able to do afterwards, <em>with</em> agents allowed? What would show they can’t? (JK: “make implicit explicit”.)</p><label class="sr-only" for="p1">Capability</label><textarea id="p1" data-k="p1"></textarea></li>
+        <li><h4>Shape the task so that capability is the hard part</h4><p>Put the effort where the skill is — hidden information, a forecast, a requirement nobody stated — not in friction. (Learning test.)</p><label class="sr-only" for="p2">Task</label><textarea id="p2" data-k="p2"></textarea></li>
+        <li><h4>Attack it: agent alone, shared answer, shared solver, collusion, faking</h4><p>Give a strong agent everything a student has. Ask students to break it. Write down what each attack achieves. (Forward, solver, agent, faking tests.)</p><label class="sr-only" for="p3">Adversarial trial</label><textarea id="p3" data-k="p3"></textarea></li>
+        <li><h4>Grade with a checker you have checked</h4><p>Run a reference solution and near-misses through it. Publish tolerances. Give students a debug view and an appeal. Check who scores low and why — not the histogram’s shape. (Oracle test, plus the Tangram.)</p><label class="sr-only" for="p4">Grading</label><textarea id="p4" data-k="p4"></textarea></li>
+        <li><h4>Look for transfer</h4><p>Later, a fresh case with changed tools, data or constraints. Did the capability reappear without the scaffold? Only then call the question a success. (Anand’s “Presence” pattern.)</p><label class="sr-only" for="p5">Transfer</label><textarea id="p5" data-k="p5"></textarea></li>
+      </ol>
+      <div class="proto-actions">
+        <button type="button" class="chip" id="proto-fill">Fill with the invoice example</button>
+        <button type="button" class="chip" id="proto-copy">Copy as Markdown</button>
+        <button type="button" class="chip" id="proto-clear">Clear</button>
+        <span id="proto-msg" class="small muted" aria-live="polite"></span>
+      </div>
+    </div>
+  </div>
+  <p>The course already does parts of this. It publishes its <a href="https://exam.sanand.workers.dev/tds-2026-09-ga0">assignments</a>, lets students argue with the marking, and — as this meeting showed — lets them watch the questions being invented. The missing piece is step 5, and it is the hardest one: <strong>a correct submission today is the start of the evidence, not the end of it.</strong></p>
+</section>
+
+</main>
+
+<aside class="dock" id="dock" aria-label="Video of the meeting">
+  <div class="dock-head"><span><b>Meeting video</b> · 69 min</span><span id="dock-mode-label">Story focus</span></div>
+  <div class="vwrap">
+    <video id="vid" controls preload="metadata" playsinline>
+      <source src="https://media.s-anand.net/2026-10-12-tds-course-ideation.webm" type="video/webm">
+      <track kind="captions" src="captions.vtt" srclang="en" label="English (auto-generated)">
+      <a href="https://media.s-anand.net/2026-10-12-tds-course-ideation.webm">Download the video</a>
+    </video>
+    <div class="resume" id="resume"><button type="button" id="resume-btn"><i class="bi bi-play-fill" aria-hidden="true"></i> <span>Play</span></button></div>
+  </div>
+  <div class="now" id="now" aria-live="polite"><span class="t" id="now-t">00:00</span><span id="now-title">Press play, or tap any ▶ time in the story</span><span class="in-story" id="now-story"></span></div>
+  <div class="dock-ctrls">
+    <button class="dbtn mode" id="mode-btn" type="button" aria-pressed="false"><i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span></button>
+    <button class="dbtn" id="share-btn" type="button"><i class="bi bi-link-45deg" aria-hidden="true"></i> <span>Share moment</span></button>
+    <a class="dbtn wide-only" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+    <button class="dbtn dock-min" id="min-btn" type="button" aria-expanded="true" aria-label="Hide the mini video"><i class="bi bi-chevron-down" aria-hidden="true"></i></button>
+  </div>
+  <details class="chapters" open>
+    <summary>Chapters · tap to jump</summary>
+    <ol id="chapters"></ol>
+  </details>
+</aside>
+</div>
+
+<section class="takeaways" id="takeaways" data-act="Close" data-title="What to carry out" aria-labelledby="tk-h">
+  <div class="inner">
+    <div class="band-label">Takeaways</div>
+    <h2 id="tk-h">Four things to test before you set the next paper</h2>
+    <p class="sub">If agents and friends are allowed, the question is no longer “can they do it?” but “what did doing it change?”</p>
+    <div class="cards">
+      <div class="card"><div class="num">1</div><h3>Write the attacks first</h3><p>Forward an answer, share a solver, toss an agent at it, fake it. If every attack wins, the question teaches nothing. If gaming still teaches, that’s fine. <a class="ts" href="?t=03:54">03:54</a></p></div>
+      <div class="card"><div class="num">2</div><h3>Move the information, not the difficulty</h3><p>Scattered invoices and real forecasts change the task’s shape. But decide what you’re measuring — search, coordination, calibration or influence — before you reveal the map. <a class="ts" href="?t=17:31">17:31</a></p></div>
+      <div class="card"><div class="num">3</div><h3>Rare must also be right</h3><p>Score validity first, then distance between ideas. Duplicates-zero punishes honest discovery; distinct strings aren’t distinct mechanisms. <a class="ts" href="?t=30:45">30:45</a></p></div>
+      <div class="card"><div class="num">4</div><h3>Examine the examiner</h3><p>A histogram can’t show fairness; a screenshot can’t show geometry. Check the checker, publish tolerances, and look for transfer on a fresh case. <a class="ts" href="?t=66:06">66:06</a></p></div>
+    </div>
+    <div class="finale">
+      <p>“How do you make implicit explicit? Exactly the exercise that we are doing right now.”</p>
+      <footer>— JK <a class="ts" href="?t=11:43">11:43</a></footer>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div><strong>The Exam Is a Hypothesis</strong> · an open course-design meeting of <a href="https://tds.s-anand.net/">Tools in Data Science</a> (<a href="https://study.iitm.ac.in/ds/course_pages/BSSE2002.html">IIT Madras BS, BSSE2002</a>), September 2026 term · Monday 12 Oct 2026, remote, streamed to students.</div>
+  <div>Media: <a href="https://media.s-anand.net/2026-10-12-tds-course-ideation.webm">video (webm)</a> · <a href="https://github.com/sanand0/talks/releases/download/talks/2026-10-12-tds-ideation.opus">audio (opus)</a> · <a href="transcript.md" data-transcript>transcript</a> · <a href="captions.vtt">captions</a> · <a href="comic-page.avif" data-lightbox data-caption="The meeting as an AI-drawn eight-panel comic: an interpretation, not a record.">comic page</a> · <a href="research-notes.md" data-md="Research notes">research notes</a> · <a href="story-context.md" data-md="Story context">story context</a></div>
+  <div>Course: <a href="https://tds.s-anand.net/">course page</a> · <a href="https://exam.sanand.workers.dev/tds-2026-09-ga0">GA0 portal</a> · <a href="https://github.com/sanand0/tools-in-data-science-public">public course repository</a> · earlier: <a href="../2026-10-05-tds-orientation/">5 Oct orientation</a> · <a href="../2026-08-10-tds-ama/">10 Aug AMA</a> · <a href="../2026-06-12-let-ai-take-your-exams/">Let AI Take Your Exams</a> · <a href="https://www.s-anand.net/blog/how-i-use-ai-to-teach/">How I use AI to teach</a> · <a href="https://www.s-anand.net/blog/calvin-957-in-scrabble/">Calvin’s 957</a></div>
+  <div>Research: <a href="https://doi.org/10.1073/pnas.2422633122">Bastani et al. 2025</a> · <a href="https://doi.org/10.1073/pnas.1319030111">Freeman et al. 2014 (active learning)</a> · <a href="https://www.nationalacademies.org/read/24783/chapter/6">How People Learn II</a> · <a href="https://arxiv.org/abs/2503.03312">Rasooly &amp; Rozzi 2025</a> · <a href="https://arxiv.org/abs/2606.31675">settlement manipulation 2026</a> · <a href="https://doi.org/10.1126/sciadv.adn5290">Doshi &amp; Hauser 2024</a> · <a href="https://ncme.org/involvement/committees/classroom-assessment/classroom-assessment-standards/">NCME standards</a> · <a href="https://pages.nist.gov/800-63-4/sp800-63a/ial-general/">NIST SP 800-63-4</a> · <a href="https://www.w3.org/WAI/standards-guidelines/wcag/">WCAG</a></div>
+  <div class="muted">Quotes are verbatim from the transcript, checked against the recording’s captions and trimmed with ellipses. Screenshots are cropped from the recording; a student’s email, tokens and private browser tabs are cut out. Nothing here describes an adopted assessment: Project 1 was explicitly undecided. Lab data marked “hypothetical” is invented for illustration. Keyboard: <kbd>V</kbd> toggles video focus, <kbd>[</kbd> / <kbd>]</kbd> move between sections.</div>
+</footer>
+
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump on-hero" aria-label="Jump to section">
+  <button id="jump-prev" type="button" aria-label="Previous section"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+  <button class="jump-cur" id="jump-cur" type="button" aria-expanded="false" aria-controls="jump-menu"><i class="bi bi-list-ul" aria-hidden="true"></i><span id="jump-cur-label">Cold open</span></button>
+  <button id="jump-next" type="button" aria-label="Next section"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+</nav>
+<div class="jump-menu" id="jump-menu" role="dialog" aria-label="All sections"></div>
+
+<dialog class="pop" id="pop" aria-labelledby="pop-title">
+  <div class="pop-head"><h3 id="pop-title">Source</h3><button class="icon-btn" type="button" id="pop-close" aria-label="Close"><i class="bi bi-x-lg" aria-hidden="true"></i></button></div>
+  <div class="pop-search" id="pop-search"><i class="bi bi-search" aria-hidden="true"></i><label class="sr-only" for="pop-q">Search the transcript</label><input id="pop-q" type="search" placeholder="Search the transcript…" autocomplete="off"><span id="pop-count"></span></div>
+  <div class="pop-body" id="pop-body"></div>
+</dialog>
+
+<dialog class="lightbox" id="lightbox" aria-label="Enlarged image">
+  <img id="lb-img" alt="">
+  <div class="lb-bar"><span id="lb-cap"></span><span><a id="lb-open" href="#" target="_blank" rel="noopener">Open full size <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a> <button type="button" id="lb-close">Close</button></span></div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js" defer></script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const body = document.body;
+  const vid = $("#vid");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isNarrow = () => matchMedia("(max-width: 999px)").matches;
+  const cssVar = (n) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(n)) || 0;
+  const store = {
+    get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} },
+  };
+
+  // ---------- time helpers (transcript times = video times for this recording) ----------
+  const parseT = (s) => {
+    if (s == null || s === "") return null;
+    if (/^\d+(\.\d+)?$/.test(s)) return +s;
+    const p = String(s).split(":").map(Number);
+    if (p.some(isNaN)) return null;
+    return p.reduce((a, b) => a * 60 + b, 0);
+  };
+  const fmt = (t) => {
+    t = Math.max(0, Math.floor(t));
+    const m = Math.floor(t / 60), s = t % 60;
+    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  };
+
+  // ---------- theme ----------
+  const themeBtn = $("#theme-btn");
+  const isDark = () => document.documentElement.dataset.theme
+    ? document.documentElement.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  const syncThemeIcon = () => {
+    themeBtn.innerHTML = `<i class="bi ${isDark() ? "bi-sun" : "bi-moon-stars"}" aria-hidden="true"></i>`;
+    themeBtn.setAttribute("aria-label", `Switch to ${isDark() ? "light" : "dark"} mode`);
+  };
+  themeBtn.addEventListener("click", () => {
+    const next = isDark() ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    store.set("tds-ideation-theme", next);
+    syncThemeIcon();
+  });
+  syncThemeIcon();
+
+  // ---------- chapters (video time → story section) ----------
+  const CHAPTERS = [
+    ["01:09", "You happen to be listening in", "room"], ["03:17", "Agents allowed, sharing encouraged", "room"],
+    ["03:54", "Six tests for a question", "tests"], ["04:47", "The 50% target", "tests"], ["05:08", "Patterns that last", "tests"],
+    ["07:11", "Patterns that decay", "tests"], ["07:53", "JK: metacognition", "learn"], ["08:39", "Hritik: AI-built Adobe apps", "learn"],
+    ["09:44", "What would an agent struggle with?", "learn"], ["10:49", "Hidden requirements", "learn"], ["12:16", "Not yet clear how", "learn"],
+    ["13:12", "Trading for information", "invoices"], ["16:22", "JK: give pointers", "invoices"], ["17:31", "Self-organisation & holdouts", "invoices"],
+    ["18:39", "A cost to fetch", "invoices"], ["20:14", "A prediction market", "market"], ["22:06", "A daily ticker", "market"],
+    ["23:44", "Prediction as a pattern", "market"], ["24:59", "Bring a superforecaster", "market"], ["26:28", "Games go to the bonus pile", "market"],
+    ["27:07", "Counterexamples", "pointless"], ["28:19", "Calvin’s 957", "pointless"], ["30:45", "Away from the mode", "pointless"],
+    ["32:04", "Hritik: Pointless", "pointless"], ["34:15", "Hold hands on Meet", "fence"], ["36:16", "Google Meet 101", "fence"],
+    ["38:09", "Open to the audience", "outcome"], ["39:28", "What’s the learning outcome?", "outcome"], ["42:29", "How will you grade it?", "outcome"],
+    ["42:55", "Grade like an auditor", "outcome"], ["44:12", "Project 1 is not decided", "outcome"], ["45:58", "The trading poll", "outcome"],
+    ["48:32", "Why students are in the room", "outcome"], ["50:26", "Carlton: speak up", "outcome"], ["51:05", "Collapse solved questions", "fix"],
+    ["51:52", "Dictating the fix", "fix"], ["53:44", "Chat vs Work", "fix"], ["55:00", "ChatGPT drives a phone", "fence"],
+    ["57:17", "A selfie app", "fence"], ["58:23", "Unikernels, app stores", "fence"], ["60:10", "Meeting closes; Q&A goes on", "grader"],
+    ["61:02", "Brute force to 71", "grader"], ["63:25", "Why GA0 was reused", "grader"], ["64:41", "“Roughly fair”", "grader"],
+    ["66:06", "The Tangram", "grader"], ["67:41", "GitHub + Vercel via ChatGPT", "grader"], ["68:11", "Browser MCP", "grader"],
+  ].map(([t, title, sec]) => ({ t: parseT(t), label: t, title, sec }));
+  const chapOl = $("#chapters");
+  chapOl.innerHTML = CHAPTERS.map((c, i) =>
+    `<li><a href="?t=${c.label}" data-chap="${i}" class="ts-chap"><span class="ct">${c.label}</span><span>${c.title}</span></a></li>`).join("");
+
+  const sections = $$(".chap, #takeaways");
+  const secTitle = (id) => { const s = document.getElementById(id); return s ? s.dataset.title : ""; };
+
+  // ---------- URL state: ?t=mm:ss&view=video#section ----------
+  const urlState = () => {
+    const u = new URL(location.href);
+    return { t: parseT(u.searchParams.get("t")), view: u.searchParams.get("view"), hash: u.hash.slice(1) };
+  };
+  const buildUrl = ({ t, hash } = {}) => {
+    const u = new URL(location.href);
+    if (t != null) u.searchParams.set("t", fmt(t)); else if (t === null) u.searchParams.delete("t");
+    if (body.classList.contains("watch")) u.searchParams.set("view", "video"); else u.searchParams.delete("view");
+    if (hash !== undefined) u.hash = hash ? "#" + hash : "";
+    return u.pathname + u.search.replace(/%3A/gi, ":") + u.hash;
+  };
+  let urlT = urlState().t;
+
+  // ---------- player ----------
+  const resume = $("#resume"), resumeBtn = $("#resume-btn");
+  const seek = (t) => new Promise((res) => {
+    const go = () => { vid.currentTime = t; res(); };
+    if (vid.readyState >= 1) go(); else { vid.addEventListener("loadedmetadata", go, { once: true }); if (vid.preload === "none") vid.load(); }
+  });
+  const showResume = (t) => { resumeBtn.querySelector("span").textContent = `Play from ${fmt(t)}`; resume.classList.add("show"); };
+  const syncMin = () => {
+    const c = body.classList.contains("dock-collapsed");
+    minBtn.setAttribute("aria-expanded", String(!c));
+    minBtn.setAttribute("aria-label", c ? "Show the mini video" : "Hide the mini video");
+    minBtn.innerHTML = `<i class="bi ${c ? "bi-chevron-up" : "bi-chevron-down"}" aria-hidden="true"></i>`;
+  };
+  const ensureDockVisible = () => {
+    if (isNarrow()) { body.classList.remove("dock-collapsed"); syncMin(); return; }
+    const r = $("#dock").getBoundingClientRect();
+    if (r.top > innerHeight - 80 || r.bottom < 60) $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  };
+  const playAt = async (t, { push = false, el = null } = {}) => {
+    if (push) {
+      const sec = el && el.closest(".chap, #takeaways");
+      history.pushState({ t }, "", buildUrl({ t, hash: sec ? sec.id : undefined }));
+      urlT = t;
+    }
+    await seek(t);
+    ensureDockVisible();
+    try { await vid.play(); resume.classList.remove("show"); } catch (e) { showResume(t); }
+    if (el) { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+  };
+  resumeBtn.addEventListener("click", () => { vid.play(); resume.classList.remove("show"); });
+  vid.addEventListener("play", () => resume.classList.remove("show"));
+
+  const enhanceTs = (root = document) => {
+    $$("a.ts", root).forEach((a) => {
+      if (a.dataset.t) return;
+      const t = parseT(new URL(a.href, location.href).searchParams.get("t"));
+      a.dataset.t = t;
+      a.insertAdjacentHTML("afterbegin", '<i class="bi bi-play-fill" aria-hidden="true"></i>');
+      a.setAttribute("aria-label", `Play the meeting video from ${a.textContent.trim()}`);
+    });
+  };
+  enhanceTs();
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a.ts, a.ts-chap");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const t = a.classList.contains("ts-chap") ? CHAPTERS[+a.dataset.chap].t : +a.dataset.t;
+    const dlg = a.closest("dialog");
+    if (dlg) dlg.close();
+    playAt(t, { push: true, el: a.classList.contains("ts") && !dlg ? a : null });
+  });
+
+  // now-playing sync
+  const nowT = $("#now-t"), nowTitle = $("#now-title"), nowStory = $("#now-story");
+  const chapLinks = $$("#chapters a");
+  let curChap = -1;
+  const chapFor = (t) => { let i = -1; for (let k = 0; k < CHAPTERS.length; k++) if (CHAPTERS[k].t <= t + 0.5) i = k; return i; };
+  const onTime = () => {
+    const t = vid.currentTime;
+    nowT.textContent = fmt(t);
+    const i = chapFor(t);
+    if (i === curChap) return;
+    curChap = i;
+    chapLinks.forEach((a, k) => { a.classList.toggle("is-now", k === i); if (k === i) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
+    if (i >= 0) {
+      const c = CHAPTERS[i];
+      nowTitle.textContent = c.title;
+      nowStory.innerHTML = `In the story: <a href="#${c.sec}">${secTitle(c.sec)} ↓</a>`;
+      sections.forEach((s) => s.classList.toggle("is-now", s.id === c.sec));
+      const link = chapLinks[i], box = link.closest(".chapters");
+      if (box && box.scrollHeight > box.clientHeight) {
+        const lr = link.getBoundingClientRect(), br = box.getBoundingClientRect();
+        if (lr.top < br.top || lr.bottom > br.bottom) box.scrollTop += lr.top - br.top - box.clientHeight / 3;
+      }
+    }
+  };
+  vid.addEventListener("timeupdate", onTime);
+  vid.addEventListener("seeked", onTime);
+
+  // story → chapter hints
+  const revealChap = (first, last = first, pad = 8) => {
+    const box = first.closest(".chapters");
+    if (!box || box.scrollHeight <= box.clientHeight) return;
+    const top = first.getBoundingClientRect().top, bottom = last.getBoundingClientRect().bottom, br = box.getBoundingClientRect();
+    if (top >= br.top + pad && bottom <= br.bottom - pad) return;
+    box.scrollTop += bottom - top > br.height - 2 * pad ? top - br.top - pad : (top + bottom) / 2 - (br.top + br.bottom) / 2;
+  };
+  const tsSeen = new Set();
+  let hintKey = "", hintRaf = 0, tsHover = null;
+  const syncHints = () => {
+    hintRaf = 0;
+    const idx = [...new Set([...tsSeen].map((a) => chapFor(+a.dataset.t)).filter((i) => i >= 0))].sort((a, b) => a - b);
+    const key = idx.join();
+    if (key === hintKey) return;
+    hintKey = key;
+    chapLinks.forEach((a, k) => a.classList.toggle("in-view", idx.includes(k)));
+    if (idx.length && vid.paused && !tsHover) revealChap(chapLinks[idx[0]], chapLinks[idx.at(-1)]);
+  };
+  const tsIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? tsSeen.add(e.target) : tsSeen.delete(e.target)));
+    hintRaf ||= requestAnimationFrame(syncHints);
+  });
+  $$("a.ts").filter((a) => !a.closest("dialog, .dock")).forEach((a) => tsIO.observe(a));
+  const setTarget = (a) => {
+    if (tsHover === a) return;
+    tsHover = a;
+    chapLinks.forEach((l) => l.classList.remove("is-target"));
+    const i = a ? chapFor(+a.dataset.t) : -1;
+    if (i >= 0) { chapLinks[i].classList.add("is-target"); revealChap(chapLinks[i]); }
+  };
+  document.addEventListener("mouseover", (e) => setTarget(e.target.closest?.("a.ts") || (document.activeElement?.matches?.("a.ts") ? document.activeElement : null)));
+  document.addEventListener("focusin", (e) => setTarget(e.target.closest?.("a.ts") || null));
+  document.addEventListener("focusout", (e) => { if (e.target.matches?.("a.ts")) setTarget(null); });
+
+  const shareBtn = $("#share-btn");
+  shareBtn.addEventListener("click", async () => {
+    const t = Math.floor(vid.currentTime || 0);
+    const sec = curChap >= 0 ? CHAPTERS[curChap].sec : "";
+    const u = new URL(location.href);
+    u.search = "?t=" + fmt(t); u.hash = sec ? "#" + sec : "";
+    const label = shareBtn.querySelector("span");
+    try { await navigator.clipboard.writeText(u.href); label.textContent = `Copied ${fmt(t)}`; }
+    catch (e) { history.replaceState(history.state, "", u.pathname + u.search + u.hash); label.textContent = "Link in address bar"; }
+    setTimeout(() => (label.textContent = "Share moment"), 2200);
+  });
+
+  // ---------- story ⇄ video emphasis (same <video>, never remounted) ----------
+  const modeBtn = $("#mode-btn"), modeLabel = $("#dock-mode-label"), minBtn = $("#min-btn");
+  const updateDockH = () => {
+    const h = isNarrow() && body.classList.contains("watch") ? $("#dock").offsetHeight : 0;
+    document.documentElement.style.setProperty("--dock-h", h + "px");
+  };
+  const pickAnchor = () => {
+    const top = 80 + (isNarrow() && body.classList.contains("watch") ? cssVar("--dock-h") : 0);
+    return $$(".chap > *, #takeaways").find((el) => el.getBoundingClientRect().bottom > top);
+  };
+  const setMode = (watch, { replace = true } = {}) => {
+    if (body.classList.contains("watch") === watch) return;
+    const anchor = pickAnchor();
+    const before = anchor ? anchor.getBoundingClientRect().top : 0;
+    const storyVisible = $("#room").getBoundingClientRect().top < innerHeight * 0.5;
+    body.classList.toggle("watch", watch);
+    modeBtn.setAttribute("aria-pressed", String(watch));
+    modeBtn.innerHTML = watch
+      ? '<i class="bi bi-book" aria-hidden="true"></i> <span>Focus story</span>'
+      : '<i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span>';
+    modeLabel.textContent = watch ? "Video focus" : "Story focus";
+    if (replace) history.replaceState(history.state, "", buildUrl());
+    updateDockH();
+    if (anchor && storyVisible) {
+      const start = performance.now();
+      const keep = () => {
+        const d = anchor.getBoundingClientRect().top - before;
+        if (Math.abs(d) > 1) window.scrollBy({ top: d, behavior: "instant" });
+        if (performance.now() - start < 750) requestAnimationFrame(keep);
+      };
+      requestAnimationFrame(keep);
+    }
+  };
+  modeBtn.addEventListener("click", () => setMode(!body.classList.contains("watch")));
+  $("#hero-watch").addEventListener("click", (e) => {
+    e.preventDefault();
+    setMode(true);
+    $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  });
+  new ResizeObserver(updateDockH).observe($("#dock"));
+  addEventListener("resize", updateDockH);
+  minBtn.addEventListener("click", () => { body.classList.toggle("dock-collapsed"); syncMin(); });
+  if (isNarrow()) { body.classList.add("dock-collapsed"); syncMin(); }
+  vid.addEventListener("play", () => { if (body.classList.contains("dock-collapsed")) { body.classList.remove("dock-collapsed"); syncMin(); } });
+
+  // ---------- history ----------
+  addEventListener("popstate", () => {
+    const { t, view } = urlState();
+    setMode(view === "video", { replace: false });
+    if (t != null && t !== urlT) seek(t).then(() => { if (vid.paused) showResume(t); });
+    urlT = t;
+  });
+
+  // ---------- section jump nav ----------
+  const menu = $("#jump-menu"), backdrop = $("#jump-backdrop"), curBtn = $("#jump-cur"), curLabel = $("#jump-cur-label");
+  const groups = [];
+  sections.forEach((s) => {
+    const g = s.dataset.act;
+    if (!groups.length || groups[groups.length - 1].name !== g) groups.push({ name: g, items: [] });
+    groups[groups.length - 1].items.push(s);
+  });
+  menu.innerHTML = groups.map((g) => `<div class="jm-group">${g.name}</div><div class="jump-grid">${
+    g.items.map((s) => { const h = ((s.querySelector("h2") || {}).textContent || "").trim(); return `<a href="#${s.id}" data-sec="${s.id}">${s.dataset.title}<small>${h}</small></a>`; }).join("")}</div>`).join("");
+  const openMenu = (open) => {
+    menu.classList.toggle("open", open); backdrop.classList.toggle("open", open);
+    curBtn.setAttribute("aria-expanded", String(open));
+    if (open) (menu.querySelector("a.is-cur") || menu.querySelector("a")).focus();
+  };
+  curBtn.addEventListener("click", () => openMenu(!menu.classList.contains("open")));
+  backdrop.addEventListener("click", () => openMenu(false));
+  menu.addEventListener("click", (e) => { if (e.target.closest("a")) openMenu(false); });
+  let curIdx = 0;
+  const goSec = (i) => {
+    i = Math.max(0, Math.min(sections.length - 1, i));
+    sections[i].scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+    history.pushState(history.state, "", buildUrl({ hash: sections[i].id }));
+  };
+  $("#jump-prev").addEventListener("click", () => goSec(curIdx - 1));
+  $("#jump-next").addEventListener("click", () => goSec(curIdx + 1));
+  const progress = $("#progress"), jumpNav = $(".jump");
+  const onScroll = () => {
+    const line = innerHeight * 0.3 + cssVar("--dock-h");
+    let i = 0;
+    sections.forEach((s, k) => { if (s.getBoundingClientRect().top <= line) i = k; });
+    if (i !== curIdx || !curLabel.dataset.init) {
+      curIdx = i; curLabel.dataset.init = 1;
+      curLabel.textContent = sections[i].dataset.title;
+      $$("a", menu).forEach((a) => a.classList.toggle("is-cur", a.dataset.sec === sections[i].id));
+      $("#jump-prev").disabled = i === 0;
+      $("#jump-next").disabled = i === sections.length - 1;
+    }
+    jumpNav.classList.toggle("on-hero", $("#room").getBoundingClientRect().top > innerHeight * 0.75 && !menu.classList.contains("open"));
+    const h = document.documentElement.scrollHeight - innerHeight;
+    progress.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%";
+  };
+  let ticking = false;
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { onScroll(); ticking = false; }); } }, { passive: true });
+  onScroll();
+
+  // ---------- popups: transcript + markdown ----------
+  const pop = $("#pop"), popBody = $("#pop-body"), popTitle = $("#pop-title"), popSearch = $("#pop-search"), popQ = $("#pop-q"), popCount = $("#pop-count");
+  let popReturn = null;
+  const openPop = (title, html, { search = false } = {}) => {
+    popReturn = document.activeElement;
+    popTitle.textContent = title; popBody.innerHTML = html; enhanceTs(popBody);
+    popSearch.classList.toggle("on", search); popQ.value = ""; popCount.textContent = "";
+    pop.showModal(); popBody.scrollTop = 0; pop.scrollTop = 0;
+    if (search) popQ.focus();
+  };
+  pop.addEventListener("close", () => { if (popReturn && popReturn.focus) popReturn.focus(); });
+  $("#pop-close").addEventListener("click", () => pop.close());
+  pop.addEventListener("click", (e) => { if (e.target === pop) pop.close(); });
+  const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  popQ.addEventListener("input", () => {
+    const q = popQ.value.trim();
+    const blocks = $$(":scope > p, :scope > ol, :scope > ul, :scope > hr", popBody).filter((b) => !b.classList.contains("intro"));
+    $$("mark", popBody).forEach((m) => m.replaceWith(m.textContent));
+    popBody.normalize();
+    let n = 0;
+    blocks.forEach((b) => {
+      const hit = !q || b.textContent.toLowerCase().includes(q.toLowerCase());
+      b.classList.toggle("hide", !hit || (q && b.tagName === "HR"));
+      if (hit && q) {
+        n++;
+        const re = new RegExp(escRe(q), "gi");
+        const walker = document.createTreeWalker(b, NodeFilter.SHOW_TEXT);
+        const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach((node) => {
+          if (!re.test(node.nodeValue)) return; re.lastIndex = 0;
+          const span = document.createElement("span");
+          span.innerHTML = node.nodeValue.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])).replace(re, (m) => `<mark>${m}</mark>`);
+          node.replaceWith(...span.childNodes);
+        });
+      }
+    });
+    popCount.textContent = q ? `${n} passage${n === 1 ? "" : "s"}` : "";
+  });
+  const mdToHtml = (md) => window.marked ? marked.parse(md) : `<pre style="white-space:pre-wrap">${md.replace(/</g, "&lt;")}</pre>`;
+  let transcriptHtml = null;
+  document.addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-transcript]");
+    if (!a || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    if (!transcriptHtml) {
+      try {
+        let md = await (await fetch("transcript.md")).text();
+        md = md.replace(/<!--[\s\S]*?-->/g, "")
+          // drop the transcription tool's inserted summary near 49:59; nobody said it
+          .replace(/\n-{3,}\s*\n+This call recording features[\s\S]*?\n\*{3}\s*\n/, "\n")
+          .replace(/\[(\d{1,3}):(\d{2})\]/g, (m, a1, b1) => { const t = +a1 * 60 + +b1; return `<a class="ts" href="?t=${fmt(t)}">${fmt(t)}</a>`; });
+        transcriptHtml = '<p class="muted small intro">AI transcription; tap any time to play that moment. Speaker labels and words can err: “Jeb” at 24:07 is probably “Gem”; “Groq” at 51:05 is uncertain. An auto-generated summary the transcriber inserted near 49:59 has been removed.</p>' + mdToHtml(md);
+      } catch (err) { location.href = a.href; return; }
+    }
+    openPop("Transcript", transcriptHtml, { search: true });
+  });
+  const mdCache = {};
+  document.addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-md]");
+    if (!a || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    const href = a.getAttribute("href");
+    try {
+      mdCache[href] ||= mdToHtml((await (await fetch(href)).text()).replace(/<!--[\s\S]*?-->/g, "").replace(/^---\n[\s\S]*?\n---\n/, ""));
+      openPop(a.dataset.md, mdCache[href] + `<p><a href="${href}" target="_blank" rel="noopener">Open the raw file</a></p>`);
+    } catch (err) { location.href = href; }
+  });
+
+  // ---------- lightbox ----------
+  const lb = $("#lightbox"), lbImg = $("#lb-img"), lbCap = $("#lb-cap"), lbOpen = $("#lb-open");
+  let lbReturn = null;
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-lightbox]");
+    if (!el || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    const src = el.getAttribute("href") || el.currentSrc || el.src;
+    const img = el.tagName === "IMG" ? el : el.querySelector("img");
+    lbImg.src = src; lbImg.alt = img ? img.alt : (el.dataset.caption || "");
+    lbCap.textContent = el.dataset.caption || "";
+    lbOpen.href = src;
+    lbReturn = document.activeElement;
+    lb.showModal();
+  });
+  $("#lb-close").addEventListener("click", () => lb.close());
+  lb.addEventListener("click", (e) => { if (e.target === lb || e.target === lbImg) lb.close(); });
+  lb.addEventListener("close", () => { if (lbReturn && lbReturn.focus) lbReturn.focus(); });
+
+  window.__tds = { $, $$, reduced, store, parseT, fmt, menu, curBtn, pop, lb, openMenu, setMode, goSec, getCur: () => curIdx, vid, seek, showResume, onTime, isNarrow, syncMin, ensureDockVisible, urlState, updateDockH };
+})();
+</script>
+<script>
+(() => {
+  const { $, $$, reduced, store, fmt, menu, curBtn, pop, lb, openMenu, setMode, goSec, getCur, vid, seek, showResume, onTime, isNarrow, syncMin, ensureDockVisible, urlState, updateDockH } = window.__tds;
+  const pressOnly = (btns, b) => btns.forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // ---------- 1. attack a question ----------
+  const Q = [
+    { q: "<b>v1.</b> Everyone downloads the same CSV and submits the variance of one column.", tests: [
+      ["Learning", "fail", "The effort is pasting a file into a tool. That is not the skill."],
+      ["Forward", "fail", "One student’s number is everyone’s number."],
+      ["Solver", "fail", "Any shared script works for all."],
+      ["Agent", "fail", "An agent finishes it in one step."],
+      ["Faking", "fail", "Copying is cheaper than doing, and teaches nothing."],
+      ["Oracle", "pass", "Trivial to grade: one number."]],
+      verdict: "<strong>Fails five of six.</strong> Being cheap to grade is its only virtue." },
+    { q: "<b>v2.</b> Each student gets a CSV seeded from their email and submits its variance.", tests: [
+      ["Learning", "fail", "Still pasting a file into a tool."],
+      ["Forward", "pass", "A friend’s number is wrong for you."],
+      ["Solver", "fail", "A shared script reads any CSV."],
+      ["Agent", "fail", "An agent still finishes it in one step."],
+      ["Faking", "part", "Forwarding fails, but sharing a script is easy — and reading it teaches a little."],
+      ["Oracle", "pass", "The server recomputes from the seed."]],
+      verdict: "<strong>Personalising fixed forwarding.</strong> It did nothing about solvers or agents." },
+    { q: "<b>v3.</b> Deploy an API on your own cloud account that returns your seeded variance; the server calls it live.", tests: [
+      ["Learning", "part", "Deploying, configuring and debugging are real skills — if that is the target."],
+      ["Forward", "pass", "It has to be your deployment."],
+      ["Solver", "part", "A shared repo helps, but each student must deploy and configure it."],
+      ["Agent", "fail", "An agent with your logged-in terminal can deploy it — exactly the case Anand’s agent test names."],
+      ["Faking", "part", "Faking costs about as much as doing — and doing it teaches deployment."],
+      ["Oracle", "pass", "Server-side, behavioural check of a live endpoint."]],
+      verdict: "<strong>Better, and the agent still wins.</strong> So the Learning test decides: if deploying <em>with</em> an agent is the skill, the agent winning is the point. If it isn’t, no defence holds for long." },
+  ];
+  const attackBtns = $$("#attack [data-q]");
+  const showQ = (i) => {
+    const d = Q[i];
+    $("#attack-q").innerHTML = d.q;
+    $("#attack-tests").innerHTML = d.tests.map(([n, st, why]) =>
+      `<div class="test ${st}"><h4>${n} test <span class="st">${{ pass: "survives", fail: "broken", part: "partly" }[st]}</span></h4><p>${why}</p></div>`).join("");
+    $("#attack-verdict").innerHTML = d.verdict;
+  };
+  attackBtns.forEach((b) => b.addEventListener("click", () => { pressOnly(attackBtns, b); showQ(+b.dataset.q); }));
+  showQ(0);
+
+  // ---------- 2. Bastani et al. bars (real, published effects) ----------
+  (() => {
+    const rows = [
+      ["With AI access · practice problems", [["GPT Base", 48, "+48%"], ["GPT Tutor", 127, "+127%"]]],
+      ["After access removed · exam", [["GPT Base", -17, "−17%"], ["GPT Tutor", 0, "≈ 0 (n.s.)"]]],
+    ];
+    const W = 720, x0 = 280, scale = 2.2, zero = x0 + 30 * scale; // axis from −30% to +140%
+    let y = 10, out = "";
+    rows.forEach(([title, bars]) => {
+      out += `<text x="0" y="${y + 14}" style="font-weight:600">${title}</text>`;
+      y += 24;
+      bars.forEach(([name, v, lbl]) => {
+        const w = Math.abs(v) * scale, x = v >= 0 ? zero : zero - w;
+        const fill = name === "GPT Base" ? "var(--indigo)" : "var(--green)";
+        out += `<text x="${x0 - 10}" y="${y + 15}" text-anchor="end" class="m">${name}</text>`;
+        out += v === 0 ? `<rect x="${zero - 1}" y="${y + 2}" width="2" height="18" style="fill:${fill}"/>`
+          : `<rect x="${x}" y="${y + 2}" width="${w}" height="18" rx="2" style="fill:${v < 0 ? "var(--red)" : fill}"/>`;
+        out += `<text x="${v >= 0 ? zero + w + 8 : x - 8}" y="${y + 16}" text-anchor="${v >= 0 ? "start" : "end"}" style="font-weight:600">${lbl}</text>`;
+        y += 28;
+      });
+      y += 12;
+    });
+    $("#bastani-svg").innerHTML = `<svg viewBox="0 0 ${W} ${y}" role="img" aria-label="Bar chart. With AI access, practice grades rose 48% for GPT Base and 127% for GPT Tutor. After access was removed, exam grades were 17% lower for GPT Base and statistically unchanged for GPT Tutor."><line class="ax" x1="${zero}" x2="${zero}" y1="26" y2="${y - 12}" style="stroke:var(--muted)"/>${out}</svg>`;
+  })();
+
+  // ---------- 3. invoice network ----------
+  (() => {
+    const svg = $("#net-svg"), BUDGET = 6;
+    const VAL = [12, 4, 9, 30, 6, 15, 3, 21];             // share of client value, sums to 100
+    const HOLD = { 1: [0, 1], 3: [2], 4: [3], 6: [4, 5], 8: [6], 9: [7] }; // classmate → invoice indexes
+    const HOLDOUT = new Set([2, 9]);                       // 2 of 10 never reply (Anand’s illustrative 20%)
+    const HINTS = new Set([1, 4, 6]);                      // JK-style pointers for 5 of the 8 invoices
+    const LEAD = { 5: 6, 7: 1, 10: 8 };        // non-holders sometimes know who holds some
+    const N = 10, cx = 200, cy = 190, R = 138;
+    let mode = "none", asked = new Set(), got = new Set(), asks = 0, folderUsed = false;
+    const pos = (i) => { const a = -Math.PI / 2 + (i - 1) * 2 * Math.PI / N; return [cx + R * Math.cos(a), cy + R * Math.sin(a)]; };
+    const msg = (h) => ($("#net-msg").innerHTML = h);
+    const draw = () => {
+      let s = "";
+      for (let i = 1; i <= N; i++) { const [x, y] = pos(i); s += `<line class="edge${asked.has(i) && (HOLD[i] && !HOLDOUT.has(i)) ? " on" : ""}" x1="${cx}" y1="${cy}" x2="${x}" y2="${y}"/>`; }
+      if (mode === "folder") s += `<line class="edge${folderUsed ? " on" : ""}" x1="${cx}" y1="${cy}" x2="350" y2="40"/>`;
+      for (let i = 1; i <= N; i++) {
+        const [x, y] = pos(i);
+        const cls = ["node", mode === "hints" && HINTS.has(i) ? "hint" : "", asked.has(i) ? (HOLDOUT.has(i) ? "silent" : HOLD[i] ? "got" : "asked") : ""].join(" ");
+        s += `<g class="${cls}" data-i="${i}" tabindex="0" role="button" aria-label="Classmate C${i}${mode === "hints" && HINTS.has(i) ? ", pointer says they hold some of yours" : ""}${asked.has(i) ? ", already asked" : ""}"><circle cx="${x}" cy="${y}" r="22"/><text x="${x}" y="${y + 4}" text-anchor="middle">C${i}</text></g>`;
+      }
+      if (mode === "folder") s += `<g class="node${folderUsed ? " got" : ""}" data-i="folder" tabindex="0" role="button" aria-label="The class shared folder"><circle cx="350" cy="40" r="26"/><text x="350" y="44" text-anchor="middle">Folder</text></g>`;
+      s += `<g class="node me" aria-hidden="true"><circle cx="${cx}" cy="${cy}" r="26"/><text x="${cx}" y="${cy + 4}" text-anchor="middle">You</text></g>`;
+      svg.innerHTML = s;
+      $("#ledger").innerHTML = VAL.map((v, k) => `<div class="inv${got.has(k) ? " got" : ""}" aria-label="Invoice ${k + 1}, ${v}% of value, ${got.has(k) ? "found" : "missing"}">#${k + 1}<small>${v}%</small></div>`).join("");
+      const missV = 100 - [...got].reduce((a, k) => a + VAL[k], 0);
+      $("#m-asks").textContent = `${asks} / ${BUDGET}`;
+      $("#m-found").textContent = `${got.size} / 8`;
+      $("#m-gap").textContent = `${missV}% of value missing · ${8 - got.size} invoice${8 - got.size === 1 ? "" : "s"}`;
+      const done = asks >= BUDGET || got.size === 7;
+      const V = {
+        none: "<strong>No map: the task measures search under a budget</strong> — whom to ask first, and asking for leads. Some classmates who hold nothing of yours know who does.",
+        hints: "<strong>Pointers: the task measures following clues.</strong> The marked classmates give you five invoices fast; the rest is still search.",
+        folder: "<strong>Shared folder: one request returns 7 of 8.</strong> The task now measures almost nothing — except who the holdouts are.",
+      }[mode];
+      $("#net-verdict").innerHTML = V + (done ? ` <br>Invoice #8 (21% of value) sits with C9, who never replies. <strong>Under an auditor’s rubric, you lose marks for a classmate’s silence.</strong>` : "");
+    };
+    const ask = (i) => {
+      if (i === "folder") {
+        if (folderUsed || asks >= BUDGET) return;
+        folderUsed = true; asks++;
+        Object.entries(HOLD).forEach(([c, ks]) => { if (!HOLDOUT.has(+c)) ks.forEach((k) => got.add(k)); });
+        msg("The folder had everything the class uploaded: 7 of your 8 invoices. One holder never uploaded.");
+        return draw();
+      }
+      i = +i;
+      if (asked.has(i)) return msg(`You already asked C${i}.`);
+      if (asks >= BUDGET) return msg("You’re out of requests — the rate limit makes every ask count.");
+      asked.add(i); asks++;
+      if (HOLDOUT.has(i)) msg(`C${i} didn’t reply.`);
+      else if (HOLD[i]) { HOLD[i].forEach((k) => got.add(k)); msg(`C${i} sent invoice${HOLD[i].length > 1 ? "s" : ""} ${HOLD[i].map((k) => "#" + (k + 1)).join(" and ")}.`); }
+      else if (mode === "none" && LEAD[i]) msg(`C${i} has none of yours, but heard that C${LEAD[i]} has some.`);
+      else msg(`C${i} has none of yours.`);
+      draw();
+      const el = svg.querySelector(`[data-i="${i}"]`); if (el) el.focus();
+    };
+    svg.addEventListener("click", (e) => { const g = e.target.closest("[data-i]"); if (g) ask(g.dataset.i); });
+    svg.addEventListener("keydown", (e) => { const g = e.target.closest("[data-i]"); if (g && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); ask(g.dataset.i); } });
+    const reset = () => { asked = new Set(); got = new Set(); asks = 0; folderUsed = false; msg(mode === "folder" ? "Classmates dumped their invoices in one shared folder. Try it." : "Select a classmate to ask for your invoices."); draw(); };
+    const modeBtns = $$("#invoice-lab [data-mode]");
+    modeBtns.forEach((b) => b.addEventListener("click", () => { pressOnly(modeBtns, b); mode = b.dataset.mode; reset(); }));
+    $("#net-reset").addEventListener("click", reset);
+    reset();
+  })();
+
+  // ---------- 4. forecast vs control ----------
+  (() => {
+    const W = 720, H = 300, L = 54, Rr = 120, T = 16, B = 40, MAX = 1000;
+    const x = (d) => L + d / 30 * (W - L - Rr), y = (v) => H - B - v / MAX * (H - T - B);
+    const base = (d) => 770 * d / 30 + 18 * Math.sin(Math.PI * d / 10);
+    const actual = (d, push) => base(d) + (push && d > 18 ? 180 * Math.pow((d - 18) / 12, 1.5) : 0);
+    const A = { f1: [5, 900], f2: [15, 780] }, BEN = [5, 950];
+    const render = (push) => {
+      let p = ""; for (let d = 0; d <= 30; d++) p += `${d ? "L" : "M"}${x(d).toFixed(1)},${y(actual(d, push)).toFixed(1)}`;
+      const fin = actual(30, push);
+      const grid = [0, 250, 500, 750, 1000].map((v) => `<line class="grid" x1="${L}" x2="${W - Rr}" y1="${y(v)}" y2="${y(v)}"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end" style="fill:var(--muted)">$${v}</text>`).join("");
+      const days = [0, 10, 20, 30].map((d) => `<text x="${x(d)}" y="${H - B + 18}" text-anchor="middle" style="fill:var(--muted)">day ${d}</text>`).join("");
+      const fc = (d0, v, col, lab, dy = 4) => `<line x1="${x(d0)}" x2="${x(30)}" y1="${y(v)}" y2="${y(v)}" style="stroke:${col};stroke-width:2;stroke-dasharray:6 4"/><circle cx="${x(d0)}" cy="${y(v)}" r="4.5" style="fill:${col}"/><text x="${x(30) + 8}" y="${y(v) + dy}" style="fill:${col};font-weight:600">${lab}</text>`;
+      const pushBand = push ? `<rect x="${x(18)}" y="${T}" width="${x(30) - x(18)}" height="${H - T - B}" style="fill:var(--red-soft);opacity:.7"/><text x="${x(24)}" y="${y(70)}" text-anchor="middle" style="fill:var(--red);font-weight:600">Ben &amp; friends burn credits</text>` : "";
+      $("#mkt-svg").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Line chart of hypothetical cumulative token spend over 30 days. ${push ? "With Ben pushing, spend ends at $950." : "Without pushing, spend ends at $770."} Asha forecasts $900 on day 5 and updates to $780 on day 15. Ben forecasts $950 on day 5.">${pushBand}${grid}${days}
+        <line x1="${x(5)}" x2="${x(15)}" y1="${y(900)}" y2="${y(900)}" style="stroke:var(--indigo);stroke-width:1.5;stroke-dasharray:2 4;opacity:.6"/><circle cx="${x(5)}" cy="${y(900)}" r="3.5" style="fill:var(--indigo);opacity:.6"/>
+        ${fc(15, 780, "var(--indigo)", "Asha $780", push ? 4 : 14)}${fc(5, 950, "var(--red)", "Ben $950", -4)}
+        <path d="${p}" style="fill:none;stroke:var(--ink);stroke-width:2.5"/><circle cx="${x(30)}" cy="${y(fin)}" r="5" style="fill:var(--ink)"/>
+        <text x="${x(30) + 8}" y="${y(fin) + (push ? 16 : -8)}" style="fill:var(--ink);font-weight:600">actual $${Math.round(fin)}</text></svg>`;
+      const ea = Math.abs(780 - fin), eb = Math.abs(950 - fin);
+      $("#err-a").textContent = `$${Math.round(ea)}`; $("#err-b").textContent = `$${Math.round(eb)}`;
+      $("#mkt-verdict").innerHTML = push
+        ? "<strong>Ben wins with zero error, and showed nothing about forecasting.</strong> Ben learned coordination — maybe a real skill — but a score on accuracy can’t tell the two apart."
+        : "<strong>Asha updated on evidence and won.</strong> This is the lesson the market was meant to teach: make a forecast, revise it as information arrives.";
+    };
+    const btns = $$("#market-lab [data-push]");
+    btns.forEach((b) => b.addEventListener("click", () => { pressOnly(btns, b); render(b.dataset.push === "1"); }));
+    render(false);
+  })();
+
+  // ---------- 5. score the outliers: n² + n + 41 ----------
+  (() => {
+    const ANS = [[40, 13], [41, 6], [44, 2], [49, 1], [81, 1], [43, 1], [7, 1]], TOTAL = 25;
+    const spf = (v) => { for (let p = 2; p * p <= v; p++) if (v % p === 0) return p; return v; };
+    const rows = ANS.map(([n, c]) => { const v = n * n + n + 41, p = spf(v); return { n, c, v, valid: p !== v, p, q: v / p }; });
+    const famCount = {}; rows.forEach((r) => { if (r.valid) famCount[r.p] = (famCount[r.p] || 0) + r.c; });
+    const rarity = (c) => 1 - (c - 1) / (TOTAL - 1);
+    const RULES = {
+      rare: (r) => 100 * rarity(r.c),
+      zero: (r) => (r.valid && r.c === 1 ? 100 : 0),
+      valid: (r) => (r.valid ? 50 + 50 * rarity(r.c) : 0),
+      family: (r) => (r.valid ? 50 + 50 * rarity(famCount[r.p]) : 0),
+    };
+    const VERD = {
+      rare: "<strong>Two of the four top scores go to wrong answers.</strong> 43 and 7 are rare because they are not counterexamples at all.",
+      zero: "<strong>21 of 23 correct students score zero</strong> — including the 13 who honestly found the famous answer. The incentive is to hide what you found.",
+      valid: "<strong>Better: wrong answers score nothing.</strong> But 81 scores as ‘original’ as 49, though it is the same trick as 40.",
+      family: "<strong>Now distance is measured between ideas</strong> (which prime divides it). That needs a validator that understands the mathematics — far harder to build than a duplicate check.",
+    };
+    const render = (rule) => {
+      const sc = rows.map((r) => ({ ...r, s: RULES[rule](r) }));
+      const top = Math.max(...sc.map((r) => r.s));
+      $("#pt tbody").innerHTML = sc.map((r) => `<tr class="${r.s === top && top > 0 ? "top" : ""}"><td class="num">${r.n}</td><td class="num">${r.c}</td><td>${r.valid ? `<span class="ok">${r.v} = ${r.p} × ${r.q}</span>${rule === "family" ? ` <span class="fam">÷ ${r.p}</span>` : ""}` : `<span class="bad">${r.v} is prime — not a counterexample</span>`}</td><td class="num">${Math.round(r.s)}</td><td class="barcell"><div class="sbar" style="width:${r.s}%"></div></td></tr>`).join("");
+      $("#pt-verdict").innerHTML = VERD[rule];
+    };
+    const btns = $$("#pointless-lab [data-rule]");
+    btns.forEach((b) => b.addEventListener("click", () => { pressOnly(btns, b); render(b.dataset.rule); }));
+    render("rare");
+  })();
+
+  // ---------- 6. same histogram, two stories ----------
+  (() => {
+    const BINS = [6, 14, 22, 16, 9, 10, 18, 34, 46, 25];          // 200 students, scores in bins of 10
+    const A = [.15, .15, .2, .3, .55, .75, .85, .9, .95, .96];    // share who did the prep
+    const Bf = [.1, .1, .15, .3, .6, .8, .9, .95, .97, 1];        // share whose laptop ran the tool
+    const W = 720, H = 280, L = 40, T = 30, Bm = 40, bw = (W - L - 10) / 10, MAXC = 50;
+    const y = (c) => H - Bm - c / MAXC * (H - T - Bm);
+    const render = (k) => {
+      const share = k === "a" ? A : k === "b" ? Bf : null;
+      const good = k === "b" ? "var(--indigo)" : "var(--indigo)", bad = k === "b" ? "var(--red)" : "var(--muted)";
+      let s = "";
+      BINS.forEach((c, i) => {
+        const x0 = L + i * bw + 3, w = bw - 6;
+        if (!share) s += `<rect x="${x0}" y="${y(c)}" width="${w}" height="${y(0) - y(c)}" style="fill:var(--ink);opacity:.8"/>`;
+        else { const g = Math.round(c * share[i]); s += `<rect x="${x0}" y="${y(c)}" width="${w}" height="${y(0) - y(c - g)}" style="fill:${bad}"/><rect x="${x0}" y="${y(g)}" width="${w}" height="${y(0) - y(g)}" style="fill:${good}"/>`; }
+        s += `<text x="${x0 + w / 2}" y="${H - Bm + 16}" text-anchor="middle" style="fill:var(--muted)">${i * 10}</text>`;
+      });
+      const leg = !share ? `<text x="${L}" y="18" style="fill:var(--muted)">Scores of 200 students (marks out of 100)</text>`
+        : `<rect x="${L}" y="8" width="12" height="12" style="fill:${good}"/><text x="${L + 18}" y="18">${k === "a" ? "did the prep" : "tool ran on their laptop"}</text><rect x="${L + 210}" y="8" width="12" height="12" style="fill:${bad}"/><text x="${L + 228}" y="18">${k === "a" ? "skipped the prep" : "tool wouldn’t run on their laptop"}</text>`;
+      $("#hist-svg").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Bimodal histogram of 200 hypothetical scores, a small hump around 20 and a large one around 80.${share ? (k === "a" ? " The low hump is mostly students who skipped the preparation." : " The low hump is mostly students whose laptop could not run a required tool.") : ""}">${leg}<line x1="${L}" x2="${W - 10}" y1="${y(0)}" y2="${y(0)}" style="stroke:var(--muted)"/>${s}<text x="${W - 10}" y="${H - 6}" text-anchor="end" style="fill:var(--muted)">score →</text></svg>`;
+      $("#hist-verdict").innerHTML = {
+        none: "<strong>Bimodal, as hoped.</strong> Is it fair? Pick a cohort to see who is in the low hump.",
+        a: "<strong>The low hump is mostly students who skipped the preparation.</strong> The test measured what it meant to. Arguably fair.",
+        b: "<strong>The identical histogram — but the low hump is mostly students whose laptops couldn’t run a required tool.</strong> The test partly measured hardware. The shape gave no warning.",
+      }[k];
+    };
+    const btns = $$("#hist-lab [data-h]");
+    btns.forEach((b) => b.addEventListener("click", () => { pressOnly(btns, b); render(b.dataset.h); }));
+    render("none");
+  })();
+
+  // ---------- 7. tangram hypotheses ----------
+  $$("#hyp button").forEach((b) => b.addEventListener("click", () => b.setAttribute("aria-expanded", String(b.getAttribute("aria-expanded") !== "true"))));
+
+  // ---------- 8. protocol worksheet ----------
+  (() => {
+    const fields = $$("#proto-lab textarea"), pmsg = $("#proto-msg");
+    fields.forEach((t) => { t.value = store.get("tds-ideation-" + t.dataset.k) || ""; t.addEventListener("input", () => store.set("tds-ideation-" + t.dataset.k, t.value)); });
+    const EX = {
+      p1: "Source information when you don’t know who holds it: plan whom to ask, trade, document provenance, and cope with holdouts.",
+      p2: "Each student reconstructs one client’s invoices, scattered across classmates. A rate limit on fetching. Some signals, not the map (Anand vs JK, 17:31).",
+      p3: "Agent with the student’s full access but not peers’ files. A class-wide shared folder. A shared reconciliation script. Fake ‘holdouts’. Record what each achieves.",
+      p4: "Auditor’s loss: missing count and value (42:55). Define the full set, duplicates and appeals. Don’t penalise a student for a peer who never replies; test the checker on a reference reconstruction.",
+      p5: "Two weeks later: a different domain (say, lab samples spread across teams), a different network and no shared folder. Does the student plan the search before asking?",
+    };
+    const say = (t) => { pmsg.textContent = t; setTimeout(() => (pmsg.textContent = ""), 2500); };
+    $("#proto-fill").addEventListener("click", () => { fields.forEach((t) => { t.value = EX[t.dataset.k]; store.set("tds-ideation-" + t.dataset.k, t.value); }); say("Filled with the invoice example."); });
+    $("#proto-clear").addEventListener("click", () => { fields.forEach((t) => { t.value = ""; store.set("tds-ideation-" + t.dataset.k, ""); }); say("Cleared."); });
+    $("#proto-copy").addEventListener("click", async () => {
+      const md = "# Assessment design protocol\n\n" + $$("#proto-lab .proto li").map((li, i) => `## ${i + 1}. ${li.querySelector("h4").textContent}\n\n${li.querySelector("textarea").value.trim() || "_(blank)_"}`).join("\n\n") + "\n";
+      try { await navigator.clipboard.writeText(md); say("Copied as Markdown."); } catch (e) { say("Couldn’t copy — select the text manually."); }
+    });
+  })();
+
+  // ---------- keyboard ----------
+  addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && menu.classList.contains("open")) { openMenu(false); curBtn.focus(); return; }
+    if (e.metaKey || e.ctrlKey || e.altKey || pop.open || lb.open) return;
+    if (/^(INPUT|TEXTAREA|SELECT|VIDEO|AUDIO)$/.test(e.target.tagName) || e.target.isContentEditable) return;
+    if (e.key === "v" || e.key === "V") setMode(!document.body.classList.contains("watch"));
+    else if (e.key === "]") goSec(getCur() + 1);
+    else if (e.key === "[") goSec(getCur() - 1);
+  });
+
+  // ---------- initial state from URL (never autoplays) ----------
+  const init = urlState();
+  if (init.view === "video") setMode(true, { replace: false });
+  if (init.t != null) {
+    seek(init.t).then(() => {
+      showResume(init.t);
+      onTime();
+      const scope = (init.hash && document.getElementById(init.hash)) || document;
+      const link = $$("a.ts", scope).find((a) => +a.dataset.t === init.t) || $$("a.ts").find((a) => +a.dataset.t === init.t);
+      if (link) { link.scrollIntoView({ block: "center" }); link.classList.add("flash"); }
+      else if (init.hash) document.getElementById(init.hash)?.scrollIntoView();
+      if (!isNarrow() && !link) ensureDockVisible();
+      if (isNarrow()) { document.body.classList.remove("dock-collapsed"); syncMin(); }
+    });
+  }
+  updateDockH();
+})();
+</script>
+</body>
+</html>

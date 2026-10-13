@@ -23,6 +23,9 @@ I speak regularly at:
 <!-- BEGIN GENERATED TALKS -->
 ## Latest talks
 
+- 12 Oct 2026. **[The Exam Is a Hypothesis](2026-10-12-tds-ideation/ ":ignore")** at [TDS Course Ideation — Open Design Meeting, Sep 2026](https://tds.s-anand.net/), Remote.  
+  Inside an open TDS course-design meeting: the instructors invent agent-friendly assessments, a student asks what they will measure, and the difference between getting work done and learning becomes the hardest test.  
+  [⏯️ Video (69m)](https://media.s-anand.net/2026-10-12-tds-course-ideation.webm ":ignore") · [💬 Transcript](2026-10-12-tds-ideation/transcript.md) · [🎧 Audio (69m)](https://github.com/sanand0/talks/releases/download/talks/2026-10-12-tds-ideation.opus ":ignore")
 - 07 Oct 2026. **[Looks Right. Isn’t.](2026-10-07-iitm-ed-data-visualization/ ":ignore")** at [ED5518: Data Visualization for Engineers](https://ed.iitm.ac.in/), Department of Engineering Design, IIT Madras, Chennai (remote).  
   AI makes pictures cheap to create but harder to trust: the reader may be another AI, and a chart, map or CAD model that looks right still needs an independent check.  
   [⏯️ Video (73m)](https://media.s-anand.net/2026-10-07-iitm-ed-data-visualization.webm ":ignore") · [💬 Transcript](2026-10-07-iitm-ed-data-visualization/transcript.md) · [🎧 Audio (73m)](https://github.com/sanand0/talks/releases/download/talks/2026-10-07-iitm-ed-data-visualization.opus ":ignore")

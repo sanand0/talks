@@ -1,9 +1,10 @@
 name: Deploy Talks
 
 on:
-  # Run when pushed. Use { branches: [main, master] } to run only on specific branches
+  # Only builds from main are eligible for publication.
   push:
-  # Allow manual triggering of the workflow
+    branches: [main]
+  # Manual runs are permitted, but the job guard below rejects non-main refs.
   workflow_dispatch:
 
 permissions:
@@ -14,6 +15,8 @@ permissions:
 
 jobs:
   build-and-deploy:
+    # workflow_dispatch can target other branches; never publish those refs.
+    if: github.ref == 'refs/heads/main'
     # Specify the deployment environment. Displays the URL in the GitHub Actions UI
     environment:
       name: github-pages

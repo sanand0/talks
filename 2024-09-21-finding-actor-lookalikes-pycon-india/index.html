@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>He Wanted an Irrfan Khan Look-alike. The Trick Was a Dot Product. · S Anand at PyCon India 2024</title>
+<meta name="description" content="At PyCon India on 21 September 2024, S Anand went looking for an Irrfan Khan look-alike. He didn't train a face model. He compared vectors from a pretrained one, and the same trick sorted movie quotes, checked driver photos and raised a question nobody could answer.">
+<meta property="og:title" content="He Wanted an Irrfan Khan Look-alike. The Trick Was a Dot Product.">
+<meta property="og:description" content="Movie quotes, driver photos and a Nana Patekar surprise: S Anand's PyCon India 2024 talk, Finding Actor Look-alikes with Multi-modal LLMs.">
+<meta property="og:image" content="https://talks.s-anand.net/2024-09-21-finding-actor-lookalikes-pycon-india/comic-page.avif">
+<meta property="og:url" content="https://talks.s-anand.net/2024-09-21-finding-actor-lookalikes-pycon-india/">
+<link rel="canonical" href="https://talks.s-anand.net/2024-09-21-finding-actor-lookalikes-pycon-india/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=DM+Mono:wght@400;500&family=Gloock&family=Manrope:wght@500;600;700&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script>
+  (() => {
+    let t = null;
+    try { t = localStorage.getItem("pycon-2024-lookalikes-theme"); } catch (e) {}
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  })();
+</script>
+<style>
+:root {
+  --paper: #eef0f4; --paper-2: #e1e5ee; --card: #f9fafc; --ink: #151a2b; --muted: #4c5470; --rule: #c4cada;
+  --violet: #4a32c2; --violet-soft: #e4e0fa; --gold: #855700; --gold-soft: #f6e7c2; --coral: #ad3822; --coral-soft: #f8ddd6; --teal: #0d6767; --teal-soft: #d6eeec;
+  --night: #0f1124; --night-2: #191c36; --night-3: #272b4f; --night-line: #353a66; --on-night: #ebeaf6; --on-night-muted: #b3b5d2; --lav: #c3b6ff; --marquee: #ffc95c;
+  --font-display: "Gloock", Georgia, serif; --font-body: "Spectral", Georgia, serif; --font-ui: "Manrope", system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, monospace; --font-marquee: "Big Shoulders Display", "Manrope", sans-serif;
+  --measure: 40rem; --pad: clamp(1rem, 4vw, 2.5rem); --dock-w: 380px; --shadow: 0 12px 32px rgba(15, 17, 36, .16);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f1220; --paper-2: #181c2e; --card: #151929; --ink: #e8e9f2; --muted: #a9aec6; --rule: #2f3552;
+    --violet: #b6a7ff; --violet-soft: #29244d; --gold: #f0c060; --gold-soft: #3a2f14; --coral: #f3937e; --coral-soft: #3d221c; --teal: #7fd3cc; --teal-soft: #15302f;
+    --shadow: 0 12px 32px rgba(0, 0, 0, .5); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0f1220; --paper-2: #181c2e; --card: #151929; --ink: #e8e9f2; --muted: #a9aec6; --rule: #2f3552;
+  --violet: #b6a7ff; --violet-soft: #29244d; --gold: #f0c060; --gold-soft: #3a2f14; --coral: #f3937e; --coral-soft: #3d221c; --teal: #7fd3cc; --teal-soft: #15302f;
+  --shadow: 0 12px 32px rgba(0, 0, 0, .5); color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 19px/1.72 var(--font-body); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+a { color: var(--violet); text-decoration-thickness: 1px; text-underline-offset: .18em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; border-radius: 2px; }
+img { max-width: 100%; height: auto; display: block; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.1; margin: 0; }
+strong { font-weight: 600; }
+.skip { position: absolute; left: -999px; top: 0; background: var(--ink); color: var(--paper); padding: .5rem 1rem; z-index: 999; }
+.skip:focus { left: .5rem; top: .5rem; }
+.progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--violet); z-index: 600; }
+.mono { font-family: var(--font-mono); }
+.fine { font: .84rem/1.5 var(--font-ui); color: var(--muted); }
+
+/* ---------- masthead ---------- */
+.mast { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .9rem var(--pad); font: 700 .78rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); max-width: 1500px; margin: 0 auto; }
+.mast a { color: inherit; text-decoration: none; }
+.mast a:hover { color: var(--ink); }
+.mast .right { display: flex; gap: 1rem; align-items: center; }
+.theme-btn { background: none; border: 1px solid var(--rule); color: var(--ink); border-radius: 999px; width: 2.2rem; height: 2.2rem; cursor: pointer; display: grid; place-items: center; }
+
+/* ---------- hero ---------- */
+.hero { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); gap: clamp(1.5rem, 4vw, 4rem); padding: clamp(1rem, 3vw, 2.5rem) var(--pad) 3rem; max-width: 1500px; margin: 0 auto; align-items: start; }
+.marquee { display: inline-flex; gap: .7rem; align-items: center; font: 800 .95rem var(--font-marquee); letter-spacing: .16em; text-transform: uppercase; color: var(--gold); }
+.marquee i.dots { display: inline-flex; gap: 4px; }
+.marquee i.dots b { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); display: block; }
+.hero h1 { font-size: clamp(2.5rem, 5.6vw, 4.7rem); letter-spacing: -.01em; margin: .7rem 0 0; }
+.hero h1 em { font-style: normal; color: var(--violet); }
+.dek { font-size: clamp(1.1rem, 1.8vw, 1.3rem); line-height: 1.55; margin: 1.2rem 0 1.3rem; max-width: 37rem; }
+.meta { display: grid; grid-template-columns: auto 1fr; gap: .25rem 1rem; font: 400 .86rem/1.5 var(--font-mono); border-top: 1px solid var(--rule); padding-top: 1rem; margin-top: 1rem; max-width: 36rem; }
+.meta dt { color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.meta dd { margin: 0; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.4rem; }
+.btn { display: inline-flex; align-items: center; gap: .45rem; font: 700 .95rem var(--font-ui); letter-spacing: .01em; padding: .62rem 1rem; border-radius: 6px; border: 1.5px solid var(--ink); color: var(--ink); background: transparent; text-decoration: none; cursor: pointer; }
+.btn:hover { background: var(--ink); color: var(--paper); }
+.btn.solid { background: var(--violet); border-color: var(--violet); color: #fff; }
+.btn.solid:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+:root[data-theme="dark"] .btn.solid { color: #0f1124; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.solid { color: #0f1124; } }
+.audio { margin-top: 1.3rem; font: 600 .86rem/1.45 var(--font-ui); color: var(--muted); max-width: 36rem; background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: .7rem .9rem; }
+.audio audio { width: 100%; margin-top: .45rem; display: block; }
+.audio .fine { margin: .35rem 0 0; font-weight: 500; }
+.comic { margin: 0; }
+.comic a { display: block; border: 1px solid var(--rule); background: var(--card); padding: .5rem; border-radius: 8px; box-shadow: var(--shadow); cursor: zoom-in; }
+.comic figcaption { font: .86rem/1.5 var(--font-ui); color: var(--muted); margin-top: .7rem; }
+.comic figcaption b { color: var(--coral); }
+
+/* ---------- reading room ---------- */
+.room { display: grid; grid-template-columns: minmax(0, 1fr) var(--dock-w); gap: 0 clamp(1rem, 3vw, 2.5rem); padding: 0 var(--pad); max-width: 1500px; margin: 0 auto; position: relative; }
+body.watch .room { grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); }
+.story { min-width: 0; padding-bottom: 3rem; }
+.dock { position: sticky; top: .8rem; align-self: start; margin-top: 2rem; max-height: calc(100vh - 1.6rem); display: flex; flex-direction: column; gap: .6rem; background: var(--night); color: var(--on-night); border-radius: 10px; padding: .75rem; box-shadow: var(--shadow); z-index: 300; }
+.dock a { color: var(--lav); }
+.dock-head { display: flex; justify-content: space-between; gap: .5rem; font: 700 .74rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--on-night-muted); flex: none; }
+.dock-head b { color: var(--on-night); }
+.vwrap { position: relative; flex: none; background: #000; aspect-ratio: 16 / 9; border-radius: 6px; overflow: hidden; }
+.vwrap iframe, .vwrap > div { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.vwrap .nojs { display: grid; place-items: center; color: #fff; font: 700 1rem var(--font-ui); text-align: center; padding: 1rem; }
+.vwrap .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .55; }
+.now { font: 600 .95rem/1.35 var(--font-ui); min-height: 2.6em; flex: none; }
+.now .t { font-family: var(--font-mono); color: var(--marquee); margin-right: .45rem; }
+.now .in-story { display: block; font-size: .85rem; font-weight: 500; color: var(--on-night-muted); margin-top: .15rem; }
+.resume { display: none; flex: none; }
+.resume.show { display: block; }
+.resume button { width: 100%; font: 700 1rem var(--font-ui); background: var(--marquee); color: var(--night); border: 0; border-radius: 6px; padding: .55rem 1rem; cursor: pointer; }
+.resume button:hover { background: #fff; }
+.dock-ctrls { display: flex; flex-wrap: wrap; gap: .4rem; flex: none; }
+.dbtn { appearance: none; border: 1px solid var(--night-line); background: var(--night-2); color: var(--on-night); border-radius: 6px; padding: .4rem .65rem; font: 700 .88rem var(--font-ui); cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; text-decoration: none; }
+.dock a.dbtn { color: var(--on-night); }
+.dbtn:hover, .dock a.dbtn:hover { background: var(--night-3); color: #fff; }
+.dbtn.mode { background: var(--lav); color: var(--night); border-color: var(--lav); }
+.dbtn.mode:hover { background: #fff; color: var(--night); }
+.chapters { overflow-y: auto; min-height: 0; flex: 1 1 auto; scrollbar-width: thin; }
+.chapters summary { font: 700 .74rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--on-night-muted); cursor: pointer; padding: .2rem 0; }
+.chapters ol { list-style: none; margin: .2rem 0 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 1px; }
+body.watch .chapters ol { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: .6rem; }
+.chapters li a { display: flex; gap: .55rem; align-items: baseline; padding: .28rem .45rem; border-radius: 4px; text-decoration: none; font: 600 .9rem/1.25 var(--font-ui); }
+.dock .chapters li a { color: var(--on-night); }
+.chapters li a .ct { font: .76rem var(--font-mono); color: var(--marquee); flex: 0 0 auto; }
+.chapters li a:hover { background: var(--night-2); }
+.dock .chapters li a.is-now { background: var(--lav); color: var(--night); }
+.chapters li a.is-now .ct { color: var(--night); }
+.chapters li a.in-view { box-shadow: inset 3px 0 0 var(--marquee); }
+.dock .dock-min { display: none; }
+body.watch .story { font-size: 17px; }
+body.watch .story .chap { opacity: .62; transition: opacity .3s; }
+body.watch .story .chap.is-now, body.watch .story .chap:hover, body.watch .story .chap:focus-within { opacity: 1; }
+
+/* ---------- story typography ---------- */
+.chap { position: relative; padding: 3.4rem 0 1rem; scroll-margin-top: 1rem; }
+.chap > * { max-width: var(--measure); margin-left: auto; margin-right: auto; }
+.chap > .wide, .chap > .band { max-width: none; }
+.chap p { margin-top: 0; margin-bottom: 1.15rem; }
+.reel { font: 800 .9rem var(--font-marquee); letter-spacing: .14em; text-transform: uppercase; color: var(--coral); margin-bottom: .5rem; display: flex; gap: .6rem; align-items: center; }
+.reel::after { content: ""; flex: 1; border-top: 2px dotted var(--rule); }
+.chap h2 { font-size: clamp(2rem, 4.2vw, 3rem); margin-bottom: 1.2rem; }
+.chap h3 { font-size: 1.5rem; margin: 2rem 0 .8rem; }
+a.ts { font: 500 .8rem var(--font-mono); color: var(--violet); background: var(--violet-soft); border-radius: 4px; padding: .08rem .4rem .08rem .3rem; text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: .1rem; vertical-align: .08em; }
+a.ts:hover { background: var(--violet); color: var(--paper); }
+a.ts.flash { animation: flash 1s ease; }
+@keyframes flash { 0%, 60% { background: var(--marquee); color: #111; } }
+.said { margin: 2rem auto; padding: 0 0 0 1.3rem; border-left: 4px solid var(--violet); font: italic 400 clamp(1.3rem, 2.4vw, 1.62rem)/1.42 var(--font-body); }
+.said p { margin: 0 0 .5rem; }
+.said cite { display: block; font: normal 700 .85rem var(--font-ui); color: var(--muted); letter-spacing: .01em; }
+.said.room-q { border-left-color: var(--gold); }
+.said.wide-q { max-width: 48rem; }
+@media (min-width: 1000px) { .said.wide-q { margin-left: -2rem; margin-right: -2rem; } }
+.aside { font: 500 .95rem/1.6 var(--font-ui); background: var(--card); border: 1px solid var(--rule); border-left: 4px solid var(--gold); padding: .9rem 1.1rem; border-radius: 6px; margin: 1.6rem auto; }
+.aside b.h { display: block; font: 500 .74rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--gold); margin-bottom: .3rem; }
+.aside.warn { border-left-color: var(--coral); }
+.aside.warn b.h { color: var(--coral); }
+.aside.check { border-left-color: var(--teal); }
+.aside.check b.h { color: var(--teal); }
+.aside p { margin: 0 0 .5rem; }
+.aside p:last-child { margin: 0; }
+.aside ul { margin: .2rem 0 .4rem; padding-left: 1.2rem; }
+.prompt { background: var(--night); color: var(--on-night); border-radius: 8px; padding: 1rem 1.2rem; margin: 1.6rem auto; font: 400 .92rem/1.6 var(--font-mono); }
+.prompt .pl { display: block; font: 700 .7rem var(--font-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--marquee); margin-bottom: .4rem; }
+.prompt p { margin: 0 0 .5rem; }
+.prompt p:last-child { margin: 0; }
+.prompt .red { background: var(--night-3); color: var(--marquee); padding: 0 .3em; border-radius: 3px; }
+.prompt a { color: var(--lav); }
+figure.fig { margin: 2rem auto; }
+figure.fig img { border-radius: 6px; border: 1px solid var(--rule); cursor: zoom-in; background: #fff; }
+figure.fig figcaption { font: .86rem/1.5 var(--font-ui); color: var(--muted); margin-top: .55rem; }
+figure.fig figcaption b { color: var(--ink); }
+
+/* ---------- bands ---------- */
+.band { background: var(--night); color: var(--on-night); border: 1px solid var(--night-line); border-radius: 12px; padding: clamp(1.4rem, 3.5vw, 2.6rem); margin: 2.5rem 0; }
+.band a { color: var(--lav); }
+.band strong { color: #fff; }
+.band .band-label { font: 800 .9rem var(--font-marquee); letter-spacing: .14em; text-transform: uppercase; color: var(--marquee); margin-bottom: .5rem; }
+.band h3 { font-size: clamp(1.5rem, 3vw, 2.1rem); margin: 0 0 .8rem; color: #fff; }
+.band p { color: var(--on-night); }
+.band .muted, .band .fine { color: var(--on-night-muted); font: .86rem/1.5 var(--font-ui); }
+.band a.ts { background: var(--night-3); color: var(--marquee); }
+.band a.ts:hover { background: var(--marquee); color: var(--night); }
+.band figure.fig img { border-color: var(--night-line); }
+.band figure.fig figcaption { color: var(--on-night-muted); }
+.band figure.fig figcaption b { color: #fff; }
+
+/* ---------- jump nav ---------- */
+.jump { position: fixed; left: 1rem; bottom: 1rem; z-index: 500; display: flex; align-items: center; gap: .2rem; background: var(--ink); color: var(--paper); border-radius: 999px; padding: .25rem; box-shadow: var(--shadow); transition: opacity .3s, transform .3s; }
+.jump.on-hero { opacity: 0; pointer-events: none; transform: translateY(1rem); }
+.jump button { background: none; border: 0; color: inherit; font: 700 .9rem var(--font-ui); cursor: pointer; padding: .45rem .7rem; border-radius: 999px; display: inline-flex; align-items: center; gap: .45rem; }
+.jump button:hover:not(:disabled) { background: rgba(127, 127, 127, .25); }
+.jump button:disabled { opacity: .35; cursor: default; }
+.jump-cur span { max-width: 15rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.jump-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, .3); z-index: 480; display: none; }
+.jump-backdrop.open { display: block; }
+.jump-menu { position: fixed; left: 1rem; bottom: 4.2rem; width: min(46rem, calc(100vw - 1.4rem)); max-height: 70vh; overflow-y: auto; background: var(--card); color: var(--ink); border: 1px solid var(--rule); border-radius: 12px; box-shadow: var(--shadow); padding: 1rem; z-index: 490; display: none; }
+.jump-menu.open { display: block; }
+.jm-group { font: 800 .8rem var(--font-marquee); letter-spacing: .14em; text-transform: uppercase; color: var(--coral); margin: .6rem 0 .3rem; }
+.jm-group:first-child { margin-top: 0; }
+.jump-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .35rem; }
+.jump-grid a { display: block; padding: .45rem .6rem; border-radius: 6px; text-decoration: none; color: var(--ink); font: 700 .9rem/1.25 var(--font-ui); border: 1px solid transparent; }
+.jump-grid a small { display: block; font-weight: 500; color: var(--muted); font-size: .78rem; margin-top: .1rem; }
+.jump-grid a:hover { border-color: var(--rule); background: var(--paper); }
+.jump-grid a.is-cur { background: var(--violet-soft); border-color: var(--violet); }
+</style>
+<style id="css-components">
+/* cold-open still */
+.still { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1.3rem; align-items: center; }
+.still img { border-radius: 8px; background: #fff; border: 1px solid var(--night-line); cursor: zoom-in; }
+.still .said { margin: 0; border-left-color: var(--marquee); color: var(--on-night); }
+.still .said cite { color: var(--on-night-muted); }
+/* stat strip */
+.ledger-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin: 1.6rem auto; max-width: 52rem !important; }
+.ledger-strip div { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: .9rem 1rem; font: 500 .9rem/1.45 var(--font-ui); }
+.ledger-strip b { display: block; font: 400 2rem/1.05 var(--font-display); color: var(--violet); margin-bottom: .25rem; }
+/* pipeline */
+.pipe { list-style: none; padding: 0; margin: 1.8rem auto; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .5rem; max-width: 60rem !important; counter-reset: p; }
+.pipe li { background: var(--card); border: 1px solid var(--rule); border-top: 4px solid var(--violet); border-radius: 6px; padding: .7rem .7rem .8rem; font: 500 .84rem/1.4 var(--font-ui); position: relative; counter-increment: p; }
+.pipe li::before { content: "0" counter(p); display: block; font: 500 .72rem var(--font-mono); color: var(--muted); }
+.pipe li b { display: block; font: 700 1rem/1.2 var(--font-ui); margin: .1rem 0 .25rem; }
+.pipe li.gen { border-top-color: var(--gold); }
+.pipe li.you { border-top-color: var(--coral); }
+.pipe-key { display: flex; flex-wrap: wrap; gap: .3rem 1rem; font: 600 .8rem var(--font-ui); color: var(--muted); justify-content: center; margin-top: -.9rem; }
+.pipe-key span::before { content: ""; display: inline-block; width: .8rem; height: .25rem; margin-right: .35rem; vertical-align: .2em; background: var(--c); }
+/* interactive shell */
+.lab { font-family: var(--font-ui); }
+.lab .lab-intro { font: 400 1.04rem/1.6 var(--font-body); color: var(--on-night); max-width: 48rem; }
+.ctrls { display: flex; flex-wrap: wrap; gap: .6rem 1rem; align-items: center; margin: 1rem 0; }
+.ctrls label { font: 700 .8rem var(--font-ui); letter-spacing: .04em; color: var(--on-night-muted); display: inline-flex; align-items: center; gap: .5rem; }
+.ctrls select { font: 600 .92rem var(--font-ui); background: var(--night-2); color: var(--on-night); border: 1px solid var(--night-line); border-radius: 6px; padding: .4rem .5rem; max-width: 22rem; }
+.ctrls input[type=range] { accent-color: var(--marquee); width: 11rem; }
+.ctrls output { font: 500 .92rem var(--font-mono); color: var(--marquee); min-width: 3.2rem; }
+.lbtn { font: 700 .86rem var(--font-ui); background: var(--night-2); color: var(--on-night); border: 1px solid var(--night-line); border-radius: 999px; padding: .4rem .8rem; cursor: pointer; display: inline-flex; align-items: center; gap: .35rem; }
+.lbtn:hover { background: var(--night-3); }
+.lbtn[aria-pressed="true"], .lbtn[aria-selected="true"] { background: var(--on-night); color: var(--night); border-color: var(--on-night); }
+.lab-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 1.3rem; align-items: start; }
+.nb-map svg { width: 100%; height: auto; display: block; background: var(--night-2); border-radius: 8px; }
+.nb-map circle { cursor: pointer; }
+.nb-map .edge { stroke: var(--lav); stroke-opacity: .45; }
+.nb-map .edge.hot { stroke: var(--marquee); stroke-opacity: 1; stroke-width: 2; }
+.nb-map text { font: 600 11px var(--font-ui); fill: #fff; paint-order: stroke; stroke: var(--night); stroke-width: 3px; pointer-events: none; }
+.nb-side .sel { font: 400 1.35rem/1.3 var(--font-display); color: #fff; margin: 0 0 .2rem; }
+.nb-side .src { font: 600 .82rem var(--font-ui); color: var(--on-night-muted); margin-bottom: .8rem; }
+.nn { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; }
+.nn li { display: grid; grid-template-columns: minmax(0, 1fr) 3.4rem; gap: .5rem; align-items: center; font: 500 .9rem/1.3 var(--font-ui); }
+.nn li button { all: unset; cursor: pointer; display: block; }
+.nn li button:hover, .nn li button:focus-visible { text-decoration: underline; outline: revert; }
+.nn .bar { grid-column: 1 / -1; height: .32rem; background: var(--night-3); border-radius: 2px; position: relative; overflow: hidden; margin-top: -.15rem; }
+.nn .bar i { position: absolute; inset: 0 auto 0 0; background: var(--lav); }
+.nn li.top .bar i { background: var(--marquee); }
+.nn .v { font: 500 .85rem var(--font-mono); color: var(--marquee); text-align: right; }
+.nn .m { display: block; font-size: .76rem; color: var(--on-night-muted); }
+.readout { font: 400 1.02rem/1.55 var(--font-body); background: var(--night-2); border-left: 4px solid var(--marquee); padding: .75rem 1rem; border-radius: 6px; margin: 1rem 0 0; color: var(--on-night); }
+.readout b { color: var(--marquee); font-weight: 600; }
+/* taxonomy lab */
+.tabs { display: flex; flex-wrap: wrap; gap: .4rem; margin: .4rem 0 1rem; }
+.chips { display: flex; flex-wrap: wrap; gap: .35rem; margin: .6rem 0 .3rem; }
+.chip { font: 700 .82rem var(--font-ui); background: transparent; color: var(--on-night-muted); border: 1px dashed var(--night-line); border-radius: 999px; padding: .3rem .7rem; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--night-3); color: #fff; border: 1px solid var(--lav); }
+.chip.alt[aria-pressed="true"] { border-color: var(--marquee); }
+.chip-h { font: 500 .74rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--on-night-muted); margin-top: .8rem; }
+.groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; margin-top: 1rem; }
+.grp { background: var(--night-2); border: 1px solid var(--night-line); border-radius: 8px; padding: .75rem .85rem; font: 500 .86rem/1.4 var(--font-ui); }
+.grp h4 { margin: 0 0 .45rem; font: 700 .95rem/1.25 var(--font-ui); color: #fff; display: flex; justify-content: space-between; gap: .5rem; }
+.grp h4 span { font: 500 .8rem var(--font-mono); color: var(--marquee); white-space: nowrap; }
+.grp ul { margin: 0; padding-left: 1rem; color: var(--on-night); }
+.grp li { margin-bottom: .2rem; }
+.grp li.close { color: var(--on-night-muted); }
+.grp li.close::after { content: " · close call"; font-size: .74rem; color: var(--marquee); }
+.grp .more { color: var(--on-night-muted); font-size: .78rem; margin-top: .3rem; }
+.stab { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
+.stab-meter { flex: 1 1 12rem; height: .6rem; background: var(--night-3); border-radius: 99px; position: relative; overflow: hidden; max-width: 18rem; }
+.stab-meter i { position: absolute; inset: 0 auto 0 0; background: var(--marquee); }
+/* same-space diagram */
+.space svg { width: 100%; height: auto; display: block; }
+.space text { font-family: var(--font-ui); }
+/* audition */
+.aud-tabs { display: flex; flex-wrap: wrap; gap: .35rem; margin: .4rem 0 1rem; }
+.aud-panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 1.4rem; align-items: start; }
+.aud-panel img { border-radius: 8px; background: #fff; cursor: zoom-in; border: 1px solid var(--night-line); margin: 0 auto; max-height: 340px; width: auto; }
+.aud-panel h4 { font: 400 1.5rem/1.2 var(--font-display); color: #fff; margin: 0 0 .5rem; }
+.aud-panel blockquote { margin: 0 0 .9rem; padding-left: 1rem; border-left: 3px solid var(--marquee); font: italic 1.05rem/1.5 var(--font-body); color: var(--on-night); }
+.aud-panel blockquote cite { display: block; font: normal 700 .8rem var(--font-ui); color: var(--on-night-muted); margin-top: .3rem; }
+.aud-panel dl { display: grid; grid-template-columns: auto 1fr; gap: .35rem .8rem; font: 500 .9rem/1.45 var(--font-ui); margin: 0; }
+.aud-panel dt { font: 500 .72rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--marquee); padding-top: .2rem; }
+.aud-panel dd { margin: 0; color: var(--on-night); }
+.aud-panel dd.no { color: var(--on-night-muted); }
+.confound { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; margin-top: 1.4rem; }
+.confound div { background: var(--night-2); border: 1px solid var(--night-line); border-radius: 8px; padding: .75rem .85rem; font: 500 .88rem/1.45 var(--font-ui); color: var(--on-night); }
+.confound b { display: block; color: #fff; font-size: .98rem; margin-bottom: .2rem; }
+/* experiment */
+.exp { background: var(--card); border: 2px dashed var(--rule); border-radius: 10px; padding: 1.3rem 1.5rem; margin: 2rem auto; max-width: 52rem !important; font: 500 .97rem/1.6 var(--font-ui); }
+.exp h3 { margin: 0 0 .7rem; font-size: 1.6rem; }
+.exp table { width: 100%; border-collapse: collapse; margin: .6rem 0 1rem; font-size: .9rem; }
+.exp th, .exp td { text-align: left; padding: .45rem .5rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.exp th { font: 500 .72rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.exp ol { margin: 0 0 .8rem; padding-left: 1.3rem; }
+.exp li { margin-bottom: .35rem; }
+.exp .verdict { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+.exp .verdict div { border-radius: 8px; padding: .7rem .85rem; font-size: .9rem; }
+.exp .verdict .a { background: var(--teal-soft); }
+.exp .verdict .b { background: var(--coral-soft); }
+.exp .verdict b { display: block; }
+/* takeaways */
+.takeaways { background: var(--night); color: var(--on-night); padding: 3.5rem var(--pad); margin: 2rem 0 0; scroll-margin-top: 1rem; }
+.takeaways .inner { max-width: 1240px; margin: 0 auto; }
+.takeaways .band-label { font: 800 .9rem var(--font-marquee); letter-spacing: .14em; text-transform: uppercase; color: var(--marquee); }
+.takeaways h2 { font-size: clamp(2rem, 4vw, 2.8rem); color: #fff; margin: .4rem 0 1.6rem; }
+.cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.card { background: var(--night-2); border: 1px solid var(--night-line); border-radius: 10px; padding: 1.2rem; font: 500 .95rem/1.55 var(--font-ui); }
+.card .num { font: 500 .8rem var(--font-mono); color: var(--marquee); }
+.card h3 { font-size: 1.35rem; color: #fff; margin: .3rem 0 .5rem; }
+.card p { margin: 0; color: var(--on-night); }
+.takeaways a { color: var(--lav); }
+.takeaways a.ts { background: var(--night-3); color: var(--marquee); }
+.takeaways a.ts:hover { background: var(--marquee); color: var(--night); }
+/* ledger */
+.ledger-sec { max-width: 1180px; margin: 0 auto; padding: 3.5rem var(--pad) 1rem; scroll-margin-top: 1rem; }
+.ledger-sec h2 { font-size: clamp(1.8rem, 3.4vw, 2.5rem); margin-bottom: .8rem; }
+.ledger-sec > p { max-width: 46rem; font-size: 1rem; }
+.table-wrap { overflow-x: auto; }
+.ledger { width: 100%; border-collapse: collapse; font: 500 .9rem/1.45 var(--font-ui); min-width: 44rem; }
+.ledger th { text-align: left; font: 500 .72rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); border-bottom: 2px solid var(--ink); padding: .5rem; }
+.ledger td { border-bottom: 1px solid var(--rule); padding: .6rem .5rem; vertical-align: top; }
+.st { display: inline-block; font: 500 .72rem var(--font-mono); padding: .1rem .4rem; border-radius: 4px; margin: .1rem 0; }
+.st.ok { background: var(--teal-soft); color: var(--teal); }
+.st.ctx { background: var(--gold-soft); color: var(--gold); }
+.st.asis { background: var(--paper-2); color: var(--ink); }
+.st.bad { background: var(--coral-soft); color: var(--coral); }
+/* footer */
+footer.site { max-width: 1180px; margin: 2rem auto 0; padding: 2rem var(--pad) 6rem; border-top: 1px solid var(--rule); font: 500 .9rem/1.6 var(--font-ui); display: grid; gap: .7rem; }
+footer.site .muted { color: var(--muted); }
+kbd { font: 500 .8rem var(--font-mono); border: 1px solid var(--rule); border-radius: 3px; padding: 0 .3rem; background: var(--card); }
+/* dialogs */
+dialog { border: 0; padding: 0; }
+dialog::backdrop { background: rgba(8, 9, 20, .74); }
+.pop { width: min(48rem, calc(100vw - 1.4rem)); max-height: calc(100vh - 2rem); background: var(--paper); color: var(--ink); border-radius: 12px; box-shadow: var(--shadow); }
+.pop[open] { display: flex; flex-direction: column; }
+.pop-head { display: flex; justify-content: space-between; align-items: center; padding: .8rem 1.2rem; border-bottom: 1px solid var(--rule); }
+.pop-head h3 { font-size: 1.5rem; }
+.pop-head button { background: none; border: 1px solid var(--rule); color: var(--ink); border-radius: 6px; padding: .35rem .7rem; font: 700 .9rem var(--font-ui); cursor: pointer; }
+.pop-search { display: none; align-items: center; gap: .6rem; padding: .6rem 1.2rem; border-bottom: 1px solid var(--rule); font: 500 .9rem var(--font-ui); }
+.pop-search.on { display: flex; }
+.pop-search input { flex: 1; font: 1rem var(--font-ui); padding: .4rem .6rem; border: 1px solid var(--rule); border-radius: 6px; background: var(--card); color: var(--ink); }
+.pop-body { overflow-y: auto; padding: 1rem 1.4rem 1.6rem; font-size: 1.02rem; line-height: 1.65; }
+.pop-body p { margin: 0 0 .9rem; }
+.pop-body ul, .pop-body ol { margin: 0 0 .9rem 1.4rem; padding: 0; }
+.pop-body li { margin-bottom: .3rem; }
+.pop-body blockquote { margin: 0 0 .9rem; padding-left: .9rem; border-left: 3px solid var(--rule); }
+.pop-body h1, .pop-body h2 { font-size: 1.4rem; margin: 1rem 0 .5rem; }
+.pop-body hr { border: 0; border-top: 1px solid var(--rule); margin: 1.2rem 0; }
+.pop-body .intro { font: italic 500 .95rem/1.5 var(--font-ui); color: var(--muted); }
+.pop-body .hide { display: none; }
+.pop-body mark { background: var(--gold-soft); color: inherit; }
+.lightbox { background: #0b0c18; color: #fff; width: min(96vw, 1400px); max-height: 96vh; border-radius: 8px; }
+.lightbox[open] { display: flex; flex-direction: column; }
+.lightbox img { max-height: calc(96vh - 4rem); width: auto; max-width: 100%; margin: 0 auto; object-fit: contain; cursor: zoom-out; background: #fff; }
+.lb-bar { display: flex; justify-content: space-between; gap: 1rem; align-items: center; padding: .6rem .9rem; font: 500 .88rem/1.4 var(--font-ui); }
+.lb-act { display: flex; gap: .8rem; align-items: center; flex: none; }
+.lb-act a { color: var(--lav); }
+.lb-act button { background: var(--night-3); color: #fff; border: 0; border-radius: 6px; padding: .35rem .8rem; font: 700 .88rem var(--font-ui); cursor: pointer; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1200px) { :root { --dock-w: 330px; } .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } .pipe { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 999px) {
+  .hero { grid-template-columns: 1fr; }
+  .comic { max-width: 34rem; }
+  .room { display: block; }
+  .dock { position: fixed; right: .7rem; bottom: 4.3rem; top: auto; margin: 0; width: min(52vw, 280px); max-height: none; padding: .45rem; gap: .4rem; }
+  .dock .dock-head, .dock .now, .dock .chapters, .dock .dock-ctrls .wide-only { display: none; }
+  .dock .dbtn { padding: .35rem .5rem; font-size: .84rem; flex: 1 1 auto; justify-content: center; }
+  .dock .dock-min { display: inline-flex; }
+  body.dock-collapsed:not(.watch) .dock .vwrap { height: 0; aspect-ratio: auto; visibility: hidden; }
+  body.dock-collapsed:not(.watch) .dock { width: auto; }
+  body.dock-collapsed:not(.watch) .dock #share-btn, body.dock-collapsed:not(.watch) .dock .resume { display: none; }
+  body.watch .dock { left: 0; right: 0; top: 0; bottom: auto; width: auto; border-radius: 0 0 8px 8px; padding: .5rem .6rem .6rem; }
+  body.watch .dock .now { display: block; font-size: .88rem; min-height: 0; }
+  body.watch .dock .now .in-story { display: none; }
+  body.watch .dock .dock-min { display: none; }
+  body.watch { padding-top: var(--dock-h, 0px); }
+  body.watch .chap { scroll-margin-top: calc(var(--dock-h, 0px) + .5rem); }
+  body.watch .story .chap { opacity: .9; }
+  .jump { left: .7rem; bottom: .7rem; }
+  .jump-menu { left: .7rem; }
+  .lab-grid, .aud-panel, .still { grid-template-columns: 1fr; }
+  .groups, .confound { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  body { font-size: 18px; }
+  .jump-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cards, .groups, .confound, .ledger-strip, .exp .verdict { grid-template-columns: 1fr; }
+  .pipe { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .jump-cur span { max-width: 9rem; }
+  .mast .right > span { display: none; }
+  .ctrls input[type=range] { width: 9rem; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#story">Skip to the story</a>
+<div class="progress" id="progress"></div>
+
+<header class="mast">
+  <a href="../">S Anand · Talks</a>
+  <span class="right"><span>PyCon India · 21 Sep 2024</span><button class="theme-btn" id="theme-btn" type="button" aria-label="Switch between light and dark theme"><i class="bi bi-circle-half" aria-hidden="true"></i></button></span>
+</header>
+
+<section class="hero" aria-labelledby="page-title">
+  <div>
+    <div class="marquee"><i class="dots" aria-hidden="true"><b></b><b></b><b></b></i>PyCon India 2024 · Track 1 · Saturday 21 September</div>
+    <h1 id="page-title">He wanted an Irrfan Khan look-alike. The trick was a <em>dot product</em>.</h1>
+    <p class="dek">S Anand asked a hall full of Python programmers which Bollywood star they'd want a double for. His own answer was Irrfan Khan. To find one, he didn't train a face model. He took vectors from a model Google had already trained and compared them, the same arithmetic that had sorted 150 movie quotes twenty minutes earlier. The answer made the room laugh. Then a question from the session host showed <strong>nobody in the room knew what “similar” was measuring</strong>.</p>
+    <dl class="meta">
+      <dt>Speaker</dt><dd><a href="https://s-anand.net/">S Anand</a>, introduced as “LLM psychologist at Straive”</dd>
+      <dt>Talk</dt><dd><a href="https://in.pycon.org/cfp/2024/proposals/finding-actor-look-alikes-with-multi-modal-llms~azpn8/"><em>Finding actor look-alikes with multi-modal LLMs</em></a> · <a href="https://in.pycon.org/2024/schedule/">schedule</a>: 14:45–15:15</dd>
+      <dt>Where</dt><dd>NIMHANS Convention Centre, Bengaluru</dd>
+      <dt>Recording</dt><dd>Python India on YouTube, 30:50 with Q&amp;A, published March 2025</dd>
+      <dt>Models used</dt><dd>OpenAI text-embedding-3-small · Google multimodal embeddings · GPT-4o mini (for naming)</dd>
+    </dl>
+    <div class="hero-actions">
+      <a class="btn solid" href="#nana"><i class="bi bi-book" aria-hidden="true"></i> Read the story</a>
+      <a class="btn" href="?view=video" id="hero-watch"><i class="bi bi-play-btn" aria-hidden="true"></i> Watch alongside</a>
+      <a class="btn" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+    </div>
+    <div class="audio">
+      <i class="bi bi-headphones" aria-hidden="true"></i> Listen instead · audio only, 30:50, Opus
+      <audio controls preload="none">
+        <source src="2024-09-21-finding-actor-lookalikes-pycon-india.opus" type="audio/ogg; codecs=opus">
+        <source src="https://github.com/sanand0/talks/releases/download/talks/2024-09-21-finding-actor-lookalikes-pycon-india.opus" type="audio/ogg; codecs=opus">
+      </audio>
+      <p class="fine">The soundtrack of the same PyCon recording. Much of the talk is a screen demo, so the video below shows what the audio describes. <a href="https://github.com/sanand0/talks/releases/download/talks/2024-09-21-finding-actor-lookalikes-pycon-india.opus">Download the .opus file</a>.</p>
+    </div>
+  </div>
+  <!-- Comic page generated with ChatGPT. Source: https://chatgpt.com/c/6ad19f99-8408-83ec-bca2-7ade308f1bfc -->
+  <figure class="comic">
+    <a href="comic-page.avif" data-lightbox data-caption="The talk as an eight-panel comic page, drawn with ChatGPT after the talk. An interpretation, not stage documentation: the 2021 conference stage, the vector sizes and the photos are invented for the drawing.">
+      <img src="comic-page.avif" width="1055" height="1491" alt="Eight-panel comic. 1: a speaker on a 2021 conference stage points at a board asking ‘Who looks like Irrfan Khan?’, beside labels ‘too expensive’ and ‘too unreliable’ and photos of Shah Rukh Khan, Deepika Padukone, Ranveer Singh and Alia Bhatt. 2: a robot with a fake moustache guesses ‘random’ numbers 42, 47 and 37, with a chart and a note that 10, 20, 11, 22 and 100 are missing. 3: a price-versus-quality chart where newer models move up and to the left along a Pareto frontier. 4: the word ‘apple’ passes through an embedding model into a short vector, plotted near ‘orange’ and away from Apple the company. 5: movie quotes go through K-means into coloured clusters with outliers and an automatic taxonomy. 6: a face photo and the word ‘smile’ enter one multimodal embedding model and land in a shared space between ‘smile’ and ‘frown’. 7: driver application photos are accepted or rejected for plain background, duplicates, a company logo and a tuxedo; a six-week plan is crossed out for ‘Day 6’. 8: a ‘Bollywood look-alike finder’ pairs Shah Rukh Khan with Varun Dhawan, Deepika Padukone with Priyanka Chopra, Ranveer Singh with Vicky Kaushal, Alia Bhatt with Katrina Kaif and Irrfan Khan with Nana Patekar; an audience member asks ‘Why not spouses?’ and the speaker replies ‘I have no clue!’">
+    </a>
+    <figcaption><b>Artist's interpretation.</b> A comic page drawn with ChatGPT after the talk, not a picture of the stage. The talk was at PyCon in 2024, not a 2021 conference, and the real 2024 embedding had about 1,536 numbers. The stage evidence is in the story below. Tap to enlarge.</figcaption>
+  </figure>
+</section>
+
+<div class="room" id="room">
+<main class="story" id="story">
+<section class="chap" id="nana" data-act="Cold open" data-title="Nana Patekar, maybe">
+  <div class="reel">Reel 1 · <a class="ts" href="?t=26:18">26:18</a></div>
+  <h2>“Nana Patekar. Maybe.”</h2>
+  <p>Twenty-six minutes into his PyCon talk, S Anand typed a name into a search box he'd been saving for the end. He'd opened by asking the hall whose double they wanted to find. The room voted for Shah Rukh Khan. Anand had said his own choice was <a href="https://en.wikipedia.org/wiki/Irrfan_Khan">Irrfan Khan</a>, the actor who died in 2020: <q>Who can replace—I mean, no one can, that's another story—but I mean, facially, who might be the closest?</q></p>
+  <p>Now the screen showed four small face crops joined by grey lines. Two were photos of Irrfan. A third carried the filename <span class="mono">Nana_Patekar.649.jpg</span>.</p>
+  <div class="band still">
+    <a href="stage-irrfan-nana.webp" data-lightbox data-caption="Stage still, 26:33. ImageExplore's similarity view after searching for Irrfan Khan: two Irrfan Khan photos (top and centre), a photo labelled Nana_Patekar.649.jpg (right) and a fourth, unlabelled face (left). Grey lines join photos above the similarity cutoff. Frame from Python India's recording.">
+      <img src="stage-irrfan-nana.webp" width="730" height="500" alt="Four face crops on a white screen joined by grey lines: two photos of Irrfan Khan, one labelled Nana_Patekar.649.jpg, and one unlabelled smiling face.">
+    </a>
+    <blockquote class="said">
+      <p>“But to answer the question that I had almost two years ago: who could replace Irrfan Khan? And I think one answer clearly matches: Nana Patekar. Maybe. Yeah, even as an actor, probably.”</p>
+      <cite>S Anand · <a class="ts" href="?t=26:22">26:22</a></cite>
+    </blockquote>
+  </div>
+  <p>The room laughed. The answer is fun, and it's the least important thing in the talk. What matters is <strong>what Anand didn't have to build</strong> to get it. He didn't collect a labelled face dataset or train a recognition network. He didn't hire anyone for computer vision. He took photos, passed them through a model someone else had trained, and asked which lists of numbers were close together.</p>
+  <p>A few years earlier the same question had been refused as a waste of money. To see what changed, rewind to minute three.</p>
+  <div class="aside warn"><b class="h">Read the result narrowly</b><p>The screen shows which <em>photo</em> in <em>that collection</em> sat closest to an Irrfan photo, for <em>that model</em>, above <em>that slider setting</em>. It isn't a verified look-alike, a facial-recognition match or a claim about either man. Anand's “maybe” was the right word.</p></div>
+</section>
+
+<section class="chap" id="veto" data-act="Permission" data-title="The $5,000 veto">
+  <div class="reel">Reel 2 · <a class="ts" href="?t=00:33">00:33</a> – <a class="ts" href="?t=03:31">03:31</a></div>
+  <h2>A quiz, a 42 and a veto</h2>
+  <p>The talk began as a show of hands. Ranveer Singh: <q>One, two hands, three.</q> Deepika Padukone did better. Then Shah Rukh Khan: <q>Wow, he beats Deepika Padukone! I did not expect this.</q> Alia Bhatt came last. Anand wanted Irrfan, and said he'd first wondered about it around 2021.</p>
+  <p>The early language models weren't much help. Ask one for a random number and it isn't random. <strong>Claude 3 Haiku said 42 <q>almost consistently every time</q></strong>, and GPT-3.5 Turbo preferred 47. Both avoided round numbers and repeated digits, <q>exactly the same kinds of biases that a human exhibits.</q> That was enough to make him distrust them for careful measurement. (The random-number experiment has its own story: <a href="../2024-08-10-tedx-mdi-gurgaon/">“The computer said it gets stressed”</a>, from his TEDx talk six weeks earlier.)</p>
+  <figure class="fig">
+    <a href="orig-llm-random.webp" data-lightbox data-caption="Slide ‘How good are LLMs?’ (01:14): how often GPT-3.5 Turbo and Claude 3 Haiku picked each number. Red and yellow columns are favourites: 47 for GPT-3.5 Turbo, 42 for Claude 3 Haiku. Original image from the actor-lookalikes repository."><img src="orig-llm-random.webp" width="900" height="400" loading="lazy" alt="Two heatmap strips of numbers 17 to 95. GPT-3.5 Turbo's strip peaks in red at 47 with yellow at 57; Claude 3 Haiku's peaks in red at 42 with yellow at 47 and 57."></a>
+    <figcaption><b>“LLMs can't even guess unbiased.”</b> The slide at <a class="ts" href="?t=01:14">01:14</a>. Original artwork from <a href="https://github.com/sanand0/actor-lookalikes">sanand0/actor-lookalikes</a>; live version: <a href="https://github.com/gramener/llmrandom">llmrandom</a>.</figcaption>
+  </figure>
+  <p>The second problem was money. His next slide priced an A100 GPU on AWS, Azure and Google at $3.40 to $4.10 an hour, <strong>about $2,500 a month</strong> on a hyperscaler. So he asked his co-founder, Naveen Gattu, for permission to play.</p>
+  <blockquote class="said wide-q room-q">
+    <p>“Anand, we're in the middle of a fundraising initiative. $5,000, two months of your time to find out who's the actor closest to Irrfan Khan? Don't you think we have better things to do?”</p>
+    <cite>The co-founder's reply, as Anand recalled it · <a class="ts" href="?t=02:59">02:59</a></cite>
+  </blockquote>
+  <p><q>I said, ‘Okay, fine.’</q> It's a fair answer, and it's the setup for the whole talk. <strong>The question was cheap to ask but expensive to answer</strong>, and in 2021 an unreliable, costly model wasn't worth spending on a whim.</p>
+</section>
+
+<section class="chap" id="frontier" data-act="Permission" data-title="The frontier moves left">
+  <div class="reel">Reel 3 · <a class="ts" href="?t=03:31">03:31</a> – <a class="ts" href="?t=07:01">07:01</a></div>
+  <h2>The frontier moves left</h2>
+  <p><q>And I waited, and things have changed a little bit. Actually, two things have changed. First, we actually got acquired, which helps.</q> The second was price. Anand opened <a href="https://github.com/gramener/llmpricing">LLM Pricing</a>, a chart his team maintained. It plots each model's cost per million input tokens (log scale) against its <span title="A chess-style rating computed from crowd votes: people compare two anonymous chatbots' answers and pick the better one.">Elo score</span> on the <a href="https://lmarena.ai/">LMSYS Chatbot Arena</a>, where people vote between two anonymous chatbots. The screen said <strong>“Last updated: 20 Sep 2024”</strong>, the day before the talk.</p>
+  <figure class="fig">
+    <a href="orig-llm-pricing.webp" data-lightbox data-caption="LLM Pricing chart, as of mid-2024 (the repository image; on stage Anand used the live version updated 20 Sep 2024). x: cost per million input tokens, log scale, about 7 cents to $30. y: LMSYS Arena Elo score. Green: Pareto-best models (nothing both better and cheaper). Red: dominated models."><img src="orig-llm-pricing.webp" width="1300" height="648" loading="lazy" alt="Scatter plot of language models by cost per million input tokens on a log scale (x) and Arena Elo score (y). Green dots on the upper-left frontier include gpt-4o-mini-2024-07-18, deepseek-v2, meta-llama-3.1-8b-instruct and llama-3-8b-instruct; gpt-4o-2024-05-13 is green at the top. Red dots on the lower right include gpt-4-0314, gpt-4-0613, claude-1, claude-2.0, claude-2.1 and mistral-large-2402."></a>
+    <figcaption><b>Better models sit higher; cheaper ones sit further left.</b> A green model has no rival that's both better and cheaper. This repository snapshot dates from mid-2024; on stage Anand dragged a time slider from August 2023 to September 2024 (<a class="ts" href="?t=04:52">04:52</a>).</figcaption>
+  </figure>
+  <p>He dragged a slider through time. In August 2023 the frontier was GPT-3.5 and early Claude. Then the green dots kept jumping up and to the left. He explained the colour code in one sentence: <q>I would never pick a model that is not in green. In other words, something that has nothing both above it and to the left of it.</q> He moved his teams each time the frontier moved, through Claude 3 Haiku, Llama 3 and Gemini 1.5 Flash, to GPT-4o mini, <q>and then Gemini Flash moved the needle again, making it half the price of GPT-4o Mini. Crazy.</q></p>
+  <div class="aside"><b class="h">A slip worth catching</b><p>At <a class="ts" href="?t=05:46">05:46</a> Anand says <q>Claude 3.5 Haiku</q>. The automatic captions hear the same thing, but the tooltip on screen reads <span class="mono">claude-3-haiku-20240307</span>, at $0.25 per million tokens. Claude 3.5 Haiku was <a href="https://www.anthropic.com/news/3-5-models-and-computer-use">announced on 22 October 2024</a>, a month after the talk. He meant <strong>Claude 3 Haiku</strong>, the model his own price slide names.</p></div>
+  <figure class="fig">
+    <a href="orig-llm-comparison.webp" data-lightbox data-caption="Slide ‘How big is the difference?’ (06:29): price per million input tokens drawn as squares. GPT-4: $30; GPT-4 Turbo: $10; Claude 3 Haiku: 25 cents; Gemini 1.5 Flash: 7.5 cents. Source: LLM Pricing, September 2024."><img src="orig-llm-comparison.webp" width="1248" height="672" loading="lazy" alt="Price comparison drawn as blocks of squares: a large red block for GPT-4 at $30 per million tokens, a smaller orange block for GPT-4 Turbo at $10, one green square for Claude 3 Haiku at 25 cents and a tiny blue square for Gemini 1.5 Flash at 7.5 cents."></a>
+    <figcaption><b>“The difference between a $10K and a $4M budget.”</b> September 2024 list prices per million input tokens <a class="ts" href="?t=06:29">06:29</a>. GPT-4 cost 400 times as much as Gemini 1.5 Flash. That ratio is what the budget line means, not a measured saving on any project.</figcaption>
+  </figure>
+  <p>The ratio, not the dollar figure, is the point. $30 against 7.5 cents is a factor of 400, about the gap between $10,000 and $4 million. A project that needs a board meeting at one end of the chart is pocket money at the other. <q>I had no problem going back to Naveen and saying, ‘Yaar, this I can fund out of my own pocket.’</q></p>
+  <p class="fine">All prices on this page are the September 2024 list prices shown in the talk. They have changed since, and Elo is one crowd's rating, not a universal measure of quality.</p>
+</section>
+
+<section class="chap" id="cheaper" data-act="Permission" data-title="Cheaper than talking">
+  <div class="reel">Reel 4 · <a class="ts" href="?t=07:01">07:01</a> – <a class="ts" href="?t=08:47">08:47</a></div>
+  <h2>Cheaper than talking</h2>
+  <p>Then came the turn Anand actually cared about. <strong>Generating text wasn't the cheap part. Embeddings were.</strong> An embedding model doesn't write anything. It turns a piece of text into a fixed list of numbers, and <q>two numbers that are close to each other are similar in meaning.</q></p>
+  <figure class="fig">
+    <a href="orig-embedding-pricing.webp" data-lightbox data-caption="Slide ‘Embeddings are 10x cheaper than generation’ (07:15): price per million tokens. Open models such as BGE and E5: under 1 cent. OpenAI text-embedding-3-small: 2 cents. Claude 3 Haiku (generation): 25 cents. September 2024 prices."><img src="orig-embedding-pricing.webp" width="1280" height="264" loading="lazy" alt="Squares comparing price per million tokens: a dot for open models BGE and E5 at under 1 cent, two squares for text-embedding-3-small at 2 cents, and 25 squares for Claude 3 Haiku at 25 cents."></a>
+    <figcaption><b>“Embeddings are 10x cheaper than generation.”</b> The slide title at <a class="ts" href="?t=07:15">07:15</a>. On the slide, text-embedding-3-small is 2 cents per million tokens; Claude 3 Haiku, itself a cheap generator, is 25.</figcaption>
+  </figure>
+  <div class="ledger-strip" role="list">
+    <div role="listitem"><b>2¢</b>per million tokens for OpenAI's text-embedding-3-small, September 2024</div>
+    <div role="listitem"><b>1/12</b>of the price of Claude 3 Haiku, already a cheap model (25¢)</div>
+    <div role="listitem"><b>~2%</b>of exam answers where the “same” embedding came back different</div>
+  </div>
+  <p>He called them <q>practically free</q>, and he valued something else even more: <strong>they're quantitative</strong>. The same text mostly gives the same numbers, so a distance computed today can be recomputed tomorrow. He was candid about the word “mostly”.</p>
+  <blockquote class="said">
+    <p>“Heck, I teach a course at IIT Madras, I set an exam paper assuming that it would always come back with the same response, and I found that roughly in about 2% of the cases it does not, and therefore I had to give the students full marks for getting the wrong answer.”</p>
+    <cite>S Anand · <a class="ts" href="?t=07:48">07:48</a></cite>
+  </blockquote>
+  <p>So experiments are <q>mostly reproducible unless somebody changes the model behind the scenes.</q> Is the distance <em>accurate</em>? <q>Interpretable? That's a second-order question.</q> Hold on to that sentence. The last question of the day comes back to it.</p>
+  <div class="aside check"><b class="h">Checked, two years later</b><p>For the explorers below, this page re-embedded the talk's 150 movie quotes with the same model on 16 October 2026. The nearest pairs and loneliest quotes match what the stage app showed in 2024. That's evidence the method is repeatable. It doesn't prove the numbers are identical: <strong>providers retire models, preprocessing changes and caches hide drift</strong>, which is why Anand's 2% surprised him.</p></div>
+</section>
+
+<section class="chap" id="apple" data-act="Meaning becomes geometry" data-title="Apple, in 1,536 numbers">
+  <div class="reel">Reel 5 · <a class="ts" href="?t=08:47">08:47</a> – <a class="ts" href="?t=11:22">11:22</a></div>
+  <h2>Apple, in 1,536 numbers</h2>
+  <p>To show what an embedding looks like, Anand didn't open a notebook. He pasted a prompt into a code-generating chat app and let <strong>Claude 3.5 Sonnet</strong> write the tool.</p>
+  <div class="prompt">
+    <span class="pl">The prompt on the slide · <a class="ts" href="?t=09:00">09:00</a></span>
+    <p>Create a pretty vanilla JS single page web app using only CDN libraries. Show a form with a textbox for PHRASE. On submit, fetch this CORS-enabled API and show the JSON response as a pre-formatted 2-space indented JSON. Use this code:</p>
+    <p>curl -X POST <span class="red">[internal LLM Foundry proxy]</span>/openai/v1/embeddings -H "Content-Type: application/json" -d '{"model": "text-embedding-3-small", "input": "$PHRASE"}'</p>
+    <p class="fine" style="color:var(--on-night-muted)">Verbatim from the published <a href="https://github.com/sanand0/actor-lookalikes/blob/main/slide-prompt.md">slide prompt</a>, except the endpoint: it pointed at Straive's internal LLM Foundry gateway, which isn't a public API.</p>
+  </div>
+  <p>He typed <q>apple</q> and clicked the button. Out came <q>a whole bunch of numbers. Lots and lots and lots of numbers, about 1,530 odd in this particular case.</q> The model, text-embedding-3-small, returns 1,536 by default. <q>And these numbers are what constitute the meaning of this—of this phrase, ‘apple’.</q></p>
+  <figure class="fig">
+    <a href="stage-0930-apple.webp" data-lightbox data-caption="Stage still, 09:30: the ‘Phrase Embedding Generator’ app Claude wrote on stage, showing the start of the JSON embedding for ‘Apple’. Frame from Python India's recording."><img src="stage-0930-apple.webp" width="1280" height="720" loading="lazy" alt="Screenshot of a web app titled Phrase Embedding Generator with ‘Apple’ in the text box and a JSON result listing the start of a long list of decimal numbers."></a>
+    <figcaption><b>The generated app, live on stage</b> <a class="ts" href="?t=09:27">09:27</a>. Each number alone means nothing. The meaning is in how the whole list relates to other lists.</figcaption>
+  </figure>
+  <p>Picture each list as a point in a space with 1,536 directions. “Apple” and “orange” land near each other. To measure how near, Anand named the usual tool: <q>you probably calculate it as a <strong>cosine similarity</strong></q>, the cosine of the angle between the two arrows. Pointing the same way gives 1; unrelated gives about 0.</p>
+  <p>He took a short detour that's now a familiar refrain. <q>Me, I have moved entirely towards LLM-based coding.</q> The deck itself was a <a href="https://revealjs.com/">reveal.js</a> page generated from a prompt that's <a href="https://github.com/sanand0/actor-lookalikes/blob/main/slide-prompt.md">in the repository</a>. <q>Beyond that, the only thing that I did was the last 15 minutes of ‘Oh, maybe we should do this, maybe we should do that.’ That is purely obsessive-compulsive disorder.</q></p>
+</section>
+
+<section class="chap" id="neighbors" data-act="Meaning becomes geometry" data-title="Showtime, clobberin' time">
+  <div class="reel">Reel 6 · <a class="ts" href="?t=11:22">11:22</a> – <a class="ts" href="?t=13:25">13:25</a></div>
+  <h2>“It's showtime!” meets “It's clobberin' time!”</h2>
+  <p>Next came about 150 lines from a <a href="https://raw.githubusercontent.com/sanand0/actor-lookalikes/main/movie-quotes-catchphrases.csv">public list of movie catchphrases</a>, from <q>Beetlejuice, Beetlejuice, Beetlejuice!</q> to <q>Bond, James Bond.</q> He pasted them into a clustering app, clicked <em>Cluster</em> and slid the similarity cutoff up until only the closest pairs stayed joined.</p>
+  <p>Top of the list: <q>‘It's showtime!’ and ‘It's clobbering time!’ Yeah, very similar, absolutely. These two: ‘They're here!’ and ‘They're back!’ Okay, that's also fairly similar, fair enough.</q> At the other end were quotes with no close neighbour at all. <q>‘Machete don't text’ and ‘There can be only one.’ These are practically outliers.</q> His summary had two numbered lines: <strong>outlier detection now becomes a whole lot easier; cluster detection becomes a whole lot easier.</strong></p>
+  <p>Look at <em>why</em> those pairs match. “Showtime” is Beetlejuice; “clobberin' time” is The Thing from <em>Fantastic Four</em>. They share a rhythm, “It's ___ time!”, not a meaning. <strong>Proximity is useful, not comprehension.</strong> Try it yourself.</p>
+
+  <div class="band wide lab" id="nb-lab" aria-labelledby="nb-h">
+    <div class="band-label">Explorer 1 · the neighbourhood</div>
+    <h3 id="nb-h">Pick a quote. See what the model puts next to it.</h3>
+    <p class="lab-intro">These are the talk's 150 catchphrases, embedded with the same model it used (text-embedding-3-small, 1,536 numbers each) on 16 October 2026. Every similarity below is a real cosine computed from those full vectors. The map is only a flat sketch: 1,536 dimensions squashed into two, so <strong>trust the numbers, not the distance on the map</strong>.</p>
+    <div class="ctrls">
+      <label for="nb-pick">Quote <select id="nb-pick"></select></label>
+      <label for="nb-cut">Join pairs above <input id="nb-cut" type="range" min="0.30" max="0.62" step="0.01" value="0.45"> <output id="nb-cut-o" for="nb-cut">0.45</output></label>
+      <button type="button" class="lbtn" id="nb-top"><i class="bi bi-link-45deg" aria-hidden="true"></i> Closest pair</button>
+      <button type="button" class="lbtn" id="nb-lone"><i class="bi bi-person-dash" aria-hidden="true"></i> Loneliest quote</button>
+    </div>
+    <div class="lab-grid">
+      <div class="nb-map" id="nb-map" aria-hidden="true"></div>
+      <div class="nb-side" id="nb-side" aria-live="polite"></div>
+    </div>
+    <p class="readout" id="nb-read"></p>
+    <p class="fine" style="margin-top:.8rem">Data: <a href="https://raw.githubusercontent.com/sanand0/actor-lookalikes/main/movie-quotes-catchphrases.csv">movie-quotes-catchphrases.csv</a> from the 2024 repository, catchphrase column only. The map is a t-SNE projection of the vectors. Cosines are stored to ±0.002. The 2024 stage numbers weren't published, so the values here are a 2026 recomputation, not the original run.</p>
+  </div>
+  <figure class="fig">
+    <a href="stage-1231-quote-pairs.webp" data-lightbox data-caption="Stage still, 12:31: the clustering app with the cutoff near its maximum. Only one pair is still joined: ‘It's showtime!’ and ‘It's clobberin' time!’. Frame from Python India's recording."><img src="stage-1231-quote-pairs.webp" width="1280" height="720" loading="lazy" alt="Clustering app on stage: a ring of blue dots with a single short line joining two dots, labelled ‘It's showtime!’ and ‘It's clobberin' time!’ in a tooltip."></a>
+    <figcaption><b>The same pair on stage</b> <a class="ts" href="?t=12:07">12:07</a>. With the cutoff high, one link survives. Lower it and a network appears, as in the explorer above.</figcaption>
+  </figure>
+</section>
+
+<section class="chap" id="taxonomy" data-act="Meaning becomes geometry" data-title="Name it, then overrule it">
+  <div class="reel">Reel 7 · <a class="ts" href="?t=13:25">13:25</a> – <a class="ts" href="?t=19:12">19:12</a></div>
+  <h2>Name it, then overrule it</h2>
+  <p>Then Anand asked the question that turns a toy into a tool. <q>If we can do cluster detection, then maybe we can get a sense of what are the different types of movie quotes in this list of movie quotes without actually having to sit and read and classify all of these, right?</q></p>
+  <p>He asked for 15 topics. The app grouped the vectors with <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.BisectingKMeans.html">bisecting K-means</a> (<q>Why bisecting K-means? I don't know, I just read that it was slightly better</q>), then sent five samples from each group to GPT-4o mini with a short prompt: <q>Suggest 2-4 word topic names for each cluster. Capture the spirit of each cluster.</q> Out came Philosophical Reflections, Legendary Heroic Phrases, Classic Film References, Inspirational Life Lessons and others. He admitted the number was a choice: <q>I could have chosen maybe 16 clusters, 14 clusters, however many clusters—it's entirely arbitrary.</q></p>
+  <p>Not every name fit. Inspirational Life Lessons held Forrest Gump's box of chocolates next to <q>‘There can be only one,’ that's probably not inspirational.</q> He changed the prompt to ask for Hindi names and got them. <q>In other words, the prompting part of it is all yours.</q></p>
+  <figure class="fig">
+    <a href="stage-1425-topics.webp" data-lightbox data-caption="Stage still, 14:25: topics named by GPT-4o mini, with each quote's silhouette score. 13. Philosophical Reflections includes ‘Hasta la vista…baby’ and ‘A martini…shaken, not stirred’. 14. Inspirational Life Lessons includes ‘After all, tomorrow is another day’ and ‘There can be only one’ (−1.7%). Frame from Python India's recording."><img src="stage-1425-topics.webp" width="1280" height="720" loading="lazy" alt="Topic list on stage. ‘13. Philosophical Reflections, 8 distinct docs’ lists Well la-de-da, Hasta la vista baby, Frankly my dear I don't give a damn, A martini shaken not stirred and the Badges quote. ‘14. Inspirational Life Lessons, 4 distinct docs’ lists After all tomorrow is another day, the box of chocolates line, There can be only one (−1.7%) and Go ahead make my day."></a>
+    <figcaption><b>Named by a language model, scored by geometry</b> <a class="ts" href="?t=14:25">14:25</a>. The percentage after each quote is a silhouette score, roughly how much closer it sits to its own cluster than to the next one. Negative means it would fit better elsewhere, like “There can be only one”.</figcaption>
+  </figure>
+  <p>The next step is the one that matters most. He deleted the generic topics, <q>I want only specific stuff</q>, kept the rest as <em>his</em> taxonomy, and asked the app to file every quote under it. Beetlejuice's triple summons scored 37% for Creepy Movie Moments. <q>‘It's showtime!’ very strongly falls under High-energy Showdowns.</q> No retraining was needed and nothing was re-embedded: <strong>the topics are just more vectors, and classification is one matrix multiplication.</strong></p>
+  <blockquote class="said wide-q">
+    <p>“In case you're not familiar with what a dot product is, just think of it as one function which is surprisingly fast even without a GPU.”</p>
+    <cite>S Anand · <a class="ts" href="?t=18:25">18:25</a></cite>
+  </blockquote>
+  <ol class="pipe" aria-label="The reusable pipeline">
+    <li><b>Encode once</b>Each quote becomes 1,536 numbers. Paid for once, cached.</li>
+    <li><b>Compare</b>Dot products between every pair: neighbours and outliers.</li>
+    <li><b>Group</b>K-means proposes clusters. The number of groups is your choice.</li>
+    <li class="gen"><b>Label</b>An LLM reads samples and suggests names. This is the only generative step.</li>
+    <li class="you"><b>Edit</b>A person deletes, merges and renames. The taxonomy is now yours.</li>
+    <li><b>Classify</b>Topic vectors × quote vectors. One matrix product.</li>
+  </ol>
+  <div class="pipe-key"><span style="--c:var(--violet)">arithmetic on stored vectors</span><span style="--c:var(--gold)">generation</span><span style="--c:var(--coral)">human judgement</span></div>
+
+  <div class="band wide lab" id="tx-lab" aria-labelledby="tx-h">
+    <div class="band-label">Explorer 2 · group, then overrule</div>
+    <h3 id="tx-h">Let the data propose groups. Then impose your own.</h3>
+    <p class="lab-intro">Same 150 quotes, same 2026 vectors. <strong>Propose</strong> replays the talk's bisecting K-means, computed in advance for every group count from 4 to 15 and five random seeds. <strong>Impose</strong> files each quote under whichever of your chosen topic names is nearest, using dot products computed live in your browser.</p>
+    <div class="tabs" role="tablist" aria-label="Explorer mode">
+      <button type="button" class="lbtn" role="tab" id="tx-tab-k" aria-selected="true" aria-controls="tx-k">Propose: K-means</button>
+      <button type="button" class="lbtn" role="tab" id="tx-tab-t" aria-selected="false" aria-controls="tx-t" tabindex="-1">Impose: your topics</button>
+    </div>
+    <div id="tx-k" role="tabpanel" aria-labelledby="tx-tab-k">
+      <div class="ctrls">
+        <label for="tx-kn">Groups <input id="tx-kn" type="range" min="4" max="15" step="1" value="14"> <output id="tx-kn-o" for="tx-kn">14</output></label>
+        <span class="ctrls" role="group" aria-label="Random seed" id="tx-seeds" style="margin:0"></span>
+      </div>
+      <div class="stab"><span class="fine" style="color:var(--on-night-muted)">How many pairs of quotes this seed keeps together like seed 1 does (adjusted Rand index; 1 = identical, 0 = chance)</span><span class="stab-meter" aria-hidden="true"><i id="tx-stab-bar"></i></span><output id="tx-stab" class="mono" style="color:var(--marquee)"></output></div>
+      <div class="groups" id="tx-groups"></div>
+      <p class="readout" id="tx-k-read"></p>
+    </div>
+    <div id="tx-t" role="tabpanel" aria-labelledby="tx-tab-t" hidden>
+      <div class="chip-h">Topics named on stage by GPT-4o mini <a class="ts" href="?t=17:28">17:28</a></div>
+      <div class="chips" id="tx-chips-stage" role="group" aria-label="Stage topics"></div>
+      <div class="chip-h">Other topics to try</div>
+      <div class="chips" id="tx-chips-alt" role="group" aria-label="Alternative topics"></div>
+      <div class="groups" id="tx-out"></div>
+      <p class="readout" id="tx-t-read"></p>
+    </div>
+    <p class="fine" style="margin-top:.8rem">The vectors are unit length (every norm is 1.000 ± 0.001), so each dot product here equals the cosine similarity. A “close call” means the top two topics are within 0.01 of each other. K-means used scikit-learn's BisectingKMeans with k-means++ initialisation, as in the talk's notebook. On stage, the deleted topics were the generic ones, Iconic Movie Quotes and Memorable Catchphrases, and they start switched off here.</p>
+  </div>
+
+  <p>Two lessons fall out of the explorer, and neither came up in the talk. First, <strong>the groups are not stable</strong>. With 14 groups, the adjusted Rand index between seed 1 and the other four seeds is only 0.17 to 0.26, where 1 would mean identical groupings. K-means is a way to draft a taxonomy, not to discover one. Second, <strong>the filing reflects the names as much as the quotes</strong>. With the stage's twelve specific topics, Witty Comebacks takes about a third of the 150 quotes, Philosophical Reflections gets none, and about 35 quotes are close calls. A good taxonomy is a human decision, and so is the check that it works. The vectors only make it cheap to apply.</p>
+  <div class="aside"><b class="h">Dot product or cosine?</b><p>On stage Anand said the dot product would <q>give you the distance</q>. Strictly, it gives a <em>similarity</em>: bigger means closer. It equals the cosine only when the vectors have length 1, which OpenAI's do. For vectors of other lengths, normalise first, or a long vector will look similar to everything.</p></div>
+</section>
+
+<section class="chap" id="samespace" data-act="Faces" data-title="Words and photos, one space">
+  <div class="reel">Reel 8 · <a class="ts" href="?t=19:12">19:12</a> – <a class="ts" href="?t=22:01">22:01</a></div>
+  <h2>Words and photos in the same room</h2>
+  <p><q>But the best part of it is we can apply this to images as well.</q> Anand used <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/multimodal-embeddings">Google's multimodal embeddings API</a> on Vertex AI, and he was honest about why: <q>this happened to be the first one that I found and it worked well enough, so I've never really dug deeper into this.</q> Send it a sentence, a photo or a video clip and you get back a vector. The point is where the vectors land.</p>
+  <blockquote class="said">
+    <p>“…it embeds them all in the same space, which means that the distance between the photo of an apple and the picture of an apple is actually very low.”</p>
+    <cite>S Anand · <a class="ts" href="?t=19:59">19:59</a></cite>
+  </blockquote>
+  <figure class="fig space">
+    <svg viewBox="0 0 760 300" role="img" aria-labelledby="space-t space-d">
+      <title id="space-t">One shared space versus two separate ones</title>
+      <desc id="space-d">Left: a single multimodal model puts the word ‘smile’, the word ‘frown’ and two photos as arrows from one origin, so the angles between a word and a photo can be measured. Right: a text-only model and an image-only model each have their own axes; an arrow from one cannot be compared with an arrow from the other.</desc>
+      <g fill="none" stroke="var(--rule)" stroke-width="1.5"><circle cx="190" cy="160" r="110"/><circle cx="520" cy="160" r="80"/><circle cx="680" cy="160" r="60" stroke-dasharray="4 4"/></g>
+      <g stroke-width="3" stroke-linecap="round">
+        <line x1="190" y1="160" x2="290" y2="115" stroke="var(--violet)"/>
+        <line x1="190" y1="160" x2="135" y2="65" stroke="var(--violet)"/>
+        <line x1="190" y1="160" x2="282" y2="96" stroke="var(--gold)"/>
+        <line x1="190" y1="160" x2="160" y2="56" stroke="var(--gold)"/>
+        <line x1="520" y1="160" x2="585" y2="120" stroke="var(--violet)"/>
+        <line x1="680" y1="160" x2="715" y2="110" stroke="var(--gold)"/>
+      </g>
+      <path d="M 238 138 A 52 52 0 0 0 232 129" fill="none" stroke="var(--coral)" stroke-width="3"/>
+      <g font-size="15" font-weight="700" fill="var(--ink)">
+        <text x="296" y="122">“smile” (text)</text>
+        <text x="72" y="58">“frown” (text)</text>
+        <text x="288" y="92" fill="var(--gold)">photo A</text>
+        <text x="166" y="48" fill="var(--gold)">photo B</text>
+        <text x="590" y="116">text model</text>
+        <text x="650" y="96" fill="var(--gold)">image model</text>
+      </g>
+      <g font-size="13" fill="var(--muted)">
+        <text x="190" y="294" text-anchor="middle">One multimodal model: angles between words and photos mean something</text>
+        <text x="600" y="294" text-anchor="middle">Two separate models: different axes</text>
+        <text x="600" y="64" text-anchor="middle" font-size="40" fill="var(--coral)">≠</text>
+      </g>
+    </svg>
+    <figcaption><b>Comparable only if trained together.</b> A word vector and a photo vector can be compared only when one model was trained to place both in a shared space, as CLIP-style models are (<a href="https://proceedings.mlr.press/v139/radford21a.html">Radford et al., 2021</a>). Google's current documentation says its image and text vectors <q>are in the same semantic space with the same dimensionality</q>. A text vector from OpenAI and an image vector from Google don't share axes, so comparing them means nothing.</figcaption>
+  </figure>
+  <p>His prototype, ImageExplore, plotted about a hundred actors' photos against two words at once. Similarity to “smile” ran along the x-axis and similarity to “frown” along the y-axis. He introduced them as Bollywood actors, but the faces on screen were Hollywood stars. <q>So what this is saying is this picture of Tom Holland is the closest to a smiling picture; Tom Holland's smiling the most.</q> At the other extreme: <q>Clint Eastwood is totally frowning. Yeah, we get that.</q></p>
+  <figure class="fig">
+    <a href="orig-hollywood-actors.webp" data-lightbox data-caption="From the 2024 repository (slide ‘Actor Look-alikes’): actor photos plotted by similarity to ‘Smile’ (x) and ‘Frown’ (y) in ImageExplore. Clint Eastwood sits high on frown; Tom Holland and Ryan Reynolds sit far right on smile. Photos belong to their owners."><img src="orig-hollywood-actors.webp" width="1200" height="640" loading="lazy" alt="Scatter of about a hundred small actor headshots. Dropdowns at the top read Smile and Frown. Clint Eastwood's photo is high on the frown axis at upper left; smiling photos of Tom Holland and Ryan Reynolds are at the far right."></a>
+    <figcaption><b>“Smile” on one axis, “frown” on the other.</b> The image from the 2024 repository; the live version is at <a class="ts" href="?t=20:32">20:32</a>. The axes measure the <em>photos</em>: Clint Eastwood scores as “frowning” in this picture, not in general. ImageExplore's code isn't public.</figcaption>
+  </figure>
+  <div class="aside warn"><b class="h">The axis this page won't rebuild</b><p>At <a class="ts" href="?t=21:27">21:27</a> Anand swapped the words for “African” and “Chinese” and read off which faces scored highest. It shows how easily a shared space will score a face against <em>any</em> word. It doesn't show anyone's ancestry, ethnicity or nationality. A score like that mixes skin tone, lighting, makeup, photo style and whatever stereotypes the training captions carried, and <a href="https://doi.org/10.6028/NIST.IR.8280">NIST's 2019 study</a> found demographic differences in error rates across many face-recognition systems. That's why there's no word-against-face slider on this page.</p></div>
+</section>
+
+<section class="chap" id="sixdays" data-act="Faces" data-title="Day six">
+  <div class="reel">Reel 9 · <a class="ts" href="?t=22:01">22:01</a> – <a class="ts" href="?t=23:35">23:35</a></div>
+  <h2>Six months, six weeks, six days</h2>
+  <p>Then the story turned from celebrities to payroll. A logistics client screened photos from drivers applying to join its fleet. Some were duplicates. <q>Sometimes they don't send their photos—in fact, a whole bunch of people send the logo of our company as their photo. Sometimes they're wearing tuxedos, not a driver's uniform.</q> They wanted no high-visibility vests and a plain background.</p>
+  <p>Anand's team did what any team would do: <q>We will do training, we will do computer vision, blah, blah, blah,</q> and budgeted about six months. The client wanted a six-week pilot. <q>We looked at our hands and said, ‘Okay, maybe we can try with LLMs.’</q></p>
+  <blockquote class="said wide-q">
+    <p>“The sixth day, the project was done. All we did was this: took the embeddings, and we found that if we take the word, let's say, ‘high-visibility vest,’ it has a good match. ‘Plain background,’ it has a good match.”</p>
+    <cite>S Anand · <a class="ts" href="?t=22:50">22:50</a></cite>
+  </blockquote>
+  <p>The rest of the anecdote is a comedy of early delivery. Nobody knew what to do with the remaining five weeks, so the client asked for enhancements. <q>We literally had to tell them, ‘Boss, these are once-in-a-lifetime occasions when the project actually gets done before the budgeted time. Let the team have a holiday.’</q> Then came the line that is the real thesis of the talk:</p>
+  <blockquote class="said">
+    <p>“I don't think the world has gotten used to the scenario where we don't have to train models anymore to get to the result that we want. The pre-training and some amount of prompt engineering works well enough.”</p>
+    <cite>S Anand · <a class="ts" href="?t=23:16">23:16</a></cite>
+  </blockquote>
+  <p>Notice what the trick is. Nobody trained a vest detector. <strong>They wrote the requirement down as words</strong> and measured each photo against it. Changing a rule means typing a new phrase, not labelling a new dataset.</p>
+  <div class="aside"><b class="h">What the anecdote does and doesn't establish</b><p>This is the speaker's account of a client pilot. The talk gives no dataset size, error rates, thresholds or comparison against a trained model, and doesn't say whether duplicate detection worked or what went to production. A responsible version would hold out labelled photos, set each threshold on a validation set, report false accepts and false rejects for every check, and route uncertain photos to a person. It would also need applicants' consent and a check for demographic differences in error. A photo-requirements checker isn't an identity checker, and a cosine is not proof of who someone is.</p></div>
+</section>
+
+<section class="chap" id="audition" data-act="Faces" data-title="The audition">
+  <div class="reel">Reel 10 · <a class="ts" href="?t=23:35">23:35</a> – <a class="ts" href="?t=26:50">26:50</a></div>
+  <h2>The audition</h2>
+  <p>Finally, the question the room had voted on. ImageExplore compares every photo of a set of Bollywood actors with every other one. A slider sets the minimum similarity. Raise it, and only the closest photos stay joined. Search for a name and you see who stays linked to it.</p>
+  <p>Before the stars, Anand showed what the slider does at its extremes. The three most similar photos in the whole set were <q>two photos of Riteish Deshmukh and one photo of Shreyas Talpade.</q> The three loneliest were Manoj Bajpayee, Tusshar Kapoor and Kunal Khemu: <q>Very atypical Bollywood faces.</q></p>
+
+  <div class="band wide lab" id="aud-lab" aria-labelledby="aud-h">
+    <div class="band-label">Explorer 3 · what the screen showed</div>
+    <h3 id="aud-h">Pick a casting call. See the stage result, and what it can't tell you.</h3>
+    <p class="lab-intro">Each panel is a frame from the recording, cropped to the result. There are no scores here that weren't on the screen. ImageExplore's data and code weren't published, so this page can't rerun them.</p>
+    <div class="aud-tabs" role="tablist" aria-label="Casting call" id="aud-tabs"></div>
+    <div class="aud-panel" role="tabpanel" id="aud-panel" aria-live="polite"></div>
+  </div>
+
+  <p>Anand treated it as a game, and said so. <q>So now as a casting director, I have at least one backup.</q> But look at what kind of answer the tool gives. Every result is <strong>photo to photo</strong>. Deepika Padukone's nearest neighbour was another photo of herself. Ranveer Singh and Vicky Kaushal share <q>similar beard, similar look</q>, which is a fact about two pictures. In a different pair of photos, the beards and the result might not match.</p>
+  <div class="confound" role="list" aria-label="Things that can make two photos close">
+    <div role="listitem"><b>Pose and crop</b>Two three-quarter profiles can sit closer than two photos of one person facing different ways.</div>
+    <div role="listitem"><b>Light and colour</b>Warm stage lighting, black-and-white stills and saturation all shift the vector.</div>
+    <div role="listitem"><b>Expression and grooming</b>A grin or a beard is a strong signal, and both change from film to film.</div>
+    <div role="listitem"><b>Who else is in the set</b>“Nearest” only means nearest among these photos. Add a photo and the answer can change.</div>
+    <div role="listitem"><b>The model and its settings</b>Another model, crop size or slider value is a different measuring instrument.</div>
+    <div role="listitem"><b>What the model learned</b>Training on captioned web images may tie a face to a name, a film or a partner. That's the next question.</div>
+  </div>
+</section>
+
+<section class="chap" id="spouse" data-act="The question" data-title="“I have no clue”">
+  <div class="reel">Reel 11 · <a class="ts" href="?t=27:30">27:30</a> – <a class="ts" href="?t=29:11">29:11</a></div>
+  <h2>“I have no clue”</h2>
+  <p>Anand closed with three adjectives, cheap, quantitative and multimodal (<a class="ts" href="?t=26:50">26:50</a>), and the applause came. Then the session host, who had seen him at PyCon <q>over the years</q>, asked the best question of the afternoon.</p>
+  <blockquote class="said wide-q room-q">
+    <p>“…using an image embedding model for this that also embeds text, so it's the same model—so I'm curious why it wouldn't rank spouses in similarity as well? Like, why is it just visual?”</p>
+    <cite>The session host · <a class="ts" href="?t=27:30">27:30</a></cite>
+  </blockquote>
+  <p>The question goes deeper than it sounds. A model that learned from captioned photos might place a star near their partner, not because the faces match but because the two names keep appearing together. Then “similar” would partly measure <em>fame and association</em>, not just appearance. Anand didn't bluff.</p>
+  <div class="band still">
+    <blockquote class="said" style="grid-column:1/-1">
+      <p>“I can give you a long answer to that, but I'll give you a summary of the answer. I have no clue. I have no idea how they're trained. I haven't even explored what similarities work and don't work. Great question.”</p>
+      <cite>S Anand · <a class="ts" href="?t=28:13">28:13</a></cite>
+    </blockquote>
+  </div>
+  <p>That's the real ending of the talk. After half an hour on how easy similarity is to compute, the speaker admits he doesn't know <strong>what property the number measures</strong>. A cosine is a measurement. Like any measurement, it needs a test of what it actually measures. Anand sketched that test himself, using Deepika Padukone and Ranveer Singh, who are married: <q>Two people looking image-wise roughly equally similar, but one pair is husband and wife and another pair is not—are they going to come closer together? If so, how much closer? Worth exploring.</q></p>
+  <div class="exp" id="experiment">
+    <h3>A test that could prove the look-alike finder wrong</h3>
+    <p>Run this before trusting “nearest” as “looks alike”. Decide in advance what result would count against the method.</p>
+    <table>
+      <thead><tr><th scope="col">Group</th><th scope="col">Example design</th><th scope="col">What it controls</th></tr></thead>
+      <tbody>
+        <tr><td>A · Couples</td><td>Real spouses whom independent raters judge <em>not</em> to look alike</td><td>Association without resemblance</td></tr>
+        <tr><td>B · Strangers</td><td>Unrelated people matched to group A on rated dissimilarity</td><td>The baseline</td></tr>
+        <tr><td>C · Look-alikes</td><td>Pairs that independent raters <em>do</em> judge alike</td><td>Proves the tool can see resemblance at all</td></tr>
+      </tbody>
+    </table>
+    <ol>
+      <li><strong>Several photos per person</strong>, from different years, poses and lighting. Report how much the ranking changes between photos.</li>
+      <li><strong>Blind human ratings</strong> for every pair, collected before any model is run.</li>
+      <li><strong>Same crop, same model, same settings</strong> for everyone. Then repeat with a second, independently trained image model.</li>
+      <li><strong>Unknown faces as a control</strong>: consenting volunteers whose names can't be in any training data.</li>
+    </ol>
+    <div class="verdict">
+      <div class="a"><b>If couples ≈ strangers</b>The spouse worry fails this test, and the tool measured faces, not fame.</div>
+      <div class="b"><b>If couples sit reliably closer</b>The space mixes in association. “Nearest” isn't “looks alike”.</div>
+    </div>
+  </div>
+</section>
+
+<section class="chap" id="coda" data-act="The question" data-title="Cheap, quantitative, multimodal">
+  <div class="reel">Reel 12 · <a class="ts" href="?t=26:50">26:50</a> · <a class="ts" href="?t=29:11">29:11</a> – <a class="ts" href="?t=30:28">30:28</a></div>
+  <h2>Cheap, quantitative, multimodal. And conditional.</h2>
+  <blockquote class="said wide-q">
+    <p>“But the message that I wanted to leave you with is primarily that embeddings are really cheap. They are quantitative and therefore reproducible, perhaps even reliable, and they are multimodal. Just use them a bit more.”</p>
+    <cite>S Anand · <a class="ts" href="?t=26:50">26:50</a></cite>
+  </blockquote>
+  <p>Notice the hedge: <q>perhaps even reliable</q>. “Cheap” was true at September 2024 prices. “Quantitative” held up: two years later the same model still puts his quote neighbours next to each other. “Multimodal” worked on stage. What the talk shows is narrower and more useful than “no more training”. <strong>A pretrained model's vectors are a cheap first baseline</strong>, good enough to try an idea in an afternoon. Whether they're good enough to <em>decide</em> anything is a separate, measurable question.</p>
+  <p>Two last audience questions showed how that afternoon worked. LLM Foundry, the app behind half the demos, is Straive's internal gateway: <q>Because it's an internal router, you don't get access to it by default.</q> And the charts? <q>All the visualizations are from some LLM where I just said, ‘Do this, this is what I want,’ and it generated it.</q> <strong>The code got cheap too.</strong> That's how one person could build the demos, the slides and the look-alike search himself.</p>
+  <p>So the Irrfan answer stands, in its narrow form: in one 2024 photo collection, under one Google model and one slider setting, a Nana Patekar photo sat close to an Irrfan Khan photo. Whether that's resemblance or something the model learned about two famous character actors is the next experiment. Anand said it best: <q>Worth exploring.</q></p>
+</section>
+
+</main>
+<aside class="dock" id="dock" aria-label="Video of the talk">
+  <div class="dock-head"><span><b>The talk</b> · 30:50 · YouTube</span><span id="dock-mode-label">Story focus</span></div>
+  <div class="vwrap">
+    <div id="yt"><div class="nojs"><img class="poster" src="https://i.ytimg.com/vi/FHa8Xgssrz4/hqdefault.jpg" alt=""><a href="https://youtu.be/FHa8Xgssrz4" style="position:relative;color:#fff">Watch on YouTube ↗</a></div></div>
+  </div>
+  <div class="resume" id="resume"><button type="button" id="resume-btn"><i class="bi bi-play-fill" aria-hidden="true"></i> <span>Play</span></button></div>
+  <div class="now" id="now" aria-live="polite"><span class="t" id="now-t">00:00</span><span id="now-title">Press play, or tap any ▶ time in the story</span><span class="in-story" id="now-story"></span></div>
+  <div class="dock-ctrls">
+    <button class="dbtn mode" id="mode-btn" type="button" aria-pressed="false"><i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span></button>
+    <button class="dbtn" id="share-btn" type="button"><i class="bi bi-link-45deg" aria-hidden="true"></i> <span>Share moment</span></button>
+    <a class="dbtn wide-only" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+    <button class="dbtn dock-min" id="min-btn" type="button" aria-expanded="true" aria-label="Hide the mini video"><i class="bi bi-chevron-down" aria-hidden="true"></i></button>
+  </div>
+  <details class="chapters" open>
+    <summary>Chapters · tap to jump</summary>
+    <ol id="chapters"></ol>
+  </details>
+</aside>
+</div>
+<section class="takeaways" id="takeaways" data-act="Close" data-title="Four takeaways" aria-labelledby="tk-h">
+  <div class="inner">
+    <div class="band-label">After the credits</div>
+    <h2 id="tk-h">Four things to take from a 2024 talk</h2>
+    <div class="cards">
+      <div class="card"><div class="num">01</div><h3>Cheap changes the questions</h3><p>A $5,000 whim was refused in 2021. At 2024 prices the same whim cost pocket money. Falling prices don't just save money; they decide which questions get asked. <a class="ts" href="?t=02:59">02:59</a></p></div>
+      <div class="card"><div class="num">02</div><h3>Encode once, ask again</h3><p>Stored vectors answered “what's near this?”, “what groups exist?” and “file these under my topics” without retraining, using a dot product. <a class="ts" href="?t=18:25">18:25</a></p></div>
+      <div class="card"><div class="num">03</div><h3>Nearest is conditional</h3><p>Every match depends on the model, the photo, the crop and who else is in the set. “Nana Patekar, maybe” is a result about photos, not people. <a class="ts" href="?t=26:22">26:22</a></p></div>
+      <div class="card"><div class="num">04</div><h3>Ask what it measures</h3><p>A cosine is easy to compute and hard to interpret. Decide what result would prove the tool wrong, then run that test. <a class="ts" href="?t=28:13">28:13</a></p></div>
+    </div>
+  </div>
+</section>
+
+<section class="ledger-sec" id="ledger" data-act="Close" data-title="Evidence ledger" aria-labelledby="ledger-h">
+  <div class="reel">Evidence ledger</div>
+  <h2 id="ledger-h">What the talk said, and what the record shows</h2>
+  <p>Quotes are from the recording. Stage details were checked against frames of the video. Statements published after 21 September 2024 are marked as later.</p>
+  <div class="table-wrap">
+    <table class="ledger">
+      <thead><tr><th scope="col">Claim</th><th scope="col">In the talk</th><th scope="col">Record</th><th scope="col">Status</th></tr></thead>
+      <tbody>
+        <tr><td>Date, place, slot</td><td>PyCon India 2024</td><td><a href="https://in.pycon.org/2024/schedule/">Schedule</a>: Track 1, 21 Sep, 14:45–15:15. YouTube description: “21st Sep 2024, NIMHANS Convention Centre, Bengaluru”. Uploaded March 2025</td><td><span class="st ok">Confirmed</span></td></tr>
+        <tr><td>When the question began</td><td>“this was 2021” <a class="ts" href="?t=01:14">01:14</a>; “almost two years ago” <a class="ts" href="?t=26:22">26:22</a></td><td>2021 to 2024 is about three years</td><td><span class="st ctx">Loose recollection</span></td></tr>
+        <tr><td>Favourite random numbers</td><td>Claude 3 Haiku 42, GPT-3.5 Turbo 47 <a class="ts" href="?t=01:14">01:14</a></td><td>Slide image <span class="mono">llm-random.webp</span>; data in <a href="https://github.com/gramener/llmrandom">llmrandom</a></td><td><span class="st ok">Matches slide</span></td></tr>
+        <tr><td>$5,000 and two months refused</td><td>Co-founder's reply <a class="ts" href="?t=02:59">02:59</a></td><td>Slide: A100 at $3.40–$4.10/hour, “~$2,500 per month”. No budget document</td><td><span class="st asis">Speaker's recollection</span></td></tr>
+        <tr><td>“Claude 3.5 Haiku” moved the frontier</td><td><a class="ts" href="?t=05:46">05:46</a></td><td>Screen tooltip: <span class="mono">claude-3-haiku-20240307</span>, $0.25/MTok. Claude 3.5 Haiku was <a href="https://www.anthropic.com/news/3-5-models-and-computer-use">announced 22 Oct 2024</a> (later)</td><td><span class="st bad">Verbal slip: Claude 3 Haiku</span></td></tr>
+        <tr><td>$10K versus $4M</td><td><a class="ts" href="?t=06:29">06:29</a></td><td>Slide: GPT-4 $30 vs Gemini 1.5 Flash 7.5¢ per million input tokens, a 400× ratio</td><td><span class="st ctx">Illustrative ratio, not a project cost</span></td></tr>
+        <tr><td>Embeddings cost ~1/10 of Claude 3 Haiku</td><td><a class="ts" href="?t=07:01">07:01</a></td><td>Slide: text-embedding-3-small 2¢, 3-large 13¢, ada-002 10¢ per million tokens; Claude 3 Haiku 25¢</td><td><span class="st ok">Sep 2024 prices</span></td></tr>
+        <tr><td>Embeddings mostly repeat</td><td>~2% changed in an IIT Madras exam <a class="ts" href="?t=07:48">07:48</a></td><td>No published audit. Recomputed Oct 2026: same nearest pairs and outliers as on stage</td><td><span class="st ctx">Anecdote; consistent</span></td></tr>
+        <tr><td>“about 1,530 odd” numbers for “apple”</td><td><a class="ts" href="?t=09:27">09:27</a></td><td>text-embedding-3-small returns 1,536 by default</td><td><span class="st ok">Rounded</span></td></tr>
+        <tr><td>Closest quotes; outliers</td><td>Showtime/clobberin', here/back; Machete, There can be only one <a class="ts" href="?t=12:07">12:07</a></td><td>2026 recomputation, same model: top pairs 0.63 and 0.61; loneliest quotes Machete (0.26) and There can be only one (0.29)</td><td><span class="st ok">Reproduced</span></td></tr>
+        <tr><td>Dot product “will give you the distance”</td><td><a class="ts" href="?t=18:25">18:25</a></td><td>It gives similarity (higher = closer); equals cosine for unit vectors</td><td><span class="st ctx">Wording</span></td></tr>
+        <tr><td>Images and text in one space</td><td>Google multimodal embeddings <a class="ts" href="?t=19:12">19:12</a></td><td><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/multimodal-embeddings">Google docs</a> (current): image and text vectors share one space; default 1,408 dimensions; English text up to 32 tokens</td><td><span class="st ok">Confirmed for that model</span></td></tr>
+        <tr><td>“100 Bollywood actors” on smile/frown</td><td><a class="ts" href="?t=20:32">20:32</a></td><td>The faces on screen are Hollywood actors (Tom Holland, Clint Eastwood…)</td><td><span class="st ctx">Spoken slip</span></td></tr>
+        <tr><td>Driver-photo pilot done on day six</td><td><a class="ts" href="?t=22:50">22:50</a></td><td>No client, data, error rates or deployment details published</td><td><span class="st asis">Speaker's anecdote</span></td></tr>
+        <tr><td>Look-alikes: Varun, Priyanka, Vicky, Katrina, Nana</td><td><a class="ts" href="?t=24:54">24:54</a>–<a class="ts" href="?t=26:22">26:22</a></td><td>Frames show the linked photos and filenames. No ratings, no published data or code for ImageExplore</td><td><span class="st asis">As displayed; photo-level</span></td></tr>
+        <tr><td>Do spouses embed closer?</td><td>“I have no clue” <a class="ts" href="?t=28:13">28:13</a></td><td>Untested here. See the experiment above</td><td><span class="st ctx">Open question</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer class="site">
+  <div><strong>He Wanted an Irrfan Khan Look-alike. The Trick Was a Dot Product.</strong> · S Anand's talk <em>Finding actor look-alikes with multi-modal LLMs</em> at <a href="https://in.pycon.org/2024/schedule/">PyCon India 2024</a>, NIMHANS Convention Centre, Bengaluru, Saturday 21 September 2024.</div>
+  <div>Media: <a href="https://youtu.be/FHa8Xgssrz4">video (Python India, YouTube)</a> · <a href="https://github.com/sanand0/talks/releases/download/talks/2024-09-21-finding-actor-lookalikes-pycon-india.opus">audio (Opus)</a> · <a href="transcript.md" data-transcript>transcript</a> · <a href="https://llmfoundry.straive.com/apps/actor-lookalikes.html">original slide deck</a> (hosted on the internal LLM Foundry; may not load) · <a href="https://github.com/sanand0/actor-lookalikes/blob/main/slide-prompt.md">slide-generation prompt</a> · <a href="comic-page.avif" data-lightbox data-caption="The talk as a comic page, drawn with ChatGPT after the talk. An interpretation, not stage documentation.">comic page</a></div>
+  <div>Code and data: <a href="https://github.com/sanand0/actor-lookalikes">sanand0/actor-lookalikes</a> · <a href="https://raw.githubusercontent.com/sanand0/actor-lookalikes/main/movie-quotes-catchphrases.csv">movie catchphrases CSV</a> · <a href="https://colab.research.google.com/drive/1anjfSi5IYLNm2Ibipz1sp9GeTPPatKup">topic-naming Colab notebook</a> · <a href="https://github.com/gramener/llmpricing">llmpricing</a> · <a href="https://github.com/gramener/llmrandom">llmrandom</a> · <a href="https://projector.tensorflow.org/">TensorFlow Embedding Projector</a>. Not the same talk: an earlier, 49-minute version at <a href="https://youtu.be/a6_tygjxxUc">DataHack Summit</a> on 8 August 2024.</div>
+  <div class="muted">Stage stills are frames from Python India's recording; slide images come from the 2024 repository. Actor photos belong to their owners and appear only as they did on stage. The explorers use text-embedding-3-small vectors of the public catchphrase list, computed on 16 October 2026; no face data is used or collected. Quotes are verbatim from the recording, trimmed with ellipses. Keyboard: <kbd>V</kbd> toggles video focus, <kbd>[</kbd> / <kbd>]</kbd> move between sections.</div>
+</footer>
+
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump on-hero" aria-label="Jump to section">
+  <button id="jump-prev" type="button" aria-label="Previous section"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+  <button class="jump-cur" id="jump-cur" type="button" aria-expanded="false" aria-controls="jump-menu"><i class="bi bi-list-ul" aria-hidden="true"></i><span id="jump-cur-label">Nana Patekar, maybe</span></button>
+  <button id="jump-next" type="button" aria-label="Next section"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+</nav>
+<div class="jump-menu" id="jump-menu" role="dialog" aria-label="All sections"></div>
+
+<dialog class="pop" id="pop" aria-labelledby="pop-title">
+  <div class="pop-head"><h3 id="pop-title">Transcript</h3><button type="button" id="pop-close" aria-label="Close">Close <i class="bi bi-x-lg" aria-hidden="true"></i></button></div>
+  <div class="pop-search" id="pop-search"><i class="bi bi-search" aria-hidden="true"></i><input id="pop-q" type="search" placeholder="Find in transcript…" aria-label="Find in transcript"><span id="pop-count"></span></div>
+  <div class="pop-body" id="pop-body"></div>
+</dialog>
+
+<dialog class="lightbox" id="lightbox" aria-label="Enlarged image">
+  <img id="lb-img" src="data:," alt="">
+  <div class="lb-bar"><span id="lb-cap"></span><span class="lb-act"><a id="lb-open" href="#" target="_blank" rel="noopener">Open full size ↗</a><button type="button" id="lb-close">Close</button></span></div>
+</dialog>
+
+<script type="application/json" id="quote-data">
+{"model":"text-embedding-3-small (1536 dims), embedded 16 Oct 2026","quotes":[["Beetlejuice","Beetlejuice, Beetlejuice, Beetlejuice!"],["Beetlejuice","It's showtime!"],["Poltergeist","They're heeeere!"],["The Goonies","Hey you guys!"],["Good Morning, Vietnam","Good morning, Vietnam!"],["Apocalypse Now","I love the smell of napalm in the morning. You know, one time we had a hill bombed, for 12 hours. When it was all over, I walked up. We didn't find one of 'em, not one stinkin' dink body. The smell, you know that gasoline smell, the whole hill. Smelled like ... victory."],["Scarface","Say 'hello' to my little friend!"],["Tombstone","I'm your Huckleberry."],["The Princess Bride","Hello, my name is Inigo Montoya. You killed my father. Prepare to die."],["The Shining","Heeeeere's Johnny!"],["Star Trek Ii: The Wrath Of Kahn","Khaaaaan!"],["Ferris Bueller'S Day Off","Bueller....Bueller...Bueller?"],["In The Heat Of The Night","They call me Mr. Tibbs!"],["Goldfinger","Bond...James Bond."],["Goldfinger","A martini...shaken, not stirred."],["Wargames","Shall...we...play...a...game?"],["Ace Ventura: Pet Detective","Alrighty then!"],["This Is Spinal Tap","The numbers all go to 11!"],["Toy Story","To infinity...and beyond!"],["Annie Hall","Well, la-de-da."],["Austin Powers: International Man Of Mystery","Yeah baby, yeah!"],["The Matrix","I know kung fu."],["They Live","I have come here to chew bubblegum and kick ass, and I'm all out of bubblegum."],["\"Your Worst Nightmare.\"","Who are you?"],["Pee Wee'S Big Adventure","I know you are, but what am I?"],["\"I Am Serious, And Don'T Call Me Shirley.\"","Surely, you can't be serious."],["\"","Dammit, man, I'm a DOCTOR, not"],["Rocky Iii","I pity the fool."],["Taxi Driver","You talkin' to me?"],["Dirty Harry","You've gotta ask yourself a question: do I feel lucky? ...well, do ya, punk?!?"],["Full Metal Jacket","WHAT IS YOUR MAJOR MALFUNCTION, NUMBNUTS?!?"],["Highlander","There can be only one."],["Hellboy","Aw, crap."],["Lord Of The Rings: The Fellowship Of The Ring","YOU SHALL NOT PASS!"],["300","THIS IS SPARTA!"],["A Night At The Opera","Of course, you know, this means WAR!"],["Apollo 13","Houston, we have a problem."],["The Wizard Of Oz","Lions and tigers and bears, oh my!"],["The Warriors","Warriors, come out to play-ee-ay!"],["Rocky Iv","I must break you."],["Bad Boys Ii","Shit just got real."],["Network","I'm as mad as hell, and I'm not gonna take this anymore!"],["Fantastic Four","It's clobberin' time!"],["Carlito'S Way","Here comes the pain!"],["The Incredible Hulk","HULK SMASH!"],["Sudden Impact","Go ahead, make my day."],["Zombieland","Time to nut up or shut up."],["Star Trek: First Contact","Resistance is futile."],["Air Force One","Get off my plane."],["Aliens","Get away from her, you BITCH!!!"],["Planet Of The Apes","Take your stinking paws off me, you damn dirty ape!"],["Forrest Gump","Run, Forrest, run!"],["The Terminator","I'll be back."],["Lethal Weapon","I'm too old for this shit."],["Robocop","Thank you for your cooperation."],["Ace Ventura: Pet Detective","Loser!"],["The Wizard Of Oz","Ding-dong, the witch is dead!"],["Better Off Dead","I want my two dollars!"],["Jerry Maguire","SHOW ME THE MONEY!!!"],["Wall Street","Greed, for lack of a better word, is good."],["Borat: Cultural Learnings Of America For Make Benefit\n. Glorious Nation Of Kazakhstan","Very nice, how much?"],["Austin Powers: International Man Of Mystery","One MILLION dollars!"],["Robocop","I'll buy that for a dollar!"],["Bill & Ted'S Excellent Adventure","Excellent!"],["Bill & Ted'S Excellent Adventure","Bogus."],["Apocalypse Now","The horror.....the horror."],["A Few Good Men","You can't handle the truth!"],["A Time To Kill","YES, they deserved to die, and I hope they burn in hell!"],["Planet Of The Apes","Damn you. Goddamn you all to hell!"],["Moonstruck","Snap out of it!"],["The Dark Knight","Why so serious?"],["The Blues Brothers","We're on a mission from God."],["Wayne'S World","Shaa, and monkeys might fly out of my butt!"],["Clueless","As if!"],["Black Dynamite","I sell drugs to the community!"],["Cobra","You're a disease, and I'm the cure."],["Die Hard","Yipee kayaye, motherfucker!"],["Scent Of A Woman","Hoo-ah!"],["Teenage Mutant Ninja Turtles Ii: Secret Of The Ooze","Cowabunga!"],["Top Gun","I feel the need...the need for speed."],["Field Of Dreams","If you build it, he will come."],["The Italian Job","You're only supposed to blow the bloody doors off!"],["Machete","Machete don't text."],["Jaws","You're gonna need a bigger boat."],["The Treasure Of The Sierra Madre","Badges? We don't have no badges. We don't need no badges. I don't have to show you any stinking badges!"],["Star Wars Episode V: The Empire Strikes Back","I am your father."],["The Sixth Sense","I see dead people."],["The Wizard Of Oz","Toto, I have a feeling we're not in Kansas anymore."],["American Pie","...and this one time, at band camp..."],["Tommy Boy","HOLY SCHNIKES!!!"],["Back To The Future","Great scott!"],["The Princess Bride","INCONCEIVABLE!!!"],["Forrest Gump","My momma always said, 'Life is like a box of chocolates: you never know what you're gonna get.\""],["Frankenstein","It's alive! It's alive! IT'S ALIVE!!!"],["Freaks","Gooble gobble, gooble gobble. We accept her! We accept her! Gooble gobble, gooble gobble. One of us! One of us!"],["Sunset Boulevard","Alright, Mr. DeMille, I'm ready for my close-up."],["Silence Of The Lambs","I ate his liver with some fava beans and a nice chianti."],["The Exorcist","THE POWER OF CHRIST COMPELS YOU!!!"],["The Godfather","I'm gonna make him an offer he can't refuse."],["Soylent Green","Soylent Green is people!"],["The Godfather Part Ii","I know it was you, Fredo. You broke my heart. You broke my heart!"],["On The Waterfront","You don't understand! I coulda had class! I coulda been a contender. I coulda been somebody, instead of a bum, which is what I am."],["Casablanca","Here's lookin' at you, kid."],["Galaxy Quest","Never give up, never surrender!"],["The Goonies","Goonies never say die!"],["Braveheart","They may take our lives, but they'll never take...OUR FREEDOM!"],["Gone With The Wind","Frankly, my dear, I don't give a damn."],["Austin Powers: The Spy Who Shagged Me","Oh, behave!"],["Goodfellas","What do you mean, I'm funny?"],["The Godfather Part Iii","Just when I thought I was out, they pull me back in!"],["Poltergeist 2","They're back!"],["E.T.: The Extra-Terrestrial","E.T. phone home."],["The Wizard Of Oz","There's no place like home."],["Rocky","Yo, Adrian!"],["Wayne'S World 2","Schwing!"],["A Streetcar Named Desire","Hey Stella! HEY STELLA!!!"],["Jerry Maguire","You...complete me."],["Jerry Maguire","You had me at 'hello'."],["Who Framed Roger Rabbit?","I'm not bad. I'm just drawn that way."],["She Done Him Wrong","Why don't you come up sometime, and see me?"],["The Mask","Ssssssssssssmokin'!"],["The Graduate","Mrs. Robinson, you're trying to seduce me!"],["When Harry Met Sally","I'll have what she's having."],["The Lord Of The Rings: The Two Towers","My precious!"],["Star Wars Episode Vi: Return Of The Jedi","It's a trap!"],["The Karate Kid","Wax on, wax off. Wax on, wax off."],["... That'S Gonna Leave A Mark.\"","SON OF"],["Clueless","My bad!"],["The Marathon Man","Is it safe?"],["The Karate Kid","Yes, sensei!"],["Midnight Cowboy","Hey! I'm walking here! I'm walking here!"],["Office Space","Sounds like SOMEBODY'S got a case of the Mondays!"],["Office Space","Uhh....yeah."],["Donnie Brasco","Forget about it."],["Scarface","In this country, you gotta make the money first. Then, when you get the money, you get the power. Then when you get the power, THEN you get the woman!"],["Titanic","I'm the king of the world!"],["The Lion King","Hakuna Matata!"],["Animal House","Toga, toga, toga toga!"],["Little Shop Of Horrors","Feed me, Seymour!"],["2001: A Space Odyssey","I'm sorry, Dave. I'm afraid I can't do that."],["Citizen Kane","Rosebud."],["The Wizard Of Oz","Pay no attention to that man behind the curtain!"],["Chinatown","Forget it, Jake. It's Chinatown."],["Star Trek","Live long and prosper."],["Star Wars Episode Iv: A New Hope","May the Force be with you."],["Terminator 2: Judgment Day","Hasta la vista...baby."],["Babe","That'll do, Pig."],["First Blood","It's over, Johnny."],["Gone With The Wind","After all, tomorrow is another day."],["The Truman Show","In case I don't see ya...good afternoon, good evening, and goodnight."]],"labels":["Iconic Movie Quotes","Memorable Catchphrases","Classic One-Liners","Famous Death Scenes","Creepy Movie Moments","Witty Comebacks","Romantic Movie Lines","Dramatic Farewells","Intense Outbursts","High-Energy Showdowns","Legendary Heroic Phrases","Classic Film References","Philosophical Reflections","Inspirational Life Lessons","Threats and warnings","Greetings and introductions","Food and drink","Questions","Monsters and the supernatural","Love and romance","Space and science fiction","Money and greed","Family","Insults","Sports and games","Fear"],"nStage":14,"xy":[[0.292,0.227],[0.461,0.416],[0.256,0.5],[0.309,0.456],[0.27,0.018],[0.266,0.001],[0.512,0.802],[0.368,0.839],[0.382,0.682],[0.2,0.501],[0.426,0.326],[0.285,0.185],[0.387,0.849],[0.179,0.819],[0.171,0.799],[0.508,0.379],[0.661,0.229],[0.111,0.227],[0.159,0.25],[0.452,0.107],[0.486,0.276],[0.534,0.177],[0.834,0.715],[0.484,0.706],[0.485,0.689],[0.955,0.348],[0.732,0.613],[0.686,0.549],[0.536,0.639],[0.664,0.74],[0.281,0.147],[0.047,0.191],[0.675,0.313],[0.726,0.489],[0.601,0.127],[0.563,0.34],[0.083,0.499],[0.283,0.271],[0.481,0.356],[0.652,0.612],[0.647,0.331],[0.813,0.676],[0.446,0.407],[0.573,0.405],[0.41,0.383],[0.443,0.558],[0.441,0.456],[0.099,0.15],[0.861,0.54],[0.834,0.518],[0.822,0.539],[0.236,0.321],[0.174,0.647],[0.84,0.667],[0.7,0.172],[0.686,0.5],[0.367,0.218],[0.532,0.919],[0.599,0.92],[0.786,0.837],[0.546,1.0],[0.57,0.945],[0.523,0.936],[0.651,0.207],[0.994,0.399],[0.605,0.404],[0.924,0.377],[0.79,0.597],[0.769,0.57],[0.842,0.466],[0.965,0.326],[0.721,0.961],[0.307,0.293],[0.734,0.349],[0.424,0.897],[0.586,0.699],[0.497,0.297],[0.453,0.296],[0.362,0.34],[0.213,0.356],[0.265,0.71],[0.76,0.497],[0.841,0.313],[0.179,0.383],[0.882,0.199],[0.389,0.704],[0.309,0.595],[0.066,0.531],[0.636,0.404],[0.657,0.874],[0.628,0.166],[0.676,0.901],[0.685,0.759],[0.295,0.558],[0.403,0.275],[0.461,0.515],[0.159,0.759],[0.699,0.933],[0.23,0.711],[1.0,0.574],[0.645,0.632],[0.623,0.518],[0.556,0.612],[0.159,0.166],[0.18,0.207],[0.165,0.143],[0.781,0.675],[0.874,0.468],[0.515,0.652],[0.786,0.395],[0.273,0.52],[0.197,0.558],[0.117,0.588],[0.339,0.465],[0.399,0.204],[0.308,0.428],[0.544,0.711],[0.515,0.781],[0.753,0.222],[0.466,0.0],[0.479,0.233],[0.848,0.4],[0.186,0.706],[0.514,0.844],[0.818,0.416],[0.377,0.155],[0.382,0.735],[0.719,0.249],[0.981,0.275],[0.542,0.215],[0.266,0.46],[0.506,0.449],[0.572,0.269],[0.0,0.549],[0.736,0.851],[0.556,0.509],[0.73,0.443],[0.256,0.258],[0.975,0.554],[0.76,0.276],[0.33,0.846],[0.906,0.444],[0.022,0.544],[0.141,0.275],[0.121,0.294],[0.452,0.071],[0.952,0.515],[0.173,0.494],[0.422,0.571],[0.454,0.045]],"sim":"j5CBhlh5X2qLfZmAc21rc36Hh5NIbltYZWtTbXRsY3h5ZG9Hpn1iYmWPcnxpVklkfoODYVNHb5Z7eVVUZ3NxWIJjSoJ4WFiBdWRje4V0cFV5S05ZZ3p3b3lfW1qThG5OZ1d4WmtyZ5tTXIhTcnhtW32JgGRsRUV+fGtxhoFOaD93c3BvNV2Aa6GDRG2Eal11a21VVGWomYlHiWNxj4t3d21bh4V7hXieX2doUV5eXG15YVd7c4KKZoukbYV105mGhZtcalpohGxtRm6DdqBESGJ1jFBzbE9qjWhldIBuWIqTh3RadURZZ2FRbnx6alpXkXiWOG5VclpjdnCHXEuRXHSzZGeJkYBWYTNTgVllhZJtXG5PlHh/aEhekGyId0JVdnVeb3RjcGlvqnBSfWxZ0ItpeFlLa3x5iHqSQ25uWWVZWW1gWVuFdo18co2WXYJqjJl0Yl1bWl9fg3JTRGp6aHNHU2Fhg1p4dF16amFobYVlWIWkeG10ZD5gX2Fze22Fb19AkoVlP2pgdFZWdWKEaE5/XIPbdnuGeoplb0RPfV9rgJxWRWs/hapvcTJUiWmGcz9Jd11VeW5ZYE1ZeE6AXlCRhGdtTEtnh2V0bJxIWIlnaWVWe15eR3x6fnNwfpJea2SDeW9sU0xjYXF5WFdjeGVtbEFgXmCCWGdsPYaAb2lcfnZXhpyEUE9kTVBXXWVgbnp6XEyHg1pCZkt3Y1l0a31YVpBXaaRgWaV9qWZsRVl3YVl6jldPiVKIpWh6RU17bXlwRFB6WmdsZFhbUWWehWdleHxabmtUV2JZb2l7W09YTUhaT1JUVT1iZ2KERXp9S0pkbmVmhVtPe05ock1PTlxtY2dDV2NtdE5YU0JeclBabmpSTHGEdFE8WEJHUFJPXmldYlJPbGtvQ1FMeU9QaYV9aWN0R2BtZVZweG1PeS9Kdl9MbGRdSWQ1dmlzVzxNf3Vxaj9qYm5tbmpsV26AQk5HUlJFUEtDS0hNUF9kRWgxMjpBT0JcWEVWSlB0R1lRN0daY1pUWkZFRzxiZFM3PD1ZSE1NSk1SVzpcR2djVEVOTFBGRmhrXVg/WTowWENQWXNYW0VUVU5EUEQ1RUZhRG5bZFs9RFZOU2M3UD5QUzREbj5BR0dnQDgyW1RVVjdKXkhqPyphNElLRFNVVkxRem6FdXZ8XVV3cWpqZ4hSXG9mSkdneWhXR1tiYWZQeW5fT1F1dW6OWEBmXnBaXUVMZG9lW0FoT3Z3RVpaLlhsVkBta3BedoJwVltVQ1dPV01PVlxpRUx7iGlWTmpmXVKAV2pHaX5cYmplUoF0lWypOHdyZm+Vd1RDZ054gGNkPzyBX3KPR2lsXWRtdG1CW316flh2pYBgXWNZZU9qU3iHgFlgdIhsaUlgZGpPW2RNfVFkflxvdltbaF96anJiWlBMZF5ERUZlWElMZjVqYVNUaFVoiGqKXmtiSk9mVY1fcmBYYkZgU3RoWFVpVmNrhFhkUmVmgnBXX3lUWG6HiWptd39vbF5BVV4xYmlcckVHdnlRe16SV2ZncF13YENtaVxhXmpjVVZJb2VYYXF4UlpkY2heTUZZbWNyTFpicF5ka3RcbmVkc11xYWRLTVR0UVhOR05GVURmYGxzVWRVXVBbWH5aa19UbmpORKd2YklLUFdYbVp7cVhiVnZVZWF5XGtlV1BLUk5sXFZkaUZOWFtRVVpRZ1kua1lHV0FSa2BqbVpgYGZ7fnZgX0hjbXVvcVNgf3Z9dpFKZGhTXV9YZWtjXXlnbWV7dXxaYGuHlHBnYU9mZ2x/bE5Qbm5zfkVWY3F/UWJ0S2h1YlhlfVdXgpiCZ2RjPVhYYWdzbm9mWlZ+enhgV1xsZ1+KZYBPXn1RbZR8dYx+iVlnQWR4W2CAeF1gZ0l8lHBuRleCXnl8Sld2dWBoemXOU2RadG1PeoJqfmqLaGVqW1pfZWljW19yhnNrVH6NZWFbf3yJZ1lYYmF2aGFRQIR2YGVNTmRjbVp1bj1ueV9JioBtT3+WhVpbZkNQTGVZXWFiY1lCbWtZMVRkZUZid2R1UlB6UGODV0drcVpjU09Ce1hhfXtRVnVGfWhmazhOhXCJYkdNamlgcFlfTFRZeXleeWp1goF2R2FtYlxpYoOCiGZpZ2Bja29XaV1eb2x0a2pjWGFTbVhWSnBrY2w+WmZ0aGJ4WkZwZGhOVGhZUmF9cHduUkRsYHBUcXteYFtPbHJ3TllgZGJ3eF16RltzWmdTa1BoeIRjaT5cY2JeVGBVUmBMaV9xhFNRclNzZ1NxenVnX2xnUF9rfVxZcm5lX3RVanZsVG9qh2pwSFtgdl5BempbV3ODYVVtVUJjV31sZmBDYWlwa0RSVmBwZE9rQ29nYU9sbIhifnN3Yk9TTT5ecmpyW3FnS09jcHNJVmJfYoJfT2ZNaXBsfXRrXn91d2pxWlqDgmNqclNMbTiAfHNjMUyMaX6CSWZyZFNVVXxMQGuWcWpicmhwXWJoWF5xX1RuW2RjYGljUVxbdGZTb0xlYmRZaVNMZnBJSVZeXnZRWG5hY2RkSzRjamJfWGBVU1pmbXVUX1BWVGpNZmhPaUhKWlp3UVJiX1lbYmF5YV1zS15Ua1xcbFJsZlY8aF5pZWRnblFHZkRca0VRYlpmY092W31xdmBrZlRgbVxTXW1bQk1RU29tWE9kTltJXFZUQ2BEWV5mYkRcWWpRT1VZSlJMPFJdVmFNVFxWVFpeVjtZWmFFTW48S0NrRVtDY2NQSFZPYFtUaF1lVVNlglFVY1lIXmVeXm1xT2VES1lLaV9QaFc6ZWGJVmBfSlZNUUBcWlFSUF9gVUVkX2RVYmlVTFJkdmZ1bntHVmFaZltjboFgX2R/bXZcb4xscVWDcGZ1dVNXVlNqWlU4WV5OcVNcVm5pQ3RMQWNlc2dydEJbXXZleWJaSGVbWEBqbWdfSVJhel9KVXFaQVNaWmheVYNUWGNbVFlmaWZhPGBtYHxWcFZJTld4VWuCQk9pS3prVE9SZmFiZXRHVGt9hHqITVlXUmVpUXBlZ2OMdnN4XW18W2pqd2lufHBeYVtwaW1fanBkamtUbWWBrWJlbEZ2cmVWZ5RpV4KTbF9YbExoVF5XV2Nmd1JCaHN5S1lzaEtYaGFtTmeFSWJ/ZFJ7bW9lcFBKd1V9fHNiYptmjGt5llJNdWV7blVXcWNoYmKHXWh8nXB/O1Y+QGFTW2FzdXRmdWhsW4NuVFVhg3p3aVVqSFhVX01hSWl2e3BDYn98g15tbkJ5X09MXX1WS2h+b1RPaUhXWVNVYF17Z3BFZ3JOOWVRW0pNWGyARUtwSmtxYFpkdGxPUzgralJXcXZRSFxJdl9cZEJNf2GVbTlXcFRfaFdmYFBTgYVBdFNMXlZbY2lkX2aDfHdRl3JXXXCAdoZ1VnhXY2eDa2BJaWpkclhYh3WITnxmU3RsYW6NhV1Xd32HcmthPXNLZFZ4dm16iF57d2lNcGBxSUxxiKl1Wn1KhHd7YWGEfGxrOkR3TmB4fGhYYVF/bVptTU+ahKJ4RFOAZLGVkWFcamidT2FISmFtZWd1Z1mCWlh4Wm5xWWhYcG1Wh2NgYmRcYWpcTmt+WmhialJiiVxuUkV2X2FYbHlKYoKPdVdWWEVaa2VpamVnX1VcbnSKV05MVFlaeVVnSYp8Y1ldZmyBgXhmeFhcZFZ8TmZyVGNGfWdwiWJmaGGWVl5jYXNwb6KFe3ODXGpaWWN1Wo2CZk5/c3qSapCbaXR8mpV5k2xNX3uDf2FlRHlwepJUZG98l0V5aFqRf2RZg5Bob7OynXRbaEhlYWtUanl7fFNajIh5VGdQaGF2jG+BWHOTb32DYWKIlo11gFFklmx6g319W25UnoZ2okFym22eilBYaWFcaZV3a1tkbl59UWFcVlxYOUpISGs5TFVmSVZjSVpSW0pVRWVdZ2VCPkRNXERFNE9PR0tINlpJTj5uUGJQXFdmajhJUDdKaGVORkU3MUhGRFhRVEw6dmZYUlE7YFBVT0NAMlRhN15JV1BON1RKQ1VFVD6GWD1hOUVqPk1JVTs9ck5hQl9IPVJiXUpuTHB1b0lpblpdTmBndmKMfmtpZnlibGJ1YnV/M1lZZF9LODhNT0hPXEBpd09YdVFvbXBjeXVZckZLZWJkeGBUQVNnXGlcTlZlVUt7a2ZvSmpmWoFVUlpcXVhqWGZWZE50S1JeTVkqX3hOXT1edV1kc1dtTWdlWW1qYT5cxW5oYZB2clhhX1hPTldcel9cTU9dYllTZGpmXGRgTXVXTlszZlA+VV9TeC5sbX9iU1lrf2FxW1lMS0FPU5dpXEJPWkZOV2thTVdNXG1vdEZQP2t2hGJiUEp/VH2aenBlY25hZWJLZ2xHXnlUaUJHgEtYZV5UZE9cWUlPSUJiam5skG9rUFxcV2lEVFNtUFlITEVbT01UXmNOWVw6XEdDTz5CMT9IVlRdK2hiYE1ualqNWlVQT0E8PEdWhm1hSVNPU1dZYVU8VElSeHhvPkBEbmuPbkxdS2NEaoRnb2JUcGxXZE5VYERhZ1NjRUh5RlhhVElfU0pTP1hITFt4aHRcYmlpgFxxYlxNe2doYFpZWGZzYGdyVlprSG1cRldBXVZaZoh5mklxZqleY35FXF9iVEVRaWJtWGNMalllTYpGWVtdP15sTl9sbVZbUXJ/cVNTSmBkXFVkX0xSWnNSYHI7RlZYamBdenZNWnBgXHY5bWZNXmBlYktFcmFgcEeGeF1pYGBWamuMa19kbmFTb3B/ZmB5OXBoWF5NUk1XbmhjbEOTdGhcZ25pj3lhXVk3c2FKZHNxbl1bU1pPWl5qVFdpW2yEY15fR32DaGZSWkxrXFNiVG1VZHBiXWpRbXxLeWNoaFFOcF5eZ3tHdW1eUFpwY1diYIBcYYB/VlNQY0x+Vl5ph1p6aoJeaXNnXnBEiGdcYXBQUW9aeX1pbIBiXkZbYlJrgW5VbVxVUl1QX2pcWE5cb1FVZFRgaXpScXN1XVhDh21WbD5SV1lPT2NbZFFbT2Vqf0lRdkNjXnJiZVl0b1pnblx6X2ZvanNKY1SGaktya19tVltjfGRleFZcdGhHbnOIVmR0P2NUY2wwYU1fWFdWeUiDanZKaHBqeHJ1bVhOW1pZYYB0aFhhX1ZMaWJtVVFfVHxrlz5bPWx9nXBabE9/Z3mRg12CcoFnZHVOTG1ec39jhlVJgFVshlpVa2JOUGljWzNodFxsaVNkQHBsYGFmfmNfhIJcTFtoZVZcMWtdc4dfWGFraExYWVtvYmJBbWtbYn10dHZlVlBfaltceG5fWk6HZ2dmUGVVUGZxiW+FVoFoe3VTWllkZG9kaGplZ09jWmZWUEpOaVt3d0p7eU5rZkJ1YmV0cV5sS2RmWHB1amZmak1vVF1wXHhaemtbX3NgRVpMfFNcZFBMbV5eW2JzP2hrbVNvW11jXltlZz9bVU5nZVJeZIFQaWBhZldFZUpcXWxUVFlPcmhpXldYP1pWYWlPVUlZT1lmXkZYbEpZUHtpTUdlYWhrUVlrUFhTVFxUQUxXcVFYUF5GZWBFZFZNS1pzOURIU14wP2laTF1iPWZOVlRUYTpUUFBRV1EvVldbVVVfWkBTTk9ARk9WVV5LVXNULWBVTkVUU2JiYUVOLU5KSXJLUUtSOUMtRzNoZFJIWU5EUT5YWkxeamZqPVtaVVNdY1RdYWVHbnCKendqcploi49xbHRscW1+e2J8THR3WlpVX1tgiICKd06NlHJTbZBaZ4GKd11JYk1rVWZlbHd2cWdadGlmSUtmTmdqhlBkR3CMVXmBZ2SBeG9cZ1tOcV9geZFqXZdUdGZ2kGs9ZFprZHRhanJMWGl6fFZlj3tba3GfZoCDlHxmbJeBiIWBWWtTmG5lfEZBamVoWnCRZJ18YmZkdF5ifX1oYGOXXHNfcF9naXFme0txZlxCi2tbYWt6i31+X4hHZmNTVmtybWRYUj99c114mUxxeEFyd25jVV13kXhyZUmDY2d1b2haS1aLVG6GYHBtgIaMVl1eXmNph1FaPW5kXXNJSWRkclVvaFRvd1RjXnphUGuCYWVTaEhPVGtYaH+Fjlw+h2pVUHNKa1taY22Ackp2RWCHZmpxd3lXUEAtcVpRcIdHcmtGhYRoaD1EcnyPaUBMY1dnbFdUVkxDW3eQZYh5kZN1aHxnVF5lb1NRSWBtUW1gRl5bfkV4Y2SGXWhlaIlRWXx7eF1YcVBhUV9XbHVtXF1faGJvN21PXGZfa3ZrcGx7XGhwZV9lcWVVZTkzZGBYX3tiXF5CjGNmfExifVeHWkNPY2tZbmBnYmtMUlRRdF9qbWNJY15eU0xdRFFZUkdQYUJBTkhhWHJtPGJVZXU/T09WQ3lbVUlHSGNdSViEWWRPWjpdZ1Q9S05VTkRbS0RJUFVBTV5gW2BbaklLPUFRR1pYYURKZkNQVGthVkpKO05MZ1RNbkdLXkt1Q0mUVF5pjHh4eVdSTU6BjUxRRmJqbHFiTGxqek55WlF4X11Ton1aV32OdGdeWTVTZ1lbbm1+Y1hjhX9hWF1Obk1XY2SIZ2qMV3mBRl9qaW1YYEpCclldgntbUGVIamN1aixKiH2nkD9abFxjZlVwPVxbYGlskIxsfH9RWl54gV5PPmdpZIJRQ1Nedj5XWURsgEtccXxfTo6ggltsaDdPXEpUYGVrYktGbnNqNmVMU0VbbHmBXE+RQmmPW117c3dSUjlhdlRVXHJtW2AshnFrYThYeVZ4bjpTZFhjeV1kU1tkW2t0g3eBdH2OjYlvgmpRa1dnZ0RTVV9dUmp/S4+UZlVnVF6KYWhRgVZ9WndhfVtfVFtJVUpQV25KeIJApWVvVVNTZodqak1PTGpWWpd1cGFljHB2fVRWcDtoYlxqV2BjZV16fF1UW1Fea2ltQ11ufIVrYZhfZl5ZaFp2SldpUnNLVFlfaWWKY0d8dYNhan9bUXtsZWlRVVlnP2xkcGOCY2Jae2FoUV9eXkhZbVRgW11qP3F3a09oaV1eXUosdUZpWXBVUGNMZFFkck1aZVBgVz1EW19OYGZub1BUinxwYopjc4GHc2qXNW1vfXlDQ1prZktneXqUeF5LaHJoZ4huXWk8aEdaYmFmg2FeV2lfc2BnTmNwVnuBZn9idJd4V3RsQ2FgaWVPUlxLbVtlaFdMTl8tb3R2UU5QgXtxZl1MZlpPRmpicFNhl5pzl2BbaYuBVHE5cYt0gVk8WHSCV3tyWYyIY2lqemJfjJanckyGW15VXVF2dn1oYU2Ig3JDd1ViY2l7dIdeZn9OfJRXYW+QcVVbNFV9YF91gnBWXjx+Z4hwSmKQbJF+TFpvb15sbmp/WV59cHZvZ3x2g2dhTXl4dYZHUmVtek6bfFmKkGZUbodlYoyBa3hjakphTWZdZnZ9b29ZdGJlTn5iVXdie2tpYFl2OXyHZWd0gXJSWD9Qe1pmgpFfWm9LgoGCYUVkdW+Eb1NNa11MbnFmbVZQZGpnXm13bVJVP3htWng3RGFndlh2c0Bvd1NHYHBZR2mQdWpRdVRZRWNUQmB5b3I5dmVdUHhQZllfbGlyRUp0RlZyX05ygHtXWzw4iExbY2ZMYl5IZXBoa0JKgGh1akNMbUhnY25qWEhIeV9wbG1pbVdWYmJ7eVxmWX2EWFFKSnRqWkpybVhoknxndHBRWFxUZVNWT1xdTF1kbJBOXodbZVt4ZWlOh35wW1JeV292cot6VHtpaXtuZ1tPeUZ+cHNybWV8X2mKYFpqa3d3Z4NTk36Hbm52cVZxSWpbWopZO09SYVVfdUtsj3VTYlxLTHRwbW5raE9xVlQ2V1tkTk1iVGZ+SXdpXEhfeoRZVneFQGRYWkhWXlxLXT1XZk9mSVlpU044YkRyYmpyX1peZ0VQamFXXm1xbWRZWGhiaVFmX4BZS05GKztGWWtdgU1fdlJYQ0k+T2FMUE9WYFpcWGQ9WVRDTnBOTk5JM3hxWkhGapdld19mNF9MaF5JTElIREs0VVlPRHlPPU1ITUFBV3hMWIJoX2Zec2Nwg29naFtJnZ9jdXhYakxvajBTVFNMW1hlOmybZV97VFVXZ2VYXTdsXGNbZmxxUFhPWT9KVnFITmJCV2RbW1NWcYJYXUpxW11ZXVdlUHBcaVViYmZReT1NYE9Ob0BlaFVhbEtteFNWimV4Om+nf1BtRY5wZH04SV1RXFxwhliQmFZSXWBOan9valZFamddVlk9YlZuWH5MYXNUS3NWQW5meHRdVW2STGlHWlhlV4FfZEpdbIRhZ3JgS2U7ZHBeVn9iUWtgc1dPc25MT4VzcEdeg05tVHdic25PUVxeblhniFWgkmBRkWpadY9+hmU/f1xddnNWZFNmYGNGcm1tWF5kTXJ4f2dgVHSbXnJZY1JuZmxuaFJke4ZNdXJ0W3sydnVkZVhPcoR5i2dadF9RVWeFXzxYY1RJZ19wfVRJYmp6SXFfSn2BUVV2cFlKaXZriF9hOlxOX01wamd9TVV5Z1xFYlFlZVpngn1qVoNKdHhdY3RrcVZVPkZxWE1ug2RPY0d7fmRlTlhqc4x5TWFza2JoWmdeUVZaXEpWZ1xLVUFXaU1UPTVVYE5RYFZfYmdiYWljQUZmQG12Z1pLWjhKYFNyVEZyRmVcYlJpVGJhYHqda31eV19udFlyYUSQZFdiU2lKZG5EXFJIaEldUmhYQWd2dZd/a2SVOmFWalc+RjhYSF5tc0tqfXRTW1BfY3JaWGsoWlJcWGlwal1bT1lMVUhaSFJiUFdtckRiP35tWWxTTE1cUUtRWWdEVFhgUmFJS2JIVWFaYWU8aVdiXnNDWV5SO25jeEhgQEhLPT1rPzJ7TlE9NFM7UEQxQTxTVl1GODgvMz84XDNART5TNjRBWWM/SkE+PhFOTjpDSGMqNU5HPFRAW1JXKzpCQlRXPkZGc1hiQzdYRSAiR0Y9bUxES15lXWtdUFxhcnBKTW9obI1ajVl4cV08VmxjV4N7bEM/ZmBXXVhGUFRfaHxAVWVVSldTWmuHa352U2l0SWFqYFl/b2FdTEZDcFhIeH9CXJAya212ZGVTeHVvZVxYdmlMTG5nZEc+Xl1CS1FydGOKYnR6Z1BDWGhcW4V5ZUJJbllHRFp6d2dwX1pOj4NgUVtOa2dQTliDWmBxVGiAWU9amGtVXjMobFxbYXVtR1VAa15mWDtSfGp7Y0VXfmBgUHdteVpgo013m8RqV0paV2ppWUZnaX1LcHNqdkhST0teW1VWT2VUXE9laHFMWGVecmVSX29QZXFLcHddRmdpbFBTNkZZVXKQZ1U+fUFmb11ON15sZGx7V2RcWExUV1xMP09kX6Z8aWZxcmFvZWFVbG50VIN4bXpkYVRmc2NhaWqKaoVXe2t/TpBjZWZreW13ZWh8S2pdZVhfZ3xXXzlVe1hob2dabFo0bV5yZ0KWe1t2eU5bc2NZXnZjY0RaT0pRY1RHQ1JgPUZdSUxVUV5STn1kTENZTUJFTTpKU0RTO2BPRWJRYTxWRVFdWm9WNFlFQ11AQDVOSHA5QT5ZRE5EQ1Q1VSlUYEB6WVpcVjhNRFBgYFFqQ2FDiH+NUFI9KVtLdjQ/Zl9HVGVOU1A5Nk5CUTw9Pl9rTC9QWmRrOGFGTjhaPz4nVXdNR0xUQW1WYmRwO2JbTmZ/U1hBZXBdV0NjS0JANFheUlY7VE9OVGxOPVulcVlZWkZeWmRNYHRvRVpoV1FTTkJeQ0s4TFFnWoNAZGFmTFtpXUtRWFtlWFBrOlRYUjhcWGNJUSIpa1NMh2o7WmJRVFJlXkFYc1xhV0pcXEpZSFZSTj42dltbYEZqZU1EaXeAU2l9ZmpeS0BZWlZOVGNsVGxMcHNhTVqJZ1tmXVZySlpqTltXV0Ricl5QZDk/aVN2dndNNGRKYm1laERQgV5rbWFVaWJJT1ZySklPX3ZiWX1wZVtmk19lhJJ2Z0xgN11aVk1dV3mYZDt3d3xUXmBvS09jaGpSZIpWZpFoWIiHgmhyRUqJXW+IfGlajnKcdG6KSkl1YIBwWFxlWWdgX4pjU1xofUBbZmRZTm1USVtXZT09VldNX1xhWFtXZH9AVmJLQ0xiQWNgTT5aO1lkR1hXWlFdT1ZOUVI/V1hFUYZGS3peT1BhXl5IUmNvT0xSdlxJSVphUkFDeXSGaXdcXnlQXXJtbH1IcldWRmpscJCIeYlRkG5XW3ZXYGVUZ050X2J1QW1wY1JTY15iZ1A8cFlcZIZcU3FUX1FxhlVRZFuJW15Hb19QXG9UXVlTTYCOfkZXbGVkbG5hVDyDXWVrZVdWVGBQh1hlZ1lEcVpacnxpZmZfeXleZ2FbY29RZGFfTk1xdktxk0NIdDhjZmtcalJ8c2FpdUWKYDFBVFpqNz2SOEBDUFhOR3JNRVMiZUE4PT5gTVlQTWBEUkg5VVQxUFpMO1ZddFpGMl5bOjs6SEFEPEIfXjk5R1QmOlQxZi9gYDo/SUZPTitJMjFEP1JCTDw0dmB2Zn9oeJyEd2ZHiEtrUXhiZGZ9bG1ebmxgV31cVoN1e2JpVXGIY31iUE9weGp7bmZHhXJjcnxdZXs1gGV4gUVmfWGLa1tUaVpWXmx3alxbZkp0gV9adnB4akN8UE1WYFtvYXJpcE2CY1s0blZeYWx5dmdVTZ9NjHplVnd3cFpcT1mAdFtvnXJXfEZ7YnZggkRxeHJ9XGaDbFZPbHJ7RWNqUHJYWV1kU2s3V1hZW2FaU1dkWlRSVlhoWlRQX1FoaEhTO3+LflNMWkNlT2FnY1NUaGBeemVLV2R3YlVnbWZGXVRiZ1lGa1VcTl9aXV5TUFRaZVxcXGRZX0ZXTF9Pc1NbUFJGW2diP4laWjc7V11lakhYREtdblJORVldVU0yUFdSVWlQZUc9VlBVW0BWW1RePUc8UUhZaldNU048fF9ZenGFb1BdSGFaXHF0XHBRbm9sYllPVFdWSm1YVn5hZHNrgWRVSVlyWVpOUV51VmJtaVlUYU5zX3VlPkuHfH11REpkT1tgWGU/TlphVXh+bGBnbEVYUGhWbG5/c49jeWxmT2dKeVZ3bWV0XWyYXo2Dbmp9fnZtdUhCgmR0hoxqaXhji2x2fFlWeHCEcjpNeWdJX2JsVGFabW5qZmxNU0JJVVpmTEpQS01OV1hITlxtZmNuVVBqR1deXXFhTzV2VV1jU1VLc3BiYXZGSHNMZ25SVhdbiVZpZkBGYUxUQUVJPzdIalZLY0xPPWJVdGlZUkZJPEpcZFxeU2ZTbXhzS0o/YGV3X1FUWllDTpJ2fF1Wbn5baFhKWj5UZltePkp1UVVsXEdHU29NTVlaQlWpkWxZaVRsUXlhanJvc11bhYNnUmVUZ1xrf3aJaXh9X2t4bmd5hGhwaUFLe1VYamxbYGI8i3ZzejxoiHOLgUtMZGhvc3uMaWphk3lfcD5pZF9XZ212glBJepZyPV1SWlVph3WEU2KZVHV/ZmyEj4dxgkdHimNxgXZoW3NPjIBpkkVdenqOakpvZV5vb3x6XFBuWlNbVXFUZENoc3JwZkR2glM9WVBgVFxsbpxIXHJPb3tfWXmNc15ZQkN4TV1fcmtUakJ9Yl9qQliFcJVwRl5la25ve29mRlJfT1F8XGFfe2p2YE9GaVFlR31mVFNbW1VqWWJhSHdbZ2FVdFl6aGNRclJ5ZlVkVV9Ea1NndjNhd1hkd05MT09bcmdbPkRbRUJ1QWo7Rl1DSEJKUlFYP2+HU0c+YmBbSz1ORVtAYGJRU0tvZlB5SUJqRGNMVz0zT1o7UkmBXktPXDw9Y1lfa0tUO1ZKaFtbUV1WU1ZNVU1gVVg+YEtQYVZfZWlbUoRJWVlGT1RoUE9NSjh2aD9Wf2NScz9iVlRcR1lgW2VWTU1yUUtPVlxgPjtJT0RSU1BLOlVJTi5FPE1KSFBGREtTTFFSQTU+ZjdIYU5NTUFEXU9BSlc2RF09TztNTE9WRGxOSEtGV1FBUGZKRjldRllGWV5PWFVHR1BgQV90P0tNYkVXRk5fUGFOSFVUXlVoWz5JXFFoS1tNUVc0Tz5WZk5gWFBfXWM8QVxgS2VxVU1CQ1FiUVJMT0ZDc1YuQ08+T3tSVV1ZeWlVR01CcFc4X1lGX1VYR1BdUUE4YDNfXlNQTlBZcGtQY1JlSzM7UltQR1R3ZGxdX0deYFVrWGRbVndhgEdeTF5lc1xYcF9sW1qGcmhTYW1WUGZWlWlJemRKZ0dTe1JnamNQY2ZgcV9ZX0NbaFJZUFBRhVliV1FIZ1tjXDNtRGVTaWJkY05VUVNgTmpsYVdeSFxFVV1AYXFjYjZAZk1XWVZPYU1iVWdKUThzamJibmBwcmE+VlZTYldrVXJmb2VbgmhrfVFmWV5YWUVbZFJTa0FXVjF0YGldTk10dINea3B3i1JvfFp1UlpuZlldamNeTGZRUGVnaGOAZkplS3JiZ2Zmbl1fYE9QbVVJXGteYVs5cGBodEZPaleCUUtcW2NcWWhYV1xad5VQhm9cR4dNWlxNWFt/WlB1TnCAW1RnlYRjYzcxilljfXJZXldMc2hkcT9Eb1F7cjZGbVhIYmdiTElQXzlsbFtXZ1ViUkxnZHZcUGxDZHVVY2p9flVoREl+SllnZllZdFl0XVtvQTpwZHxfUFVfQWFta1hHTFBUbWFBSZJkV1ZqSGxlXltjOHpTUFVgXHFPTDhAZFJKc3AyW2c7S09rUnVPZnlsTVpHcltASndHVURGTVFAUlNGQ1JjW21faWpdVmw2PGpJSlFWVGhIU0llYllhVkg/VThiT0F0SlxXUS9oV1RnVVhPR21ge1hYd0h6YVNnZIpuUnZZZpl5W3Bzil5fMT5xU1CBjU1RXVR4gm1sSjd2Yop5SFVsW4NrV19iXFljWVpceFJgbGaOXmF8TmRrU2BscHlwczhKZGOHeG9XWWI2dGheZkFXZ1WLg1hkZF9rbWV9VVtYTV5tW2BieFNYSoJ+W1hWWUhzY2ZyeExoZXdsaFRlUl88dmRSZUtecVBlb2xadXtMY3Z6b01wP3JicktWOkM9YVNMRjhKNUNESFtdQVBePn5hSD5KUkk7PTpLST1RM1RuNz89TFhCU1hYNlBbWUtYWoZgcFFiOH5SVkxaYG1uYVZAYmJUX2xHdU0qZ19gWk+EdGNxW0Q5a0NcjU5OSV1BPFtZbF9WVVhiT2FAUUlWRE1hYmxgZ2iNX4NPT1c/U1hKVVJRYFFVaX1MYl1YVFVoVEpWQlRcUnVdTmFBTWlqTGJZak1hMjNhU2VabjBXWlRdZ2FWK1ZpXlyQNEdhTm5bVF1HYFBvbkpVQ25dZ19aTVN3XHN7blRXVnBRbWQ7U3QxY2VdWFBGaVFmY2ViWWpGWGBOaEFVcV1hTGhpa2tLQlZtXFxxYXVgZWRWYVxITnAUbm12Vkxwh2NqXVdTYFo8OUlbUV5UWXBHZYtZUVpsXHhqeGmAZXCEcm9ba1BkYEJ4cGV9XFxwV2B7UW9zc2Vqi3pxX3Koqlh0KXpYWGpia2BGTTQ4ZUJPbGNmQ040eFFPTGVicIF+cEBXemSXhGFjY2xWilxvSXuLZ3ZtcWdVUUE2bUdObnRTVV07bV1pZkVThXmRckpfcXaJhHV2Y2ZfXE0ycGtKcj5XT01BLy5aPUhqXkdJPDVaQEw+OFtiemFONEJYTnBjX01WW0t/bltCR2NeUV1qb25iWGZta0lbPGg3V2Bda35Tc2phbnZYeXJXT3VxbmR0anR4XFZ3c4ZpdWNbhY12gZFwWIRZiHxve3BYaXyClVdulHBuamqOXV9wXklGSFNAVYlrd2xdZ15OXUM9Tj5Xa1NmP0BzQFNdVDlMTkFCOlhKQFmVXHRjaGtsfHRKb3NhbptjT2tBaF5mXjhjgGh3Z0NTfV9HWGJXU0xWY3V9eHtRVzhBck5Ygo9UUHxTf3t8YzgxdGN4Y0FLXlRQZWBWaUxQdF5VcFlyMldUUlRQaFBeT01dXVFrUUBcPldlSFhZYmdocGBjSGpZUWBlaFBRWkJTY2JKSUw5WltiX05LaHNXWFtfTHNZYHBra2RddpRrbUFmbWlgeHZYWnlEj491Z0dNcl58flRPYmNUVXNtZUpsf1xfOzOLYmtwboJVaD2GcWFxPk+BZH97RFppXWJudW5bRlJfgTFagGpogm1SWG5OepVwdkdDbWaCdUNuYE5mc35iT1V3lXFvWXhtg2NPWV03dl9PfTJTcVVmeV1eSVNZaFx0W0llX2trfn5ocl5AbEBbY1h0SFBlVFlvTV1cVlljgmNOToZRTGFdO2hCTYstRVVQWztQXVE4QWJCW0Y6TT9NPEZUUGBTQjc+Q0s6VV9XV0dSUTk/Y1pHQU5LOWpGSUuHenJ9emhoaUqMcXJ2OFCAWop2OV9lVFpbcXxVOmNrXplITWI/bmtVV0BialJefVRlZFk1Rk5aTzNPamhsTlxJXllnaEpqWUplgVJcTVJibXKESU13fFFdfWiBclxmRzlybHaAVIFYT1hiYGhVQlhYTIlggYR2ZlNWeHaDfE1EinFMWlBYWU1KVk9AY05MWUpoWDp3SzZPXVFcU2dlWUdhWzhoSWRSN1lgQltTQVpNSFpgUE9PTElIemp2amg3aW9hW4VfcWFPUmBfV1FvVEgwZU4lOT87RS8+QjxTPFRGPTtBgWuHOE90dY99U1FjYWl6YX1gXGVSYTpGimNxbU1GWVlVWFhaTUtjblBWaWJqZEZRXltFW1tXUH1oXlJlUWtlWmtSYl1eboVYVFw4NldDRXBQdZ9RSGlriGhIX1pmSjA+YlFSVlZTQFdFb4yASjuAZF5gW1ddVlWEZlRUh1ZfcWteUFhVbD1TdV51dHlwYWNeTGl3YHFrXI9TR2NTTG5BR1dnbztQRGdeWmR0UUFWcVRnaF1YXFZUV2x5i2hhrHx2XnGEZ2dEamh6kVqre2V2XmRx","lab":"hG1wZo5pZ15GYmGFQEpRUk5PekZRUj1SN1J6dXFWa3FgdGKnZ2hAR09rT09XRVVEVVRUWmRhXTxdaE5ZRmJcYTs2SGhPSl1CTkpBRkBPWGBaOV5oVFVHYExPNDRGe01eTkVIQFtQSEt4ZHNPVFdsZzNMYHNDVkJ4Q0tAT0k7Qks+QltmZlhGSE9kSk5hTTVHLUE6QDFINEE1RSpBVl9vO1ZxUWM3U1pZQ0JHmEZUQEw/LlZcO05ocm1CRXRoSkBJWlo5UTRcPE4+RzszW08+PnBVZn9ZaW50U0drYT9PVmc7SkE8OkpIbSFUcmp0V2NoXmJHZE1rPUNBZUJPUEI6SklIPURbYFZJXl5IUU9RbEtEN0FOR2BPNUFJSlpIV3Nre01naGZbSlJdfUVYSFg3cFY7U0NCQD1HYWVlR0prUVVCS05qP0k8ajhOQzIwP0hWUDmDamtmZE51ZU9PWYI4RERXQVtLWGFOVkBNVWdWaVdJVF1aQ1RGYUBFQU5XWDpDPUw4Sy5GWWVwP1dmYlpLXmRRUENEZU9tU1VgSUpXhlZUXmg2UWpLUlRkWU9LPkhoSWVKPkJGTVdMRmNPc0paYE9dTl9lWTJGUkVLWU9CQk0vWkc/fGNrTVtkYWRNV25pXWBJVlBgdFuVXkxJREtOVmRHUlhUZjdbWFBDPDZZTFNAWEQ7TUE3Q2pvYDtkcWFESV1TVTIwOlZLVEJXPEZRRVBLRkFATjxNPzNDU0ZSOzgzPUBMQi86Nkw1U1JZWlA1RGBCTVpfSUQsRTxaUkpIK0s+OUg2N15RXEhKZVZRVVFYR0xNSI9PgVBLSEtzX0xbVExUM0dpSS9IS0dLTDxQYEVwS0JGOFJWTlZGRls+UWBFR1dBRz9APEc/O1FMNUBGMWhHSE1LXE1RWlNKTEFZSkg4PkM5SlY5P0JBS0BNSVZhSENtQ1c9RGs8VFJLQDtXNTkuYFBuOGpbYFs4VHNbQVNVR0w3Ok9bSGVBTEE/Q2dHQX5wg0tZfmFIP2FiY0lpLkM7gkdPQFhESzhYVGFsQExjO0RgU0dRSD9UUEZvWDpAW0tdRUxRVHtGLUc6S05gTkA+PTA7LEw9Mj5RRjoxR1pXYk1rYU9fVFRUUzhBXE89UEhAPUdWXEZUWV1bU15mVmBZVWFQOkxkREVRSzkxUD1yOGBhXFNFUVlYUVJfaGE8P01RRT9QPWM6TVRrTWVSVk1IWFBTVl5dXzo4ZVA8SUdNT0lNT0lUUE9MNEJSS0tKUUo6Ni9PTDdbPTc+UkFHLkZyb3RSVGVSWEpkcGNOUF9PaVF+UkxkTFdaXl9lW0BFck1hYYBxSkVES184SFU+PUVKW2lSVVVTRmZcYlVuWllDNDxRSj5UQ0AoQUZyP1dRTEtRYkw+XmZYSEc/QVVbQldUQENMUkdBYFlMRD9EXUVPc1JCNi40SUkzPz8vJks3WjJAbnxtVWNwVV5ihWtqODJFVEY8WUc/UkhiRExYW11fb2xYZmtbWEtERWBZRlY8RilSS25EbmRYVUxQZUNXZ4BwUCw3QU07T2A9RDtCaklNXGFfPVNtZUhCV2lJPldIXj1bNlAsQENYQkxbXV1FTHhOVWxvV0BDXV5YP1kuLjVWTWA6YVdOXkpLblRWUl9eRlJWajQ5WTUyUEJBXjJlVUpWQ1ZXVW5PPTtVKzhPVklUOTVAR01qO1JaWUpIa3BdVF5IR0UpQlA6NU81Mio+T3MxW1tYWURjb1NGXEpOTzs5Q0hASkMzLlQ9ez9QZVxYUFlKW05LWVleOUxRRkpHUD0+TlRFVGNVYF1DTWBMc0dIWFY9QT9gT0lFPj8wUj9EQ0pFST9gXT9MSktDQTI8QzhIN1A3P0NEU0dCKTo8IDU9PkE1KTs2JDBUWUNiLjsnMUgzOj5LV2I5UnFITUdUTz0sRDVCOE9CN0BfUHVEYlZVX3VkaFB3M0pfVTc9RE0tPVU0MjsqSCM6WVVjLlBbV0k9TEVMMTs1PEdSNkUzcz9LO0ByZ15camBiX0yKTWUuUENNQmBOQjaZW1FMWERSUDhBSTpAQE9gNVZRMz5NQ0xGQslFQjpfPDhOMj1FTUc9O0ZCQDI1aFVnOFZEWFJGQUBhSGdCSUdRTEA+R0w0RTo+Lkw4Qj5/TkY2QVpZdjhRYUo/M0BMRTc3LTg2STQyMFQrQzFFW150QUtvUlleZGtgUEFPfFhsUElLRlBYWk1KRlFAYmBHTjpOTUIzP0pDMU1WLjphP2M+RF1LXV6aSE9cWkVTXj87YERDZX5IXU9RVD5/YFhmRVh4TVdiVU5HRkdNNzdQSDI5YUV0Nlo6QDVeS0Y2Uk85ODEuPz8fKTw9LilWNFkaP1ROUVNZY09QZ01VSC03TEJDVk9AIlhPbj9RaXBeUnJ3U2mJZ1BMQU5KUEVLQTpBOFRhS1dVUmpXYmBVanVPVVBYV2FaQ21LWVFiW19UXlhATTNKO002PzZIQj5QPkAtSVk+RFBHPTdIXldbPFNeQj5cRVBNTkZGQ0NUbEJeUD1LTlVjWGBLXXFQZ2tdTGJHRU5TWGlGQ0VLTmtLWEdMSC9CUThLRUU/OjY+Q1tWTEU9OWVJSFA8TFVaM0ZgVDU+SVI4KEFCSD44V0o7RUFKREJbbF1MWnNFWVRVX0UxQ0FSPkE6LiJSUWBJT2BrbDVJaVVdSmFzUUZAQXBQYT9INERUUkxKb3VsRWZuWVFSZlVmM0RCSz1NY0JRTU5OQz9eV1BAWEtUTWliUVU5Rz1ISFpJWFBkTTxbY1FVVidCYU82KDhYQDNYMkY5SjE3PEFDOi5PXEBaXGVWTGJjVVdZNT1bPzUySCk1SyRjKT5OTktGTVVVPz44QjsnOj46LDo0LitGKVctO1NRTyxDUUk/PD5ARjZHOTU3RzIvNEtFRDk1XF5oPUNaR1M5WWtLK0pRWUJTRjU9RDpiQE1bWFpOa2NcVEU2WlM3SU9cQE9FOjtEY1BDW1VMS4F4UlFmQElNYEJBP09HTnVDSD9AQjZLY1hTSWdYUmRJRklhNEFCTDlRXDZKRkhALVBganZLclRTYFBOUmA0WUFJOEpDNkM7TENKQmBmZlhjXE1KWmhiXzxFQUpNXFhANEhNU1hRVFxjV09SS1lDWGJbQklFZ0VSUD5iQkRMTk1fUUxEWmBOXF9STjpHSz84M2lcPUtSSGwsYV9ec0xRYl5STUhBR1CSUkBFYDxbM0tiQDlTYFxaUHRaTUdCV0xcMURFUD1HWkFINEE5PUtia3lGUmVNYkVHZFg/PTB+WFFQQkRKXlk2So1cY3FvUnxuRV1chDw8OGQtSj05PT84Pik5QT9NTz5MUUU2NzxBNTgqOG1DPFIxU09FOjphVFJFVF9SRlpiaj9PckpBMVJXRTdeTEg8bkxLVzJNX1RFOkFSPDpDSUI0Sj8uO1A3UzRMYFFfTVtLSkUvU0JbQEksUXNAUj9jVEg0OUJUUExPV1FnSUVESE4tMjJAL0cyTiFHT1UsWGBfaEdBaFFRR1RfTUlcPkIqSjwvNFA4Uj5FY2FnTXRmVEpJVE9bOk1RVzxQPzQ7Q09dOFBxb2pMP1tfW0piclVEg0dCQk83QkNOQEVBVJp+f3B2X2trQVZ2hjJgNDhEPnM4W1RIRktIal9eWERKVFU5OFVRSnFCLz09NzdDW0tKN2FWR2FORV1aW0E3SU5PQDROP1s+SzFXVFssW15aZEZkcmJbY1hbVT5HWFpaYk5LQkpTZE5aZ3B2OUuLWTdBR1JPMD42OzxQPkE1L0BRRzNZamY3W3VVZFxRSlZSV0JQPlZNR09KVEs3RFpgXjlXb09jUmdVWz4xO15VQGdMTURTT1BIX2VcN3FXWGNOV0xaP0BOXT5WUj5dSFJFPlZeZ3M8RGNgbC9JU1RGWy5MSzg8TU48ak5GTFlUUzlQZ0tVRlZKUUVER3pSU0JEO0BQUUxKWV1XTUxRTlZVXlZWPz03XztTQzw+N0JQTkRqZ2Q9TXZeXkheWVc7SUd0PmE5SlEzVVVKRVpVXUVbaHRRUU1cST9NNlxEWz1nODZaUkZAZHJrOGJpb2UxRFNZNUhCoUpUPF8/NU9SNEI7Okk1UVJKMlJGSio4Rzc4IjZYMTJBOUEoQjZESjFIYEg+LkAuOjY5KWE+WztDPS5FOzVCZWVnV1ZvUVddWk9bQUc/TUBXP0I+QEhbSz1WTlQ3b11zR0E7O1g6MVJJM09BXThDQGE2SVpnWzlLa1xGT19VSzw6NFJ1W0RJNkBJR0FAa2VjSFZib15fUGBWS1dKUlJaSGs1VmtlTU9cYWVBc2pXTzxbTlZBQmFHRkhVRElSQV5AUmpcZEVNYltgTFpOYExJQ14/SS1LPD4/R0M3Z1VoWlVWWVZpV2RZQ1NAWjxdVUdKQ5ZiV2FCTVgrUV5ISVBITVQ/Ok5mQWVIOj1RUW9GVTQ3Nj9JOTUwQTo8MzoueURRbEVFQzBKPEJYWmJfS1ZoVVNNXmhYTV9KakFkSEpOOlJHWUlaSlI7TVlORjNPUFMzOzxpQkg5NTkoOEk+RE1ZXDZXaUdQWVtESURCPUkwWlQ4NVVHUThNVGZYSWRdUEZUVk5PNzY4U0NgRVA/Q01HTEo8RkUsPUk/Nz0sMzI8PzIoM1U2PDc5Rk8pWllRWT1STFJBNUlMQztgLUU5TTJIL4NKNjJDb2BrTUBoUE9EW29VQEI3VDRCVj1FWS1GP0ZlW2RAR1ZXUDU8U0lIWkdFTERPO0RbQVA0R3NmZU5VXEtgR1tvY0Q/RVhaV09LS1BHSVY+WmlZSl10V1RKXkxSQk5EUn1VVUc7TE1kUlQ8O0o8QkRJSTEzSDcsKjdEM0s2Ki83RUk3T2VcZlBRYXZbU0lFajpNN1JFZC9jOT9qWjFJXFBlSmtZTVVFSFRpREhSPihFUylATTBMI1FvZWpQXlNpUzBMQHk4MzA9NkdBNUVFTkQ0TlhtcE1CU05iPFiBTUl6RWRLSE1YZk1iN0pJcWpaSlBbYFhBSINcTGdIW0xLUVJlSFREPGhXY1hTZGJTkD9ORlA3NT9nPlE8REBAUVQoQ11jcEhJcUNNQkVaVT5GL0RUUC4yJjdRUElJWldfU09TVW5IVDVHMjg7QzdAQTgtRElSPENASFUsOUc+RyM6TDdJZDtCM1A1OTc4RywyWE9jX0xWXVWBO1ZVXEJLSY9PV0pFRCNQQkZA","km":{"4":[{"l":"DDDDDCDBBDDADAAADDDADBBBBBBBBBCADCDCADDBCCCDDBAAACCCABACDCCAACCDADCCCDAADDDBCDDAACABBBBADDDCBDDBBCBDBBBCDCBDBCDAADDDBBBBDBBDDAADADDCAABDCDDBADAAAAAAAA","m":[[145,19,146],[39,28,116],[33,68,42],[20,1,2]]},{"l":"AAAAABADDAADADCDAAACADDDDCDCDDBCABBBCAADBBABBDCCDBBADCCBABBCDBBACBBBBADDBABDBAADCBCCCDDDABBBCAADDBCADDDBABDADAACCAAADDDDBDDAACDACAABDCCAAAACCACCCCCCCD","m":[[1,20,2],[68,33,43],[145,146,19],[28,116,23]]},{"l":"DDDDDBDAADDBDBBBDCDBDAAAABABABBBBCDDBDDADCDDCBBBACCDBABCDCCBBCCDBDCCCDBADDDADDDABCABBAAADDDCADDBBCBDAABCDCBDADDABDDDABAADABDDBABBDDCBBBDCDDBBDBBBBBBBB","m":[[85,28,39],[19,146,45],[33,68,58],[20,1,2]]},{"l":"AAAAAACCCAADCDDDAAADADDCCDDDCDDBDBBADAADDDABBDDDDDDACDDAAABBDAAADABBBDDBAABCAAABBBDDDCCDABBBDAADCBDACDDBABDDCBACCDAACCDCADCAADBDDAAADDBAAADDDADDBCDDDC","m":[[20,1,2],[97,33,58],[7,28,117],[107,32,69]]},{"l":"DDDDDDDAADDACAAADDDADAAAABAAAABBDBDDBDDADCDDDABBABADABABDCCAACCDBDBCADBADDCADDDCAABABAAADDDBADDAAAACABADDDBAACDDBCDCAAAADAADDDAABDCDABACBDCBABBDDAABAA","m":[[107,39,68],[66,25,33],[57,135,58],[20,1,2]]}],"5":[{"l":"EDDDECDBBEDADAAADEEAEBBBBBBBBBCADCDCAEEBCCCDEBAAACCCABACECCAACCDADCCCDAAEDDBCEEAACABBBBAEEECBDEBBCBEBBBCECBDBCDAADEDBBBBDBBDDAADADDCAABECEDBADAAAAAAAA","m":[[145,19,146],[39,28,116],[33,68,42],[2,1,3],[20,137,77]]},{"l":"BBAABCAEEABEBEDEBBBDBEEEEDEDEECDBCCCDBBECCBCCEDDECCBEDDCBCCDECCBDCCCCBEECBCECBBEDCDDDEEEBCCCDBBEECDAEEECBCEBEBBDDABAEEEECEEBADEADAACEDDBBBBDDBDDDDDDDE","m":[[3,2,130],[1,20,42],[68,33,43],[145,146,19],[28,116,23]]},{"l":"EEEEEBEAAEECEBBBEDEBEAAAACACABCBCDEECEEAEDEEDBBCADDEBABDEDDBBDDECEDDDECAEEEAEEEABDABCAAAEEEDAEEBBDBEAABDEDBEAEEABEEEABAAEABEEBACCEEDBCBEDEECBECBBBBCBB","m":[[85,28,39],[19,45,146],[32,25,133],[33,68,58],[20,1,2]]},{"l":"AAAAAACCCAADCDDDAAAEADDCCEEECDDBEBBAEAAEEEABBDDEEEEACEEAAABBEAAAEABBBEEBAABCAAABBBDEDCCDABBBDAADCBEACDDBABDECBACCEAACCDCAECAAEBEEAAAEEBAAADEDAEDBCEEDC","m":[[20,1,2],[97,33,58],[7,28,117],[29,45,106],[107,32,69]]},{"l":"EEEEEEEBBEEBDBAAEEEAEBABBCBABACCECEECEEBEDEEEACCACAEACACEDDAADDECECDBECBEEDBEEEDAACACBBAEEECAEEAABADBCAEEECBBDEECDEDBABAEBAEEEBBCEDEACADCEDCACCEEAACAA","m":[[45,145,19],[85,23,39],[66,25,33],[57,135,58],[20,1,2]]}],"6":[{"l":"FEEEFDECCFEBEBBBEFFBFCCCCCCCCCDBEDEDBFFCDDDEFCBBBDDDBCADFDDBADDEBEDDDEABFEECDFFBBDBCCCCBFFFDCEFCCDCFCCCDFDCECDEBBEFECCCCECCEEBBEAEEDBBCFDFECBEBBBBBBBB","m":[[60,128,70],[145,19,146],[39,28,116],[33,68,42],[2,1,3],[20,137,77]]},{"l":"BBAABCAFFABEBFDEBBBDBFEFFDFDEECDBCCCDBBFCCBCCEDDFCCBFDDCBCCDECCBDCCCCBEFCBCFCBBFDCDDDFFEBCCCDBBEFCDAFEECBCEBFBBDDABAFEFECEEBADFADAACEDDBBBBDDBDDDDDDDE","m":[[3,2,130],[1,20,42],[68,33,43],[145,146,19],[28,102,45],[85,23,39]]},{"l":"FEEEEBEAAEECEBBBEDFBEAAAACACABCBCDEECFEAEDEEDBBCADDFBABDFDDBBDDECFDDDECAFEFAEEFABDABCAAAFFEDAFEBBDBFAABDFDBEAFEABEEEABAAEABEEBACCEEDBCBFDFFCBFCBBBBCBB","m":[[85,28,39],[19,45,146],[32,25,133],[33,68,58],[1,20,2],[137,0,104]]},{"l":"BAAABBDDDAAEDEEEABBFBEEDDFFFDEECFCCBFBAFFFBCCEEFFFFBDFFBBBCCFBBAFBCCCFFCBACDBABCCCEFEDDEBCCCEABEDCFADEECBCEFDCADDFBADDEDBFDAAFCFFBAAFFCBBBEFEAFECDFFED","m":[[2,3,1],[20,137,42],[97,33,58],[7,28,117],[29,45,106],[107,32,69]]},{"l":"EEEEEFEBBEEBDBAAEEEAEBABBCBABACCECEECEEBEDEEEACCACAEACACEDDAADDECECDBECBEEDBEEEDAACACBBAFEECAEEAABADBCAFFFCBBDEECDEDBABAEBAEEEBBCEDEACADCEDCACCFFAACAA","m":[[45,145,19],[85,23,39],[66,25,33],[57,135,58],[20,1,2],[103,104,143]]}],"7":[{"l":"GFFFGEFDCGFBFBBBFGGBGDCDDCCCDCEBFEFEBGGDEEEFGCBBBEEEBCAEGEEBAEEFBFEEEFABGFFDEGGBBEBCCDDBGGGECFGCCECGDDDEGECFDEFBBFGFDCDCFDCFFBBFAFFEBBCGEGFCBFBBBBBBBB","m":[[60,128,70],[145,19,146],[106,45,29],[24,23,28],[33,68,42],[2,1,3],[20,137,77]]},{"l":"BBAABCAGGABFBGDFBBBDBGFGGEGEFFCEBCCCEBBGCCBCCFEEGCCBGEECBCCDFCCBECCCCBFGCBCGCBBGDCEDEGGFBCCCDBBFGCEAGFFCBCFBGBBEEABAGFGFCFFBADGADAACFEDBBBBEEBEDDDDEDF","m":[[3,2,130],[1,20,42],[68,33,43],[19,143,145],[47,142,147],[28,102,45],[85,23,39]]},{"l":"GFFFFCFAAFFDFCBCFEGCFAAAADADABDCDEFFDGFAFEFFECBDAEEGCACEGEEBBEEFDGEEEFDAGFGAFFGABEABDAAAGGFEAGFBBEBGAACEGECFAGFACFFFABAAFABFFBADDFFECDBGEGGDCGDCCCCDCC","m":[[85,28,39],[122,98,46],[19,145,146],[32,25,133],[33,68,58],[1,20,2],[137,0,104]]},{"l":"BAAABBDDDAAEDEEEABBGBEEDDFFFDEECFCCBFBAFFFBCCEEFFFFBDFGBBBCCGBBAFBCCCFGCBACDBABCCCEFEDDEBCCCEABEDCFADEECBCEFDCADDGBADDEDBFDAAFCFGBAAGFCBBBEFEAFECDGFED","m":[[2,3,1],[20,137,42],[97,33,58],[7,28,117],[29,45,106],[32,69,107],[132,60,19]]},{"l":"EEEEEGEBBEEBDBAAEEEAEBABBCBABACCFCEECEEBFDFFFACCACAFACACFDDAADDECFCDBFCBFFDBEEEDAACACBBAGEECAEEAABADBCAGGGCBBDEFCDEDBABAFBAEFFBBCEDFACADCEDCACCGGAACAA","m":[[45,145,19],[85,23,39],[66,25,33],[57,135,58],[20,77,2],[43,32,42],[103,104,143]]}],"8":[{"l":"HGGGHFGEDHGBGBBBGHHBHEDEEDDDEDFBGFGFCHHEFFFGHDCCCFFFBDAFHFFBAFFGBGFFFGACHGGEFHHBBFBDDEECHHHFDGHDDFDHEEEFHFDGEFGBBGHGEDEDGEDGGBBGAGGFBCDHFHGDBGCBBBBCBB","m":[[60,128,70],[19,145,13],[142,147,87],[106,45,29],[24,23,28],[33,68,42],[2,1,3],[20,137,77]]},{"l":"BBAABCAHHABGBHEGBBBEBHGHHFHFGGDFBDDDFBBHDDBDDGFFHDDBHFFDBDDEGDDBFDDCDBGHDBDHDBBHEDFEFHHGBDDDEBBGHDFAHGGCBCGBHBBFFABAHGHGDGGBAEHAEAADGFEBBBBFFBFEEEEFEG","m":[[3,2,130],[1,20,42],[105,103,5],[68,33,43],[19,143,145],[47,142,147],[28,102,45],[85,23,39]]},{"l":"HGGGGCGAAGGDGCBCFEHCGAAAADADABDCDEGGDHGAGEGGECBDAEEHCACEHEEBBEEFDHEEEGDAHFHAGGHABEABDAAAHHFEAHGBBEBHAACEHECGAHGACGGFABAAFABFGBADDFGECDBHEHHDCHDCCCCDCC","m":[[85,28,39],[122,98,46],[19,145,146],[32,25,133],[33,68,58],[63,129,16],[1,2,20],[137,0,104]]},{"l":"BAAABBEEEAAFEFFFABBHBFFEEGGGEFFDGDDBGBAGGGBDDFFGGGGBEGHBBCDDHCCAGBDDDGHDBADEBABDDDFGFEEFBDDDFABFEDGAEFFDBDFGEDAEEHBAEEFEBGEAAGDGHBAAHGDBBBFGFAGFDEHGFE","m":[[2,3,1],[137,20,42],[62,57,61],[97,33,58],[7,28,117],[29,45,106],[32,69,107],[132,60,19]]},{"l":"FFFFFHFCCFFCECBAFFFBFCBCCDCBCBDDGDFFDFFCGEGGGADDADAGADADGEEBAEEFDGDECGDCGGECFFFEBBDBDCCBHFFDBFFAACAECDAHHHDCCEFGDEFECACAGCBFGGCCDFEGADBEDFEDADDHHABDBA","m":[[145,45,149],[29,19,122],[85,23,39],[66,25,33],[57,135,58],[20,77,2],[43,32,42],[103,104,143]]}],"9":[{"l":"IHHHIFHEDIHBHBBBHIIBIEDEEDDDEDGBHFHFCIIEFFFHIDCCCFFFBDAFIGGBAGGHBHFFFHACIHHEFIIBBFBDDEECIIIGDHIDDFDIEEEFIFDHEFHBBHIHEDEDHEDHHBBHAHHFBCDIFIHDBHCBBBBCBB","m":[[60,128,70],[19,145,13],[142,147,87],[106,45,29],[24,23,28],[68,33,42],[61,57,58],[2,1,3],[20,137,77]]},{"l":"BCAABDAIIACHCIFHCCBFCIHIIGIGHHEGCEEEGBCIEECEEHGGIEEBIGGEBEEFHEECGEEDECHIECEIECCIFEGFGIIHCEEEFBBHIEGAIHHDBDHBICCGGACAIHIHEHHCAFIAFAAEHGFCCBBGGBGFFFFGFH","m":[[3,2,130],[0,137,37],[1,20,42],[105,103,5],[68,33,43],[19,143,145],[47,142,147],[28,102,45],[85,23,39]]},{"l":"IHHHHDHBAHHEHDCDGFIDHAABBEBEBCEDEFHHEIHBHFHHFDCEAFFIDADFIFFCCFFGEIFFFHEAIGIBHHIACFACEBAAIIGFAIHCCFCIBBDFIFDHBIHADHHGBCBBGBCGHCAEEGHFDECIFIIEDIEDDDDEDD","m":[[87,22,48],[116,23,24],[122,98,46],[19,145,146],[32,25,133],[33,68,58],[63,129,16],[1,2,20],[137,0,104]]},{"l":"BAAABBFFFAAGFGGGABBIBGGFFHHHFGGDHEEBHBAHHHBEEGGHHHHBFHIBBCEDICCAHBEEEHIDBAEFBABEDEGHGFFGBEEEGABGFEHAFGGEBDGHFEAFFIBAFFGFBHFAAHEHIBAAIHDBBBGHGAHGDFIHGF","m":[[2,3,1],[137,20,42],[62,57,61],[134,59,80],[33,97,68],[7,28,117],[29,45,106],[32,69,107],[132,60,19]]},{"l":"GGGGGIGCCGGCFCBAGGGBGCBCCDCBCBDDHDGGEGGCHFHHHADDADAHADADHFFBAFFGDHDFCHDCHHFCGGGFBBDBDCCBIGGDBGGAACAFCDAIIIECCFGHEFGFCACAHCBGHHCCEGFHAEBFDGFEADEIIABEBA","m":[[145,45,149],[29,19,122],[85,23,39],[66,33,55],[142,147,133],[57,135,58],[20,77,2],[43,32,42],[103,104,143]]}],"10":[{"l":"JIIIJFHEDJIBIBBBHJJBJEDEEDDDEDGBHFIFCJJEFFFIJDCCCFFFBDAFJGGBAGGHBIFFFHACJHIEFJJBBFBDDEECJJJGDIJDDFDJEEEFJFDHEFIBBIJIEDEDHEDHIBBHAHIFBCDJFJHDBHCBBBBCBB","m":[[60,128,70],[19,145,13],[142,147,87],[106,45,29],[24,23,28],[68,33,42],[61,57,58],[107,63,73],[2,3,110],[20,137,77]]},{"l":"BCAABDAJJACICJGICCBGCJIJJHJHIIFHCFEEHBCJEECEEIHHJFFBJHHFBEEGIEECHEFDFCIJECEJFCCJGFHGHJJICEEEGBBIJEHAJIIDBDIBJCCHHACAJIJIEIICAGJAGAAFIHGCCBBHHBHGGGGHGI","m":[[3,2,130],[0,137,37],[1,20,42],[105,103,5],[58,43,89],[68,33,50],[19,143,145],[47,142,147],[28,102,45],[85,23,39]]},{"l":"JHIIHDIBAIHEIDCDGFJDHAABBEBEBCEDEFHHEJHBHFHHFDCEAFFJDADFJFFCCFFGEJFFFHEAJGJBHHJACFACEBAAJJGFAJHCCFCJBBDFJFDHBJIADIIGBCBBGBCGHCAEEGIFDECJFJJEDJEDDDDEDD","m":[[87,22,48],[116,23,24],[122,98,46],[19,145,146],[32,25,133],[33,68,58],[63,129,16],[1,20,77],[2,3,9],[137,0,104]]},{"l":"BAAABBFFFAAGFGGGABBJBGGFFIIIFGGDIEEBHBAIHIBEEGGHIIIBFHJBBCEDJCCAIBEEEIJDBAEFBABEDEGIGFFGBEEEGABGFEIAFGGEBDGIFEAFFJBAFFGFBIFAAIEIJBAAJHDBBBGHGAHGDFJHGF","m":[[2,3,1],[137,20,42],[62,57,61],[134,59,80],[33,97,68],[7,28,117],[29,45,106],[147,142,133],[50,107,69],[132,60,19]]},{"l":"GHHHHJHCCHHCFCBAHGGBHCBCCDCBCBDDIDGHEGHCIFIIIADDADAIADADIFFBAFFHDIDFCIDCIIFCHHHFBBDBDCCBJGHDBHGAACAFCDAJJJECCFHIEFHFCACAICBHIICCEHFIAEBFDGFEADEJJABEBA","m":[[145,45,149],[29,19,122],[85,23,39],[66,33,55],[142,147,133],[57,135,58],[137,37,18],[20,77,1],[43,32,42],[103,104,143]]}],"11":[{"l":"KJJJKGIFEKJBJCBBIKKBKFEFFEEEFEHCIGJGDKKFGGGJKEDDDGGGBEAGKHHCAHHIBJGGGIADKIJFGKKCCGBEEFFDKKKHEJKEEGEKFFFGKGEIFGJBBJKJFEFEIFEIJBCIAIJGBDEKGKIEBIDCCBBDCB","m":[[60,128,70],[145,19,146],[144,143,13],[142,147,87],[106,45,29],[24,23,28],[68,33,42],[61,57,58],[107,63,73],[2,3,110],[20,137,77]]},{"l":"BCAABDAKJACICJGICCBGCJIKKHKHIIFHCFEEHBCJEECEEIHHJFFBJHHFBEEGIEECHEFDFCIKECEKFCCKGFHGHJKICEEEGBBIJEHAJIIDBDIBKCCHHACAKIKIEIICAGJAGAAFIHGCCBBHHBHGGGGHGI","m":[[3,2,130],[0,137,37],[1,20,42],[105,103,5],[58,43,89],[68,33,50],[19,143,145],[47,142,147],[28,102,45],[85,39,8],[23,75,24]]},{"l":"KIJJIDJBAJIEJDCDHFKDIAABBEBEBCEDEGIIEKIBIGIIGDCEAGGKDADGKFFCCFFHEKGGGIEAKHKBIIKACGACEBAAKKHGAKICCGCKBBDGKGDIBKJADJJHBCBBHBCHICAEEHJGDECKGKKEDKEDDDDEDD","m":[[87,22,48],[116,23,24],[122,98,46],[19,145,146],[32,25,133],[57,61,62],[33,68,41],[63,129,16],[1,20,77],[2,3,9],[137,0,104]]},{"l":"BAAABBFFFAAHFHHHABBKBGGFFJJJFHGDJEEBIBAJIJBEEHHIJJJBFIKBBCEDKCCAJBEEEJKDBAEFBABEDEHJGFFGBEEEGABHFEJAFGHEBDHJFEAFFKBAFFGFBJFAAJEJKBAAKIDBBBHIGAIHDFKIHF","m":[[2,3,1],[137,20,42],[62,57,61],[134,59,80],[33,97,68],[7,28,117],[22,101,87],[45,29,46],[147,142,133],[50,107,69],[132,60,19]]},{"l":"HIIIIKIDDIIDGDBAIHHBIDBDDEDBDBEEJEHIFHIDJGJJJAEEAEAJAEAEJGGBAGGIEJEGDJECJJGDIIIGBBEBEDDBKHIEBIHAACAGDEAKKKFDDGIJFGIGDADAJDBIJJCDFIGJAFBGEHGFAEFKKABFBA","m":[[145,45,149],[29,19,122],[97,71,126],[23,39,28],[66,33,55],[142,147,133],[57,135,58],[137,37,18],[20,77,1],[43,32,42],[103,104,143]]}],"12":[{"l":"LKKKLHJGFLKBKCBBJLLBLGFGGEEFGFICJHKHDLLGHHHKLFDDDHHHBEAHLIICAIIJBKHHHJADLJKGHLLCCHBEEGGDLLLIFKLFFHFLGGGHLHFJGHKBBKLKGFGFJGFJKBCJAJKHBDFLHLJEBJDCCBBDCB","m":[[60,128,70],[145,19,146],[144,143,13],[142,147,87],[139,25,26],[45,106,29],[24,23,28],[68,33,42],[61,57,58],[107,63,73],[2,3,110],[20,137,77]]},{"l":"BCAABDALKACJCKGJCCBGCKJLLHLHJJFHCFEEIBCKEECEEJHHKFFBKHIFBEEGJEECHEFDFCJLECELFCCLGFIGHKLJCEEEGBBJKEHAKJJDBDJBLCCIIACALJLJEJJCAGKAGAAFJHGCCBBHIBIGGGGIGJ","m":[[3,2,130],[0,137,37],[1,20,42],[105,103,5],[58,43,89],[68,33,50],[19,143,145],[47,25,27],[142,147,111],[28,102,45],[85,39,8],[23,75,24]]},{"l":"LJKKJEKBAKJFKECEIGLEJAABBFBFBCFEFHJJFLJBJHJJHDCFAHHLDADHLGGCCGGIFLHHHJFALILBJJLACHACFBAALLIHALJCCHCLBBEHLHDJBLKAEKKIBCBBIBCIJCAFFIKHEFCLHLLFELFDDDEFDD","m":[[87,22,48],[116,23,24],[122,98,46],[149,143,145],[146,132,19],[32,25,133],[57,61,62],[33,68,41],[63,129,16],[1,20,77],[2,3,9],[137,0,104]]},{"l":"BAAACCGGGAAIGIIIABBLBHHGGKKKGIHEKFFBJBAKJKBFFIIJKKKBGJLBBDFELDDAKBFFFKLEBAFGBABFEFIKHGGHBFFFHABIGFKAGHIFBEIKGFAGGLBAGGHGBKGAAKFKLBAALJEBBBIJHAJIEGLJIG","m":[[2,3,1],[137,20,42],[5,4,0],[62,57,61],[134,59,80],[33,97,68],[7,28,117],[22,101,87],[45,29,46],[147,142,133],[50,107,69],[132,60,19]]},{"l":"IJJJJLJEDJJDHDBAJIIBJEBEEFDBEBFFKFIJGIJDKHKKKAFFAFAKAFAFKHHBAHHJFKFHDKFCKKHEJJJHBBFBFEEBLIJFBJIAACAHEFALLLGDEHJKGHJHEAEAKDBJKKCDGJHKAGBHFIHGAFGLLABGBA","m":[[145,45,149],[29,19,122],[97,71,126],[107,68,39],[24,23,116],[66,33,55],[142,147,133],[57,135,58],[137,37,18],[20,77,1],[43,32,42],[103,104,143]]}],"13":[{"l":"MLLLMIKGFMLBLCBBKMMBMGFGGEEFGFJCKHLIDMMGIIHLMFDDDHHIBEAHMJJCAJJKBLHIHKADMKLGHMMCCHBEEGGDMMMJFLMFFIFMGGGIMIFKGILBBLMLGFGFKGFKLBCKAKLHBDFMIMKEBKDCCBBDCB","m":[[60,128,70],[145,19,146],[144,143,13],[142,147,87],[139,25,26],[45,106,29],[24,23,28],[68,33,50],[103,105,41],[61,57,58],[107,63,73],[2,3,110],[20,137,77]]},{"l":"BCAABEAMLACKCLHKDCBHCLKMMIMIKKGIDGFFJBCLFFCFFKIILGGBLIJGBFFHKFFDIFGEGDKMFDFMGCCMHGJHILMKDFFFHBBKLFIALKKEBEKBMDDJJACAMKMKFKKDAHLAHAAGKIHCCBBIJBJHHHHJHK","m":[[3,2,130],[0,137,37],[42,20,1],[73,32,63],[105,103,5],[58,43,89],[68,33,50],[19,143,145],[47,25,27],[142,147,111],[28,102,45],[85,39,8],[23,75,24]]},{"l":"MJKKJEKBAKJFKECEIGMEJAABBFBFBCFEFHJJFMJBJHJJHDCFAHHMDADHLGGCCGGIFLHHHJFAMIMBJJMACHACFBAALLIHALJCCHCMBBEHMHDJBMKAEKKIBCBBIBCIJCAFFIKHEFCMHMMFELFDDDEFDD","m":[[87,22,48],[116,23,24],[122,98,46],[149,143,145],[146,132,19],[32,25,133],[57,61,62],[33,68,41],[63,129,16],[1,20,77],[2,3,9],[65,93,56],[37,18,137]]},{"l":"BAAACCGGHAAJGJJJABBMBIIHHLLLHJIELFFBKBALKLBFFJJKLLLBGKMBBDFEMDDALBFFFLMEBAFHBABFEFJLIHGIBFFFIABJHFLAHIJFBEJLHFAGGMBAHGIGBLGAALFLMBAAMKEBBBJKIAKJEGMKJG","m":[[2,3,1],[137,20,42],[5,4,0],[62,57,61],[134,59,80],[33,97,68],[149,52,117],[23,116,24],[22,101,87],[45,29,46],[147,142,133],[50,107,69],[132,60,19]]},{"l":"IJJJJMJEDJJDHDBAKIIBJEBEEFDBEBFFLFIJGIJDLHLLLAFFAFALAFAFLHHBAHHKFLFHDLFCLLHEJJJHBBFBFEEBMIKFBJIAACAHEFAMMMGDEHJLGHJHEAEALDBKLLCDGKHLAGBHFIHGAFGMMABGBA","m":[[145,45,149],[29,19,122],[97,71,126],[107,68,39],[24,23,116],[66,33,55],[142,147,133],[57,135,58],[137,37,18],[2,20,1],[63,16,129],[43,32,42],[103,104,143]]}],"14":[{"l":"NLLLNIKGFMLBLCBBKMMBMGFGGEEFGFJCKHLIDMMGIIHLMFDDDHHIBEAHNJJCAJJKBLHIHKADMKLGHMMCCHBEEGGDNMMJFLNFFIFNGGGINIFKGILBBLNLGFGFKGFKLBCKAKLHBDFMIMKEBKDCCBBDCB","m":[[60,128,70],[145,19,146],[144,143,13],[142,147,87],[139,25,26],[45,106,29],[24,23,28],[68,33,50],[103,105,41],[61,57,58],[107,63,73],[2,3,110],[20,77,137],[0,104,56]]},{"l":"BCAABEANMACLCMHLDCBHCMLNNINILLGIDGFFJBCMFFCFFKIIMGGBMIJGBFFHKFFDIFGEGDLNFDFNGCCNHGJHIMNLDFFFHBBKMFIAMLLEBEKBNDDJJACANKNLFLKDAHMAHAAGLIHCCBBIJBJHHHHJHK","m":[[3,2,130],[0,137,37],[42,20,1],[73,32,63],[105,103,5],[58,43,89],[68,33,50],[19,143,145],[47,25,27],[142,147,111],[45,117,95],[28,102,29],[85,39,8],[23,75,24]]},{"l":"NKLLKELBALKFLECEJHNEKAABBFBFBCFEGIKKGNKBKIKKIDCFAIINDADIMHHCCHHJFMIIIKFANJNBKKNACIACFBAAMMJIAMKCCICNBBEINIDKBNLAELLJBCBBJBCJKCAFFJLIEGCNINNGEMGDDDEGDD","m":[[87,22,48],[116,23,24],[122,98,46],[149,143,145],[146,132,19],[25,70,64],[142,147,133],[57,61,62],[33,68,41],[63,129,16],[1,20,77],[2,3,9],[65,93,56],[37,18,137]]},{"l":"BAAADDHHIAAKHKKKABBNBJJIIMMMIKJFMGGBLBAMLMBGGKKLMMMBHLNBBEGFNEEAMCGGGMNFBAGIBABGFGKMJIHJCGGGJABKIGMAIJKGBFKMIGAHHNBAIHJHBMHAAMGMNBAANLFBBBKLJALKFHNLKH","m":[[2,3,1],[137,20,42],[65,88,0],[5,4,0],[62,57,61],[134,59,80],[33,97,68],[149,52,117],[23,116,24],[22,101,87],[45,29,46],[147,142,133],[50,107,69],[132,60,19]]},{"l":"JKKKKNKEDKKDIDBALJJBKEBEEFDBEBGGMGJKHJKDMIMMMAFGAGAMAFAGMIIBAIILGMGIDMFCMMIEKKKIBBGBGEEBNJLGBKJAACAIEGANNNHDEIKMHIKIEAEAMDBLMMCDHLIMAHBIGJIHAGHNNABHBA","m":[[145,45,149],[29,19,122],[97,71,126],[107,68,39],[24,23,116],[70,25,53],[55,66,33],[142,147,133],[57,135,58],[137,37,18],[2,20,1],[63,16,129],[43,32,42],[103,104,143]]}],"15":[{"l":"OMMMOJLHGNMCMDBCLNNCNHGHHFFGHGKDLIMJENNHJJIMNGEEEIIJCFAIOKKDAKKLCMIJILAENLMHINNDDIBFFHHEONNKGMOGGJGOHHHJOJGLHJMCCMOMHGHGLHGLMCDLALMICEGNJNLFCLEDDCCEDC","m":[[60,128,70],[82,14,2],[145,19,146],[144,143,13],[142,147,87],[139,25,26],[45,106,29],[24,23,28],[68,33,50],[103,105,41],[61,57,58],[107,63,73],[2,3,110],[20,77,137],[0,104,56]]},{"l":"BCAABEAONACMCNIMDCBICNMOOJOJMMHJDHGGKBCNGFCGGLJJNHHBNJKHBFFILFFDJGHEHDMOFDFOHCCOIHKIJNOMDGGGIBBLNGJANMMEBELBODDKKACAOLOMGMLDAINAIAAHMJICCBBJKBKIIIIKIL","m":[[3,2,130],[0,137,37],[42,20,1],[73,32,63],[105,103,5],[57,62,58],[89,43,65],[68,33,50],[19,143,145],[47,25,27],[142,147,111],[45,117,95],[28,102,29],[85,39,8],[23,75,24]]},{"l":"OLMMLEMBAMLFMECEKHOELAABBFBFBCFEGILLGOLBLILLIDCFAIIODADINHHCCHHKFNIIILFAOKOBLLOACIACFBAANNKIANLCCICOBBEJOJDLBOMAEMMKBCBBKBCKLCAFFKMIEGCOJOOGENGDDDEGDD","m":[[87,22,48],[116,23,24],[122,98,46],[149,143,145],[146,132,19],[25,70,64],[142,147,133],[57,61,62],[68,33,49],[103,105,136],[63,129,16],[1,20,77],[2,3,9],[65,93,56],[37,18,137]]},{"l":"BAAAEEIIJAALILLLABBOCKKJJNNNJLKGNHHCMBANMNCHHLLMNNNBIMOCCFHGOFFANDHHHNOGBAHJCACHGHLNKJIKDHHHKACLJHNAJKLHCGLNJHAIIOCAJIKICNIAANHNOCAAOMGCBBLMKAMLGIOMLI","m":[[2,3,1],[37,137,18],[20,42,76],[65,88,0],[5,4,0],[62,57,61],[134,59,80],[33,97,68],[149,52,117],[23,116,24],[22,101,87],[45,29,46],[147,142,133],[50,107,69],[132,60,19]]},{"l":"KLLLLOLFELLEJECBMKKCLFCFFGECFCHHNHKLIKLENJNNNBGHBHBNBGAHNJJCAJJMHNHJENGDNNJFLLLJCCHCHFFCOKMHCLKBBDBJFHBOOOIEFJLNIJLJFBFBNECMNNDEIMJNAICJHKJIAHIOOBCICB","m":[[132,60,54],[145,149,45],[29,19,122],[97,71,126],[107,68,39],[24,23,116],[70,25,53],[55,66,33],[142,147,133],[57,135,58],[137,37,18],[2,20,1],[63,16,129],[43,32,42],[103,104,143]]}]}}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js" defer></script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const body = document.body;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isNarrow = () => matchMedia("(max-width: 999px)").matches;
+  const cssVar = (n) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(n)) || 0;
+  const parseT = (s) => {
+    if (s == null || s === "") return null;
+    const p = String(s).split(":").map(Number);
+    return p.some(Number.isNaN) ? null : p.reduce((a, b) => a * 60 + b, 0);
+  };
+  const fmt = (t) => { t = Math.max(0, Math.floor(t)); return String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0"); };
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // ---------- theme ----------
+  $("#theme-btn").addEventListener("click", () => {
+    const root = document.documentElement;
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+    try { localStorage.setItem("pycon-2024-lookalikes-theme", root.dataset.theme); } catch (e) {}
+  });
+
+  // ---------- chapters (video moments → story sections) ----------
+  const CHAPTERS = [
+    ["00:00", "The host introduces Anand", "veto"], ["00:33", "Whose look-alike? A show of hands", "veto"], ["01:14", "“Random” numbers: 42 and 47", "veto"],
+    ["02:59", "The co-founder's veto", "veto"], ["03:31", "Prices fall: the Pareto chart", "frontier"], ["05:46", "Haiku, Llama, Flash, GPT-4o mini", "frontier"],
+    ["06:29", "$10K versus $4M", "frontier"], ["07:01", "Embeddings: even cheaper", "cheaper"], ["07:48", "The 2% exam surprise", "cheaper"],
+    ["08:47", "Claude writes an embedding app", "apple"], ["09:27", "“Apple” as numbers", "apple"], ["10:32", "A deck written by an LLM", "apple"],
+    ["11:22", "150 movie quotes", "neighbors"], ["12:07", "Showtime, clobberin' time", "neighbors"], ["12:53", "Outliers", "neighbors"],
+    ["13:25", "K-means finds topics", "taxonomy"], ["15:00", "Inside the notebook", "taxonomy"], ["16:42", "GPT-4o mini names them", "taxonomy"],
+    ["17:14", "Your own taxonomy", "taxonomy"], ["18:25", "The dot product", "taxonomy"], ["19:12", "Images get embeddings too", "samespace"],
+    ["20:32", "Smile versus frown", "samespace"], ["21:27", "Scoring faces against words", "samespace"], ["22:01", "The driver-photo pilot", "sixdays"],
+    ["22:50", "Done on day six", "sixdays"], ["23:35", "Most alike, most atypical", "audition"], ["24:54", "Shah Rukh Khan → Varun Dhawan", "audition"],
+    ["25:24", "Deepika → Priyanka", "audition"], ["25:56", "Ranveer → Vicky, Alia → Katrina", "audition"], ["26:18", "Irrfan Khan → Nana Patekar", "nana"],
+    ["26:50", "Cheap, quantitative, multimodal", "coda"], ["27:30", "Why not spouses?", "spouse"], ["28:13", "“I have no clue”", "spouse"],
+    ["29:11", "LLM Foundry and LLM-made charts", "coda"],
+  ].map(([t, title, sec]) => ({ t: parseT(t), label: t, title, sec }));
+  const chapOl = $("#chapters");
+  chapOl.innerHTML = CHAPTERS.map((c, i) =>
+    `<li><a href="?t=${c.label}" data-chap="${i}" class="ts-chap"><span class="ct">${c.label}</span><span>${c.title}</span></a></li>`).join("");
+  const chapLinks = $$("#chapters a");
+  const chapFor = (t) => { let i = -1; CHAPTERS.forEach((c, k) => { if (c.t <= t + 0.5) i = k; }); return i; };
+  const sections = $$(".chap, #takeaways, #ledger");
+  const secTitle = (id) => { const s = document.getElementById(id); return s ? s.dataset.title : ""; };
+
+  // ---------- URL state: ?t=mm:ss&view=video#section ----------
+  const urlState = () => {
+    const u = new URL(location.href);
+    return { t: parseT(u.searchParams.get("t")), view: u.searchParams.get("view") };
+  };
+  const buildUrl = ({ t, hash } = {}) => {
+    const u = new URL(location.href);
+    if (t != null) u.searchParams.set("t", fmt(t)); else if (t === null) u.searchParams.delete("t");
+    if (body.classList.contains("watch")) u.searchParams.set("view", "video"); else u.searchParams.delete("view");
+    if (hash !== undefined) u.hash = hash ? "#" + hash : "";
+    return u.pathname + u.search.replace(/%3A/gi, ":") + u.hash;
+  };
+  let urlT = urlState().t;
+
+  // ---------- one persistent YouTube player (IFrame Player API) ----------
+  // Created once inside .vwrap and never moved or re-created: story/video focus only changes CSS.
+  const VID = "FHa8Xgssrz4";
+  let player = null, ready = false, pending = null, lastT = urlT || 0, poll = 0;
+  const resume = $("#resume"), resumeBtn = $("#resume-btn");
+  let resumeT = urlT || 0;
+  const state = () => (ready && player.getPlayerState ? player.getPlayerState() : -1);
+  const getT = () => (ready && player.getCurrentTime ? player.getCurrentTime() || lastT : lastT);
+  const showResume = (t) => { resumeT = t; resumeBtn.querySelector("span").textContent = `Play from ${fmt(t)}`; resume.classList.add("show"); };
+  const hideResume = () => resume.classList.remove("show");
+
+  window.onYouTubeIframeAPIReady = () => {
+    const vars = { playsinline: 1, rel: 0, modestbranding: 1 };
+    if (urlT) vars.start = Math.floor(urlT);
+    if (/^https?:/.test(location.protocol)) vars.origin = location.origin;
+    player = new YT.Player("yt", {
+      videoId: VID, width: "100%", height: "100%", playerVars: vars,
+      events: {
+        onReady: () => {
+          ready = true;
+          player.getIframe().title = "Finding actor look-alikes with multi-modal LLMs: S Anand at PyCon India, 21 September 2024 (YouTube)";
+          if (pending != null) { const t = pending; pending = null; startAt(t); }
+          else if (urlT) { onTime(); showResume(urlT); }
+        },
+        onStateChange: (e) => {
+          if (e.data === 1) {
+            hideResume();
+            if (body.classList.contains("dock-collapsed")) { body.classList.remove("dock-collapsed"); syncMin(); }
+            clearInterval(poll); poll = setInterval(() => { lastT = player.getCurrentTime(); onTime(); }, 300);
+          } else {
+            clearInterval(poll);
+            if (ready) { lastT = player.getCurrentTime() || lastT; onTime(); }
+          }
+        },
+      },
+    });
+  };
+  const tag = document.createElement("script");
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
+
+  const startAt = (t) => {
+    lastT = t;
+    const s = state();
+    if (s === 1 || s === 2 || s === 3) player.seekTo(t, true);
+    else player.loadVideoById({ videoId: VID, startSeconds: t });
+    player.playVideo();
+    onTime();
+    setTimeout(() => { const s2 = state(); if (s2 !== 1 && s2 !== 3) showResume(t); }, 1800);
+  };
+  const ensureDockVisible = () => {
+    if (isNarrow()) { body.classList.remove("dock-collapsed"); syncMin(); return; }
+    const r = $("#dock").getBoundingClientRect();
+    if (r.top > innerHeight - 80 || r.bottom < 60) $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  };
+  const playAt = (t, { push = false, el = null } = {}) => {
+    if (push) {
+      const sec = el && el.closest(".chap, #takeaways, #ledger");
+      history.pushState({ t }, "", buildUrl({ t, hash: sec ? sec.id : undefined }));
+      urlT = t;
+    }
+    ensureDockVisible();
+    if (ready) startAt(t); else { pending = t; lastT = t; onTime(); }
+    if (el) { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+  };
+  resumeBtn.addEventListener("click", () => {
+    if (!ready) return;
+    const s = state();
+    if (s === 2 || s === 1) player.playVideo(); else startAt(resumeT);
+    hideResume();
+  });
+
+  const enhanceTs = (root = document) => {
+    $$("a.ts", root).forEach((a) => {
+      if (a.dataset.t) return;
+      const t = parseT(new URL(a.href, location.href).searchParams.get("t"));
+      a.dataset.t = t;
+      a.insertAdjacentHTML("afterbegin", '<i class="bi bi-play-fill" aria-hidden="true"></i>');
+      a.setAttribute("aria-label", `Play the talk from ${a.textContent.trim()}`);
+    });
+  };
+  enhanceTs();
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a.ts, a.ts-chap");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const t = a.classList.contains("ts-chap") ? CHAPTERS[+a.dataset.chap].t : +a.dataset.t;
+    const dlg = a.closest("dialog");
+    if (dlg) dlg.close();
+    playAt(t, { push: true, el: a.classList.contains("ts") && !dlg ? a : null });
+  });
+
+  // now-playing sync
+  const nowT = $("#now-t"), nowTitle = $("#now-title"), nowStory = $("#now-story");
+  let curChap = -2;
+  const onTime = () => {
+    const t = getT();
+    nowT.textContent = fmt(t);
+    const i = chapFor(t);
+    if (i === curChap) return;
+    curChap = i;
+    chapLinks.forEach((a, k) => { a.classList.toggle("is-now", k === i); if (k === i) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
+    if (i >= 0) {
+      const c = CHAPTERS[i];
+      nowTitle.textContent = c.title;
+      nowStory.innerHTML = `In the story: <a href="#${c.sec}">${secTitle(c.sec)} ↓</a>`;
+      sections.forEach((s) => s.classList.toggle("is-now", s.id === c.sec));
+      const link = chapLinks[i], box = link.closest(".chapters");
+      if (box && box.scrollHeight > box.clientHeight) {
+        const lr = link.getBoundingClientRect(), br = box.getBoundingClientRect();
+        if (lr.top < br.top || lr.bottom > br.bottom) box.scrollTop += lr.top - br.top - box.clientHeight / 3;
+      }
+    }
+  };
+  if (urlT) onTime();
+
+  // story → chapter hints
+  const tsSeen = new Set();
+  let hintRaf = 0;
+  const tsIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? tsSeen.add(e.target) : tsSeen.delete(e.target)));
+    hintRaf ||= requestAnimationFrame(() => {
+      hintRaf = 0;
+      const idx = new Set([...tsSeen].map((a) => chapFor(+a.dataset.t)));
+      chapLinks.forEach((a, k) => a.classList.toggle("in-view", idx.has(k)));
+    });
+  });
+  $$("a.ts").filter((a) => !a.closest("dialog, .dock")).forEach((a) => tsIO.observe(a));
+
+  const shareBtn = $("#share-btn");
+  shareBtn.addEventListener("click", async () => {
+    const t = Math.floor(getT());
+    const sec = curChap >= 0 ? CHAPTERS[curChap].sec : "";
+    const u = new URL(location.href);
+    u.search = "?t=" + fmt(t); u.hash = sec ? "#" + sec : "";
+    const label = shareBtn.querySelector("span");
+    try { await navigator.clipboard.writeText(u.href.replace(/%3A/gi, ":")); label.textContent = `Copied ${fmt(t)}`; }
+    catch (e) { history.replaceState(history.state, "", u.pathname + u.search.replace(/%3A/gi, ":") + u.hash); label.textContent = "Link in address bar"; }
+    setTimeout(() => (label.textContent = "Share moment"), 2200);
+  });
+
+  // ---------- story ⇄ video focus (same iframe, CSS only) ----------
+  const modeBtn = $("#mode-btn"), modeLabel = $("#dock-mode-label");
+  const pickAnchor = () => {
+    const top = 80 + (isNarrow() && body.classList.contains("watch") ? cssVar("--dock-h") : 0);
+    return $$(".story .chap > *").find((el) => el.getBoundingClientRect().bottom > top);
+  };
+  const setMode = (watch, { replace = true } = {}) => {
+    if (body.classList.contains("watch") === watch) return;
+    const anchor = pickAnchor();
+    const before = anchor ? anchor.getBoundingClientRect().top : 0;
+    const storyVisible = $("#room").getBoundingClientRect().top < innerHeight * 0.5;
+    body.classList.toggle("watch", watch);
+    if (watch) body.classList.remove("dock-collapsed");
+    syncMin();
+    modeBtn.setAttribute("aria-pressed", String(watch));
+    modeBtn.innerHTML = watch
+      ? '<i class="bi bi-book" aria-hidden="true"></i> <span>Focus story</span>'
+      : '<i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span>';
+    modeLabel.textContent = watch ? "Video focus" : "Story focus";
+    if (replace) history.replaceState(history.state, "", buildUrl());
+    updateDockH();
+    if (anchor && storyVisible) {
+      const start = performance.now();
+      const keep = () => {
+        const d = anchor.getBoundingClientRect().top - before;
+        if (Math.abs(d) > 1) window.scrollBy({ top: d, behavior: "instant" });
+        if (performance.now() - start < 700) requestAnimationFrame(keep);
+      };
+      requestAnimationFrame(keep);
+    }
+  };
+  modeBtn.addEventListener("click", () => setMode(!body.classList.contains("watch")));
+  $("#hero-watch").addEventListener("click", (e) => {
+    e.preventDefault();
+    setMode(true);
+    $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  });
+  const updateDockH = () => {
+    const h = isNarrow() && body.classList.contains("watch") ? $("#dock").offsetHeight : 0;
+    document.documentElement.style.setProperty("--dock-h", h + "px");
+  };
+  new ResizeObserver(updateDockH).observe($("#dock"));
+  addEventListener("resize", updateDockH);
+  const minBtn = $("#min-btn");
+  function syncMin() {
+    const c = body.classList.contains("dock-collapsed");
+    minBtn.setAttribute("aria-expanded", String(!c));
+    minBtn.setAttribute("aria-label", c ? "Show the mini video" : "Hide the mini video");
+    minBtn.innerHTML = `<i class="bi ${c ? "bi-chevron-up" : "bi-chevron-down"}" aria-hidden="true"></i>`;
+  }
+  minBtn.addEventListener("click", () => { body.classList.toggle("dock-collapsed"); syncMin(); });
+  if (isNarrow() && !urlT) { body.classList.add("dock-collapsed"); syncMin(); }
+  if (urlState().view === "video") setMode(true, { replace: false });
+  if (urlT) showResume(urlT);
+
+  // ---------- history ----------
+  addEventListener("popstate", () => {
+    const { t, view } = urlState();
+    setMode(view === "video", { replace: false });
+    if (t != null && t !== urlT) {
+      lastT = t;
+      if (ready) { const s = state(); if (s === 1 || s === 2 || s === 3) player.seekTo(t, true); else player.cueVideoById({ videoId: VID, startSeconds: t }); }
+      onTime();
+      if (state() !== 1) showResume(t);
+    }
+    urlT = t;
+  });
+
+  // ---------- section jump nav ----------
+  const menu = $("#jump-menu"), backdrop = $("#jump-backdrop"), curBtn = $("#jump-cur"), curLabel = $("#jump-cur-label");
+  const groups = [];
+  sections.forEach((s) => {
+    const g = s.dataset.act;
+    if (!groups.length || groups[groups.length - 1].name !== g) groups.push({ name: g, items: [] });
+    groups[groups.length - 1].items.push(s);
+  });
+  menu.innerHTML = groups.map((g) => `<div class="jm-group">${g.name}</div><div class="jump-grid">${g.items.map((s) => {
+    const h = ((s.querySelector("h2") || {}).textContent || "").trim();
+    const same = h.replace(/\W/g, "").toLowerCase() === s.dataset.title.replace(/\W/g, "").toLowerCase();
+    return `<a href="#${s.id}" data-sec="${s.id}">${s.dataset.title}${same ? "" : `<small>${h}</small>`}</a>`;
+  }).join("")}</div>`).join("");
+  const openMenu = (open) => {
+    menu.classList.toggle("open", open); backdrop.classList.toggle("open", open);
+    curBtn.setAttribute("aria-expanded", String(open));
+    if (open) (menu.querySelector("a.is-cur") || menu.querySelector("a")).focus();
+    else if (menu.contains(document.activeElement)) curBtn.focus();
+  };
+  curBtn.addEventListener("click", () => openMenu(!menu.classList.contains("open")));
+  backdrop.addEventListener("click", () => openMenu(false));
+  menu.addEventListener("click", (e) => { if (e.target.closest("a")) openMenu(false); });
+  menu.addEventListener("keydown", (e) => { if (e.key === "Escape") openMenu(false); });
+  let curIdx = 0;
+  const goSec = (i) => {
+    i = Math.max(0, Math.min(sections.length - 1, i));
+    sections[i].scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+    history.pushState(history.state, "", buildUrl({ hash: sections[i].id }));
+  };
+  $("#jump-prev").addEventListener("click", () => goSec(curIdx - 1));
+  $("#jump-next").addEventListener("click", () => goSec(curIdx + 1));
+  const progress = $("#progress"), jumpNav = $(".jump");
+  const onScroll = () => {
+    const line = innerHeight * 0.3 + cssVar("--dock-h");
+    let i = 0;
+    sections.forEach((s, k) => { if (s.getBoundingClientRect().top <= line) i = k; });
+    if (i !== curIdx || !curLabel.dataset.init) {
+      curIdx = i; curLabel.dataset.init = 1;
+      curLabel.textContent = sections[i].dataset.title;
+      $$("a", menu).forEach((a) => a.classList.toggle("is-cur", a.dataset.sec === sections[i].id));
+      $("#jump-prev").disabled = i === 0;
+      $("#jump-next").disabled = i === sections.length - 1;
+    }
+    jumpNav.classList.toggle("on-hero", $("#room").getBoundingClientRect().top > innerHeight * 0.75 && !menu.classList.contains("open"));
+    const h = document.documentElement.scrollHeight - innerHeight;
+    progress.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%";
+  };
+  let ticking = false;
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { onScroll(); ticking = false; }); } }, { passive: true });
+  onScroll();
+
+  // keyboard shortcuts
+  document.addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest("input, textarea, select, dialog, [contenteditable]")) return;
+    if (e.key === "v" || e.key === "V") setMode(!body.classList.contains("watch"));
+    else if (e.key === "[") goSec(curIdx - 1);
+    else if (e.key === "]") goSec(curIdx + 1);
+  });
+
+  // ---------- transcript popup ----------
+  const pop = $("#pop"), popBody = $("#pop-body"), popTitle = $("#pop-title"), popSearch = $("#pop-search"), popQ = $("#pop-q"), popCount = $("#pop-count");
+  let popReturn = null;
+  const openPop = (title, html, { search = false } = {}) => {
+    popReturn = document.activeElement;
+    popTitle.textContent = title; popBody.innerHTML = html; enhanceTs(popBody);
+    popSearch.classList.toggle("on", search); popQ.value = ""; popCount.textContent = "";
+    pop.showModal(); popBody.scrollTop = 0;
+    if (search) popQ.focus();
+  };
+  pop.addEventListener("close", () => { if (popReturn && popReturn.focus) popReturn.focus(); });
+  $("#pop-close").addEventListener("click", () => pop.close());
+  pop.addEventListener("click", (e) => { if (e.target === pop) pop.close(); });
+  const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  popQ.addEventListener("input", () => {
+    const q = popQ.value.trim();
+    const blocks = $$(":scope > p, :scope > ul, :scope > ol", popBody).filter((b) => !b.classList.contains("intro"));
+    $$("mark", popBody).forEach((m) => m.replaceWith(m.textContent));
+    popBody.normalize();
+    let n = 0;
+    blocks.forEach((b) => {
+      const hit = !q || b.textContent.toLowerCase().includes(q.toLowerCase());
+      b.classList.toggle("hide", !hit);
+      if (hit && q) {
+        n++;
+        const re = new RegExp(escRe(q), "gi");
+        const walker = document.createTreeWalker(b, NodeFilter.SHOW_TEXT);
+        const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach((node) => {
+          if (!re.test(node.nodeValue)) return; re.lastIndex = 0;
+          const span = document.createElement("span");
+          span.innerHTML = esc(node.nodeValue).replace(re, (m) => `<mark>${m}</mark>`);
+          node.replaceWith(...span.childNodes);
+        });
+      }
+    });
+    popCount.textContent = q ? `${n} passage${n === 1 ? "" : "s"}` : "";
+  });
+  let transcriptHtml = null;
+  document.addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-transcript]");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    if (!transcriptHtml) {
+      try {
+        let md = await (await fetch("transcript.md")).text();
+        md = md.replace(/<!--[\s\S]*?-->/g, "").replace(/^# Transcript\s*/, "")
+          .replace(/\[(\d{1,2}):(\d{2})\]/g, (m, a1, b1) => `<a class="ts" href="?t=${a1}:${b1}">${a1}:${b1}</a>`);
+        transcriptHtml = window.marked ? marked.parse(md) : md.split(/\n\n+/).map((p) => `<p>${p}</p>`).join("");
+        transcriptHtml = '<p class="intro">A lightly edited transcript of the Python India recording, including the host\'s introduction and the Q&amp;A. Times match the YouTube video, so tap one to play that moment. Bold phrases were added for scanning. Speech-to-text errors remain: at 05:46 Anand says “Claude 3.5 Haiku” but the screen shows Claude 3 Haiku, and at 20:32 he says “Bollywood” over Hollywood photos.</p>' + transcriptHtml;
+      } catch (err) { location.href = a.href; return; }
+    }
+    openPop("Transcript", transcriptHtml, { search: true });
+  });
+
+  // ---------- lightbox ----------
+  const lb = $("#lightbox"), lbImg = $("#lb-img"), lbCap = $("#lb-cap"), lbOpen = $("#lb-open");
+  let lbReturn = null;
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-lightbox]");
+    if (!el || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    const src = el.getAttribute("href") || el.currentSrc || el.src;
+    const img = el.tagName === "IMG" ? el : el.querySelector("img");
+    lbImg.src = src; lbImg.alt = img ? img.alt : (el.dataset.caption || "");
+    lbCap.textContent = el.dataset.caption || "";
+    lbOpen.href = src;
+    lbReturn = document.activeElement;
+    lb.showModal();
+    $("#lb-close").focus();
+  });
+  $("#lb-close").addEventListener("click", () => lb.close());
+  lb.addEventListener("click", (e) => { if (e.target === lb || e.target === lbImg) lb.close(); });
+  lb.addEventListener("close", () => { if (lbReturn && lbReturn.focus) lbReturn.focus(); });
+  // ---------- shared data: 150 catchphrases, text-embedding-3-small (1,536-d), Oct 2026 ----------
+  const D = JSON.parse($("#quote-data").textContent);
+  const QS = D.quotes, N = QS.length, NL = D.labels.length;
+  const b64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+  const SIMQ = b64(D.sim), LABQ = b64(D.lab);
+  const deq = (b) => b / 300 - 0.1;
+  const sim = (i, j) => {
+    if (i === j) return 1;
+    if (i > j) [i, j] = [j, i];
+    return deq(SIMQ[i * N - (i * (i + 1)) / 2 + (j - i - 1)]);
+  };
+  const labSim = (i, l) => deq(LABQ[i * NL + l]);
+  const PAIRS = [];
+  for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) PAIRS.push([i, j, sim(i, j)]);
+  PAIRS.sort((a, b) => b[2] - a[2]);
+  const nearest = (i, k = 6) => QS.map((_, j) => j).filter((j) => j !== i).sort((a, b) => sim(i, b) - sim(i, a)).slice(0, k);
+  const BEST = QS.map((_, i) => sim(i, nearest(i, 1)[0]));
+  const qtxt = (i) => QS[i][1];
+  const f2 = (v) => v.toFixed(2);
+
+  // ---------- explorer 1: the neighbourhood ----------
+  const pick = $("#nb-pick"), cut = $("#nb-cut"), cutO = $("#nb-cut-o"), map = $("#nb-map"), side = $("#nb-side"), nbRead = $("#nb-read");
+  const order = QS.map((_, i) => i).sort((a, b) => qtxt(a).replace(/^\W+/, "").localeCompare(qtxt(b).replace(/^\W+/, "")));
+  pick.innerHTML = order.map((i) => `<option value="${i}">${esc(qtxt(i).length > 60 ? qtxt(i).slice(0, 58) + "…" : qtxt(i))}</option>`).join("");
+  let sel = QS.findIndex((q) => q[1] === "It's showtime!");
+  const MW = 600, MH = 440, P = 18;
+  const X = (i) => P + D.xy[i][0] * (MW - 2 * P), Y = (i) => P + D.xy[i][1] * (MH - 2 * P);
+  const drawNb = () => {
+    const c = +cut.value;
+    cutO.textContent = f2(c);
+    const nn = nearest(sel, 6), hot = new Set([sel, ...nn.slice(0, 3)]);
+    const edges = PAIRS.filter((p) => p[2] >= c);
+    const lines = edges.map(([i, j]) => `<line class="edge${i === sel || j === sel ? " hot" : ""}" x1="${X(i).toFixed(1)}" y1="${Y(i).toFixed(1)}" x2="${X(j).toFixed(1)}" y2="${Y(j).toFixed(1)}"/>`).join("");
+    const dots = QS.map((q, i) => {
+      const isSel = i === sel, isNn = nn.slice(0, 3).includes(i);
+      return `<circle data-i="${i}" cx="${X(i).toFixed(1)}" cy="${Y(i).toFixed(1)}" r="${isSel ? 7.5 : isNn ? 6 : 4.2}" fill="${isSel ? "var(--marquee)" : isNn ? "var(--lav)" : "#7d82b0"}" stroke="${isSel || isNn ? "#0f1124" : "none"}" stroke-width="1.5"><title>${esc(q[1])} (${esc(q[0])})</title></circle>`;
+    }).join("");
+    const labels = [...hot].map((i) => {
+      const t = qtxt(i).length > 28 ? qtxt(i).slice(0, 26) + "…" : qtxt(i);
+      const right = X(i) > MW * 0.62;
+      return `<text x="${(X(i) + (right ? -10 : 10)).toFixed(1)}" y="${(Y(i) + 4).toFixed(1)}" text-anchor="${right ? "end" : "start"}">${esc(t)}</text>`;
+    }).join("");
+    map.innerHTML = `<svg viewBox="0 0 ${MW} ${MH}">${lines}${dots}${labels}</svg>`;
+    const max = 0.65;
+    side.innerHTML = `<p class="sel">“${esc(qtxt(sel))}”</p><p class="src">${esc(QS[sel][0])}</p>
+      <ul class="nn" aria-label="Nearest quotes">${nn.map((j, k) => `<li class="${k === 0 ? "top" : ""}"><button type="button" data-i="${j}">${esc(qtxt(j))}<span class="m">${esc(QS[j][0])}</span></button><span class="v">${f2(sim(sel, j))}</span><span class="bar" aria-hidden="true"><i style="width:${Math.max(2, (sim(sel, j) / max) * 100).toFixed(0)}%"></i></span></li>`).join("")}</ul>`;
+    const linked = new Set(edges.flat().filter((v, k) => k % 3 !== 2));
+    const alone = N - linked.size;
+    const b = BEST[sel], rank = QS.map((_, i) => i).sort((a, b2) => BEST[a] - BEST[b2]).indexOf(sel) + 1;
+    nbRead.innerHTML = `At a cutoff of <b>${f2(c)}</b>, <b>${edges.length}</b> pair${edges.length === 1 ? " is" : "s are"} joined and <b>${alone}</b> of 150 quotes have no partner. ` +
+      `“${esc(qtxt(sel))}” has its closest neighbour at <b>${f2(b)}</b>` +
+      (rank <= 10 ? `, one of the ten loneliest quotes in the set (rank ${rank}).` : b >= 0.5 ? `, one of the tightest pairs in the set.` : `. Most quotes' nearest neighbour sits between 0.35 and 0.45.`) +
+      (sel === QS.findIndex((q) => q[1] === "It's showtime!") ? " Its partner is a different film. They share a rhythm, not a meaning." : "");
+  };
+  const select = (i) => { sel = i; pick.value = String(i); drawNb(); };
+  pick.addEventListener("change", () => select(+pick.value));
+  cut.addEventListener("input", drawNb);
+  map.addEventListener("click", (e) => { const c = e.target.closest("circle[data-i]"); if (c) select(+c.dataset.i); });
+  side.addEventListener("click", (e) => { const b = e.target.closest("button[data-i]"); if (b) select(+b.dataset.i); });
+  $("#nb-top").addEventListener("click", () => { cut.value = String(Math.floor(PAIRS[1][2] * 100) / 100); select(PAIRS[0][0]); });
+  $("#nb-lone").addEventListener("click", () => { let m = 0; BEST.forEach((v, i) => { if (v < BEST[m]) m = i; }); select(m); });
+  select(sel);
+
+  // ---------- explorer 2: propose (K-means) and impose (your topics) ----------
+  const txTabs = $$("#tx-lab [role=tab]");
+  const showTx = (b, focus = false) => {
+    txTabs.forEach((x) => { const on = x === b; x.setAttribute("aria-selected", on); x.tabIndex = on ? 0 : -1; document.getElementById(x.getAttribute("aria-controls")).hidden = !on; });
+    if (focus) b.focus();
+  };
+  txTabs.forEach((b, i) => {
+    b.addEventListener("click", () => showTx(b));
+    b.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); showTx(txTabs[(i + 1) % 2], true); }
+    });
+  });
+  const kn = $("#tx-kn"), knO = $("#tx-kn-o"), seedBox = $("#tx-seeds");
+  seedBox.innerHTML = '<span class="fine" style="color:var(--on-night-muted)">Seed</span>' + [1, 2, 3, 4, 5].map((s) => `<button type="button" class="lbtn" data-seed="${s - 1}" aria-pressed="${s === 1}">${s}</button>`).join("");
+  let seed = 0;
+  const choose2 = (n) => (n * (n - 1)) / 2;
+  const ari = (a, b) => {
+    const t = {}, ra = {}, rb = {};
+    for (let i = 0; i < a.length; i++) { const k = a[i] + b[i]; t[k] = (t[k] || 0) + 1; ra[a[i]] = (ra[a[i]] || 0) + 1; rb[b[i]] = (rb[b[i]] || 0) + 1; }
+    const sij = Object.values(t).reduce((s, v) => s + choose2(v), 0);
+    const sa = Object.values(ra).reduce((s, v) => s + choose2(v), 0), sb = Object.values(rb).reduce((s, v) => s + choose2(v), 0);
+    const exp = (sa * sb) / choose2(a.length), mx = (sa + sb) / 2;
+    return mx === exp ? 1 : (sij - exp) / (mx - exp);
+  };
+  const qi = (t) => QS.findIndex((q) => q[1] === t);
+  const SHOW = qi("It's showtime!"), CLOB = qi("It's clobberin' time!"), HERE = qi("They're heeeere!"), BACK = qi("They're back!");
+  const drawK = () => {
+    const k = +kn.value; knO.textContent = k;
+    const run = D.km[k][seed], L = run.l;
+    $$("button", seedBox).forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.seed === seed)));
+    const a = ari(D.km[k][0].l, L);
+    $("#tx-stab").textContent = a.toFixed(2);
+    $("#tx-stab-bar").style.width = Math.max(0, a) * 100 + "%";
+    const groups = [...Array(k).keys()].map((c) => {
+      const mem = [...L].map((ch, i) => (ch.charCodeAt(0) - 65 === c ? i : -1)).filter((i) => i >= 0);
+      const rep = run.m[c].filter((i) => L.charCodeAt(i) - 65 === c);
+      return { c, mem, rep };
+    }).sort((x, y) => y.mem.length - x.mem.length);
+    $("#tx-groups").innerHTML = groups.map((g, n) => {
+      const rest = g.mem.filter((i) => !g.rep.includes(i));
+      return `<div class="grp"><h4>Group ${n + 1}<span>${g.mem.length} quote${g.mem.length === 1 ? "" : "s"}</span></h4><ul>${g.rep.map((i) => `<li>${esc(qtxt(i))}</li>`).join("")}</ul>` +
+        (rest.length ? `<details class="more"><summary>${rest.length} more</summary><ul>${rest.map((i) => `<li>${esc(qtxt(i))}</li>`).join("")}</ul></details>` : "") + `</div>`;
+    }).join("");
+    const same = (i, j) => L[i] === L[j];
+    const sizes = groups.map((g) => g.mem.length);
+    $("#tx-k-read").innerHTML = `${k} groups, seed ${seed + 1}: sizes run from <b>${Math.min(...sizes)}</b> to <b>${Math.max(...sizes)}</b> quotes. ` +
+      `“It's showtime!” and “It's clobberin' time!” are <b>${same(SHOW, CLOB) ? "together" : "split up"}</b>; “They're heeeere!” and “They're back!” are <b>${same(HERE, BACK) ? "together" : "split up"}</b>. ` +
+      (seed === 0 ? "Try another seed: same data, same k, different starting points." : `Agreement with seed 1 is <b>${a.toFixed(2)}</b>${a < 0.4 ? ", far from 1: the groups depend on where the algorithm started" : ""}.`) +
+      " On stage, GPT-4o mini read five samples from each group and named it.";
+  };
+  kn.addEventListener("input", drawK);
+  seedBox.addEventListener("click", (e) => { const b = e.target.closest("button[data-seed]"); if (b) { seed = +b.dataset.seed; drawK(); } });
+  drawK();
+
+  const active = new Set(D.labels.map((_, l) => l).filter((l) => l < D.nStage && l > 1));
+  const chip = (l) => `<button type="button" class="chip${l >= D.nStage ? " alt" : ""}" data-l="${l}" aria-pressed="${active.has(l)}">${esc(D.labels[l])}</button>`;
+  $("#tx-chips-stage").innerHTML = D.labels.slice(0, D.nStage).map((_, l) => chip(l)).join("");
+  $("#tx-chips-alt").innerHTML = D.labels.slice(D.nStage).map((_, l) => chip(l + D.nStage)).join("");
+  const BJ = qi("Beetlejuice, Beetlejuice, Beetlejuice!");
+  const drawT = () => {
+    $$("#tx-t .chip").forEach((b) => b.setAttribute("aria-pressed", String(active.has(+b.dataset.l))));
+    const act = [...active];
+    if (act.length < 2) {
+      $("#tx-out").innerHTML = "";
+      $("#tx-t-read").innerHTML = "Switch on at least two topics. With one, every quote lands in it: a taxonomy needs alternatives.";
+      return;
+    }
+    const assign = QS.map((_, i) => {
+      const s = act.map((l) => [l, labSim(i, l)]).sort((a, b) => b[1] - a[1]);
+      return { l: s[0][0], v: s[0][1], close: s[0][1] - s[1][1] < 0.01 };
+    });
+    const by = act.map((l) => ({ l, q: QS.map((_, i) => i).filter((i) => assign[i].l === l).sort((a, b) => assign[b].v - assign[a].v) })).sort((a, b) => b.q.length - a.q.length);
+    $("#tx-out").innerHTML = by.map((g) => {
+      const show = g.q.slice(0, 4), rest = g.q.slice(4);
+      const li = (i) => `<li class="${assign[i].close ? "close" : ""}">${esc(qtxt(i))}</li>`;
+      return `<div class="grp"><h4>${esc(D.labels[g.l])}<span>${g.q.length}</span></h4>` +
+        (g.q.length ? `<ul>${show.map(li).join("")}</ul>` : `<p class="more" style="margin:0">No quote is closer to this than to your other topics.</p>`) +
+        (rest.length ? `<details class="more"><summary>${rest.length} more</summary><ul>${rest.map(li).join("")}</ul></details>` : "") + `</div>`;
+    }).join("");
+    const closeN = assign.filter((a) => a.close).length, empty = by.filter((g) => !g.q.length).length;
+    $("#tx-t-read").innerHTML = `<b>${act.length}</b> topics. The biggest, <b>${esc(D.labels[by[0].l])}</b>, takes <b>${by[0].q.length}</b> of 150 quotes` +
+      (empty ? `; <b>${empty}</b> topic${empty === 1 ? " gets" : "s get"} none` : "") + `. <b>${closeN}</b> quotes are close calls. ` +
+      `Beetlejuice's summons goes to <b>${esc(D.labels[assign[BJ].l])}</b>; “It's showtime!” goes to <b>${esc(D.labels[assign[SHOW].l])}</b>. Each filing took ${act.length} dot products, and nothing was re-embedded.`;
+  };
+  $("#tx-t").addEventListener("click", (e) => {
+    const b = e.target.closest(".chip");
+    if (!b) return;
+    const l = +b.dataset.l;
+    if (active.has(l)) active.delete(l); else active.add(l);
+    drawT();
+  });
+  drawT();
+
+  // ---------- explorer 3: the audition (stage frames only) ----------
+  const AUD = [
+    { id: "irrfan", tab: "Irrfan Khan", img: "stage-irrfan-nana.webp", w: 730, h: 500, t: "26:18",
+      alt: "Four face crops joined by grey lines: two photos of Irrfan Khan, a photo labelled Nana_Patekar.649.jpg, and an unlabelled smiling face.",
+      q: "But to answer the question that I had almost two years ago: who could replace Irrfan Khan? And I think one answer clearly matches: Nana Patekar. Maybe.",
+      on: "Two Irrfan Khan photos linked to a photo labelled <span class=\"mono\">Nana_Patekar.649.jpg</span>, plus a fourth, unlabelled face.",
+      yes: "In this collection, under this model and cutoff, a Nana Patekar photo cleared the threshold next to Irrfan Khan's photos.",
+      no: "No similarity value for the Irrfan search is legible (the slider read 84.9% just before it). Nothing shows how other photos of either actor would rank." },
+    { id: "srk", tab: "Shah Rukh Khan", img: "stage-srk-varun.webp", w: 500, h: 485, t: "24:54",
+      alt: "Three face crops joined by lines: two photos of Shah Rukh Khan and one labelled Varun_Dhawan.151.jpg.",
+      q: "…this photo of Varun Dhawan seems to match Shah Rukh the most. I don't know if you'd agree, but at least in this set of photos, that's the closest.",
+      on: "Two Shah Rukh Khan photos and one labelled <span class=\"mono\">Varun_Dhawan.151.jpg</span>.",
+      yes: "One Varun Dhawan photo was Shah Rukh's closest non-self neighbour in this set. Anand's own qualifier: “at least in this set of photos.”",
+      no: "No score was shown, and nobody rated the pair. A different Varun Dhawan photo might not make the cut." },
+    { id: "deepika", tab: "Deepika Padukone", img: "stage-deepika-priyanka.webp", w: 460, h: 340, t: "25:24",
+      alt: "Four face crops joined by lines: photos of Deepika Padukone, one labelled Priyanka_Chopra, and another actress.",
+      q: "But two people stand out: Priyanka Chopra—yeah, I kind of felt that they look similar—and at least one picture of Deepika looks like herself, so maybe as a second backup.",
+      on: "At a cutoff of 86.2%, a cluster of four photos including a Priyanka Chopra file and more than one Deepika photo.",
+      yes: "A Priyanka Chopra photo and another Deepika Padukone photo cleared 86.2%.",
+      no: "One match is Deepika herself: the tool compares photos, so the same person's other photo is a natural neighbour. The fourth face isn't identified." },
+    { id: "ranveer", tab: "Ranveer Singh", img: "stage-ranveer-vicky.webp", w: 290, h: 315, t: "25:56",
+      alt: "Two face crops joined by a line: Ranveer Singh with a beard and Vicky Kaushal with a beard.",
+      q: "Who looks like Ranveer? At the moment, no one at this level of similarity, so we'll have to dig a little deeper, but we find... okay, Vicky Kaushal is not too different from this photo of Ranveer. Yeah, similar beard, similar look, maybe, maybe.",
+      on: "Nobody cleared the first cutoff. At 81.7%, a bearded Ranveer Singh photo links to a bearded Vicky Kaushal photo.",
+      yes: "With the threshold lowered, this Ranveer photo's nearest partner was a Vicky Kaushal photo.",
+      no: "The shared feature Anand named is a beard, which is about grooming in two pictures, not about faces." },
+    { id: "alia", tab: "Alia Bhatt", img: "stage-alia-katrina.webp", w: 330, h: 330, t: "26:08",
+      alt: "Three face crops joined by lines: two photos of Alia Bhatt and one labelled Katrina_Kaif.25.jpg.",
+      q: "And Alia Bhatt... whole bunch of people that seem close enough to Alia, but the closest on this in terms of pictures is this picture of Katrina Kaif, who might be a decent lookalike.",
+      on: "Two Alia Bhatt photos and one labelled <span class=\"mono\">Katrina_Kaif.25.jpg</span>.",
+      yes: "“In terms of pictures”: one Katrina Kaif photo was closest.",
+      no: "Many photos were “close enough”, so a small change in the cutoff could change the winner." },
+    { id: "pair", tab: "Closest pair overall", img: "stage-riteish-shreyas.webp", w: 430, h: 420, t: "23:35",
+      alt: "Three face crops joined by lines: two photos of Riteish Deshmukh and one labelled Shreyas_Talpade.",
+      q: "And the three most similar photos are two photos of Riteish Deshmukh and one photo of Shreyas Talpade.",
+      on: "With the slider near its maximum, the last surviving cluster in the whole set: two Riteish Deshmukh photos and a Shreyas Talpade photo.",
+      yes: "These were the tightest three photos in the collection. Anand had searched for the pair before and <q>wasn't the only one who thought that these two looked like brothers.</q>",
+      no: "It matches one person's impression; it isn't a survey of viewers." },
+    { id: "out", tab: "Most atypical", img: "stage-outliers.webp", w: 410, h: 390, t: "24:15",
+      alt: "Three face crops: Kunal Khemu with an intense frown, Tusshar Kapoor and Manoj Bajpayee.",
+      q: "So three people come out as completely unusual Bollywood faces: Manoj Bajpayee, Tusshar Kapoor, and Kunal Khemu. Very atypical Bollywood faces.",
+      on: "The three photos with the fewest close neighbours at the chosen cutoff.",
+      yes: "These three photos were the outliers of this collection.",
+      no: "“Atypical face” really means atypical photo: a scowl, a crop or a colour cast can do it. It says nothing about the actors." },
+  ];
+  const audTabs = $("#aud-tabs"), audPanel = $("#aud-panel");
+  audTabs.innerHTML = AUD.map((a, i) => `<button type="button" class="lbtn" role="tab" id="aud-${a.id}" aria-selected="${i === 0}" aria-controls="aud-panel" tabindex="${i === 0 ? 0 : -1}">${a.tab}</button>`).join("");
+  const audBtns = $$("button", audTabs);
+  const showAud = (i, focus = false) => {
+    const a = AUD[i];
+    audBtns.forEach((b, k) => { b.setAttribute("aria-selected", String(k === i)); b.tabIndex = k === i ? 0 : -1; });
+    if (focus) audBtns[i].focus();
+    audPanel.setAttribute("aria-labelledby", "aud-" + a.id);
+    audPanel.innerHTML = `<a href="${a.img}" data-lightbox data-caption="Stage still from Python India's recording, ${a.t}. ${esc(a.alt)}"><img src="${a.img}" width="${a.w}" height="${a.h}" alt="${esc(a.alt)}"></a>
+      <div><h4>${a.tab}</h4><blockquote>“${a.q}”<cite>S Anand · <a class="ts" href="?t=${a.t}">${a.t}</a></cite></blockquote>
+      <dl><dt>On screen</dt><dd>${a.on}</dd><dt>It shows</dt><dd>${a.yes}</dd><dt>It doesn't show</dt><dd class="no">${a.no}</dd></dl></div>`;
+    enhanceTs(audPanel);
+  };
+  audBtns.forEach((b, i) => {
+    b.addEventListener("click", () => showAud(i));
+    b.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); showAud((i + 1) % AUD.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); showAud((i - 1 + AUD.length) % AUD.length, true); }
+    });
+  });
+  showAud(0);
+})();
+</script>
+
+</body>
+</html>

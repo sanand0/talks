@@ -78,3 +78,5 @@ A short, visually compelling hook and comic belong near the top; don't place an 
 - Preserve already staged/unstaged neighboring edits and files (particularly the 2015 TEDx prompt and media here); no reset, commit or push without instruction.
 
 **Deliver** a polished, testable index.html and only genuinely useful supporting assets; then the verified catalog update and concise implementation notes describing main narrative/design decisions, tested interactions and remaining evidence uncertainties. **This prompts.md is the handoff to that future build. The current preparation did not itself publish the page.**
+
+<!-- claude --resume 87c0db0e-1698-4241-bf39-983eeaa1c6a5 -->

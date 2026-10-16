@@ -1,5 +1,20 @@
 # Prompts
 
+## .gitignore .opus, 16 Oct 2026
+
+<!--
+cd ~/code/talks
+claude --model sonnet --effort medium
+-->
+
+Rewrite the history of the last two talk commits to .gitignore the .opus files. Identical, except that there's no .opus committed and .gitignore updated.
+
+Then add a global .gitignore for .opus in the repo root, remove the .gitignore for .opus in individual folders.
+Where .opus files HAVE been committed in the past, the (probably) were required, so add a .gitignore entry there that allows the .opus files to be included.
+Add this as a new commit.
+
+<!-- claude --resume 07d56e73-b457-42c3-9d62-d015840b001b -->
+
 ## talks.s-anand.net, 24 Aug 2026
 
 <!-- https://chatgpt.com/c/6a8c163e-1034-83ee-ba09-ed542336fd01 -->

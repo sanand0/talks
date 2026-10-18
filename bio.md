@@ -14,21 +14,27 @@ If you need a short bio to introduce me, you're welcome to modify this.
 
 [Blog](https://www.s-anand.net/) · [LinkedIn](https://www.linkedin.com/in/sanand0/) · [GitHub](https://github.com/sanand0) · [X/Twitter](https://twitter.com/sanand0) · [YouTube](https://www.youtube.com/channel/UCBOUVZF7VkeXzGaQ89CxiTQ)
 
-### Speaker photos
+## Speaker photos
 
 [![Anand S](https://www.s-anand.net/blog/assets/Anand-5a-1.webp)](https://www.s-anand.net/blog/assets/Anand-5a-1.webp)
 
 [Alternative photo](https://www.s-anand.net/blog/assets/s-anand-2015.webp)
 
-### Logistics
+## Logistics
 
-- **Presentation:** I present interactive demos, not fixed slide decks.
-- **Laptop:** Please set up a podium on stage where I can type on my laptop (Lenovo/Ubuntu, HDMI + USB3).
-- **Mic:** Please provide a clip-on mic, not a handheld or table mic.
+### Constraints
+
+- **Presentation:** I present interactive demos. I have no PPT to share.
+- **Podium:** Please set up a podium on stage where I can type on my laptop.
+- **Laptop:** I use a Lenovo/Ubuntu with HDMI + USB-C.
 - **Screen:** 16:9, 16:10, or 4:3 works well. Please ensure circles appear as circles, not ovals.
 - **Internet:** My demos need Internet. If mobile data at venue is flaky, please share Wi-Fi.
 - **Security:** I don't carry ID. If venue needs one, please escort my phone, laptop, and me.
 - **Attire:** I wear round-neck T-shirts, jeans, and open sandals. Please allow this.
+
+### Requests
+
+- **Mic:** Please provide a clip-on mic, not a handheld or table mic.
 - **Badges:** Please print my name on _both sides_, in _large letters_.
 - **Agenda:** Please share the agenda. I'll attend other speakers' sessions to adapt my talk.
 - **Recording:** Please record my video + audio + screen and share it publicly - or me.

@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Remove One Log. Lose a Pyramid. · S Anand, Programming Minecraft with WebSockets (2021)</title>
+<meta name="description" content="In a 34-minute screen-recorded tutorial on 22 January 2021, S Anand deleted one console.log line, made his Node program faster, and watched his Minecraft pyramid stop being built. The fix was backpressure.">
+<meta property="og:title" content="Remove One Log. Lose a Pyramid.">
+<meta property="og:description" content="A console.log was quietly holding up a glowstone pyramid. S Anand's 2021 tutorial on programming Minecraft with WebSockets in JavaScript, and the flow-control lesson inside it.">
+<meta property="og:image" content="https://talks.s-anand.net/2021-01-22-minecraft-websockets-javascript/slides/07-speed-breaks-it.webp">
+<meta property="og:url" content="https://talks.s-anand.net/2021-01-22-minecraft-websockets-javascript/">
+<link rel="canonical" href="https://talks.s-anand.net/2021-01-22-minecraft-websockets-javascript/">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%3E%3Crect%20width='16'%20height='16'%20fill='%236b4a1f'/%3E%3Crect%20x='1'%20y='1'%20width='4'%20height='4'%20fill='%23ffd76a'/%3E%3Crect%20x='9'%20y='2'%20width='5'%20height='3'%20fill='%23ffe9a8'/%3E%3Crect%20x='5'%20y='6'%20width='5'%20height='4'%20fill='%23ffc23d'/%3E%3Crect%20x='1'%20y='10'%20width='3'%20height='5'%20fill='%23ffcf5a'/%3E%3Crect%20x='11'%20y='9'%20width='4'%20height='5'%20fill='%23ffe9a8'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Schibsted+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&family=Silkscreen&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script>
+  (() => {
+    let t = null;
+    try { t = localStorage.getItem("mc-ws-2021-theme"); } catch (e) {}
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+    document.documentElement.classList.add("js");
+  })();
+</script>
+<style>
+/* =========================================================
+   Design note: night falls in a Minecraft world and the only light
+   comes from glowstone. Amber = what got built. Chat-cyan = what the
+   game said (the colour of Bedrock's chat text in the recording).
+   Redstone red = rejected commands. Grass green = acknowledged.
+   Night bands stay dark in both themes; the paper flips.
+   ========================================================= */
+:root {
+  --paper: #f5efe2; --paper2: #ece4d2; --card: #fbf8f1;
+  --ink: #1c1914; --ink2: #3b352b; --muted: #645a49; --line: #d6cbb4;
+  --glow: #8f5400; --glow-soft: #f6e3b4; --glow-hi: #ffcf5a;
+  --grass: #2f6a1d; --grass-soft: #dcebd0; --red: #a8352a; --red-soft: #f5dcd6; --chat: #0b6b79; --chat-soft: #d6eef1;
+  --night: #12161b; --night2: #1b2129; --night3: #2a3340;
+  --on-night: #ece6d8; --on-night-muted: #b2ab9b; --on-night-glow: #ffcf5a; --on-night-chat: #7fe0ef; --on-night-red: #ff9a8c; --on-night-green: #a6e486;
+  --font-display: "Gloock", Georgia, serif;
+  --font-body: "Literata", Georgia, serif;
+  --font-ui: "Schibsted Grotesk", "Helvetica Neue", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-pixel: "Silkscreen", var(--font-mono);
+  --measure: 40rem; --pad: clamp(1rem, 4vw, 2.5rem); --dock-w: 390px;
+  --shadow: 0 1px 2px rgba(20, 16, 8, .08), 0 12px 32px rgba(20, 16, 8, .14);
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #101317; --paper2: #161b21; --card: #1a2028; --ink: #ece6d8; --ink2: #d2cab8; --muted: #a39b8b; --line: #2e3742;
+    --glow: #ffc94d; --glow-soft: #3a2d10; --grass: #9bd97a; --grass-soft: #1e2e19; --red: #ff9a8c; --red-soft: #3a201c; --chat: #7fe0ef; --chat-soft: #12323a;
+    --night: #07090c; --night2: #12171d; --night3: #222b36;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 14px 34px rgba(0,0,0,.45); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #101317; --paper2: #161b21; --card: #1a2028; --ink: #ece6d8; --ink2: #d2cab8; --muted: #a39b8b; --line: #2e3742;
+  --glow: #ffc94d; --glow-soft: #3a2d10; --grass: #9bd97a; --grass-soft: #1e2e19; --red: #ff9a8c; --red-soft: #3a201c; --chat: #7fe0ef; --chat-soft: #12323a;
+  --night: #07090c; --night2: #12171d; --night3: #222b36;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 14px 34px rgba(0,0,0,.45); color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+body { margin: 0; font-family: var(--font-body); font-size: 19px; line-height: 1.7; color: var(--ink); background: var(--paper); overflow-x: hidden; font-optical-sizing: auto; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--glow); text-decoration-thickness: 1px; text-underline-offset: .18em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--chat); outline-offset: 2px; border-radius: 3px; }
+strong { font-weight: 600; }
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height: 1.06; margin: 0; letter-spacing: -.005em; text-wrap: balance; }
+p { text-wrap: pretty; }
+code, .mono { font-family: var(--font-mono); font-size: .86em; }
+p code, li code { background: var(--glow-soft); color: var(--ink); padding: .05em .3em; border-radius: 3px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: -999px; top: 0; background: var(--ink); color: var(--paper); padding: .5rem 1rem; z-index: 2000; }
+.skip:focus { left: .5rem; top: .5rem; }
+kbd { font-family: var(--font-mono); font-size: .8em; border: 1px solid var(--line); border-radius: 4px; padding: 0 .3em; background: var(--card); }
+
+/* ---------- masthead ---------- */
+.progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--glow-hi); box-shadow: 0 0 8px var(--glow-hi); z-index: 1500; }
+.mast { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .7rem var(--pad); font: 600 .8rem var(--font-ui); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--line); }
+.mast a { color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; gap: .55rem; }
+.mast .right { display: flex; align-items: center; gap: .8rem; }
+.gs { display: inline-grid; grid-template-columns: repeat(4, 4px); gap: 0; width: 16px; height: 16px; background: #6b4a1f; }
+.gs i { display: block; width: 4px; height: 4px; }
+.gs i:nth-child(3n+1) { background: #ffd76a; } .gs i:nth-child(5n+2) { background: #ffe9a8; } .gs i:nth-child(7n) { background: #ffc23d; }
+.theme-btn { appearance: none; border: 1px solid var(--line); background: var(--card); color: var(--ink); width: 2.3rem; height: 2.3rem; border-radius: 50%; cursor: pointer; display: inline-grid; place-items: center; font-size: 1rem; }
+.theme-btn:hover { border-color: var(--glow); color: var(--glow); }
+
+/* ---------- hero ---------- */
+.hero { max-width: 1320px; margin: 0 auto; padding: clamp(1.6rem, 4vw, 3.6rem) var(--pad) 2.6rem; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .85fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; }
+.kicker { font: .72rem var(--font-pixel); letter-spacing: .06em; color: var(--glow); margin-bottom: 1.1rem; display: flex; flex-wrap: wrap; gap: .4rem .9rem; align-items: center; text-transform: uppercase; }
+.kicker span + span::before { content: "■"; margin-right: .9rem; color: var(--line); font-size: .6rem; }
+.hero h1 { font-size: clamp(3rem, 8vw, 6.6rem); line-height: .95; letter-spacing: -.02em; }
+.hero h1 .lose { display: block; color: var(--glow); position: relative; }
+.hero h1 .lose span { display: inline-block; animation: drop .7s var(--ease) both; }
+.hero h1 .lose span:nth-child(2) { animation-delay: .12s; } .hero h1 .lose span:nth-child(3) { animation-delay: .24s; }
+@keyframes drop { from { opacity: 0; transform: translateY(-.25em); } to { opacity: 1; transform: none; } }
+.dek { font-size: clamp(1.12rem, 1.8vw, 1.36rem); line-height: 1.5; color: var(--ink2); margin: 1.5rem 0 1.3rem; max-width: 38rem; }
+.facts { display: grid; grid-template-columns: auto 1fr; gap: .25rem 1rem; margin: 0 0 1.4rem; font: .92rem/1.45 var(--font-ui); max-width: 40rem; }
+.facts dt { color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-size: .74rem; padding-top: .15rem; }
+.facts dd { margin: 0; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.2rem; }
+.btn { display: inline-flex; align-items: center; gap: .5rem; font: 600 .95rem var(--font-ui); padding: .62rem 1.05rem; border-radius: 4px; border: 1.5px solid var(--ink); background: transparent; color: var(--ink); text-decoration: none; cursor: pointer; min-height: 44px; }
+.btn.solid { background: var(--ink); color: var(--paper); }
+.btn:hover { background: var(--glow-soft); color: var(--ink); border-color: var(--glow); }
+.btn.solid:hover { background: var(--glow); border-color: var(--glow); color: var(--paper); }
+.audio { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .8rem; font: .86rem var(--font-ui); color: var(--muted); }
+.audio audio { height: 38px; flex: 1 1 260px; max-width: 440px; }
+.comic { margin: 0; position: relative; }
+.comic a { display: block; background: #fffdf7; padding: 10px; border: 1px solid var(--line); box-shadow: var(--shadow), 0 0 0 1px rgba(255, 207, 90, .0); transform: rotate(.7deg); transition: transform .4s var(--ease), box-shadow .4s; cursor: zoom-in; }
+.comic a:hover, .comic a:focus-visible { transform: rotate(0) scale(1.01); box-shadow: var(--shadow), 0 0 40px rgba(255, 207, 90, .35); }
+.comic img { width: 100%; aspect-ratio: 1055 / 1491; }
+.comic figcaption { font: .84rem/1.5 var(--font-ui); color: var(--muted); margin-top: .9rem; }
+.comic .tag { position: absolute; top: -14px; left: -10px; z-index: 2; font: .7rem var(--font-pixel); background: var(--night); color: var(--on-night-glow); padding: .3rem .55rem; transform: rotate(-4deg); box-shadow: var(--shadow); }
+
+/* ---------- reading room: story + video dock ---------- */
+.room { display: grid; grid-template-columns: minmax(0, 1fr) var(--dock-w); gap: 0 clamp(1rem, 3vw, 2.5rem); padding: 0 var(--pad); max-width: 1500px; margin: 0 auto; border-top: 1px solid var(--line); }
+body.watch .room { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+.story { min-width: 0; padding-bottom: 4rem; }
+.dock { position: sticky; top: .8rem; align-self: start; margin-top: 2rem; max-height: calc(100vh - 1.6rem); display: flex; flex-direction: column; gap: .6rem; background: var(--night); color: var(--on-night); border-radius: 6px; padding: .75rem; box-shadow: var(--shadow); z-index: 300; border: 1px solid rgba(255, 207, 90, .18); }
+.dock a { color: var(--on-night-glow); }
+.dock-head { display: flex; justify-content: space-between; gap: .5rem; font: .66rem var(--font-pixel); letter-spacing: .04em; text-transform: uppercase; color: var(--on-night-muted); flex: none; }
+.dock-head b { color: var(--on-night-glow); font-weight: 400; }
+.vwrap { position: relative; flex: none; background: #000; aspect-ratio: 16 / 9; border-radius: 3px; overflow: hidden; }
+.vwrap iframe, .vwrap > div { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.vwrap .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .6; }
+.vwrap .nojs { display: grid; place-items: center; color: #fff; font: 600 1rem var(--font-ui); text-align: center; padding: 1rem; z-index: 1; }
+.now { font: 500 .93rem/1.35 var(--font-ui); min-height: 2.6em; flex: none; }
+.now .t { font-family: var(--font-mono); color: var(--on-night-glow); margin-right: .45rem; }
+.now .in-story { display: block; font-size: .84rem; color: var(--on-night-muted); margin-top: .15rem; }
+.resume { display: none; flex: none; }
+.resume.show { display: block; }
+.resume button { width: 100%; font: 700 1rem var(--font-ui); background: var(--on-night-glow); color: #1c1408; border: 0; border-radius: 4px; padding: .55rem 1rem; cursor: pointer; }
+.resume button:hover { background: #fff; }
+.dock-ctrls { display: flex; flex-wrap: wrap; gap: .4rem; flex: none; }
+.dbtn { appearance: none; border: 1px solid #3a4553; background: var(--night2); color: var(--on-night); border-radius: 4px; padding: .42rem .65rem; font: 600 .88rem var(--font-ui); cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; text-decoration: none; min-height: 36px; }
+.dock a.dbtn { color: var(--on-night); }
+.dbtn:hover, .dock a.dbtn:hover { background: var(--night3); color: #fff; }
+.dbtn.mode { background: var(--on-night-glow); color: #1c1408; border-color: var(--on-night-glow); }
+.dbtn.mode:hover { background: #fff; color: #1c1408; }
+.chapters { overflow-y: auto; min-height: 0; flex: 1 1 auto; scrollbar-width: thin; }
+.chapters summary { font: .64rem var(--font-pixel); text-transform: uppercase; color: var(--on-night-muted); cursor: pointer; padding: .2rem 0; }
+.chapters ol { list-style: none; margin: .2rem 0 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 1px; }
+body.watch .chapters ol { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: .6rem; }
+.chapters li a { display: flex; gap: .55rem; align-items: baseline; padding: .28rem .45rem; border-radius: 3px; text-decoration: none; font: 500 .9rem/1.25 var(--font-ui); }
+.dock .chapters li a { color: var(--on-night); }
+.chapters li a .ct { font: .74rem var(--font-mono); color: var(--on-night-glow); flex: 0 0 auto; }
+.chapters li a:hover { background: var(--night2); }
+.dock .chapters li a.is-now { background: var(--on-night-glow); color: #1c1408; }
+.chapters li a.is-now .ct { color: #1c1408; }
+.chapters li a.in-view { box-shadow: inset 3px 0 0 var(--on-night-chat); }
+.dock .dock-min { display: none; }
+body.watch .story { font-size: 17px; }
+body.watch .story .chap { opacity: .62; transition: opacity .3s; }
+body.watch .story .chap.is-now, body.watch .story .chap:hover, body.watch .story .chap:focus-within { opacity: 1; }
+
+/* ---------- story typography ---------- */
+.chap { position: relative; padding: 3.2rem 0 1rem; scroll-margin-top: 1rem; }
+.chap > * { max-width: var(--measure); margin-left: auto; margin-right: auto; }
+.chap > .wide { max-width: 54rem; }
+.chap > .band { max-width: none; }
+.chap p { margin: 0 auto 1.15rem; }
+.act { font: .7rem var(--font-pixel); text-transform: uppercase; color: var(--glow); display: flex; align-items: center; gap: .7rem; margin-bottom: .9rem; }
+.act::after { content: ""; flex: 1; border-top: 1px dashed var(--line); }
+.act a.ts { font-size: .72rem; }
+.chap h2 { font-size: clamp(2.2rem, 4.4vw, 3.4rem); margin-bottom: 1.3rem; }
+.chap h2 em { color: var(--glow); font-style: normal; }
+.lede { font-size: 1.14em; line-height: 1.58; }
+.lede::first-letter { font-family: var(--font-display); float: left; font-size: 4.2em; line-height: .8; margin: .06em .1em 0 0; color: var(--glow); }
+
+/* timestamp chips */
+a.ts { display: inline-flex; align-items: center; gap: .18rem; font: 600 .74rem/1 var(--font-mono); color: var(--ink); background: var(--glow-soft); border: 1px solid transparent; padding: .24rem .42rem .22rem .3rem; border-radius: 3px; text-decoration: none; vertical-align: .12em; white-space: nowrap; }
+a.ts:hover { border-color: var(--glow); }
+a.ts .bi { font-size: .9em; color: var(--glow); }
+a.ts.flash { animation: flash 1.4s var(--ease); }
+@keyframes flash { 0%, 40% { background: var(--glow-hi); color: #1c1408; box-shadow: 0 0 16px var(--glow-hi); } 100% { background: var(--glow-soft); } }
+
+/* quotes: spoken words in the recording */
+.said { margin: 2rem auto; padding: .2rem 0 .2rem 1.3rem; border-left: 4px solid var(--glow-hi); }
+.said p { font-family: var(--font-display); font-size: clamp(1.4rem, 2.5vw, 1.8rem); line-height: 1.24; margin: 0 0 .55rem; }
+.said cite { display: block; font: normal .84rem var(--font-ui); color: var(--muted); }
+.said cite a.ts { margin-left: .3rem; }
+.said.red { border-color: var(--red); }
+
+/* breakout bands (full-bleed across the story column only) */
+.band { width: 100vw; margin-left: calc(50% - 50vw); padding: clamp(2.2rem, 5vw, 3.8rem) var(--pad); margin-top: 2.2rem; margin-bottom: 2.4rem; }
+@media (min-width: 1000px) { .room .band { width: calc(100% + 2 * var(--pad)); margin-left: calc(-1 * var(--pad)); } }
+.band > .inner { max-width: 1100px; margin: 0 auto; }
+.band.night { background: var(--night); color: var(--on-night); background-image: radial-gradient(ellipse at 80% 0%, rgba(255, 207, 90, .12), transparent 60%); }
+.band.night a { color: var(--on-night-glow); }
+.band.night strong { color: #fff; }
+.band.night .cap, .band.night figcaption, .band.night .muted { color: var(--on-night-muted); }
+.band.night .band-label { color: var(--on-night-glow); }
+.band.night a.ts { background: rgba(255, 207, 90, .16); color: var(--on-night); }
+.band.night a.ts .bi { color: var(--on-night-glow); }
+.band.paper2 { background: var(--paper2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.band.paper2 .band-label { color: var(--glow); }
+.band-label { font: .7rem var(--font-pixel); text-transform: uppercase; margin-bottom: .8rem; display: flex; gap: .5rem; align-items: center; }
+.band h3 { font-size: clamp(1.7rem, 3vw, 2.4rem); margin-bottom: .8rem; }
+.band .big { font-family: var(--font-display); font-size: clamp(1.9rem, 4.2vw, 3.2rem); line-height: 1.1; margin: 0 0 1rem; max-width: 52rem; }
+.cap { font: .84rem/1.5 var(--font-ui); color: var(--muted); margin-top: .7rem; }
+figure { margin: 2rem auto; }
+figure img { width: 100%; border-radius: 3px; }
+figcaption { font: .84rem/1.5 var(--font-ui); color: var(--muted); margin-top: .65rem; }
+figcaption b { color: var(--ink); }
+.band.night figcaption b { color: var(--on-night); }
+a[data-lightbox] { display: block; cursor: zoom-in; }
+.frame { position: relative; }
+.frame .stamp { position: absolute; left: .6rem; top: .6rem; font: .62rem var(--font-pixel); background: rgba(10, 12, 15, .82); color: var(--on-night-glow); padding: .25rem .45rem; border-radius: 2px; pointer-events: none; }
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(.8rem, 2vw, 1.6rem); align-items: start; }
+.pair figure { margin: 0; }
+
+/* code excerpts from the original repository */
+.code { margin: 1.8rem auto; background: var(--night); color: #e6e1d4; border-radius: 6px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,.06); }
+.code-head { display: flex; justify-content: space-between; gap: .8rem; flex-wrap: wrap; padding: .45rem .8rem; background: var(--night2); font: .78rem var(--font-ui); color: var(--on-night-muted); }
+.code-head a, .code-note a:not(.ts) { color: var(--on-night-glow); }
+.code pre { margin: 0; padding: .9rem 1rem 1rem; overflow-x: auto; font: .84rem/1.6 var(--font-mono); tab-size: 2; }
+.code .k { color: #c7a4ff; } .code .s { color: #a6e486; } .code .c { color: #a3a9b2; font-style: italic; } .code .n { color: #ffcf5a; } .code .hl { background: rgba(255, 207, 90, .14); display: inline-block; width: 100%; box-shadow: inset 3px 0 0 #ffcf5a; }
+.code .del { background: rgba(255, 120, 100, .16); text-decoration: line-through; text-decoration-color: #ff9a8c; display: inline-block; width: 100%; box-shadow: inset 3px 0 0 #ff9a8c; }
+.code-note { padding: .55rem .9rem .75rem; font: .84rem/1.5 var(--font-ui); color: var(--on-night-muted); border-top: 1px solid rgba(255,255,255,.07); }
+.code-note b { color: var(--on-night); }
+
+/* notes */
+.note { margin: 2rem auto; padding: 1rem 1.2rem; border: 1px solid var(--line); border-left: 4px solid var(--chat); background: var(--card); font-size: .95rem; line-height: 1.55; border-radius: 0 4px 4px 0; }
+.note b.h { display: block; font: .66rem var(--font-pixel); text-transform: uppercase; color: var(--chat); margin-bottom: .3rem; }
+.note.warn { border-left-color: var(--red); }
+.note.warn b.h { color: var(--red); }
+.note p:last-child { margin-bottom: 0; }
+.tip { border-bottom: 1px dotted var(--glow); cursor: help; position: relative; }
+.tip::after { content: attr(data-tip); position: absolute; left: 50%; bottom: 135%; transform: translateX(-50%); width: min(260px, 70vw); padding: .55rem .7rem; background: var(--night); color: var(--on-night); font: 400 .8rem/1.45 var(--font-ui); border-radius: 3px; display: none; pointer-events: none; z-index: 50; text-transform: none; letter-spacing: 0; }
+.tip:hover::after, .tip:focus::after { display: block; }
+.cite { font: 600 .64rem/1 var(--font-mono); color: var(--glow); border: 1px solid var(--glow); border-radius: 3px; padding: .14rem .3rem; text-decoration: none; vertical-align: .25em; margin-left: .12rem; }
+.cite:hover { background: var(--glow); color: var(--paper); }
+
+/* chat lines (what Minecraft's chat window shows) */
+.chat { margin: 1.6rem auto; background: #1e2a36; border-radius: 4px; padding: .7rem .9rem; font: .9rem/1.55 var(--font-mono); color: #7fe0ef; box-shadow: var(--shadow); }
+.chat .me { color: #f2f2f2; }
+.chat .err { color: #ff9a8c; }
+
+/* ---------- interaction 1: prediction ---------- */
+.predict { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: clamp(1rem, 2.5vw, 1.6rem); box-shadow: var(--shadow); }
+.predict .q { font-family: var(--font-display); font-size: clamp(1.35rem, 2.4vw, 1.75rem); line-height: 1.2; margin: 0 0 1rem; }
+.picks { display: flex; flex-wrap: wrap; gap: .5rem; }
+.pick { appearance: none; border: 1.5px solid var(--ink); background: transparent; color: var(--ink); padding: .6rem 1rem; font: 600 .95rem var(--font-ui); border-radius: 4px; cursor: pointer; min-height: 44px; display: inline-flex; gap: .45rem; align-items: center; }
+.pick:hover { border-color: var(--glow); background: var(--glow-soft); }
+.pick[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.answered .pick.right { border-color: var(--grass); box-shadow: inset 0 0 0 1px var(--grass); }
+.answered .pick.right[aria-pressed="true"] { background: var(--grass); border-color: var(--grass); color: var(--paper); }
+.skip-pick { border-style: dashed; color: var(--muted); border-color: var(--line); }
+.js .after-reveal:not(.shown) { display: none; }
+.verdict { font: .98rem/1.55 var(--font-ui); margin-top: .9rem; min-height: 1.5em; }
+.verdict b { color: var(--glow); }
+.reveal-pair .after { position: relative; }
+.js .reveal-pair:not(.revealed) .after img { filter: blur(18px) brightness(.5); }
+.reveal-pair .cover { display: none; }
+.js .reveal-pair:not(.revealed) .cover { display: grid; position: absolute; inset: 0; place-items: center; text-align: center; font: .78rem/1.5 var(--font-pixel); color: var(--on-night-glow); padding: 1rem; pointer-events: none; }
+.js .reveal-pair:not(.revealed) .after figcaption .spoiler { visibility: hidden; }
+.reveal-pair .after img { transition: filter .8s var(--ease); }
+
+/* ---------- interaction 2 + 3: pyramid grid ---------- */
+.lab { background: var(--night); color: var(--on-night); border-radius: 6px; padding: clamp(.9rem, 2.5vw, 1.5rem); box-shadow: var(--shadow); border: 1px solid rgba(255, 207, 90, .16); }
+.lab a { color: var(--on-night-glow); }
+.lab-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: .4rem 1rem; margin-bottom: .9rem; }
+.lab-head h3 { font-size: clamp(1.4rem, 2.6vw, 1.9rem); color: var(--on-night); }
+.band .lab .band-label, .lab-head .band-label { margin: 0; color: var(--on-night-glow); }
+.lab-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(1rem, 2.5vw, 1.8rem); align-items: start; }
+.grid-svg { width: 100%; height: auto; display: block; background: #0b0e11; border-radius: 4px; image-rendering: pixelated; }
+.grid-svg rect.cell { fill: #1a1f25; }
+.grid-svg rect.b { transition: fill .25s; }
+.grid-svg .dup { fill: none; stroke: #ff9a8c; stroke-width: .16; }
+.grid-svg .first100 { stroke: #7fe0ef; stroke-width: .12; fill: none; }
+.lab-ctrl { display: flex; flex-direction: column; gap: .9rem; font: .92rem/1.45 var(--font-ui); }
+.lab-ctrl label { font-weight: 600; display: flex; justify-content: space-between; gap: .5rem; }
+.lab-ctrl output { font: 600 1rem var(--font-mono); color: var(--on-night-glow); }
+.lab-ctrl input[type="range"] { width: 100%; accent-color: #ffcf5a; min-height: 32px; }
+.counts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; }
+.count { background: var(--night2); border-radius: 4px; padding: .5rem .6rem; }
+.count b { display: block; font: 600 1.45rem/1.1 var(--font-mono); color: var(--on-night-glow); }
+.count span { font-size: .78rem; color: var(--on-night-muted); line-height: 1.3; display: block; }
+.count.dupc b { color: var(--on-night-red); }
+.count.ok b { color: var(--on-night-green); }
+.count.chatc b { color: var(--on-night-chat); }
+.legend { display: flex; flex-wrap: wrap; gap: .3rem 1rem; font-size: .8rem; color: var(--on-night-muted); }
+.legend i { display: inline-block; width: .8rem; height: .8rem; border-radius: 2px; margin-right: .3rem; vertical-align: -.1rem; }
+.check { display: flex; gap: .5rem; align-items: center; font-weight: 500 !important; justify-content: flex-start !important; cursor: pointer; }
+.check input { width: 1.1rem; height: 1.1rem; accent-color: #7fe0ef; }
+.formula { font: .82rem/1.55 var(--font-mono); color: var(--on-night-muted); background: var(--night2); border-radius: 4px; padding: .55rem .7rem; }
+.formula b { color: var(--on-night); font-weight: 600; }
+
+/* simulator */
+.modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .4rem; }
+.mode-btn { appearance: none; border: 1px solid #3a4553; background: var(--night2); color: var(--on-night); border-radius: 4px; padding: .5rem .75rem; font: 600 .88rem var(--font-ui); cursor: pointer; min-height: 44px; text-align: left; }
+.mode-btn small { display: block; font-weight: 400; color: var(--on-night-muted); font-size: .76rem; }
+.mode-btn[aria-checked="true"] { background: var(--on-night-glow); color: #1c1408; border-color: var(--on-night-glow); }
+.mode-btn[aria-checked="true"] small { color: #4a3a14; }
+.sim-run { display: flex; gap: .5rem; flex-wrap: wrap; }
+.queues { display: grid; gap: .55rem; }
+.q-row { display: grid; grid-template-columns: 7.2rem minmax(0, 1fr) 3.2rem; gap: .5rem; align-items: center; font-size: .84rem; }
+.q-row .lbl { color: var(--on-night-muted); font-family: var(--font-mono); font-size: .78rem; }
+.q-bar { display: block; position: relative; height: 14px; background: #0b0e11; border-radius: 2px; overflow: hidden; }
+.q-bar i { position: absolute; inset: 0 auto 0 0; width: 0; background: #ffcf5a; transition: width .12s linear; }
+.q-bar.cyan i { background: #7fe0ef; }
+.q-bar .cap-line { position: absolute; top: -2px; bottom: -2px; width: 2px; background: #ff9a8c; }
+.q-row .v { font: 600 .9rem var(--font-mono); text-align: right; color: var(--on-night); }
+.stream { height: 9.6rem; overflow: hidden; background: #0b0e11; border-radius: 4px; padding: .4rem .6rem; font: .74rem/1.6 var(--font-mono); color: var(--on-night-muted); display: flex; flex-direction: column-reverse; }
+.stream .ok { color: var(--on-night-green); } .stream .dupl { color: #ffc07a; } .stream .over { color: var(--on-night-red); } .stream .send { color: var(--on-night-chat); }
+.sim-note { font-size: .8rem; color: var(--on-night-muted); margin: .2rem 0 0; }
+.sim-verdict { font: 600 .98rem/1.45 var(--font-ui); color: var(--on-night); min-height: 2.9em; }
+
+/* envelope diagram */
+.envelope { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; font: .84rem/1.4 var(--font-mono); }
+.envelope > div { border: 1px solid var(--line); background: var(--card); border-radius: 4px; padding: .6rem .7rem; }
+.envelope h4 { font: .66rem var(--font-pixel); text-transform: uppercase; color: var(--glow); margin-bottom: .35rem; }
+.envelope dl { display: grid; grid-template-columns: auto 1fr; gap: .1rem .6rem; margin: 0; }
+.envelope dt { color: var(--muted); } .envelope dd { margin: 0; overflow-wrap: anywhere; }
+.envelope .key { background: var(--glow-soft); border-radius: 2px; padding: 0 .2rem; }
+
+/* takeaways */
+.cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.card { background: var(--night2); border: 1px solid rgba(255,255,255,.08); border-radius: 6px; padding: 1.1rem 1.1rem 1.2rem; display: flex; flex-direction: column; gap: .5rem; }
+.card .n { font: .7rem var(--font-pixel); color: var(--on-night-glow); }
+.card h4 { font-size: 1.35rem; color: var(--on-night); }
+.card p { margin: 0; font: .92rem/1.5 var(--font-ui); color: var(--on-night-muted); }
+
+/* evidence ledger */
+.ledger-wrap { overflow-x: auto; }
+.ledger { width: 100%; border-collapse: collapse; font: .86rem/1.45 var(--font-ui); }
+.ledger th, .ledger td { text-align: left; vertical-align: top; padding: .55rem .6rem; border-bottom: 1px solid var(--line); }
+.ledger th { font: .64rem var(--font-pixel); text-transform: uppercase; color: var(--muted); }
+.st { display: inline-block; font: 600 .72rem var(--font-ui); padding: .12rem .45rem; border-radius: 999px; white-space: nowrap; }
+.st.ok { background: var(--grass-soft); color: var(--grass); }
+.st.ctx { background: var(--glow-soft); color: var(--ink); }
+.st.ours { background: var(--chat-soft); color: var(--chat); }
+
+/* footer */
+footer.site { max-width: 1100px; margin: 0 auto; padding: 2.5rem var(--pad) 6rem; font: .88rem/1.6 var(--font-ui); color: var(--ink2); display: grid; gap: .8rem; border-top: 1px solid var(--line); }
+footer.site .muted { color: var(--muted); }
+
+/* ---------- jump nav ---------- */
+.jump { position: fixed; left: 1rem; bottom: 1rem; z-index: 500; display: flex; align-items: center; gap: .2rem; background: var(--night); color: var(--on-night); border-radius: 999px; padding: .25rem; box-shadow: var(--shadow); border: 1px solid rgba(255, 207, 90, .25); transition: opacity .3s, transform .3s; }
+.jump.on-hero { opacity: 0; pointer-events: none; transform: translateY(1rem); }
+.jump button { background: none; border: 0; color: inherit; font: 600 .9rem var(--font-ui); cursor: pointer; padding: .5rem .75rem; border-radius: 999px; display: inline-flex; align-items: center; gap: .45rem; min-height: 40px; }
+.jump button:hover:not(:disabled) { background: var(--night3); }
+.jump button:disabled { opacity: .35; cursor: default; }
+.jump-cur span { max-width: 15rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.jump-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, .35); z-index: 480; display: none; }
+.jump-backdrop.open { display: block; }
+.jump-menu { position: fixed; left: 1rem; bottom: 4.4rem; width: min(46rem, calc(100vw - 1.4rem)); max-height: 70vh; overflow-y: auto; background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow); padding: 1rem; z-index: 490; display: none; }
+.jump-menu.open { display: block; }
+.jm-group { font: .64rem var(--font-pixel); text-transform: uppercase; color: var(--glow); margin: .6rem 0 .35rem; }
+.jm-group:first-child { margin-top: 0; }
+.jump-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .35rem; }
+.jump-grid a { display: block; padding: .45rem .6rem; border-radius: 4px; text-decoration: none; color: var(--ink); font: 600 .9rem/1.25 var(--font-ui); border: 1px solid transparent; }
+.jump-grid a small { display: block; font-weight: 400; color: var(--muted); font-size: .78rem; margin-top: .1rem; }
+.jump-grid a:hover { border-color: var(--line); background: var(--paper); }
+.jump-grid a.is-cur { background: var(--glow-soft); border-color: var(--glow); }
+
+/* ---------- dialogs ---------- */
+dialog { border: 0; padding: 0; }
+dialog::backdrop { background: rgba(5, 6, 8, .72); }
+.pop { width: min(48rem, calc(100vw - 1.4rem)); max-height: calc(100vh - 2rem); background: var(--paper); color: var(--ink); border-radius: 8px; box-shadow: var(--shadow); }
+.pop[open] { display: flex; flex-direction: column; }
+.pop-head { display: flex; justify-content: space-between; align-items: center; padding: .8rem 1.2rem; border-bottom: 1px solid var(--line); }
+.pop-head h3 { font-size: 1.5rem; }
+.pop-head button { background: none; border: 1px solid var(--line); color: var(--ink); border-radius: 4px; padding: .4rem .75rem; font: 600 .9rem var(--font-ui); cursor: pointer; min-height: 40px; }
+.pop-search { display: none; align-items: center; gap: .6rem; padding: .6rem 1.2rem; border-bottom: 1px solid var(--line); font: .9rem var(--font-ui); }
+.pop-search.on { display: flex; }
+.pop-search input { flex: 1; min-width: 0; font: 1rem var(--font-ui); padding: .45rem .6rem; border: 1px solid var(--line); border-radius: 4px; background: var(--card); color: var(--ink); }
+.pop-body { overflow-y: auto; padding: 1rem 1.4rem 1.6rem; font-size: 1.02rem; line-height: 1.65; }
+.pop-body p { margin: 0 0 .9rem; }
+.pop-body ul, .pop-body ol { margin: 0 0 .9rem 1.4rem; padding: 0; }
+.pop-body li { margin-bottom: .3rem; }
+.pop-body blockquote { margin: 0 0 .9rem; padding-left: .9rem; border-left: 3px solid var(--line); }
+.pop-body h1, .pop-body h2, .pop-body h3 { font-size: 1.4rem; margin: 1rem 0 .5rem; }
+.pop-body pre { background: var(--night); color: #e6e1d4; padding: .8rem; border-radius: 4px; overflow-x: auto; font: .82rem/1.55 var(--font-mono); }
+.pop-body pre code { background: none; color: inherit; padding: 0; }
+.pop-body .intro { font: italic .95rem/1.5 var(--font-ui); color: var(--muted); }
+.pop-body .hide { display: none; }
+.pop-body mark { background: var(--glow-soft); color: inherit; outline: 1px solid var(--glow); }
+.lightbox { background: #0b0d10; color: #fff; width: min(96vw, 1400px); max-height: 96vh; border-radius: 6px; }
+.lightbox[open] { display: flex; flex-direction: column; }
+.lightbox img { max-height: calc(96vh - 4.5rem); width: auto; max-width: 100%; margin: 0 auto; object-fit: contain; cursor: zoom-out; }
+.lb-bar { display: flex; justify-content: space-between; gap: 1rem; align-items: center; padding: .6rem 1rem; font: .9rem/1.4 var(--font-ui); flex-wrap: wrap; }
+.lb-act { display: flex; gap: .8rem; align-items: center; }
+.lb-bar a { color: #ffcf5a; white-space: nowrap; }
+.lb-bar button { background: transparent; color: #fff; border: 1px solid #5a6370; border-radius: 4px; padding: .35rem .75rem; cursor: pointer; font: 600 .95rem var(--font-ui); min-height: 40px; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1200px) { :root { --dock-w: 330px; } .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } .lab-body { grid-template-columns: 1fr; } }
+@media (max-width: 999px) {
+  .hero { grid-template-columns: 1fr; }
+  .comic { max-width: 560px; width: 100%; margin: 0 auto; }
+  .room { display: block; }
+  .dock { position: fixed; right: .7rem; bottom: 4.4rem; top: auto; margin: 0; width: min(52vw, 280px); max-height: none; padding: .45rem; gap: .4rem; }
+  .dock .dock-head, .dock .now, .dock .chapters, .dock .dock-ctrls .wide-only { display: none; }
+  .dock .dbtn { padding: .35rem .5rem; font-size: .84rem; flex: 1 1 auto; justify-content: center; }
+  .dock .dock-min { display: inline-flex; }
+  body.dock-collapsed:not(.watch) .dock .vwrap { height: 0; aspect-ratio: auto; visibility: hidden; }
+  body.dock-collapsed:not(.watch) .dock { width: auto; }
+  body.dock-collapsed:not(.watch) .dock .resume { display: none; }
+  body.watch .dock { left: 0; right: 0; top: 0; bottom: auto; width: auto; border-radius: 0 0 6px 6px; padding: .5rem .6rem .6rem; }
+  body.watch .dock .now { display: block; font-size: .88rem; min-height: 0; }
+  body.watch .dock .now .in-story { display: none; }
+  body.watch .dock .dock-min { display: none; }
+  body.watch { padding-top: var(--dock-h, 0px); }
+  body.watch .chap { scroll-margin-top: calc(var(--dock-h, 0px) + .5rem); }
+  body.watch .story .chap { opacity: .92; }
+  .jump { left: .7rem; bottom: .7rem; }
+  .jump-menu { left: .7rem; }
+}
+@media (max-width: 720px) {
+  body { font-size: 18px; }
+  .pair, .envelope { grid-template-columns: 1fr; }
+  .cards { grid-template-columns: 1fr; }
+  .jump-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .jump-cur span { max-width: 8rem; }
+  .mast .right > span { display: none; }
+  .said { padding-left: 1rem; }
+  .q-row { grid-template-columns: 6rem minmax(0, 1fr) 2.8rem; }
+  .modes { grid-template-columns: 1fr; }
+  .ledger thead { display: none; }
+  .ledger tr { display: block; border-bottom: 1px solid var(--line); padding: .4rem 0; }
+  .ledger td { display: block; border: 0; padding: .15rem 0; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#story">Skip to the story</a>
+<div class="progress" id="progress"></div>
+<header class="mast">
+  <a href="../"><span class="gs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>S Anand · Talks</a>
+  <span class="right"><span>Video tutorial · 22 Jan 2021</span><button class="theme-btn" id="theme-btn" type="button" aria-label="Switch between light and dark theme"><i class="bi bi-circle-half" aria-hidden="true"></i></button></span>
+</header>
+
+<section class="hero" aria-labelledby="page-title">
+  <div>
+    <div class="kicker"><span>Solo screen recording</span><span>33 min 44 s</span><span>Minecraft Bedrock 1.16 + Node.js</span></div>
+    <h1 id="page-title">Remove one log. <span class="lose"><span>Lose</span> <span>a</span> <span>pyramid.</span></span></h1>
+    <p class="dek">Twenty-two minutes into a tutorial on <strong>programming Minecraft with WebSockets in JavaScript</strong>, Anand deleted one <code>console.log</code> line. His program got faster. His glowing pyramid stopped being built. The fix was not more logging. It was <strong>backpressure</strong>.</p>
+    <dl class="facts">
+      <dt>What</dt><dd><em>Programming Minecraft with WebSockets in JavaScript</em>, a 34-minute screen-recorded tutorial by S Anand. No stage, no audience: one game window, one code editor.</dd>
+      <dt>When</dt><dd>Recorded on the morning of Friday 22 January 2021 (the taskbar clock reads 09:14 to 09:52) and uploaded to YouTube the same day. The <a href="https://www.s-anand.net/blog/programming-minecraft-with-websockets/">written tutorial</a> went up two days earlier.</dd>
+      <dt>Stack</dt><dd><a href="https://en.wikipedia.org/wiki/Minecraft:_Bedrock_Edition">Minecraft Bedrock</a> build 1.16.201 on Windows 10, <a href="https://nodejs.org/">Node.js</a>, the <a href="https://github.com/websockets/ws"><code>ws</code></a> library (v7.4.2) and <code>uuid</code>, in <a href="https://code.visualstudio.com/">VS Code</a>.</dd>
+      <dt>Code</dt><dd><a href="https://github.com/sanand0/minecraft-websocket/tree/master/tutorial"><code>mineserver1.js</code> to <code>mineserver5.js</code></a> in <a href="https://github.com/sanand0/minecraft-websocket">sanand0/minecraft-websocket</a>.</dd>
+    </dl>
+    <div class="hero-actions">
+      <a class="btn solid" href="#cold-open"><i class="bi bi-book" aria-hidden="true"></i> Read the story</a>
+      <a class="btn" href="?view=video" id="hero-watch"><i class="bi bi-play-btn" aria-hidden="true"></i> Watch alongside</a>
+      <a class="btn" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+    </div>
+    <div class="audio">
+      <span><i class="bi bi-headphones" aria-hidden="true"></i> Audio only (34 min, Opus)</span>
+      <audio controls preload="none">
+        <source src="https://github.com/sanand0/talks/releases/download/talks/2021-01-22-minecraft-websockets-javascript.opus" type="audio/ogg; codecs=opus">
+      </audio>
+    </div>
+  </div>
+  <figure class="comic">
+    <span class="tag" aria-hidden="true">Comic · not footage</span>
+    <a href="comic-page.avif" data-lightbox data-caption="The tutorial as a nine-panel comic page, drawn with ChatGPT in 2026. An artist's interpretation, not a frame from the video: its scenery, code and JSON are redrawn for the drawing. The real frames and code are in the story below.">
+      <img src="comic-page.avif" width="1055" height="1491" fetchpriority="high" alt="Nine-panel comic titled ‘The Minecraft pyramid that taught backpressure’, subtitle ‘He removed a log message. The pyramid stopped growing.’ Panel 1: a worried programmer at a laptop says ‘Anand removed one console.log… and Minecraft built less. How can a faster program fail?’ beside an expected complete glowstone pyramid and an actual half-built one. 2: a single grass block placed with /setblock. 3: mineserver.js and /connect localhost:3000 link Minecraft (Bedrock) and a JavaScript server over a WebSocket. 4: a player says ‘Hello!’ and a JSON message arrives. 5: chat lines ‘pyramid 3’ and ‘pyramid 5’ trigger drawPyramid. 6: ‘It works!’ inside a glowstone pyramid, then a bigger one. 7: the console.log is crossed out, setblock commands stream out ‘Too fast!’ and the pyramid stops finishing; a sign reads ‘Logging = accidental brake pedal’. 8: a sendQueue, request IDs, an awaitedQueue and Minecraft returning command responses. 9: ‘Flow control turns a fragile hack into a reliable builder!’ beside a completed pyramid at sunset. Footer: ‘The program didn't need more speed. It needed flow control.’">
+    </a>
+    <figcaption><b>Artist's interpretation.</b> A comic page drawn with ChatGPT in 2026, not a frame from the 2021 video. Its scenery, code and JSON are redrawn for the drawing (the real event header says <code>"event"</code>, not <code>"commandRequest"</code>). Every photo-like image below this one is an actual frame from the recording. Tap to enlarge.</figcaption>
+  </figure>
+</section>
+
+<div class="room" id="room">
+<main class="story" id="story">
+
+<section class="chap" id="cold-open" data-act="Cold open" data-title="The faster program built less">
+  <div class="act">Cold open · <a class="ts" href="?t=22:00">22:00</a></div>
+  <h2>The faster program <em>built less</em></h2>
+  <p class="lede">The first pyramid below took a few lines of JavaScript and about a second. Anand had typed <code>pyramid 10</code> into Minecraft's chat window, and a program on his laptop answered by placing <strong>several hundred glowstone blocks</strong> around him. He flew out to admire it: <em>“You can see that it's actually created a huge, massive pyramid out here.”</em> <a class="ts" href="?t=21:40">21:40</a></p>
+  <p>Then he made one small edit. <em>“I'm going to remove this <code>console.log</code>, restart the server, and see if I can show you one other thing.”</em> <a class="ts" href="?t=22:00">22:00</a> The line he deleted did nothing but print each command to his terminal as it went out. <strong>It placed no blocks. It changed no data.</strong> Removing it could only make the program faster.</p>
+  <p>He moved to a fresh patch of grass, typed <code>pyramid 10</code> again, and turned to look.</p>
+
+  <div class="predict wide" id="predict">
+    <p class="q">Same command, same code, minus one log line. What did Minecraft build?</p>
+    <div class="picks" role="group" aria-label="Your prediction">
+      <button type="button" class="pick" data-pick="same" aria-pressed="false"><i class="bi bi-lightning" aria-hidden="true"></i> The same pyramid, a bit faster</button>
+      <button type="button" class="pick" data-pick="nothing" aria-pressed="false"><i class="bi bi-dash-circle" aria-hidden="true"></i> Nothing changes at all</button>
+      <button type="button" class="pick right" data-pick="less" aria-pressed="false"><i class="bi bi-bricks" aria-hidden="true"></i> Less of a pyramid</button>
+      <button type="button" class="pick skip-pick" data-pick="skip" aria-pressed="false">Just show me</button>
+    </div>
+    <p class="verdict" id="verdict" aria-live="polite">Pick one to reveal the frame from the recording.</p>
+  </div>
+
+  <div class="pair wide reveal-pair" id="reveal-pair" style="margin-top:1.4rem">
+    <figure class="frame">
+      <a href="slides/10-pyramid-ten.webp" data-lightbox data-caption="Video frame at 21:48. Pyramid 10, built while the server printed every command. Ten stepped glowstone rings rise to a peak."><img src="slides/10-pyramid-ten.webp" width="1280" height="720" loading="lazy" alt="Minecraft daylight scene: a large stepped pyramid of glowing glowstone blocks rising from grass to a single block at the top."></a>
+      <span class="stamp">21:48 · with the log</span>
+      <figcaption><b>With <code>console.log</code>.</b> Pyramid 10, eleven layers, complete. <a class="ts" href="?t=21:42">21:42</a></figcaption>
+    </figure>
+    <figure class="frame after">
+      <a href="slides/07-speed-breaks-it.webp" data-lightbox data-caption="Video frame at 22:47. Pyramid 10 again, after the console.log line was deleted. Only the bottom ring and a few blocks of the second layer were built."><img src="slides/07-speed-breaks-it.webp" width="1280" height="720" loading="lazy" alt="Minecraft daylight scene from a hilltop: a single long ring of glowstone blocks one block high encircles the player, with a short raised section of a second layer near the middle. Nothing rises above it."></a>
+      <span class="cover" aria-hidden="true">Predict first</span>
+      <span class="stamp">22:47 · log deleted</span>
+      <figcaption><b>Without it.</b> <span class="spoiler">One ring. The pyramid never rose.</span> <a class="ts" href="?t=22:14">22:14</a></figcaption>
+    </figure>
+  </div>
+
+  <div class="after-reveal" id="after-reveal">
+  <p>The faster program built <strong>a single ring of glowstone</strong>, one block high, with a few blocks of a second layer on top. Everything above it was simply missing. Anand noticed at once:</p>
+  <blockquote class="said">
+    <p>“When I removed the console.log, it didn't really print the— it didn't put the whole pyramid out here.”</p>
+    <cite>Anand · <a class="ts" href="?t=22:14">22:14</a></cite>
+  </blockquote>
+  <p>A print statement had been <strong>holding up a pyramid</strong>. To see how, it helps to go back to the start of the video, where there is no pyramid at all. Just one block of grass.</p>
+  </div>
+  <div class="note"><b class="h">How to read this page</b><p>Quotes in large serif type are Anand's spoken words, checked against the recording's audio. Each <i class="bi bi-play-fill" aria-hidden="true"></i> time plays that moment in the video beside the story (a mini-player on phones); <em>Focus video</em> enlarges the same player without restarting it. Code blocks are excerpts from the <a href="https://github.com/sanand0/minecraft-websocket/tree/master/tutorial">tutorial's repository</a>, which match what he typed on screen. Notes marked <em>Our reading</em> are this page's analysis, not things said in the video.</p></div>
+</section>
+
+<section class="chap" id="grass" data-act="Rewind" data-title="One block of grass">
+  <div class="act">Rewind · <a class="ts" href="?t=00:01">00:01</a></div>
+  <h2>One block of grass</h2>
+  <p>The tutorial opens with an unremarkable fact: <em>“Minecraft has an option to connect to a web server when we are in a game, and specifically a WebSocket server.”</em> <a class="ts" href="?t=00:01">00:01</a> A <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API">WebSocket</a> is a <strong>connection that stays open in both directions</strong>: either side can send a message at any time, without waiting to be asked. That is the whole trick. Whatever a player can type, a program on the other end of that socket can type too.</p>
+  <p>So Anand starts with something a player would type. He opens the chat window and enters <a href="https://minecraft.wiki/w/Commands/setblock"><code>/setblock</code></a> to place a grass block <strong>one step away along the x-axis</strong>. He gets it slightly wrong first. A block appears somewhere, he has <em>“no idea where”</em>, and he realises he wrote absolute coordinates for y and z. The fix is a <span class="tip" tabindex="0" data-tip="In Minecraft commands, ~ means ‘relative to the player’. ~1 ~0 ~0 is one block along x from where you stand; a bare 0 means absolute coordinate zero.">tilde</span>: <code>setblock ~1 ~0 ~0 grass</code> <a class="ts" href="?t=01:09">01:09</a>. Remember the tilde. It will go missing again later.</p>
+  <figure class="frame">
+    <a href="slides/01-single-grass-block.webp" data-lightbox data-caption="Video frame at 00:34. Minecraft's Chat and Commands window with /setblock typed and the command's syntax hint: /setblock position: x y z, tileName: Block, tileData: int, replace|destroy|keep."><img src="slides/01-single-grass-block.webp" width="1280" height="720" loading="lazy" alt="Minecraft's Chat and Commands window at dusk. The input box reads ‘/setblock’ and the hint above it reads ‘/setblock position: x y z, tileName: Block, tileData: int, replace|destroy|keep’."></a>
+    <span class="stamp">00:34</span>
+    <figcaption><b>Where it starts.</b> The <code>/setblock</code> command, typed by hand. Every block in every pyramid on this page is one of these. <a class="ts" href="?t=00:19">00:19</a></figcaption>
+  </figure>
+  <p>Then he switches to code. He installs <code>ws</code>, <em>“a fairly popular WebSocket library”</em>, and writes a server that does almost nothing: it listens on port 3000 and prints a word when something connects. Port 3000, he says, but <em>“it could be literally any port.”</em> <a class="ts" href="?t=02:51">02:51</a></p>
+  <div class="code">
+    <div class="code-head"><span>mineserver1.js · the whole server</span><a href="https://github.com/sanand0/minecraft-websocket/blob/master/tutorial/mineserver1.js">GitHub ↗</a></div>
+<pre><span class="k">const</span> WebSocket = require(<span class="s">'ws'</span>)
+<span class="k">const</span> wss = <span class="k">new</span> WebSocket.Server({ port: <span class="n">3000</span> })
+
+<span class="c">// On Minecraft, when you type "/connect localhost:3000" it creates a connection</span>
+wss.on(<span class="s">'connection'</span>, socket =&gt; {
+  console.log(<span class="s">'Connected'</span>)
+})</pre>
+    <div class="code-note">Trimmed from the repository file (which also loads <code>uuid</code> for later and prints a “Ready” hint). The version on screen at <a class="ts" href="?t=03:34">03:34</a> is the same shape.</div>
+  </div>
+  <p>Back in the game he types <code>/connect localhost:3000</code>. Minecraft replies in its chat: <em>Connection established to server: ws://localhost:3000</em>. In the terminal, Node prints <em>Connected</em> <a class="ts" href="?t=04:10">04:10</a>. Two programs that know nothing about each other are now on speaking terms.</p>
+  <div class="chat" role="img" aria-label="Minecraft chat after /connect: ‘Connection established to server: ws://localhost:3000’.">Connection established to server: ws://localhost:3000</div>
+</section>
+
+<section class="chap" id="talking" data-act="Rewind" data-title="The game talks back">
+  <div class="act">Two-way · <a class="ts" href="?t=05:18">05:18</a></div>
+  <h2>The game <em>talks back</em></h2>
+  <p>A connection is only useful if something travels over it. Anand's next step turns the server from a listener into an <strong>observer of the world</strong>: If the player types something in chat, <em>“we want to listen to it.”</em> <a class="ts" href="?t=05:18">05:18</a> The server sends Minecraft a <em>subscribe</em> request for an event called <code>PlayerMessage</code>. From then on, anything typed in chat is forwarded to Node as a JSON message.</p>
+  <div class="code">
+    <div class="code-head"><span>mineserver2.js · subscribe to chat</span><a href="https://github.com/sanand0/minecraft-websocket/blob/master/tutorial/mineserver2.js">GitHub ↗</a></div>
+<pre>socket.send(JSON.stringify({
+  <span class="s">"header"</span>: {
+    <span class="s">"version"</span>: <span class="n">1</span>,                     <span class="c">// Use version 1 message protocol</span>
+<span class="hl">    <span class="s">"requestId"</span>: uuid.v4(),           <span class="c">// A unique ID for the request</span></span>
+    <span class="s">"messageType"</span>: <span class="s">"commandRequest"</span>,  <span class="c">// This is a request ...</span>
+    <span class="s">"messagePurpose"</span>: <span class="s">"subscribe"</span>     <span class="c">// ... to subscribe to ...</span>
+  },
+  <span class="s">"body"</span>: {
+    <span class="s">"eventName"</span>: <span class="s">"PlayerMessage"</span>      <span class="c">// ... all player messages.</span>
+  },
+}))</pre>
+    <div class="code-note"><b>Every message is an envelope:</b> a <code>header</code> that says what kind of message it is, and a <code>body</code> with the payload. Typed on screen from <a class="ts" href="?t=05:43">05:43</a>.</div>
+  </div>
+  <p>He types <em>hello</em> into the game. The terminal fills with a <strong>huge object</strong>. Along with the word itself, Minecraft reports the biome he is standing in, his client ID, that he is on Windows 10, and his game build: <em>“I'm on build 1.16.201, on platform seven, which I presume is Bedrock, which is what I'm on.”</em> <a class="ts" href="?t=09:56">09:56</a></p>
+  <div class="envelope wide" role="group" aria-label="The two envelopes: the request Node sends and the event Minecraft returns">
+    <div>
+      <h4>Node → Minecraft: subscribe</h4>
+      <dl><dt>messagePurpose</dt><dd>"subscribe"</dd><dt>requestId</dt><dd class="key">a fresh uuid.v4()</dd><dt>body.eventName</dt><dd>"PlayerMessage"</dd></dl>
+    </div>
+    <div>
+      <h4>Minecraft → Node: event</h4>
+      <dl><dt>messagePurpose</dt><dd>"event"</dd><dt>requestId</dt><dd class="key">"00000000-0000-…-000000000000"</dd><dt>body.properties</dt><dd>Message: "hello", Build: "1.16.201", Biome: 1, …</dd></dl>
+    </div>
+  </div>
+  <p class="cap" style="max-width:var(--measure)">Field names from <code>mineserver2.js</code> and the terminal output visible at <a class="ts" href="?t=09:35">09:35</a>. An event carries an all-zero request ID: it is not a reply to anything you asked.</p>
+  <p>None of this is in an official manual. Anand says so plainly:</p>
+  <blockquote class="said">
+    <p>“These messages are in the Minecraft WebSocket protocol, which is actually … undocumented … So, this is largely about trial and error.”</p>
+    <cite>Anand · <a class="ts" href="?t=10:14">10:14</a></cite>
+  </blockquote>
+  <p>Keep two details from this scene. First, <strong>every request carries a unique <code>requestId</code></strong>, generated by the <a href="https://en.wikipedia.org/wiki/Universally_unique_identifier"><code>uuid</code></a> package. Right now it looks like ceremony. Twenty minutes later it is the only thing that lets Node match an answer to a question. Second, the protocol is a <strong>conversation</strong>: Minecraft does not just obey, it reports back. For the next quarter of an hour, the program will ignore everything Minecraft says except chat.</p>
+</section>
+
+<section class="chap" id="geometry" data-act="The build" data-title="Geometry in a chat box">
+  <div class="act">The build · <a class="ts" href="?t=10:33">10:33</a></div>
+  <h2>Geometry in a chat box</h2>
+  <p>Now the payoff Anand has been heading towards: <strong>type a sentence, get a building</strong>. When a <code>PlayerMessage</code> arrives, a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions">regular expression</a> checks whether it reads <code>pyramid</code> followed by a number <a class="ts" href="?t=11:07">11:07</a>. If so, a function draws a pyramid of that size around the player.</p>
+  <p>The drawing is two loops. The outer loop climbs from the ground, <code>y = 0</code>, to the top. At each height the square shrinks by one: <code>side = size - y</code>. The inner loop walks along that square, and for each step sends <strong>four <code>setblock</code> commands</strong>, one for each edge <a class="ts" href="?t=14:10">14:10</a>.</p>
+  <div class="code">
+    <div class="code-head"><span>mineserver3.js · draw_pyramid()</span><a href="https://github.com/sanand0/minecraft-websocket/blob/master/tutorial/mineserver3.js">GitHub ↗</a></div>
+<pre><span class="k">function</span> draw_pyramid(size) {
+  <span class="c">// y is the height of the pyramid. Start with y=0, and keep building up</span>
+  <span class="k">for</span> (<span class="k">let</span> y = <span class="n">0</span>; y &lt; size + <span class="n">1</span>; y++) {
+    <span class="k">let</span> side = size - y;
+    <span class="k">for</span> (<span class="k">let</span> x = -side; x &lt; side + <span class="n">1</span>; x++) {
+      send(<span class="s">`setblock ~${x} ~${y} ~${-side} glowstone`</span>)
+      send(<span class="s">`setblock ~${x} ~${y} ~${+side} glowstone`</span>)
+      send(<span class="s">`setblock ~${-side} ~${y} ~${x} glowstone`</span>)
+      send(<span class="s">`setblock ~${+side} ~${y} ~${x} glowstone`</span>)
+    }
+  }
+}</pre>
+    <div class="code-note"><b>Each <code>send()</code> wraps one command in a JSON envelope</b> with its own <code>uuid.v4()</code> request ID and fires it down the socket at once. Nothing waits for anything.</div>
+  </div>
+  <p>Notice what the loop draws. Not a solid pyramid: <strong>a hollow shell of square rings</strong>, one per layer, stacked like a ziggurat. And because the rows and the columns of each ring both include the corners, <strong>every corner is sent twice</strong>. Neither fact matters yet. Both will.</p>
+
+  <div class="band paper2">
+    <div class="inner">
+      <div class="lab" id="gen">
+        <div class="lab-head"><div class="band-label"><i class="bi bi-grid-3x3" aria-hidden="true"></i> Interactive · the exact loop above</div><h3>How many commands is a pyramid?</h3></div>
+        <div class="lab-body">
+          <svg class="grid-svg" id="gen-svg" viewBox="0 0 21 21" role="img" aria-label="Top-down view of the blocks draw_pyramid sends for the chosen size."></svg>
+          <div class="lab-ctrl">
+            <label for="gen-size">Pyramid size <output id="gen-out" for="gen-size">10</output></label>
+            <input type="range" id="gen-size" min="1" max="20" value="10" aria-describedby="gen-summary">
+            <div class="counts">
+              <div class="count"><b id="gen-cmds">484</b><span>setblock commands sent</span></div>
+              <div class="count ok"><b id="gen-uniq">441</b><span>distinct blocks placed</span></div>
+              <div class="count dupc"><b id="gen-dup">43</b><span>repeats of a block already sent</span></div>
+            </div>
+            <label class="check"><input type="checkbox" id="gen-100"> Outline the first 100 commands sent</label>
+            <div class="legend"><span><i style="background:#8a5a12"></i>bottom layer</span><span><i style="background:#ffe9a8"></i>top</span><span><i style="border:2px solid #ff9a8c"></i>corner sent twice</span><span><i style="border:2px solid #7fe0ef"></i>first 100</span></div>
+            <p class="formula" id="gen-summary">Seen from above. Each ring is one layer of the hollow shell: the outer ring is the ground floor, the centre block is the peak. <b>Commands = 4 × (size + 1)²</b>; distinct blocks = 4 × size × (size + 1) + 1; repeats = 4 per ring plus 3 at the peak.</p>
+          </div>
+        </div>
+        <noscript><p class="sim-note">With JavaScript off: size 3 sends 64 commands for 49 blocks (15 repeats); size 5 sends 144 for 121 (23 repeats); size 10 sends 484 for 441 (43 repeats).</p></noscript>
+      </div>
+      <p class="cap">Computed from the loop in <a href="https://github.com/sanand0/minecraft-websocket/blob/master/tutorial/mineserver3.js"><code>mineserver3.js</code></a>, not from Minecraft. Drag the slider (or use the arrow keys) and watch the count grow with the <em>square</em> of the size: double the pyramid, roughly quadruple the requests. Turn on the first-100 outline at size 10 and keep it in mind.</p>
+    </div>
+  </div>
+
+  <p>The first run fails twice, in two instructive ways. The game drops the connection because Node threw an error: on screen, the call reads <code>draw_pyraid</code>, a missing letter <a class="ts" href="?t=18:47">18:47</a>. Fixed, he types <code>pyramid 3</code> again and <em>“it didn't do a single thing. We should have been surrounded by a glowstone pyramid.”</em> <a class="ts" href="?t=19:05">19:05</a></p>
+  <p>So he does what any programmer does. <em>“Let's do a <code>console.log</code> to see what commands we are actually sending.”</em> <a class="ts" href="?t=19:13">19:13</a> The printout shows the bug at once: the z-coordinate has no tilde, so every block is being placed at absolute z, somewhere far away. Two tildes later, the commands are right.</p>
+  <div class="note"><b class="h">Our reading</b><p>That debugging line, added at 19:13 to find a missing tilde, is <strong>the same <code>console.log</code></strong> he deletes at 22:00. For the next three minutes, every pyramid he builds is built with it.</p></div>
+</section>
+
+<section class="chap" id="inside" data-act="The build" data-title="Standing inside your code">
+  <div class="act">The build · <a class="ts" href="?t=19:59">19:59</a></div>
+  <h2>Standing inside <em>your own code</em></h2>
+  <p>He types <code>pyramid 3</code> and the screen turns gold. <em>“That has created a glowstone pyramid around us of size three.”</em> <a class="ts" href="?t=20:02">20:02</a> He is inside it: the program built the walls around the spot where he stood.</p>
+  <figure class="frame">
+    <a href="slides/05-small-pyramid.webp" data-lightbox data-caption="Video frame at 20:05. Inside the first glowstone pyramid: four walls of glowing blocks and a grass floor, seen from where the player stood when he typed pyramid 3."><img src="slides/05-small-pyramid.webp" width="1280" height="720" loading="lazy" alt="First-person view from inside a small room whose walls and ceiling are all glowstone blocks, with a grass floor and faint chat text overlaid at left."></a>
+    <span class="stamp">20:05 · pyramid 3</span>
+    <figcaption><b>The first pyramid, from the inside.</b> 64 commands, 49 blocks, all glowing. <a class="ts" href="?t=19:59">19:59</a></figcaption>
+  </figure>
+  <p>What follows is the most human minute of the recording. Anand does not move on. <em>“Let's break out of it,”</em> he says, and punches his way out of his own creation <a class="ts" href="?t=20:09">20:09</a>. He points out that it started at <code>y = 0</code> and climbed to the top. He accidentally breaks some grass and patches it by hand, though he could have used a command: he finds it <strong>satisfying to do this manually</strong> <a class="ts" href="?t=20:51">20:51</a>.</p>
+  <p>That is the quiet argument of the whole tutorial. Code is not a replacement for play. It is <strong>a way to make bigger things to play in</strong>. <code>pyramid 5</code> follows. Then, after a typo the chat log keeps forever (<code>pyramid 1-</code>), <code>pyramid 10</code>, in mid-air <a class="ts" href="?t=21:00">21:00</a>. Built with the log line still in place, all 484 commands land: the complete pyramid at the top of this page.</p>
+  <p><em>“Well, that was a very quick introduction into how you can use Minecraft to send messages,”</em> he says <a class="ts" href="?t=21:50">21:50</a>. It sounds like an ending. Then he deletes the log line.</p>
+</section>
+
+<section class="chap" id="brake" data-act="The mystery" data-title="The log was a brake">
+  <div class="act">The mystery · <a class="ts" href="?t=22:00">22:00</a></div>
+  <h2>The log line was <em>a brake</em></h2>
+  <p>Here is the line he removed, as it sat on screen a second before he deleted it: line 48, inside <code>send()</code>, just above the call that actually ships each command to Minecraft.</p>
+  <figure class="frame">
+    <a href="slides/11-the-log-line.webp" data-lightbox data-caption="Video frame at 22:00. VS Code, line 48: console.log(cmd), directly above socket.send(JSON.stringify(msg)). The terminal below lists the setblock commands it printed for the last pyramid, ending at ~0 ~10 ~0, the peak."><img src="slides/11-the-log-line.webp" width="1280" height="720" loading="lazy" alt="VS Code. Line 48 reads console.log(cmd) and line 49 reads socket.send(JSON.stringify(msg)). The terminal shows a column of printed commands such as ‘setblock ~1 ~9 ~-1 glowstone’ ending with ‘setblock ~0 ~10 ~0 glowstone’ four times."></a>
+    <span class="stamp">22:00 · line 48</span>
+    <figcaption><b>The culprit, innocently printing.</b> Note the last four lines: the single block at the peak, <code>~0 ~10 ~0</code>, sent four times. <a class="ts" href="?t=22:00">22:00</a></figcaption>
+  </figure>
+  <div class="code">
+    <div class="code-head"><span>send(), as typed in the video · the one-line change</span><span>VS Code, 22:00</span></div>
+<pre>  <span class="k">function</span> send(cmd) {
+    <span class="k">const</span> msg = { header: { …, requestId: uuid.v4() }, body: { commandLine: cmd, … } }
+<span class="del">    console.log(cmd)</span>
+    socket.send(JSON.stringify(msg))
+  }</pre>
+    <div class="code-note">The repository's <a href="https://github.com/sanand0/minecraft-websocket/blob/master/tutorial/mineserver3.js"><code>mineserver3.js</code></a> ships without the log line. The header and body are abbreviated here.</div>
+  </div>
+  <p>Anand's diagnosis came within seconds, and it is the heart of the video:</p>
+  <blockquote class="said">
+    <p>“The reason is that Minecraft isn't as fast as Node, and it only accepts 100 messages at a time.”</p>
+    <cite>Anand · <a class="ts" href="?t=22:21">22:21</a></cite>
+  </blockquote>
+  <p>Printing to a terminal is slow, as computer work goes. With the log in place, each pass through the loop paused to write a line, and that pause gave Minecraft <strong>breathing space</strong> to work through the commands as they arrived <a class="ts" href="?t=22:29">22:29</a>. Without it, the loops fired all 484 commands in a burst.</p>
+  <blockquote class="said red">
+    <p>“Once it sent a 100 of these, it got overloaded and choked.”</p>
+    <cite>Anand · <a class="ts" href="?t=22:40">22:40</a></cite>
+  </blockquote>
+  <div class="note"><b class="h">Our reading · the arithmetic fits the frame</b><p>The loop sends the bottom layer first. For size 10 that layer is <strong>84 commands</strong> (21 steps × 4 edges). If Minecraft accepts only the first 100, it builds the whole ground ring plus <strong>16 commands' worth of the second layer</strong>, a few blocks near each corner, and nothing above. That matches the 22:47 frame: one full ring, a raised section, nothing higher. Try it with the outline toggle in the counter above.</p></div>
+  <p>Programmers have a name for a bug that vanishes when you add print statements: a <a href="https://en.wikipedia.org/wiki/Heisenbug">Heisenbug</a>. This is its mirror image. The program only worked <em>because</em> it was being watched. The debugging line, added at 19:13 to look for a missing tilde, had quietly become <strong>load-bearing</strong>.</p>
+</section>
+
+<div class="band night" id="band-throttle">
+  <div class="inner">
+    <div class="band-label"><i class="bi bi-speedometer2" aria-hidden="true"></i> The paradox, stated plainly</div>
+    <p class="big">The slow program was correct by accident. The fast program was wrong on purpose: <span style="color:var(--on-night-glow)">it did exactly what it was told, faster than anyone could listen.</span></p>
+    <p class="cap">Logging was never the fix. It was an uncontrolled throttle whose speed depended on how fast a terminal could scroll. Change the laptop, redirect the output to a file, or send a bigger pyramid, and the accident stops protecting you.</p>
+  </div>
+</div>
+
+<section class="chap" id="replies" data-act="The fix" data-title="Listening to the replies">
+  <div class="act">The fix · <a class="ts" href="?t=22:55">22:55</a></div>
+  <h2>Listening to <em>the replies</em></h2>
+  <p>The obvious fix would be to put the log back, or to add a sleep. Anand does neither. He asks a better question: <em>“Why don't we now listen to more of Minecraft's responses and see what they have to say?”</em> <a class="ts" href="?t=22:55">22:55</a></p>
+  <p>For every command it receives, Minecraft sends back a <code>commandResponse</code> carrying <strong>the same <code>requestId</code></strong> and a <code>statusCode</code>: zero for success, negative for failure. The program had been receiving these all along and throwing them away. After one more typo (<code>command</code> for <code>commandResponse</code>, <a class="ts" href="?t=24:03">24:03</a>), the terminal fills with them.</p>
+  <figure class="frame">
+    <a href="slides/13-command-responses.webp" data-lightbox data-caption="Video frame at 24:30. Command responses in the terminal: one with statusCode 0 and statusMessage 'Block placed'; below it, one with statusCode -2147352576 and statusMessage 'The block couldn't be placed'. Each carries messagePurpose 'commandResponse' and a requestId."><img src="slides/13-command-responses.webp" width="1280" height="720" loading="lazy" alt="VS Code terminal showing JSON responses: statusCode: 0, statusMessage: 'Block placed', header with messagePurpose: 'commandResponse', requestId: 'fdb8c272-…', version: 1; then statusCode: -2147352576, statusMessage: 'The block couldn't be placed'."></a>
+    <span class="stamp">24:30</span>
+    <figcaption><b>Minecraft had been answering all along.</b> <code>Block placed</code>, then <code>The block couldn't be placed</code>. <a class="ts" href="?t=24:23">24:23</a></figcaption>
+  </figure>
+  <p>He scrolls up: <em>Block placed, block placed, block placed</em>, then, after a point, failures. He also names the error that marks a true overload: <em>“too many commands have been requested, and wait for one to be done.”</em> <a class="ts" href="?t=24:54">24:54</a></p>
+  <div class="note"><b class="h">Our reading · two different failures</b><p>The written tutorial lists the codes separately <a class="cite" href="https://www.s-anand.net/blog/programming-minecraft-with-websockets/#understand-minecrafts-responses" data-pop="pop-codes">blog</a>: <code>The block couldn't be placed</code> (−2147352576) means <strong>the same block was already there</strong>; <code>Too many commands have been requested</code> (−2147418109) is the overload. At 24:23 he was rebuilding pyramid 10 in a spot where an earlier attempt had already left blocks, so some of the failures on screen there were probably collisions, not overload. The distinction comes back in the final scene.</p></div>
+</section>
+
+<section class="chap" id="queue" data-act="The fix" data-title="A hundred in flight">
+  <div class="act">The fix · <a class="ts" href="?t=25:03">25:03</a></div>
+  <h2>A hundred <em>in flight</em></h2>
+  <p>Now the plan is simple enough to say in one breath:</p>
+  <blockquote class="said">
+    <p>“If there are more than 100 messages, we are going to put it into a queue and, yeah, just send at most 100 at a time.”</p>
+    <cite>Anand · <a class="ts" href="?t=25:04">25:04</a></cite>
+  </blockquote>
+  <p>He builds it with <strong>two containers</strong>. <code>sendQueue</code> holds commands that have not gone out yet. <code>awaitedQueue</code> holds commands that have gone out but have not been answered, filed under their <code>requestId</code>. <code>send()</code> no longer sends anything: it just pushes onto <code>sendQueue</code> <a class="ts" href="?t=28:22">28:22</a>. The real sending happens in the message handler, every time Minecraft says anything at all.</p>
+  <div class="code">
+    <div class="code-head"><span>mineserver5.js · inside socket.on('message')</span><a href="https://github.com/sanand0/minecraft-websocket/blob/master/tutorial/mineserver5.js">GitHub ↗</a></div>
+<pre><span class="c">// If we get a command response, act on it</span>
+<span class="k">if</span> (msg.header.messagePurpose == <span class="s">'commandResponse'</span>) {
+  <span class="k">if</span> (msg.header.requestId <span class="k">in</span> awaitedQueue) {
+    <span class="k">if</span> (msg.body.statusCode &lt; <span class="n">0</span>)
+      console.log(awaitedQueue[msg.header.requestId].body.commandLine, msg.body.statusMessage)
+<span class="hl">    <span class="k">delete</span> awaitedQueue[msg.header.requestId]     <span class="c">// a reply frees a slot</span></span>
+  }
+}
+<span class="c">// We can send new commands from the sendQueue -- up to a maximum of 100.</span>
+<span class="hl"><span class="k">let</span> count = Math.min(<span class="n">100</span> - Object.keys(awaitedQueue).length, sendQueue.length)</span>
+<span class="k">for</span> (<span class="k">let</span> i = <span class="n">0</span>; i &lt; count; i++) {
+  <span class="k">let</span> command = sendQueue.shift()
+  socket.send(JSON.stringify(command))
+  awaitedQueue[command.header.requestId] = command
+}</pre>
+    <div class="code-note">The comment in the second highlighted block is the file's own; “a reply frees a slot” is ours. On screen the arguments to <code>Math.min</code> are in the other order <a class="ts" href="?t=31:00">31:00</a>.</div>
+  </div>
+  <p>Read it as a rule of conversation: <strong>never have more than 100 questions unanswered</strong>. Each reply, success or failure, crosses one question off and lets one more out. There is no timer and no sleep. <strong>Minecraft's own answers set the pace.</strong> This is what engineers call <a href="https://nodejs.org/en/learn/modules/backpressuring-in-streams">backpressure</a>: the slow side pushes back on the fast side, so work waits where it is cheap to wait, in a list in Node's memory, instead of being thrown away at the door.</p>
+  <p>Why 100? Not because a standard says so. <a href="https://www.rfc-editor.org/rfc/rfc6455">WebSocket itself</a> sets no such limit. It is the number Anand observed for <strong>this undocumented Minecraft interface in early 2021</strong>; his <a href="https://www.s-anand.net/blog/programming-minecraft-with-websockets/#wait-for-commands-to-be-done">written tutorial</a> puts it as <em>“Minecraft only allows up to 100 messages in its queue.”</em> And note what it bounds: <strong>requests in flight</strong>, not requests per second. Run the three versions side by side to feel the difference.</p>
+
+  <div class="band night" id="sim-band">
+    <div class="inner">
+      <div class="lab" id="sim" style="border:0;box-shadow:none;padding:0;background:none">
+        <div class="lab-head"><div class="band-label"><i class="bi bi-diagram-3" aria-hidden="true"></i> Simulation · in your browser, no Minecraft involved</div><h3>Three ways to send pyramid 10</h3></div>
+        <div class="lab-body">
+          <div>
+            <svg class="grid-svg" id="sim-svg" viewBox="0 0 21 21" role="img" aria-label="Top-down view of pyramid 10 filling in as simulated commands are accepted or refused. The counts beside it summarise the result."></svg>
+            <div class="legend" style="margin-top:.5rem"><span><i style="background:#ffcf5a"></i>placed</span><span><i style="background:#3a1d1a;border:1px solid #ff9a8c"></i>rejected, never built</span><span><i style="border:2px solid #ff9a8c"></i>“already there”</span></div>
+          </div>
+          <div class="lab-ctrl">
+            <div class="modes" role="radiogroup" aria-label="Sending strategy">
+              <button type="button" class="mode-btn" role="radio" data-mode="log" aria-checked="false">With console.log<small>mineserver3 + log line · 21:00</small></button>
+              <button type="button" class="mode-btn" role="radio" data-mode="burst" aria-checked="true">Log deleted<small>mineserver3 · 22:08</small></button>
+              <button type="button" class="mode-btn" role="radio" data-mode="queue" aria-checked="false">Queue of 100<small>mineserver5 · 31:06</small></button>
+            </div>
+            <div class="sim-run">
+              <button type="button" class="dbtn mode" id="sim-play"><i class="bi bi-play-fill" aria-hidden="true"></i> <span>Run</span></button>
+              <button type="button" class="dbtn" id="sim-end"><i class="bi bi-skip-end-fill" aria-hidden="true"></i> Jump to result</button>
+              <button type="button" class="dbtn" id="sim-reset"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Reset</button>
+            </div>
+            <div class="queues" aria-hidden="true">
+              <div class="q-row"><span class="lbl">waiting in Node</span><span class="q-bar cyan"><i id="bar-q"></i></span><span class="v" id="v-q">0</span></div>
+              <div class="q-row"><span class="lbl">in flight</span><span class="q-bar"><i id="bar-f"></i><span class="cap-line" style="left:83.3%"></span></span><span class="v" id="v-f">0</span></div>
+            </div>
+            <div class="counts">
+              <div class="count ok"><b id="c-ok">0</b><span>blocks placed</span></div>
+              <div class="count"><b id="c-dup" style="color:#ffc07a">0</b><span>“already there”</span></div>
+              <div class="count dupc"><b id="c-over">0</b><span>“too many commands”</span></div>
+            </div>
+            <div class="stream" id="stream" aria-hidden="true"></div>
+            <p class="sim-verdict" id="sim-verdict" aria-live="polite">Pick a strategy and press Run.</p>
+          </div>
+        </div>
+        <p class="sim-note">How the model works: Node's loops produce 484 commands. Minecraft is modelled as a desk that holds at most 100 unanswered commands and finishes two per tick; a command arriving at a full desk is refused. With the log line, Node can produce only one command per tick (Anand's diagnosis, not a measurement). The queue version follows <code>mineserver5.js</code>: send up to 100, then one more for each reply. Speeds are illustrative; the 100 is the bound Anand observed in 2021.</p>
+        <noscript><p class="sim-note">With JavaScript off: with the log, all 441 blocks are placed slowly; with the log deleted, the first 100 commands are accepted (84 for the bottom layer, 16 for the second) and 384 are refused; with the queue of 100, all 441 blocks are placed, faster than the logging version, with only the 43 corner repeats reported as errors.</p></noscript>
+      </div>
+    </div>
+  </div>
+
+  <p>Notice what the queue version does that the log version cannot: it is <strong>both correct and fast</strong>. It runs as fast as Minecraft can go, and no faster. The logging hack ran at the speed of a scrolling terminal, which happened to be slow enough. Flow control replaces luck with a contract.</p>
+</section>
+
+<section class="chap" id="corners" data-act="The proof" data-title="Forty-odd honest errors">
+  <div class="act">The proof · <a class="ts" href="?t=31:06">31:06</a></div>
+  <h2>Forty-odd <em>honest</em> errors</h2>
+  <p>He flies somewhere new and types <code>pyramid 10</code> <a class="ts" href="?t=31:27">31:27</a>. The pyramid builds, larger than the broken one, and yet the terminal still prints lines. For a moment it looks like failure. <em>“That's odd,”</em> he says, then sees why: the program is now printing only <strong>errors</strong>, with their messages. To be sure, he moves again and builds one more <a class="ts" href="?t=32:00">32:00</a>.</p>
+  <figure class="frame">
+    <a href="slides/16-complete-pyramid.webp" data-lightbox data-caption="Video frame at 33:36. A complete, flow-controlled pyramid 10 built in mid-air over hills, seen from above, all faces intact to the peak."><img src="slides/16-complete-pyramid.webp" width="1280" height="720" loading="lazy" alt="Aerial Minecraft view: a complete stepped glowstone pyramid floating above green hills and snowy mountains, its four faces intact up to a single peak block."></a>
+    <span class="stamp">33:36 · queue of 100</span>
+    <figcaption><b>Pyramid 10, flow-controlled.</b> Complete to the peak, built at full speed with no log line. <a class="ts" href="?t=33:28">33:28</a></figcaption>
+  </figure>
+  <p>The pyramid is whole. The remaining errors all say <code>The block couldn't be placed</code>, and Anand explains them by typing a little square of <code>x</code>'s into his editor <a class="ts" href="?t=32:23">32:23</a>. His loop places the top row and the bottom row, then the left column and the right column. The corners belong to both.</p>
+  <blockquote class="said">
+    <p>“Because I'm saying place this twice, both as part of the row as well as part of the column, Minecraft's saying, I can't place that glowstone, because it's already there.”</p>
+    <cite>Anand · <a class="ts" href="?t=32:57">32:57</a></cite>
+  </blockquote>
+  <figure class="frame">
+    <a href="slides/15-corner-errors.webp" data-lightbox data-caption="Video frame at 32:48. In the editor, a 4 by 4 square of x characters drawn to explain corner overlap. Below, the terminal lists failed commands such as 'setblock ~3 ~7 ~-3 glowstone The block couldn't be placed' and 'setblock ~-2 ~8 ~-2 glowstone The block couldn't be placed', all at ring corners."><img src="slides/15-corner-errors.webp" width="1280" height="720" loading="lazy" alt="VS Code: lines 82 to 85 contain rows of ‘x x x x’ forming a square. The terminal below lists about a dozen failures like ‘setblock ~3 ~7 ~-3 glowstone The block couldn't be placed’, ‘setblock ~-1 ~9 ~1 glowstone …’ and ‘setblock ~0 ~10 ~0 glowstone …’."></a>
+    <span class="stamp">32:48</span>
+    <figcaption><b>Every failure is a corner.</b> <code>~3 ~7 ~-3</code>, <code>~-2 ~8 ~-2</code>, <code>~0 ~10 ~0</code>: x and z at ±side. <a class="ts" href="?t=32:23">32:23</a></figcaption>
+  </figure>
+  <p>He predicts <em>“roughly 40, or, well, close to 40”</em>, counts, and finds <em>“around 40-odd messages”</em> <a class="ts" href="?t=33:07">33:07</a>. The loop's arithmetic says <strong>exactly 43</strong>: four repeated corners on each of the ten rings, plus three repeats of the single peak block. These are not overload. They are <strong>a geometry bug reported honestly</strong>, and the program can tell them apart now only because it is finally listening.</p>
+  <div class="note"><b class="h">Our reading</b><p>“The queue fixed it” means the pyramid is no longer truncated by flooding Minecraft. It does not mean every command succeeds. Correct pacing and correct work are different properties, and you need the replies to check either.</p></div>
+</section>
+
+<section class="chap" id="coda" data-act="Coda" data-title="Fast output isn't working output">
+  <div class="act">Coda · <a class="ts" href="?t=33:24">33:24</a></div>
+  <h2>Fast output isn't <em>working output</em></h2>
+  <p>The recording ends on possibility, not on bugs:</p>
+  <blockquote class="said">
+    <p>“Now, we can pretty much get Minecraft to, well, take any request from a player, do anything on the player's behalf, and, well, create more interesting worlds.”</p>
+    <cite>Anand · <a class="ts" href="?t=33:28">33:28</a></cite>
+  </blockquote>
+  <p>But the lesson most worth carrying out of the game is the one he stumbled into at minute 22. <strong>A producer that is faster than its consumer is not fast. It is broken in a way that looks like success</strong> until something downstream quietly drops the excess. The symptom was missing glowstone. The cause was a conversation in which one side never waited for the other.</p>
+  <p>The shape recurs anywhere one program asks another to do work: a script calling a rate-limited API, a browser opening too many connections, a job queue feeding a database, an AI agent firing tool calls at a service. The tutorial did not discuss any of these; this is a 2026 reading of a 2021 video. But the remedy is the same three moves Anand made in eight minutes: <strong>tag every request, listen to every reply, and cap what is in flight</strong>.</p>
+  <div class="note warn"><b class="h">Historical note · please don't copy the 2021 setup blindly</b><p>This page documents what worked on <strong>Minecraft Bedrock 1.16 in January 2021</strong>, through an <strong>undocumented</strong> interface. Later Bedrock versions changed its behaviour (the tutorial's comments record new connection errors by 1.18), and we have not verified that <code>/connect</code> works in today's Minecraft. The original setup also involved switching off encrypted WebSockets, which we do not recommend, and a server listening on a network port, which should never be exposed beyond your own machine. Everything interactive on this page is a simulation that runs in your browser. For current, documented ways to script Minecraft, start with <a href="https://learn.microsoft.com/en-us/minecraft/creator/documents/commandsintroduction">Microsoft's creator documentation</a>.</p></div>
+</section>
+
+<section class="chap" id="takeaways" data-act="Coda" data-title="Takeaways">
+  <div class="band night">
+    <div class="inner">
+      <div class="band-label"><i class="bi bi-lightbulb" aria-hidden="true"></i> What to carry out of the game</div>
+      <h3 style="color:var(--on-night)">Four lessons from one glowstone pyramid</h3>
+      <div class="cards" style="margin-top:1.2rem">
+        <div class="card"><span class="n">01 · 22:00</span><h4>A log line can be load-bearing</h4><p>Anything that changes timing changes behaviour. When removing a print statement breaks a program, the print was hiding a race or a flood. Find what it was slowing down.</p></div>
+        <div class="card"><span class="n">02 · 22:21</span><h4>The system runs at the slowest part's speed</h4><p>Node could produce 484 commands in a blink. Minecraft could not take them. Sending faster than the receiver can work does not save time; it throws work away.</p></div>
+        <div class="card"><span class="n">03 · 29:06</span><h4>Cap what's in flight, and let replies pace you</h4><p>A unique <code>requestId</code>, a waiting list, and “100 minus what's awaited” turned a fragile accident into a contract. No sleeps, no guesses: each answer releases the next question.</p></div>
+        <div class="card"><span class="n">04 · 32:57</span><h4>Read the replies to tell failures apart</h4><p>“Too many commands” is a pacing problem. “Already there” is a geometry problem. Only a program that listens can tell which one it has.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chap" id="ledger" data-act="Sources" data-title="Evidence ledger">
+  <div class="act">Sources</div>
+  <h2>What's on screen, what's said, <em>what's ours</em></h2>
+  <p>This page leans on four kinds of evidence: the <a href="https://youtu.be/bjanNXXwQbo">recording</a> itself, its <a href="transcript.md" data-transcript>transcript</a> (machine-made in 2026; every quote above was re-checked against the audio), the <a href="https://github.com/sanand0/minecraft-websocket/tree/master/tutorial">tutorial's code</a>, and the <a href="https://www.s-anand.net/blog/programming-minecraft-with-websockets/">written tutorial</a>, first published 20 January 2021 and last updated 2 February 2022.</p>
+  <div class="ledger-wrap wide">
+    <table class="ledger">
+      <thead><tr><th>Claim</th><th>Evidence</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Deleting <code>console.log(cmd)</code> left pyramid 10 unfinished</td><td>Frames at 22:00 and 22:47; <a class="ts" href="?t=22:14">22:14</a></td><td><span class="st ok">Seen on screen</span></td></tr>
+        <tr><td>Minecraft “only accepts 100 messages at a time”</td><td>Said at <a class="ts" href="?t=22:21">22:21</a>; code caps in-flight requests at 100; blog: “up to 100 messages in its queue”</td><td><span class="st ctx">Observed, 2021 only</span></td></tr>
+        <tr><td>First 100 commands = the 84-command ground ring + 16 of layer two</td><td>Loop arithmetic from <code>mineserver3.js</code>, compared with the 22:47 frame</td><td><span class="st ours">Our analysis</span></td></tr>
+        <tr><td>“Block couldn't be placed” means the block was already there; overload is a different error</td><td>Blog's list of error codes (−2147352576 vs −2147418109); <a class="ts" href="?t=24:54">24:54</a></td><td><span class="st ctx">Blog, possibly later edit</span></td></tr>
+        <tr><td>43 corner repeats for pyramid 10</td><td>“Around 40-odd messages” at <a class="ts" href="?t=33:07">33:07</a>; exact count from the loop</td><td><span class="st ok">Consistent</span></td></tr>
+        <tr><td>Bedrock build 1.16.201, Windows 10; <code>ws</code> 7.4.2</td><td>Event properties at <a class="ts" href="?t=09:56">09:56</a>; npm output in the 04:08 frame</td><td><span class="st ok">Seen on screen</span></td></tr>
+        <tr><td>Recorded the morning of 22 Jan 2021</td><td>Terminal timestamps (“Fri Jan 22 09:17 AM”) and the taskbar clock</td><td><span class="st ok">Seen on screen</span></td></tr>
+        <tr><td>Speeds in the simulator</td><td>Illustrative; only the cap of 100 comes from the video</td><td><span class="st ours">Model, not data</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="cap" style="max-width:var(--measure)">Related, but not this recording: the companion <a href="https://youtu.be/o-NgvtJZDcY">Python version of the tutorial</a> and a <a href="https://youtu.be/v3W2cjTWY-Y">short 2025 glowstone-pyramid demo</a>. The same repository also holds the <a href="https://github.com/sanand0/minecraft-websocket/blob/master/tutorial/mineserver4.js">intermediate <code>mineserver4.js</code></a> that only prints responses.</p>
+</section>
+
+</main>
+
+<aside class="dock" id="dock" aria-label="Video player">
+  <div class="dock-head"><span id="dock-mode-label">Story focus</span><span><b>Video</b> 22 Jan 2021</span></div>
+  <div class="vwrap">
+    <div id="yt"></div>
+    <img class="poster" src="slides/05-small-pyramid.webp" width="1280" height="720" alt="" aria-hidden="true">
+    <noscript><a class="nojs" href="https://youtu.be/bjanNXXwQbo">Watch on YouTube ↗</a></noscript>
+  </div>
+  <div class="resume" id="resume"><button type="button" id="resume-btn"><i class="bi bi-play-fill" aria-hidden="true"></i> <span>Play</span></button></div>
+  <div class="now" aria-live="polite"><span class="t" id="now-t">00:00</span><span id="now-title">Press any ▶ time in the story</span><span class="in-story" id="now-story"></span></div>
+  <div class="dock-ctrls">
+    <button type="button" class="dbtn mode" id="mode-btn" aria-pressed="false"><i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span></button>
+    <a class="dbtn wide-only" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+    <button type="button" class="dbtn wide-only" id="share-btn"><i class="bi bi-link-45deg" aria-hidden="true"></i> <span>Share moment</span></button>
+    <button type="button" class="dbtn dock-min" id="min-btn" aria-expanded="true" aria-label="Hide the mini video"><i class="bi bi-chevron-down" aria-hidden="true"></i></button>
+  </div>
+  <details class="chapters" open>
+    <summary>Moments in the video</summary>
+    <ol id="chapters"></ol>
+  </details>
+</aside>
+</div>
+
+<footer class="site">
+  <div><strong>Remove One Log. Lose a Pyramid.</strong> · S Anand's solo video tutorial <em>Programming Minecraft with WebSockets in JavaScript</em>, recorded and uploaded to YouTube on 22 January 2021 (33 min 44 s).</div>
+  <div>Media: <a href="https://youtu.be/bjanNXXwQbo">video (YouTube)</a> · <a href="https://github.com/sanand0/talks/releases/download/talks/2021-01-22-minecraft-websockets-javascript.opus">audio (Opus)</a> · <a href="transcript.md" data-transcript>transcript</a> · <a href="comic-page.avif" data-lightbox data-caption="The tutorial as a comic page, drawn with ChatGPT in 2026. An interpretation, not footage.">comic page</a></div>
+  <div>Code and writing: <a href="https://github.com/sanand0/minecraft-websocket">sanand0/minecraft-websocket</a> (<a href="https://github.com/sanand0/minecraft-websocket/blob/master/tutorial/mineserver1.js">1</a> · <a href="https://github.com/sanand0/minecraft-websocket/blob/master/tutorial/mineserver2.js">2</a> · <a href="https://github.com/sanand0/minecraft-websocket/blob/master/tutorial/mineserver3.js">3</a> · <a href="https://github.com/sanand0/minecraft-websocket/blob/master/tutorial/mineserver4.js">4</a> · <a href="https://github.com/sanand0/minecraft-websocket/blob/master/tutorial/mineserver5.js">5</a>) · <a href="https://www.s-anand.net/blog/programming-minecraft-with-websockets/">“Programming Minecraft with Websockets”</a>, blog, 20 Jan 2021. Background: <a href="https://www.minecraft.net/en-us/about-minecraft">Minecraft</a> · <a href="https://www.rfc-editor.org/rfc/rfc6455">RFC 6455 (WebSocket)</a> · <a href="https://www.rfc-editor.org/rfc/rfc4122">RFC 4122 (UUID)</a> · <a href="https://minecraft.wiki/w/Glowstone">glowstone</a> · <a href="https://minecraft.wiki/w/Coordinates">Minecraft coordinates</a> · <a href="https://en.wikipedia.org/wiki/Flow_control_(data)">flow control</a>.</div>
+  <div class="muted">Images are frames from the 2021 recording, except the comic page, which is a 2026 illustration. Minecraft is a trademark of Mojang/Microsoft; this page is not affiliated with them. Quotes are verbatim from the audio, trimmed with ellipses. Keyboard: <kbd>V</kbd> toggles video focus, <kbd>[</kbd> / <kbd>]</kbd> move between sections.</div>
+</footer>
+
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump on-hero" aria-label="Jump to section">
+  <button id="jump-prev" type="button" aria-label="Previous section"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+  <button class="jump-cur" id="jump-cur" type="button" aria-expanded="false" aria-controls="jump-menu"><i class="bi bi-list-ul" aria-hidden="true"></i><span id="jump-cur-label">The faster program built less</span></button>
+  <button id="jump-next" type="button" aria-label="Next section"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+</nav>
+<div class="jump-menu" id="jump-menu" role="dialog" aria-label="All sections"></div>
+
+<dialog class="pop" id="pop" aria-labelledby="pop-title">
+  <div class="pop-head"><h3 id="pop-title">Transcript</h3><button type="button" id="pop-close" aria-label="Close">Close <i class="bi bi-x-lg" aria-hidden="true"></i></button></div>
+  <div class="pop-search" id="pop-search"><i class="bi bi-search" aria-hidden="true"></i><input id="pop-q" type="search" placeholder="Find in transcript…" aria-label="Find in transcript"><span id="pop-count"></span></div>
+  <div class="pop-body" id="pop-body"></div>
+</dialog>
+
+<template id="pop-codes" data-title="Minecraft's error codes, per the written tutorial">
+  <p class="intro">From the section “Understand Minecraft's responses” of Anand's blog post <em>Programming Minecraft with Websockets</em> (first published 20 January 2021, updated 2 February 2022; we can't tell which edit added this list).</p>
+  <ul>
+    <li><code>The block couldn't be placed</code> (−2147352576): The same block was already at that location.</li>
+    <li><code>Syntax error: Unexpected "xxx": at "~0 ~9 ~-1 &gt;&gt;xxx&lt;&lt;"</code> (−2147483648): You gave wrong arguments to the command.</li>
+    <li><code>Too many commands have been requested, wait for one to be done</code> (−2147418109): Minecraft only allows 100 commands can be executed without waiting for their response.</li>
+  </ul>
+  <p><a href="https://www.s-anand.net/blog/programming-minecraft-with-websockets/#understand-minecrafts-responses">Read the section on the blog ↗</a></p>
+</template>
+
+<dialog class="lightbox" id="lightbox" aria-label="Enlarged image">
+  <img id="lb-img" src="data:," alt="">
+  <div class="lb-bar"><span id="lb-cap"></span><span class="lb-act"><a id="lb-open" href="#" target="_blank" rel="noopener">Open full size ↗</a><button type="button" id="lb-close">Close</button></span></div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js" defer></script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const body = document.body;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isNarrow = () => matchMedia("(max-width: 999px)").matches;
+  const cssVar = (n) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(n)) || 0;
+  const parseT = (s) => {
+    if (s == null || s === "") return null;
+    const p = String(s).split(":").map(Number);
+    return p.some(Number.isNaN) ? null : p.reduce((a, b) => a * 60 + b, 0);
+  };
+  const fmt = (t) => { t = Math.max(0, Math.floor(t)); return String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0"); };
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // ---------- theme ----------
+  $("#theme-btn").addEventListener("click", () => {
+    const root = document.documentElement;
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+    try { localStorage.setItem("mc-ws-2021-theme", root.dataset.theme); } catch (e) {}
+  });
+
+  // ---------- chapters (video moments → story sections) ----------
+  const CHAPTERS = [
+    ["00:01", "Minecraft can call a WebSocket", "grass"], ["00:19", "One grass block, by hand", "grass"], ["01:25", "A WebSocket server in Node", "grass"],
+    ["04:10", "“Connection established”", "grass"], ["05:18", "Subscribe to chat", "talking"], ["09:28", "“hello” arrives as JSON", "talking"],
+    ["10:11", "Undocumented: trial and error", "talking"], ["10:33", "Parse “pyramid N”", "geometry"], ["13:23", "Two loops, bottom up", "geometry"],
+    ["14:52", "Each block, one JSON request", "geometry"], ["18:47", "draw_pyraid is not defined", "geometry"], ["19:13", "A console.log to debug", "geometry"],
+    ["19:59", "Inside pyramid 3", "inside"], ["21:00", "Pyramid 5, then 10", "inside"], ["22:00", "Delete the console.log", "brake"],
+    ["22:14", "The pyramid that didn't finish", "brake"], ["22:55", "Listen to the replies", "replies"], ["24:23", "“Block couldn't be placed”", "replies"],
+    ["25:03", "At most 100 at a time", "queue"], ["25:53", "Match replies by requestId", "queue"], ["29:06", "100 minus what's in flight", "queue"],
+    ["31:06", "Pyramid 10 again", "corners"], ["32:00", "Corners placed twice", "corners"], ["33:24", "“Any request from a player”", "coda"],
+  ].map(([t, title, sec]) => ({ t: parseT(t), label: t, title, sec }));
+  $("#chapters").innerHTML = CHAPTERS.map((c, i) =>
+    `<li><a href="?t=${c.label}" data-chap="${i}" class="ts-chap"><span class="ct">${c.label}</span><span>${c.title}</span></a></li>`).join("");
+  const chapLinks = $$("#chapters a");
+  const chapFor = (t) => { let i = -1; CHAPTERS.forEach((c, k) => { if (c.t <= t + 0.5) i = k; }); return i; };
+  const sections = $$(".chap");
+  const secTitle = (id) => document.getElementById(id)?.dataset.title || "";
+
+  // ---------- URL state: ?t=mm:ss&view=video#section ----------
+  const urlState = () => {
+    const u = new URL(location.href);
+    return { t: parseT(u.searchParams.get("t")), view: u.searchParams.get("view") };
+  };
+  const buildUrl = ({ t, hash } = {}) => {
+    const u = new URL(location.href);
+    if (t != null) u.searchParams.set("t", fmt(t)); else if (t === null) u.searchParams.delete("t");
+    if (body.classList.contains("watch")) u.searchParams.set("view", "video"); else u.searchParams.delete("view");
+    if (hash !== undefined) u.hash = hash ? "#" + hash : "";
+    return u.pathname + u.search.replace(/%3A/gi, ":") + u.hash;
+  };
+  let urlT = urlState().t;
+
+  // ---------- one persistent YouTube player (IFrame Player API) ----------
+  // Created once inside .vwrap and never moved or re-created: story/video focus only changes CSS, so playback never resets.
+  const VID = "bjanNXXwQbo";
+  let player = null, ready = false, pending = null, lastT = urlT || 0, poll = 0;
+  const resume = $("#resume"), resumeBtn = $("#resume-btn");
+  let resumeT = urlT || 0;
+  const state = () => (ready && player.getPlayerState ? player.getPlayerState() : -1);
+  const getT = () => (ready && player.getCurrentTime ? player.getCurrentTime() || lastT : lastT);
+  const showResume = (t) => { resumeT = t; resumeBtn.querySelector("span").textContent = `Play from ${fmt(t)}`; resume.classList.add("show"); };
+  const hideResume = () => resume.classList.remove("show");
+  window.onYouTubeIframeAPIReady = () => {
+    const vars = { playsinline: 1, rel: 0, modestbranding: 1 };
+    if (urlT) vars.start = Math.floor(urlT);
+    if (/^https?:/.test(location.protocol)) vars.origin = location.origin;
+    player = new YT.Player("yt", {
+      videoId: VID, width: "100%", height: "100%", playerVars: vars,
+      events: {
+        onReady: () => {
+          ready = true;
+          $(".vwrap .poster")?.remove();
+          player.getIframe().title = "Programming Minecraft with WebSockets in JavaScript, S Anand, 22 January 2021 (YouTube)";
+          if (pending != null) { const t = pending; pending = null; startAt(t); }
+          else if (urlT) { onTime(); showResume(urlT); }
+        },
+        onStateChange: (e) => {
+          if (e.data === 1) {
+            hideResume();
+            if (body.classList.contains("dock-collapsed")) { body.classList.remove("dock-collapsed"); syncMin(); }
+            clearInterval(poll); poll = setInterval(() => { lastT = player.getCurrentTime(); onTime(); }, 300);
+          } else {
+            clearInterval(poll);
+            if (ready) { lastT = player.getCurrentTime() || lastT; onTime(); }
+          }
+        },
+      },
+    });
+  };
+  const tag = document.createElement("script");
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
+  const startAt = (t) => {
+    lastT = t;
+    const s = state();
+    if (s === 1 || s === 2 || s === 3) player.seekTo(t, true);
+    else player.loadVideoById({ videoId: VID, startSeconds: t });
+    player.playVideo();
+    onTime();
+    setTimeout(() => { const s2 = state(); if (s2 !== 1 && s2 !== 3) showResume(t); }, 1800);
+  };
+  const ensureDockVisible = () => {
+    if (isNarrow()) { body.classList.remove("dock-collapsed"); syncMin(); return; }
+    const r = $("#dock").getBoundingClientRect();
+    if (r.top > innerHeight - 80 || r.bottom < 60) $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  };
+  const playAt = (t, { push = false, el = null } = {}) => {
+    if (push) {
+      const sec = el && el.closest(".chap");
+      history.pushState({ t }, "", buildUrl({ t, hash: sec ? sec.id : undefined }));
+      urlT = t;
+    }
+    ensureDockVisible();
+    if (ready) startAt(t); else { pending = t; lastT = t; onTime(); }
+    if (el) { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+  };
+  resumeBtn.addEventListener("click", () => {
+    if (!ready) return;
+    const s = state();
+    if (s === 2 || s === 1) player.playVideo(); else startAt(resumeT);
+    hideResume();
+  });
+  const enhanceTs = (root = document) => {
+    $$("a.ts", root).forEach((a) => {
+      if (a.dataset.t) return;
+      const t = parseT(new URL(a.href, location.href).searchParams.get("t"));
+      a.dataset.t = t;
+      a.insertAdjacentHTML("afterbegin", '<i class="bi bi-play-fill" aria-hidden="true"></i>');
+      a.setAttribute("aria-label", `Play the video from ${a.textContent.trim()}`);
+    });
+  };
+  enhanceTs();
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a.ts, a.ts-chap");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const t = a.classList.contains("ts-chap") ? CHAPTERS[+a.dataset.chap].t : +a.dataset.t;
+    const dlg = a.closest("dialog");
+    if (dlg) dlg.close();
+    playAt(t, { push: true, el: a.classList.contains("ts") && !dlg ? a : null });
+  });
+
+  // now-playing sync
+  const nowT = $("#now-t"), nowTitle = $("#now-title"), nowStory = $("#now-story");
+  let curChap = -2;
+  const onTime = () => {
+    const t = getT();
+    nowT.textContent = fmt(t);
+    const i = chapFor(t);
+    if (i === curChap) return;
+    curChap = i;
+    chapLinks.forEach((a, k) => { a.classList.toggle("is-now", k === i); if (k === i) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
+    if (i < 0) return;
+    const c = CHAPTERS[i];
+    nowTitle.textContent = c.title;
+    nowStory.innerHTML = `In the story: <a href="#${c.sec}">${esc(secTitle(c.sec))} ↓</a>`;
+    sections.forEach((s) => s.classList.toggle("is-now", s.id === c.sec));
+    const link = chapLinks[i], box = link.closest(".chapters");
+    if (box && box.scrollHeight > box.clientHeight) {
+      const lr = link.getBoundingClientRect(), br = box.getBoundingClientRect();
+      if (lr.top < br.top || lr.bottom > br.bottom) box.scrollTop += lr.top - br.top - box.clientHeight / 3;
+    }
+  };
+  if (urlT) onTime();
+  // story → chapter hints: mark the moments whose timestamps are on screen
+  const tsSeen = new Set();
+  let hintRaf = 0;
+  const tsIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? tsSeen.add(e.target) : tsSeen.delete(e.target)));
+    hintRaf ||= requestAnimationFrame(() => {
+      hintRaf = 0;
+      const idx = new Set([...tsSeen].map((a) => chapFor(+a.dataset.t)));
+      chapLinks.forEach((a, k) => a.classList.toggle("in-view", idx.has(k)));
+    });
+  });
+  $$("a.ts").filter((a) => !a.closest("dialog, .dock")).forEach((a) => tsIO.observe(a));
+  const shareBtn = $("#share-btn");
+  shareBtn.addEventListener("click", async () => {
+    const t = Math.floor(getT());
+    const sec = curChap >= 0 ? CHAPTERS[curChap].sec : "";
+    const u = new URL(location.href);
+    u.search = "?t=" + fmt(t); u.hash = sec ? "#" + sec : "";
+    const label = shareBtn.querySelector("span");
+    try { await navigator.clipboard.writeText(u.href.replace(/%3A/gi, ":")); label.textContent = `Copied ${fmt(t)}`; }
+    catch (e) { history.replaceState(history.state, "", u.pathname + u.search.replace(/%3A/gi, ":") + u.hash); label.textContent = "Link in address bar"; }
+    setTimeout(() => (label.textContent = "Share moment"), 2200);
+  });
+
+  // ---------- story ⇄ video focus (same iframe, CSS only) ----------
+  const modeBtn = $("#mode-btn"), modeLabel = $("#dock-mode-label");
+  const pickAnchor = () => {
+    const top = 80 + (isNarrow() && body.classList.contains("watch") ? cssVar("--dock-h") : 0);
+    return $$(".story .chap > *").find((el) => el.getBoundingClientRect().bottom > top);
+  };
+  const setMode = (watch, { replace = true } = {}) => {
+    if (body.classList.contains("watch") === watch) return;
+    const anchor = pickAnchor();
+    const before = anchor ? anchor.getBoundingClientRect().top : 0;
+    const storyVisible = $("#room").getBoundingClientRect().top < innerHeight * 0.5;
+    body.classList.toggle("watch", watch);
+    if (watch) body.classList.remove("dock-collapsed");
+    syncMin();
+    modeBtn.setAttribute("aria-pressed", String(watch));
+    modeBtn.innerHTML = watch
+      ? '<i class="bi bi-book" aria-hidden="true"></i> <span>Focus story</span>'
+      : '<i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span>';
+    modeLabel.textContent = watch ? "Video focus" : "Story focus";
+    if (replace) history.replaceState(history.state, "", buildUrl());
+    updateDockH();
+    // keep the paragraph the reader was on in place while the column resizes
+    if (anchor && storyVisible) {
+      const start = performance.now();
+      const keep = () => {
+        const d = anchor.getBoundingClientRect().top - before;
+        if (Math.abs(d) > 1) window.scrollBy({ top: d, behavior: "instant" });
+        if (performance.now() - start < 700) requestAnimationFrame(keep);
+      };
+      requestAnimationFrame(keep);
+    }
+  };
+  modeBtn.addEventListener("click", () => setMode(!body.classList.contains("watch")));
+  $("#hero-watch").addEventListener("click", (e) => {
+    e.preventDefault();
+    setMode(true);
+    $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  });
+  const updateDockH = () => {
+    const h = isNarrow() && body.classList.contains("watch") ? $("#dock").offsetHeight : 0;
+    document.documentElement.style.setProperty("--dock-h", h + "px");
+  };
+  new ResizeObserver(updateDockH).observe($("#dock"));
+  addEventListener("resize", updateDockH);
+  const minBtn = $("#min-btn");
+  function syncMin() {
+    const c = body.classList.contains("dock-collapsed");
+    minBtn.setAttribute("aria-expanded", String(!c));
+    minBtn.setAttribute("aria-label", c ? "Show the mini video" : "Hide the mini video");
+    minBtn.innerHTML = `<i class="bi ${c ? "bi-chevron-up" : "bi-chevron-down"}" aria-hidden="true"></i>`;
+  }
+  minBtn.addEventListener("click", () => { body.classList.toggle("dock-collapsed"); syncMin(); });
+  if (isNarrow() && !urlT) { body.classList.add("dock-collapsed"); syncMin(); }
+  if (urlState().view === "video") setMode(true, { replace: false });
+  if (urlT) showResume(urlT);
+
+  // ---------- history ----------
+  addEventListener("popstate", () => {
+    const { t, view } = urlState();
+    setMode(view === "video", { replace: false });
+    if (t != null && t !== urlT) {
+      lastT = t;
+      if (ready) { const s = state(); if (s === 1 || s === 2 || s === 3) player.seekTo(t, true); else player.cueVideoById({ videoId: VID, startSeconds: t }); }
+      onTime();
+      if (state() !== 1) showResume(t);
+    }
+    urlT = t;
+  });
+
+  // ---------- section jump nav ----------
+  const menu = $("#jump-menu"), backdrop = $("#jump-backdrop"), curBtn = $("#jump-cur"), curLabel = $("#jump-cur-label");
+  const groups = [];
+  sections.forEach((s) => {
+    const g = s.dataset.act;
+    if (!groups.length || groups[groups.length - 1].name !== g) groups.push({ name: g, items: [] });
+    groups[groups.length - 1].items.push(s);
+  });
+  menu.innerHTML = groups.map((g) => `<div class="jm-group">${g.name}</div><div class="jump-grid">${g.items.map((s) => {
+    const h = (s.querySelector("h2, h3")?.textContent || "").trim();
+    const same = h.replace(/\W/g, "").toLowerCase() === s.dataset.title.replace(/\W/g, "").toLowerCase();
+    return `<a href="#${s.id}" data-sec="${s.id}">${esc(s.dataset.title)}${same ? "" : `<small>${esc(h)}</small>`}</a>`;
+  }).join("")}</div>`).join("");
+  const openMenu = (open) => {
+    menu.classList.toggle("open", open); backdrop.classList.toggle("open", open);
+    curBtn.setAttribute("aria-expanded", String(open));
+    if (open) (menu.querySelector("a.is-cur") || menu.querySelector("a")).focus();
+    else if (menu.contains(document.activeElement)) curBtn.focus();
+  };
+  curBtn.addEventListener("click", () => openMenu(!menu.classList.contains("open")));
+  backdrop.addEventListener("click", () => openMenu(false));
+  menu.addEventListener("click", (e) => { if (e.target.closest("a")) openMenu(false); });
+  menu.addEventListener("keydown", (e) => { if (e.key === "Escape") openMenu(false); });
+  let curIdx = 0;
+  const goSec = (i) => {
+    i = Math.max(0, Math.min(sections.length - 1, i));
+    sections[i].scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+    history.pushState(history.state, "", buildUrl({ hash: sections[i].id }));
+  };
+  $("#jump-prev").addEventListener("click", () => goSec(curIdx - 1));
+  $("#jump-next").addEventListener("click", () => goSec(curIdx + 1));
+  const progress = $("#progress"), jumpNav = $(".jump");
+  const onScroll = () => {
+    const line = innerHeight * 0.3 + cssVar("--dock-h");
+    let i = 0;
+    sections.forEach((s, k) => { if (s.getBoundingClientRect().top <= line) i = k; });
+    if (i !== curIdx || !curLabel.dataset.init) {
+      curIdx = i; curLabel.dataset.init = 1;
+      curLabel.textContent = sections[i].dataset.title;
+      $$("a", menu).forEach((a) => a.classList.toggle("is-cur", a.dataset.sec === sections[i].id));
+      $("#jump-prev").disabled = i === 0;
+      $("#jump-next").disabled = i === sections.length - 1;
+    }
+    jumpNav.classList.toggle("on-hero", $("#room").getBoundingClientRect().top > innerHeight * 0.75 && !menu.classList.contains("open"));
+    const h = document.documentElement.scrollHeight - innerHeight;
+    progress.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%";
+  };
+  let ticking = false;
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { onScroll(); ticking = false; }); } }, { passive: true });
+  onScroll();
+  document.addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest("input, textarea, select, dialog, [contenteditable]")) return;
+    if (e.key === "v" || e.key === "V") setMode(!body.classList.contains("watch"));
+    else if (e.key === "[") goSec(curIdx - 1);
+    else if (e.key === "]") goSec(curIdx + 1);
+  });
+
+  // ---------- popups: transcript and citations ----------
+  const pop = $("#pop"), popBody = $("#pop-body"), popTitle = $("#pop-title"), popSearch = $("#pop-search"), popQ = $("#pop-q"), popCount = $("#pop-count");
+  let popReturn = null;
+  const openPop = (title, html, { search = false } = {}) => {
+    popReturn = document.activeElement;
+    popTitle.textContent = title; popBody.innerHTML = html; enhanceTs(popBody);
+    popSearch.classList.toggle("on", search); popQ.value = ""; popCount.textContent = "";
+    pop.showModal(); popBody.scrollTop = 0;
+    if (search) popQ.focus();
+  };
+  pop.addEventListener("close", () => popReturn?.focus?.());
+  $("#pop-close").addEventListener("click", () => pop.close());
+  pop.addEventListener("click", (e) => { if (e.target === pop) pop.close(); });
+  const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  popQ.addEventListener("input", () => {
+    const q = popQ.value.trim();
+    const blocks = $$(":scope > p, :scope > ul, :scope > ol", popBody).filter((b) => !b.classList.contains("intro"));
+    $$("mark", popBody).forEach((m) => m.replaceWith(m.textContent));
+    popBody.normalize();
+    let n = 0;
+    blocks.forEach((b) => {
+      const hit = !q || b.textContent.toLowerCase().includes(q.toLowerCase());
+      b.classList.toggle("hide", !hit);
+      if (!hit || !q) return;
+      n++;
+      const re = new RegExp(escRe(q), "gi");
+      const walker = document.createTreeWalker(b, NodeFilter.SHOW_TEXT);
+      const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach((node) => {
+        if (!re.test(node.nodeValue)) return; re.lastIndex = 0;
+        const span = document.createElement("span");
+        span.innerHTML = esc(node.nodeValue).replace(re, (m) => `<mark>${m}</mark>`);
+        node.replaceWith(...span.childNodes);
+      });
+    });
+    popCount.textContent = q ? `${n} passage${n === 1 ? "" : "s"}` : "";
+  });
+  let transcriptHtml = null;
+  document.addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-transcript]");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    if (!transcriptHtml) {
+      try {
+        const res = await fetch("transcript.md");
+        if (!res.ok) throw new Error(res.status);
+        let md = await res.text();
+        md = md.replace(/<!--[\s\S]*?-->/g, "").replace(/^# Transcript\s*/, "")
+          .replace(/\[(\d{1,2}):(\d{2})\]/g, (m, a1, b1) => `<a class="ts" href="?t=${a1}:${b1}">${a1}:${b1}</a>`);
+        transcriptHtml = window.marked ? marked.parse(md) : md.split(/\n\n+/).map((p) => `<p>${p}</p>`).join("");
+        transcriptHtml = '<p class="intro">A machine transcript of the 2021 recording, made in 2026 and lightly cleaned; it is not word-perfect (the quotes on this page were re-checked against the audio). Times match the YouTube video: tap one to play that moment. Bold phrases were added for scanning.</p>' + transcriptHtml;
+      } catch (err) { location.href = a.href; return; }
+    }
+    openPop("Transcript", transcriptHtml, { search: true });
+  });
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a[data-pop]");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    const tpl = document.getElementById(a.dataset.pop);
+    openPop(tpl.dataset.title, tpl.innerHTML);
+  });
+
+  // ---------- lightbox ----------
+  const lb = $("#lightbox"), lbImg = $("#lb-img"), lbCap = $("#lb-cap"), lbOpen = $("#lb-open");
+  let lbReturn = null;
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-lightbox]");
+    if (!el || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    const src = el.getAttribute("href");
+    const img = el.querySelector("img");
+    lbImg.src = src; lbImg.alt = img ? img.alt : (el.dataset.caption || "");
+    lbCap.textContent = el.dataset.caption || "";
+    lbOpen.href = src;
+    lbReturn = document.activeElement;
+    lb.showModal();
+    $("#lb-close").focus();
+  });
+  $("#lb-close").addEventListener("click", () => lb.close());
+  lb.addEventListener("click", (e) => { if (e.target === lb || e.target === lbImg) lb.close(); });
+  lb.addEventListener("close", () => lbReturn?.focus?.());
+
+  // ---------- interaction 1: predict, then reveal the 22:47 frame ----------
+  const VERDICTS = {
+    same: "<b>That's what the code promised.</b> Minecraft built one ring out of eleven layers. Faster sending meant less building.",
+    nothing: "<b>Reasonable: a print statement shouldn't matter.</b> This one did. Minecraft built one ring out of eleven layers.",
+    skip: "<b>Here it is.</b> Minecraft built one ring out of eleven layers.",
+    less: "<b>Right, and by a lot.</b> One ring out of eleven layers. Now the puzzle: why would printing help?",
+  };
+  $$("#predict .pick").forEach((b) => b.addEventListener("click", () => {
+    $$("#predict .pick").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    $("#verdict").innerHTML = VERDICTS[b.dataset.pick];
+    $("#reveal-pair").classList.add("revealed");
+    $("#predict").classList.add("answered");
+    $("#after-reveal").classList.add("shown");
+  }));
+
+  // ---------- shared: the exact loop from mineserver3.js ----------
+  // Returns [x, y, z] per setblock command, in send order. Each (x, z) column belongs to one ring, so y = size - max(|x|, |z|).
+  const pyramid = (size) => {
+    const out = [];
+    for (let y = 0; y < size + 1; y++) {
+      const side = size - y;
+      for (let x = -side; x < side + 1; x++) out.push([x, y, -side], [x, y, side], [-side, y, x], [side, y, x]);
+    }
+    return out;
+  };
+  const shade = (y, size) => {
+    // bottom layer dark amber → top pale glow
+    const f = size ? y / size : 1, a = [138, 90, 18], b = [255, 233, 168];
+    return `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * f)).join(",")})`;
+  };
+  const NS = "http://www.w3.org/2000/svg";
+  const drawGrid = (svg, size) => {
+    const w = 2 * size + 1, cells = {};
+    svg.setAttribute("viewBox", `0 0 ${w} ${w}`);
+    svg.replaceChildren();
+    for (let x = -size; x <= size; x++) for (let z = -size; z <= size; z++) {
+      const r = document.createElementNS(NS, "rect");
+      Object.entries({ x: x + size + 0.04, y: z + size + 0.04, width: 0.92, height: 0.92, class: "cell" }).forEach(([k, v]) => r.setAttribute(k, v));
+      svg.append(r);
+      cells[`${x},${z}`] = r;
+    }
+    return cells;
+  };
+  const mark = (svg, size, x, z, cls) => {
+    const r = document.createElementNS(NS, "rect");
+    Object.entries({ x: x + size + 0.2, y: z + size + 0.2, width: 0.6, height: 0.6, class: cls }).forEach(([k, v]) => r.setAttribute(k, v));
+    svg.append(r);
+  };
+  const setParam = (k, v) => {
+    const u = new URL(location.href);
+    u.searchParams.set(k, v);
+    history.replaceState(history.state, "", u.pathname + u.search.replace(/%3A/gi, ":") + u.hash);
+  };
+
+  // ---------- interaction 2: pyramid outline generator ----------
+  const genSvg = $("#gen-svg"), genSize = $("#gen-size"), gen100 = $("#gen-100");
+  const renderGen = () => {
+    const size = +genSize.value, cmds = pyramid(size), cells = drawGrid(genSvg, size), seen = new Map();
+    cmds.forEach(([x, y, z], i) => {
+      const k = `${x},${z}`;
+      if (!seen.has(k)) seen.set(k, { y, first: i, n: 0 });
+      seen.get(k).n++;
+    });
+    seen.forEach(({ y, first, n }, k) => {
+      const [x, z] = k.split(",").map(Number);
+      cells[k].setAttribute("style", `fill:${shade(y, size)}`);
+      if (n > 1) mark(genSvg, size, x, z, "dup");
+      if (gen100.checked && first < 100) {
+        const r = cells[k].cloneNode(); r.setAttribute("class", "first100"); r.removeAttribute("style"); genSvg.append(r);
+      }
+    });
+    $("#gen-out").value = size;
+    $("#gen-cmds").textContent = cmds.length;
+    $("#gen-uniq").textContent = seen.size;
+    $("#gen-dup").textContent = cmds.length - seen.size;
+    genSvg.setAttribute("aria-label", `Pyramid ${size} seen from above: ${size + 1} concentric rings, ${cmds.length} setblock commands for ${seen.size} distinct blocks, ${cmds.length - seen.size} repeats at the corners.` +
+      (gen100.checked ? ` The first 100 commands cover ${Math.min(cmds.length, 100) === cmds.length ? "the whole pyramid" : "only the outer rings"}.` : ""));
+  };
+  const gp = new URL(location.href).searchParams;
+  if (+gp.get("size") >= 1 && +gp.get("size") <= 20) genSize.value = gp.get("size");
+  genSize.addEventListener("input", () => { renderGen(); setParam("size", genSize.value); });
+  gen100.addEventListener("change", renderGen);
+  renderGen();
+
+  // ---------- interaction 3: flow-control simulator ----------
+  // Model (illustrative): Minecraft holds at most CAP unanswered commands and finishes RATE per tick;
+  // a command arriving at a full desk is refused. Only CAP = 100 comes from the video.
+  const CAP = 100, RATE = 2, SIZE = 10, CMDS = pyramid(SIZE);
+  const simSvg = $("#sim-svg"), stream = $("#stream"), playBtn = $("#sim-play");
+  let mode = ["log", "burst", "queue"].includes(gp.get("sim")) ? gp.get("sim") : "burst", sim, raf = 0;
+  const addLine = (cls, text) => {
+    const d = document.createElement("div");
+    d.className = cls; d.textContent = text;
+    stream.prepend(d);
+    while (stream.children.length > 14) stream.lastChild.remove();
+  };
+  const reset = () => {
+    cancelAnimationFrame(raf); raf = 0;
+    sim = { tick: 0, produced: 0, sendQueue: [], desk: [], placed: new Set(), ok: 0, dup: 0, over: 0, done: false, cells: drawGrid(simSvg, SIZE) };
+    stream.replaceChildren();
+    playBtn.querySelector("span").textContent = "Run";
+    $("#sim-verdict").textContent = "Press Run to send pyramid 10 this way.";
+    paint();
+  };
+  const arrive = (i) => {
+    const [x, , z] = CMDS[i];
+    if (sim.desk.length >= CAP) {
+      sim.over++;
+      if (!sim.placed.has(`${x},${z}`)) sim.cells[`${x},${z}`].setAttribute("style", "fill:#3a1d1a;stroke:#ff9a8c;stroke-width:.05");
+      addLine("over", `#${i + 1} Too many commands have been requested`);
+      return;
+    }
+    sim.desk.push(i);
+  };
+  const step = () => {
+    const s = sim;
+    // 1. Node produces
+    if (mode === "burst" && s.tick === 0) while (s.produced < CMDS.length) { addLine("send", `→ #${s.produced + 1} ${cmdText(s.produced)}`); arrive(s.produced++); }
+    if (mode === "log" && s.produced < CMDS.length) { addLine("send", `→ #${s.produced + 1} ${cmdText(s.produced)}  (logged)`); arrive(s.produced++); }
+    if (mode === "queue" && s.tick === 0) { while (s.produced < CMDS.length) s.sendQueue.push(s.produced++); topUp(); }
+    // 2. Minecraft works through its desk; every reply frees a slot
+    for (let k = 0; k < RATE && s.desk.length; k++) {
+      const i = s.desk.shift(), [x, y, z] = CMDS[i], key = `${x},${z}`;
+      if (s.placed.has(key)) { s.dup++; mark(simSvg, SIZE, x, z, "dup"); addLine("dupl", `← #${i + 1} The block couldn't be placed`); }
+      else { s.placed.add(key); s.ok++; s.cells[key].setAttribute("style", `fill:${shade(y, SIZE)}`); addLine("ok", `← #${i + 1} Block placed`); }
+      if (mode === "queue") topUp();
+    }
+    s.tick++;
+    s.done = s.produced >= CMDS.length && !s.desk.length && !s.sendQueue.length;
+  };
+  // mineserver5.js: count = min(100 - awaited, sendQueue.length); awaited == commands on Minecraft's desk here
+  const topUp = () => {
+    const count = Math.min(CAP - sim.desk.length, sim.sendQueue.length);
+    for (let k = 0; k < count; k++) { const i = sim.sendQueue.shift(); addLine("send", `→ #${i + 1} ${cmdText(i)}`); arrive(i); }
+  };
+  const cmdText = (i) => { const [x, y, z] = CMDS[i]; return `setblock ~${x} ~${y} ~${z} glowstone`; };
+  const paint = () => {
+    const waiting = mode === "queue" ? sim.sendQueue.length : CMDS.length - sim.produced;
+    $("#bar-q").style.width = (waiting / CMDS.length) * 100 + "%";
+    $("#v-q").textContent = waiting;
+    $("#bar-f").style.width = (sim.desk.length / 120) * 100 + "%";
+    $("#v-f").textContent = sim.desk.length;
+    $("#c-ok").textContent = sim.ok; $("#c-dup").textContent = sim.dup; $("#c-over").textContent = sim.over;
+    if (!sim.done) return;
+    playBtn.querySelector("span").textContent = "Run again";
+    const t = `${sim.tick} ticks`;
+    $("#sim-verdict").textContent = {
+      log: `All ${sim.ok} blocks placed in ${t}. Printing slowed Node to one command per tick, below Minecraft's pace, so the desk never filled. Correct, but only by luck.`,
+      burst: `Done in ${t}, and wrong: ${sim.ok} blocks placed, ${sim.over} commands refused. The first 100 cover the ground ring and a few blocks of layer two, as in the 22:47 frame.`,
+      queue: `All ${sim.ok} blocks placed in ${t}, faster than the logging version. In flight never passed 100. The only errors are the ${sim.dup} corner repeats.`,
+    }[mode];
+  };
+  const run = () => {
+    if (sim.done || sim.tick) reset();
+    if (reduced) { while (!sim.done) step(); paint(); return; }
+    playBtn.querySelector("span").textContent = "Running…";
+    // pace so each mode takes a few seconds: ~60 ticks per second
+    const loop = () => { step(); paint(); raf = sim.done ? 0 : requestAnimationFrame(loop); };
+    raf = requestAnimationFrame(loop);
+  };
+  playBtn.addEventListener("click", run);
+  $("#sim-end").addEventListener("click", () => { cancelAnimationFrame(raf); raf = 0; if (sim.done) reset(); while (!sim.done) step(); paint(); });
+  $("#sim-reset").addEventListener("click", reset);
+  const radios = $$(".mode-btn");
+  const setSimMode = (m, focus = false) => {
+    mode = m;
+    radios.forEach((b) => { const on = b.dataset.mode === m; b.setAttribute("aria-checked", on); b.tabIndex = on ? 0 : -1; if (on && focus) b.focus(); });
+    setParam("sim", m);
+    reset();
+  };
+  radios.forEach((b, idx) => {
+    b.addEventListener("click", () => setSimMode(b.dataset.mode));
+    b.addEventListener("keydown", (e) => {
+      const d = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+      if (!d) return;
+      e.preventDefault();
+      setSimMode(radios[(idx + d + radios.length) % radios.length].dataset.mode, true);
+    });
+  });
+  radios.forEach((b) => { const on = b.dataset.mode === mode; b.setAttribute("aria-checked", on); b.tabIndex = on ? 0 : -1; });
+  reset();
+})();
+</script>
+</body>
+</html>

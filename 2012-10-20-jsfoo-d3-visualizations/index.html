@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Bubbles Looked Cool · Anand S at JSFoo 2012</title>
+<meta name="description" content="Anand S's 61-minute JSFoo 2012 talk, Beautiful Visualizations with d3.js: a showreel of D3 charts, an audience question about bubbles, and a live bug about cx and cy.">
+<meta property="og:title" content="The Bubbles Looked Cool">
+<meta property="og:description" content="JSFoo Bangalore, 20 October 2012. A room of JavaScript developers saw what D3 could draw. Then someone asked whether it should have.">
+<meta property="og:image" content="https://talks.s-anand.net/2012-10-20-jsfoo-d3-visualizations/comic-page.avif">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Literata:ital,opsz,wght@0,7..72,400..700;1,7..72,400..600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script>
+  (() => {
+    let t = null;
+    try { t = localStorage.getItem("jsfoo-2012-theme"); } catch (e) {}
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  })();
+</script>
+<style>
+:root {
+  --paper: #f5f3ec; --paper-2: #ebe7dc; --card: #fffdf8; --ink: #17161a; --ink-2: #38363e; --muted: #5a5861;
+  --rule: #d4cfc2; --grid: rgba(23, 22, 26, .055);
+  --red: #b0121b; --red-soft: #f7dedd; --blue: #1c4fd0; --blue-soft: #dde6fb; --green: #1d7438; --green-soft: #dcefe1;
+  --amber: #8a4b00; --amber-soft: #f6e7cc;
+  --night: #15151b; --night-2: #202029; --night-3: #2d2d38; --on-night: #eeede8; --on-night-muted: #b9b7c0; --on-night-red: #ff8f87; --on-night-link: #a9c4ff;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Literata", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --font-ui: "Bricolage Grotesque", system-ui, sans-serif;
+  --pad: clamp(1rem, 3vw, 2rem); --dock-w: 380px; --shadow: 0 1px 2px rgba(0,0,0,.06), 0 8px 28px rgba(0,0,0,.08);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #111116; --paper-2: #1a1a21; --card: #1b1b23; --ink: #ecebe6; --ink-2: #d2d0d8; --muted: #a9a7b1;
+    --rule: #34333d; --grid: rgba(255, 255, 255, .045);
+    --red: #ff7a72; --red-soft: #3b1c1e; --blue: #93b3ff; --blue-soft: #1d2640; --green: #6fd394; --green-soft: #17301f;
+    --amber: #f2b45c; --amber-soft: #352816;
+    --night: #08080c; --night-2: #17171e; --night-3: #25252f; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 28px rgba(0,0,0,.45);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #111116; --paper-2: #1a1a21; --card: #1b1b23; --ink: #ecebe6; --ink-2: #d2d0d8; --muted: #a9a7b1;
+  --rule: #34333d; --grid: rgba(255, 255, 255, .045);
+  --red: #ff7a72; --red-soft: #3b1c1e; --blue: #93b3ff; --blue-soft: #1d2640; --green: #6fd394; --green-soft: #17301f;
+  --amber: #f2b45c; --amber-soft: #352816;
+  --night: #08080c; --night-2: #17171e; --night-3: #25252f; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 28px rgba(0,0,0,.45);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+body {
+  margin: 0; font-family: var(--font-body); font-size: 19px; line-height: 1.72; color: var(--ink); overflow-x: hidden;
+  background-color: var(--paper);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+a { color: var(--blue); text-underline-offset: .18em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; border-radius: 3px; }
+img { max-width: 100%; height: auto; display: block; }
+code, kbd { font-family: var(--font-mono); font-size: .84em; }
+p code, li code, td code { background: var(--paper-2); padding: .05em .3em; border-radius: 3px; }
+kbd { border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 3px; padding: 0 .3em; background: var(--card); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: -999px; top: 0; background: var(--ink); color: var(--paper); padding: .5rem 1rem; z-index: 1000; }
+.skip:focus { left: .5rem; top: .5rem; }
+
+/* progress + masthead */
+.progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--red); z-index: 900; }
+.masthead { border-bottom: 1px solid var(--rule); background: color-mix(in srgb, var(--paper) 92%, transparent); }
+.masthead-inner { max-width: 1500px; margin: 0 auto; padding: .55rem var(--pad); display: flex; justify-content: space-between; align-items: center; gap: 1rem; font: 600 .78rem var(--font-mono); letter-spacing: .06em; color: var(--muted); }
+.masthead a { color: var(--ink); text-decoration: none; }
+.masthead a:hover { color: var(--red); }
+.theme-btn { appearance: none; background: transparent; border: 1px solid var(--rule); color: var(--ink); border-radius: 4px; padding: .25rem .55rem; cursor: pointer; font: inherit; }
+.theme-btn:hover { border-color: var(--ink); }
+
+/* hero */
+.hero { max-width: 1500px; margin: 0 auto; padding: clamp(2rem, 5vw, 4rem) var(--pad) 2rem; display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; }
+.event-label { font: 600 .8rem/1.5 var(--font-mono); letter-spacing: .05em; color: var(--red); margin-bottom: 1rem; }
+.event-label span { color: var(--muted); }
+.hero h1 { font: 800 clamp(2.9rem, 7.2vw, 6.1rem)/.92 var(--font-display); letter-spacing: -.035em; margin: 0 0 1.2rem; }
+.hero h1 .dot { color: var(--red); }
+.hero-sub { font-size: clamp(1.15rem, 2vw, 1.4rem); line-height: 1.5; color: var(--ink-2); max-width: 36em; margin: 0 0 1.6rem; }
+.hero-sub strong { color: var(--ink); }
+.hero-meta { display: grid; gap: .9rem; font: 500 .95rem/1.5 var(--font-ui); }
+.meta-row { display: flex; flex-wrap: wrap; gap: .45rem 1rem; color: var(--muted); }
+.meta-row b { color: var(--ink); font-weight: 650; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: .55rem; }
+.btn { appearance: none; display: inline-flex; align-items: center; gap: .45rem; border: 1.5px solid var(--ink); background: var(--card); color: var(--ink); border-radius: 999px; padding: .5rem 1rem; font: 650 .95rem var(--font-ui); text-decoration: none; cursor: pointer; }
+.btn:hover { background: var(--ink); color: var(--paper); }
+.btn.primary { background: var(--red); border-color: var(--red); color: #fff; }
+.btn.primary:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+:root[data-theme="dark"] .btn.primary { color: #1a0605; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.primary { color: #1a0605; } }
+.audio { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: .6rem .8rem; max-width: 34rem; }
+.audio span { font: 600 .82rem var(--font-ui); color: var(--muted); }
+.audio audio { width: 100%; display: block; margin-top: .35rem; height: 36px; }
+.comic { margin: 0; }
+.comic > a { display: block; background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .5rem; box-shadow: var(--shadow); cursor: zoom-in; transform: rotate(.6deg); transition: transform .3s; }
+.comic > a:hover { transform: rotate(0); }
+.comic figcaption { font: .85rem/1.5 var(--font-ui); color: var(--muted); margin-top: .8rem; }
+.comic figcaption b { color: var(--ink); }
+
+/* reading room: story + persistent video dock */
+.room { display: grid; grid-template-columns: minmax(0, 1fr) var(--dock-w); gap: 0 clamp(1.2rem, 3vw, 2.8rem); padding: 0 var(--pad); max-width: 1500px; margin: 0 auto; }
+body.watch .room { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+.story { min-width: 0; max-width: 46rem; padding-bottom: 3rem; }
+body.watch .story { font-size: 17px; }
+.chap { padding-top: 3.2rem; scroll-margin-top: 1rem; }
+body.watch .story .chap { opacity: .6; transition: opacity .3s; }
+body.watch .story .chap.is-now, body.watch .story .chap:hover, body.watch .story .chap:focus-within { opacity: 1; }
+.act { margin: 4.2rem 0 0; padding: 1.1rem 0 0; border-top: 2px solid var(--ink); display: flex; justify-content: space-between; gap: 1rem; font: 600 .78rem var(--font-mono); letter-spacing: .04em; color: var(--muted); }
+.act b { color: var(--ink); }
+.kicker { font: 600 .8rem/1.4 var(--font-mono); color: var(--red); margin: 0 0 .5rem; }
+.kicker span { color: var(--muted); }
+.chap h2 { font: 750 clamp(1.9rem, 3.6vw, 2.75rem)/1.04 var(--font-display); letter-spacing: -.025em; margin: 0 0 1.1rem; }
+.chap h3 { font: 700 1.3rem/1.2 var(--font-display); margin: 2rem 0 .6rem; }
+.chap p { margin: 0 0 1.15rem; }
+.chap ul, .chap ol { padding-left: 1.3rem; margin: 0 0 1.2rem; }
+.chap li { margin-bottom: .4rem; }
+.lede { font-size: 1.12em; }
+.chap strong { color: var(--ink); font-weight: 650; }
+
+/* timestamp + source chips */
+a.ts { display: inline-flex; align-items: center; gap: .15rem; font: 600 .74em/1 var(--font-mono); color: var(--red); background: var(--red-soft); border-radius: 999px; padding: .28em .55em .28em .4em; text-decoration: none; white-space: nowrap; vertical-align: .08em; }
+a.ts:hover { background: var(--red); color: var(--paper); }
+a.ts.flash { animation: flash 1s; }
+@keyframes flash { 0%, 60% { box-shadow: 0 0 0 4px var(--red); } 100% { box-shadow: 0 0 0 0 transparent; } }
+a.src { font: 600 .7em/1 var(--font-mono); color: var(--blue); border: 1px solid currentColor; border-radius: 3px; padding: .15em .35em; text-decoration: none; vertical-align: .08em; margin-left: .15em; white-space: nowrap; }
+a.src:hover { background: var(--blue); color: var(--paper); }
+
+/* quotes */
+.pull { margin: 2.2rem 0 2.2rem -2.2rem; padding: .2rem 0 .2rem 1.4rem; border-left: 5px solid var(--red); }
+.pull p { font: 650 clamp(1.4rem, 2.6vw, 1.9rem)/1.22 var(--font-display); letter-spacing: -.012em; margin: 0 0 .55rem; color: var(--ink); }
+.pull cite { font: 500 .85rem var(--font-ui); font-style: normal; color: var(--muted); display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.pull.blue { border-color: var(--blue); }
+.dialogue { margin: 1.8rem 0 2rem; display: grid; gap: .7rem; }
+.line { display: grid; grid-template-columns: 6.2rem minmax(0, 1fr); gap: .8rem; align-items: first baseline; }
+.who { font: 700 .76rem/1.2 var(--font-mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); text-align: right; }
+.line.anand .who { color: var(--red); }
+.say { background: var(--card); border: 1px solid var(--rule); border-radius: 4px 14px 14px 14px; padding: .65rem .95rem; font-size: .96em; line-height: 1.55; }
+.line.anand .say { border-color: color-mix(in srgb, var(--red) 40%, var(--rule)); }
+.say .ts { margin-left: .3rem; }
+
+/* figures */
+.still { margin: 2rem 0; }
+.still > a { display: block; cursor: zoom-in; border-radius: 4px; overflow: hidden; border: 1px solid var(--rule); background: #000; }
+.still img { width: 100%; height: auto; }
+.still figcaption, .exhibit figcaption { font: .85rem/1.5 var(--font-ui); color: var(--muted); margin-top: .55rem; }
+.still figcaption b, .exhibit figcaption b { color: var(--ink); }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+.pair .still { margin: 0; }
+
+/* bands inside the story column */
+.band { margin: 2.4rem -1.4rem; padding: 1.6rem 1.4rem 1.4rem; border-radius: 10px; }
+.band.night { background: var(--night); color: var(--on-night); }
+.band.night a { color: var(--on-night-link); }
+.band.night strong { color: #fff; }
+.band.night .kicker { color: var(--on-night-red); }
+.band.night .kicker span, .band.night figcaption { color: var(--on-night-muted); }
+.band.night figcaption b { color: var(--on-night); }
+.band.night a.ts { background: #3a1c1e; color: var(--on-night-red); }
+.band.night a.ts:hover { background: var(--on-night-red); color: var(--night); }
+.band.tint { background: var(--paper-2); border: 1px solid var(--rule); }
+
+/* editorial 2026 notes */
+.note26 { margin: 2rem 0; border: 1.5px dashed var(--amber); background: var(--amber-soft); border-radius: 8px; padding: 1rem 1.15rem .4rem; }
+.note26 .tag { display: inline-block; font: 700 .7rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--amber); margin-bottom: .4rem; }
+.note26 p { font-size: .96em; }
+.note26 a { color: var(--ink); }
+
+/* code panels */
+.codepair { display: grid; grid-template-columns: minmax(0, 1fr); gap: .8rem; margin: 1.6rem 0; }
+.code { margin: 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--rule); background: var(--night); color: var(--on-night); min-width: 0; }
+.code .ch { display: flex; justify-content: space-between; gap: .5rem; padding: .45rem .75rem; font: 600 .72rem var(--font-mono); letter-spacing: .03em; background: var(--night-3); color: var(--on-night-muted); }
+.code .ch b { color: var(--on-night); }
+.code .ch .v2 { color: var(--on-night-red); }
+.code .ch .v7 { color: #9be3b0; }
+.code .ch a { color: var(--on-night-link); }
+.code pre { margin: 0; padding: .8rem .9rem; overflow-x: auto; font: .78rem/1.6 var(--font-mono); }
+.code mark { background: #5b1d21; color: #ffd2cf; border-radius: 2px; padding: 0 .1em; }
+.code mark.ok { background: #1c4a2b; color: #c9f5d6; }
+.code .cm { color: #8e8c99; }
+
+/* interactive exhibits */
+.exhibit { margin: 2rem -1.4rem 2.4rem; background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 1.1rem 1.2rem 1rem; box-shadow: var(--shadow); }
+.ex-head { display: flex; justify-content: space-between; gap: .6rem 1rem; flex-wrap: wrap; align-items: baseline; margin-bottom: .6rem; }
+.ex-title { font: 700 1.05rem/1.25 var(--font-display); }
+.ex-tag { font: 600 .7rem var(--font-mono); letter-spacing: .04em; color: var(--muted); }
+.ex-tag.orig { color: var(--red); }
+.ex-tag.recon { color: var(--blue); }
+.ask { font: 600 1.05rem/1.4 var(--font-display); margin: .3rem 0 .7rem; }
+.choices, .seg { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 .7rem; }
+.choices button, .seg button { appearance: none; font: 600 .9rem var(--font-ui); border: 1.5px solid var(--rule); background: var(--paper); color: var(--ink); border-radius: 999px; padding: .38rem .85rem; cursor: pointer; }
+.choices button:hover, .seg button:hover { border-color: var(--ink); }
+.seg button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.choices button.right { background: var(--green-soft); border-color: var(--green); color: var(--ink); }
+.choices button.wrong { background: var(--red-soft); border-color: var(--red); color: var(--ink); }
+.seg-label { font: 600 .72rem var(--font-mono); color: var(--muted); align-self: center; margin-right: .2rem; }
+.reveal { font: .95rem/1.55 var(--font-ui); border-left: 3px solid var(--green); background: var(--green-soft); padding: .55rem .8rem; border-radius: 0 6px 6px 0; margin: 0 0 .8rem; }
+.reveal[hidden] { display: none; }
+.reveal b { color: var(--ink); }
+.viz { width: 100%; height: auto; display: block; font-family: var(--font-ui); }
+.viz text { fill: var(--ink); }
+.viz .lab { font-size: 16px; }
+.viz .val { font: 600 14px var(--font-mono); fill: var(--muted); }
+.viz .axis { stroke: var(--rule); }
+.readout { font: 500 .85rem/1.45 var(--font-mono); color: var(--muted); min-height: 2.9em; margin: .4rem 0 0; }
+.readout b { color: var(--ink); }
+
+/* join playground */
+.pg { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 1rem; align-items: start; }
+.pg-stage { background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; position: relative; }
+.pg-stage svg { width: 100%; height: auto; display: block; }
+.pg-stage .origin { position: absolute; left: .4rem; top: .3rem; font: 600 .68rem var(--font-mono); color: var(--muted); pointer-events: none; }
+.pg-side { display: grid; gap: .7rem; min-width: 0; }
+.pg-code { margin: 0; background: var(--night); color: var(--on-night); border-radius: 6px; padding: .7rem .8rem; font: .76rem/1.6 var(--font-mono); overflow-x: auto; white-space: pre; }
+.pg-code .attr { color: #ffd38a; }
+.pg-code .bad { background: #5b1d21; color: #ffd2cf; border-radius: 2px; }
+.pg-code .good { background: #1c4a2b; color: #c9f5d6; border-radius: 2px; }
+.pg-data { font: 600 .9rem var(--font-mono); }
+.inspect { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 6px; padding: .55rem .7rem; font: .78rem/1.55 var(--font-mono); color: var(--ink-2); min-height: 5.2em; overflow-wrap: anywhere; }
+.inspect b { color: var(--ink); }
+.inspect .tagname { color: var(--red); }
+.legend-joins { display: flex; flex-wrap: wrap; gap: .3rem .9rem; font: 600 .78rem var(--font-ui); color: var(--muted); }
+.legend-joins i { display: inline-block; width: .8em; height: .8em; border-radius: 50%; margin-right: .3em; vertical-align: -.05em; }
+
+/* live original demo frame */
+.museum { margin: 2rem -1.4rem 2.4rem; background: var(--night); border-radius: 10px; padding: 1rem 1rem .9rem; color: var(--on-night); }
+.museum .seg button { background: var(--night-2); color: var(--on-night); border-color: var(--night-3); }
+.museum .seg button:hover { border-color: var(--on-night); }
+.museum .seg button[aria-pressed="true"] { background: var(--on-night); color: var(--night); border-color: var(--on-night); }
+.museum .ex-title { color: var(--on-night); }
+.museum .ex-tag.orig { color: var(--on-night-red); }
+.frame { position: relative; background: #fff; border-radius: 6px; overflow: hidden; aspect-ratio: 1000 / 820; }
+.frame iframe { position: absolute; inset: 0; width: 1000px; height: 820px; border: 0; transform-origin: 0 0; }
+.frame .poster { position: absolute; inset: 0; display: grid; place-items: center; background: #0d0d12; color: #fff; text-align: center; padding: 1rem; }
+.frame .poster img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .45; }
+.frame .poster button { position: relative; font: 700 1rem var(--font-ui); background: var(--on-night); color: var(--night); border: 0; border-radius: 999px; padding: .6rem 1.1rem; cursor: pointer; }
+.museum figcaption { font: .85rem/1.5 var(--font-ui); color: var(--on-night-muted); margin-top: .6rem; }
+.museum figcaption a { color: var(--on-night-link); }
+.museum figcaption b { color: var(--on-night); }
+
+/* cards */
+.qa { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; margin: 1.6rem 0 2rem; }
+.qa .card { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: .9rem 1rem; font-size: .9em; line-height: 1.55; }
+.qa .card h4 { font: 700 .98rem/1.3 var(--font-display); margin: 0 0 .4rem; }
+.qa .card p { margin: 0 0 .5rem; }
+.qa .card .q { font: 600 .72rem var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; display: block; margin-bottom: .3rem; }
+
+/* ladder + small figures */
+.ladder { margin: 1.8rem 0 2rem; }
+.ladder svg { width: 100%; height: auto; display: block; }
+.ladder figcaption { font: .85rem/1.5 var(--font-ui); color: var(--muted); margin-top: .4rem; }
+.ladder text { fill: var(--ink); font-family: var(--font-ui); }
+.ladder .sub { fill: var(--muted); font-size: 12px; }
+
+/* dock */
+.dock { position: sticky; top: .8rem; align-self: start; margin-top: 3.2rem; max-height: calc(100vh - 1.6rem); display: flex; flex-direction: column; gap: .6rem; background: var(--night); color: var(--on-night); border-radius: 10px; padding: .75rem; box-shadow: var(--shadow); z-index: 300; }
+.dock a { color: var(--on-night-link); }
+.dock-head { display: flex; justify-content: space-between; gap: .5rem; font: 600 .72rem var(--font-mono); letter-spacing: .05em; color: var(--on-night-muted); flex: none; }
+.dock-head b { color: var(--on-night); }
+.vwrap { position: relative; flex: none; background: #000; aspect-ratio: 16 / 9; border-radius: 5px; overflow: hidden; }
+.vwrap iframe, .vwrap > div { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.vwrap .nojs { display: grid; place-items: center; color: #fff; font: 600 1rem var(--font-ui); text-align: center; padding: 1rem; }
+.vwrap .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .5; }
+.now { font: 500 .93rem/1.35 var(--font-ui); min-height: 2.6em; flex: none; }
+.now .t { font-family: var(--font-mono); color: var(--on-night-red); margin-right: .45rem; }
+.now .in-story { display: block; font-size: .84rem; color: var(--on-night-muted); margin-top: .15rem; }
+.resume { display: none; flex: none; }
+.resume.show { display: block; }
+.resume button { width: 100%; font: 700 1rem var(--font-ui); background: var(--on-night-red); color: var(--night); border: 0; border-radius: 5px; padding: .55rem 1rem; cursor: pointer; }
+.resume button:hover { background: #fff; }
+.dock-ctrls { display: flex; flex-wrap: wrap; gap: .4rem; flex: none; }
+.dbtn { appearance: none; border: 1px solid #3c3c49; background: var(--night-2); color: var(--on-night); border-radius: 5px; padding: .4rem .65rem; font: 600 .88rem var(--font-ui); cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; text-decoration: none; }
+.dock a.dbtn { color: var(--on-night); }
+.dbtn:hover, .dock a.dbtn:hover { background: var(--night-3); color: #fff; }
+.dbtn.mode { background: var(--on-night-red); color: var(--night); border-color: var(--on-night-red); }
+.dbtn.mode:hover { background: #fff; color: var(--night); }
+.chapters { overflow-y: auto; min-height: 0; flex: 1 1 auto; scrollbar-width: thin; }
+.chapters summary { font: 600 .72rem var(--font-mono); letter-spacing: .05em; color: var(--on-night-muted); cursor: pointer; padding: .2rem 0; }
+.chapters ol { list-style: none; margin: .2rem 0 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 1px; }
+body.watch .chapters ol { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: .6rem; }
+.chapters li a { display: flex; gap: .55rem; align-items: baseline; padding: .26rem .45rem; border-radius: 4px; text-decoration: none; font: 500 .9rem/1.25 var(--font-ui); }
+.dock .chapters li a { color: var(--on-night); }
+.chapters li a .ct { font: .74rem var(--font-mono); color: var(--on-night-red); flex: 0 0 auto; }
+.chapters li a:hover { background: var(--night-2); }
+.dock .chapters li a.is-now { background: var(--on-night-red); color: var(--night); }
+.chapters li a.is-now .ct { color: var(--night); }
+.chapters li a.in-view { box-shadow: inset 3px 0 0 var(--on-night-red); }
+.dock .dock-min { display: none; }
+
+/* close: takeaways, ledger, footer */
+.takeaways { width: 100vw; margin-left: calc(50% - 50vw); background: var(--night); color: var(--on-night); padding: 3.5rem var(--pad) 3rem; margin-top: 2rem; margin-bottom: 0; }
+.takeaways .inner, .ledger-sec, footer.site { max-width: 1240px; margin-left: auto; margin-right: auto; }
+.band-label { font: 600 .78rem var(--font-mono); letter-spacing: .06em; color: var(--on-night-red); margin-bottom: .5rem; }
+.takeaways h2 { font: 750 clamp(1.9rem, 3.6vw, 2.7rem)/1.05 var(--font-display); margin: 0 0 1.6rem; letter-spacing: -.02em; }
+.cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.cards .card { background: var(--night-2); border: 1px solid var(--night-3); border-radius: 10px; padding: 1.1rem 1.1rem 1rem; font-size: .95rem; line-height: 1.55; }
+.cards .num { font: 700 .8rem var(--font-mono); color: var(--on-night-red); margin-bottom: .4rem; }
+.cards h3 { font: 700 1.15rem/1.2 var(--font-display); margin: 0 0 .5rem; color: #fff; }
+.cards p { margin: 0; color: var(--on-night); }
+.cards a { color: var(--on-night-link); }
+.cards code, .band.night code, .museum code { background: var(--night-3); color: #fff; }
+.cards a.ts { background: #3a1c1e; color: var(--on-night-red); }
+.cards a.ts:hover { background: var(--on-night-red); color: var(--night); }
+.ledger-sec { padding: 3.5rem var(--pad) 1rem; scroll-margin-top: 1rem; }
+.ledger-sec h2 { font: 750 clamp(1.7rem, 3vw, 2.3rem)/1.1 var(--font-display); margin: 0 0 .6rem; }
+.ledger-sec > p { max-width: 46rem; color: var(--ink-2); }
+.case-no { font: 600 .78rem var(--font-mono); color: var(--red); margin-bottom: .4rem; }
+.table-wrap { overflow-x: auto; margin: 1.2rem 0 2rem; border: 1px solid var(--rule); border-radius: 8px; background: var(--card); }
+table.ledger { width: 100%; border-collapse: collapse; font: .88rem/1.5 var(--font-ui); min-width: 760px; }
+.ledger th, .ledger td { text-align: left; vertical-align: top; padding: .6rem .75rem; border-bottom: 1px solid var(--rule); }
+.ledger th { font: 600 .74rem var(--font-mono); letter-spacing: .04em; color: var(--muted); background: var(--paper-2); }
+.ledger tr:last-child td { border-bottom: 0; }
+.st { display: inline-block; font: 700 .7rem var(--font-mono); border-radius: 3px; padding: .1rem .4rem; margin: .1rem 0; white-space: nowrap; }
+.st.ok { background: var(--green-soft); color: var(--green); }
+.st.ctx { background: var(--amber-soft); color: var(--amber); }
+.st.asis { background: var(--blue-soft); color: var(--blue); }
+footer.site { padding: 1.5rem var(--pad) 6rem; border-top: 1px solid var(--rule); font: .88rem/1.65 var(--font-ui); color: var(--ink-2); display: grid; gap: .7rem; }
+footer.site .muted { color: var(--muted); }
+
+/* jump nav */
+.jump { position: fixed; left: 1rem; bottom: 1rem; z-index: 400; display: flex; align-items: center; gap: 2px; background: var(--ink); color: var(--paper); border-radius: 999px; padding: 3px; box-shadow: var(--shadow); transition: opacity .25s, transform .25s; }
+.jump.on-hero { opacity: 0; transform: translateY(1rem); pointer-events: none; }
+.jump button { appearance: none; background: transparent; color: var(--paper); border: 0; border-radius: 999px; padding: .45rem .7rem; font: 600 .88rem var(--font-ui); cursor: pointer; display: inline-flex; align-items: center; gap: .45rem; }
+.jump button:hover:not(:disabled) { background: color-mix(in srgb, var(--paper) 18%, transparent); }
+.jump button:disabled { opacity: .35; cursor: default; }
+.jump-cur span { max-width: 16rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.jump-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.25); z-index: 390; display: none; }
+.jump-backdrop.open { display: block; }
+.jump-menu { position: fixed; left: 1rem; bottom: 4rem; z-index: 410; width: min(720px, calc(100vw - 2rem)); max-height: calc(100vh - 6rem); overflow-y: auto; background: var(--card); color: var(--ink); border: 1px solid var(--rule); border-radius: 12px; box-shadow: var(--shadow); padding: .8rem 1rem 1rem; display: none; }
+.jump-menu.open { display: block; }
+.jm-group { font: 600 .72rem var(--font-mono); letter-spacing: .05em; color: var(--red); margin: .7rem 0 .3rem; }
+.jump-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .3rem; }
+.jump-grid a { display: block; padding: .4rem .55rem; border-radius: 6px; text-decoration: none; color: var(--ink); font: 600 .88rem/1.25 var(--font-ui); border: 1px solid transparent; }
+.jump-grid a small { display: block; font-weight: 400; color: var(--muted); font-size: .78rem; margin-top: .1rem; }
+.jump-grid a:hover { background: var(--paper-2); }
+.jump-grid a.is-cur { border-color: var(--red); background: var(--red-soft); }
+
+/* dialogs */
+dialog { border: 0; padding: 0; }
+dialog::backdrop { background: rgba(8, 8, 12, .72); }
+.pop { width: min(820px, calc(100vw - 1.5rem)); max-height: calc(100vh - 2rem); background: var(--card); color: var(--ink); border-radius: 12px; box-shadow: var(--shadow); }
+.pop[open] { display: flex; flex-direction: column; }
+.pop-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .8rem 1.1rem; border-bottom: 1px solid var(--rule); }
+.pop-head h3 { margin: 0; font: 700 1.15rem var(--font-display); }
+.pop-head button { appearance: none; background: transparent; border: 1px solid var(--rule); color: var(--ink); border-radius: 5px; padding: .3rem .7rem; cursor: pointer; font: 600 .88rem var(--font-ui); }
+.pop-search { display: none; align-items: center; gap: .5rem; padding: .5rem 1.1rem; border-bottom: 1px solid var(--rule); font: .85rem var(--font-ui); color: var(--muted); }
+.pop-search.on { display: flex; }
+.pop-search input { flex: 1; font: 1rem var(--font-ui); padding: .35rem .5rem; border: 1px solid var(--rule); border-radius: 5px; background: var(--paper); color: var(--ink); }
+.pop-body { overflow-y: auto; padding: 1rem 1.3rem 1.5rem; font-size: 1rem; line-height: 1.65; }
+.pop-body p { margin: 0 0 .9rem; }
+.pop-body ul, .pop-body ol { margin: 0 0 .9rem 1.3rem; padding: 0; }
+.pop-body h2, .pop-body h3 { font-family: var(--font-display); margin: 1.2rem 0 .5rem; }
+.pop-body .intro { font: .9rem/1.5 var(--font-ui); color: var(--muted); border-left: 3px solid var(--amber); padding-left: .7rem; }
+.pop-body .hide { display: none; }
+.pop-body mark { background: #ffe58a; color: #000; }
+.lightbox { background: transparent; max-width: 96vw; max-height: 96vh; }
+.lightbox[open] { display: flex; flex-direction: column; align-items: center; gap: .5rem; }
+.lightbox img { max-width: 96vw; max-height: calc(96vh - 4rem); object-fit: contain; border-radius: 4px; background: #000; }
+.lb-bar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: 100%; max-width: 1100px; font: .88rem/1.4 var(--font-ui); color: #eee; }
+.lb-act { display: flex; gap: .8rem; align-items: center; flex: none; }
+.lb-bar a { color: #a9c4ff; white-space: nowrap; }
+.lb-bar button { background: transparent; color: #fff; border: 1px solid #666; border-radius: 4px; padding: .3rem .7rem; cursor: pointer; font: 600 .9rem var(--font-ui); }
+
+/* responsive */
+@media (max-width: 1200px) { :root { --dock-w: 330px; } .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 999px) {
+  .hero { grid-template-columns: 1fr; }
+  .comic { max-width: 560px; width: 100%; margin: 0 auto; }
+  .room { display: block; }
+  .story { margin: 0 auto; }
+  .dock { position: fixed; right: .7rem; bottom: 4.3rem; top: auto; margin: 0; width: min(54vw, 290px); max-height: none; padding: .45rem; gap: .4rem; }
+  .dock .dock-head, .dock .now, .dock .chapters, .dock .dock-ctrls .wide-only { display: none; }
+  .dock .dbtn { padding: .35rem .5rem; font-size: .84rem; flex: 1 1 auto; justify-content: center; }
+  .dock .dock-min { display: inline-flex; }
+  body.dock-collapsed:not(.watch) .dock .vwrap { height: 0; aspect-ratio: auto; visibility: hidden; }
+  body.dock-collapsed:not(.watch) .dock { width: auto; }
+  body.dock-collapsed:not(.watch) .dock #share-btn, body.dock-collapsed:not(.watch) .dock .resume { display: none; }
+  body.watch .dock { left: 0; right: 0; top: 0; bottom: auto; width: auto; border-radius: 0 0 8px 8px; padding: .5rem .6rem .6rem; }
+  body.watch .dock .now { display: block; font-size: .86rem; min-height: 0; }
+  body.watch .dock .now .in-story { display: none; }
+  body.watch .dock .dock-min { display: none; }
+  body.watch { padding-top: var(--dock-h, 0px); }
+  body.watch .chap { scroll-margin-top: calc(var(--dock-h, 0px) + .5rem); }
+  body.watch .story .chap { opacity: .92; }
+  .jump { left: .7rem; bottom: .7rem; }
+  .jump-menu { left: .7rem; }
+}
+@media (max-width: 720px) {
+  body { font-size: 18px; }
+  .pull { margin-left: 0; padding-left: 1rem; }
+  .band, .exhibit, .museum { margin-left: 0; margin-right: 0; padding-left: .9rem; padding-right: .9rem; }
+  .pair, .codepair, .pg, .qa { grid-template-columns: 1fr; }
+  .line { grid-template-columns: 1fr; gap: .2rem; }
+  .who { text-align: left; }
+  .cards { grid-template-columns: 1fr; }
+  .jump-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .jump-cur span { max-width: 9rem; }
+  .act { flex-direction: column; gap: .2rem; }
+}
+@media print { .dock, .jump, .progress { display: none !important; } .room { display: block; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#story">Skip to the story</a>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <a href="../">TALKS · S ANAND</a>
+    <span>SAT 20 OCT 2012 · BANGALORE</span>
+    <button class="theme-btn" id="theme-btn" type="button" aria-label="Toggle light or dark theme"><i class="bi bi-circle-half" aria-hidden="true"></i></button>
+  </div>
+</header>
+
+<section class="hero" aria-labelledby="hero-title">
+  <div>
+    <div class="event-label">JSFoo 2012 <span>·</span> NIMHANS Convention Centre, Bangalore <span>·</span> 14:00–15:00</div>
+    <h1 id="hero-title">The bubbles looked cool<span class="dot">.</span></h1>
+    <p class="hero-sub">For an hour, Anand S showed a room of JavaScript developers what <a href="https://d3js.org/">D3</a> could draw: Indian welfare spending, JavaScript mistakes, the conference's own tweets, a supermarket, a century of weather, an epic in Sanskrit. <strong>Then someone in the audience asked whether the bubbles had been a good idea at all.</strong> The speaker's candid answer turned a showreel into a lesson about judgment.</p>
+    <div class="hero-meta">
+      <div class="meta-row"><span><b>Talk</b> · <em>Beautiful Visualizations with d3.js</em></span><span><b>Speaker</b> · Anand S, <a href="https://gramener.com/">Gramener</a></span><span><b>Length</b> · 61 min, with questions</span></div>
+      <div class="hero-actions">
+        <a class="btn primary" href="?view=video" id="hero-watch"><i class="bi bi-play-fill" aria-hidden="true"></i> Watch alongside the story</a>
+        <a class="btn" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+        <a class="btn" href="https://github.com/sanand0/beautiful-visualisations"><i class="bi bi-github" aria-hidden="true"></i> The 2012 code</a>
+      </div>
+      <div class="audio">
+        <span><i class="bi bi-headphones" aria-hidden="true"></i> Listen to the recording (Opus audio, 61 min)</span>
+        <audio controls preload="metadata"><source src="https://github.com/sanand0/talks/releases/download/talks/2012-10-20-jsfoo-d3-visualizations.opus" type="audio/ogg; codecs=opus"></audio>
+      </div>
+    </div>
+  </div>
+  <figure class="comic">
+    <a href="comic-page.avif" data-lightbox data-caption="The talk as a comic page: a 2026 interpretation made with AI image generation. It is not a photograph of the stage, and faces and slides are stylised.">
+      <img src="comic-page.avif" width="1055" height="1491" alt="Comic page in six panels. A speaker shows a bubble chart of NREGA spending to a JSFoo 2012 audience. Tweets, shopping paths, an India weather map and a word cloud follow, with the audience saying Oooh and Nice. An audience member with a microphone asks: But is this actually a good visualization, or does it just look cool? The speaker answers: Honestly? I used circles because they looked cool, next to a peacock labelled Pretty and a bar chart labelled Useful. A panel compares a bubble chart with a bar chart of the same data: position helps us compare better than area. Another shows data turning into SVG circles. The speaker groans Oops! beside code using x and y instead of cx and cy, with all the circles stuck in a corner. The final caption: Beautiful visualization is not enough. D3 was the tool; judgment was the real skill.">
+    </a>
+    <figcaption><b>The talk as a comic page.</b> A 2026 interpretation made with AI image generation, not a stage photograph. The real frames from the recording appear throughout the story below. Tap to enlarge.</figcaption>
+  </figure>
+</section>
+
+<div class="room" id="room">
+<main class="story" id="story">
+
+<section class="chap" id="guess" data-act="Cold open" data-title="Guess first">
+  <p class="kicker">d3.select("#guess") <span>· before we press play</span></p>
+  <h2>Which bubble is bigger, and by how much?</h2>
+  <p class="lede">Here are <strong>94 kinds of JavaScript mistake</strong>, counted by running <a href="https://www.jslint.com/">JSLint</a> over code crawled from GitHub. Each circle is one lint rule. The bigger the circle, the more often that rule was broken. Anand put this picture on the screen at JSFoo in Bangalore on 20 October 2012.</p>
+
+  <figure class="exhibit" id="ex-pack" aria-labelledby="ex-pack-t">
+    <div class="ex-head"><span class="ex-title" id="ex-pack-t">94 JSLint rules, sized by how often they were broken</span><span class="ex-tag recon">RECONSTRUCTED FROM jslint.csv (2012)</span></div>
+    <p class="ask" id="pack-ask">The biggest circle is the most-broken rule. <strong>How many times more often was it broken than the runner-up?</strong></p>
+    <div class="choices" id="pack-choices" role="group" aria-labelledby="pack-ask">
+      <button type="button" data-v="1.1">About 1.1×</button><button type="button" data-v="1.5">About 1.5×</button><button type="button" data-v="2">About 2×</button><button type="button" data-v="3">About 3×</button>
+    </div>
+    <p class="reveal" id="pack-reveal" hidden></p>
+    <div class="seg" id="pack-enc" role="group" aria-label="How to encode the counts">
+      <span class="seg-label">DRAW AS</span>
+      <button type="button" data-enc="sqrt" aria-pressed="true">Circles, as coded in 2012</button>
+      <button type="button" data-enc="area" aria-pressed="false">Circles, area = count</button>
+      <button type="button" data-enc="dots" aria-pressed="false">Sorted dots on one axis</button>
+    </div>
+    <div class="seg" id="pack-key" role="group" aria-label="What to count">
+      <span class="seg-label">COUNT</span>
+      <button type="button" data-key="errors" aria-pressed="true">errors</button>
+      <button type="button" data-key="files" aria-pressed="false">files</button>
+    </div>
+    <svg class="viz" id="pack-svg" viewBox="0 0 940 600" role="img" aria-label="Packed circles, one per JSLint rule, sized by number of errors"></svg>
+    <p class="readout" id="pack-readout" aria-live="polite">Hover over or tap a circle to see its rule. The 2012 page labelled nothing: you had to hover to find out which bubble was which.</p>
+    <figcaption><b>Reconstruction, not a screenshot.</b> Drawn with D3 v7 from the archived <a href="https://github.com/sanand0/beautiful-visualisations/blob/gh-pages/jslint.csv">jslint.csv</a>, keeping the 2012 page's sizing rule, sort and <em>errors / files</em> buttons. The 2012 page ran D3 2.10.3, so the packing differs slightly. <a href="https://sanand0.github.io/beautiful-visualisations/jslint.html">The original page still runs ↗</a></figcaption>
+  </figure>
+
+  <p>If you went with the smaller answers, the picture did its job: the two biggest circles look roughly the same size. <strong>The numbers say 195,774 against 130,626, so the top rule was broken 1.5 times as often.</strong> Switch to the sorted dots and the gap is obvious.</p>
+  <p>Thirty-two minutes into the talk, someone in the audience put up their hand and made the same point out loud.</p>
+  <blockquote class="pull blue">
+    <p>“In circles you don't really know which radius is bigger.”</p>
+    <cite>Audience member, during the questions <a class="ts" href="?t=33:15">33:15</a></cite>
+  </blockquote>
+  <p>Anand's reply turned the showreel into a lesson. To see why it landed, rewind to where the hour began.</p>
+</section>
+
+<div class="act" aria-hidden="true"><b>Act 1 · The wow</b><span>01:18 – 10:40</span></div>
+
+<section class="chap" id="nrega" data-act="Act 1 · The wow" data-title="Each bubble is a state">
+  <p class="kicker">d3.csv("nrega.csv") <span>· 01:18 – 04:58</span></p>
+  <h2>Each bubble is a state</h2>
+  <p>The session was meant to be a workshop. With one hour, Anand said he would <strong>“make a compromise”</strong> <a class="ts" href="?t=01:41">01:41</a>: first show what the library could do, then the basic model of how you build with it. It would also be about something larger than the library:</p>
+  <blockquote class="pull">
+    <p>“How one can conceive of visualizations and can create some fairly interesting things out of what might be potentially mundane data.”</p>
+    <cite>Anand S <a class="ts" href="?t=01:50">01:50</a></cite>
+  </blockquote>
+  <p>He began with the National Rural Employment Guarantee Act, which pays for rural jobs. States can spend the money on <strong>labour or on raw materials</strong>, and the funding comes from the Centre, the state, or both. On screen: <strong>“each bubble is a state”</strong> <a class="ts" href="?t=03:33">03:33</a>. Height shows the share spent on labour, the horizontal position shows the Centre's share of funding, and size shows total spend.</p>
+
+  <div class="pair">
+    <figure class="still">
+      <a href="stills/01-nrega.webp" data-lightbox data-caption="The NREGA chart as projected at 03:40. Frame from the HasGeek recording."><img src="stills/01-nrega.webp" alt="Video frame: the NREGA page, a white SVG with translucent coloured circles clustered at the right edge and one green circle on the far left." loading="lazy" width="948" height="716"></a>
+      <figcaption><b>03:40, on stage.</b> Most states sit hard against the right edge. <a class="ts" href="?t=03:40">03:40</a></figcaption>
+    </figure>
+    <figure class="still">
+      <a href="stills/02-jslint.webp" data-lightbox data-caption="Raw JSLint output for jQuery 1.3.2, shown at about 07:15. Frame from the HasGeek recording."><img src="stills/02-jslint.webp" alt="Video frame: a browser showing a text file of JSLint errors for jQuery 1.3.2, mostly lines like Expected exactly one space between and Unexpected space between." loading="lazy" width="948" height="716"></a>
+      <figcaption><b>07:15.</b> The raw lint log behind the bubbles, run on jQuery 1.3.2. <a class="ts" href="?t=07:15">07:15</a></figcaption>
+    </figure>
+  </div>
+
+  <p>The archived file <a class="src" href="https://github.com/sanand0/beautiful-visualisations/blob/gh-pages/nrega.csv">nrega.csv</a> has 28 rows with four columns: <code>Name</code>, <code>NREGA</code>, <code>Centre</code> and <code>Labour</code>. It bears out what he pointed at. <strong>Tamil Nadu spent 97% on labour; Madhya Pradesh, 61%.</strong> Karnataka and Orissa sit alone on the left with a Centre share of zero <a class="ts" href="?t=04:26">04:26</a>. (So does Goa, but its circle is a dot: its spend is 434.75 against Uttar Pradesh's 556,004.)</p>
+  <p>One detail is easy to miss. The colours look as if they mean something, but they don't. <strong>The code picks each colour from the row number</strong>, cycling through 13 hues <a class="src" href="https://github.com/sanand0/beautiful-visualisations/blob/gh-pages/nrega.html">nrega.html</a>. Anand called it <strong>“a very simple visualization, a scatter plot that's done in D3”</strong> <a class="ts" href="?t=04:44">04:44</a>, and promised to take it apart in the second half.</p>
+</section>
+
+<section class="chap" id="jslint" data-act="Act 1 · The wow" data-title="Should we even have this rule?">
+  <p class="kicker">d3.layout.pack() <span>· 04:58 – 10:40</span></p>
+  <h2>“Should we even have this rule?”</h2>
+  <p>“Since we are in a JavaScript conference,” the next dataset was the audience's own trade <a class="ts" href="?t=04:58">04:58</a>. The team <strong>crawled GitHub, “about 10,000 users or so”</strong>, ran JSLint over their repositories, and counted which rules were broken most. By a wide margin, the biggest bubble was <code>Expected '{a}' at column {b}, not column {c}</code>. Anand opened jQuery 1.3.2 to show what it meant: <strong>bad indentation.</strong></p>
+  <blockquote class="pull">
+    <p>“That is the most violated rule of JSLint… which leads one to question, should we even have this rule?”</p>
+    <cite>Anand S <a class="ts" href="?t=06:53">06:53</a></cite>
+  </blockquote>
+  <p>He clicked through small bubbles at random (“Weird assignment… Strange loop… I'm not picking these intentionally”) and then pressed the second button. <strong>The chart could count every occurrence of an error, or every file that contained it.</strong> Recount by files and the indentation giant shrinks into the crowd, while <code>Missing 'use strict' statement</code> jumps to second place, in 3,433 files. That rule can fire only once per file.</p>
+  <blockquote class="pull">
+    <p>“There are a number of errors like this that can occur only once in a file and tend to misrepresent the total size.”</p>
+    <cite>Anand S <a class="ts" href="?t=09:33">09:33</a></cite>
+  </blockquote>
+  <p><strong>Before anyone questioned the shape, he had questioned the count.</strong> Choosing what to measure is the first design decision, and here it changed the answer. Try the <em>files</em> button in the exhibit above: the race at the top becomes 3,538 against 3,433, a near tie that the circles render as identical.</p>
+</section>
+
+<div class="act" aria-hidden="true"><b>Act 2 · The room sees itself</b><span>11:02 – 18:13</span></div>
+
+<section class="chap" id="tweets" data-act="Act 2 · The room sees itself" data-title="You were the last dot">
+  <p class="kicker">force.nodes(tweets) <span>· 11:02 – 18:13</span></p>
+  <h2>“You were probably the last dot”</h2>
+  <p>Then the room saw itself. <strong>“Every dot here is a tweet that has the hashtag #jsfoo”</strong> <a class="ts" href="?t=11:10">11:10</a>. The tweets appeared in time order, starting on Thursday afternoon: <strong>black for original tweets, red for retweets, blue for replies</strong>, with a line from each reply to its parent. A clock in the corner sped through the night. Nothing at 3 a.m. A burst at 8 a.m. as people arrived. A slump after lunch.</p>
+
+  <figure class="still">
+    <a href="stills/03-jsfoo-tweets.webp" data-lightbox data-caption="The #jsfoo tweet replay at about 12:00, with its clock reading Fri Oct 19, 01:16 PM. Frame from the HasGeek recording."><img src="stills/03-jsfoo-tweets.webp" alt="Video frame: a page titled Tweets with a clock reading Fri Oct 19, 01:16 PM, and a ball of black and red dots with a few blue ones." loading="lazy" width="948" height="716"></a>
+    <figcaption><b>12:00.</b> The replay reaches Friday lunchtime. Red dots, retweets, already outnumber the black. <a class="ts" href="?t=12:00">12:00</a></figcaption>
+  </figure>
+
+  <p>Then the dots ran past midnight, and the speaker asked the room.</p>
+  <div class="dialogue">
+    <div class="line anand"><span class="who">Anand</span><div class="say">Seems to be going on till almost 1:00. Did it go on till 1:00 yesterday?</div></div>
+    <div class="line"><span class="who">Audience</span><div class="say">I reached home at 1:00.</div></div>
+    <div class="line anand"><span class="who">Anand</span><div class="say">Wow. Okay. And tweeted. Okay. So you were probably the last dot. <a class="ts" href="?t=12:28">12:28</a></div></div>
+  </div>
+  <p>This was the moment when <strong>an audience recognised itself in a chart.</strong> Anand hovered over a cluster of blue to read a <a href="https://backbonejs.org/">Backbone.js</a> thread aloud <a class="ts" href="?t=13:21">13:21</a>, then compared crowds. The red dots suggested JSFoo was a crowd that passes things on more than it posts its own <a class="ts" href="?t=14:48">14:48</a>. <strong>PyCon India</strong> a month earlier had more black. <strong>Paris Web</strong> “comes on like an explosion” <a class="ts" href="?t=16:20">16:20</a>. A Bollywood hashtag, <em>#SOTY</em> for <em>Student of the Year</em>, was trending at 3 a.m. Was that excitement, or “some marketing campaign”? <a class="ts" href="?t=17:22">17:22</a></p>
+  <div class="note26">
+    <span class="tag">2026 check · archived data</span>
+    <p>The tweet file in the repository <a class="src" href="https://github.com/sanand0/beautiful-visualisations/blob/gh-pages/tweet-jsfoo.js">tweet-jsfoo.js</a> was refreshed after the talk. Its <strong>1,035 tweets run from 13:55 IST on Thursday 18 October to 10:04 IST on Sunday 21 October</strong>, past the 1:57 p.m. cut-off Anand mentioned on stage. 446 start with “RT” and 73 are replies. The replay below shows that later file, not the exact frames the room saw. These are 2012 tweets pulled from a Twitter API that no longer exists, so the page cannot fetch new ones.</p>
+  </div>
+</section>
+
+<div class="act" aria-hidden="true"><b>Act 3 · Everything becomes a picture</b><span>18:13 – 32:33</span></div>
+
+<section class="chap" id="gallery" data-act="Act 3 · Everything becomes a picture" data-title="Carts, districts, a century">
+  <p class="kicker">selectAll("path") <span>· 18:13 – 25:32</span></p>
+  <h2>Shopping carts, districts and a century of heat</h2>
+  <p>The pace picked up. Next came a store in the UK whose carts carried <strong>“an internal GPS kind of a system”</strong> <a class="ts" href="?t=18:50">18:50</a>. Each label is an aisle, and the thickness of each curve shows how many carts moved that way. Anand traced the flow: fresh produce, then meat, ready meals, dairy. <strong>“A strong proximity effect”</strong> <a class="ts" href="?t=19:55">19:55</a>. Most people work down one side and back up the other: “notice how few people are crossing the aisles” <a class="ts" href="?t=21:21">21:21</a>.</p>
+  <p>Midway, someone signalled time. “Oh, it's a half-an-hour session, is it? … I'll wrap up.” It was, in fact, an hour <a class="ts" href="?t=21:36">21:36</a>. He carried on, and hit an aisle he couldn't read.</p>
+  <div class="dialogue">
+    <div class="line anand"><span class="who">Anand</span><div class="say">I don't know what BWS is, by the way. <a class="ts" href="?t=22:37">22:37</a></div></div>
+    <div class="line"><span class="who">Audience</span><div class="say">Beer, wine, and spirits.</div></div>
+    <div class="line anand"><span class="who">Anand</span><div class="say">What was this thing about beer bottles being stacked next to diapers? Let's test that. … They've got their priorities right. <strong>Buy the beer first, then we'll worry about the diapers.</strong> <a class="ts" href="?t=23:21">23:21</a></div></div>
+  </div>
+  <p>That is the right spirit and a thin test: <strong>one store, cart paths only, and no sample size given on stage.</strong> He presented it as a way of exploring the data, not as a finding. Then he showed India: <strong>every district, coloured by temperature, with “every flash… one month's worth of temperature data starting from 1900”</strong> <a class="ts" href="?t=24:14">24:14</a>. Gaps on the map were districts whose names didn't match, which he hadn't had the patience to clean that morning. The west coast stays cool, so “if you want to retire, barring the rain, you now know where you ought to be” <a class="ts" href="?t=24:47">24:47</a>. Bilaspur and Shimoga run hot when their neighbours run cool. <strong>“We don't quite know why this is happening.”</strong> <a class="ts" href="?t=25:26">25:26</a></p>
+
+  <div class="pair">
+    <figure class="still">
+      <a href="stills/04-shop-paths.webp" data-lightbox data-caption="Shopping paths at about 19:15: curves from Outside to the aisles. Frame from the HasGeek recording."><img src="stills/04-shop-paths.webp" alt="Video frame: the shopping page. Black curves fan out from a red label, Outside, to aisle labels such as Fresh Produce, Meat/Fish/Poultry, Dairy and BWS." loading="lazy" width="948" height="716"></a>
+      <figcaption><b>19:15.</b> Where carts go from the entrance. <a class="ts" href="?t=19:15">19:15</a></figcaption>
+    </figure>
+    <figure class="still">
+      <a href="stills/05-india-weather.webp" data-lightbox data-caption="India's districts coloured by monthly temperature at about 24:25. Frame from the HasGeek recording."><img src="stills/05-india-weather.webp" alt="Video frame: a district map of India in orange and red, with a yellow-green north and a cooler green strip down the west coast." loading="lazy" width="948" height="716"></a>
+      <figcaption><b>24:25.</b> One month of one year, one of 1,200 frames. <a class="ts" href="?t=24:25">24:25</a></figcaption>
+    </figure>
+  </div>
+
+  <figure class="museum" id="museum" aria-labelledby="museum-t">
+    <div class="ex-head"><span class="ex-title" id="museum-t">The 2012 pages, running live</span><span class="ex-tag orig">ORIGINAL CODE · D3 2.10.3</span></div>
+    <div class="seg" id="museum-tabs" role="group" aria-label="Choose an original demo">
+      <button type="button" data-demo="tweets.html?jsfoo" data-poster="stills/03-jsfoo-tweets.webp" aria-pressed="true">#jsfoo tweets</button>
+      <button type="button" data-demo="shopping.html" data-poster="stills/04-shop-paths.webp" aria-pressed="false">Shopping paths</button>
+      <button type="button" data-demo="weather.html" data-poster="stills/05-india-weather.webp" aria-pressed="false">India's weather</button>
+      <button type="button" data-demo="wordcloud.html?ramayana" data-poster="stills/06-ramayana-cloud.webp" aria-pressed="false">Ramayana words</button>
+    </div>
+    <div class="frame" id="museum-frame">
+      <div class="poster"><img src="stills/03-jsfoo-tweets.webp" alt=""><button type="button" id="museum-load"><i class="bi bi-play-fill" aria-hidden="true"></i> Run the original page</button></div>
+    </div>
+    <figcaption id="museum-cap"><b>Live, not a recording.</b> The page loads each demo from <a href="https://sanand0.github.io/beautiful-visualisations/">sanand0.github.io/beautiful-visualisations</a>, unchanged since 2012. Hover over a dot to read its tweet, or drag the dots around. The tweet clock shows your browser's time zone. The weather map loads a 1.9 MB SVG and is slow to start, as it was on stage. <a id="museum-open" href="https://sanand0.github.io/beautiful-visualisations/tweets.html?jsfoo">Open this demo in a new tab ↗</a><br>All the originals: <a href="https://sanand0.github.io/beautiful-visualisations/nrega.html">NREGA</a> · <a href="https://sanand0.github.io/beautiful-visualisations/jslint.html">JSLint</a> · <a href="https://sanand0.github.io/beautiful-visualisations/tweets.html?jsfoo">tweets</a> · <a href="https://sanand0.github.io/beautiful-visualisations/shopping.html">shopping</a> · <a href="https://sanand0.github.io/beautiful-visualisations/weather.html">weather</a> (<a href="https://github.com/sanand0/beautiful-visualisations/blob/gh-pages/weather.csv">csv</a>) · <a href="https://sanand0.github.io/beautiful-visualisations/wordcloud.html?ramayana">Ramayana</a> · <a href="https://sanand0.github.io/beautiful-visualisations/wordcloud.html?jsfoo">JSFoo words</a></figcaption>
+  </figure>
+</section>
+
+<section class="chap" id="sanskrit" data-act="Act 3 · Everything becomes a picture" data-title="A word cloud in Sanskrit">
+  <p class="kicker">d3.layout.cloud() <span>· 25:32 – 29:20</span></p>
+  <h2>What if the word cloud were in Sanskrit?</h2>
+  <p><strong>“Why do we have all of these word clouds just in English?”</strong> <a class="ts" href="?t=25:34">25:34</a> The team took the Valmiki <em>Ramayana</em>, split it on spaces, removed some stopwords and plotted what was left. Splitting on spaces works well enough in English. In Sanskrit it scatters one name across a dozen spellings: <em>Ramaha</em>, <em>Ramam</em>, <em>Ramo</em>, <em>Ramena</em>, <em>Ramaya</em>, <em>Ramasya</em>. The room joined in, calling out forms (“There is <em>Ramam</em>”) that it could see better than the speaker standing beside the screen <a class="ts" href="?t=27:05">27:05</a>.</p>
+
+  <figure class="still">
+    <a href="stills/06-ramayana-cloud.webp" data-lightbox data-caption="The original 2012 wordcloud.html, re-run unchanged from sanand0.github.io in 2026. The layout is random, so each load arranges the words differently. On stage it was shown at about 26:10."><img src="stills/06-ramayana-cloud.webp" alt="The Ramayana word cloud: an oval of Devanagari words in black. The largest include वाक्यं, रामं, ददर्श, वाक्यम, राजा, तवया, तवां, दृष्ट्वा, पुनर and नाम, with other forms of Rama such as रामॊ, रामस्य, रामः and रामेण scattered across the cloud." loading="lazy" width="1400" height="871"></a>
+    <figcaption><b>The same page, re-run in 2026.</b> The 2012 <code>wordcloud.html</code>, unchanged. The video frame is too soft to read, so this is a fresh render; the layout is random and differs from the one on stage. Shown in the talk at <a class="ts" href="?t=26:10">26:10</a></figcaption>
+  </figure>
+
+  <figure class="ladder" id="rama-fig">
+    <svg id="rama-svg" viewBox="0 0 700 190" role="img" aria-label="Bar chart. The most frequent single word in the file, vakyam, appears 203 times. The seven forms of Rama named on stage add up to 865."></svg>
+    <figcaption><b>Count one spelling or count the name?</b> These numbers come straight from the archived <a href="https://github.com/sanand0/beautiful-visualisations/blob/gh-pages/wordcloud-ramayana.csv">wordcloud-ramayana.csv</a>. The grouping is a 2026 addition: it uses only the seven forms named on stage, spelled as in the file. It leaves out रामम (74, perhaps रामं again with a dropped mark) and compounds such as रामलक्ष्मणौ (26).</figcaption>
+  </figure>
+
+  <p>In the cloud, Rama looks like one prominent word among many. <strong>Add up the forms Anand named and the name occurs more than four times as often as the biggest word on the screen.</strong> It is the JSLint lesson again in another script: the picture can only be as good as the count behind it. He was candid that the cleaning was incomplete (“there are a huge number of stop words still left”), and summed up the epic anyway:</p>
+  <blockquote class="pull">
+    <p>“This is a somewhat simpler, more linear epic… more like a, you know… Telugu masala movie, if you will.”</p>
+    <cite>Anand S, comparing the <em>Ramayana</em> with the <em>Mahabharata</em>, “more like a soap opera” <a class="ts" href="?t=28:27">28:27</a></cite>
+  </blockquote>
+  <p>Then he ran the same code on the conference's own tweets. Out came HasGeek, the organisers' names, live streaming, hacknight, Raspberry Pi and, oddly, “tomorrow” <a class="ts" href="?t=28:44">28:44</a>. <a href="https://sanand0.github.io/beautiful-visualisations/wordcloud.html?jsfoo">That cloud still runs too ↗</a></p>
+</section>
+
+<section class="chap" id="borrowed" data-act="Act 3 · Everything becomes a picture" data-title="Two charts that weren't his">
+  <p class="kicker">credits <span>· 29:20 – 32:33</span></p>
+  <h2>Two charts that weren't his</h2>
+  <div class="band tint">
+    <p><strong>“This isn't something that I've created; this is on wealthfront.com.”</strong> <a class="ts" href="?t=29:36">29:36</a> The <a href="https://blog.wealthfront.com/startup-employee-equity-compensation/">Wealthfront chart of start-up pay against equity</a> plotted roles by cash and equity. It ran into a translation problem: an audience member pointed out that a US “director” is a role, “not what it means in India”, where the word suggests the board <a class="ts" href="?t=30:52">30:52</a>. The chart was right, and the label still misled this room.</p>
+    <p style="margin-bottom:.3rem">To close the tour came <a href="https://bost.ocks.org/mike/">Mike Bostock</a>'s <a href="https://gist.github.com/mbostock/1256572">D3 Show Reel</a>, which morphs Apple, Amazon, IBM and Microsoft stock prices from one chart type into the next <a class="ts" href="?t=32:00">32:00</a>. Bostock created D3. Anand presented both pieces as other people's work.</p>
+  </div>
+  <p>“So that's D3, what D3 can do.” He offered to take questions before the code. <strong>The first question was not about code.</strong></p>
+</section>
+
+<div class="act" aria-hidden="true"><b>Act 4 · The question</b><span>32:39 – 39:29</span></div>
+
+<section class="chap" id="question" data-act="Act 4 · The question" data-title="It looked cool">
+  <p class="kicker">.on("question") <span>· 32:39 – 34:10</span></p>
+  <h2>“It looked cool”</h2>
+  <p>The first hand went up for the first chart.</p>
+  <figure class="still">
+    <a href="slides/08-bubble-critique.webp" data-lightbox data-caption="An audience member with a microphone asks about the bubbles, about 33:10. Frame from the HasGeek recording."><img src="slides/08-bubble-critique.webp" alt="Dim video frame: a person in the audience holds a microphone and gestures toward the stage, with tiered seating behind." loading="lazy" width="1280" height="720"></a>
+    <figcaption><b>33:10.</b> The question from the floor. The recording does not name the person asking. <a class="ts" href="?t=33:10">33:10</a></figcaption>
+  </figure>
+  <div class="dialogue">
+    <div class="line"><span class="who">Audience</span><div class="say">Your first chart was about the bubble chart, about NREGA… The second chart where you were showing the JavaScript errors, JSLint. <strong>How does it make sense to show it as bubbles</strong> instead of having in a graph form where it is more easy to make sense out of which error is made more? Because in circles you don't really know which radius is bigger. <a class="ts" href="?t=32:48">32:48</a></div></div>
+    <div class="line anand"><span class="who">Anand</span><div class="say">Very true. <a class="ts" href="?t=33:16">33:16</a></div></div>
+  </div>
+  <blockquote class="pull">
+    <p>“The reason why I put it in bubbles is not because it would be a better data visualization; it is simply because I wanted to show circles and it looked cool.”</p>
+    <cite>Anand S <a class="ts" href="?t=33:19">33:19</a></cite>
+  </blockquote>
+  <p>He didn't defend the chart. He set out the trade-off: <strong>“If I were doing this for a client, I would have certainly put it in a different way. We tend to avoid circles.”</strong> <a class="ts" href="?t=33:27">33:27</a> Areas are harder to compare than distances, especially side by side, “and angles are among the worst things that you can use to compare.” Circles waste space and are less effective “from an Edward Tufte perspective of data-to-ink ratio”, he said, citing <a href="https://www.edwardtufte.com/">Edward Tufte</a>, “but in a lot of cases, if done well, they look more visually appealing.”</p>
+  <p>Honest answers like that are rare in a demo. <strong>The talk was called <em>Beautiful Visualizations</em>, and here the speaker separated beautiful from useful.</strong> D3 had removed the limits on what you could draw. It had not told anyone what to draw.</p>
+  <div class="band night">
+    <p class="kicker">the line to remember <span>· editor's summary</span></p>
+    <p style="font: 700 clamp(1.5rem, 3vw, 2.1rem)/1.2 var(--font-display); margin:0 0 .6rem">The bubbles looked cool. The question was whether they helped anyone see.</p>
+    <p style="margin:0; font-size:.95rem">A follow-up came at once: <em>“To understand which visualization makes sense for which type of data is the most difficult task, not the programming part.”</em> (Audience, <a class="ts" href="?t=34:10">34:10</a>) Anand agreed: <strong>“by far a tougher problem by several orders of magnitude.”</strong> <a class="ts" href="?t=34:29">34:29</a></p>
+  </div>
+</section>
+
+<section class="chap" id="hierarchy" data-act="Act 4 · The question" data-title="Position first, angles never">
+  <p class="kicker">scale.range() <span>· 34:29 – 36:30</span></p>
+  <h2>Position first. Avoid angles at all costs.</h2>
+  <p>He gave two rules of thumb. The first is humble: <strong>“If you've seen a similar visualization that you liked, copy it”</strong> <a class="ts" href="?t=34:44">34:44</a>, which means you have to keep looking at other people's charts. The second is a ranking: put your most important comparison on position, the next on size, then colour, and push the rest into a separate chart.</p>
+
+  <figure class="ladder">
+    <svg viewBox="0 0 700 280" role="img" aria-label="The same two values, 40 and 50, encoded four ways: as positions on a common axis, as circle areas, as colour shades and as pie-wedge angles. The positions are easiest to compare.">
+      <g font-size="13">
+        <text x="0" y="22" class="sub" font-family="JetBrains Mono, monospace">SAME TWO NUMBERS, 40 AND 50, FOUR WAYS</text>
+        <g transform="translate(0,62)">
+          <text x="0" y="6" font-size="30" font-weight="800" fill="var(--red)">1</text>
+          <text x="34" y="-4" font-weight="700" font-size="16">Position</text>
+          <text x="34" y="16" class="sub">“We are excellent at comparing position.”</text>
+          <line x1="440" x2="440" y1="-22" y2="22" stroke="var(--muted)"/>
+          <line x1="440" x2="600" y1="-9" y2="-9" stroke="var(--ink)" stroke-width="2"/><circle cx="600" cy="-9" r="6" fill="var(--ink)"/>
+          <line x1="440" x2="640" y1="9" y2="9" stroke="var(--ink)" stroke-width="2"/><circle cx="640" cy="9" r="6" fill="var(--ink)"/>
+        </g>
+        <g transform="translate(0,128)">
+          <text x="0" y="6" font-size="30" font-weight="800" fill="var(--red)">2</text>
+          <text x="34" y="-4" font-weight="700" font-size="16">Size</text>
+          <text x="34" y="16" class="sub">“We are slightly worse at comparing sizes.”</text>
+          <circle cx="490" cy="0" r="19" fill="var(--blue)" opacity=".75"/><circle cx="560" cy="0" r="21.2" fill="var(--blue)" opacity=".75"/>
+        </g>
+        <g transform="translate(0,194)">
+          <text x="0" y="6" font-size="30" font-weight="800" fill="var(--red)">3</text>
+          <text x="34" y="-4" font-weight="700" font-size="16">Colour</text>
+          <text x="34" y="16" class="sub">“Slightly worse… especially when they're close to each other.”</text>
+          <rect x="470" y="-18" width="40" height="36" rx="3" fill="hsl(355,65%,62%)"/><rect x="540" y="-18" width="40" height="36" rx="3" fill="hsl(355,65%,54%)"/>
+        </g>
+        <g transform="translate(0,256)">
+          <text x="0" y="6" font-size="30" font-weight="800" fill="var(--red)">4</text>
+          <text x="34" y="-4" font-weight="700" font-size="16">Angle</text>
+          <text x="34" y="16" class="sub">“Avoid angles at all costs.”</text>
+          <circle cx="490" cy="0" r="20" fill="none" stroke="var(--rule)"/><path d="M490 0 L490 -20 A20 20 0 0 1 501.76 16.18 Z" fill="var(--green)"/>
+          <circle cx="560" cy="0" r="20" fill="none" stroke="var(--rule)"/><path d="M560 0 L560 -20 A20 20 0 0 1 560 20 Z" fill="var(--green)"/>
+        </g>
+      </g>
+    </svg>
+    <figcaption><b>Anand's ranking, drawn.</b> The quotes are his <a class="ts" href="?t=35:07">35:07</a>. Each row shows 40 against 50, a 25% difference. Only the top row makes that gap easy to see. He added a rule for colour: keep it for categories, and <strong>“never have more than 20 colors ever.”</strong> <a class="ts" href="?t=35:18">35:18</a></figcaption>
+  </figure>
+
+  <p>For pictures too dense for one chart, like the flashing weather map, he offered <strong>the principle of small multiples</strong> <a class="ts" href="?t=36:03">36:03</a>: a grid of small maps, months across and decades down, instead of one animation the eye can't hold.</p>
+  <div class="note26">
+    <span class="tag">Background · not cited on stage</span>
+    <p>When someone asked a minute later whether the ranking was written down anywhere, Anand said he remembered it “mostly from experience” and had “seen this somewhere. I honestly can't think…” <a class="ts" href="?t=37:58">37:58</a>. The best-known source is <a href="https://doi.org/10.1080/01621459.1984.10478080">Cleveland and McGill's 1984 study of graphical perception</a>. It ranked position on a common scale as the most accurate judgment, followed by length, then angle and direction, then area, with shading and colour lowest. <strong>The stage version is a rule of thumb, and it differs in detail</strong>: the paper rates angle above area. Both agree on what matters most here. Put the comparison you care about on a shared axis.</p>
+  </div>
+</section>
+
+<section class="chap" id="recount" data-act="Act 4 · The question" data-title="What the code actually did">
+  <p class="kicker">Math.pow(d[key], .5) <span>· a 2026 reading of the 2012 source</span></p>
+  <h2>The circles were flatter than they looked</h2>
+  <p>The archived source has a further twist that nobody mentioned on stage. <strong>The JSLint page did not size circles by the count. It sized them by the square root of the count.</strong> Then the D3 pack layout took another square root to get each radius.</p>
+  <div class="codepair">
+    <figure class="code">
+      <div class="ch"><b>jslint.html</b><a href="https://github.com/sanand0/beautiful-visualisations/blob/gh-pages/jslint.html">2012 source ↗</a></div>
+<pre>var layout = d3.layout.pack()
+  .sort(function(a,b) { return b[key] - a[key]; })
+  .size([940, 600])
+  <mark>.value(function(d) { return Math.pow(d[key], .5) })</mark>
+  .padding(.5);</pre>
+    </figure>
+    <figure class="code">
+      <div class="ch"><b>d3.v2.js</b> <span class="v2">version 2.10.3</span></div>
+<pre><span class="cm">// inside d3.layout.pack</span>
+d3_layout_treeVisitAfter(root, function(d) {
+  <mark>d.r = Math.sqrt(d.value);</mark>
+});</pre>
+    </figure>
+  </div>
+  <p>So <strong>the radius grew with the fourth root of the count</strong>, and area with its square root. The top rule's 1.5-fold lead shrinks to a circle with 1.22 times the area and 1.11 times the radius. The most common error was broken 195,774 times and the rarest just once, yet the biggest circle is only about 21 times as wide as the smallest. Press <em>“Circles, area = count”</em> in <a href="#guess">the opening exhibit</a> and the giants swell while the one-off rules shrink to specks.</p>
+  <p>The same speaker knew the right rule. He explained it later that hour, walking through the NREGA code.</p>
+  <blockquote class="pull">
+    <p>“Why do we use square root? Because if we use the actual value, then the radius would be proportional to the value… size is proportional to the square of the radius.”</p>
+    <cite>Anand S, on <code>nrega.html</code> <a class="ts" href="?t=52:29">52:29</a></cite>
+  </blockquote>
+  <p>NREGA takes one square root and gets circles whose area is proportional to spend. JSLint takes two. <strong>Maybe that was deliberate, to keep the one-off rules visible, or maybe it was a slip. The code doesn't say.</strong> Either way, the audience member was more right than anyone in the room could have known: the bubbles hid the differences on two counts.</p>
+</section>
+
+<section class="chap" id="advice" data-act="Act 4 · The question" data-title="Ask for the data">
+  <p class="kicker">questions.enter() <span>· 36:30 – 39:29</span></p>
+  <h2>Ask for the data, then turn the internet off</h2>
+  <p>The questions kept coming before any code appeared, and they were practical.</p>
+  <div class="qa">
+    <div class="card"><span class="q">Browser support? · 36:31</span><h4>“Pretty much everything except IE”</h4><p>“IE 9 works okay, IE 10 works well.” That was 2012. Later in the session he named old Internet Explorer as the one reason his firm had ever reached for Raphaël instead. <a class="ts" href="?t=36:33">36:33</a></p></div>
+    <div class="card"><span class="q">Where do you get data? · 36:44</span><h4>“Best way is ask for help”</h4><p>“A programmer crowd is much better at scraping than asking for help.” Building up the datasets and the contacts took him years. <a class="ts" href="?t=37:14">37:14</a></p></div>
+    <div class="card"><span class="q">Is that ranking written down? · 37:42</span><h4>“I might forget it as well!”</h4><p>He promised to tweet it. An audience member pointed others to <a href="https://flowingdata.com/">Nathan Yau</a>'s book <em>Visualize This</em>. Anand added Yau's and Pete Warden's lists of data sources. <a class="ts" href="?t=37:53">37:53</a></p></div>
+    <div class="card"><span class="q">Too many examples? · 38:12</span><h4>“Sleep over it”</h4><p>“Spend some time looking at all the charts so that it goes in the back of your head and sleep over it.” Decide what to make at another time. “Turn the internet off; might help.” <a class="ts" href="?t=38:33">38:33</a></p></div>
+  </div>
+  <p>The last answer is the most useful. <strong>Looking for inspiration and deciding what to make are separate jobs, and doing both at once is how people get lost in the gallery.</strong> Then he opened the source of the very first chart.</p>
+</section>
+
+<div class="act" aria-hidden="true"><b>Act 5 · Under the picture</b><span>39:29 – 53:42</span></div>
+
+<section class="chap" id="select" data-act="Act 5 · Under the picture" data-title="Data-Driven Documents">
+  <p class="kicker">view-source:nrega.html <span>· 39:29 – 47:28</span></p>
+  <h2>Data-Driven Documents</h2>
+  <p>“Let's do a view source” <a class="ts" href="?t=39:41">39:41</a>. The first chart turned out to be plain HTML: a doctype, Bootstrap “simply out of habit”, an <code>&lt;svg&gt;</code> tag with four hand-placed text labels (“a very crude way of labeling it”), and one script. <strong>“One of the prerequisites of getting the most out of D3 is that you know some amount of SVG.”</strong> <a class="ts" href="?t=40:49">40:49</a></p>
+  <p>He started with the part that looks like jQuery. <code>d3.select</code> returns one element and <code>selectAll</code> returns all of them. He chained <code>.append("rect").attr("x", 100)…</code> in the browser console, and a red square appeared. “This is how D3 is like jQuery” <a class="ts" href="?t=43:56">43:56</a>. Then he showed the part that isn't:</p>
+  <blockquote class="pull">
+    <p>“D3 stands for Data-Driven Documents… you've got data and you map that data onto elements of the document.”</p>
+    <cite>Anand S <a class="ts" href="?t=44:14">44:14</a></cite>
+  </blockquote>
+  <p>Each state becomes a circle, and each field of the state can drive an attribute of the circle. The strange part comes next. You write <code>selectAll("circle")</code> on an SVG that contains no circles. <strong>“<code>selectAll</code> does not necessarily only select stuff that exists; it also selects stuff that could exist in the future.”</strong> <a class="ts" href="?t=45:27">45:27</a> Bind five numbers to that empty selection, and D3 works out which circles must be created, which updated and which removed. The <strong>“Create, Update, and Delete operations”</strong> <a class="ts" href="?t=47:24">47:24</a> are what D3 calls <a href="https://bost.ocks.org/mike/join/">enter, update and exit</a>. The idea comes from the <a href="https://idl.uw.edu/papers/d3">2011 D3 paper</a>: bind data to the browser's own document, rather than to a private scene graph.</p>
+  <figure class="still">
+    <a href="stills/09-d3-selections.webp" data-lightbox data-caption="Live coding in the Chrome console at about 41:50, with the NREGA page above. Frame from the HasGeek recording."><img src="stills/09-d3-selections.webp" alt="Video frame: the NREGA page in Chrome with developer tools open below, showing the Elements panel and an empty console." loading="lazy" width="948" height="716"></a>
+    <figcaption><b>41:50.</b> The NREGA page, with the console open underneath it. <a class="ts" href="?t=41:50">41:50</a></figcaption>
+  </figure>
+</section>
+
+<section class="chap" id="bug" data-act="Act 5 · Under the picture" data-title="Circles in the corner">
+  <p class="kicker">.attr("x", …) <span>· 47:28 – 50:30</span></p>
+  <h2>Five circles in the corner</h2>
+  <p>He typed it live: bind <code>[1, 2, 3, 4, 5]</code>, call <code>enter()</code>, append a circle for each number, and set <code>x</code> and <code>y</code> to <code>d * 100</code> and the radius to <code>d * 20</code>. Five green circles should have marched down a diagonal. <strong>“Let's hope this works. Okay, not quite. Looks like they're all sitting on the top left.”</strong> <a class="ts" href="?t=49:05">49:05</a> Try it yourself.</p>
+
+  <figure class="exhibit" id="ex-join" aria-labelledby="ex-join-t">
+    <div class="ex-head"><span class="ex-title" id="ex-join-t">The stage code, re-run</span><span class="ex-tag recon">RECONSTRUCTION · SVG + D3 v7</span></div>
+    <div class="pg">
+      <div class="pg-stage">
+        <span class="origin">(0, 0)</span>
+        <svg id="pg-svg" viewBox="0 0 640 640" role="group" aria-label="SVG canvas with circles bound to the data array"></svg>
+      </div>
+      <div class="pg-side">
+        <div class="pg-code" id="pg-code" aria-label="The code being run"></div>
+        <div class="seg" id="pg-attr" role="group" aria-label="Attribute names for position">
+          <span class="seg-label">POSITION</span>
+          <button type="button" data-attr="xy" aria-pressed="true">x / y (as typed)</button>
+          <button type="button" data-attr="cxcy" aria-pressed="false">cx / cy</button>
+        </div>
+        <div class="seg" id="pg-data" role="group" aria-label="Data bound to the circles">
+          <span class="seg-label">.data(</span>
+          <button type="button" data-arr="1,2,3,4,5" aria-pressed="true">[1,2,3,4,5]</button>
+          <button type="button" data-arr="1,2,3" aria-pressed="false">[1,2,3]</button>
+          <button type="button" data-arr="5,4,3,2,1" aria-pressed="false">[5,4,3,2,1]</button>
+          <button type="button" data-arr="0.5,1,1.5,2,2.5,3,3.5,4,4.5,5" aria-pressed="false">ten</button>
+        </div>
+        <div class="legend-joins" id="pg-joins" aria-live="polite"></div>
+        <div class="inspect" id="pg-inspect" aria-live="polite">Tap or focus a circle to inspect the DOM node and the datum bound to it.</div>
+      </div>
+    </div>
+    <p class="ask" id="bug-ask" style="margin-top:1rem">Positions run from 100 to 500. <strong>Why does every circle sit in the corner?</strong></p>
+    <div class="choices" id="bug-choices" role="group" aria-labelledby="bug-ask">
+      <button type="button" data-ok="0">The coordinates are negative</button>
+      <button type="button" data-ok="0">d is always zero</button>
+      <button type="button" data-ok="0">The last circle hides the rest</button>
+      <button type="button" data-ok="1">A circle has no x or y</button>
+    </div>
+    <p class="reveal" id="bug-reveal" hidden></p>
+    <figcaption><b>Reconstruction.</b> The numbers, attributes and green fill are those typed on stage, as seen in the 49:55 frame below. The fill is translucent here so the stacked circles show. Data is bound by index, as in D3's default join, and changes animate unless you have asked for reduced motion.</figcaption>
+  </figure>
+
+  <p>The room had guesses: <em>“The coordinates are negative.” “D is always zero.” “The last circle's sitting on top.”</em> <a class="ts" href="?t=49:28">49:28</a> Then the speaker gave the answer.</p>
+  <blockquote class="pull">
+    <p>“The name of the attribute is wrong; it's actually <code>cx</code> and <code>cy</code>, not <code>x</code> and <code>y</code>.”</p>
+    <cite>Anand S <a class="ts" href="?t=49:59">49:59</a></cite>
+  </blockquote>
+  <figure class="still">
+    <a href="stills/10-debug-d3.webp" data-lightbox data-caption="The bug, live, at about 49:55: a green quarter-circle stuck at the top-left corner beside the red test rectangle, with the console line using x and y below. Frame from the HasGeek recording."><img src="stills/10-debug-d3.webp" alt="Video frame: the NREGA page with a green quarter-circle in the top-left corner and a red square beside it. The console below shows nodes.enter().append('circle').attr('x', function(d) { return d*100; })." loading="lazy" width="948" height="716"></a>
+    <figcaption><b>49:55, the real bug.</b> Green in the corner, the earlier red square beside it, and <code>.attr('x', …)</code> in the console. <a class="ts" href="?t=49:55">49:55</a></figcaption>
+  </figure>
+  <p>SVG doesn't complain about an attribute it doesn't use on that element. It ignores it. <strong>A rectangle is placed by <code>x</code> and <code>y</code>; a circle by its centre, <code>cx</code> and <code>cy</code>,</strong> which default to zero. All five centres sat at the origin, stacked smallest to largest, and the last one drawn, with radius 100, covered the rest. He cleared the canvas, typed <code>cx</code> and <code>cy</code>, and the diagonal appeared.</p>
+  <p>The bug is small, but it makes the earlier point concrete. <strong>D3 gives you the DOM and no safety net:</strong> you need to know which shape you are drawing and how that shape is placed. Thirty minutes after “it looked cool”, the room learned the same lesson at the level of a single attribute.</p>
+</section>
+
+<section class="chap" id="thirty" data-act="Act 5 · Under the picture" data-title="Thirty lines">
+  <p class="kicker">.enter().append("circle") <span>· 50:30 – 53:42</span></p>
+  <h2>Thirty lines for a scatter plot</h2>
+  <blockquote class="pull">
+    <p>“What we've done here is mapped a data set onto objects. And this is the exact same principle that has been used in every one of the visualizations that you've seen so far.”</p>
+    <cite>Anand S <a class="ts" href="?t=50:30">50:30</a></cite>
+  </blockquote>
+  <p>He returned to NREGA and read it line by line. <code>cx</code> is the Centre's share times 900, plus 40. <code>cy</code> is the labour share, flipped and stretched. <code>r</code> is a square root, for the reason quoted above. The colour is a hue picked by row number. A <code>&lt;title&gt;</code> holds the state's name for the hover tooltip. Here is the 2012 code beside a modern equivalent.</p>
+  <div class="codepair">
+    <figure class="code">
+      <div class="ch"><b><span class="v2">D3 v2 · 2012</span> · nrega.html</b><a href="https://github.com/sanand0/beautiful-visualisations/blob/gh-pages/nrega.html">source ↗</a></div>
+<pre>d3.csv('nrega.csv', function(data) {
+  d3.select('svg').selectAll('circle')
+      .data(data)
+    <mark>.enter()</mark>
+      .append('circle')
+      .attr('<mark class="ok">cx</mark>', function(d,i) { return d.Centre * 900 + 40; })
+      .attr('<mark class="ok">cy</mark>', function(d,i) { return (1 - d.Labour) * 1250 + 20; })
+      .attr('r'   , function(d,i) { return Math.pow(d.NREGA / 500000, .5) * 60; })
+      .attr('fill', function(d,i) { return 'hsla(' + Math.round(i * 360 / 13) + ',80%,40%,.4)' })
+      .append('title')
+        .text(function(d) { return d.Name })
+});</pre>
+    </figure>
+    <figure class="code">
+      <div class="ch"><b><span class="v7">D3 v7 · 2026</span> · equivalent</b><span>not run on stage</span></div>
+<pre><span class="cm">// d3.csv now returns a Promise; join() wraps enter/update/exit</span>
+const data = await d3.csv("nrega.csv", d3.autoType);
+d3.select("svg").selectAll("circle")
+  .data(data)
+  <mark>.join("circle")</mark>
+    .attr("<mark class="ok">cx</mark>", d =&gt; d.Centre * 900 + 40)
+    .attr("<mark class="ok">cy</mark>", d =&gt; (1 - d.Labour) * 1250 + 20)
+    .attr("r", d =&gt; Math.sqrt(d.NREGA / 500000) * 60)
+    .attr("fill", (d, i) =&gt; `hsla(${Math.round(i * 360 / 13)},80%,40%,.4)`)
+  .append("title")
+    .text(d =&gt; d.Name);</pre>
+    </figure>
+  </div>
+  <p>The whole file is 31 lines. <strong>“You might argue the 30 lines is quite a bit for a scatter plot, but remember that every single one of these visualizations, without exception, have been created in less than 100 lines.”</strong> <a class="ts" href="?t=53:08">53:08</a> His closing line before questions was one sentence: <strong>“The crux of it is you can map data to visual elements.”</strong> <a class="ts" href="?t=53:37">53:37</a></p>
+</section>
+
+<div class="act" aria-hidden="true"><b>Act 6 · What D3 doesn't do</b><span>53:46 – 60:55</span></div>
+
+<section class="chap" id="limits" data-act="Act 6 · What D3 doesn't do" data-title="A megabyte of data">
+  <p class="kicker">exit().remove() <span>· 53:46 – 60:55</span></p>
+  <h2>A hundred lines, and a megabyte of map</h2>
+  <p>The last questions mapped out what D3 does and doesn't do. <strong>Layouts do the heavy lifting.</strong> The tweet swarm was a force-directed layout, “still under 100 lines” <a class="ts" href="?t=54:28">54:28</a>. The JSLint bubbles came from the pack layout, which Anand happily criticised: <strong>“it isn't doing it very efficiently if you notice, because this circle would have fitted here”</strong>, a trade-off “between speed versus size” <a class="ts" href="?t=57:44">57:44</a>.</p>
+  <p><strong>Getting the data is someone else's problem.</strong> Asked which tools pull from databases, he drew a line: “this is an entirely different problem. D3 can natively consume XML, CSV, and JSON” <a class="ts" href="?t=55:50">55:50</a>. Asked what his own firm used, he realised something:</p>
+  <div class="dialogue">
+    <div class="line anand"><span class="who">Anand</span><div class="say">I don't think I introduced myself at all. My name is Anand. I'm in this company called Gramener and we do data visualization. Sorry about the lack of introduction. <a class="ts" href="?t=58:54">58:54</a></div></div>
+  </div>
+  <p>The answer was “always D3, perhaps Raphaël”. D3's problems were old Internet Explorer and the learning curve: <strong>“the 15 minutes of D3 overview that I gave you, I assume will make no sense whatsoever.”</strong> <a class="ts" href="?t=59:47">59:47</a> The last question asked whether the flashing weather map was also under a hundred lines.</p>
+  <blockquote class="pull">
+    <p>“While it's 100 lines of JavaScript, the SVG file behind it is more than a megabyte. I don't know if that's cheating or not, but that's data.”</p>
+    <cite>Anand S <a class="ts" href="?t=60:22">60:22</a> · the archived <a href="https://github.com/sanand0/beautiful-visualisations/blob/gh-pages/weather.svg">weather.svg</a> is 1.87 MB</cite>
+  </blockquote>
+  <p>“Anand, unfortunately, we're out of time,” said a voice from the side of the stage <a class="ts" href="?t=60:43">60:43</a>. <strong>The complexity hadn't gone away. It had moved</strong> into the map file, the layout algorithm, the data someone had to ask for, and the decision about which shape to draw.</p>
+</section>
+
+<section class="chap" id="epilogue" data-act="Act 6 · What D3 doesn't do" data-title="Epilogue, 2026">
+  <p class="kicker">// editor's epilogue <span>· written in 2026, not said in 2012</span></p>
+  <h2>Drawing got easier again</h2>
+  <div class="note26">
+    <span class="tag">2026 reflection · editorial</span>
+    <p>In 2012 the hard part, for most of that room, was writing the thirty lines. Today an AI assistant will write them in seconds, in any chart type you name, and the chart will usually look polished. That makes the 2012 exchange more relevant, not less. <strong>When drawing is nearly free, the scarce skill is the one the audience member used: asking whether the shape helps anyone compare what matters.</strong></p>
+    <p>This is an editor's reading. Anand did not say it on stage, and the talk is better for not reaching beyond its moment. His own advice from that afternoon still works as a checklist: copy charts you liked, put the main comparison on position, count the right thing, know what each attribute does, and look for inspiration at a different time from deciding what to make.</p>
+  </div>
+</section>
+
+</main>
+
+<aside class="dock" id="dock" aria-label="Video of the talk">
+  <div class="dock-head"><span><b>The talk</b> · 61 min · YouTube</span><span id="dock-mode-label">Story focus</span></div>
+  <div class="vwrap">
+    <div id="yt"><div class="nojs"><img class="poster" src="https://i.ytimg.com/vi/JAlZ0uJnqkA/hqdefault.jpg" alt=""><a href="https://youtu.be/JAlZ0uJnqkA" style="position:relative;color:#fff">Watch on YouTube ↗</a></div></div>
+  </div>
+  <div class="resume" id="resume"><button type="button" id="resume-btn"><i class="bi bi-play-fill" aria-hidden="true"></i> <span>Play</span></button></div>
+  <div class="now" id="now" aria-live="polite"><span class="t" id="now-t">00:00</span><span id="now-title">Press play, or tap any ▶ time in the story</span><span class="in-story" id="now-story"></span></div>
+  <div class="dock-ctrls">
+    <button class="dbtn mode" id="mode-btn" type="button" aria-pressed="false"><i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span></button>
+    <button class="dbtn" id="share-btn" type="button"><i class="bi bi-link-45deg" aria-hidden="true"></i> <span>Share moment</span></button>
+    <a class="dbtn wide-only" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+    <button class="dbtn dock-min" id="min-btn" type="button" aria-expanded="true" aria-label="Hide the mini video"><i class="bi bi-chevron-down" aria-hidden="true"></i></button>
+  </div>
+  <details class="chapters" open>
+    <summary>CHAPTERS · TAP TO JUMP</summary>
+    <ol id="chapters"></ol>
+  </details>
+</aside>
+</div>
+
+<section class="takeaways" id="takeaways" data-act="Close" data-title="Four takeaways" aria-labelledby="tk-h">
+  <div class="inner">
+    <div class="band-label">TAKEAWAYS · 2012, STILL TRUE</div>
+    <h2 id="tk-h">What a talk called <em>Beautiful</em> ended up teaching</h2>
+    <div class="cards">
+      <div class="card"><div class="num">01</div><h3>Beautiful isn't useful by default</h3><p>“I wanted to show circles and it looked cool.” Circles are good for a first impression. For comparisons, put the main number on a shared axis. <a class="ts" href="?t=33:19">33:19</a></p></div>
+      <div class="card"><div class="num">02</div><h3>Count before you draw</h3><p>Errors or files? One spelling of Rama, or all of them? The count you choose changes the answer before any shape is drawn. <a class="ts" href="?t=09:33">09:33</a></p></div>
+      <div class="card"><div class="num">03</div><h3>Know what each attribute does</h3><p>A circle has <code>cx</code>, not <code>x</code>. D3 maps data to real DOM nodes, so you have to know how each node is placed. <a class="ts" href="?t=49:59">49:59</a></p></div>
+      <div class="card"><div class="num">04</div><h3>Browse, sleep, then build</h3><p>Copy a chart you liked. Look for inspiration at one time and decide what to make at another. “Turn the internet off; might help.” <a class="ts" href="?t=38:33">38:33</a></p></div>
+    </div>
+  </div>
+</section>
+
+<section class="ledger-sec" id="ledger" data-act="Close" data-title="Evidence ledger" aria-labelledby="ledger-h">
+  <div class="case-no">EVIDENCE LEDGER</div>
+  <h2 id="ledger-h">What was said, and what the record shows</h2>
+  <p>Quotes were checked against the recording's audio transcript and YouTube's captions. Seek times follow the YouTube upload. Data claims were recounted from the archived 2012 files. Rows marked 2026 are this page's own readings, not claims made on stage.</p>
+  <div class="table-wrap">
+    <table class="ledger">
+      <thead><tr><th scope="col">Claim</th><th scope="col">In the talk</th><th scope="col">Record</th><th scope="col">Status</th></tr></thead>
+      <tbody>
+        <tr><td>Date and venue</td><td>JSFoo, Bangalore</td><td><a href="https://jsfoo.in/2012/">JSFoo 2012 programme</a>: Sat 20 Oct 2012, 14:00, NIMHANS Convention Centre. <a href="https://gist.github.com/sanand0/4554440">Anand's talk log</a> agrees. YouTube upload was 7 Dec 2012.</td><td><span class="st ok">Confirmed</span></td></tr>
+        <tr><td>NREGA chart</td><td>Tamil Nadu “close to 100%” on labour; Karnataka and Orissa state-funded <a class="ts" href="?t=03:36">03:36</a></td><td><a href="https://github.com/sanand0/beautiful-visualisations/blob/gh-pages/nrega.csv">nrega.csv</a>: TN 97.1%, MP 61.1%. Karnataka, Orissa and Goa have a Centre share of 0. No year or units in the file.</td><td><span class="st ok">Confirmed</span> <span class="st ctx">MP “a little over 50%” is a spoken estimate</span></td></tr>
+        <tr><td>JSLint crawl</td><td>“About 10,000 users or so” on GitHub <a class="ts" href="?t=05:04">05:04</a></td><td>No crawl log in the repository. <a href="https://github.com/sanand0/beautiful-visualisations/blob/gh-pages/jslint.csv">jslint.csv</a> has 94 rules and 550,484 errors.</td><td><span class="st asis">As presented</span></td></tr>
+        <tr><td>Most-broken rules</td><td>Indentation first; “use strict” rises when counting files <a class="ts" href="?t=08:32">08:32</a></td><td>Errors: 195,774 then 130,626. Files: 3,538 (used before defined) then 3,433 (missing “use strict”).</td><td><span class="st ok">Confirmed</span></td></tr>
+        <tr><td>Bubble sizing</td><td>Not discussed</td><td><code>.value(√count)</code> plus D3 2.10.3's <code>r = √value</code>, so radius ∝ count<sup>¼</sup>.</td><td><span class="st ctx">2026 code reading</span></td></tr>
+        <tr><td>Tweets</td><td>Tweets up to 1:57 p.m. on talk day <a class="ts" href="?t=12:48">12:48</a></td><td><a href="https://github.com/sanand0/beautiful-visualisations/blob/gh-pages/tweet-jsfoo.js">tweet-jsfoo.js</a>: 1,035 tweets, 18 Oct 13:55 to 21 Oct 10:04 IST. Refreshed after the talk.</td><td><span class="st ctx">Archive differs from stage</span></td></tr>
+        <tr><td>Shopping paths</td><td>UK store, tracked carts <a class="ts" href="?t=18:45">18:45</a></td><td>Store, period and sample size are not given.</td><td><span class="st asis">As presented</span></td></tr>
+        <tr><td>Weather map</td><td>District monthly temperatures, 1900–2000; Bilaspur and Shimoga counter-cyclic <a class="ts" href="?t=24:14">24:14</a></td><td>Original <a href="https://sanand0.github.io/beautiful-visualisations/weather.html">weather page</a> runs. No data source is named on stage, and the counter-cyclic pattern is an observation, not a tested finding.</td><td><span class="st asis">As presented</span></td></tr>
+        <tr><td>Forms of Rama</td><td>Many forms; “segregating that out is a nightmare” <a class="ts" href="?t=27:30">27:30</a></td><td>Seven named forms total 865 in <a href="https://github.com/sanand0/beautiful-visualisations/blob/gh-pages/wordcloud-ramayana.csv">wordcloud-ramayana.csv</a>; top single word वाक्यं, 203.</td><td><span class="st ctx">2026 grouping</span></td></tr>
+        <tr><td>Third-party work</td><td>Wealthfront chart; Bostock's showreel <a class="ts" href="?t=29:34">29:34</a></td><td><a href="https://blog.wealthfront.com/startup-employee-equity-compensation/">Wealthfront</a>; <a href="https://gist.github.com/mbostock/1256572">D3 Show Reel</a>, linked from the <a href="https://sanand0.github.io/beautiful-visualisations/">2012 index</a>.</td><td><span class="st ok">Credited on stage</span></td></tr>
+        <tr><td>Perception ranking</td><td>Position, size, colour, angle <a class="ts" href="?t=35:07">35:07</a></td><td><a href="https://doi.org/10.1080/01621459.1984.10478080">Cleveland &amp; McGill 1984</a> (not cited on stage) put angle above area and colour last.</td><td><span class="st ctx">Rule of thumb</span></td></tr>
+        <tr><td>The cx / cy bug</td><td><a class="ts" href="?t=49:59">49:59</a></td><td>Frame at 49:55 shows <code>.attr('x', …)</code> and circles at the origin.</td><td><span class="st ok">Confirmed</span></td></tr>
+        <tr><td>Browser support</td><td>“Everything except IE”; IE 9 okay, IE 10 well <a class="ts" href="?t=36:33">36:33</a></td><td>True of 2012 D3. Current D3 targets modern browsers.</td><td><span class="st ctx">True in 2012</span></td></tr>
+        <tr><td>“More than a megabyte”</td><td>Weather SVG <a class="ts" href="?t=60:22">60:22</a></td><td>weather.svg is 1,870,529 bytes.</td><td><span class="st ok">Confirmed</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer class="site">
+  <div><strong>The Bubbles Looked Cool</strong> · Anand S, <em>Beautiful Visualizations with d3.js</em>, <a href="https://jsfoo.in/2012/">JSFoo 2012</a>, NIMHANS Convention Centre, Bangalore, Saturday 20 October 2012. Recording by HasGeek.</div>
+  <div>Media: <a href="https://youtu.be/JAlZ0uJnqkA">video (YouTube)</a> · <a href="https://github.com/sanand0/talks/releases/download/talks/2012-10-20-jsfoo-d3-visualizations.opus">audio (Opus)</a> · <a href="transcript.md" data-transcript>transcript</a> · <a href="comic-page.avif" data-lightbox data-caption="The talk as a comic page: a 2026 interpretation made with AI image generation, not a stage photograph.">comic page</a></div>
+  <div>Code and data: <a href="https://github.com/sanand0/beautiful-visualisations">sanand0/beautiful-visualisations</a> (D3 2.10.3, 2012) · <a href="https://sanand0.github.io/beautiful-visualisations/">live 2012 demos</a> · <a href="https://idl.uw.edu/papers/d3">D3 paper (Bostock, Ogievetsky &amp; Heer, 2011)</a> · <a href="https://bost.ocks.org/mike/join/">Thinking with Joins</a> · <a href="https://d3js.org/">d3js.org</a></div>
+  <div class="muted">Stills are frames from the HasGeek recording. The Wealthfront chart and the D3 Show Reel belong to their authors. The interactive charts on this page are 2026 reconstructions from the archived data, drawn with D3 v7. Audience members are not named because the recording doesn't name them. Keyboard: <kbd>V</kbd> toggles video focus; <kbd>[</kbd> and <kbd>]</kbd> move between sections.</div>
+</footer>
+
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump on-hero" aria-label="Jump to section">
+  <button id="jump-prev" type="button" aria-label="Previous section"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+  <button class="jump-cur" id="jump-cur" type="button" aria-expanded="false" aria-controls="jump-menu"><i class="bi bi-list-ul" aria-hidden="true"></i><span id="jump-cur-label">Guess first</span></button>
+  <button id="jump-next" type="button" aria-label="Next section"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+</nav>
+<div class="jump-menu" id="jump-menu" role="dialog" aria-label="All sections"></div>
+
+<dialog class="pop" id="pop" aria-labelledby="pop-title">
+  <div class="pop-head"><h3 id="pop-title">Transcript</h3><button type="button" id="pop-close" aria-label="Close">Close <i class="bi bi-x-lg" aria-hidden="true"></i></button></div>
+  <div class="pop-search" id="pop-search"><i class="bi bi-search" aria-hidden="true"></i><input id="pop-q" type="search" placeholder="Find in transcript…" aria-label="Find in transcript"><span id="pop-count"></span></div>
+  <div class="pop-body" id="pop-body"></div>
+</dialog>
+
+<dialog class="lightbox" id="lightbox" aria-label="Enlarged image">
+  <img id="lb-img" src="data:," alt="">
+  <div class="lb-bar"><span id="lb-cap"></span><span class="lb-act"><a id="lb-open" href="#" target="_blank" rel="noopener">Open full size ↗</a><button type="button" id="lb-close">Close</button></span></div>
+</dialog>
+<script type="application/json" id="jslint-data">[["'{a}' is already defined.",817,229],["'{a}' used out of scope.",8,2],["'{a}' was used before it was defined.",21584,3538],["A constructor name '{a}' should start with an uppercase letter.",117,87],["A css file should begin with @charset 'UTF-8';",1,1],["A leading decimal point can be confused with a dot: '.{a}'.",59,10],["A regular expression literal can be confused with '/='.",9,9],["A trailing decimal point can be confused with a dot: '.{a}'.",2,1],["Avoid '{a}'.",41,23],["Bad assignment.",13,13],["Bad for in variable '{a}'.",119,83],["Bad invocation.",1,1],["Combine this with the previous 'var' statement.",8969,1676],["Confusing use of '{a}'.",16,10],["D:\\Java Script Files\\output\\jslint2.js(6460, 1) Microsoft JScript runtime error: Input past end of file",11,11],["Do not mutate parameter '{a}' when using 'arguments'.",64,30],["Do not use 'new' for side effects.",24,13],["Do not use {a} as a constructor.",25,15],["Do not wrap function literals in parens unless they are to be immediately invoked.",3010,36],["Don't make functions within a loop.",118,67],["Don't use octal: '{a}'. Use '\\u....' instead.",73,13],["Duplicate '{a}'.",77,13],["Empty block.",225,57],["Empty case.",2,2],["Expected '{a}' and instead saw '{b}'.",25357,2382],["Expected '{a}' at column {b}, not column {c}.",195774,2991],["Expected '{a}' to match '{b}' from line {c} and instead saw '{d}'.",129,111],["Expected a conditional expression and instead saw an assignment.",1911,200],["Expected a number and instead saw '{a}'.",82,9],["Expected a string and instead saw '{a}'.",131,33],["Expected an assignment or function call and instead saw an expression.",3633,334],["Expected an identifier and instead saw '{a}' (a reserved word).",447,277],["Expected an identifier and instead saw '{a}'.",411,411],["Expected an operator and instead saw '{a}'.",7,7],["Expected exactly one space between '{a}' and '{b}'.",55483,3102],["Expected to see a statement and instead saw a block.",6,3],["Function statements are not invocable.Wrap the whole function invocation in parens.",5,5],["Function statements should not be placed in blocks.Use a function expression or move the statement to the top of the outer function.",21,12],["Implied eval is evil. Pass a function instead of a string.",26,14],["Insecure '{a}'.",1700,396],["It is not necessary to initialize '{a}' to 'undefined'.",22,12],["JavaScript URL.",6,5],["Missing 'use strict' statement.",13160,3433],["Missing '{a}' after '{b}'.",22,8],["Missing '{a}'.",1032,347],["Missing name in function statement.",9,9],["Missing radix parameter.",236,112],["Missing space between '{a}' and '{b}'.",130626,2147],["Mixed spaces and tabs.",1405,187],["Move 'var' declarations to the top of the function.",1219,1219],["Move the invocation into the parens that contain the function.",2585,357],["Nested comment.",18,18],["Only properties should be deleted.",3,3],["Read only.",25,23],["Reserved name '{a}'.",18,18],["Spaces are hard to count. Use {{a}}.",4,3],["Strange loop.",10,8],["Strict violation.",6,4],["The '&&' subexpression should be wrapped in parens.",266,113],["The Function constructor is eval.",28,21],["The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype.",214,145],["This is an ES5 feature.",844,27],["Unclosed string.",6,6],["Unescaped '{a}'.",505,168],["Unexpected 'else' after 'return'.",1144,404],["Unexpected 'in'. Compare with undefined, or use the hasOwnProperty method instead.",375,135],["Unexpected 'typeof'. Use '===' to compare directly with {a}.",956,404],["Unexpected '{a}'.",17468,2712],["Unexpected /*property*/ '{a}'.",21,3],["Unexpected TODO comment.",390,173],["Unexpected dangling '_' in '{a}'.",14408,921],["Unexpected label '{a}'.",10,10],["Unexpected space between '{a}' and '{b}'.",37421,1031],["Unexpected sync method: '{a}'.",361,141],["Unnecessary 'use strict'.",1,1],["Unreachable '{a}' after '{b}'.",87,70],["Unsafe character.",1253,133],["Use a named parameter.",267,138],["Use the array literal notation [].",1320,164],["Use the function form of 'use strict'.",85,85],["Use the isNaN function to compare with NaN.",1,1],["Use the object literal notation {}.",37,26],["Use the || operator.",169,103],["Variable {a} was not declared correctly.",7,7],["Weird assignment.",19,11],["Weird condition.",209,144],["Weird construction. Delete 'new'.",2,2],["Weird program.",2,2],["Weird relation.",3,3],["Wrap an immediate function invocation in parentheses to assist the reader in understanding that the expression is the result of a function, and not the function itself.",114,56],["Wrap the /regexp/ literal in parens to disambiguate the slash operator.",5,5],["['{a}'] is better written in dot notation.",1428,231],["document.write can be a form of eval.",29,20],["eval is evil.",115,79]]</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js" defer></script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const body = document.body;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isNarrow = () => matchMedia("(max-width: 999px)").matches;
+  const cssVar = (n) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(n)) || 0;
+  const parseT = (s) => {
+    if (s == null || s === "") return null;
+    const p = String(s).split(":").map(Number);
+    return p.some(Number.isNaN) ? null : p.reduce((a, b) => a * 60 + b, 0);
+  };
+  const fmt = (t) => { t = Math.max(0, Math.floor(t)); return String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0"); };
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  window.__story = { $, $$, reduced, esc };
+
+  // ---------- theme ----------
+  $("#theme-btn").addEventListener("click", () => {
+    const root = document.documentElement;
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+    try { localStorage.setItem("jsfoo-2012-theme", root.dataset.theme); } catch (e) {}
+  });
+
+  // ---------- chapters (video moments → story sections) ----------
+  const CHAPTERS = [
+    ["01:18", "“Am I audible from the back?”", "nrega"], ["01:41", "A compromise", "nrega"], ["03:33", "Each bubble is a state", "nrega"],
+    ["04:58", "JSLint across GitHub", "jslint"], ["06:53", "Should we have this rule?", "jslint"], ["08:32", "Errors or files?", "jslint"],
+    ["11:10", "Every dot is a tweet", "tweets"], ["12:28", "The last dot", "tweets"], ["14:48", "PyCon, Paris Web, #SOTY", "tweets"],
+    ["18:13", "Shopping carts", "gallery"], ["22:37", "What is BWS?", "gallery"], ["23:44", "A century of weather", "gallery"],
+    ["25:34", "A Sanskrit word cloud", "sanskrit"], ["29:29", "Wealthfront's chart", "borrowed"], ["32:00", "Bostock's showreel", "borrowed"],
+    ["32:48", "Why bubbles?", "question"], ["33:16", "“It looked cool”", "question"], ["34:29", "Harder than the code", "hierarchy"],
+    ["34:56", "Position first", "hierarchy"], ["36:31", "Browsers and data", "advice"], ["38:30", "Sleep over it", "advice"],
+    ["39:41", "View source", "select"], ["44:14", "Data-Driven Documents", "select"], ["45:27", "Selecting the future", "select"],
+    ["47:28", "enter() and append", "bug"], ["49:05", "“Not quite”", "bug"], ["49:59", "cx, not x", "bug"],
+    ["50:30", "Data onto objects", "thirty"], ["52:25", "Why the square root", "thirty"], ["53:46", "Questions: layouts", "limits"],
+    ["55:50", "Not D3's problem", "limits"], ["58:54", "“My name is Anand”", "limits"], ["60:22", "A megabyte of SVG", "limits"],
+  ].map(([t, title, sec]) => ({ t: parseT(t), label: t, title, sec }));
+  const chapOl = $("#chapters");
+  chapOl.innerHTML = CHAPTERS.map((c, i) =>
+    `<li><a href="?t=${c.label}" data-chap="${i}" class="ts-chap"><span class="ct">${c.label}</span><span>${c.title}</span></a></li>`).join("");
+  const chapLinks = $$("#chapters a");
+  const chapFor = (t) => { let i = -1; CHAPTERS.forEach((c, k) => { if (c.t <= t + 0.5) i = k; }); return i; };
+  const sections = $$(".chap, #takeaways, #ledger");
+  const secTitle = (id) => { const s = document.getElementById(id); return s ? s.dataset.title : ""; };
+
+  // ---------- URL state: ?t=mm:ss&view=video#section ----------
+  const urlState = () => {
+    const u = new URL(location.href);
+    return { t: parseT(u.searchParams.get("t")), view: u.searchParams.get("view") };
+  };
+  const buildUrl = ({ t, hash } = {}) => {
+    const u = new URL(location.href);
+    if (t != null) u.searchParams.set("t", fmt(t)); else if (t === null) u.searchParams.delete("t");
+    if (body.classList.contains("watch")) u.searchParams.set("view", "video"); else u.searchParams.delete("view");
+    if (hash !== undefined) u.hash = hash ? "#" + hash : "";
+    return u.pathname + u.search.replace(/%3A/gi, ":") + u.hash;
+  };
+  let urlT = urlState().t;
+
+  // ---------- one persistent YouTube player (IFrame Player API) ----------
+  // Created once inside .vwrap and never moved or re-created: story/video focus only changes CSS.
+  const VID = "JAlZ0uJnqkA";
+  let player = null, ready = false, pending = null, lastT = urlT || 0, poll = 0;
+  const resume = $("#resume"), resumeBtn = $("#resume-btn");
+  let resumeT = urlT || 0;
+  const state = () => (ready && player.getPlayerState ? player.getPlayerState() : -1);
+  const getT = () => (ready && player.getCurrentTime ? player.getCurrentTime() || lastT : lastT);
+  const showResume = (t) => { resumeT = t; resumeBtn.querySelector("span").textContent = `Play from ${fmt(t)}`; resume.classList.add("show"); };
+  const hideResume = () => resume.classList.remove("show");
+
+  window.onYouTubeIframeAPIReady = () => {
+    const vars = { playsinline: 1, rel: 0, modestbranding: 1 };
+    if (urlT) vars.start = Math.floor(urlT);
+    if (/^https?:/.test(location.protocol)) vars.origin = location.origin;
+    player = new YT.Player("yt", {
+      videoId: VID, width: "100%", height: "100%", playerVars: vars,
+      events: {
+        onReady: () => {
+          ready = true;
+          player.getIframe().title = "Beautiful Visualizations with d3.js: Anand S at JSFoo 2012, Bangalore (YouTube)";
+          if (pending != null) { const t = pending; pending = null; startAt(t); }
+          else if (urlT) { onTime(); showResume(urlT); }
+        },
+        onStateChange: (e) => {
+          if (e.data === 1) {
+            hideResume();
+            if (body.classList.contains("dock-collapsed")) { body.classList.remove("dock-collapsed"); syncMin(); }
+            clearInterval(poll); poll = setInterval(() => { lastT = player.getCurrentTime(); onTime(); }, 300);
+          } else {
+            clearInterval(poll);
+            if (ready) { lastT = player.getCurrentTime() || lastT; onTime(); }
+          }
+        },
+      },
+    });
+  };
+  const tag = document.createElement("script");
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
+
+  const startAt = (t) => {
+    lastT = t;
+    const s = state();
+    if (s === 1 || s === 2 || s === 3) player.seekTo(t, true);
+    else player.loadVideoById({ videoId: VID, startSeconds: t });
+    player.playVideo();
+    onTime();
+    setTimeout(() => { const s2 = state(); if (s2 !== 1 && s2 !== 3) showResume(t); }, 1800);
+  };
+  const ensureDockVisible = () => {
+    if (isNarrow()) { body.classList.remove("dock-collapsed"); syncMin(); return; }
+    const r = $("#dock").getBoundingClientRect();
+    if (r.top > innerHeight - 80 || r.bottom < 60) $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  };
+  const playAt = (t, { push = false, el = null } = {}) => {
+    if (push) {
+      const sec = el && el.closest(".chap, #takeaways, #ledger");
+      history.pushState({ t }, "", buildUrl({ t, hash: sec ? sec.id : undefined }));
+      urlT = t;
+    }
+    ensureDockVisible();
+    if (ready) startAt(t); else { pending = t; lastT = t; onTime(); }
+    if (el) { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+  };
+  resumeBtn.addEventListener("click", () => {
+    if (!ready) return;
+    const s = state();
+    if (s === 2 || s === 1) player.playVideo(); else startAt(resumeT);
+    hideResume();
+  });
+
+  const enhanceTs = (root = document) => {
+    $$("a.ts", root).forEach((a) => {
+      if (a.dataset.t) return;
+      const t = parseT(new URL(a.href, location.href).searchParams.get("t"));
+      a.dataset.t = t;
+      a.insertAdjacentHTML("afterbegin", '<i class="bi bi-play-fill" aria-hidden="true"></i>');
+      a.setAttribute("aria-label", `Play the talk from ${a.textContent.trim()}`);
+    });
+  };
+  enhanceTs();
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a.ts, a.ts-chap");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const t = a.classList.contains("ts-chap") ? CHAPTERS[+a.dataset.chap].t : +a.dataset.t;
+    const dlg = a.closest("dialog");
+    if (dlg) dlg.close();
+    playAt(t, { push: true, el: a.classList.contains("ts") && !dlg ? a : null });
+  });
+
+  // now-playing sync
+  const nowT = $("#now-t"), nowTitle = $("#now-title"), nowStory = $("#now-story");
+  let curChap = -2;
+  const onTime = () => {
+    const t = getT();
+    nowT.textContent = fmt(t);
+    const i = chapFor(t);
+    if (i === curChap) return;
+    curChap = i;
+    chapLinks.forEach((a, k) => { a.classList.toggle("is-now", k === i); if (k === i) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
+    if (i >= 0) {
+      const c = CHAPTERS[i];
+      nowTitle.textContent = c.title;
+      nowStory.innerHTML = `In the story: <a href="#${c.sec}">${secTitle(c.sec)} ↓</a>`;
+      sections.forEach((s) => s.classList.toggle("is-now", s.id === c.sec));
+      const link = chapLinks[i], box = link.closest(".chapters");
+      if (box && box.scrollHeight > box.clientHeight) {
+        const lr = link.getBoundingClientRect(), br = box.getBoundingClientRect();
+        if (lr.top < br.top || lr.bottom > br.bottom) box.scrollTop += lr.top - br.top - box.clientHeight / 3;
+      }
+    }
+  };
+  if (urlT) onTime();
+
+  // story → chapter hints
+  const tsSeen = new Set();
+  let hintRaf = 0;
+  const tsIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? tsSeen.add(e.target) : tsSeen.delete(e.target)));
+    hintRaf ||= requestAnimationFrame(() => {
+      hintRaf = 0;
+      const idx = new Set([...tsSeen].map((a) => chapFor(+a.dataset.t)));
+      chapLinks.forEach((a, k) => a.classList.toggle("in-view", idx.has(k)));
+    });
+  });
+  $$("a.ts").filter((a) => !a.closest("dialog, .dock")).forEach((a) => tsIO.observe(a));
+
+  const shareBtn = $("#share-btn");
+  shareBtn.addEventListener("click", async () => {
+    const t = Math.floor(getT());
+    const sec = curChap >= 0 ? CHAPTERS[curChap].sec : "";
+    const u = new URL(location.href);
+    u.search = "?t=" + fmt(t); u.hash = sec ? "#" + sec : "";
+    const label = shareBtn.querySelector("span");
+    try { await navigator.clipboard.writeText(u.href.replace(/%3A/gi, ":")); label.textContent = `Copied ${fmt(t)}`; }
+    catch (e) { history.replaceState(history.state, "", u.pathname + u.search.replace(/%3A/gi, ":") + u.hash); label.textContent = "Link in address bar"; }
+    setTimeout(() => (label.textContent = "Share moment"), 2200);
+  });
+
+  // ---------- story ⇄ video focus (same iframe, CSS only) ----------
+  const modeBtn = $("#mode-btn"), modeLabel = $("#dock-mode-label");
+  const pickAnchor = () => {
+    const top = 80 + (isNarrow() && body.classList.contains("watch") ? cssVar("--dock-h") : 0);
+    return $$(".story .chap > *").find((el) => el.getBoundingClientRect().bottom > top);
+  };
+  const setMode = (watch, { replace = true } = {}) => {
+    if (body.classList.contains("watch") === watch) return;
+    const anchor = pickAnchor();
+    const before = anchor ? anchor.getBoundingClientRect().top : 0;
+    const storyVisible = $("#room").getBoundingClientRect().top < innerHeight * 0.5;
+    body.classList.toggle("watch", watch);
+    if (watch) body.classList.remove("dock-collapsed");
+    syncMin();
+    modeBtn.setAttribute("aria-pressed", String(watch));
+    modeBtn.innerHTML = watch
+      ? '<i class="bi bi-book" aria-hidden="true"></i> <span>Focus story</span>'
+      : '<i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span>';
+    modeLabel.textContent = watch ? "Video focus" : "Story focus";
+    if (replace) history.replaceState(history.state, "", buildUrl());
+    updateDockH();
+    if (anchor && storyVisible) {
+      const start = performance.now();
+      const keep = () => {
+        const d = anchor.getBoundingClientRect().top - before;
+        if (Math.abs(d) > 1) window.scrollBy({ top: d, behavior: "instant" });
+        if (performance.now() - start < 700) requestAnimationFrame(keep);
+      };
+      requestAnimationFrame(keep);
+    }
+    dispatchEvent(new Event("resize"));
+  };
+  modeBtn.addEventListener("click", () => setMode(!body.classList.contains("watch")));
+  $("#hero-watch").addEventListener("click", (e) => {
+    e.preventDefault();
+    setMode(true);
+    $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  });
+  const updateDockH = () => {
+    const h = isNarrow() && body.classList.contains("watch") ? $("#dock").offsetHeight : 0;
+    document.documentElement.style.setProperty("--dock-h", h + "px");
+  };
+  new ResizeObserver(updateDockH).observe($("#dock"));
+  addEventListener("resize", updateDockH);
+  const minBtn = $("#min-btn");
+  function syncMin() {
+    const c = body.classList.contains("dock-collapsed");
+    minBtn.setAttribute("aria-expanded", String(!c));
+    minBtn.setAttribute("aria-label", c ? "Show the mini video" : "Hide the mini video");
+    minBtn.innerHTML = `<i class="bi ${c ? "bi-chevron-up" : "bi-chevron-down"}" aria-hidden="true"></i>`;
+  }
+  minBtn.addEventListener("click", () => { body.classList.toggle("dock-collapsed"); syncMin(); });
+  if (isNarrow() && !urlT) { body.classList.add("dock-collapsed"); syncMin(); }
+  if (urlState().view === "video") setMode(true, { replace: false });
+  if (urlT) showResume(urlT);
+
+  // ---------- history ----------
+  addEventListener("popstate", () => {
+    const { t, view } = urlState();
+    setMode(view === "video", { replace: false });
+    if (t != null && t !== urlT) {
+      lastT = t;
+      if (ready) { const s = state(); if (s === 1 || s === 2 || s === 3) player.seekTo(t, true); else player.cueVideoById({ videoId: VID, startSeconds: t }); }
+      onTime();
+      if (state() !== 1) showResume(t);
+    }
+    urlT = t;
+  });
+
+  // ---------- section jump nav ----------
+  const menu = $("#jump-menu"), backdrop = $("#jump-backdrop"), curBtn = $("#jump-cur"), curLabel = $("#jump-cur-label");
+  const groups = [];
+  sections.forEach((s) => {
+    const g = s.dataset.act;
+    if (!groups.length || groups[groups.length - 1].name !== g) groups.push({ name: g, items: [] });
+    groups[groups.length - 1].items.push(s);
+  });
+  menu.innerHTML = groups.map((g) => `<div class="jm-group">${g.name}</div><div class="jump-grid">${g.items.map((s) => {
+    const h = ((s.querySelector("h2") || {}).textContent || "").trim();
+    const same = h.replace(/\W/g, "").toLowerCase() === s.dataset.title.replace(/\W/g, "").toLowerCase();
+    return `<a href="#${s.id}" data-sec="${s.id}">${s.dataset.title}${same ? "" : `<small>${esc(h)}</small>`}</a>`;
+  }).join("")}</div>`).join("");
+  const openMenu = (open) => {
+    menu.classList.toggle("open", open); backdrop.classList.toggle("open", open);
+    curBtn.setAttribute("aria-expanded", String(open));
+    if (open) (menu.querySelector("a.is-cur") || menu.querySelector("a")).focus();
+    else if (menu.contains(document.activeElement)) curBtn.focus();
+  };
+  curBtn.addEventListener("click", () => openMenu(!menu.classList.contains("open")));
+  backdrop.addEventListener("click", () => openMenu(false));
+  menu.addEventListener("click", (e) => { if (e.target.closest("a")) openMenu(false); });
+  menu.addEventListener("keydown", (e) => { if (e.key === "Escape") openMenu(false); });
+  let curIdx = 0;
+  const goSec = (i) => {
+    i = Math.max(0, Math.min(sections.length - 1, i));
+    sections[i].scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+    history.pushState(history.state, "", buildUrl({ hash: sections[i].id }));
+  };
+  $("#jump-prev").addEventListener("click", () => goSec(curIdx - 1));
+  $("#jump-next").addEventListener("click", () => goSec(curIdx + 1));
+  const progress = $("#progress"), jumpNav = $(".jump");
+  const onScroll = () => {
+    const line = innerHeight * 0.3 + cssVar("--dock-h");
+    let i = 0;
+    sections.forEach((s, k) => { if (s.getBoundingClientRect().top <= line) i = k; });
+    if (i !== curIdx || !curLabel.dataset.init) {
+      curIdx = i; curLabel.dataset.init = 1;
+      curLabel.textContent = sections[i].dataset.title;
+      $$("a", menu).forEach((a) => a.classList.toggle("is-cur", a.dataset.sec === sections[i].id));
+      $("#jump-prev").disabled = i === 0;
+      $("#jump-next").disabled = i === sections.length - 1;
+    }
+    jumpNav.classList.toggle("on-hero", $("#room").getBoundingClientRect().top > innerHeight * 0.75 && !menu.classList.contains("open"));
+    const h = document.documentElement.scrollHeight - innerHeight;
+    progress.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%";
+  };
+  let ticking = false;
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { onScroll(); ticking = false; }); } }, { passive: true });
+  onScroll();
+
+  // keyboard shortcuts
+  document.addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest("input, textarea, select, dialog, [contenteditable]")) return;
+    if (e.key === "v" || e.key === "V") setMode(!body.classList.contains("watch"));
+    else if (e.key === "[") goSec(curIdx - 1);
+    else if (e.key === "]") goSec(curIdx + 1);
+  });
+
+  // ---------- transcript popup ----------
+  const pop = $("#pop"), popBody = $("#pop-body"), popTitle = $("#pop-title"), popSearch = $("#pop-search"), popQ = $("#pop-q"), popCount = $("#pop-count");
+  let popReturn = null;
+  const openPop = (title, html, { search = false } = {}) => {
+    popReturn = document.activeElement;
+    popTitle.textContent = title; popBody.innerHTML = html; enhanceTs(popBody);
+    popSearch.classList.toggle("on", search); popQ.value = ""; popCount.textContent = "";
+    pop.showModal(); popBody.scrollTop = 0;
+    if (search) popQ.focus();
+  };
+  pop.addEventListener("close", () => { if (popReturn && popReturn.focus) popReturn.focus(); });
+  $("#pop-close").addEventListener("click", () => pop.close());
+  pop.addEventListener("click", (e) => { if (e.target === pop) pop.close(); });
+  const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  popQ.addEventListener("input", () => {
+    const q = popQ.value.trim();
+    const blocks = $$(":scope > p, :scope > ul, :scope > ol", popBody).filter((b) => !b.classList.contains("intro"));
+    $$("mark", popBody).forEach((m) => m.replaceWith(m.textContent));
+    popBody.normalize();
+    let n = 0;
+    blocks.forEach((b) => {
+      const hit = !q || b.textContent.toLowerCase().includes(q.toLowerCase());
+      b.classList.toggle("hide", !hit);
+      if (hit && q) {
+        n++;
+        const re = new RegExp(escRe(q), "gi");
+        const walker = document.createTreeWalker(b, NodeFilter.SHOW_TEXT);
+        const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach((node) => {
+          if (!re.test(node.nodeValue)) return; re.lastIndex = 0;
+          const span = document.createElement("span");
+          span.innerHTML = esc(node.nodeValue).replace(re, (m) => `<mark>${m}</mark>`);
+          node.replaceWith(...span.childNodes);
+        });
+      }
+    });
+    popCount.textContent = q ? `${n} passage${n === 1 ? "" : "s"}` : "";
+  });
+  let transcriptHtml = null;
+  document.addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-transcript]");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    if (!transcriptHtml) {
+      try {
+        let md = await (await fetch("transcript.md")).text();
+        md = md.replace(/<!--[\s\S]*?-->/g, "").replace(/^# Transcript\s*/, "")
+          .replace(/\[(\d{1,2}):(\d{2})\]/g, (m, a1, b1) => `<a class="ts" href="?t=${a1}:${b1}">${a1}:${b1}</a>`);
+        transcriptHtml = window.marked ? marked.parse(md) : md.split(/\n\n+/).map((p) => `<p>${p}</p>`).join("");
+        transcriptHtml = '<p class="intro">A machine-made transcript of the recording, lightly edited, with bold phrases added for scanning. Times are close to the YouTube video but can run up to ~15 seconds off; tap one to play from there. Audience speakers are not named. Lines marked “Unsure” were hard to attribute.</p>' + transcriptHtml;
+      } catch (err) { location.href = a.href; return; }
+    }
+    openPop("Transcript", transcriptHtml, { search: true });
+  });
+
+  // ---------- lightbox ----------
+  const lb = $("#lightbox"), lbImg = $("#lb-img"), lbCap = $("#lb-cap"), lbOpen = $("#lb-open");
+  let lbReturn = null;
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-lightbox]");
+    if (!el || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    const src = el.getAttribute("href") || el.currentSrc || el.src;
+    const img = el.tagName === "IMG" ? el : el.querySelector("img");
+    lbImg.src = src; lbImg.alt = img ? img.alt : (el.dataset.caption || "");
+    lbCap.textContent = el.dataset.caption || "";
+    lbOpen.href = src;
+    lbReturn = document.activeElement;
+    lb.showModal();
+    $("#lb-close").focus();
+  });
+  $("#lb-close").addEventListener("click", () => lb.close());
+  lb.addEventListener("click", (e) => { if (e.target === lb || e.target === lbImg) lb.close(); });
+  lb.addEventListener("close", () => { if (lbReturn && lbReturn.focus) lbReturn.focus(); });
+})();
+</script>
+<script>
+(() => {
+  if (!window.d3) return;
+  const { $, $$, reduced, esc } = window.__story;
+  const dur = reduced ? 0 : 900;
+  const nf = d3.format(",");
+
+  // ---------- exhibit 1: 94 JSLint rules, three encodings ----------
+  const RULES = JSON.parse($("#jslint-data").textContent).map(([name, errors, files]) => ({ name, errors, files }));
+  const svg = d3.select("#pack-svg");
+  const W = 940, H = 600, TOP = 15;
+  const defs = svg.append("defs");
+  [["fill", "#ff1d1d", "#1a0000"], ["pick", "#3b6bff", "#000a2a"]].forEach(([id, a, b]) => {
+    const g = defs.append("radialGradient").attr("id", "g-" + id).attr("cx", .2).attr("cy", .2).attr("r", 1);
+    g.append("stop").attr("offset", "0%").attr("stop-color", a);
+    g.append("stop").attr("offset", "100%").attr("stop-color", b);
+  });
+  const gAxis = svg.append("g"), gLines = svg.append("g"), gNodes = svg.append("g"), gLabels = svg.append("g");
+  let enc = "sqrt", key = "errors", picked = new Set();
+  const readout = $("#pack-readout");
+  const rank = (k) => RULES.slice().sort((a, b) => b[k] - a[k]);
+
+  const layout = () => {
+    const pos = new Map();
+    if (enc === "dots") {
+      const top = rank(key).slice(0, TOP);
+      const x = d3.scaleLinear().domain([0, top[0][key]]).range([430, 840]).nice();
+      const y = (i) => 30 + i * 34;
+      top.forEach((d, i) => pos.set(d.name, { x: x(d[key]), y: y(i), r: 7, i }));
+      RULES.forEach((d) => { if (!pos.has(d.name)) pos.set(d.name, { x: x(d[key]), y: y(TOP) + 10, r: 0, i: -1 }); });
+      return { pos, top, x, y };
+    }
+    const root = d3.hierarchy({ children: RULES })
+      .sum((d) => (d.name ? (enc === "sqrt" ? Math.sqrt(d[key]) : d[key]) : 0))
+      .sort((a, b) => b.value - a.value);
+    d3.pack().size([W, H]).padding(.5)(root);
+    root.leaves().forEach((n) => pos.set(n.data.name, { x: n.x, y: n.y, r: n.r }));
+    return { pos };
+  };
+  const short = (s, n = 42) => (s.length > n ? s.slice(0, n - 1) + "…" : s);
+  const show = (d) => {
+    const r = rank(key).indexOf(d) + 1;
+    readout.innerHTML = `<b>${esc(d.name)}</b><br>${nf(d.errors)} errors · in ${nf(d.files)} files · rank ${r} of 94 by ${key}`;
+  };
+  const draw = () => {
+    const L = layout();
+    const t = svg.transition().duration(dur);
+    gNodes.selectAll("circle").data(RULES, (d) => d.name).join(
+      (enter) => enter.append("circle").attr("cx", W / 2).attr("cy", H / 2).attr("r", 0)
+        .on("pointerenter click", (e, d) => show(d))
+        .call((c) => c.append("title").text((d) => d.name)),
+    )
+      .style("fill", (d) => (enc === "dots" ? (picked.has(d.name) ? "var(--blue)" : "var(--red)") : `url(#g-${picked.has(d.name) ? "pick" : "fill"})`))
+      .transition(t)
+      .attr("cx", (d) => L.pos.get(d.name).x).attr("cy", (d) => L.pos.get(d.name).y).attr("r", (d) => L.pos.get(d.name).r);
+
+    const top = enc === "dots" ? L.top : [];
+    gLines.selectAll("line").data(top, (d) => d.name).join(
+      (enter) => enter.append("line").attr("stroke", "var(--rule)").attr("stroke-width", 2).attr("x1", 430).attr("x2", 430)
+        .attr("y1", (d, i) => L.y(i)).attr("y2", (d, i) => L.y(i)),
+      (update) => update,
+      (exit) => exit.transition(t).attr("x2", 430).style("opacity", 0).remove(),
+    ).transition(t).attr("y1", (d, i) => L.y(i)).attr("y2", (d, i) => L.y(i)).attr("x2", (d) => L.x(d[key])).style("opacity", 1);
+    gLabels.selectAll("g").data(top, (d) => d.name).join(
+      (enter) => {
+        const g = enter.append("g").style("opacity", 0).attr("transform", (d, i) => `translate(0,${L.y(i)})`);
+        g.append("text").attr("class", "lab").attr("x", 420).attr("dy", ".35em").attr("text-anchor", "end");
+        g.append("text").attr("class", "val").attr("dy", ".35em");
+        return g;
+      },
+      (update) => update,
+      (exit) => exit.transition(t).style("opacity", 0).remove(),
+    ).call((g) => {
+      g.select(".lab").text((d) => short(d.name));
+      g.select(".val").text((d) => nf(d[key]));
+    }).transition(t).style("opacity", 1).attr("transform", (d, i) => `translate(0,${L.y(i)})`)
+      .call((g) => g.select(".val").attr("x", (d) => L.x(d[key]) + 12));
+
+    gAxis.selectAll("*").remove();
+    if (enc === "dots") {
+      gAxis.attr("transform", `translate(0,${L.y(TOP) - 4})`).style("opacity", 0).transition(t).style("opacity", 1);
+      gAxis.call(d3.axisBottom(L.x).ticks(5).tickFormat(d3.format("~s")).tickSizeOuter(0))
+        .call((g) => g.selectAll("text").attr("class", "val").style("font-size", "13px"))
+        .call((g) => g.selectAll("line,path").attr("stroke", "var(--rule)"));
+      gAxis.append("text").attr("class", "val").attr("x", 420).attr("y", 36).attr("text-anchor", "end")
+        .text(`top ${TOP} of 94 rules, by ${key}`);
+    }
+    svg.attr("aria-label", enc === "dots"
+      ? `Dot plot of the top ${TOP} JSLint rules by ${key}. Highest: ${rank(key)[0].name}, ${nf(rank(key)[0][key])}.`
+      : `Packed circles, one per JSLint rule, sized by ${key}${enc === "sqrt" ? " as coded in 2012 (area proportional to the square root)" : " (area proportional to the count)"}.`);
+  };
+  const seg = (box, attr, set) => $$(`#${box} button`).forEach((b) => b.addEventListener("click", () => {
+    $$(`#${box} button`).forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    set(b.dataset[attr]); draw();
+  }));
+  seg("pack-enc", "enc", (v) => (enc = v));
+  seg("pack-key", "key", (v) => (key = v));
+  const setKey = (v) => { key = v; $$("#pack-key button").forEach((x) => x.setAttribute("aria-pressed", String(x.dataset.key === v))); };
+
+  const reveal = $("#pack-reveal");
+  $$("#pack-choices button").forEach((b) => b.addEventListener("click", () => {
+    const [a, c] = rank("errors");
+    const ratio = a.errors / c.errors;
+    $$("#pack-choices button").forEach((x) => { x.classList.toggle("right", x.dataset.v === "1.5"); x.classList.toggle("wrong", x === b && x.dataset.v !== "1.5"); });
+    reveal.innerHTML = `${b.dataset.v === "1.5" ? "<b>Right.</b> " : b.dataset.v === "1.1" ? "<b>That is what the circles suggest, but no.</b> " : "<b>Not quite.</b> "}` +
+      `The top rule, <b>${esc(a.name)}</b> (bad indentation), was broken <b>${nf(a.errors)}</b> times. The runner-up, <b>${esc(c.name)}</b>, ${nf(c.errors)}. ` +
+      `That is <b>${ratio.toFixed(2)}×</b>, but the bigger circle has only ${Math.sqrt(ratio).toFixed(2)}× the area and ${Math.pow(ratio, .25).toFixed(2)}× the radius. Both are now blue. Try the sorted dots.`;
+    reveal.hidden = false;
+    picked = new Set([a.name, c.name]);
+    setKey("errors");
+    draw();
+  }));
+  draw();
+
+  // ---------- exhibit 2: the data join and the cx/cy bug ----------
+  const pg = d3.select("#pg-svg");
+  const code = $("#pg-code"), joins = $("#pg-joins"), inspect = $("#pg-inspect");
+  let attr = "xy", arr = [1, 2, 3, 4, 5], answered = false;
+  const showCode = (changed) => {
+    const [ax, ay] = attr === "xy" ? ["x", "y"] : ["cx", "cy"];
+    const cls = attr === "xy" ? "bad" : "good";
+    code.innerHTML = `<span class="cm">// typed on stage, 48:05 (D3 v2)</span>\n` +
+      `nodes = d3.select('svg').selectAll('circle')\n  .data([${arr.join(",")}])\n` +
+      `nodes.enter().append('circle')\n` +
+      `  .attr('<span class="${cls}">${ax}</span>', function(d) { return d*100; })\n` +
+      `  .attr('<span class="${cls}">${ay}</span>', function(d) { return d*100; })\n` +
+      `  .attr('<span class="attr">r</span>', function(d) { return d*20; })\n` +
+      `  .attr('<span class="attr">fill</span>', 'green');` +
+      (changed ? `\n<span class="cm">// this page also updates and removes nodes:\n// the update and exit selections</span>` : "");
+  };
+  const showNode = (el) => {
+    const d = el.__data__, i = [...el.parentNode.children].indexOf(el);
+    const html = el.outerHTML.replace(/ (tabindex|role|aria-label|class|style)="[^"]*"/g, "");
+    inspect.innerHTML = `<span class="tagname">${esc(html)}</span><br><b>__data__</b> = ${d} · index ${i}` +
+      (attr === "xy" ? `<br>No <b>cx</b> or <b>cy</b>, so the centre is (0, 0). SVG ignores <b>x</b> and <b>y</b> on a circle.` : "");
+  };
+  const render = (changed = false) => {
+    const before = pg.selectAll("circle").size();
+    const t = pg.transition().duration(reduced ? 0 : 700);
+    const pos = attr === "cxcy";
+    pg.selectAll("circle").data(arr).join(
+      (enter) => enter.append("circle").attr("r", 0).attr("fill", "green").attr("fill-opacity", .5)
+        .attr("stroke", "var(--blue)").attr("stroke-width", 4).attr("tabindex", 0)
+        .call((c) => { if (pos) c.attr("cx", (d) => d * 100).attr("cy", (d) => d * 100); }),
+      (update) => update.attr("stroke", "#0b4d1d").attr("stroke-width", 1.5),
+      (exit) => exit.attr("stroke", "var(--red)").attr("stroke-width", 4).transition(t).attr("r", 0).remove(),
+    )
+      .attr("aria-label", (d) => `circle bound to ${d}`)
+      .each(function () {
+        if (pos) { if (!this.hasAttribute("cx")) { this.setAttribute("cx", 0); this.setAttribute("cy", 0); } this.removeAttribute("x"); this.removeAttribute("y"); }
+      })
+      .call((c) => { if (!pos) c.attr("x", (d) => d * 100).attr("y", (d) => d * 100); })
+      .transition(t)
+      .attr("r", (d) => d * 20)
+      .call((c) => { if (pos) c.attr("cx", (d) => d * 100).attr("cy", (d) => d * 100); else c.attr("cx", 0).attr("cy", 0); })
+      .on("end", function () {
+        d3.select(this).attr("stroke", "#0b4d1d").attr("stroke-width", 1.5);
+        if (!pos) { this.removeAttribute("cx"); this.removeAttribute("cy"); }
+      });
+    const n = arr.length;
+    joins.innerHTML = `<span><i style="background:var(--blue)"></i>enter ${Math.max(0, n - before)}</span>` +
+      `<span><i style="background:#0b4d1d"></i>update ${Math.min(n, before)}</span>` +
+      `<span><i style="background:var(--red)"></i>exit ${Math.max(0, before - n)}</span>`;
+    showCode(changed);
+  };
+  pg.on("click focusin", (e) => { if (e.target.tagName === "circle") showNode(e.target); });
+  const bugReveal = $("#bug-reveal");
+  const explain = () => {
+    bugReveal.innerHTML = `<b>A circle has no x or y.</b> An SVG <code>&lt;circle&gt;</code> is placed by its centre, <code>cx</code> and <code>cy</code>, which default to 0. The browser ignores <code>x</code> and <code>y</code> on it, so every circle is centred on the corner and the largest, drawn last, covers the rest. ` +
+      (attr === "xy" ? `Switch <b>POSITION</b> to <b>cx / cy</b> to make the fix from 49:59.` : `With <code>cx</code> and <code>cy</code>, the diagonal appears.`);
+    bugReveal.hidden = false; answered = true;
+  };
+  $$("#bug-choices button").forEach((b) => b.addEventListener("click", () => {
+    if (b.dataset.ok === "1") { b.classList.add("right"); explain(); }
+    else { b.classList.add("wrong"); if (!answered) { bugReveal.innerHTML = "Someone in the room guessed that too, around 49:28. It wasn't the problem. Try another answer."; bugReveal.hidden = false; } }
+  }));
+  $$("#pg-attr button").forEach((b) => b.addEventListener("click", () => {
+    $$("#pg-attr button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    attr = b.dataset.attr; render();
+    if (attr === "cxcy") { $$("#bug-choices button").forEach((x) => x.dataset.ok === "1" && x.classList.add("right")); explain(); }
+    const sel = pg.select("circle").node(); if (sel) setTimeout(() => showNode(sel), reduced ? 0 : 750);
+  }));
+  $$("#pg-data button").forEach((b) => b.addEventListener("click", () => {
+    $$("#pg-data button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    arr = b.dataset.arr.split(",").map(Number); render(true);
+  }));
+  render();
+
+  // ---------- Rama: one spelling vs seven ----------
+  const FORMS = [["रामं", 193], ["रामॊ", 156], ["रामस्य", 137], ["रामः", 137], ["राम", 130], ["रामेण", 76], ["रामाय", 36]];
+  const total = d3.sum(FORMS, (d) => d[1]);
+  const rs = d3.select("#rama-svg"), rx = d3.scaleLinear().domain([0, 900]).range([0, 390]);
+  const row = (y, label, sub) => {
+    rs.append("text").attr("x", 0).attr("y", y).attr("font-weight", 700).attr("font-size", 15).text(label);
+    rs.append("text").attr("x", 0).attr("y", y + 18).attr("class", "sub").text(sub);
+  };
+  row(42, "Top single word", "वाक्यं, “speech”");
+  rs.append("rect").attr("x", 210).attr("y", 24).attr("height", 30).attr("rx", 3).attr("width", rx(203)).attr("fill", "var(--muted)");
+  rs.append("text").attr("x", 210 + rx(203) + 8).attr("y", 44).attr("class", "sub").attr("font-weight", 700).text("203");
+  row(120, "Rama, seven forms", "as named on stage");
+  let acc = 0;
+  FORMS.forEach(([w, n], i) => {
+    const x = 210 + rx(acc);
+    rs.append("rect").attr("x", x).attr("y", 102).attr("height", 30).attr("width", rx(n) - 1).attr("fill", i % 2 ? "var(--red)" : "color-mix(in srgb, var(--red) 70%, var(--paper))");
+    if (rx(n) > 34) rs.append("text").attr("x", x + rx(n) / 2).attr("y", 152).attr("text-anchor", "middle").attr("font-size", 12).text(w);
+    if (rx(n) > 34) rs.append("text").attr("x", x + rx(n) / 2).attr("y", 168).attr("text-anchor", "middle").attr("class", "sub").attr("font-size", 11).text(n);
+    acc += n;
+  });
+  rs.append("text").attr("x", 210 + rx(total) + 8).attr("y", 122).attr("class", "sub").attr("font-weight", 700).text(`${total} · ${(total / 203).toFixed(1)}×`);
+
+  // ---------- the 2012 pages, live ----------
+  const BASE = "https://sanand0.github.io/beautiful-visualisations/";
+  const frame = $("#museum-frame"), openA = $("#museum-open");
+  let demo = "tweets.html?jsfoo", iframe = null;
+  const fit = () => { if (iframe) iframe.style.transform = `scale(${frame.clientWidth / 1000})`; };
+  new ResizeObserver(fit).observe(frame);
+  const load = () => {
+    frame.innerHTML = "";
+    iframe = document.createElement("iframe");
+    iframe.src = BASE + demo;
+    iframe.title = "Original 2012 D3 demo: " + demo;
+    iframe.setAttribute("sandbox", "allow-scripts allow-same-origin");
+    iframe.loading = "lazy";
+    frame.appendChild(iframe); fit();
+  };
+  $("#museum-load").addEventListener("click", load);
+  $$("#museum-tabs button").forEach((b) => b.addEventListener("click", () => {
+    $$("#museum-tabs button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    demo = b.dataset.demo; openA.href = BASE + demo;
+    load();
+  }));
+})();
+</script>
+</body>
+</html>

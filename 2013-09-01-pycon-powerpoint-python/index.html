@@ -1,0 +1,1518 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Slide Was the Program · Anand S at PyCon India 2013</title>
+<meta name="description" content="At PyCon India on 1 September 2013, Anand S used Python to make 250 IMDb posters move inside one PowerPoint slide, then showed why: newspapers and boardrooms needed the work to end up in PowerPoint.">
+<meta property="og:title" content="The Slide Was the Program">
+<meta property="og:description" content="250 movie posters, one PowerPoint slide, a Python notebook, and the clients who needed it. PyCon India, Bangalore, 1 September 2013.">
+<meta property="og:image" content="https://talks.s-anand.net/2013-09-01-pycon-powerpoint-python/slides/12-sort-mid-flight.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..800;1,62..125,400..700&family=Spectral:ital,wght@0,400;0,600;1,400;1,600&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script>
+  (() => {
+    let t = null;
+    try { t = localStorage.getItem("pycon-ppt-2013-theme"); } catch (e) {}
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  })();
+</script>
+<style>
+:root {
+  --paper: #f3efe6; --paper-2: #e8e1d3; --card: #fbf9f4; --ink: #1f1a15; --muted: #5b5248; --rule: #cfc5b3;
+  --accent: #b2380f; --accent-soft: #f6dccf; --blue: #1d4b78; --blue-soft: #dbe6f1; --gold: #775400; --gold-soft: #f4e5bd;
+  --night: #15120e; --night-2: #211c17; --night-3: #2e2720; --on-night: #f1eadf; --on-night-muted: #bfb4a5;
+  --hot: #ff9a6b; --sky: #9cc8f2; --sun: #f2c14e;
+  --slide: #ffffff; --slide-ink: #222;
+  --font-display: "Archivo", "Arial Narrow", system-ui, sans-serif; --font-body: "Spectral", Georgia, serif;
+  --font-ui: "Archivo", system-ui, sans-serif; --font-mono: "Fira Code", ui-monospace, monospace;
+  --measure: 40rem; --pad: clamp(1rem, 4vw, 2.5rem); --dock-w: 380px; --shadow: 0 12px 32px rgba(31, 26, 21, .16);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #16130f; --paper-2: #221d17; --card: #1d1914; --ink: #ede6da; --muted: #b3a898; --rule: #3b342b;
+    --accent: #ff8a5c; --accent-soft: #3d2216; --blue: #8fbbe8; --blue-soft: #1a2a3a; --gold: #f0c15c; --gold-soft: #3a2f15;
+    --shadow: 0 12px 32px rgba(0, 0, 0, .5);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #16130f; --paper-2: #221d17; --card: #1d1914; --ink: #ede6da; --muted: #b3a898; --rule: #3b342b;
+  --accent: #ff8a5c; --accent-soft: #3d2216; --blue: #8fbbe8; --blue-soft: #1a2a3a; --gold: #f0c15c; --gold-soft: #3a2f15;
+  --shadow: 0 12px 32px rgba(0, 0, 0, .5);
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 19px/1.74 var(--font-body); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+a { color: var(--blue); text-decoration-thickness: 1px; text-underline-offset: .18em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+img { max-width: 100%; height: auto; display: block; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 800; font-stretch: 72%; line-height: 1.02; margin: 0; letter-spacing: -.005em; }
+strong { font-weight: 600; }
+code { font: .86em var(--font-mono); background: var(--paper-2); padding: .05em .3em; border-radius: 3px; }
+kbd { font: .8em var(--font-mono); border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 3px; padding: 0 .3em; }
+.skip { position: absolute; left: -999px; top: 0; background: var(--ink); color: var(--paper); padding: .5rem 1rem; z-index: 999; }
+.skip:focus { left: .5rem; top: .5rem; }
+.progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--accent); z-index: 600; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- masthead ---------- */
+.mast { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .9rem var(--pad); font: 600 .78rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); max-width: 1500px; margin: 0 auto; }
+.mast a { color: inherit; text-decoration: none; }
+.mast a:hover { color: var(--ink); }
+.mast .right { display: flex; gap: 1rem; align-items: center; }
+.theme-btn { background: none; border: 1px solid var(--rule); color: var(--ink); border-radius: 999px; width: 2.2rem; height: 2.2rem; cursor: pointer; display: grid; place-items: center; }
+
+/* ---------- hero ---------- */
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(1.5rem, 4vw, 4rem); padding: clamp(1rem, 3vw, 2.5rem) var(--pad) 2.5rem; max-width: 1500px; margin: 0 auto; align-items: center; position: relative; }
+.hero::before { content: ""; position: absolute; inset: 0 var(--pad); background-image: radial-gradient(var(--rule) 1.2px, transparent 1.3px); background-size: 28px 41px; opacity: .55; pointer-events: none; mask-image: linear-gradient(90deg, #000 0, transparent 55%); -webkit-mask-image: linear-gradient(90deg, #000 0, transparent 55%); }
+.hero > * { position: relative; }
+.kicker { font: 700 .8rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: .9rem; display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; }
+.kicker .chip { background: var(--accent); color: #fff; padding: .1rem .5rem; border-radius: 2px; }
+:root[data-theme="dark"] .kicker .chip { color: #16130f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .kicker .chip { color: #16130f; } }
+.hero h1 { font-size: clamp(3rem, 7.6vw, 6.4rem); font-stretch: 64%; text-transform: uppercase; line-height: .9; }
+.hero h1 em { font-style: normal; color: var(--accent); display: block; }
+.dek { font-size: clamp(1.12rem, 1.8vw, 1.32rem); line-height: 1.55; margin: 1.2rem 0 1.3rem; max-width: 34rem; }
+.facts { display: grid; grid-template-columns: auto 1fr; gap: .2rem 1rem; font: 400 .84rem/1.5 var(--font-mono); border-top: 1px solid var(--rule); padding-top: .9rem; max-width: 34rem; margin: 0; }
+.facts dt { color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.facts dd { margin: 0; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.3rem; }
+.btn { display: inline-flex; align-items: center; gap: .45rem; font: 700 .95rem var(--font-ui); padding: .62rem 1rem; border-radius: 3px; border: 1.5px solid var(--ink); color: var(--ink); background: transparent; text-decoration: none; cursor: pointer; }
+.btn:hover { background: var(--ink); color: var(--paper); }
+.btn.solid { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.solid:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+:root[data-theme="dark"] .btn.solid { color: #16130f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.solid { color: #16130f; } }
+.audio { margin-top: 1.1rem; font: 500 .85rem var(--font-ui); color: var(--muted); max-width: 34rem; }
+.audio audio { width: 100%; margin-top: .35rem; display: block; }
+/* the hero "slide": an authentic frame inside a PowerPoint-ish window */
+.ppt { margin: 0; background: var(--night); border-radius: 6px; padding: .55rem .55rem 0; box-shadow: var(--shadow); }
+.ppt-bar { display: flex; gap: .35rem; align-items: center; padding: 0 .2rem .5rem; font: 600 .72rem var(--font-mono); color: var(--on-night-muted); }
+.ppt-bar i { width: .62rem; height: .62rem; border-radius: 50%; background: #5a4f43; display: inline-block; }
+.ppt-bar i:first-child { background: var(--hot); }
+.ppt-bar span { margin-left: .4rem; }
+.ppt a { display: block; cursor: zoom-in; }
+.ppt img { border-radius: 2px; width: 100%; }
+.ppt figcaption { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font: 500 .8rem/1.4 var(--font-ui); color: var(--on-night-muted); padding: .55rem .25rem .6rem; }
+.ppt figcaption b { color: var(--on-night); }
+.ppt figcaption a { color: var(--sky); display: inline; cursor: pointer; }
+.ppt a.ts { display: inline-flex; background: var(--night-3); color: var(--hot); }
+.ppt a.ts:hover { background: var(--hot); color: var(--night); }
+
+/* ---------- comic band ---------- */
+.comic-band { background: var(--night); color: var(--on-night); padding: clamp(2rem, 5vw, 3.5rem) var(--pad); margin: 0 0 1rem; }
+.comic-inner { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, min(600px, 62vh)) minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center; }
+.comic-inner > a { display: block; cursor: zoom-in; border: 6px solid #fff; border-radius: 4px; box-shadow: 0 18px 40px rgba(0, 0, 0, .5); transform: rotate(-.6deg); transition: transform .3s; }
+.comic-inner > a:hover { transform: rotate(0) scale(1.01); }
+.band-label { font: 700 .76rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--sun); margin-bottom: .6rem; }
+.comic-note h2 { font-size: clamp(2rem, 4vw, 3rem); color: #fff; margin-bottom: .9rem; }
+.comic-note p { font-size: 1.02rem; color: var(--on-night); margin: 0 0 .9rem; }
+.comic-note .fine { color: var(--on-night-muted); font: .86rem/1.55 var(--font-ui); }
+.comic-note a { color: var(--sky); }
+
+/* ---------- reading room ---------- */
+.room { display: grid; grid-template-columns: minmax(0, 1fr) var(--dock-w); gap: 0 clamp(1rem, 3vw, 2.5rem); padding: 0 var(--pad); max-width: 1500px; margin: 0 auto; position: relative; }
+body.watch .room { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+.story { min-width: 0; padding-bottom: 3rem; }
+.dock { position: sticky; top: .8rem; align-self: start; margin-top: 2rem; max-height: calc(100vh - 1.6rem); display: flex; flex-direction: column; gap: .6rem; background: var(--night); color: var(--on-night); border-radius: 8px; padding: .75rem; box-shadow: var(--shadow); z-index: 300; }
+.dock a { color: var(--sky); }
+.dock-head { display: flex; justify-content: space-between; gap: .5rem; font: 700 .72rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--on-night-muted); flex: none; }
+.dock-head b { color: var(--on-night); }
+.vwrap { position: relative; flex: none; background: #000; aspect-ratio: 16 / 9; border-radius: 4px; overflow: hidden; }
+.vwrap iframe, .vwrap > div { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.vwrap .nojs { display: grid; place-items: center; color: #fff; font: 600 1rem var(--font-ui); text-align: center; padding: 1rem; }
+.vwrap .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .5; }
+.vwrap .nojs a { position: relative; color: #fff; background: rgba(0, 0, 0, .6); padding: .4rem .8rem; border-radius: 3px; }
+.now { font: 500 .95rem/1.35 var(--font-ui); min-height: 2.6em; flex: none; }
+.now .t { font-family: var(--font-mono); color: var(--sun); margin-right: .45rem; }
+.now .in-story { display: block; font-size: .85rem; color: var(--on-night-muted); margin-top: .15rem; }
+.resume { display: none; flex: none; }
+.resume.show { display: block; }
+.resume button { width: 100%; font: 700 1rem var(--font-ui); background: var(--hot); color: var(--night); border: 0; border-radius: 4px; padding: .55rem 1rem; cursor: pointer; }
+.resume button:hover { background: #fff; }
+.dock-ctrls { display: flex; flex-wrap: wrap; gap: .4rem; flex: none; }
+.dbtn { appearance: none; border: 1px solid #4a3f33; background: var(--night-2); color: var(--on-night); border-radius: 4px; padding: .4rem .65rem; font: 600 .9rem var(--font-ui); cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; text-decoration: none; }
+.dock a.dbtn { color: var(--on-night); }
+.dbtn:hover, .dock a.dbtn:hover { background: var(--night-3); color: #fff; }
+.dbtn.mode { background: var(--hot); color: var(--night); border-color: var(--hot); }
+.dbtn.mode:hover { background: #fff; color: var(--night); }
+.chapters { overflow-y: auto; min-height: 0; flex: 1 1 auto; scrollbar-width: thin; }
+.chapters summary { font: 700 .72rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--on-night-muted); cursor: pointer; padding: .2rem 0; }
+.chapters ol { list-style: none; margin: .2rem 0 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 1px; }
+body.watch .chapters ol { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: .6rem; }
+.chapters li a { display: flex; gap: .55rem; align-items: baseline; padding: .28rem .45rem; border-radius: 3px; text-decoration: none; font: 500 .92rem/1.25 var(--font-ui); }
+.dock .chapters li a { color: var(--on-night); }
+.chapters li a .ct { font: .76rem var(--font-mono); color: var(--sun); flex: 0 0 auto; }
+.chapters li a:hover { background: var(--night-2); }
+.dock .chapters li a.is-now { background: var(--sun); color: var(--night); }
+.chapters li a.is-now .ct { color: var(--night); }
+.chapters li a.in-view { box-shadow: inset 3px 0 0 var(--hot); }
+.dock .dock-min { display: none; }
+body.watch .story { font-size: 17px; }
+body.watch .story .chap { opacity: .62; transition: opacity .3s; }
+body.watch .story .chap.is-now, body.watch .story .chap:hover, body.watch .story .chap:focus-within { opacity: 1; }
+
+/* ---------- story typography ---------- */
+.chap { position: relative; padding: 3.4rem 0 1rem; scroll-margin-top: 1rem; }
+.chap > * { max-width: var(--measure); margin-left: auto; margin-right: auto; }
+.chap > .wide, .chap > .band { max-width: none; }
+.chap p { margin-top: 0; margin-bottom: 1.15rem; }
+.slide-no { font: 600 .76rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: .7rem; display: flex; gap: .6rem; align-items: center; }
+.slide-no b { display: inline-grid; place-items: center; min-width: 2.1rem; height: 1.55rem; border: 1.5px solid var(--accent); color: var(--accent); border-radius: 2px; font-weight: 700; }
+.slide-no::after { content: ""; flex: 1; border-top: 1px solid var(--rule); }
+.chap h2 { font-size: clamp(2.2rem, 4.6vw, 3.4rem); margin-bottom: 1.2rem; text-transform: uppercase; font-stretch: 66%; }
+.chap h3 { font-size: 1.6rem; margin: 2rem 0 .8rem; }
+.act-open { margin: 4rem auto 0 !important; max-width: none !important; text-align: center; font: 800 clamp(.9rem, 1.4vw, 1rem) var(--font-ui); letter-spacing: .3em; text-transform: uppercase; color: var(--accent); display: flex; align-items: center; gap: 1rem; }
+.act-open::before, .act-open::after { content: ""; flex: 1; border-top: 3px double var(--rule); }
+a.ts { font: 600 .78rem var(--font-mono); color: var(--accent); background: var(--accent-soft); border-radius: 3px; padding: .08rem .4rem .08rem .3rem; text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: .1rem; vertical-align: .08em; }
+a.ts:hover { background: var(--accent); color: var(--paper); }
+a.ts.flash { animation: flash 1s ease; }
+@keyframes flash { 0%, 60% { background: var(--sun); color: #111; } }
+.said { margin: 2.2rem auto; padding: 0 0 0 1.3rem; border-left: 5px solid var(--accent); font: italic 400 clamp(1.35rem, 2.5vw, 1.75rem)/1.38 var(--font-body); }
+.said p { margin: 0 0 .5rem; }
+.said cite { display: block; font: normal 600 .85rem var(--font-ui); color: var(--muted); letter-spacing: .02em; }
+.said.aud { border-left-color: var(--blue); }
+.said.wide { max-width: 48rem; }
+.aside { font: 400 .95rem/1.6 var(--font-ui); background: var(--card); border: 1px solid var(--rule); border-left: 4px solid var(--gold); padding: .9rem 1.1rem; border-radius: 4px; margin: 1.6rem auto; }
+.aside b.h { display: block; font: 700 .72rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--gold); margin-bottom: .3rem; }
+.aside p { margin: 0 0 .5rem; }
+.aside p:last-child { margin: 0; }
+figure.still { margin: 2rem auto; }
+figure.still a { display: block; cursor: zoom-in; }
+figure.still img { border-radius: 4px; border: 1px solid var(--rule); background: #fff; }
+figure.still figcaption, .fig-cap { font: .86rem/1.5 var(--font-ui); color: var(--muted); margin-top: .55rem; }
+figure.still figcaption b { color: var(--ink); }
+figcaption a.ts { display: inline-flex !important; cursor: pointer !important; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.pair figure { margin: 0; }
+
+/* code cells: the original notebook */
+.cell { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; margin: 1.8rem auto; overflow: hidden; font: 400 .86rem/1.6 var(--font-mono); }
+.cell-h { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding: .45rem .9rem; border-bottom: 1px solid var(--rule); background: var(--paper-2); font: 600 .74rem var(--font-ui); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.cell-h a { color: var(--blue); text-transform: none; letter-spacing: 0; }
+.cell pre { margin: 0; padding: .8rem 1rem; overflow-x: auto; white-space: pre; }
+.cell .k { color: var(--accent); font-weight: 600; }
+.cell .c { color: var(--muted); font-style: italic; }
+.cell .s { color: var(--gold); }
+.cell .hl { background: var(--gold-soft); display: inline-block; min-width: 100%; }
+
+/* ---------- bands (in-column, full story width) ---------- */
+.band { background: var(--night); color: var(--on-night); border-radius: 10px; padding: clamp(1.3rem, 3.5vw, 2.6rem); margin: 2.5rem 0 2.8rem; }
+.band a { color: var(--sky); }
+.band strong { color: #fff; }
+.band .band-label { color: var(--sun); }
+.band h3 { font-size: clamp(1.6rem, 3.2vw, 2.3rem); margin: 0 0 .8rem; color: #fff; text-transform: uppercase; font-stretch: 68%; }
+.band p { color: var(--on-night); }
+.band .muted, .band .fine { color: var(--on-night-muted); font: .86rem/1.55 var(--font-ui); }
+.band a.ts { background: var(--night-3); color: var(--hot); }
+.band a.ts:hover { background: var(--hot); color: var(--night); }
+.band code { background: var(--night-3); color: var(--on-night); }
+.band .cell { background: var(--night-2); border-color: #3c3329; color: var(--on-night); }
+.band .cell-h { background: var(--night-3); border-color: #3c3329; color: var(--on-night-muted); }
+.band .cell-h a { color: var(--sky); }
+.band .cell .k { color: var(--hot); }
+.band .cell .c { color: var(--on-night-muted); }
+.band .cell .s { color: var(--sun); }
+.band .cell .hl { background: #4a3a17; }
+.quote-band { text-align: center; }
+.quote-band blockquote { margin: 0 auto; max-width: 46rem; font: italic 400 clamp(1.5rem, 3.4vw, 2.3rem)/1.3 var(--font-body); color: #fff; }
+.quote-band blockquote p { margin: 0 0 .8rem; }
+.quote-band cite { display: block; font: normal 600 .9rem var(--font-ui); color: var(--on-night-muted); }
+.quote-band.light { background: var(--accent-soft); color: var(--ink); }
+.quote-band.light blockquote, .quote-band.light p { color: var(--ink); }
+.quote-band.light cite { color: var(--muted); }
+.quote-band.light a.ts { background: var(--card); color: var(--accent); }
+</style>
+<style id="css-components">
+/* ---------- COM ladder ---------- */
+.ladder { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.2rem; align-items: start; }
+.ladder .cell { margin: 0; }
+.ladder .cell pre { white-space: pre-wrap; }
+.lad-line { display: block; width: 100%; text-align: left; font: inherit; color: inherit; background: none; border: 0; border-left: 3px solid transparent; padding: .15rem .5rem; cursor: pointer; border-radius: 2px; }
+.lad-line:hover { background: var(--night-3); }
+.lad-line[aria-pressed="true"] { border-left-color: var(--sun); background: #3b2f1c; }
+.lad-line .c { display: block; }
+.lad-svg { width: 100%; height: auto; display: block; }
+.lad-svg .lyr rect.box { fill: none; stroke: #5f5345; stroke-width: 2; transition: stroke .3s, fill .3s; }
+.lad-svg .lyr text { fill: var(--on-night-muted); font: 700 13px var(--font-mono); letter-spacing: .04em; transition: fill .3s; }
+.lad-svg .lyr.on rect.box { stroke: var(--sun); fill: rgba(242, 193, 78, .08); }
+.lad-svg .lyr.on text { fill: var(--sun); }
+.lad-svg .slide-bg { fill: #fff; transition: opacity .4s; }
+.lad-svg .oval { fill: var(--hot); stroke: #b2380f; stroke-width: 2; transition: opacity .4s, transform .5s; transform-origin: 150px 150px; transform-box: view-box; }
+.lad-svg .hidden { opacity: 0; }
+.lad-note { font: 500 .95rem/1.55 var(--font-ui); color: var(--on-night); background: var(--night-2); border-left: 4px solid var(--sun); padding: .7rem .9rem; border-radius: 4px; margin-top: .8rem; min-height: 4.8em; }
+.lad-note b { color: var(--sun); }
+.lad-ctrls { display: flex; gap: .5rem; margin-top: .7rem; flex-wrap: wrap; }
+.lbtn { font: 700 .9rem var(--font-ui); background: var(--hot); color: var(--night); border: 0; border-radius: 4px; padding: .5rem .9rem; cursor: pointer; display: inline-flex; gap: .4rem; align-items: center; }
+.lbtn:hover { background: #fff; }
+.lbtn.ghost { background: transparent; color: var(--on-night); border: 1px solid #5f5345; }
+.lbtn.ghost:hover { background: var(--night-3); }
+
+/* ---------- sort lab: 250 films on a 720x540 slide ---------- */
+.lab-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: .8rem 1.5rem; margin-bottom: 1rem; }
+.lab-top h3 { margin: 0; }
+.stage { position: relative; background: #3a332b; border-radius: 6px; padding: clamp(.4rem, 1.4vw, 1rem); }
+.pslide { position: relative; aspect-ratio: 4 / 3; background: var(--slide); border-radius: 2px; overflow: hidden; box-shadow: 0 6px 24px rgba(0, 0, 0, .45); container-type: inline-size; }
+.pbtn { position: absolute; z-index: 6; top: calc(10 / 540 * 100%); height: calc(40 / 540 * 100%); width: calc(150 / 720 * 100%); background: #2f6db5; color: #fff; border: 1px solid #1e4f88; font: 600 clamp(.55rem, 2.1cqw, .95rem) var(--font-ui); cursor: pointer; border-radius: 0; display: grid; place-items: center; padding: 0; }
+.pbtn:hover { background: #3c80cf; }
+.pbtn[aria-pressed="true"] { background: #173f6d; box-shadow: inset 0 0 0 2px var(--sun); }
+.pbtn.alpha { left: calc(400 / 720 * 100%); }
+.pbtn.rating { left: calc(560 / 720 * 100%); }
+.ptitle { position: absolute; left: calc(10 / 720 * 100%); top: calc(14 / 540 * 100%); font: 700 clamp(.55rem, 2.3cqw, 1.05rem)/1.15 var(--font-ui); color: #333; max-width: 52%; }
+.ptitle small { display: block; font-weight: 500; color: #666; font-size: .82em; }
+.tiles { position: absolute; inset: 0; pointer-events: none; }
+.tile { pointer-events: auto; position: absolute; width: calc(28 / 720 * 100%); height: calc(41 / 540 * 100%); padding: 0; border: 0; background: var(--c); color: rgba(255, 255, 255, .92); font: 700 clamp(.42rem, 1.8cqw, .82rem)/1 var(--font-ui); display: grid; place-items: center; cursor: pointer; box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .55); transition: transform 1.5s cubic-bezier(.45, .05, .35, 1), opacity .3s, filter .3s; will-change: transform; }
+.tile:hover { filter: brightness(1.25); z-index: 3; }
+.tile.dark-ink { color: rgba(20, 16, 12, .85); }
+.tiles.has-pick .tile { opacity: .42; }
+.tiles.has-pick .tile.pick, .tiles.has-pick .tile.mark { opacity: 1; }
+.tile.mark { box-shadow: inset 0 0 0 2px #fff, 0 0 0 1.5px #111; z-index: 2; }
+.tile.pick { box-shadow: inset 0 0 0 2px #fff, 0 0 0 3px #e0281f; z-index: 4; }
+.tile.pick::after { content: ""; position: absolute; inset: -40%; border: 2px solid #e0281f; border-radius: 50%; animation: ping 1.6s ease-out infinite; pointer-events: none; }
+@keyframes ping { 0% { transform: scale(.5); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+.tip { position: absolute; z-index: 10; pointer-events: none; background: #fffbe6; color: #111; border: 1px solid #777; font: 500 .82rem/1.3 var(--font-ui); padding: .25rem .45rem; box-shadow: 2px 2px 0 rgba(0, 0, 0, .25); white-space: nowrap; display: none; }
+.tip.on { display: block; }
+.lab-ui { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem 1.4rem; margin-top: 1rem; }
+.find label { display: block; font: 700 .74rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--sun); margin-bottom: .35rem; }
+.find input { width: 100%; font: 500 1rem var(--font-ui); padding: .5rem .7rem; border-radius: 4px; border: 1.5px solid #5f5345; background: var(--night-2); color: #fff; }
+.find input::placeholder { color: var(--on-night-muted); }
+.chips { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .6rem; }
+.chips button { font: 600 .82rem var(--font-ui); background: var(--night-2); color: var(--on-night); border: 1px solid #5f5345; border-radius: 999px; padding: .25rem .65rem; cursor: pointer; }
+.chips button:hover { background: var(--night-3); }
+.chips button[aria-pressed="true"] { background: var(--sun); color: var(--night); border-color: var(--sun); }
+.readout { background: var(--night-2); border-left: 4px solid var(--hot); border-radius: 4px; padding: .75rem .95rem; font: 400 .95rem/1.55 var(--font-ui); min-height: 9.5rem; }
+.readout .r-title { font: 700 1.15rem/1.25 var(--font-ui); color: #fff; }
+.readout .r-meta { color: var(--on-night-muted); font-size: .86rem; }
+.readout .r-path { font: 600 .84rem var(--font-mono); color: var(--sun); background: #0e0c09; padding: .3rem .5rem; border-radius: 3px; display: block; margin: .45rem 0 .3rem; overflow-x: auto; white-space: nowrap; }
+.readout .r-hint { color: var(--on-night-muted); font-size: .86rem; }
+.legend { display: flex; flex-wrap: wrap; gap: .25rem .8rem; align-items: center; font: 600 .78rem var(--font-ui); color: var(--on-night-muted); margin-top: .8rem; }
+.legend .k { display: inline-flex; align-items: center; gap: .3rem; }
+.legend .k::before { content: ""; width: .75rem; height: 1.05rem; background: var(--c); border-radius: 1px; }
+.status-line { font: 600 .82rem var(--font-mono); color: var(--on-night-muted); margin-top: .6rem; min-height: 1.4em; }
+
+/* triptych of authentic frames */
+.trip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; margin: 2rem auto .5rem; }
+.trip figure { margin: 0; }
+.trip a { display: block; cursor: zoom-in; }
+.trip img { border-radius: 3px; border: 1px solid var(--rule); background: #fff; }
+.trip figcaption { font: 600 .8rem/1.4 var(--font-ui); color: var(--muted); margin-top: .35rem; }
+.trip figcaption b { color: var(--accent); font-family: var(--font-mono); }
+
+/* code ↔ output */
+.co { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; align-items: center; margin: 2rem auto; }
+.co .cell { margin: 0; }
+.co figure { margin: 0; }
+.co figure a { display: block; cursor: zoom-in; }
+.co figure img { border-radius: 4px; border: 1px solid var(--rule); }
+.co figcaption { font: .84rem/1.5 var(--font-ui); color: var(--muted); margin-top: .45rem; }
+.arrow-label { font: 700 .74rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+
+/* tweets */
+.tweets { display: grid; gap: .5rem; margin: 1.6rem auto; max-width: 30rem !important; }
+.tw { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr) 4.6rem; gap: .7rem; align-items: center; background: #fff; color: #222; border: 1px solid var(--rule); padding: .45rem; font: 500 .92rem/1.35 var(--font-ui); }
+.tw i { width: 2.6rem; height: 2.6rem; background: repeating-linear-gradient(45deg, #ccc 0 4px, #ddd 4px 8px); display: block; }
+.tw span:last-child { background: #f6a33a; color: #fff; height: 2.6rem; display: grid; place-items: center; font: 600 .66rem var(--font-ui); }
+
+/* Q&A */
+.qa { margin: 1.6rem auto; max-width: 46rem !important; border-top: 2px solid var(--ink); }
+.qa-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 1.2rem; padding: .9rem .2rem; border-bottom: 1px solid var(--rule); font: 400 .98rem/1.5 var(--font-ui); }
+.qa-row .q { font-style: italic; font-family: var(--font-body); font-size: 1.05rem; color: var(--blue); }
+.qa-row .q::before { content: "Q "; font: 800 .8rem var(--font-mono); color: var(--blue); font-style: normal; }
+.qa-row .a b { color: var(--accent); }
+.qa-row .a a.ts { margin-left: .2rem; }
+
+/* takeaways */
+.takeaways { background: var(--night); color: var(--on-night); padding: clamp(2.5rem, 6vw, 4.5rem) var(--pad); margin: 2rem 0 0; }
+.takeaways .inner { max-width: 1300px; margin: 0 auto; }
+.takeaways h2 { color: #fff; font-size: clamp(2.2rem, 5vw, 3.6rem); text-transform: uppercase; font-stretch: 64%; margin-bottom: 1.6rem; }
+.cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.card { background: var(--night-2); border: 1px solid #3c3329; border-top: 4px solid var(--hot); border-radius: 4px; padding: 1.1rem 1.1rem 1.2rem; font: 400 .98rem/1.55 var(--font-ui); }
+.card .num { font: 700 .8rem var(--font-mono); color: var(--sun); margin-bottom: .4rem; }
+.card h3 { color: #fff; font-size: 1.45rem; margin-bottom: .55rem; font-stretch: 75%; }
+.card p { margin: 0; color: var(--on-night); }
+.takeaways a, .card a { color: var(--sky); }
+.takeaways code { background: var(--night-3); color: var(--on-night); }
+.takeaways a.ts { background: var(--night-3); color: var(--hot); }
+.takeaways a.ts:hover { background: var(--hot); color: var(--night); }
+
+/* ledger */
+.ledger-sec { max-width: 1100px; margin: 0 auto; padding: 3.5rem var(--pad) 2rem; }
+.ledger-sec h2 { font-size: clamp(2rem, 4vw, 2.8rem); text-transform: uppercase; font-stretch: 66%; margin-bottom: .8rem; }
+.ledger-sec > p { max-width: 46rem; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; background: var(--card); }
+table.ledger { width: 100%; border-collapse: collapse; font: 400 .9rem/1.45 var(--font-ui); }
+table.ledger th, table.ledger td { text-align: left; vertical-align: top; padding: .6rem .75rem; border-bottom: 1px solid var(--rule); }
+table.ledger th { font: 700 .72rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--paper-2); }
+table.ledger td:first-child { font-weight: 700; }
+.st { display: inline-block; font: 700 .72rem var(--font-mono); padding: .08rem .4rem; border-radius: 3px; margin: .1rem 0; }
+.st.ok { background: var(--blue-soft); color: var(--blue); }
+.st.ctx { background: var(--gold-soft); color: var(--gold); }
+.st.asis { background: var(--accent-soft); color: var(--accent); }
+
+/* footer */
+footer.site { max-width: 1100px; margin: 0 auto; padding: 2rem var(--pad) 6rem; font: 400 .9rem/1.6 var(--font-ui); color: var(--muted); display: grid; gap: .7rem; border-top: 1px solid var(--rule); }
+footer.site strong { color: var(--ink); }
+
+/* ---------- jump nav ---------- */
+.jump { position: fixed; left: 1rem; bottom: 1rem; z-index: 500; display: flex; align-items: center; gap: .2rem; background: var(--ink); color: var(--paper); border-radius: 999px; padding: .25rem; box-shadow: var(--shadow); transition: opacity .3s, transform .3s; }
+.jump.on-hero { opacity: 0; pointer-events: none; transform: translateY(1rem); }
+.jump button { background: none; border: 0; color: inherit; font: 600 .9rem var(--font-ui); cursor: pointer; padding: .45rem .7rem; border-radius: 999px; display: inline-flex; align-items: center; gap: .45rem; }
+.jump button:hover:not(:disabled) { background: rgba(127, 127, 127, .3); }
+.jump button:disabled { opacity: .35; cursor: default; }
+.jump-cur span { max-width: 15rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.jump-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, .35); z-index: 480; display: none; }
+.jump-backdrop.open { display: block; }
+.jump-menu { position: fixed; left: 1rem; bottom: 4.2rem; width: min(46rem, calc(100vw - 1.4rem)); max-height: 70vh; overflow-y: auto; background: var(--card); color: var(--ink); border: 1px solid var(--rule); border-radius: 10px; box-shadow: var(--shadow); padding: 1rem; z-index: 490; display: none; }
+.jump-menu.open { display: block; }
+.jm-group { font: 700 .72rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: .7rem 0 .3rem; }
+.jm-group:first-child { margin-top: 0; }
+.jump-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .35rem; }
+.jump-grid a { display: block; padding: .45rem .6rem; border-radius: 4px; text-decoration: none; color: var(--ink); font: 600 .9rem/1.25 var(--font-ui); border: 1px solid transparent; }
+.jump-grid a small { display: block; font-weight: 400; color: var(--muted); font-size: .78rem; margin-top: .1rem; }
+.jump-grid a:hover { border-color: var(--rule); background: var(--paper); }
+.jump-grid a.is-cur { background: var(--accent-soft); border-color: var(--accent); }
+
+/* ---------- dialogs ---------- */
+dialog { border: 0; padding: 0; }
+dialog::backdrop { background: rgba(10, 8, 6, .72); }
+.pop { width: min(48rem, calc(100vw - 1.4rem)); max-height: calc(100vh - 2rem); background: var(--paper); color: var(--ink); border-radius: 10px; box-shadow: var(--shadow); }
+.pop[open] { display: flex; flex-direction: column; }
+.pop-head { display: flex; justify-content: space-between; align-items: center; padding: .8rem 1.2rem; border-bottom: 1px solid var(--rule); }
+.pop-head h3 { font-size: 1.6rem; text-transform: uppercase; font-stretch: 70%; }
+.pop-head button { background: none; border: 1px solid var(--rule); color: var(--ink); border-radius: 4px; padding: .35rem .7rem; font: 600 .9rem var(--font-ui); cursor: pointer; }
+.pop-search { display: none; align-items: center; gap: .6rem; padding: .6rem 1.2rem; border-bottom: 1px solid var(--rule); font: .9rem var(--font-ui); }
+.pop-search.on { display: flex; }
+.pop-search input { flex: 1; font: 1rem var(--font-ui); padding: .4rem .6rem; border: 1px solid var(--rule); border-radius: 4px; background: var(--card); color: var(--ink); }
+.pop-body { overflow-y: auto; padding: 1rem 1.4rem 1.6rem; font-size: 1.02rem; line-height: 1.65; }
+.pop-body p { margin: 0 0 .9rem; }
+.pop-body ul, .pop-body ol { margin: 0 0 .9rem 1.4rem; padding: 0; }
+.pop-body li { margin-bottom: .35rem; }
+.pop-body blockquote { margin: 0 0 .9rem; padding-left: .9rem; border-left: 3px solid var(--rule); }
+.pop-body h1, .pop-body h2, .pop-body h3 { font-size: 1.4rem; margin: 1rem 0 .5rem; }
+.pop-body code { white-space: normal; }
+.pop-body .intro { font: italic .95rem/1.5 var(--font-ui); color: var(--muted); }
+.pop-body .hide { display: none; }
+.pop-body mark { background: var(--gold-soft); color: inherit; }
+.lightbox { background: #0d0b09; color: #fff; width: min(96vw, 1400px); max-height: 96vh; border-radius: 6px; }
+.lightbox[open] { display: flex; flex-direction: column; }
+.lightbox img { max-height: calc(96vh - 4.5rem); width: auto; max-width: 100%; margin: 0 auto; object-fit: contain; cursor: zoom-out; }
+.lb-bar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .6rem 1rem; font: .88rem/1.4 var(--font-ui); color: #d8cfc2; }
+.lb-act { display: flex; gap: .8rem; align-items: center; flex: none; }
+.lb-act a { color: var(--sky); }
+.lb-act button { background: none; border: 1px solid #6b5f52; color: #fff; border-radius: 4px; padding: .3rem .7rem; font: 600 .88rem var(--font-ui); cursor: pointer; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1200px) { :root { --dock-w: 330px; } .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 999px) {
+  .hero { grid-template-columns: 1fr; }
+  .comic-inner { grid-template-columns: 1fr; }
+  .comic-inner > a { max-width: 620px; margin: 0 auto; }
+  .room { display: block; }
+  .dock { position: fixed; right: .7rem; bottom: 4.3rem; top: auto; margin: 0; width: min(52vw, 280px); max-height: none; padding: .45rem; gap: .4rem; }
+  .dock .dock-head, .dock .now, .dock .chapters, .dock .dock-ctrls .wide-only { display: none; }
+  .dock .dbtn { padding: .35rem .5rem; font-size: .84rem; flex: 1 1 auto; justify-content: center; }
+  .dock .dock-min { display: inline-flex; }
+  body.dock-collapsed:not(.watch) .dock .vwrap { height: 0; aspect-ratio: auto; visibility: hidden; }
+  body.dock-collapsed:not(.watch) .dock { width: auto; }
+  body.dock-collapsed:not(.watch) .dock #share-btn, body.dock-collapsed:not(.watch) .dock .resume { display: none; }
+  body.watch .dock { left: 0; right: 0; top: 0; bottom: auto; width: auto; border-radius: 0 0 6px 6px; padding: .5rem .6rem .6rem; }
+  body.watch .dock .now { display: block; font-size: .88rem; min-height: 0; }
+  body.watch .dock .now .in-story { display: none; }
+  body.watch .dock .dock-min { display: none; }
+  body.watch { padding-top: var(--dock-h, 0px); }
+  body.watch .chap { scroll-margin-top: calc(var(--dock-h, 0px) + .5rem); }
+  body.watch .story .chap { opacity: .92; }
+  .jump { left: .7rem; bottom: .7rem; }
+  .jump-menu { left: .7rem; }
+  .ladder { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  body { font-size: 18px; }
+  .pair, .co, .lab-ui { grid-template-columns: 1fr; }
+  .trip { grid-template-columns: 1fr 1fr; }
+  .trip figure:last-child { grid-column: 1 / -1; }
+  .jump-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cards { grid-template-columns: 1fr; }
+  .qa-row { grid-template-columns: 1fr; gap: .4rem; }
+  .said { padding-left: 1rem; }
+  .jump-cur span { max-width: 9rem; }
+  .mast .right > span { display: none; }
+  .band { padding: 1.1rem .9rem; border-radius: 6px; }
+  .stage { padding: .3rem; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#story">Skip to the story</a>
+<div class="progress" id="progress"></div>
+
+<header class="mast">
+  <a href="../">Talks · S Anand</a>
+  <div class="right"><span>PyCon India · 1 Sep 2013</span><button class="theme-btn" id="theme-btn" type="button" aria-label="Toggle light or dark theme"><i class="bi bi-circle-half" aria-hidden="true"></i></button></div>
+</header>
+
+<section class="hero" aria-labelledby="title">
+  <div>
+    <div class="kicker"><span class="chip">PyCon India 2013</span><span>Bangalore · Sunday 1 September</span></div>
+    <h1 id="title">The slide <em>was the program</em></h1>
+    <p class="dek">At a Python conference, Anand S made <strong>250 movie posters walk across a single PowerPoint slide</strong>. The code was short. The odd part was the destination, and he had a reason for it: <strong>his clients' work ended in PowerPoint</strong>.</p>
+    <dl class="facts">
+      <dt>Talk</dt><dd><a href="https://in.pycon.org/funnel/2013/73-data-visualisation-in-powerpoint-with-python/"><em>Data visualisation in PowerPoint with Python</em></a></dd>
+      <dt>When</dt><dd>Sun 1 Sep 2013, 14:00 (<a href="https://in.pycon.org/2013/">programme</a>)</dd>
+      <dt>Where</dt><dd>NIMHANS Convention Centre, Bangalore</dd>
+      <dt>Recording</dt><dd>42:52 on YouTube, uploaded 6 Sep 2013</dd>
+      <dt>Code</dt><dd><a href="https://github.com/sanand0/ipython-notebooks/blob/master/Office.ipynb"><code>Office.ipynb</code></a>, the notebook he ran on stage</dd>
+    </dl>
+    <div class="hero-actions">
+      <a class="btn solid" id="hero-watch" href="?view=video"><i class="bi bi-play-fill" aria-hidden="true"></i> Watch alongside</a>
+      <a class="btn" href="#lab"><i class="bi bi-grid-3x3" aria-hidden="true"></i> Sort the 250</a>
+      <a class="btn" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+    </div>
+    <div class="audio">
+      <span><i class="bi bi-headphones" aria-hidden="true"></i> Listen to the recording (Opus, 43 min)</span>
+      <audio controls preload="none">
+        <source src="https://github.com/sanand0/talks/releases/download/talks/2013-09-01-pycon-powerpoint-python.opus" type="audio/ogg; codecs=opus">
+      </audio>
+    </div>
+  </div>
+  <figure class="ppt">
+    <div class="ppt-bar" aria-hidden="true"><i></i><i></i><i></i><span>Slide 1 of 1 · 250 pictures · slideshow</span></div>
+    <a href="slides/12-sort-mid-flight.webp" data-lightbox data-caption="16:26 in the recording. Anand has just clicked “Alphabetical”: all 250 IMDb posters are in mid-flight from rating order to title order, inside one PowerPoint slide. Frame from the PyCon India 2013 video."><img src="slides/12-sort-mid-flight.webp" width="960" height="720" alt="A white PowerPoint slide with two blue buttons, Alphabetical and By rating. Hundreds of small movie posters are scattered across it, overlapping, caught mid-movement." fetchpriority="high"></a>
+    <figcaption><span><b>16:26.</b> 250 posters in mid-air, between rating order and title order.</span><a class="ts" href="?t=16:21">16:21</a></figcaption>
+  </figure>
+</section>
+
+<section class="comic-band" aria-labelledby="comic-h">
+  <div class="comic-inner">
+    <a href="comic-page.avif" data-lightbox data-caption="An interpretive companion comic of the talk, drawn after the event with an image model. Not stage documentation: the dialogue, faces and some code details are invented."><img src="comic-page.avif" width="1055" height="1491" loading="lazy" alt="A nine-panel comic titled Data Visualization in PowerPoint with Python, Anand S, 1 Sep 2013, PyCon India Bangalore. Panels show a frustrated man nudging boxes in PowerPoint; a speaker saying Python can control PowerPoint; a code panel drawing a circle; a robot arm drawing a grid; a speaker dragging a window over a wall of 250 movie posters while the audience cheers; posters rearranging between Alphabetical and By Rating buttons; newspaper graphics of MLA attendance and a constituency cartogram; revenue and app store dashboards; and a closing panel saying the slide deck had turned into software."></a>
+    <div class="comic-note">
+      <div class="band-label">Interpretive companion comic</div>
+      <h2 id="comic-h">The talk in nine panels</h2>
+      <p>A comic retelling of the 43 minutes: the suspicious audience, the scripted circle, the window-dragging, the dancing posters, the newspaper spreads, the boardroom decks.</p>
+      <p class="fine">Drawn after the talk with an image model as a <strong>companion, not a record</strong>. Its faces, speech bubbles and some code values (such as the grid height) are invented. For what actually happened, use the story below, the <a href="https://youtu.be/aKCXj1DyEhM">recording</a> and the <a href="https://github.com/sanand0/ipython-notebooks/blob/master/Office.ipynb">notebook</a>. Click to enlarge.</p>
+    </div>
+  </div>
+</section>
+
+<div class="room" id="room">
+<main class="story" id="story">
+
+<p class="act-open">Cold open</p>
+
+<section class="chap" id="drag" data-act="Cold open" data-title="The man dragging the window">
+  <div class="slide-no"><b>01</b> 11:31 · the speed trick</div>
+  <h2>The man dragging the window</h2>
+  <p>About eleven minutes in, Anand stops typing Python and does something odd at a Python conference. <strong>He grabs the PowerPoint window and drags it around the screen.</strong> He keeps dragging it while a program fills the slide with movie posters, one by one.</p>
+  <p>He has just watched PowerPoint slow down once he switched to that slide. His explanation gets a laugh.</p>
+  <blockquote class="said">
+    <p>“Like Heisenberg's uncertainty principle, if you observe it very carefully, tries to be a bit more slippery than it normally is. But there is a way around it.”</p>
+    <cite>Anand S <a class="ts" href="?t=11:31">11:31</a></cite>
+  </blockquote>
+  <p>The way around it:</p>
+  <blockquote class="said wide">
+    <p>“This is perhaps my greatest discovery of this year, that if you hold this, if you keep dragging it, it's pretty fast.”</p>
+    <cite>Anand S <a class="ts" href="?t=11:39">11:39</a></cite>
+  </blockquote>
+  <figure class="still">
+    <a href="slides/03-imdb-posters.webp" data-lightbox data-caption="About 12:00. The outline of the PowerPoint window being dragged across the screen while a row of posters fills in. Frame from the PyCon India 2013 recording."><img src="slides/03-imdb-posters.webp" width="1280" height="720" loading="lazy" alt="A Jupyter notebook on the left. On the right, the outline of a PowerPoint window caught mid-drag, with a single row of small movie posters drawn on its slide."></a>
+    <figcaption><b>Mid-drag.</b> The window outline floats over the notebook while the first row of posters appears. This is a workaround he noticed, not a benchmark. <a class="ts" href="?t=12:01">12:01</a></figcaption>
+  </figure>
+  <p>He isn't joking about how often he does it.</p>
+  <div class="quote-band band">
+    <blockquote>
+      <p>“I've spent several hours just keeping the PowerPoint window dragged so that this damn thing can get done in time for a project.”</p>
+      <cite>Anand S, adding that his colleague Nikhil does the same <a class="ts" href="?t=12:11">12:11</a></cite>
+    </blockquote>
+  </div>
+  <p>Hours of a working programmer's week spent <strong>holding down a mouse button so a slide renders in time for a client</strong>. That raises two questions. Why is a Python programmer generating slides at all? And why does the result have to be PowerPoint?</p>
+</section>
+
+<p class="act-open">Why PowerPoint?</p>
+
+<section class="chap" id="heck" data-act="Why PowerPoint?" data-title="“What the heck is PowerPoint doing here?”">
+  <div class="slide-no"><b>02</b> 00:01 · the opening line</div>
+  <h2>“What the heck is PowerPoint doing here?”</h2>
+  <p>Anand opens by saying what the room is thinking.</p>
+  <blockquote class="said">
+    <p>“…a lot of you would be wondering what the heck is PowerPoint doing in a Python conference.”</p>
+    <cite>Anand S, first sentence of the talk <a class="ts" href="?t=00:01">00:01</a></cite>
+  </blockquote>
+  <p>He gives two answers right away. One is commercial: it <strong>“made me a decent chunk of money”</strong> <a class="ts" href="?t=00:06">00:06</a>. The other is about experience: <strong>“I've been programming in Python since 2009, I've been programming in PowerPoint since '96”</strong>. That gives him, he says, more credentials in PowerPoint than in Python, “probably by an order of magnitude.”</p>
+  <p>The real argument comes four minutes later. He describes a client who had seen the sophisticated version of the work and replied:</p>
+  <blockquote class="said aud">
+    <p>“Look, all of this is really fancy, but you know what? Ultimately, this is going to go into a presentation for one of the people in our board. … We want to be able to draw arrows, we want to be able to play around with it. And we're used to PowerPoint, could you just give all of this in PowerPoint instead?”</p>
+    <cite>A client at Novartis, as Anand recalls it <a class="ts" href="?t=04:08">04:08</a></cite>
+  </blockquote>
+  <p>Then he lists more: <strong>“I've heard the same thing at P&amp;G, I've heard the same thing at Unilever, I've heard the same thing at Walmart, I've heard the same thing at Nokia.”</strong> <a class="ts" href="?t=04:34">04:34</a> These are clients' requests as he tells them, not endorsements, and he doesn't say which work each paid for. The pattern is the point. <strong>Directors argue over slides, annotate them and forward them.</strong> A visualization that can't go into a deck doesn't reach the meeting where decisions get made.</p>
+  <div class="aside">
+    <b class="h">What “visualization in PowerPoint” means here</b>
+    <p>He isn't pasting a chart image into a slide. Every circle, poster and button is a <strong>native, editable PowerPoint object</strong>, created by Python. A director can drag it, recolour it or add an arrow next to it, and the file still opens on any office laptop.</p>
+  </div>
+</section>
+
+<section class="chap" id="shapes" data-act="Why PowerPoint?" data-title="A slide is just shapes">
+  <div class="slide-no"><b>03</b> 01:18 · four lines of COM</div>
+  <h2>A slide is just shapes</h2>
+  <p>The first demo is deliberately small. Anand types into an IPython notebook on the left of the screen. On the right, PowerPoint opens, a blank slide appears, and then a circle. <strong>Nobody touched PowerPoint.</strong> <a class="ts" href="?t=01:18">01:18</a></p>
+  <p>The bridge is <a href="https://github.com/mhammond/pywin32">pywin32</a>, a library that gives Python access to <span title="Component Object Model: Microsoft's interface that lets one program script another">COM</span>, Windows' way of letting one program drive another. Anand's summary: <strong>“The Component Object Model is one of those useful things that Microsoft's come up with where using almost any language, you can script almost any application.”</strong> <a class="ts" href="?t=01:46">01:46</a> It only worked with Windows and an installed copy of Office: “firstly, you need Windows, you need PowerPoint, they cost money, or not.”</p>
+  <div class="band" id="ladder-band">
+    <div class="band-label">Step through the real cell · Office.ipynb, cell 1</div>
+    <h3>Application → presentation → slide → shape</h3>
+    <p>This is the notebook's first code cell, unchanged. <strong>Click a line, or press Step</strong>, to see which object in PowerPoint it reaches. The drawing on the right is a diagram of the result, not a running copy of PowerPoint.</p>
+    <div class="ladder">
+      <div class="cell" role="group" aria-label="Notebook cell 1">
+        <div class="cell-h"><span>In [1]</span><a href="https://github.com/sanand0/ipython-notebooks/blob/master/Office.ipynb">Office.ipynb ↗</a></div>
+        <pre><span class="k">import</span> win32com.client
+<button class="lad-line" type="button" data-step="0" aria-pressed="false"><span class="c"># Open PowerPoint</span>Application = win32com.client.Dispatch(<span class="s">"PowerPoint.Application"</span>)</button><button class="lad-line" type="button" data-step="1" aria-pressed="false"><span class="c"># Add a presentation</span>Presentation = Application.Presentations.Add()</button><button class="lad-line" type="button" data-step="2" aria-pressed="false"><span class="c"># Add a slide with a blank layout (12 stands for blank layout)</span>Base = Presentation.Slides.Add(<span class="s">1</span>, <span class="s">12</span>)</button><button class="lad-line" type="button" data-step="3" aria-pressed="false"><span class="c"># Add an oval. Shape 9 is an oval.</span>oval = Base.Shapes.AddShape(<span class="s">9</span>, <span class="s">100</span>, <span class="s">100</span>, <span class="s">100</span>, <span class="s">100</span>)</button></pre>
+      </div>
+      <div>
+        <svg class="lad-svg" id="lad-svg" viewBox="0 0 400 330" role="img" aria-label="Nested boxes: the PowerPoint application contains a presentation, which contains a slide, which contains an oval shape at position 100, 100.">
+          <g class="lyr" data-l="0"><rect class="box" x="4" y="4" width="392" height="322" rx="6"/><text x="16" y="24">Application</text></g>
+          <g class="lyr" data-l="1"><rect class="box" x="20" y="36" width="360" height="278" rx="4"/><text x="32" y="56">.Presentations.Add()</text></g>
+          <g class="lyr" data-l="2"><rect class="slide-bg hidden" x="40" y="70" width="320" height="240"/><rect class="box" x="40" y="70" width="320" height="240"/><text x="48" y="304">.Slides.Add(1, 12) · 720 × 540 pt</text></g>
+          <g class="lyr" data-l="3"><ellipse class="oval hidden" cx="106.7" cy="136.7" rx="22.2" ry="22.2"/><text x="136" y="140">.Shapes.AddShape(9, …)</text></g>
+        </svg>
+        <div class="lad-note" id="lad-note" aria-live="polite">Press <b>Step</b> to run the cell one line at a time.</div>
+        <div class="lad-ctrls"><button class="lbtn" id="lad-step" type="button"><i class="bi bi-play-fill" aria-hidden="true"></i> Step</button><button class="lbtn ghost" id="lad-reset" type="button">Reset</button></div>
+      </div>
+    </div>
+    <p class="fine" style="margin:1rem 0 0">Numbers like 12 (blank layout) and 9 (oval) come from Office's object model, documented in Microsoft's <a href="https://learn.microsoft.com/en-us/office/vba/api/overview/powerpoint">PowerPoint VBA reference</a>. To avoid remembering them, Anand imported his own constants module, so later cells say <code>msoShapeRectangle</code> and <code>ppLayoutBlank</code>.</p>
+  </div>
+  <p>He knew how unimpressive it looked:</p>
+  <blockquote class="said">
+    <p>“Simple so far and unimpressive so far. What can we really do with it? Well, what you can really do with it is create any kind of visualization that you can do with HTML, with Processing, with Java, whatever, in PowerPoint.”</p>
+    <cite>Anand S <a class="ts" href="?t=03:49">03:49</a></cite>
+  </blockquote>
+  <p>He had used the same bridge before. A <a href="https://www.s-anand.net/blog/automating-powerpoint-with-python/">2009 blog post</a> shows him scripting PowerPoint from Python to draw an editable treemap of bank data. The PyCon talk took that technique further. Before moving on he showed that <strong>Excel answers to the same calls</strong>: an <code>AddShape(9, …)</code> circle and a few cell values appeared in a new workbook so fast that he had to tell the audience the script, not he, had done it.</p>
+</section>
+
+<p class="act-open">Act I · 250 films</p>
+
+<section class="chap" id="posters" data-act="Act I · 250 films" data-title="Two hundred and fifty rectangles">
+  <div class="slide-no"><b>04</b> 05:20 · a movie fan's itch</div>
+  <h2>Two hundred and fifty rectangles</h2>
+  <p>For the real demo he picked something he cared about. “…I'm a hardcore movie fan,” he reminds the room. He <strong>“sort of live[s] on”</strong> the IMDb Top 250, and he wanted to see all its posters at once: <strong>“I just like looking at those posters.”</strong> <a class="ts" href="?t=05:20">05:20</a></p>
+  <p>The scraping takes a few lines: <code>lxml</code> parses <code>imdb.com/chart/top</code>, the first title is <em>The Shawshank Redemption</em>, and a loop saves each poster under an MD5-hashed filename. He skips through it: “this is meant to be a tutorial on PowerPoint in Python, not <code>lxml</code>” <a class="ts" href="?t=06:56">06:56</a>. Then he <strong>lays out empty boxes before adding any images</strong>.</p>
+  <div class="co">
+    <div class="cell">
+      <div class="cell-h"><span>Cell 10 · the grid</span><a href="https://github.com/sanand0/ipython-notebooks/blob/master/Office.ipynb">source ↗</a></div>
+      <pre>Base = Presentation.Slides.Add(<span class="s">1</span>, ppLayoutBlank)
+
+width, height = <span class="s">28</span>, <span class="s">41</span>
+<span class="k">for</span> i, movie <span class="k">in</span> enumerate(movies):
+    x = <span class="s">10</span> + width * (i % <span class="s">25</span>)
+    y = <span class="s">100</span> + height * (i // <span class="s">25</span>)
+    r = Base.Shapes.AddShape(
+            msoShapeRectangle,
+            x, y,
+            width, height)</pre>
+    </div>
+    <figure>
+      <a href="slides/02-imdb-poster-grid.webp" data-lightbox data-caption="About 08:55. The 25 × 10 grid of blue rectangles drawn by cell 10, beside the notebook. Frame from the PyCon India 2013 recording."><img src="slides/02-imdb-poster-grid.webp" width="1280" height="720" loading="lazy" alt="The notebook with the grid code on the left; on the right, a PowerPoint slide filled with a blue block of 250 small rectangles."></a>
+      <figcaption><span class="arrow-label">Output →</span> 25 across, 10 down, 28 × 41 points each: <strong>poster-shaped boxes</strong>. <a class="ts" href="?t=08:37">08:37</a></figcaption>
+    </figure>
+  </div>
+  <p>Swapping posters into the boxes takes one change. <code>AddShape</code> becomes <code>AddPicture</code>, which links to each image file on disk rather than embedding it, “because that way I don't have all of the images sitting and taking up space inside the document.” That is the cell that brought on the slow drawing, the Heisenberg joke and the window-dragging.</p>
+  <blockquote class="said">
+    <p>“So, what do I really do when I'm watching a movie at home? Having one window on the PowerPoint, keeping it dragged.”</p>
+    <cite>Anand S <a class="ts" href="?t=12:23">12:23</a></cite>
+  </blockquote>
+</section>
+
+<section class="chap" id="quiz" data-act="Act I · 250 films" data-title="Name that poster">
+  <div class="slide-no"><b>05</b> 12:41 · the audience plays along</div>
+  <h2>Name that poster</h2>
+  <p>With the wall of posters up, the talk turns into a quiz. <strong>“The movies are fun, too. In fact, probably more fun than Python.”</strong> <a class="ts" href="?t=12:36">12:36</a> He reads the top of the chart, <em>Shawshank</em>, <em>Godfather</em> I and II, <em>Pulp Fiction</em>, <em>The Good, the Bad and the Ugly</em>, then points at thumbnails he can't identify, and the audience calls out titles.</p>
+  <figure class="still">
+    <a href="slides/11-sort-by-rating.webp" data-lightbox data-caption="About 16:20. All 250 posters of the IMDb Top 250 in rating order, 25 across and 10 down, under two buttons labelled Alphabetical and By rating. Frame from the PyCon India 2013 recording."><img src="slides/11-sort-by-rating.webp" width="960" height="720" loading="lazy" alt="A dense grid of 250 small movie posters on a white slide, with two blue buttons at the top right reading Alphabetical and By rating."></a>
+    <figcaption><b>The wall.</b> 250 posters in rating order, as the room saw it. Postage-stamp thumbnails are hard to identify, which is why a guessing game started. <a class="ts" href="?t=12:41">12:41</a></figcaption>
+  </figure>
+  <p>The room got <em>American Beauty</em> and <em>Goodfellas</em>. Someone offered <em>Bourne Identity</em>, and Anand admitted, <strong>“I wouldn't even know enough to verify that.”</strong> <a class="ts" href="?t=13:13">13:13</a> The last one drew both <em>Ran</em> and <em>Kagemusha</em>: “Okay, at least there's some debate around it.” So he asks for what a website would do:</p>
+  <blockquote class="said">
+    <p>“Well, at the very least, I would like on hover to see what the movie is and when I click on it, get to the actual movie, right? Let's do that.”</p>
+    <cite>Anand S <a class="ts" href="?t=13:33">13:33</a></cite>
+  </blockquote>
+  <p>PowerPoint already had both features: a hyperlink, and a <span title="The small yellow label PowerPoint shows when you hover over a hyperlinked object">ScreenTip</span>. Doing it by hand means right-click, Hyperlink, ScreenTip, 250 times. In code it's three more lines in the loop:</p>
+  <div class="cell">
+    <div class="cell-h"><span>Cell 16 · hover titles and links</span><a href="https://github.com/sanand0/ipython-notebooks/blob/master/Office.ipynb">source ↗</a></div>
+    <pre>    url = urljoin(<span class="s">'http://www.imdb.com/'</span>, movie.get(<span class="s">'href'</span>))
+<span class="hl">    link = image.ActionSettings(ppMouseClick).Hyperlink</span>
+<span class="hl">    link.Address = url</span>
+<span class="hl">    link.ScreenTip = movie.text_content().encode(<span class="s">'cp1252'</span>)</span></pre>
+  </div>
+  <p>Then he hovered over the posters again. <em>Mystic River</em>. <strong><em>The Bourne Ultimatum</em></strong>. <em>The Untouchables</em>. <em>Eternal Sunshine of the Spotless Mind</em>, “got that right.” He clicked <em>Goodfellas</em> and IMDb opened. <a class="ts" href="?t=14:23">14:23</a></p>
+  <div class="aside">
+    <b class="h">The tooltip corrected the audience</b>
+    <p>The poster someone called <em>Bourne Identity</em> turned out to be <em>The Bourne Ultimatum</em>. That fits the record: in the <a href="https://web.archive.org/web/20130901232912/http://www.imdb.com/chart/top">IMDb chart archived that evening</a>, <em>Ultimatum</em> is #189 and <em>The Bourne Identity</em> isn't in the Top 250 at all. <em>Ran</em> is #131; <em>Kagemusha</em> isn't listed. (We can't confirm from the video that the two hovers were on the same thumbnail.)</p>
+  </div>
+  <blockquote class="said">
+    <p>“So I have practically a web kind of environment, not too bad.”</p>
+    <cite>Anand S <a class="ts" href="?t=14:41">14:41</a></cite>
+  </blockquote>
+</section>
+
+<p class="act-open">Act II · It moves</p>
+
+<section class="chap" id="both" data-act="Act II · It moves" data-title="“I want both”">
+  <div class="slide-no"><b>06</b> 14:47 · the real cool stuff</div>
+  <h2>“I want both”</h2>
+  <p>“Okay, let's go further. I haven't shown you the real cool stuff yet.” The grid has a problem every list has. Rank order is good for browsing and bad for finding things. To find <em>Gandhi</em>, he says, <strong>“It's an order of N search. It's not order of log N, which is what I'd like it to be.”</strong> <a class="ts" href="?t=15:06">15:06</a></p>
+  <p>The obvious fix is to sort alphabetically. He wanted more than that:</p>
+  <div class="quote-band band">
+    <blockquote>
+      <p>“I don't want to either sort it alphabetically or sort it by rank, I want both. I want to be able to click on a button, and then it'll sort alphabetically, and click on another button, and it'll sort by rank.”</p>
+      <cite>Anand S <a class="ts" href="?t=15:26">15:26</a></cite>
+    </blockquote>
+  </div>
+  <p>And one more condition: <strong>“And being ambitious, I also want this to look nice.”</strong> He didn't want two slides or an instant jump. He wanted to see each poster travel, so the eye could follow it from one order to the other. <a class="ts" href="?t=15:38">15:38</a></p>
+</section>
+
+<section class="chap" id="lab" data-act="Act II · It moves" data-title="Sort the 250 yourself">
+  <div class="slide-no"><b>07</b> 16:21 · one slide, two orders</div>
+  <h2>Sort the 250 yourself</h2>
+  <p>He ran the cell, dragged the window again (“this case, it's doing a lot more”), started the slideshow and clicked <strong>Alphabetical</strong>. Below is a reconstruction you can click. The <strong>boxes, buttons and positions follow his notebook</strong>, and the films are the real Top 250 from the evening of the talk.</p>
+  <div class="band wide" id="lab-band">
+    <div class="lab-top">
+      <div><div class="band-label">Reconstruction · real chart from 1 Sep 2013</div><h3>Click “Alphabetical”</h3></div>
+    </div>
+    <div class="stage">
+      <div class="pslide" id="pslide">
+        <div class="ptitle" aria-hidden="true">IMDb Top 250<small>as archived 1 Sep 2013, 23:29 UTC</small></div>
+        <button class="pbtn alpha" id="btn-alpha" type="button" aria-pressed="false">Alphabetical</button>
+        <button class="pbtn rating" id="btn-rating" type="button" aria-pressed="true">By rating</button>
+        <div class="tiles" id="tiles" role="group" aria-label="250 films, one box each. Use the search box below to find one."></div>
+        <div class="tip" id="tip" role="tooltip"></div>
+      </div>
+    </div>
+    <div class="legend" id="legend" aria-label="Colour shows the decade of release"></div>
+    <div class="status-line" id="lab-status" aria-live="polite">Sorted by rating. Shawshank is first, as on stage.</div>
+    <div class="lab-ui">
+      <div class="find">
+        <label for="find-in">Find a film</label>
+        <input id="find-in" list="film-list" type="search" placeholder="Type a title, e.g. Gandhi" autocomplete="off">
+        <datalist id="film-list"></datalist>
+        <div class="chips" id="chips" aria-label="Films named during the talk"></div>
+      </div>
+      <div class="readout" id="readout" aria-live="polite">
+        <div class="r-title">Pick a film</div>
+        <p class="r-hint" style="margin:.3rem 0 0">Choose a chip, search, or click a box. Then switch orders and <strong>watch the same box move</strong>. You'll also see the motion path his code would give that poster.</p>
+      </div>
+    </div>
+    <p class="fine" style="margin:1.1rem 0 0">Data: the <a href="https://web.archive.org/web/20130901232912/http://www.imdb.com/chart/top">IMDb Top 250 archived by the Wayback Machine at 23:29 UTC on 1 September 2013</a>. His own scrape may be a few days older, and ranks moved daily. It matches what he read out on stage: <em>Shawshank</em> at #1, <em>Three Colors: Red</em> at #250, and <code>movies[10]</code> is a <em>Star Wars</em> film. Posters aren't reproduced. Each box shows the title's first character, coloured by decade. The order is Python's plain <code>sorted()</code> on the title, as in cell 18, so <strong>63 films starting with “The” all land under T</strong>. Today's chart is <a href="https://www.imdb.com/chart/top/">different</a>.</p>
+  </div>
+  <p>Here is what the room saw, in three frames two seconds apart:</p>
+  <div class="trip">
+    <figure><a href="slides/11-sort-by-rating.webp" data-lightbox data-caption="16:20. By rating, before the click. Frame from the PyCon India 2013 recording."><img src="slides/11-sort-by-rating.webp" width="960" height="720" loading="lazy" alt="The 250-poster grid in rating order."></a><figcaption><b>16:20</b> By rating</figcaption></figure>
+    <figure><a href="slides/12-sort-mid-flight.webp" data-lightbox data-caption="16:26. Mid-flight: every poster travelling at once along its own straight path. Frame from the PyCon India 2013 recording."><img src="slides/12-sort-mid-flight.webp" width="960" height="720" loading="lazy" alt="Posters scattered and overlapping across the slide, mid-movement."></a><figcaption><b>16:26</b> All 250 in flight</figcaption></figure>
+    <figure><a href="slides/13-sort-alphabetical.webp" data-lightbox data-caption="16:28. Alphabetical: the same 250 posters, now in title order. Frame from the PyCon India 2013 recording."><img src="slides/13-sort-alphabetical.webp" width="960" height="720" loading="lazy" alt="The 250-poster grid again, in a different order."></a><figcaption><b>16:28</b> Alphabetical</figcaption></figure>
+  </div>
+  <p>Then came the claim that the D3 users in the room probably didn't expect:</p>
+  <blockquote class="said wide">
+    <p>“PowerPoint can do that, and the weird thing is it's actually easier to do this in PowerPoint than it is in D3, than it is in Processing, than it is in most other libraries, which is a bizarre discovery.”</p>
+    <cite>Anand S <a class="ts" href="?t=16:31">16:31</a></cite>
+  </blockquote>
+  <p>That is his 2013 opinion about this one effect, not a benchmark. It carries some weight because <strong>eleven months earlier, at the same NIMHANS convention centre, he had given a talk on <a href="../2012-10-20-jsfoo-d3-visualizations/">beautiful visualizations with D3</a></strong>. He knew both tools. For 250 objects moving on a click, in a file a client would open, PowerPoint was less work.</p>
+</section>
+
+<section class="chap" id="animate" data-act="Act II · It moves" data-title="One queue per order">
+  <div class="slide-no"><b>08</b> 18:11 · how it moves</div>
+  <h2>One queue per order</h2>
+  <p>The trick is that <strong>nothing gets re-sorted</strong>. Every poster stays where it was drawn. He gives the slide two <em>interactive sequences</em>, which he calls “like cues for animation”: one for alphabetical, one for rating. Each sequence holds 250 motion effects, one per poster, set off by clicking a button. <a class="ts" href="?t=18:11">18:11</a></p>
+  <div class="cell">
+    <div class="cell-h"><span>Cells 20 &amp; 22 · the whole mechanism (abridged)</span><a href="https://github.com/sanand0/ipython-notebooks/blob/master/Office.ipynb">source ↗</a></div>
+    <pre><span class="k">def</span> animate(seq, image, trigger, path, duration=<span class="s">1.5</span>):
+    <span class="c">'''Move image along path when trigger is clicked'''</span>
+    effect = seq.AddEffect(Shape=image,
+       effectId=msoAnimEffectPathDown,
+       trigger=msoAnimTriggerOnShapeClick)
+    ani = effect.Behaviors.Add(msoAnimTypeMotion)
+<span class="hl">    ani.MotionEffect.Path = path</span>
+<span class="hl">    effect.Timing.TriggerType = msoAnimTriggerWithPrevious</span>
+    effect.Timing.TriggerShape = trigger
+    effect.Timing.Duration = duration
+
+seq_alpha = Base.TimeLine.InteractiveSequences.Add()
+seq_rating = Base.TimeLine.InteractiveSequences.Add()
+<span class="c"># …inside the loop that draws each poster:</span>
+animate(seq_alpha, image, trigger=button_alpha, path=<span class="s">'M0,0 L{:.3f},{:.3f}'</span>.format(…))
+animate(seq_rating, image, trigger=button_rating, path=<span class="s">'M{:.3f},{:.3f} L0,0'</span>.format(…))</pre>
+  </div>
+  <p>Two highlighted lines do most of the work. <code>WithPrevious</code> means <strong>each effect starts with the one before it</strong>, so all 250 posters move together. And the path is a short string: move from where you are (<code>M0,0</code>) in a straight line (<code>L</code>) to your place in the other order, given as a fraction of the slide's width and height. The rating sequence uses the same line backwards. The path for any film in the reconstruction above is computed with this same formula.</p>
+  <p>He pointed out that the path syntax <strong>“is very similar to the SVG path specification”</strong>: it's Microsoft's older <a href="https://www.w3.org/TR/NOTE-VML">VML</a> path format, so curves are possible too. <a class="ts" href="?t=19:12">19:12</a> Then he tried it the way a user would:</p>
+  <div class="quote-band band light">
+    <blockquote>
+      <p>“It really is easy. So I can go down the G's, uh, where's F? Uh, there's Gandhi.”</p>
+      <cite>Anand S, finding the film he couldn't find five minutes earlier <a class="ts" href="?t=20:48">20:48</a></cite>
+    </blockquote>
+  </div>
+</section>
+
+<p class="act-open">Act III · Is it useful?</p>
+
+<section class="chap" id="useful" data-act="Act III · Is it useful?" data-title="“But is it useful?”">
+  <div class="slide-no"><b>09</b> 20:59 · the turn</div>
+  <h2>“But is it useful?”</h2>
+  <p>Having found <em>Gandhi</em>, he asks the question himself before anyone else can.</p>
+  <blockquote class="said">
+    <p>“Okay. So, now, that is interesting, but is it useful, is the question.”</p>
+    <cite>Anand S <a class="ts" href="?t=20:59">20:59</a></cite>
+  </blockquote>
+  <p>His answer: <strong>people “actually paid us money to do what I just showed you, a fair bit of money.”</strong> <a class="ts" href="?t=21:05">21:05</a> He gives no amounts, and neither do we. The first example is a newspaper. <em>Vijay Karnataka</em>, a Kannada daily, wanted “something fancy” for its Karnataka election coverage. His team looked at HTML5 and SVG, and then went back to the question of what the newsroom could actually work with:</p>
+  <blockquote class="said wide">
+    <p>“Look, if I gave it to you as a PDF file, that's probably going to be the safest. If you wanted to make edits, however, it would have to be only PowerPoint. That's the only thing that we've got in common.”</p>
+    <cite>Anand S, recalling the pitch <a class="ts" href="?t=21:30">21:30</a></cite>
+  </blockquote>
+  <p>The newspaper's reply: <strong>“Yeah, okay, why don't you give it to us as both?”</strong> They ran a series of full-page spreads. When he puts one up, he can't read it, so he asks the room. “Anyone here reads Kannada?” Someone reads out the headline, in Kannada. <strong>“In English, please. Sorry, I don't speak Kannada either.”</strong> The translation from the audience: <em>“Politicians' work ethic.”</em> <a class="ts" href="?t=22:09">22:09</a></p>
+  <figure class="still">
+    <a href="slides/06-karnataka-mla.webp" data-lightbox data-caption="About 22:35. A Vijay Karnataka full-page spread on MLA attendance, built in PowerPoint with Python, as shown in the talk. Newspaper page © Vijay Karnataka; frame from the PyCon India 2013 recording."><img src="slides/06-karnataka-mla.webp" width="1280" height="720" loading="lazy" alt="A Kannada newspaper page. In its centre, a large ring chart made of hundreds of thin coloured strokes around an inner ring of party colours."></a>
+    <figcaption><b>The spread on MLA attendance.</b> The inner rim is the parties. Each stroke around it is one MLA, coloured by attendance band. The page is shown as an example from the talk; we haven't checked the figures. <a class="ts" href="?t=22:27">22:27</a></figcaption>
+  </figure>
+  <p>This is where an editable file matters most. The names on that page are in a script the person who built it can't read.</p>
+  <blockquote class="said">
+    <p>“Now, it becomes a whole lot easier for them to just go in and correct typos around their names.”</p>
+    <cite>Anand S, crediting Nikhil, who knows Kannada, for his help <a class="ts" href="?t=23:22">23:22</a></cite>
+  </blockquote>
+  <p><strong>Because the output was PowerPoint, the newspaper's own staff could fix a misspelled name</strong> without asking the programmers to run anything again. For a programmer who can't read the language, the editable file is a safeguard.</p>
+</section>
+
+<section class="chap" id="cartogram" data-act="Act III · Is it useful?" data-title="No map? Draw circles">
+  <div class="slide-no"><b>10</b> 24:55 · a map without a map</div>
+  <h2>No map? Draw circles</h2>
+  <p>Another spread showed a survey on <em>why</em> people vote: for the party, the caste or the candidate. Each constituency is a circle, coloured by its most common answer and sized by its population. Laid out properly, it would be a map. But the team had no up-to-date boundaries after the constituencies were redrawn.</p>
+  <figure class="still">
+    <a href="slides/07-cartogram.webp" data-lightbox data-caption="About 25:10. A Vijay Karnataka spread with two cartograms of Karnataka's assembly constituencies, one circle per constituency. Newspaper page © Vijay Karnataka; frame from the PyCon India 2013 recording."><img src="slides/07-cartogram.webp" width="1280" height="720" loading="lazy" alt="A newspaper page with two clusters of coloured circles that roughly trace the shape of Karnataka, one circle per constituency."></a>
+    <figcaption><b>Karnataka, drawn in circles.</b> Positions come from rough centroids found on Google Maps, then nudged apart so they don't overlap. It's a visual stand-in, not a surveyed map. <a class="ts" href="?t=24:55">24:55</a></figcaption>
+  </figure>
+  <blockquote class="said">
+    <p>“Very often, you'll be in situations where you don't actually have a map. And a cartogram is a phenomenal way of escaping that and still making it look cool.”</p>
+    <cite>Anand S <a class="ts" href="?t=24:55">24:55</a></cite>
+  </blockquote>
+  <p>The shortcut also adds something: <strong>“I'm not only able to bring in the color that I can put against that constituency, but I can also use size as an extra dimension for something else.”</strong> A third spread grouped the topics MLAs asked about in the Assembly by party. All of it, he says, was “done in PowerPoint,” although “not quite interactive.” That was next.</p>
+</section>
+
+<section class="chap" id="boardroom" data-act="Act III · Is it useful?" data-title="An application inside a deck">
+  <div class="slide-no"><b>11</b> 26:57 · clickable decks</div>
+  <h2>An application inside a deck</h2>
+  <p>For one company, a revenue breakdown: worldwide, then countries, then channels, then products, each segment coloured by the action needed. (“Anonymized numbers, by the way.”) He clicks China and gets China's slide. He clicks Product 8 and gets Product 8's. A <strong>Worldwide</strong> button takes him back. <a class="ts" href="?t=26:57">26:57</a></p>
+  <div class="pair">
+    <figure class="still" style="margin:0">
+      <a href="slides/08-business-example.webp" data-lightbox data-caption="About 27:35. A clickable revenue breakdown built in PowerPoint with Python. The numbers are anonymised, per the speaker. Frame from the PyCon India 2013 recording."><img src="slides/08-business-example.webp" width="1280" height="720" loading="lazy" alt="A semicircular sunburst chart of revenue by country, channel and product, coloured red, yellow and green, with a Worldwide total in the corner."></a>
+      <figcaption><b>Revenue, drillable.</b> Each wedge links to its own slide. <a class="ts" href="?t=27:31">27:31</a></figcaption>
+    </figure>
+    <figure class="still" style="margin:0">
+      <a href="slides/10-questions.webp" data-lightbox data-caption="About 28:00 onward. An app-store downloads dashboard built as a PowerPoint deck, broken down by country, model, category and segment. Frame from the PyCon India 2013 recording."><img src="slides/10-questions.webp" width="1280" height="720" loading="lazy" alt="A PowerPoint window showing a dense yellow-green dashboard: daily bars on top and flows between country, model, category and segment rows below, with slide thumbnails down the left."></a>
+      <figcaption><b>App-store downloads.</b> Days, weeks, countries, devices, segments. <a class="ts" href="?t=28:01">28:01</a></figcaption>
+    </figure>
+  </div>
+  <blockquote class="said">
+    <p>“So, I have an interactive application in PowerPoint that is data driven.”</p>
+    <cite>Anand S <a class="ts" href="?t=27:51">27:51</a></cite>
+  </blockquote>
+  <p>The second was an app-store dashboard: downloads by day, week and month, broken down by country, device model, category and customer segment, with each bar coloured by whether growth was up or down. It's a <strong>dense web of bars, flows and drill-down slides</strong>, and each click opens another level. Asked in the Q&amp;A whether he had scripted it, he said: <strong>“Oh yes, all of this is created using Python, right? I can't draw this much by hand.”</strong> <a class="ts" href="?t=40:15">40:15</a></p>
+  <div class="aside">
+    <b class="h">Why build it in a deck rather than a web app?</b>
+    <p>He doesn't argue that PowerPoint is the better tool. The audience for this work had PowerPoint, used it every day, and could open, present, annotate and forward a <code>.pptx</code> without anyone's help. <strong>The file was the delivery.</strong> The notebook's “Real-life examples” cell lists the same three projects.</p>
+  </div>
+</section>
+
+<p class="act-open">Coda · live</p>
+
+<section class="chap" id="tweets" data-act="Coda · live" data-title="Beer, live">
+  <div class="slide-no"><b>12</b> 31:07 · a slide that listens</div>
+  <h2>Beer, live</h2>
+  <p>With a few minutes left he tries a last one: “what if we could take Twitter data and do a bit of live streaming of that.” The notebook uses the <a href="https://github.com/geduldig/TwitterAPI">TwitterAPI</a> package (“I was Googling yesterday for what might be a good package”) and a <code>draw_tweet</code> function that puts a profile picture, the tweet text and an orange handle box on the slide. <a class="ts" href="?t=31:07">31:07</a></p>
+  <p>He needs a topic that people tweet about all the time. <strong>“Beer, maybe?”</strong> <a class="ts" href="?t=32:11">32:11</a> What follows is a real live demo:</p>
+  <div class="band">
+    <div class="band-label">32:19 → 33:00, as it happened</div>
+    <p style="margin:0 0 .45rem">“Okay, got an error.” <a class="ts" href="?t=32:19">32:19</a></p>
+    <p style="margin:0 0 .45rem">Someone in the audience says something about the hashtag. “No, I actually just meant beer. I was hoping that the hashtag would be more common.” <a class="ts" href="?t=32:43">32:43</a></p>
+    <p style="margin:0 0 .45rem">“Oh, I'm not on the first slide. Good point.”</p>
+    <p style="margin:0">Then the slide fills up. <strong>“Beer is pretty popular.”</strong> <a class="ts" href="?t=33:00">33:00</a></p>
+  </div>
+  <p>The loop stops at twelve tweets (<code>if pos &gt; 10: break</code>, as he says on stage). Then he switches the search to the conference hashtag and asks for questions as tweets. <a class="ts" href="?t=33:42">33:42</a> A couple of minutes later the audience's tweets appear on the slide:</p>
+  <figure class="still">
+    <a href="slides/16-live-tweets.webp" data-lightbox data-caption="About 35:30. Audience tweets tagged #pyconindia2013 drawn live into a PowerPoint slide by the notebook's draw_tweet loop. Handles are illegible at this resolution and are left that way. Frame from the PyCon India 2013 recording."><img src="slides/16-live-tweets.webp" width="978" height="720" loading="lazy" alt="Left: the notebook loop calling draw_tweet. Right: a PowerPoint slide with four rows, each a small profile picture, a line of tweet text and an orange handle box."></a>
+    <figcaption><b>The room, tweeting into the slide.</b> Readable in the frame: “Amazing sir #pyconindia2013”, “Is it possible to do something similar on linux? #pyconindia2013”, “Anand sir is insane! Amazing! #pyconindia2013”, “power point with python is awesome :O #pyconindia2013”.</figcaption>
+  </figure>
+  <p>The second tweet is the question the Q&amp;A would keep coming back to. <strong>It works, but does it work anywhere else?</strong> The 2013 Twitter streaming API he used no longer exists, so this demo can't be re-run today.</p>
+</section>
+
+<section class="chap" id="questions" data-act="Coda · live" data-title="The room asks the practical questions">
+  <div class="slide-no"><b>13</b> 35:05 · questions</div>
+  <h2>The room asks the practical questions</h2>
+  <p>Nobody asks whether it's cool. The questions are about portability, effort and distribution, which is a good sign the audience took it seriously.</p>
+  <div class="qa">
+    <div class="qa-row"><div class="q">How much of this is actually valid in Keynote?</div><div class="a">“None of this would work in Keynote, unfortunately.” He grants that Keynote's Magic Move is “outrageously good”, but says the bigger gain is <b>working in code at all</b>. <a class="ts" href="?t=35:05">35:05</a></div></div>
+    <div class="qa-row"><div class="q">Would it work in PowerPoint on a Mac?</div><div class="a">“The reason I have a Windows laptop is that, to the best of my knowledge, it does not work… on a Mac. I am so sorry.” <a class="ts" href="?t=35:56">35:56</a></div></div>
+    <div class="qa-row"><div class="q">Do the slides update in-slide, or link between slides?</div><div class="a">“They update in-slide.” <b>Every object has its animation from one position to the other built in.</b> An audience member adds that you can't export this to SlideShare: “Yes. That is a disadvantage.” <a class="ts" href="?t=36:11">36:11</a></div></div>
+    <div class="qa-row"><div class="q">How does Python compare with PowerShell for Office automation?</div><div class="a">“There is no real Python that I'm doing here, right, other than lxml.” His method: <b>“use Record Macros in Excel, record the macro, copy paste the Visual Basic code into Python, and if required, change the syntax.”</b> <a class="ts" href="?t=36:47">36:47</a></div></div>
+    <div class="qa-row"><div class="q">Can <code>win32com.client</code> drive other applications?</div><div class="a">Yes. He has used Outlook “to scrape email data and figure out the social network of… few companies,” built maps in Excel, and, before PhantomJS existed, used Internet Explorer through COM to scrape awkward government sites. <a class="ts" href="?t=37:24">37:24</a></div></div>
+    <div class="qa-row"><div class="q">What effort does something like this take?</div><div class="a"><b>“One person, one week, roughly.”</b> That's his estimate for a deck like the ones shown, not a general rule. <a class="ts" href="?t=40:46">40:46</a></div></div>
+    <div class="qa-row"><div class="q">Do you ship the Python code so clients can generate the deck?</div><div class="a">No: an intermediate format plus a converter, and “these days we are experimenting with… the creation of a .pptx file directly using the Open XML API. So in which case, it can be done on the server side.” <a class="ts" href="?t=41:22">41:22</a></div></div>
+    <div class="qa-row"><div class="q">Are the Windows APIs available on OS X?</div><div class="a">“To the best of my knowledge, no, which, as I told Lakshman, is the reason why I have a Windows machine, not a Mac machine, sorry.” <a class="ts" href="?t=42:29">42:29</a></div></div>
+  </div>
+</section>
+
+<section class="chap" id="tradeoff" data-act="Coda · live" data-title="Where the work ends">
+  <div class="slide-no"><b>14</b> the trade-off</div>
+  <h2>Where the work ends</h2>
+  <p>The Q&amp;A covers both sides of the deal. The output went anywhere: <strong>any office laptop could open, present, edit and forward it</strong>. Producing it went almost nowhere: Windows, a licensed copy of Office, a COM bridge, and sometimes a person holding a window mid-drag. A Linux user in the room asked the obvious question by tweet. Anand's answer to the distribution question was to move generation to a server that writes <code>.pptx</code> files directly, which shows he saw the limit too.</p>
+  <p>His Keynote answer generalises beyond PowerPoint:</p>
+  <div class="quote-band band">
+    <blockquote>
+      <p>“When you're manually drawing stuff, the effort is linear. When you're programmatically doing it, the effort is completely non-linear. … You're saying, ‘Okay, I've got all of this data. I'll put in 10,000 objects if I need to.’”</p>
+      <cite>Anand S <a class="ts" href="?t=35:31">35:31</a></cite>
+    </blockquote>
+  </div>
+  <p>The posters were the eye-catching part of the talk; the more useful lesson was about where the work goes. The newspaper editors and directors he described never saw the Python. They saw a file they already knew how to use. <strong>The most interesting programming environment that afternoon wasn't the notebook on stage. It was the program his clients already opened every day.</strong></p>
+  <p class="fine" style="font:.86rem/1.5 var(--font-ui);color:var(--muted)">That last line is our summary of the talk, not something he said on stage.</p>
+</section>
+
+</main>
+
+<aside class="dock" id="dock" aria-label="Video of the talk">
+  <div class="dock-head"><span><b>The talk</b> · 43 min · YouTube</span><span id="dock-mode-label">Story focus</span></div>
+  <div class="vwrap">
+    <div id="yt"><div class="nojs"><img class="poster" src="https://i.ytimg.com/vi/aKCXj1DyEhM/hqdefault.jpg" alt=""><a href="https://youtu.be/aKCXj1DyEhM">Watch on YouTube ↗</a></div></div>
+  </div>
+  <div class="resume" id="resume"><button type="button" id="resume-btn"><i class="bi bi-play-fill" aria-hidden="true"></i> <span>Play</span></button></div>
+  <div class="now" id="now" aria-live="polite"><span class="t" id="now-t">00:00</span><span id="now-title">Press play, or tap any ▶ time in the story</span><span class="in-story" id="now-story"></span></div>
+  <div class="dock-ctrls">
+    <button class="dbtn mode" id="mode-btn" type="button" aria-pressed="false"><i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span></button>
+    <button class="dbtn" id="share-btn" type="button"><i class="bi bi-link-45deg" aria-hidden="true"></i> <span>Share moment</span></button>
+    <a class="dbtn wide-only" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+    <button class="dbtn dock-min" id="min-btn" type="button" aria-expanded="true" aria-label="Hide the mini video"><i class="bi bi-chevron-down" aria-hidden="true"></i></button>
+  </div>
+  <details class="chapters" open>
+    <summary>Chapters · tap to jump</summary>
+    <ol id="chapters"></ol>
+  </details>
+</aside>
+</div>
+
+<section class="takeaways" id="takeaways" data-act="Close" data-title="Four takeaways" aria-labelledby="tk-h">
+  <div class="inner">
+    <div class="band-label">What to take from 2013</div>
+    <h2 id="tk-h">Four takeaways</h2>
+    <div class="cards">
+      <div class="card"><div class="num">01</div><h3>Deliver where the work ends</h3><p>Directors and editors wanted PowerPoint so they could annotate, edit and forward. Building for the place people already work made a Python talk about PowerPoint make sense. <a class="ts" href="?t=04:08">04:08</a></p></div>
+      <div class="card"><div class="num">02</div><h3>Remove the UI, find an engine</h3><p>Without its menus, a slide is a set of addressable objects with links, tooltips and motion paths: “practically a web kind of environment.” <a class="ts" href="?t=14:41">14:41</a></p></div>
+      <div class="card"><div class="num">03</div><h3>Keep identity across views</h3><p>Two orders, one set of objects, and every poster moves on its own path. Watching an item move between views beats re-sorting the list. <a class="ts" href="?t=16:21">16:21</a></p></div>
+      <div class="card"><div class="num">04</div><h3>Know what the medium costs</h3><p>Windows only, Office only, no SlideShare, the odd dragged window. He moved toward generating <code>.pptx</code> on a server, and the trade-off is still there. <a class="ts" href="?t=41:22">41:22</a></p></div>
+    </div>
+  </div>
+</section>
+
+<section class="ledger-sec" id="ledger" data-act="Close" data-title="Evidence ledger" aria-labelledby="ledger-h">
+  <div class="slide-no"><b>§</b> sources and checks</div>
+  <h2 id="ledger-h">What the talk said, and what the record shows</h2>
+  <p>Quotations were checked against the original audio, not only the automated transcript. Times follow the YouTube upload. Where the record is thin, the claim is labelled as the speaker's.</p>
+  <div class="table-wrap">
+    <table class="ledger">
+      <thead><tr><th scope="col">Claim</th><th scope="col">In the talk</th><th scope="col">Record</th><th scope="col">Status</th></tr></thead>
+      <tbody>
+        <tr><td>Date and venue</td><td>PyCon India 2013, Bangalore</td><td><a href="https://in.pycon.org/2013/">Programme</a>: Sun 1 Sep 2013, 14:00–14:45, NIMHANS Convention Centre. Also <a href="https://pyvideo.org/pycon-india-2013/data-visualisation-in-powerpoint-with-python.html">PyVideo</a> and Anand's <a href="https://gist.github.com/sanand0/4554440">talk log</a>. The video was uploaded on 6 Sep.</td><td><span class="st ok">Confirmed: 1 Sep</span></td></tr>
+        <tr><td>The code used on stage</td><td>“I've already posted the code” <a class="ts" href="?t=01:15">01:15</a></td><td><a href="https://github.com/sanand0/ipython-notebooks/blob/master/Office.ipynb">Office.ipynb</a>, which Anand linked from his <a href="https://in.pycon.org/funnel/2013/73-data-visualisation-in-powerpoint-with-python/">PyCon proposal</a>. Readable on <a href="https://nbviewer.org/github/sanand0/ipython-notebooks/blob/master/Office.ipynb">nbviewer</a>. The frames match its cells.</td><td><span class="st ok">Confirmed</span></td></tr>
+        <tr><td>Twitter handle</td><td>Said aloud at 00:01–00:20</td><td>Audio says <code>@sanand0</code>; the automated transcript's “@ananth0” is a mishearing</td><td><span class="st ok">Corrected</span></td></tr>
+        <tr><td>Which Top 250</td><td>Shawshank first, “Three Colors: Red” last, <code>movies[10]</code> is Star Wars</td><td><a href="https://web.archive.org/web/20130901232912/http://www.imdb.com/chart/top">Wayback snapshot, 1 Sep 2013 23:29 UTC</a>: all three match. His scrape may be a few days older.</td><td><span class="st ok">Consistent</span></td></tr>
+        <tr><td>Dragging speeds up drawing</td><td>“perhaps my greatest discovery of this year” <a class="ts" href="?t=11:39">11:39</a></td><td>His own observation from 2013 PowerPoint on Windows. Not tested here.</td><td><span class="st asis">As presented</span></td></tr>
+        <tr><td>Easier than D3 or Processing</td><td><a class="ts" href="?t=16:31">16:31</a></td><td>His opinion about this one animated reorder in 2013. He had <a href="../2012-10-20-jsfoo-d3-visualizations/">spoken on D3</a> in Oct 2012. <a href="https://d3js.org/">D3</a> has changed a lot since.</td><td><span class="st asis">Speaker's opinion</span></td></tr>
+        <tr><td>Clients asking for PowerPoint</td><td>Novartis, P&amp;G, Unilever, Walmart, Nokia <a class="ts" href="?t=04:08">04:08</a></td><td>His recollection of requests. Not endorsements, and no link to specific paid work.</td><td><span class="st asis">Speaker's account</span></td></tr>
+        <tr><td>“A fair bit of money”</td><td><a class="ts" href="?t=21:05">21:05</a></td><td>No amounts given, and none reported here</td><td><span class="st ctx">Unquantified</span></td></tr>
+        <tr><td>Vijay Karnataka spreads</td><td>MLA attendance, voting reasons, Assembly questions <a class="ts" href="?t=21:15">21:15</a></td><td>Seen in the recording. The notebook's “Real-life examples” cell lists the project. Chart statistics not independently checked.</td><td><span class="st ctx">Shown, not audited</span></td></tr>
+        <tr><td>Revenue and app-store decks</td><td>“anonymized numbers” <a class="ts" href="?t=27:00">27:00</a></td><td>Client unnamed. No figures from the frames are repeated here as facts.</td><td><span class="st ctx">Illustrative</span></td></tr>
+        <tr><td>Mac and Keynote</td><td>“None of this would work in Keynote” <a class="ts" href="?t=35:19">35:19</a></td><td>COM automation through <a href="https://github.com/mhammond/pywin32">pywin32</a> is Windows-only. True in 2013 and still Windows-specific.</td><td><span class="st ok">Confirmed for 2013</span></td></tr>
+        <tr><td>“Can't export this to SlideShare”</td><td><a class="ts" href="?t=36:36">36:36</a></td><td>In the audio an audience member says it; Anand agrees. The automated transcript gives it to Anand.</td><td><span class="st ok">Re-attributed</span></td></tr>
+        <tr><td>VML paths</td><td>“very similar to the SVG path specification” <a class="ts" href="?t=19:12">19:12</a></td><td>The motion path is a <a href="https://www.w3.org/TR/NOTE-VML">VML</a>-style string, scaled to slide size</td><td><span class="st ok">Consistent with code</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer class="site">
+  <div><strong>The Slide Was the Program</strong> · S Anand's talk <em>Data visualisation in PowerPoint with Python</em> at <a href="https://in.pycon.org/2013/">PyCon India 2013</a>, NIMHANS Convention Centre, Bangalore, Sunday 1 September 2013.</div>
+  <div>Media: <a href="https://youtu.be/aKCXj1DyEhM">video (YouTube, Python India channel)</a> · <a href="https://github.com/sanand0/talks/releases/download/talks/2013-09-01-pycon-powerpoint-python.opus">audio (Opus)</a> · <a href="transcript.md" data-transcript>transcript</a> · <a href="comic-page.avif" data-lightbox data-caption="An interpretive companion comic of the talk, drawn after the event with an image model. Not stage documentation.">companion comic</a> · <a href="https://in.pycon.org/funnel/2013/73-data-visualisation-in-powerpoint-with-python/">proposal</a></div>
+  <div>Code: <a href="https://github.com/sanand0/ipython-notebooks/blob/master/Office.ipynb">Office.ipynb</a> (the talk's notebook, quoted in short excerpts) · earlier technique: <a href="https://www.s-anand.net/blog/automating-powerpoint-with-python/">“Automating PowerPoint with Python” (2009)</a> · <a href="https://learn.microsoft.com/en-us/office/vba/api/overview/powerpoint">PowerPoint object model</a>.</div>
+  <div>Images are frames from the PyCon India 2013 recording. Movie posters belong to their studios. Newspaper pages belong to <em>Vijay Karnataka</em> and are shown at video resolution as examples from the talk. The interactive grid uses titles, years and ranks from the archived IMDb chart and no poster art. Keyboard: <kbd>V</kbd> toggles video focus, <kbd>[</kbd> / <kbd>]</kbd> move between sections.</div>
+</footer>
+
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump on-hero" aria-label="Jump to section">
+  <button id="jump-prev" type="button" aria-label="Previous section"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+  <button class="jump-cur" id="jump-cur" type="button" aria-expanded="false" aria-controls="jump-menu"><i class="bi bi-list-ul" aria-hidden="true"></i><span id="jump-cur-label">The man dragging the window</span></button>
+  <button id="jump-next" type="button" aria-label="Next section"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+</nav>
+<div class="jump-menu" id="jump-menu" role="dialog" aria-label="All sections"></div>
+
+<dialog class="pop" id="pop" aria-labelledby="pop-title">
+  <div class="pop-head"><h3 id="pop-title">Transcript</h3><button type="button" id="pop-close" aria-label="Close">Close <i class="bi bi-x-lg" aria-hidden="true"></i></button></div>
+  <div class="pop-search" id="pop-search"><i class="bi bi-search" aria-hidden="true"></i><input id="pop-q" type="search" placeholder="Find in transcript…" aria-label="Find in transcript"><span id="pop-count"></span></div>
+  <div class="pop-body" id="pop-body"></div>
+</dialog>
+
+<dialog class="lightbox" id="lightbox" aria-label="Enlarged image">
+  <img id="lb-img" src="data:," alt="">
+  <div class="lb-bar"><span id="lb-cap"></span><span class="lb-act"><a id="lb-open" href="#" target="_blank" rel="noopener">Open full size ↗</a><button type="button" id="lb-close">Close</button></span></div>
+</dialog>
+
+<script type="application/json" id="film-data">
+[[1,9.2,"The Shawshank Redemption",1994,"0111161"],[2,9.2,"The Godfather",1972,"0068646"],[3,9.0,"The Godfather: Part II",1974,"0071562"],[4,8.9,"Pulp Fiction",1994,"0110912"],[5,8.9,"The Good, the Bad and the Ugly",1966,"0060196"],[6,8.9,"The Dark Knight",2008,"0468569"],[7,8.9,"12 Angry Men",1957,"0050083"],[8,8.9,"Schindler's List",1993,"0108052"],[9,8.8,"The Lord of the Rings: The Return of the King",2003,"0167260"],[10,8.8,"Fight Club",1999,"0137523"],[11,8.8,"Star Wars: Episode V - The Empire Strikes Back",1980,"0080684"],[12,8.8,"The Lord of the Rings: The Fellowship of the Ring",2001,"0120737"],[13,8.7,"One Flew Over the Cuckoo's Nest",1975,"0073486"],[14,8.7,"Inception",2010,"1375666"],[15,8.7,"Goodfellas",1990,"0099685"],[16,8.7,"Star Wars",1977,"0076759"],[17,8.7,"Seven Samurai",1954,"0047478"],[18,8.7,"Forrest Gump",1994,"0109830"],[19,8.7,"The Matrix",1999,"0133093"],[20,8.7,"The Lord of the Rings: The Two Towers",2002,"0167261"],[21,8.6,"City of God",2002,"0317248"],[22,8.6,"Se7en",1995,"0114369"],[23,8.6,"The Silence of the Lambs",1991,"0102926"],[24,8.6,"Once Upon a Time in the West",1968,"0064116"],[25,8.6,"Casablanca",1942,"0034583"],[26,8.6,"The Usual Suspects",1995,"0114814"],[27,8.6,"Raiders of the Lost Ark",1981,"0082971"],[28,8.6,"Rear Window",1954,"0047396"],[29,8.6,"It's a Wonderful Life",1946,"0038650"],[30,8.6,"Psycho",1960,"0054215"],[31,8.6,"Léon: The Professional",1994,"0110413"],[32,8.5,"Sunset Blvd.",1950,"0043014"],[33,8.5,"American History X",1998,"0120586"],[34,8.5,"Apocalypse Now",1979,"0078788"],[35,8.5,"Terminator 2: Judgment Day",1991,"0103064"],[36,8.5,"Memento",2000,"0209144"],[37,8.5,"Saving Private Ryan",1998,"0120815"],[38,8.5,"City Lights",1931,"0021749"],[39,8.5,"Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb",1964,"0057012"],[40,8.5,"Alien",1979,"0078748"],[41,8.5,"Spirited Away",2001,"0245429"],[42,8.5,"Modern Times",1936,"0027977"],[43,8.5,"North by Northwest",1959,"0053125"],[44,8.5,"Back to the Future",1985,"0088763"],[45,8.5,"Life Is Beautiful",1997,"0118799"],[46,8.5,"The Shining",1980,"0081505"],[47,8.5,"Citizen Kane",1941,"0033467"],[48,8.4,"The Pianist",2002,"0253474"],[49,8.4,"The Departed",2006,"0407887"],[50,8.4,"M",1931,"0022100"],[51,8.4,"Paths of Glory",1957,"0050825"],[52,8.4,"Vertigo",1958,"0052357"],[53,8.4,"Django Unchained",2012,"1853728"],[54,8.4,"The Dark Knight Rises",2012,"1345836"],[55,8.4,"Double Indemnity",1944,"0036775"],[56,8.4,"Taxi Driver",1976,"0075314"],[57,8.4,"Aliens",1986,"0090605"],[58,8.4,"American Beauty",1999,"0169547"],[59,8.4,"The Green Mile",1999,"0120689"],[60,8.4,"The Intouchables",2011,"1675434"],[61,8.4,"Gladiator",2000,"0172495"],[62,8.4,"WALL·E",2008,"0910970"],[63,8.4,"The Lives of Others",2006,"0405094"],[64,8.4,"Toy Story 3",2010,"0435761"],[65,8.4,"The Great Dictator",1940,"0032553"],[66,8.4,"The Prestige",2006,"0482571"],[67,8.4,"A Clockwork Orange",1971,"0066921"],[68,8.4,"Amélie",2001,"0211915"],[69,8.4,"Lawrence of Arabia",1962,"0056172"],[70,8.4,"To Kill a Mockingbird",1962,"0056592"],[71,8.4,"Reservoir Dogs",1992,"0105236"],[72,8.4,"Das Boot",1981,"0082096"],[73,8.4,"Cinema Paradiso",1988,"0095765"],[74,8.4,"The Lion King",1994,"0110357"],[75,8.3,"The Treasure of the Sierra Madre",1948,"0040897"],[76,8.3,"Star Wars: Episode VI - Return of the Jedi",1983,"0086190"],[77,8.3,"The Third Man",1949,"0041959"],[78,8.3,"Requiem for a Dream",2000,"0180093"],[79,8.3,"Once Upon a Time in America",1984,"0087843"],[80,8.3,"Eternal Sunshine of the Spotless Mind",2004,"0338013"],[81,8.3,"Full Metal Jacket",1987,"0093058"],[82,8.3,"Braveheart",1995,"0112573"],[83,8.3,"Oldboy",2003,"0364569"],[84,8.3,"L.A. Confidential",1997,"0119488"],[85,8.3,"Singin' in the Rain",1952,"0045152"],[86,8.3,"Chinatown",1974,"0071315"],[87,8.3,"Bicycle Thieves",1948,"0040522"],[88,8.3,"Monty Python and the Holy Grail",1975,"0071853"],[89,8.3,"Rashomon",1950,"0042876"],[90,8.3,"Metropolis",1927,"0017136"],[91,8.3,"Princess Mononoke",1997,"0119698"],[92,8.3,"Some Like It Hot",1959,"0053291"],[93,8.3,"Amadeus",1984,"0086879"],[94,8.3,"2001: A Space Odyssey",1968,"0062622"],[95,8.3,"All About Eve",1950,"0042192"],[96,8.3,"The Sting",1973,"0070735"],[97,8.3,"The Apartment",1960,"0053604"],[98,8.3,"Witness for the Prosecution",1957,"0051201"],[99,8.3,"Unforgiven",1992,"0105695"],[100,8.3,"Indiana Jones and the Last Crusade",1989,"0097576"],[101,8.3,"Grave of the Fireflies",1988,"0095327"],[102,8.3,"Raging Bull",1980,"0081398"],[103,8.3,"The Bridge on the River Kwai",1957,"0050212"],[104,8.3,"Die Hard",1988,"0095016"],[105,8.3,"Batman Begins",2005,"0372784"],[106,8.3,"A Separation",2011,"1832382"],[107,8.3,"Yojimbo",1961,"0055630"],[108,8.3,"Inglourious Basterds",2009,"0361748"],[109,8.3,"For a Few Dollars More",1965,"0059578"],[110,8.3,"Snatch.",2000,"0208092"],[111,8.2,"Toy Story",1995,"0114709"],[112,8.2,"The Great Escape",1963,"0057115"],[113,8.2,"Mr. Smith Goes to Washington",1939,"0031679"],[114,8.2,"Up",2009,"1049413"],[115,8.2,"Downfall",2004,"0363163"],[116,8.2,"Pan's Labyrinth",2006,"0457430"],[117,8.2,"On the Waterfront",1954,"0047296"],[118,8.2,"The General",1926,"0017925"],[119,8.2,"The Seventh Seal",1957,"0050976"],[120,8.2,"Heat",1995,"0113277"],[121,8.2,"The Elephant Man",1980,"0080678"],[122,8.2,"The Kid",1921,"0012349"],[123,8.2,"The Maltese Falcon",1941,"0033870"],[124,8.2,"Blade Runner",1982,"0083658"],[125,8.2,"Scarface",1983,"0086250"],[126,8.2,"Wild Strawberries",1957,"0050986"],[127,8.2,"Rebecca",1940,"0032976"],[128,8.2,"Gran Torino",2008,"1205489"],[129,8.2,"Fargo",1996,"0116282"],[130,8.2,"Ikiru",1952,"0044741"],[131,8.2,"Ran",1985,"0089881"],[132,8.2,"The Big Lebowski",1998,"0118715"],[133,8.2,"Touch of Evil",1958,"0052311"],[134,8.2,"The Gold Rush",1925,"0015864"],[135,8.2,"The Deer Hunter",1978,"0077416"],[136,8.2,"Cool Hand Luke",1967,"0061512"],[137,8.1,"It Happened One Night",1934,"0025316"],[138,8.1,"No Country for Old Men",2007,"0477348"],[139,8.1,"Lock, Stock and Two Smoking Barrels",1998,"0120735"],[140,8.1,"Diabolique",1955,"0046911"],[141,8.1,"Casino",1995,"0112641"],[142,8.1,"Good Will Hunting",1997,"0119217"],[143,8.1,"The Sixth Sense",1999,"0167404"],[144,8.1,"Strangers on a Train",1951,"0044079"],[145,8.1,"Platoon",1986,"0091763"],[146,8.1,"The Thing",1982,"0084787"],[147,8.1,"Sin City",2005,"0401792"],[148,8.1,"Jaws",1975,"0073195"],[149,8.1,"Butch Cassidy and the Sundance Kid",1969,"0064115"],[150,8.1,"Trainspotting",1996,"0117951"],[151,8.1,"Kill Bill: Vol. 1",2003,"0266697"],[152,8.1,"The Wizard of Oz",1939,"0032138"],[153,8.1,"Warrior",2011,"1291584"],[154,8.1,"The Secret in Their Eyes",2009,"1305806"],[155,8.1,"The Grapes of Wrath",1940,"0032551"],[156,8.1,"High Noon",1952,"0044706"],[157,8.1,"Hotel Rwanda",2004,"0395169"],[158,8.1,"Gone with the Wind",1939,"0031381"],[159,8.1,"Annie Hall",1977,"0075686"],[160,8.1,"My Neighbor Totoro",1988,"0096283"],[161,8.1,"The Avengers",2012,"0848228"],[162,8.1,"V for Vendetta",2005,"0434409"],[163,8.1,"Finding Nemo",2003,"0266543"],[164,8.1,"Dial M for Murder",1954,"0046912"],[165,8.1,"Notorious",1946,"0038787"],[166,8.1,"How to Train Your Dragon",2010,"0892769"],[167,8.1,"Into the Wild",2007,"0758758"],[168,8.1,"Life of Brian",1979,"0079470"],[169,8.1,"The Night of the Hunter",1955,"0048424"],[170,8.1,"The Hunt",2012,"2106476"],[171,8.1,"There Will Be Blood",2007,"0469494"],[172,8.1,"Network",1976,"0074958"],[173,8.1,"The Terminator",1984,"0088247"],[174,8.1,"Ben-Hur",1959,"0052618"],[175,8.1,"Million Dollar Baby",2004,"0405159"],[176,8.1,"The Big Sleep",1946,"0038355"],[177,8.1,"The King's Speech",2010,"1504320"],[178,8.1,"Stand by Me",1986,"0092005"],[179,8.1,"The Best Years of Our Lives",1946,"0036868"],[180,8.1,"The 400 Blows",1959,"0053198"],[181,8.1,"Groundhog Day",1993,"0107048"],[182,8.1,"Twelve Monkeys",1995,"0114746"],[183,8.1,"Mary and Max",2009,"0978762"],[184,8.1,"Dog Day Afternoon",1975,"0072890"],[185,8.1,"Donnie Darko",2001,"0246578"],[186,8.1,"Howl's Moving Castle",2004,"0347149"],[187,8.1,"Amores Perros",2000,"0245712"],[188,8.1,"Persona",1966,"0060827"],[189,8.1,"The Bourne Ultimatum",2007,"0440963"],[190,8.0,"Gandhi",1982,"0083987"],[191,8.0,"The Killing",1956,"0049406"],[192,8.0,"A Beautiful Mind",2001,"0268978"],[193,8.0,"The Graduate",1967,"0061722"],[194,8.0,"Black Swan",2010,"0947798"],[195,8.0,"The Princess Bride",1987,"0093779"],[196,8.0,"8½",1963,"0056801"],[197,8.0,"Who's Afraid of Virginia Woolf?",1966,"0061184"],[198,8.0,"La Strada",1954,"0047528"],[199,8.0,"The Hustler",1961,"0054997"],[200,8.0,"Rocky",1976,"0075148"],[201,8.0,"Anatomy of a Murder",1959,"0052561"],[202,8.0,"The Man Who Shot Liberty Valance",1962,"0056217"],[203,8.0,"Slumdog Millionaire",2008,"1010048"],[204,8.0,"Rope",1948,"0040746"],[205,8.0,"The Exorcist",1973,"0070047"],[206,8.0,"The Manchurian Candidate",1962,"0056218"],[207,8.0,"Barry Lyndon",1975,"0072684"],[208,8.0,"The Wild Bunch",1969,"0065214"],[209,8.0,"In the Name of the Father",1993,"0107207"],[210,8.0,"Stalag 17",1953,"0046359"],[211,8.0,"Monsters, Inc.",2001,"0198781"],[212,8.0,"Infernal Affairs",2002,"0338564"],[213,8.0,"Life of Pi",2012,"0454876"],[214,8.0,"Memories of Murder",2003,"0353969"],[215,8.0,"The Truman Show",1998,"0120382"],[216,8.0,"Fanny and Alexander",1982,"0083922"],[217,8.0,"Stalker",1979,"0079944"],[218,8.0,"Pirates of the Caribbean: The Curse of the Black Pearl",2003,"0325980"],[219,8.0,"Roman Holiday",1953,"0046250"],[220,8.0,"3 Idiots",2009,"1187043"],[221,8.0,"Sleuth",1972,"0069281"],[222,8.0,"Like Stars on Earth",2007,"0986264"],[223,8.0,"Harry Potter and the Deathly Hallows: Part 2",2011,"1201607"],[224,8.0,"A Fistful of Dollars",1964,"0058461"],[225,8.0,"Jurassic Park",1993,"0107290"],[226,8.0,"Ip Man",2008,"1220719"],[227,8.0,"Star Trek",2009,"0796366"],[228,8.0,"The Hobbit: An Unexpected Journey",2012,"0903624"],[229,8.0,"Incendies",2010,"1255953"],[230,8.0,"District 9",2009,"1136608"],[231,8.0,"Shutter Island",2010,"1130884"],[232,8.0,"A Streetcar Named Desire",1951,"0044081"],[233,8.0,"Ratatouille",2007,"0382932"],[234,8.0,"The Artist",2011,"1655442"],[235,8.0,"La Haine",1995,"0113247"],[236,8.0,"The Diving Bell and the Butterfly",2007,"0401383"],[237,8.0,"Rain Man",1988,"0095953"],[238,8.0,"All Quiet on the Western Front",1930,"0020629"],[239,8.0,"Nausicaä of the Valley of the Wind",1984,"0087544"],[240,8.0,"Beauty and the Beast",1991,"0101414"],[241,8.0,"Rosemary's Baby",1968,"0063522"],[242,8.0,"Papillon",1973,"0070511"],[243,8.0,"Mystic River",2003,"0327056"],[244,8.0,"Harvey",1950,"0042546"],[245,8.0,"Before Sunrise",1995,"0112471"],[246,7.9,"Spring, Summer, Fall, Winter... and Spring",2003,"0374546"],[247,7.9,"The Celebration",1998,"0154420"],[248,7.9,"The Untouchables",1987,"0094226"],[249,7.9,"In the Mood for Love",2000,"0118694"],[250,7.9,"Three Colors: Red",1994,"0111495"]]
+</script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js" defer></script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const body = document.body;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isNarrow = () => matchMedia("(max-width: 999px)").matches;
+  const cssVar = (n) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(n)) || 0;
+  const parseT = (s) => {
+    if (s == null || s === "") return null;
+    const p = String(s).split(":").map(Number);
+    return p.some(Number.isNaN) ? null : p.reduce((a, b) => a * 60 + b, 0);
+  };
+  const fmt = (t) => { t = Math.max(0, Math.floor(t)); return String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0"); };
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // ---------- theme ----------
+  $("#theme-btn").addEventListener("click", () => {
+    const root = document.documentElement;
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+    try { localStorage.setItem("pycon-ppt-2013-theme", root.dataset.theme); } catch (e) {}
+  });
+
+  // ---------- chapters (video moments → story sections) ----------
+  const CHAPTERS = [
+    ["00:01", "“What the heck is PowerPoint doing…”", "heck"], ["01:46", "COM: script any application", "shapes"],
+    ["03:49", "“Simple so far and unimpressive”", "shapes"], ["04:08", "“Give all of this in PowerPoint”", "heck"],
+    ["05:20", "A hardcore movie fan", "posters"], ["08:37", "250 rectangles", "posters"],
+    ["11:31", "Heisenberg's PowerPoint", "drag"], ["11:39", "Drag the window", "drag"],
+    ["12:36", "Name that poster", "quiz"], ["13:33", "Hover titles, click links", "quiz"],
+    ["14:47", "“I want both”", "both"], ["16:21", "Click: Alphabetical", "lab"], ["16:31", "Easier than D3?", "lab"],
+    ["18:11", "One queue per order", "animate"], ["20:48", "“There's Gandhi”", "animate"],
+    ["20:59", "But is it useful?", "useful"], ["21:15", "Vijay Karnataka's spreads", "useful"],
+    ["24:55", "A cartogram, no map", "cartogram"], ["26:57", "A revenue deck you click", "boardroom"],
+    ["28:01", "App-store downloads", "boardroom"], ["31:07", "Live tweets", "tweets"], ["32:11", "“Beer, maybe?”", "tweets"],
+    ["35:05", "Keynote? Mac?", "questions"], ["36:47", "Record a macro, paste it", "questions"],
+    ["40:15", "“I can't draw this much by hand”", "questions"], ["41:10", "Shipping it: Open XML", "tradeoff"],
+    ["42:29", "OS X? “No.”", "questions"],
+  ].map(([t, title, sec]) => ({ t: parseT(t), label: t, title, sec }));
+  const chapOl = $("#chapters");
+  chapOl.innerHTML = CHAPTERS.map((c, i) =>
+    `<li><a href="?t=${c.label}" data-chap="${i}" class="ts-chap"><span class="ct">${c.label}</span><span>${c.title}</span></a></li>`).join("");
+  const chapLinks = $$("#chapters a");
+  const chapFor = (t) => { let i = -1; CHAPTERS.forEach((c, k) => { if (c.t <= t + 0.5) i = k; }); return i; };
+  const sections = $$(".chap, #takeaways, #ledger");
+  const secTitle = (id) => { const s = document.getElementById(id); return s ? s.dataset.title : ""; };
+
+  // ---------- URL state: ?t=mm:ss&view=video#section ----------
+  const urlState = () => {
+    const u = new URL(location.href);
+    return { t: parseT(u.searchParams.get("t")), view: u.searchParams.get("view") };
+  };
+  const buildUrl = ({ t, hash } = {}) => {
+    const u = new URL(location.href);
+    if (t != null) u.searchParams.set("t", fmt(t)); else if (t === null) u.searchParams.delete("t");
+    if (body.classList.contains("watch")) u.searchParams.set("view", "video"); else u.searchParams.delete("view");
+    if (hash !== undefined) u.hash = hash ? "#" + hash : "";
+    return u.pathname + u.search.replace(/%3A/gi, ":") + u.hash;
+  };
+  let urlT = urlState().t;
+
+  // ---------- one persistent YouTube player (IFrame Player API) ----------
+  // Created once inside .vwrap and never moved or re-created: story/video focus only changes CSS.
+  const VID = "aKCXj1DyEhM";
+  let player = null, ready = false, ytFailed = false, pending = null, lastT = urlT || 0, poll = 0;
+  const resume = $("#resume"), resumeBtn = $("#resume-btn");
+  let resumeT = urlT || 0;
+  const state = () => (ready && player.getPlayerState ? player.getPlayerState() : -1);
+  const getT = () => (ready && player.getCurrentTime ? player.getCurrentTime() || lastT : lastT);
+  const showResume = (t) => { resumeT = t; resumeBtn.querySelector("span").textContent = `Play from ${fmt(t)}`; resume.classList.add("show"); };
+  const hideResume = () => resume.classList.remove("show");
+  const failYT = () => {
+    if (ready || ytFailed) return;
+    ytFailed = true;
+    $("#now-title").textContent = "The embedded player didn't load. Time links open YouTube in a new tab.";
+  };
+
+  window.onYouTubeIframeAPIReady = () => {
+    const vars = { playsinline: 1, rel: 0, modestbranding: 1 };
+    if (urlT) vars.start = Math.floor(urlT);
+    if (/^https?:/.test(location.protocol)) vars.origin = location.origin;
+    player = new YT.Player("yt", {
+      videoId: VID, width: "100%", height: "100%", playerVars: vars,
+      events: {
+        onReady: () => {
+          ready = true; ytFailed = false;
+          player.getIframe().title = "Data visualisation in PowerPoint with Python: Anand S at PyCon India, 1 September 2013 (YouTube)";
+          if (pending != null) { const t = pending; pending = null; startAt(t); }
+          else if (urlT) { onTime(); showResume(urlT); }
+        },
+        onError: () => { $("#now-title").textContent = "YouTube couldn't play this here. Use “Watch on YouTube”."; },
+        onStateChange: (e) => {
+          if (e.data === 1) {
+            hideResume();
+            if (body.classList.contains("dock-collapsed")) { body.classList.remove("dock-collapsed"); syncMin(); }
+            clearInterval(poll); poll = setInterval(() => { lastT = player.getCurrentTime(); onTime(); }, 300);
+          } else {
+            clearInterval(poll);
+            if (ready) { lastT = player.getCurrentTime() || lastT; onTime(); }
+          }
+        },
+      },
+    });
+  };
+  const tag = document.createElement("script");
+  tag.src = "https://www.youtube.com/iframe_api";
+  tag.onerror = failYT;
+  document.head.appendChild(tag);
+  setTimeout(() => { if (!ready) failYT(); }, 12000);
+
+  const startAt = (t) => {
+    lastT = t;
+    const s = state();
+    if (s === 1 || s === 2 || s === 3) player.seekTo(t, true);
+    else player.loadVideoById({ videoId: VID, startSeconds: t });
+    player.playVideo();
+    onTime();
+    setTimeout(() => { const s2 = state(); if (s2 !== 1 && s2 !== 3) showResume(t); }, 1800);
+  };
+  const ensureDockVisible = () => {
+    if (isNarrow()) { body.classList.remove("dock-collapsed"); syncMin(); return; }
+    const r = $("#dock").getBoundingClientRect();
+    if (r.top > innerHeight - 80 || r.bottom < 60) $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  };
+  const playAt = (t, { push = false, el = null } = {}) => {
+    if (push) {
+      const sec = el && el.closest(".chap, #takeaways, #ledger");
+      history.pushState({ t }, "", buildUrl({ t, hash: sec ? sec.id : undefined }));
+      urlT = t;
+    }
+    if (ytFailed) { window.open(`https://youtu.be/${VID}?t=${Math.floor(t)}`, "_blank", "noopener"); return; }
+    ensureDockVisible();
+    if (ready) startAt(t); else { pending = t; lastT = t; onTime(); }
+    if (el) { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+  };
+  resumeBtn.addEventListener("click", () => {
+    if (!ready) return;
+    const s = state();
+    if (s === 2 || s === 1) player.playVideo(); else startAt(resumeT);
+    hideResume();
+  });
+
+  const enhanceTs = (root = document) => {
+    $$("a.ts", root).forEach((a) => {
+      if (a.dataset.t) return;
+      const t = parseT(new URL(a.href, location.href).searchParams.get("t"));
+      a.dataset.t = t;
+      a.insertAdjacentHTML("afterbegin", '<i class="bi bi-play-fill" aria-hidden="true"></i>');
+      a.setAttribute("aria-label", `Play the talk from ${a.textContent.trim()}`);
+    });
+  };
+  enhanceTs();
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a.ts, a.ts-chap");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const t = a.classList.contains("ts-chap") ? CHAPTERS[+a.dataset.chap].t : +a.dataset.t;
+    const dlg = a.closest("dialog");
+    if (dlg) dlg.close();
+    playAt(t, { push: true, el: a.classList.contains("ts") && !dlg ? a : null });
+  });
+
+  // now-playing sync
+  const nowT = $("#now-t"), nowTitle = $("#now-title"), nowStory = $("#now-story");
+  let curChap = -2;
+  const onTime = () => {
+    const t = getT();
+    nowT.textContent = fmt(t);
+    const i = chapFor(t);
+    if (i === curChap) return;
+    curChap = i;
+    chapLinks.forEach((a, k) => { a.classList.toggle("is-now", k === i); if (k === i) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
+    if (i >= 0) {
+      const c = CHAPTERS[i];
+      nowTitle.textContent = c.title;
+      nowStory.innerHTML = `In the story: <a href="#${c.sec}">${esc(secTitle(c.sec))} ↓</a>`;
+      sections.forEach((s) => s.classList.toggle("is-now", s.id === c.sec));
+      const link = chapLinks[i], box = link.closest(".chapters");
+      if (box && box.scrollHeight > box.clientHeight) {
+        const lr = link.getBoundingClientRect(), br = box.getBoundingClientRect();
+        if (lr.top < br.top || lr.bottom > br.bottom) box.scrollTop += lr.top - br.top - box.clientHeight / 3;
+      }
+    }
+  };
+  if (urlT) onTime();
+
+  // story → chapter hints
+  const tsSeen = new Set();
+  let hintRaf = 0;
+  const tsIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? tsSeen.add(e.target) : tsSeen.delete(e.target)));
+    hintRaf ||= requestAnimationFrame(() => {
+      hintRaf = 0;
+      const idx = new Set([...tsSeen].map((a) => chapFor(+a.dataset.t)));
+      chapLinks.forEach((a, k) => a.classList.toggle("in-view", idx.has(k)));
+    });
+  });
+  $$("a.ts").filter((a) => !a.closest("dialog, .dock")).forEach((a) => tsIO.observe(a));
+
+  const shareBtn = $("#share-btn");
+  shareBtn.addEventListener("click", async () => {
+    const t = Math.floor(getT());
+    const sec = curChap >= 0 ? CHAPTERS[curChap].sec : "";
+    const u = new URL(location.href);
+    u.search = "?t=" + fmt(t); u.hash = sec ? "#" + sec : "";
+    const label = shareBtn.querySelector("span");
+    try { await navigator.clipboard.writeText(u.href.replace(/%3A/gi, ":")); label.textContent = `Copied ${fmt(t)}`; }
+    catch (e) { history.replaceState(history.state, "", u.pathname + u.search.replace(/%3A/gi, ":") + u.hash); label.textContent = "Link in address bar"; }
+    setTimeout(() => (label.textContent = "Share moment"), 2200);
+  });
+
+  // ---------- story ⇄ video focus (same iframe, CSS only) ----------
+  const modeBtn = $("#mode-btn"), modeLabel = $("#dock-mode-label");
+  const pickAnchor = () => {
+    const top = 80 + (isNarrow() && body.classList.contains("watch") ? cssVar("--dock-h") : 0);
+    return $$(".story .chap > *").find((el) => el.getBoundingClientRect().bottom > top);
+  };
+  const setMode = (watch, { replace = true } = {}) => {
+    if (body.classList.contains("watch") === watch) return;
+    const anchor = pickAnchor();
+    const before = anchor ? anchor.getBoundingClientRect().top : 0;
+    const storyVisible = $("#room").getBoundingClientRect().top < innerHeight * 0.5;
+    body.classList.toggle("watch", watch);
+    if (watch) body.classList.remove("dock-collapsed");
+    syncMin();
+    modeBtn.setAttribute("aria-pressed", String(watch));
+    modeBtn.innerHTML = watch
+      ? '<i class="bi bi-book" aria-hidden="true"></i> <span>Focus story</span>'
+      : '<i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span>';
+    modeLabel.textContent = watch ? "Video focus" : "Story focus";
+    if (replace) history.replaceState(history.state, "", buildUrl());
+    updateDockH();
+    if (anchor && storyVisible) {
+      const start = performance.now();
+      const keep = () => {
+        const d = anchor.getBoundingClientRect().top - before;
+        if (Math.abs(d) > 1) window.scrollBy({ top: d, behavior: "instant" });
+        if (performance.now() - start < 700) requestAnimationFrame(keep);
+      };
+      requestAnimationFrame(keep);
+    }
+  };
+  modeBtn.addEventListener("click", () => setMode(!body.classList.contains("watch")));
+  $("#hero-watch").addEventListener("click", (e) => {
+    e.preventDefault();
+    setMode(true);
+    $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  });
+  const updateDockH = () => {
+    const h = isNarrow() && body.classList.contains("watch") ? $("#dock").offsetHeight : 0;
+    document.documentElement.style.setProperty("--dock-h", h + "px");
+  };
+  new ResizeObserver(updateDockH).observe($("#dock"));
+  addEventListener("resize", updateDockH);
+  const minBtn = $("#min-btn");
+  function syncMin() {
+    const c = body.classList.contains("dock-collapsed");
+    minBtn.setAttribute("aria-expanded", String(!c));
+    minBtn.setAttribute("aria-label", c ? "Show the mini video" : "Hide the mini video");
+    minBtn.innerHTML = `<i class="bi ${c ? "bi-chevron-up" : "bi-chevron-down"}" aria-hidden="true"></i>`;
+  }
+  minBtn.addEventListener("click", () => { body.classList.toggle("dock-collapsed"); syncMin(); });
+  if (isNarrow() && !urlT) { body.classList.add("dock-collapsed"); syncMin(); }
+  if (urlState().view === "video") setMode(true, { replace: false });
+  if (urlT) showResume(urlT);
+
+  // ---------- history ----------
+  addEventListener("popstate", () => {
+    const { t, view } = urlState();
+    setMode(view === "video", { replace: false });
+    if (t != null && t !== urlT) {
+      lastT = t;
+      if (ready) { const s = state(); if (s === 1 || s === 2 || s === 3) player.seekTo(t, true); else player.cueVideoById({ videoId: VID, startSeconds: t }); }
+      onTime();
+      if (state() !== 1) showResume(t);
+    }
+    urlT = t;
+  });
+
+  // ---------- section jump nav ----------
+  const menu = $("#jump-menu"), backdrop = $("#jump-backdrop"), curBtn = $("#jump-cur"), curLabel = $("#jump-cur-label");
+  const groups = [];
+  sections.forEach((s) => {
+    const g = s.dataset.act;
+    if (!groups.length || groups[groups.length - 1].name !== g) groups.push({ name: g, items: [] });
+    groups[groups.length - 1].items.push(s);
+  });
+  menu.innerHTML = groups.map((g) => `<div class="jm-group">${g.name}</div><div class="jump-grid">${g.items.map((s) => {
+    const no = s.querySelector(".slide-no b");
+    return `<a href="#${s.id}" data-sec="${s.id}">${s.dataset.title}${no && /\d/.test(no.textContent) ? `<small>Slide ${no.textContent}</small>` : ""}</a>`;
+  }).join("")}</div>`).join("");
+  const openMenu = (open) => {
+    menu.classList.toggle("open", open); backdrop.classList.toggle("open", open);
+    curBtn.setAttribute("aria-expanded", String(open));
+    if (open) (menu.querySelector("a.is-cur") || menu.querySelector("a")).focus();
+    else if (menu.contains(document.activeElement)) curBtn.focus();
+  };
+  curBtn.addEventListener("click", () => openMenu(!menu.classList.contains("open")));
+  backdrop.addEventListener("click", () => openMenu(false));
+  menu.addEventListener("click", (e) => { if (e.target.closest("a")) openMenu(false); });
+  menu.addEventListener("keydown", (e) => { if (e.key === "Escape") openMenu(false); });
+  let curIdx = 0;
+  const goSec = (i) => {
+    i = Math.max(0, Math.min(sections.length - 1, i));
+    sections[i].scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+    history.pushState(history.state, "", buildUrl({ hash: sections[i].id }));
+  };
+  $("#jump-prev").addEventListener("click", () => goSec(curIdx - 1));
+  $("#jump-next").addEventListener("click", () => goSec(curIdx + 1));
+  const progress = $("#progress"), jumpNav = $(".jump");
+  const onScroll = () => {
+    const line = innerHeight * 0.3 + cssVar("--dock-h");
+    let i = 0;
+    sections.forEach((s, k) => { if (s.getBoundingClientRect().top <= line) i = k; });
+    if (i !== curIdx || !curLabel.dataset.init) {
+      curIdx = i; curLabel.dataset.init = 1;
+      curLabel.textContent = sections[i].dataset.title;
+      $$("a", menu).forEach((a) => a.classList.toggle("is-cur", a.dataset.sec === sections[i].id));
+      $("#jump-prev").disabled = i === 0;
+      $("#jump-next").disabled = i === sections.length - 1;
+    }
+    jumpNav.classList.toggle("on-hero", $("#room").getBoundingClientRect().top > innerHeight * 0.75 && !menu.classList.contains("open"));
+    const h = document.documentElement.scrollHeight - innerHeight;
+    progress.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%";
+  };
+  let ticking = false;
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { onScroll(); ticking = false; }); } }, { passive: true });
+  onScroll();
+
+  // keyboard shortcuts
+  document.addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest?.("input, textarea, select, dialog, [contenteditable]")) return;
+    if (e.key === "v" || e.key === "V") setMode(!body.classList.contains("watch"));
+    else if (e.key === "[") goSec(curIdx - 1);
+    else if (e.key === "]") goSec(curIdx + 1);
+  });
+
+  // ---------- transcript popup ----------
+  const pop = $("#pop"), popBody = $("#pop-body"), popTitle = $("#pop-title"), popSearch = $("#pop-search"), popQ = $("#pop-q"), popCount = $("#pop-count");
+  let popReturn = null;
+  const openPop = (title, html, { search = false } = {}) => {
+    popReturn = document.activeElement;
+    popTitle.textContent = title; popBody.innerHTML = html; enhanceTs(popBody);
+    popSearch.classList.toggle("on", search); popQ.value = ""; popCount.textContent = "";
+    pop.showModal(); popBody.scrollTop = 0;
+    if (search) popQ.focus();
+  };
+  pop.addEventListener("close", () => { if (popReturn && popReturn.focus) popReturn.focus(); });
+  $("#pop-close").addEventListener("click", () => pop.close());
+  pop.addEventListener("click", (e) => { if (e.target === pop) pop.close(); });
+  const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  popQ.addEventListener("input", () => {
+    const q = popQ.value.trim();
+    const blocks = $$(":scope > p, :scope > ul, :scope > ol", popBody).filter((b) => !b.classList.contains("intro"));
+    $$("mark", popBody).forEach((m) => m.replaceWith(m.textContent));
+    popBody.normalize();
+    let n = 0;
+    blocks.forEach((b) => {
+      const hit = !q || b.textContent.toLowerCase().includes(q.toLowerCase());
+      b.classList.toggle("hide", !hit);
+      if (hit && q) {
+        n++;
+        const re = new RegExp(escRe(q), "gi");
+        const walker = document.createTreeWalker(b, NodeFilter.SHOW_TEXT);
+        const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach((node) => {
+          if (!re.test(node.nodeValue)) return; re.lastIndex = 0;
+          const span = document.createElement("span");
+          span.innerHTML = esc(node.nodeValue).replace(re, (m) => `<mark>${m}</mark>`);
+          node.replaceWith(...span.childNodes);
+        });
+      }
+    });
+    popCount.textContent = q ? `${n} passage${n === 1 ? "" : "s"}` : "";
+  });
+  let transcriptHtml = null;
+  document.addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-transcript]");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    if (!transcriptHtml) {
+      try {
+        let md = await (await fetch("transcript.md")).text();
+        md = md.replace(/<!--[\s\S]*?-->/g, "").replace(/^# Transcript\s*/, "")
+          .replace(/\[(\d{1,2}):(\d{2})\]/g, (m, a1, b1) => `<a class="ts" href="?t=${a1}:${b1}">${a1}:${b1}</a>`);
+        transcriptHtml = window.marked ? marked.parse(md) : md.split(/\n\n+/).map((p) => `<p>${p}</p>`).join("");
+        transcriptHtml = '<p class="intro">An automated transcript of the recording, lightly cleaned. Times match the YouTube video; tap one to play that moment. Bold phrases were added for scanning. The story above quotes the audio, which differs in places. For example, the Twitter handle is @sanand0, and an audience member, not Anand, says the slides can\'t go to SlideShare.</p>' + transcriptHtml;
+      } catch (err) { location.href = a.href; return; }
+    }
+    openPop("Transcript", transcriptHtml, { search: true });
+  });
+
+  // ---------- lightbox ----------
+  const lb = $("#lightbox"), lbImg = $("#lb-img"), lbCap = $("#lb-cap"), lbOpen = $("#lb-open");
+  let lbReturn = null;
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-lightbox]");
+    if (!el || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    const src = el.getAttribute("href") || el.currentSrc || el.src;
+    const img = el.tagName === "IMG" ? el : el.querySelector("img");
+    lbImg.src = src; lbImg.alt = img ? img.alt : (el.dataset.caption || "");
+    lbCap.textContent = el.dataset.caption || "";
+    lbOpen.href = src;
+    lbReturn = document.activeElement;
+    lb.showModal();
+    $("#lb-close").focus();
+  });
+  $("#lb-close").addEventListener("click", () => lb.close());
+  lb.addEventListener("click", (e) => { if (e.target === lb || e.target === lbImg) lb.close(); });
+  lb.addEventListener("close", () => { if (lbReturn && lbReturn.focus) lbReturn.focus(); });
+
+  // ---------- interactive 1: the COM ladder (diagram of cell 1, not COM) ----------
+  const LAD_NOTES = [
+    "<b>Dispatch(\"PowerPoint.Application\")</b> starts PowerPoint, or attaches to the copy already running, and hands Python the <b>Application</b> object. On stage the first run seemed to do nothing at all.",
+    "<b>Presentations.Add()</b> creates a new, empty file inside that application, like File → New.",
+    "<b>Slides.Add(1, 12)</b> inserts slide 1 with layout 12, the blank layout. The notebook's later arithmetic treats the slide as 720 × 540 points.",
+    "<b>Shapes.AddShape(9, 100, 100, 100, 100)</b>: type 9 is an oval, 100 points from the left and top, 100 wide and 100 high. It is a <b>real, editable shape</b> that anyone can then drag, recolour or delete.",
+  ];
+  const ladLines = $$(".lad-line"), ladLyrs = $$("#lad-svg .lyr"), ladNote = $("#lad-note");
+  let ladStep = -1;
+  const setLad = (k) => {
+    ladStep = k;
+    ladLines.forEach((b, i) => b.setAttribute("aria-pressed", String(i === k)));
+    ladLyrs.forEach((g, i) => g.classList.toggle("on", i === k));
+    $("#lad-svg .slide-bg").classList.toggle("hidden", k < 2);
+    $("#lad-svg .oval").classList.toggle("hidden", k < 3);
+    ladNote.innerHTML = k < 0 ? "Press <b>Step</b> to run the cell one line at a time." : LAD_NOTES[k];
+    $("#lad-step").innerHTML = k >= 3 ? '<i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Again' : '<i class="bi bi-play-fill" aria-hidden="true"></i> Step';
+  };
+  ladLines.forEach((b) => b.addEventListener("click", () => setLad(+b.dataset.step)));
+  $("#lad-step").addEventListener("click", () => setLad(ladStep >= 3 ? 0 : ladStep + 1));
+  $("#lad-reset").addEventListener("click", () => setLad(-1));
+
+  // ---------- interactive 2: the 250 films, as laid out by cells 18–22 ----------
+  // FILMS rows: [rank, rating, title, year, imdb id] from the 1 Sep 2013 Wayback snapshot.
+  const FILMS = JSON.parse($("#film-data").textContent).map(([r, s, t, y, id]) => ({ r, s, t, y, id, i: r - 1 }));
+  // Python 2's sorted(movies, key=text_content) compares code points; JS string < does the same for these titles.
+  [...FILMS].sort((a, b) => (a.t < b.t ? -1 : a.t > b.t ? 1 : 0)).forEach((f, k) => (f.a = k));
+  const DECADES = [1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010];
+  const DCOL = ["#3b1f4a", "#5a2459", "#7c2a5c", "#9c3456", "#b9454a", "#cf5b3b", "#dd7a2c", "#e8a33a", "#efc75e", "#bcd36a"];
+  const W = 28, H = 41, X0 = 10, Y0 = 100;
+  const pos = (k) => ({ x: X0 + W * (k % 25), y: Y0 + H * Math.floor(k / 25), col: (k % 25) + 1, row: Math.floor(k / 25) + 1 });
+  const tilesBox = $("#tiles"), tip = $("#tip"), slideEl = $("#pslide");
+  tilesBox.innerHTML = FILMS.map((f) => {
+    const d = Math.floor(f.y / 10) * 10, di = DECADES.indexOf(d), p = pos(f.i);
+    const ch = [...f.t][0];
+    return `<button type="button" tabindex="-1" class="tile${di >= 7 ? " dark-ink" : ""}" data-i="${f.i}" style="--c:${DCOL[di]};left:${(p.x / 720) * 100}%;top:${(p.y / 540) * 100}%" aria-label="#${f.r} ${esc(f.t)} (${f.y})">${esc(ch)}</button>`;
+  }).join("");
+  const tiles = $$(".tile", tilesBox);
+  $("#legend").innerHTML = DECADES.map((d, k) => `<span class="k" style="--c:${DCOL[k]}">${d}s</span>`).join("");
+  $("#film-list").innerHTML = FILMS.map((f) => `<option value="${esc(f.t)}"></option>`).join("");
+
+  let order = "rating", picked = null;
+  const btnA = $("#btn-alpha"), btnR = $("#btn-rating"), status = $("#lab-status");
+  const where = (f) => pos(order === "alpha" ? f.a : f.i);
+  const vml = (f) => {
+    const a = pos(f.a), r = pos(f.i);
+    const dx = ((a.x - r.x) / 720).toFixed(3), dy = ((a.y - r.y) / 540).toFixed(3);
+    return { alpha: `M0,0 L${dx},${dy}`, rating: `M${dx},${dy} L0,0` };
+  };
+  const layout = () => {
+    FILMS.forEach((f) => {
+      const a = pos(f.a), r = pos(f.i);
+      tiles[f.i].style.transform = order === "alpha" ? `translate(${(a.col - r.col) * 100}%, ${(a.row - r.row) * 100}%)` : "";
+    });
+  };
+  const readout = () => {
+    const box = $("#readout");
+    if (!picked) return;
+    const f = picked, p = where(f), path = vml(f);
+    box.innerHTML = `<div class="r-title">${esc(f.t)} <span style="font-weight:500;color:var(--on-night-muted)">(${f.y})</span></div>
+      <div class="r-meta">#${f.r} by rating (${f.s.toFixed(1)}) · #${f.a + 1} alphabetically · now at row ${p.row}, column ${p.col}</div>
+      <code class="r-path" title="The VML motion path cell 22 would assign this poster">${order === "alpha" ? path.alpha : path.rating}</code>
+      <div class="r-hint">${order === "alpha" ? "The motion path from cell 22's alphabetical sequence" : "The return path in the rating sequence"}, as a fraction of the 720 × 540 slide. <a href="https://www.imdb.com/title/tt${f.id}/" target="_blank" rel="noopener">IMDb page ↗</a></div>`;
+  };
+  const setOrder = (o) => {
+    if (o === order) return;
+    const from = picked && where(picked);
+    order = o;
+    btnA.setAttribute("aria-pressed", String(o === "alpha"));
+    btnR.setAttribute("aria-pressed", String(o === "rating"));
+    if (reduced) tilesBox.animate([{ opacity: 1 }, { opacity: .15 }, { opacity: 1 }], { duration: 500 });
+    layout();
+    const verb = o === "alpha" ? "Alphabetical" : "By rating";
+    if (picked) {
+      const to = where(picked);
+      status.textContent = `${verb}: ${picked.t} moved from row ${from.row}, column ${from.col} to row ${to.row}, column ${to.col}, along with the other 249.`;
+    } else {
+      status.textContent = o === "alpha"
+        ? "Alphabetical: all 250 boxes moved at once, each on its own straight path, in 1.5 seconds. Look at the long run of T's."
+        : "By rating: every box went back along the same line. Shawshank is first again.";
+    }
+    readout();
+  };
+  btnA.addEventListener("click", () => setOrder("alpha"));
+  btnR.addEventListener("click", () => setOrder("rating"));
+
+  const CHIPS = ["The Shawshank Redemption", "American Beauty", "Goodfellas", "Eternal Sunshine of the Spotless Mind", "Ran", "Mystic River", "The Bourne Ultimatum", "The Untouchables", "Gandhi", "Three Colors: Red"];
+  $("#chips").innerHTML = CHIPS.map((t) => `<button type="button" aria-pressed="false" data-t="${esc(t)}">${esc(t.replace("Eternal Sunshine of the Spotless Mind", "Eternal Sunshine…").replace("The Shawshank Redemption", "Shawshank"))}</button>`).join("");
+  const pick = (f) => {
+    picked = f;
+    tiles.forEach((el) => el.classList.toggle("pick", f && +el.dataset.i === f.i));
+    tilesBox.classList.toggle("has-pick", !!f);
+    $$("#chips button").forEach((b) => b.setAttribute("aria-pressed", String(!!f && b.dataset.t === f.t)));
+    if (f) {
+      const p = where(f);
+      status.textContent = `${f.t} is at row ${p.row}, column ${p.col}. Now press ${order === "alpha" ? "By rating" : "Alphabetical"} and follow it.`;
+      readout();
+    }
+  };
+  $("#chips").addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (b) pick(FILMS.find((f) => f.t === b.dataset.t));
+  });
+  const findIn = $("#find-in");
+  const findFilm = (q, exact) => {
+    q = q.trim().toLowerCase();
+    if (!q) return null;
+    return FILMS.find((f) => f.t.toLowerCase() === q) || (exact ? null : FILMS.find((f) => f.t.toLowerCase().startsWith(q)) || FILMS.find((f) => f.t.toLowerCase().includes(q)));
+  };
+  findIn.addEventListener("input", () => { const f = findFilm(findIn.value, true); if (f) pick(f); });
+  findIn.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+    const f = findFilm(findIn.value, false);
+    if (f) { pick(f); findIn.value = f.t; } else status.textContent = `No “${findIn.value}” in the 1 Sep 2013 Top 250.`;
+  });
+  tilesBox.addEventListener("click", (e) => {
+    const el = e.target.closest(".tile");
+    if (el) pick(FILMS[+el.dataset.i]);
+  });
+  // ScreenTip-style hover label, as cell 16 added in PowerPoint
+  const showTip = (el) => {
+    const f = FILMS[+el.dataset.i];
+    tip.textContent = `#${f.r} ${f.t} (${f.y})`;
+    tip.classList.add("on");
+    const sr = slideEl.getBoundingClientRect(), tr = el.getBoundingClientRect();
+    let left = tr.left - sr.left + tr.width / 2 - tip.offsetWidth / 2;
+    left = Math.max(4, Math.min(sr.width - tip.offsetWidth - 4, left));
+    let top = tr.bottom - sr.top + 4;
+    if (top + tip.offsetHeight > sr.height - 4) top = tr.top - sr.top - tip.offsetHeight - 4;
+    tip.style.left = left + "px"; tip.style.top = top + "px";
+  };
+  tilesBox.addEventListener("mouseover", (e) => { const el = e.target.closest(".tile"); if (el) showTip(el); });
+  tilesBox.addEventListener("mouseleave", () => tip.classList.remove("on"));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>They Improved the Model. The Client Cancelled. · Anand S · DataHack Summit 2017</title>
+<meta name="description" content="At DataHack Summit 2017, Anand S told the story of a churn model that got 66% better and was never used. His 43-minute talk is about the step that comes after the algorithm: helping a person decide what to do with its output.">
+<meta property="og:title" content="They Improved the Model. The Client Cancelled.">
+<meta property="og:description" content="Visualizing Machine Learning: Anand S at Analytics Vidhya's DataHack Summit, Bengaluru, 9 November 2017.">
+<meta property="og:image" content="https://talks.s-anand.net/2017-11-09-datahack-visualizing-machine-learning/comic-page.avif">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23201b17'/%3E%3Cpath d='M32 14v12M32 26H18v10M32 26h14v10' stroke='%23f6f0e5' stroke-width='3' fill='none'/%3E%3Ccircle cx='18' cy='44' r='7' fill='%233f7a2a'/%3E%3Ccircle cx='46' cy='44' r='7' fill='%23d0482c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gloock&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&amp;family=Hanken+Grotesk:wght@400;500;600;700&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script>
+  (() => {
+    let t = null;
+    try { t = localStorage.getItem("datahack-2017-theme"); } catch (e) {}
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  })();
+</script>
+<style>
+/* =========================================================
+   Design note: a case file on a planning desk. Cream paper, ink,
+   and the two dots from Anand's 2017 decision-tree slide:
+   green 0 = "will stay", red 1 = "will leave". Blue is the model
+   talking; red/green is a decision someone can act on.
+   ========================================================= */
+:root {
+  --paper: #f6f0e5; --paper-2: #ede3d2; --card: #fffaf2; --ink: #201b17; --muted: #5b5046; --rule: #d6c8b0;
+  --red: #b03a22; --red-soft: #f4dcd2; --green: #356823; --green-soft: #dcead0; --on-dot: #ffffff; --blue: #24506e; --blue-soft: #d9e5ee; --amber: #9a6a00; --amber-soft: #f6e6bd;
+  --night: #1c1916; --night-2: #2a2621; --night-3: #3a342d; --on-night: #f3ebdd; --on-night-muted: #c9bda9; --on-night-red: #ff9f86; --on-night-green: #addb90; --on-night-amber: #f2c45a;
+  --shadow: 0 1px 2px rgba(40, 30, 20, .08), 0 10px 30px rgba(40, 30, 20, .10);
+  --font-display: "Gloock", Georgia, serif;
+  --font-body: "Source Serif 4", Georgia, serif;
+  --font-ui: "Hanken Grotesk", system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, monospace;
+  --measure: 40rem; --dock-w: 390px; --pad: clamp(1rem, 3vw, 2rem);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #171512; --paper-2: #211e1a; --card: #24211c; --ink: #efe7da; --muted: #b9ad9b; --rule: #3d372f;
+    --red: #f2896d; --red-soft: #46281f; --green: #9fcf7f; --green-soft: #25331c; --on-dot: #1c1916; --blue: #93bfe2; --blue-soft: #1d2c38; --amber: #e9b84e; --amber-soft: #3a2f16;
+    --night: #0d0c0a; --night-2: #1d1a17; --night-3: #2d2924;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 30px rgba(0, 0, 0, .35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #171512; --paper-2: #211e1a; --card: #24211c; --ink: #efe7da; --muted: #b9ad9b; --rule: #3d372f;
+  --red: #f2896d; --red-soft: #46281f; --green: #9fcf7f; --green-soft: #25331c; --on-dot: #1c1916; --blue: #93bfe2; --blue-soft: #1d2c38; --amber: #e9b84e; --amber-soft: #3a2f16;
+  --night: #0d0c0a; --night-2: #1d1a17; --night-3: #2d2924;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 30px rgba(0, 0, 0, .35);
+  color-scheme: dark;
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+*, *::before, *::after { box-sizing: border-box; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 19px/1.72 var(--font-body); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+img, svg { max-width: 100%; height: auto; display: block; }
+a { color: var(--blue); text-decoration-thickness: 1px; text-underline-offset: .18em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; border-radius: 2px; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.08; margin: 0; letter-spacing: -.005em; }
+strong { font-weight: 700; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+kbd { font: .8em var(--font-mono); border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 3px; padding: 0 .3em; }
+.skip { position: absolute; left: -999px; top: .5rem; background: var(--ink); color: var(--paper); padding: .5rem .8rem; z-index: 1000; font: 600 .9rem var(--font-ui); }
+.skip:focus { left: .5rem; }
+
+/* ---------- masthead ---------- */
+.progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--red); z-index: 900; }
+.masthead { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .7rem var(--pad); border-bottom: 1px solid var(--rule); font: 600 .78rem var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.masthead a { color: inherit; text-decoration: none; }
+.masthead .right { display: flex; align-items: center; gap: .9rem; }
+.icon-btn { appearance: none; background: none; border: 1px solid var(--rule); color: var(--ink); width: 2.1rem; height: 2.1rem; border-radius: 50%; cursor: pointer; display: inline-grid; place-items: center; font-size: 1rem; }
+.icon-btn:hover { background: var(--paper-2); }
+
+/* ---------- hero ---------- */
+.hero { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; max-width: 1360px; margin: 0 auto; padding: clamp(2rem, 5vw, 4rem) var(--pad) 2.5rem; }
+.kicker { display: flex; flex-wrap: wrap; gap: .3rem .7rem; align-items: center; font: 600 .82rem var(--font-ui); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.2rem; }
+.kicker .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--rule); }
+.hero h1 { font-size: clamp(2.7rem, 6.4vw, 5.3rem); line-height: 1; margin-bottom: 1.4rem; }
+.hero h1 .then { display: block; color: var(--red); }
+.deck { font-size: clamp(1.15rem, 1.8vw, 1.32rem); line-height: 1.6; margin: 0 0 1.1rem; max-width: 36rem; }
+.who { font: 400 1rem/1.6 var(--font-ui); color: var(--muted); max-width: 36rem; margin: 0 0 1.4rem; }
+.who strong { color: var(--ink); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.3rem; }
+.btn { display: inline-flex; align-items: center; gap: .5rem; font: 700 .98rem var(--font-ui); padding: .62rem 1.05rem; border-radius: 999px; border: 2px solid var(--ink); background: var(--ink); color: var(--paper); text-decoration: none; cursor: pointer; }
+.btn:hover { background: var(--red); border-color: var(--red); color: var(--on-dot); text-decoration: none; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.audio-line { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .8rem; font: 500 .9rem var(--font-ui); color: var(--muted); margin-bottom: 1.4rem; }
+.audio-line audio { width: min(100%, 340px); height: 36px; }
+.dates { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; background: var(--card); max-width: 36rem; }
+.dates div { padding: .6rem .8rem; border-right: 1px solid var(--rule); }
+.dates div:last-child { border-right: 0; }
+.dates small { display: block; font: 600 .68rem var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.dates b { font: 500 .98rem var(--font-mono); }
+.comic { margin: 0; position: relative; }
+.comic a { display: block; background: var(--card); padding: .55rem; border: 1px solid var(--rule); border-radius: 6px; box-shadow: var(--shadow); cursor: zoom-in; transform: rotate(.6deg); transition: transform .3s; }
+.comic a:hover { transform: rotate(0); }
+.comic .tag { position: absolute; top: -.8rem; left: 1rem; z-index: 2; font: 700 .72rem var(--font-ui); letter-spacing: .12em; text-transform: uppercase; background: var(--amber-soft); color: var(--ink); border: 1px solid var(--amber); padding: .15rem .55rem; border-radius: 3px; }
+.comic figcaption { font: .88rem/1.55 var(--font-ui); color: var(--muted); margin-top: .9rem; }
+.comic figcaption b { color: var(--ink); }
+
+/* ---------- reading room: story + persistent video dock ---------- */
+.room { display: grid; grid-template-columns: minmax(0, 1fr) var(--dock-w); gap: 0 clamp(1rem, 3vw, 2.5rem); padding: 0 var(--pad); max-width: 1360px; margin: 0 auto; position: relative; border-top: 1px solid var(--rule); }
+body.watch .room { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+.story { min-width: 0; padding-bottom: 3rem; }
+.dock { position: sticky; top: .8rem; align-self: start; margin-top: 2rem; max-height: calc(100vh - 1.6rem); display: flex; flex-direction: column; gap: .6rem; background: var(--night); color: var(--on-night); border-radius: 10px; padding: .75rem; box-shadow: var(--shadow); z-index: 300; }
+.dock a { color: var(--on-night-amber); }
+.dock-head { display: flex; justify-content: space-between; gap: .5rem; font: 600 .74rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--on-night-muted); flex: none; }
+.dock-head b { color: var(--on-night); }
+.vwrap { position: relative; flex: none; background: #000; aspect-ratio: 16 / 9; border-radius: 5px; overflow: hidden; }
+.vwrap iframe, .vwrap > div { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.vwrap .nojs { display: grid; place-items: center; color: #fff; font: 600 1rem var(--font-ui); text-align: center; padding: 1rem; }
+.vwrap .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .55; }
+.now { font: 500 .95rem/1.35 var(--font-ui); min-height: 2.6em; flex: none; }
+.now .t { font-family: var(--font-mono); color: var(--on-night-amber); margin-right: .45rem; }
+.now .in-story { display: block; font-size: .85rem; color: var(--on-night-muted); margin-top: .15rem; }
+.resume { display: none; flex: none; }
+.resume.show { display: block; }
+.resume button { width: 100%; font: 700 1rem var(--font-ui); background: var(--on-night-amber); color: #1c1916; border: 0; border-radius: 5px; padding: .55rem 1rem; cursor: pointer; }
+.resume button:hover { background: #fff; }
+.dock-ctrls { display: flex; gap: .4rem; flex: none; }
+.dock-ctrls .dbtn { flex: 1 1 auto; justify-content: center; white-space: nowrap; }
+.dock-ctrls .dock-min { flex: 0 0 auto; }
+.dbtn { appearance: none; border: 1px solid var(--night-3); background: var(--night-2); color: var(--on-night); border-radius: 5px; padding: .4rem .55rem; font: 600 .88rem var(--font-ui); cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; text-decoration: none; }
+.dock a.dbtn { color: var(--on-night); }
+.dbtn:hover, .dock a.dbtn:hover { background: var(--night-3); color: #fff; }
+.dbtn.mode { background: var(--on-night-amber); color: #1c1916; border-color: var(--on-night-amber); }
+.dbtn.mode:hover { background: #fff; color: #1c1916; }
+.chapters { overflow-y: auto; min-height: 0; flex: 1 1 auto; scrollbar-width: thin; }
+.chapters summary { font: 600 .74rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--on-night-muted); cursor: pointer; padding: .2rem 0; }
+.chapters ol { list-style: none; margin: .2rem 0 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 1px; }
+body.watch .chapters ol { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: .6rem; }
+.chapters li a { display: flex; gap: .55rem; align-items: baseline; padding: .28rem .45rem; border-radius: 3px; text-decoration: none; font: 500 .93rem/1.25 var(--font-ui); }
+.dock .chapters li a { color: var(--on-night); }
+.chapters li a .ct { font: .76rem var(--font-mono); color: var(--on-night-amber); flex: 0 0 auto; }
+.chapters li a:hover { background: var(--night-2); }
+.dock .chapters li a.is-now { background: var(--on-night-amber); color: #1c1916; }
+.chapters li a.is-now .ct { color: #1c1916; }
+.chapters li a.in-view { box-shadow: inset 3px 0 0 var(--on-night-amber); }
+.dock .dock-min { display: none; }
+body.watch .story { font-size: 17px; }
+body.watch .story .chap { opacity: .6; transition: opacity .3s; }
+body.watch .story .chap.is-now, body.watch .story .chap:hover, body.watch .story .chap:focus-within { opacity: 1; }
+
+/* ---------- story typography ---------- */
+.chap { position: relative; padding: 3.6rem 0 1rem; scroll-margin-top: 1rem; }
+.chap > * { max-width: var(--measure); margin-left: auto; margin-right: auto; }
+.chap > .wide, .chap > .lab { max-width: none; }
+.chap p { margin: 0 0 1.15rem; }
+.act { display: flex; align-items: center; gap: .7rem; font: 700 .78rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--red); margin-bottom: .7rem; }
+.act::before { content: attr(data-n); display: inline-grid; place-items: center; width: 1.7rem; height: 1.7rem; border-radius: 50%; border: 1.5px solid currentColor; font: 500 .8rem var(--font-mono); letter-spacing: 0; }
+.act::after { content: ""; flex: 1; border-top: 1px solid var(--rule); }
+.chap h2 { font-size: clamp(2.1rem, 4.2vw, 3.1rem); margin-bottom: 1.3rem; }
+.chap h2 em { font-style: normal; color: var(--red); }
+.chap h3 { font: 700 1.05rem var(--font-ui); margin: 2rem 0 .7rem; }
+.lede { font-size: 1.16em; line-height: 1.62; }
+.lede::first-letter { font-family: var(--font-display); float: left; font-size: 3.6em; line-height: .86; padding: .06em .08em 0 0; color: var(--red); }
+a.ts { font: 500 .78rem var(--font-mono); color: var(--green); background: var(--green-soft); border-radius: 3px; padding: .08rem .42rem .08rem .3rem; text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: .12rem; vertical-align: .1em; }
+a.ts:hover { background: var(--green); color: var(--paper); }
+a.ts.flash { animation: flash 1s ease; }
+@keyframes flash { 0%, 60% { background: var(--amber); color: #111; } }
+.said { margin: 2.2rem auto; padding: .2rem 0 .2rem 1.4rem; border-left: 4px solid var(--red); }
+.said p { font: italic 400 clamp(1.3rem, 2.4vw, 1.62rem)/1.42 var(--font-body); margin: 0 0 .55rem; }
+.said footer { font: 600 .86rem var(--font-ui); color: var(--muted); display: flex; gap: .55rem; align-items: center; flex-wrap: wrap; }
+.said.big { border-left: 0; padding: 0; text-align: center; }
+.said.big p { font: 400 clamp(1.8rem, 4vw, 2.7rem)/1.18 var(--font-display); font-style: normal; }
+.said.big footer { justify-content: center; }
+.note { font: 400 .95rem/1.6 var(--font-ui); background: var(--card); border: 1px solid var(--rule); border-left: 4px solid var(--amber); padding: .9rem 1.1rem; border-radius: 4px; margin: 1.7rem auto; }
+.note b.h { display: block; font: 700 .72rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--amber); margin-bottom: .3rem; }
+.note p { margin: 0 0 .5rem; }
+.note p:last-child { margin: 0; }
+.note.blue { border-left-color: var(--blue); }
+.note.blue b.h { color: var(--blue); }
+.tip { border-bottom: 1px dotted var(--muted); cursor: help; }
+
+/* figures: real film frames carry a timestamp stamp */
+figure.frame { margin: 2rem auto; }
+figure.frame .shot { position: relative; display: block; border-radius: 4px; overflow: hidden; border: 1px solid var(--rule); background: #000; cursor: zoom-in; }
+figure.frame .shot img { width: 100%; }
+figure.frame .stamp { position: absolute; left: .5rem; bottom: .5rem; font: 500 .72rem var(--font-mono); background: rgba(20, 16, 12, .82); color: #f6efe2; padding: .12rem .45rem; border-radius: 3px; letter-spacing: .04em; pointer-events: none; }
+figure.frame figcaption, .cap { font: .88rem/1.55 var(--font-ui); color: var(--muted); margin-top: .55rem; }
+figure.frame figcaption b, .cap b { color: var(--ink); }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem auto 2.2rem; }
+.pair figure.frame { margin: 0; }
+.strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; margin: 2rem auto .4rem; }
+.strip figure { margin: 0; }
+.strip .shot { position: relative; display: block; border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; cursor: zoom-in; background: #000; }
+.strip .shot img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.strip figcaption { font: 600 .8rem/1.35 var(--font-ui); color: var(--ink); margin-top: .35rem; }
+.strip figcaption small { display: block; font-weight: 400; color: var(--muted); }
+.strip .lvl { position: absolute; left: .35rem; top: .35rem; font: 500 .7rem var(--font-mono); background: var(--red); color: var(--on-dot); border-radius: 3px; padding: .05rem .35rem; }
+
+/* ---------- labs (interactive experiments) ---------- */
+.lab { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; box-shadow: var(--shadow); padding: clamp(1rem, 2.6vw, 1.6rem); margin: 2.4rem auto; font-family: var(--font-ui); }
+.lab-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .3rem 1rem; margin-bottom: .9rem; }
+.lab-head .lbl { font: 700 .74rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--red); }
+.lab-head h3 { font: 400 1.5rem var(--font-display); margin: 0; flex-basis: 100%; }
+.lab .disclaim { font: 500 .82rem/1.45 var(--font-ui); color: var(--muted); background: var(--amber-soft); border-radius: 4px; padding: .35rem .6rem; margin: 0 0 1rem; }
+.lab .disclaim b { color: var(--ink); }
+.lab p { font-size: 1rem; line-height: 1.55; }
+.chip-row { display: flex; flex-wrap: wrap; gap: .4rem; margin: .4rem 0 .9rem; }
+.chip { appearance: none; font: 600 .92rem var(--font-ui); border: 1.5px solid var(--rule); background: var(--paper); color: var(--ink); border-radius: 999px; padding: .38rem .85rem; cursor: pointer; }
+.chip:hover { border-color: var(--ink); }
+.chip[aria-pressed="true"], .chip[aria-selected="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.chip.ok { background: var(--green); border-color: var(--green); color: var(--paper); }
+.chip.no { border-color: var(--red); color: var(--red); }
+.tree-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 1.2rem; align-items: start; }
+.cust { border: 1.5px dashed var(--rule); border-radius: 8px; padding: .8rem 1rem; background: var(--paper); }
+.cust .who { margin: 0 0 .5rem; font: 700 .8rem var(--font-ui); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.cust dl { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .2rem .8rem; font-size: .95rem; line-height: 1.4; }
+.cust dt { color: var(--muted); }
+.cust dd { margin: 0; font: 500 .95rem var(--font-mono); text-align: right; white-space: nowrap; }
+.q { margin-top: 1rem; }
+.q .ask { font: 700 1.02rem var(--font-ui); margin: 0 0 .2rem; }
+.q .hint { font-size: .9rem; color: var(--muted); min-height: 1.4em; margin: 0; }
+.tree-svg text { font-family: var(--font-ui); fill: var(--ink); }
+.tree-svg .box { fill: var(--paper); stroke: var(--muted); stroke-width: 1.2; }
+.tree-svg .edge { stroke: var(--muted); stroke-width: 1.4; fill: none; }
+.tree-svg .on .box { stroke: var(--ink); stroke-width: 2.6; }
+.tree-svg .edge.on { stroke: var(--ink); stroke-width: 3.4; }
+.tree-svg .leaf0 { fill: var(--green); }
+.tree-svg .leaf1 { fill: var(--red); }
+.tree-svg .leaf text { fill: var(--on-dot); font-weight: 700; }
+.tree-svg .leaf.on circle { stroke: var(--amber); stroke-width: 5; }
+.tree-svg .lbl { font-size: 12px; fill: var(--muted); }
+.verdict { display: none; margin-top: 1rem; border-radius: 8px; padding: .9rem 1rem; background: var(--paper-2); }
+.verdict.show { display: block; }
+.verdict .big { font: 400 1.35rem/1.25 var(--font-display); margin: 0 0 .35rem; }
+.verdict .r1 { color: var(--red); }
+.verdict .r0 { color: var(--green); }
+.box-stage { display: none; margin-top: 1.6rem; padding-top: 1.4rem; border-top: 1px dashed var(--rule); }
+.box-stage.show { display: block; }
+.blackbox { display: grid; grid-template-columns: auto auto auto; align-items: center; justify-content: start; gap: .8rem; margin: .6rem 0 1rem; font: 500 .92rem var(--font-mono); }
+.blackbox .bb { background: var(--night); color: var(--on-night); border-radius: 8px; padding: 1.1rem 1.4rem; text-align: center; font: 700 .92rem var(--font-ui); letter-spacing: .08em; text-transform: uppercase; box-shadow: inset 0 0 0 1px var(--night-3); }
+.blackbox .bb small { display: block; font: 400 .75rem var(--font-mono); letter-spacing: 0; text-transform: none; color: var(--on-night-muted); }
+.blackbox .out { display: inline-grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 50%; background: var(--red); color: var(--on-dot); font: 700 1.1rem var(--font-ui); }
+.answers { display: grid; gap: .45rem; margin: .5rem 0 0; }
+.answers button { text-align: left; appearance: none; font: 500 .98rem/1.4 var(--font-body); background: var(--paper); color: var(--ink); border: 1.5px solid var(--rule); border-radius: 8px; padding: .55rem .8rem; cursor: pointer; }
+.answers button:hover { border-color: var(--ink); }
+.answers button[aria-pressed="true"] { border-color: var(--red); background: var(--red-soft); }
+.box-reveal { display: none; margin-top: 1rem; }
+.box-reveal.show { display: block; }
+
+/* ledger chart */
+.ledger { margin: 2.2rem auto; }
+.ledger svg text { font-family: var(--font-ui); fill: var(--ink); }
+.ledger .axis { stroke: var(--rule); }
+.ledger .muted { fill: var(--muted); }
+
+/* stepper (cluster label → decision) */
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: .3rem; }
+.seg > button { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; line-height: 1.2; padding: .42rem .35rem; border-radius: 8px; min-width: 0; hyphens: auto; }
+.seg .n { font: 500 .72rem var(--font-mono); color: var(--muted); white-space: nowrap; }
+.seg [aria-pressed="true"] .n, .seg [aria-selected="true"] .n { color: var(--paper); }
+.steps [role="tablist"] { margin-bottom: 1rem; }
+.steps [role="tab"] { appearance: none; font: 600 .9rem var(--font-ui); border: 1.5px solid var(--rule); background: var(--paper); color: var(--ink); cursor: pointer; gap: .1rem; }
+.steps [role="tab"][aria-selected="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.steps [role="tabpanel"] { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 1.1rem; align-items: start; }
+.steps [role="tabpanel"][hidden] { display: none; }
+.steps .shot { position: relative; display: block; border-radius: 4px; overflow: hidden; border: 1px solid var(--rule); background: #000; cursor: zoom-in; }
+.steps .shot img { width: 100%; }
+.steps .stamp { position: absolute; left: .5rem; bottom: .5rem; font: 500 .72rem var(--font-mono); background: rgba(20, 16, 12, .82); color: #f6efe2; padding: .12rem .45rem; border-radius: 3px; }
+.steps .side p { font-size: .98rem; margin: 0 0 .7rem; }
+.ready { display: flex; gap: 3px; margin: .2rem 0 .3rem; }
+.ready i { flex: 1; height: 8px; border-radius: 2px; background: var(--paper-2); }
+.ready i.f { background: var(--green); }
+.ready-l { font: 700 .74rem var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.step-nav { display: flex; gap: .5rem; margin-top: 1rem; }
+
+/* ladder lab */
+.ladder-ctrl { display: flex; align-items: center; gap: .7rem; margin-bottom: .8rem; }
+.ladder-ctrl label { font: 600 .95rem var(--font-ui); }
+.ladder-ctrl input[type="range"] { flex: 1 1 auto; min-width: 0; width: auto; accent-color: var(--red); }
+.ladder-ctrl .chip { flex: none; }
+.ladder-ctrl output { font: 500 1rem var(--font-mono); min-width: 3.4rem; display: inline-block; }
+.rule-card { font: 500 .92rem/1.5 var(--font-mono); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: .6rem .8rem; margin-bottom: .8rem; }
+.rule-card b { color: var(--red); }
+.levels { margin-bottom: .8rem; }
+.road-svg { width: 100%; background: var(--paper-2); border-radius: 6px; }
+.road-svg .road { stroke: #6b6259; }
+.road-svg .center { stroke: #e2b93b; stroke-dasharray: 8 7; }
+.road-svg .trace { fill: none; stroke: var(--red); stroke-width: 2.2; }
+.road-svg .ghost { fill: none; stroke: var(--blue); stroke-width: 1; opacity: .33; }
+.road-svg .car { fill: var(--red); stroke: #fff; stroke-width: 1.5; }
+.scrub { display: flex; align-items: center; gap: .6rem; margin: .6rem 0 0; font: 500 .85rem var(--font-mono); color: var(--muted); }
+.scrub input { flex: 1; accent-color: var(--ink); }
+.sum-svg { width: 100%; margin-top: .9rem; }
+.sum-svg text { font-family: var(--font-ui); fill: var(--muted); font-size: 12px; }
+.sum-svg .line { fill: none; stroke: var(--blue); stroke-width: 2; }
+.sum-svg .grid { stroke: var(--rule); }
+.sum-svg .marker { fill: var(--red); stroke: var(--card); stroke-width: 2; }
+.sum-svg .hit { fill: transparent; cursor: crosshair; }
+.readout { font: 500 .95rem/1.5 var(--font-ui); margin: .6rem 0 0; min-height: 3em; }
+.embed-orig { margin-top: 1.2rem; border-top: 1px dashed var(--rule); padding-top: 1rem; }
+.embed-orig iframe { width: 100%; height: min(85vh, 760px); border: 1px solid var(--rule); border-radius: 6px; background: #fff; margin-top: .8rem; }
+
+/* ---------- full-width bands (outside the room grid) ---------- */
+.band { background: var(--night); color: var(--on-night); padding: clamp(2.5rem, 6vw, 4.5rem) var(--pad); margin: 0 0 3rem; }
+.band .inner { max-width: 1200px; margin: 0 auto; }
+.band a { color: var(--on-night-amber); }
+.band-label { font: 700 .78rem var(--font-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--on-night-red); margin-bottom: .6rem; }
+.band h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: .6rem; color: var(--on-night); }
+.band .sub { font-size: 1.1rem; color: var(--on-night-muted); max-width: 44rem; margin: 0 0 2rem; }
+.cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.card { background: var(--night-2); border: 1px solid var(--night-3); border-radius: 10px; padding: 1.2rem 1.2rem 1.1rem; font: 400 .98rem/1.55 var(--font-ui); color: var(--on-night); }
+.card .num { display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; font: 700 .95rem var(--font-ui); margin-bottom: .7rem; }
+.card:nth-child(odd) .num { background: var(--on-night-green); color: #1c1916; }
+.card:nth-child(even) .num { background: var(--on-night-red); color: #1c1916; }
+.card h3 { font: 400 1.3rem/1.2 var(--font-display); margin: 0 0 .5rem; color: var(--on-night); }
+.card p { margin: 0; }
+.band a.ts { background: var(--night-3); color: var(--on-night-green); }
+.band a.ts:hover { background: var(--on-night-green); color: #1c1916; }
+.finale { text-align: center; margin: 2.6rem auto 0; max-width: 46rem; }
+.finale p { font: 400 clamp(1.6rem, 3.4vw, 2.3rem)/1.2 var(--font-display); margin: 0 0 .6rem; color: var(--on-night); }
+.finale footer { font: 600 .9rem var(--font-ui); color: var(--on-night-muted); }
+
+footer.site { max-width: 1200px; margin: 0 auto; padding: 0 var(--pad) 6rem; font: 400 .9rem/1.65 var(--font-ui); color: var(--muted); display: grid; gap: .7rem; }
+footer.site strong { color: var(--ink); }
+
+/* ---------- jump nav ---------- */
+.jump { position: fixed; left: 1rem; bottom: 1rem; z-index: 500; display: flex; align-items: center; gap: .2rem; background: var(--ink); color: var(--paper); border-radius: 999px; padding: .25rem; box-shadow: var(--shadow); transition: opacity .3s, transform .3s; }
+.jump.on-hero { opacity: 0; pointer-events: none; transform: translateY(1rem); }
+.jump button { background: none; border: 0; color: inherit; font: 600 .9rem var(--font-ui); cursor: pointer; padding: .45rem .7rem; border-radius: 999px; display: inline-flex; align-items: center; gap: .45rem; }
+.jump button:hover:not(:disabled) { background: rgba(127, 127, 127, .28); }
+.jump button:disabled { opacity: .35; cursor: default; }
+.jump-cur span { max-width: 15rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.jump-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, .3); z-index: 480; display: none; }
+.jump-backdrop.open { display: block; }
+.jump-menu { position: fixed; left: 1rem; bottom: 4.2rem; z-index: 520; width: min(46rem, calc(100vw - 2rem)); max-height: min(72vh, 40rem); overflow-y: auto; background: var(--card); color: var(--ink); border: 1px solid var(--rule); border-radius: 10px; box-shadow: var(--shadow); padding: .9rem; display: none; }
+.jump-menu.open { display: block; }
+.jm-group { font: 700 .72rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--red); margin: .6rem 0 .3rem .3rem; }
+.jm-group:first-child { margin-top: 0; }
+.jump-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .3rem; }
+.jump-grid a { display: block; text-decoration: none; color: var(--ink); font: 600 .92rem/1.25 var(--font-ui); padding: .45rem .55rem; border-radius: 6px; border: 1px solid transparent; }
+.jump-grid a small { display: block; font-weight: 400; color: var(--muted); font-size: .8rem; margin-top: .1rem; }
+.jump-grid a:hover { background: var(--paper-2); }
+.jump-grid a.is-cur { border-color: var(--red); background: var(--red-soft); }
+
+/* ---------- dialogs ---------- */
+dialog { border: 0; padding: 0; }
+dialog::backdrop { background: rgba(10, 8, 6, .62); }
+.pop { width: min(48rem, calc(100vw - 1.5rem)); max-height: calc(100vh - 2rem); background: var(--card); color: var(--ink); border-radius: 10px; box-shadow: var(--shadow); }
+.pop[open] { display: flex; flex-direction: column; }
+.pop-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .8rem 1rem; border-bottom: 1px solid var(--rule); }
+.pop-head h3 { font: 400 1.4rem var(--font-display); }
+.pop-search { display: none; align-items: center; gap: .5rem; padding: .55rem 1rem; border-bottom: 1px solid var(--rule); font: .9rem var(--font-ui); color: var(--muted); }
+.pop-search.on { display: flex; }
+.pop-search input { flex: 1; font: 1rem var(--font-ui); padding: .4rem .6rem; border: 1px solid var(--rule); border-radius: 6px; background: var(--paper); color: var(--ink); }
+.pop-body { overflow-y: auto; padding: 1rem 1.2rem 1.4rem; font-size: 1rem; line-height: 1.65; }
+.pop-body p, .pop-body ul, .pop-body ol { margin: 0 0 .9rem; }
+.pop-body ul, .pop-body ol { padding-left: 1.4rem; }
+.pop-body li { margin-bottom: .35rem; }
+.pop-body h2, .pop-body h3 { font: 700 1.05rem var(--font-ui); margin: 1.2rem 0 .5rem; }
+.pop-body blockquote { margin: 0 0 .9rem; padding-left: .9rem; border-left: 3px solid var(--rule); }
+.pop-body .intro { font: .9rem/1.55 var(--font-ui); color: var(--muted); background: var(--paper-2); border-radius: 6px; padding: .6rem .8rem; }
+.pop-body .hide { display: none; }
+.pop-body mark { background: var(--amber-soft); color: var(--ink); }
+.lightbox { background: transparent; max-width: 96vw; max-height: 96vh; }
+.lightbox[open] { display: flex; flex-direction: column; align-items: center; gap: .5rem; }
+.lightbox img { max-width: 96vw; max-height: calc(96vh - 3.5rem); width: auto; object-fit: contain; border-radius: 4px; background: #fff; }
+.lb-bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 1rem; width: 100%; font: .9rem var(--font-ui); color: #f3ebdd; }
+.lb-bar a { color: var(--on-night-amber); }
+.lb-bar button { font: 600 .9rem var(--font-ui); background: #f3ebdd; color: #1c1916; border: 0; border-radius: 5px; padding: .3rem .8rem; cursor: pointer; margin-left: .6rem; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1200px) { :root { --dock-w: 340px; } .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 999px) {
+  .hero { grid-template-columns: 1fr; }
+  .comic { max-width: 560px; width: 100%; margin: 0 auto; }
+  .room { display: block; }
+  .dock { position: fixed; right: .7rem; bottom: 4.3rem; top: auto; margin: 0; width: min(54vw, 290px); max-height: none; padding: .45rem; gap: .4rem; }
+  .dock .dock-head, .dock .now, .dock .chapters, .dock .dock-ctrls .wide-only { display: none; }
+  .dock .dbtn { padding: .35rem .5rem; font-size: .84rem; flex: 1 1 auto; justify-content: center; }
+  .dock .dock-min { display: inline-flex; }
+  body.dock-collapsed:not(.watch) .dock .vwrap { height: 0; aspect-ratio: auto; visibility: hidden; }
+  body.dock-collapsed:not(.watch) .dock { width: auto; }
+  body.dock-collapsed:not(.watch) .dock #share-btn, body.dock-collapsed:not(.watch) .dock .resume { display: none; }
+  body.watch .dock { left: 0; right: 0; top: 0; bottom: auto; width: auto; border-radius: 0 0 8px 8px; padding: .5rem .6rem .6rem; }
+  body.watch .dock .now { display: block; font-size: .88rem; min-height: 0; }
+  body.watch .dock .now .in-story { display: none; }
+  body.watch .dock .dock-min { display: none; }
+  body.watch { padding-top: var(--dock-h, 0px); }
+  body.watch .chap { scroll-margin-top: calc(var(--dock-h, 0px) + .5rem); }
+  body.watch .story .chap { opacity: .92; }
+  .jump { left: .7rem; bottom: .7rem; }
+  .jump-menu { left: .7rem; width: calc(100vw - 1.4rem); }
+  .tree-grid, .steps [role="tabpanel"] { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  body { font-size: 18px; }
+  .masthead .long { display: none; }
+  .pair { grid-template-columns: 1fr; }
+  .strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cards { grid-template-columns: 1fr; }
+  .jump-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .jump-cur span { max-width: 9rem; }
+  .blackbox { grid-template-columns: 1fr; justify-items: start; }
+}
+@media (max-width: 480px) {
+  .dates { grid-template-columns: 1fr; }
+  .dates div { border-right: 0; border-bottom: 1px solid var(--rule); }
+  .dates div:last-child { border-bottom: 0; }
+  .seg > button { font-size: .84rem; padding: .4rem .15rem; }
+  .seg .n { font-size: .62rem; letter-spacing: -.02em; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#story">Skip to the story</a>
+<div class="progress" id="progress"></div>
+
+<header class="masthead">
+  <a href="../">Talks · S Anand</a>
+  <div class="right">
+    <span class="long">DataHack Summit · 9 Nov 2017 · 43 min</span>
+    <button class="icon-btn" id="theme-btn" type="button" aria-label="Toggle dark mode"><i class="bi bi-circle-half" aria-hidden="true"></i></button>
+  </div>
+</header>
+
+<section class="hero" aria-labelledby="title">
+  <div>
+    <div class="kicker"><span>Visualizing Machine Learning</span><span class="dot"></span><span>DataHack Summit 2017</span><span class="dot"></span><span>Bengaluru</span></div>
+    <h1 id="title">They improved the model. <span class="then">The client cancelled.</span></h1>
+    <p class="deck">A telecom’s churn model got <strong>66% cheaper to run</strong> than doing nothing. <strong>Four months later, nobody was using it.</strong> In a 43-minute talk, Anand S argued that <strong>the algorithm is the easy part</strong>. The hard part is getting a person to understand the result well enough to act on it.</p>
+    <p class="who">A solo talk by <strong><a href="https://www.s-anand.net/">Anand S</a></strong>, then CEO of <a href="https://gramener.com/">Gramener</a>, at <a href="https://www.analyticsvidhya.com/datahack-summit-2017/">Analytics Vidhya’s DataHack Summit 2017</a> in Bengaluru. Every ▶ time on this page plays that moment in the video.</p>
+    <div class="hero-actions">
+      <a class="btn" href="?view=video" id="hero-watch"><i class="bi bi-play-btn-fill" aria-hidden="true"></i> Watch alongside</a>
+      <a class="btn ghost" href="#canned"><i class="bi bi-book" aria-hidden="true"></i> Start reading</a>
+      <a class="btn ghost" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+    </div>
+    <div class="audio-line">
+      <span><i class="bi bi-headphones" aria-hidden="true"></i> Audio only</span>
+      <audio controls preload="none" aria-label="Audio recording of the talk">
+        <source src="https://github.com/sanand0/talks/releases/download/talks/2017-11-09-datahack-visualizing-machine-learning.opus" type="audio/ogg; codecs=opus">
+      </audio>
+    </div>
+    <div class="dates" role="group" aria-label="Dates">
+      <div><small>Delivered</small><b>Thu 9 Nov 2017</b></div>
+      <div><small>On YouTube</small><b>28 Mar 2020</b></div>
+      <div><small>Length</small><b>43:19</b></div>
+    </div>
+  </div>
+  <figure class="comic">
+    <span class="tag" aria-hidden="true">The comic version</span>
+    <a href="comic-page.avif" data-lightbox data-caption="The talk as an AI-drawn comic page: an illustrated reflection, not a record." aria-label="Enlarge the comic page">
+      <img src="comic-page.avif" width="1055" height="1491" alt="Nine-panel comic. 1: a telecom company wants help stopping churn; Anand on the DataHack Summit 2017 stage. 2: a simple decision tree that business users can follow. 3: the team optimizes with random forests, SVMs and neural networks; a black box shows higher accuracy. 4: four months later the project was canned; a manager asks ‘But what do I do?’ Caption: the model got better at predicting and worse at helping people act. 5: interpretable model versus black box. 6: a cluster ID table becomes clusters on an India map. 7: maps and cluster profiles suggest actions. 8: moving up and down the ladder of abstraction, from a single car trajectory to many examples to a summary, idea credited to Bret Victor. 9: a clustered heatmap; Anand says build visual summaries to explain models, tools matter less than technique; a model people cannot use is not enough.">
+    </a>
+    <figcaption>The talk as an AI-drawn comic. Tap to enlarge. <b>Treat it as a reflection, not a record:</b> the 72% vs 89% “accuracy” bars, the sample customer and the “possible actions” table are the illustrator’s inventions. The 2017 slides measured <em>cost per customer</em>, not accuracy, as you’ll see below.</figcaption>
+  </figure>
+</section>
+
+<div class="room" id="room">
+<main class="story" id="story">
+
+<!-- ================= COLD OPEN ================= -->
+<section class="chap" id="canned" data-act="Cold open" data-title="Four months later">
+  <div class="act" data-n="0">Cold open</div>
+  <h2>Four months later, the project was <em>canned</em></h2>
+  <p class="lede">In the first three minutes of his talk, Anand ran through the numbers. A telecom company was losing about <strong>₹6.61 per customer</strong> to churn. A decision tree built by his team at Gramener brought that down to <strong>₹4.0</strong>. A support vector machine brought it to <strong>₹2.2</strong>. On the client’s side, the project manager was “totally thrilled.” <a class="ts" href="?t=02:18">02:18</a></p>
+  <p>Then came the next sentence.</p>
+  <blockquote class="said big">
+    <p>“Four months later, the project was canned. They didn’t implement any of it.”</p>
+    <footer>Anand <a class="ts" href="?t=03:00">03:00</a></footer>
+  </blockquote>
+  <p>The model had got better and the client had walked away. Anand’s explanation was blunt: <strong>“The problem was actually the accuracy. The problem was that the model was a black-box model.”</strong></p>
+  <p>That is the puzzle this talk keeps returning to. A data scientist is judged on how well a model predicts. A marketing manager is judged on what they do next. When those two people can’t talk to each other, the better prediction loses. So the useful question is not <em>which model scores higher?</em> but <strong>who has to decide what to do with the prediction, and what do they need to see?</strong></p>
+  <p>The next forty minutes moved through four answers: a churn tree, a map of India’s 640 census districts, a toy self-driving car borrowed from Bret Victor, and a heatmap of currencies. They are four ways of making a model’s output readable.</p>
+</section>
+
+<!-- ================= ACT I ================= -->
+<section class="chap" id="churn" data-act="I · The tree" data-title="₹80 to win, ₹40 to keep">
+  <div class="act" data-n="1">The tree</div>
+  <h2>₹80 to win a customer. <em>₹40</em> to keep one.</h2>
+  <p>The telecom’s problem was ordinary. Prepaid customers drift away. The company said <strong>about 8% left every month</strong>, and Anand added that this meant “roughly by the end of the year, the entire base has churned.” <a class="ts" href="?t=00:39">00:39</a></p>
+  <div class="note">
+    <b class="h">Checking the arithmetic</b>
+    <p>If a fixed group of customers loses 8% a month, about <strong>63%</strong> have left after twelve months (1 − 0.92¹²), not all of them. Real subscriber bases also gain new customers. The rough version was spoken on stage; the point it supports, that churn is expensive, still holds.</p>
+  </div>
+  <p>The economics were simple too. Winning a new subscriber cost about ₹80 once you counted KYC, marketing and onboarding. Keeping one with a small offer cost about ₹40. If a model could find the people about to leave, the company could spend ₹40 to save ₹80. Anand quoted the client’s pitch, including his own slip:</p>
+  <blockquote class="said">
+    <p>“As long as we’re able to identify with a reasonable accuracy who the person is that is likely to leave the network and target the offer to those people, we will be able to easily double our loss due to churn—sorry, even halve our loss due to churn.”</p>
+    <footer>Anand, quoting the telecom <a class="ts" href="?t=00:39">00:39</a></footer>
+  </blockquote>
+  <figure class="frame">
+    <a class="shot" href="slides/f0058-confusion-costs.webp" data-lightbox data-caption="00:58 — The cost matrix: a missed churner costs Rs 80 to re-acquire; a wasted offer costs Rs 40. Baseline: Rs 6.61 per customer, 8.3% missed."><img src="slides/f0058-confusion-costs.webp" width="642" height="480" loading="lazy" alt="Slide: a two-by-two matrix of actual versus predicted churn. Predicting churn for someone who stays is WASTED, marketing cost Rs 40. Missing someone who leaves is MISSED, acquisition cost Rs 80. Below, a table row: Base model, cost per customer 6.61, improvement 0.0%, missed 8.3%, wasted 0.0%."><span class="stamp">FILM · 00:58</span></a>
+    <figcaption><b>The score that mattered was money, not accuracy.</b> Missing someone who leaves costs ₹80. Sending an offer to someone who would have stayed wastes ₹40. Doing nothing misses everyone who leaves (8.3%), and 8.3% × ₹80 ≈ <strong>₹6.61 per customer</strong>. Frame from the talk video.</figcaption>
+  </figure>
+</section>
+
+<section class="chap" id="tree" data-act="I · The tree" data-title="A tree marketing could read">
+  <div class="act" data-n="1">The tree</div>
+  <h2>A tree that marketing <em>could read</em></h2>
+  <p>One of the models Gramener built was a decision tree, and Anand read it out like a set of instructions. <strong>When did this person last make an outgoing call?</strong> More than 15 days ago, and you have probably lost them. Within the last four days, and they are fine. Between five and fourteen days, look at recharges: more than one in the last quarter means they will probably stay. Otherwise, check whether the recharge amount is above a cutoff. <a class="ts" href="?t=01:15">01:15</a></p>
+  <p>Try it. The tree below is the one from his slide. The subscribers are made up.</p>
+
+  <div class="lab" id="tree-lab">
+    <div class="lab-head"><span class="lbl">Experiment 1 · Two models, one subscriber</span><h3>Walk the 2017 tree, then ask the black box why</h3></div>
+    <p class="disclaim"><b>What’s real and what isn’t:</b> the tree’s structure is copied from the slide at <a class="ts" href="?t=01:42">01:42</a>, including its “$20” cutoff label (Anand said he hadn’t put the real value on the slide). The subscribers and the black box’s outputs are <b>invented to help you think</b>. They are not 2017 data.</p>
+    <div class="seg" role="group" aria-label="Pick a subscriber" id="cust-pick" style="margin-bottom:1rem"></div>
+    <div class="tree-grid">
+      <div>
+        <div class="cust" id="cust-card" aria-live="polite"></div>
+        <div class="q" id="tree-q">
+          <p class="ask" id="q-ask"></p>
+          <div class="seg" id="q-opts" role="group" aria-labelledby="q-ask" style="margin:.4rem 0 .5rem"></div>
+          <p class="hint" id="q-hint" aria-live="polite"></p>
+        </div>
+      </div>
+      <svg class="tree-svg" id="tree-svg" viewBox="0 0 420 330" role="img" aria-labelledby="tree-svg-t">
+        <title id="tree-svg-t">The churn decision tree from Anand's 2017 slide. Last outgoing call 0 to 4 days: stays. 15 or more days: leaves. 5 to 14 days: if more than one recharge last quarter, stays; otherwise if recharge amount is above the cutoff, stays, else leaves.</title>
+        <path class="edge" data-e="a" d="M163 62 V80 H60 V88"/>
+        <path class="edge" data-e="c" d="M336 62 V88"/>
+        <path class="edge" data-e="b" d="M250 62 V140"/>
+        <path class="edge" data-e="by" d="M300 184 V204 H350 V222"/>
+        <path class="edge" data-e="bn" d="M200 184 V204 H150 V220"/>
+        <path class="edge" data-e="bny" d="M190 264 V284 H210 V290"/>
+        <path class="edge" data-e="bnn" d="M110 264 V284 H90 V290"/>
+        <g data-n="root"><rect class="box" x="120" y="8" width="260" height="54" rx="4"/><text x="250" y="27" text-anchor="middle" font-size="13" font-weight="600">Last outgoing call (days ago)</text>
+          <line x1="120" y1="36" x2="380" y2="36" stroke="currentColor" opacity=".3"/><line x1="207" y1="36" x2="207" y2="62" stroke="currentColor" opacity=".3"/><line x1="293" y1="36" x2="293" y2="62" stroke="currentColor" opacity=".3"/>
+          <text x="163" y="54" text-anchor="middle" font-size="13">0–4</text><text x="250" y="54" text-anchor="middle" font-size="13">5–14</text><text x="336" y="54" text-anchor="middle" font-size="13">15+</text></g>
+        <g data-n="rech"><rect class="box" x="175" y="140" width="150" height="44" rx="4"/><text x="250" y="158" text-anchor="middle" font-size="13" font-weight="600">More than 1</text><text x="250" y="175" text-anchor="middle" font-size="13" font-weight="600">recharge?</text></g>
+        <g data-n="amt"><rect class="box" x="80" y="220" width="140" height="44" rx="4"/><text x="150" y="238" text-anchor="middle" font-size="13" font-weight="600">Recharge amount</text><text x="150" y="255" text-anchor="middle" font-size="13" font-weight="600">&gt; cutoff (“$20”)?</text></g>
+        <text class="lbl" x="208" y="200">N</text><text class="lbl" x="314" y="200">Y</text><text class="lbl" x="98" y="280">N</text><text class="lbl" x="198" y="280">Y</text>
+        <g class="leaf" data-n="L-a"><circle class="leaf0" cx="60" cy="104" r="16"/><text x="60" y="109" text-anchor="middle" font-size="14">0</text></g>
+        <g class="leaf" data-n="L-c"><circle class="leaf1" cx="336" cy="104" r="16"/><text x="336" y="109" text-anchor="middle" font-size="14">1</text></g>
+        <g class="leaf" data-n="L-by"><circle class="leaf0" cx="350" cy="238" r="16"/><text x="350" y="243" text-anchor="middle" font-size="14">0</text></g>
+        <g class="leaf" data-n="L-bny"><circle class="leaf0" cx="210" cy="306" r="16"/><text x="210" y="311" text-anchor="middle" font-size="14">0</text></g>
+        <g class="leaf" data-n="L-bnn"><circle class="leaf1" cx="90" cy="306" r="16"/><text x="90" y="311" text-anchor="middle" font-size="14">1</text></g>
+        <text class="lbl" x="10" y="140">0 = stays</text><text class="lbl" x="352" y="140">1 = leaves</text>
+      </svg>
+    </div>
+    <div class="verdict" id="tree-verdict" aria-live="polite"></div>
+    <div class="box-stage" id="box-stage">
+      <p class="ask" style="font:700 1.02rem var(--font-ui);margin:0">Now swap in the upgraded model: same subscriber, same marketing team.</p>
+      <div class="blackbox" aria-live="polite"><span id="bb-in">Subscriber B</span><span class="bb">Support vector machine<small>cost/customer ₹2.2 · 66% better</small></span><span class="out" id="bb-out">1</span></div>
+      <p id="bb-line"></p>
+      <p style="margin:.2rem 0 0"><strong>The marketing head asks: “How?”</strong> What do you say?</p>
+      <div class="answers" id="bb-answers">
+        <button type="button" aria-pressed="false" data-a="0">“It’s a support vector machine. It beat every other model we tried.”</button>
+        <button type="button" aria-pressed="false" data-a="1">“See, think of it like a brain, and then there are these neurons, and they fire and they interact.”</button>
+        <button type="button" aria-pressed="false" data-a="2">“I don’t know, but there’s something that works.”</button>
+      </div>
+      <div class="box-reveal" id="bb-reveal" aria-live="polite">
+        <div class="note">
+          <b class="h">What actually happened</b>
+          <p>None of these tells marketing <em>which</em> customers to call, <em>why</em>, or <em>what offer to make</em>. Anand said the project manager’s answer “was wavering between something extremely complicated that neither he nor they understood, to roughly, ‘I don’t know, but there’s something that works.’” <a class="ts" href="?t=03:00">03:00</a> The brain-and-neurons line comes from his next example, a neural network. <a class="ts" href="?t=04:41">04:41</a></p>
+          <p>The tree gave you a reason you could repeat in a meeting. The box gave you a better number and nothing to say about it.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <figure class="frame">
+    <a class="shot" href="slides/f0142-tree-cost.webp" data-lightbox data-caption="01:42 — The decision tree with its scorecard: Rs 4.0 per customer, a 39% improvement, 3.2% missed, 3.6% wasted."><img src="slides/f0142-tree-cost.webp" width="642" height="480" loading="lazy" alt="Slide: the decision tree. Outgoing call 0-4 leads to 0, 15+ leads to 1, 5-14 leads to 'more than 1 recharge'; yes leads to 0, no leads to 'recharge amount over $20'; yes 0, no 1. Below: Decision Tree, cost per customer 4.0, improvement 39%, missed 3.2%, wasted 3.6%."><span class="stamp">FILM · 01:42</span></a>
+    <figcaption><b>So that’s what “39%” meant.</b> The transcript only says the tree “gave them an improvement of 39%.” The slide shows the base: cost per customer fell from ₹6.61 to ₹4.0, and (6.61 − 4.0) ÷ 6.61 ≈ 39%. The rows add up: 3.2% missed × ₹80 + 3.6% wasted × ₹40 = ₹4.0. Anand: “a decent improvement, and they were fairly happy.” <a class="ts" href="?t=01:45">01:45</a></figcaption>
+  </figure>
+</section>
+
+<section class="chap" id="better" data-act="I · The tree" data-title="Better, and dead">
+  <div class="act" data-n="1">The tree</div>
+  <h2>Better on paper, <em>dead</em> in practice</h2>
+  <p>Then the team did what any team would do. “Let’s apply the full suite of tools that we have at our disposal. Support Vector Machines, Neural Nets, Random Forest—let’s apply them all.” A tuned random forest was marginally best. They chose the standard support vector machine, which cut the cost to <strong>₹2.2, a 66% improvement</strong>. <a class="ts" href="?t=02:18">02:18</a></p>
+
+  <figure class="ledger wide" aria-labelledby="ledger-cap">
+    <svg viewBox="0 0 640 290" role="img" aria-labelledby="ledger-t">
+      <title id="ledger-t">Cost per customer by model. Base 6.61 rupees. Decision tree 4.0 rupees, 39 percent better, explainable. Support vector machine 2.2 rupees, 66 percent better, a black box. None of it was implemented.</title>
+      <text x="0" y="16" font-size="12" class="muted" font-weight="600" letter-spacing="1.5">COST PER CUSTOMER (₹) · LOWER IS BETTER</text>
+      <line class="axis" x1="150" y1="28" x2="150" y2="186"/>
+      <text x="0" y="62" font-size="15" font-weight="600">Do nothing</text><rect x="150" y="44" width="400" height="30" rx="3" fill="#9a8f82"/><text x="558" y="65" font-size="15" font-weight="700">6.61</text>
+      <text x="0" y="112" font-size="15" font-weight="600">Decision tree</text><rect x="150" y="94" width="242" height="30" rx="3" fill="var(--green)"/><text x="400" y="115" font-size="15" font-weight="700">4.0</text><text x="436" y="115" font-size="13" class="muted">−39% · marketing could follow it</text>
+      <text x="0" y="162" font-size="15" font-weight="600">SVM</text><rect x="150" y="144" width="133" height="30" rx="3" fill="var(--blue)"/><text x="291" y="165" font-size="15" font-weight="700">2.2</text><text x="327" y="165" font-size="13" class="muted">−66% · nobody could say why</text>
+      <g transform="rotate(-3 470 222)"><rect x="330" y="200" width="280" height="44" rx="4" fill="none" stroke="var(--red)" stroke-width="3"/><text x="470" y="229" text-anchor="middle" font-size="20" font-weight="700" fill="var(--red)" letter-spacing="2">IMPLEMENTED: NONE</text></g>
+      <text x="0" y="216" font-size="13" font-weight="600">Four months later:</text><text x="0" y="234" font-size="13" class="muted">“They didn’t implement any of it.”</text>
+      <text x="0" y="270" font-size="11.5" class="muted">Base and tree: slides at 00:58 and 01:42. SVM: as spoken at 02:18 (its missed/wasted split wasn’t shown).</text>
+    </svg>
+    <figcaption class="cap" id="ledger-cap"><b>The scorecard improved; the business got nothing.</b> “They didn’t implement any of it.” Whether “any of it” included the simpler tree, the talk doesn’t say.</figcaption>
+  </figure>
+
+  <p>When the client’s project manager took the SVM to his management and marketing teams and said, in effect, <em>this will tell you who is going to leave</em>, their question was “How?” He had no answer. They asked about going back to the tree, and the back-and-forth that followed “became very, very painful.”</p>
+  <blockquote class="said">
+    <p>“They got to the point where we felt we almost shouldn’t have given them the black-box model. We should have said, ‘Look, this is all you can get. It doesn’t get better than that,’ and they would have gone in for it. But the sheer confusion killed that project.”</p>
+    <footer>Anand <a class="ts" href="?t=03:36">03:36</a></footer>
+  </blockquote>
+  <p>That is a strange thing for a data science CEO to say: <strong>we should have hidden the better model.</strong> He wasn’t arguing against accuracy. He was saying that a prediction nobody can explain arrives without a reason, and <strong>a reason is what lets someone defend a budget, plan a campaign or argue with a colleague.</strong> Without one, the client could not act on the model at all.</p>
+</section>
+
+<section class="chap" id="magic" data-act="I · The tree" data-title="Witch magic">
+  <div class="act" data-n="1">The tree</div>
+  <h2>“Indistinguishable from <em>witch magic</em>”</h2>
+  <p>“And this is not uncommon.” Anand’s second example was live work at the time: forecasting agricultural prices for a commodity manufacturer, “one of the largest in the globe.” They compared moving averages, auto-regression, exponential smoothing, ARIMA and others. <strong>The neural network won consistently</strong>, at “anywhere between 70% to 90% accuracy across the board.” <a class="ts" href="?t=04:05">04:05</a></p>
+  <figure class="frame">
+    <a class="shot" href="slides/f0422-forecast-accuracy.webp" data-lightbox data-caption="04:22 — A comparison of price forecast accuracy of pure models: 16 products × 8 methods. The neural network column is the greenest."><img src="slides/f0422-forecast-accuracy.webp" width="642" height="480" loading="lazy" alt="Slide titled A comparison of price forecast accuracy of pure models: a heat-coloured table of 16 products against Moving Average, Auto-regression, Exponential Smoothing, ARIMA, Exponential Smoothing Over State Space, Hybrid Model, Neural Network and Multi-Linear Regression. Auto-regression is reddest; the Neural Network column is greenest, mostly in the 70s to 90s."><span class="stamp">FILM · 04:22</span></a>
+    <figcaption>The accuracy table from the commodity project: 16 products, 8 methods. Products were left unnamed on stage. <b>The slide does not define its accuracy measure,</b> so these figures don’t compare with the telecom’s rupees per customer.</figcaption>
+  </figure>
+  <p>The trouble started when the client asked how it worked. “See, think of it like a brain, and then there are these neurons, and they fire and they interact.” Anand described two reactions to that explanation:</p>
+  <blockquote class="said">
+    <p>“Those that say, ‘Oh, this is such fantastic jargon. I don’t understand it, so my boss also won’t understand it; this is wonderful.’ And there are the people that say, ‘I don’t care. Why is this idiot telling me all this stuff?’”</p>
+    <footer>Anand <a class="ts" href="?t=05:05">05:05</a></footer>
+  </blockquote>
+  <p>Neither reaction helps anyone decide anything. That is the problem the rest of the talk works on: <strong>“because these models are increasingly becoming effective and increasingly indistinguishable from witch magic, we need a way of trying to understand these.”</strong></p>
+</section>
+
+<!-- ================= ACT II ================= -->
+<section class="chap" id="census" data-act="II · The label" data-title="Five weeks, five minutes">
+  <div class="act" data-n="2">The label</div>
+  <h2>Five weeks for the data. <em>Five minutes</em> for the algorithm.</h2>
+  <p>To show what understanding a model looks like, Anand switched to one he could run on stage: <strong>K-means clustering</strong>. A media company had told Gramener it treated India as two markets, “the Hindi-speaking people and there is the rest of the people”, and made content for each. Yet <strong>Bilaspur and Hyderabad</strong>, far apart on the map, looked like similar audiences. <a class="ts" href="?t=06:48">06:48</a></p>
+  <blockquote class="said">
+    <p>“We shouldn’t even be having a state-based strategy, because intra-state differences can be quite huge and inter-state differences can be quite small.”</p>
+    <footer>Anand, describing the client’s question <a class="ts" href="?t=07:12">07:12</a></footer>
+  </blockquote>
+  <p>The input was a file of <span class="tip" title="Census of India 2011 counted 640 districts; see the National Health Profile 2012, Table 1.1.7.">India’s 640 districts from the 2011 Census</span> <a href="https://cbhidghs.mohfw.gov.in/WriteReadData/l892s/Demographic%20Indicators-2012.pdf">(source)</a>: population by sex, literacy, scheduled castes and tribes, workers, religion, asset ownership, education and more. “It took five weeks to collect the data, but the algorithm actually only took five minutes.” The code fits on one screen: read the CSV, drop the three name columns, call <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html"><code>KMeans</code></a>, save the labels. <a class="ts" href="?t=07:46">07:46</a></p>
+  <figure class="frame">
+    <a class="shot" href="slides/f0557-kmeans-code.webp" data-lightbox data-caption="05:57 — The whole clustering program: pandas reads census.csv, scikit-learn's KMeans fits, labels are written to census-cluster.csv."><img src="slides/f0557-kmeans-code.webp" width="854" height="480" loading="lazy" alt="Code editor showing eleven lines of Python: import pandas as pd; import sklearn.cluster; data = pd.read_csv('census.csv'); X = data[data.columns[3:]]; kmeans = sklearn.cluster.KMeans(n_clusters=2).fit(X); kmeans.labels_; data['cluster'] = kmeans.labels_; cols = ['District code', 'cluster', 'State name', ...]; data[cols].to_csv('census-cluster.csv', index=False)."><span class="stamp">FILM · 05:57</span></a>
+    <figcaption><b>The algorithm is about ten lines.</b> The file on screen still says <code>n_clusters=2</code>; he changed it to four before running it. The editor cuts off the longest lines on the right.</figcaption>
+  </figure>
+  <p>How many clusters? Anand gave two answers. One is mathematical: try two, three, four and see which groups are tight and well separated. The other is to ask the client. “Suppose I gave you 20 clusters. Are you going to be able to create 20 different sets of channels?” They said more than six would be trouble.</p>
+  <blockquote class="said">
+    <p>“So, it’s a combination of practicality—which is how it’s going to be used, which is pretty important and you better know that before you come up with your answers—as well as the mathematics behind it.”</p>
+    <footer>Anand <a class="ts" href="?t=09:23">09:23</a></footer>
+  </blockquote>
+  <p>That is the churn lesson again, before any result exists: <strong>the person who will use the output helps decide its shape.</strong></p>
+</section>
+
+<section class="chap" id="label" data-act="II · The label" data-title="“Does this make any sense?”">
+  <div class="act" data-n="2">The label</div>
+  <h2>“Great. I have my answer. <em>Does this make any sense?</em>”</h2>
+  <p>He ran it. Out came <code>census_cluster.csv</code>: district code, state, district name, and a cluster column holding 0, 1, 2 or 3. Then he asked the audience whether it meant anything. <a class="ts" href="?t=10:00">10:00</a></p>
+  <blockquote class="said big">
+    <p>“The algorithm is the easy part. People have solved that problem for us. Our problem begins once the algorithm finishes.”</p>
+    <footer>Anand <a class="ts" href="?t=10:25">10:25</a></footer>
+  </blockquote>
+  <p>Put yourself in the media planner’s seat. Each step below is a real frame from the talk, and each one shows the <em>same</em> clustering in a form you can do a bit more with.</p>
+
+  <div class="lab steps" id="steps-lab">
+    <div class="lab-head"><span class="lbl">Experiment 2 · From a label to a decision</span><h3>You run a TV network. What will you do with “cluster 3”?</h3></div>
+    <p class="disclaim"><b>All images are frames from the 2017 talk.</b> The original census data and cluster outputs were not recovered, so nothing here is recomputed. The colours and numbering change between steps because each run of K-means numbers its clusters independently.</p>
+    <div role="tablist" class="seg" aria-label="Steps from label to decision" id="steps-tabs"></div>
+    <div id="steps-panels"></div>
+    <div class="step-nav"><button class="chip" type="button" id="step-prev"><i class="bi bi-arrow-left" aria-hidden="true"></i> Back</button><button class="chip" type="button" id="step-next">Next step <i class="bi bi-arrow-right" aria-hidden="true"></i></button></div>
+  </div>
+
+  <p>The first map was drawn in Excel with a <code>VLOOKUP</code> (“I’m not here to teach you Excel”), and even that was enough to see a pattern: <strong>“The greens are hovering around the metro areas mostly.”</strong> <a class="ts" href="?t=11:39">11:39</a> Re-running with two clusters gave the client a sentence it could repeat to its programming team:</p>
+  <blockquote class="said">
+    <p>“Look, if you still want to keep only two segments, that’s fine, but what we’re finding is that parts of UP and Bihar are actually closer in characteristics to the South than the programs that you have in the North.”</p>
+    <footer>Anand <a class="ts" href="?t=12:53">12:53</a></footer>
+  </blockquote>
+  <p>“That was useful. In fact, that was the first starting point we had for the engagement because you could just see stuff.” <a class="ts" href="?t=13:16">13:16</a></p>
+</section>
+
+<section class="chap" id="bright" data-act="II · The label" data-title="Pick the brightest colors">
+  <div class="act" data-n="2">The label</div>
+  <h2>“I don’t need a human to pick <em>bright colors</em>”</h2>
+  <p>A map shows <em>where</em> a cluster is. It doesn’t say <em>what</em> the cluster is. So Anand opened a tool Gramener had built (“The point here is not the tool. The point here is the technique.”) and re-clustered the districts into six groups. One cluster, coloured red here, showed up as specks around Delhi, Mumbai–Pune, Bengaluru, Chennai and most of Kerala. <strong>“So you can see that 3 is the urban belt.”</strong> Punjab stood out as “a beast that’s very different from the rest of the country.” <a class="ts" href="?t=14:08">14:08</a></p>
+  <div class="pair wide">
+    <figure class="frame">
+      <a class="shot" href="slides/f1412-six-clusters.webp" data-lightbox data-caption="14:12 — Six clusters on India's districts in Gramener's clustering tool."><img src="slides/f1412-six-clusters.webp" width="854" height="480" loading="lazy" alt="India district map in six colours: large orange and green regions, blue across the north, purple in the north-east, brown in Punjab, red specks around cities."><span class="stamp">FILM · 14:12</span></a>
+      <figcaption>Six clusters, coloured.</figcaption>
+    </figure>
+    <figure class="frame">
+      <a class="shot" href="slides/f1421-cluster3-urban.webp" data-lightbox data-caption="14:21 — Only cluster 3 highlighted: red specks at India's metros and most of Kerala."><img src="slides/f1421-cluster3-urban.webp" width="854" height="480" loading="lazy" alt="The same map with every cluster greyed out except cluster 3, which appears as red specks around Delhi, Mumbai, Pune, Bengaluru, Chennai and in Kerala."><span class="stamp">FILM · 14:21</span></a>
+      <figcaption>Just cluster 3: the metros.</figcaption>
+    </figure>
+  </div>
+  <p>Next came the profile: the average of every variable for every cluster, shaded so unusual values stand out. Cluster 3 was the only one low on rural share. Cluster 0 had “an unusually low literacy rate.” Then Anand made the step that turns a dashboard into an explanation:</p>
+  <blockquote class="said">
+    <p>“I don’t need a human to pick bright colors, right? The system can do that. In fact, that’s what we did. We said, ‘Let’s just have a slider that picks out the brightest colors.’”</p>
+    <footer>Anand <a class="ts" href="?t=15:40">15:40</a></footer>
+  </blockquote>
+  <figure class="frame">
+    <a class="shot" href="slides/f1622-auto-highlight.webp" data-lightbox data-caption="16:22 — The slider picks the three most distinctive features: cluster 3 low rural %, cluster 4 high Christian % and low total population, cluster 5 high Sikh %."><img src="slides/f1622-auto-highlight.webp" width="854" height="480" loading="lazy" alt="Cluster profile tool. Text above a slider reads: Cluster 3 has low Rural %. Cluster 4 has high Christian %, low Total population. Cluster 5 has high Sikh %. Below, a table header of six coloured clusters 0 to 5 with sizes 151, 208, 164, 60, 37 and 20."><span class="stamp">FILM · 16:22</span></a>
+    <figcaption><b>The table describes itself in a sentence.</b> Slide the threshold up and only the strongest differences remain: cluster 3 is low-rural, cluster 4 is the north-east (“a very different segment from all of the others”), cluster 5 is Punjab. Cluster sizes add up to 640 districts. <a class="ts" href="?t=16:20">16:20</a></figcaption>
+  </figure>
+</section>
+
+<section class="chap" id="names" data-act="II · The label" data-title="Poor, Breakout, Aspirant">
+  <div class="act" data-n="2">The label</div>
+  <h2>Poor. Breakout. Aspirant. <em>Rich.</em></h2>
+  <p>The version that went to the client had no cluster numbers on it. It had six names, each describing a stage of economic development: <strong>“There is the ‘Poor’ districts in which you need a very different segment from the ‘Breakout’ districts where yes, they’re poor, but they’re starting to get educated.”</strong> Then Aspirants, Owners, Business and Rich. “And ultimately, they get a feel for what these segments mean through these words and what the strategy for these segments needs to be.” <a class="ts" href="?t=18:29">18:29</a></p>
+  <figure class="frame">
+    <a class="shot" href="slides/f1912-segments-slide.webp" data-lightbox data-caption="19:12 — Segmenting India's districts based on behaviour: six named clusters built from education, skilled-jobs and purchasing-power indices."><img src="slides/f1912-segments-slide.webp" width="642" height="480" loading="lazy" alt="Slide titled Segmenting India's districts based on behaviour. Text explains the client treated contiguous regions as homogeneous; Gramener divided India into 6 clusters using three composite indices: education, skilled jobs, purchasing power. A map of India coloured by six segments labelled Poor, Breakout, Aspirant, Owner, Business and Rich, each with a short description."><span class="stamp">FILM · 19:12</span></a>
+    <figcaption><b>The deliverable was a vocabulary, not a cluster ID.</b> This slide, from the client work, uses three composite indices (education, skilled jobs, purchasing power) rather than the raw columns of the live demo. That’s why its map differs from the six clusters above.</figcaption>
+  </figure>
+  <div class="note">
+    <b class="h">Handle with care</b>
+    <p>Some live-demo profiles rested on religion and caste shares. Anand used one to suggest a different religious channel for the north-east. Those are <strong>2011 district averages</strong>, not facts about any person, and K-means only groups similar rows; the meaning comes from the variables someone chose. Read these frames as a 2017 example of interpretation, not as a segmentation to reuse.</p>
+  </div>
+  <p>The same method then went to the advertisers. Clustering ad buyers by volume, channels, seasons and price points put <strong>P&amp;G, HUL, Cadbury and Reckitt</strong> together (“big buyers… at very low price points”) and <strong>Heinz, Apple and Future Group</strong> in a mid-sized group. The payoff was practical: one account manager per peer group, and pitches like this one. <a class="ts" href="?t=19:46">19:46</a></p>
+  <blockquote class="said">
+    <p>“What I can do is go to an OLX and say, ‘Look, you belong to a peer of companies that have very similar advertising characteristics. Now Samsung has come up with a strategy of advertising in which they’re focusing heavily on these kinds of slots. Maybe that will be helpful for you.’”</p>
+    <footer>Anand <a class="ts" href="?t=20:25">20:25</a></footer>
+  </blockquote>
+  <figure class="frame">
+    <a class="shot" href="slides/f2026-advertisers.webp" data-lightbox data-caption="20:26 — Advertiser clustering: four groups of brands, each with a one-line description, next to the method (transform variables, cluster, profile)."><img src="slides/f2026-advertisers.webp" width="642" height="480" loading="lazy" alt="Slide titled Advertiser Clustering. Four boxes of brand names: P&amp;G, HUL, Cadbury, Reckitt (big buyers across categories at low price points); Godrej, L'Oreal, ITC, GSK, J&amp;J, Amazon, Coke (big buyers with better price and viewership); Dabur, Nestle, Maruti, Airtel, OLX, Samsung (big buyers with low regional advertising); Heinz, Apple, Future Group, LIC, Ford, Amul (mid-buyers with average price and viewership). A blue panel explains how clients were classified by behaviour, with three small charts."><span class="stamp">FILM · 20:26</span></a>
+    <figcaption><b>Same method, different rows.</b> Advertisers clustered by how they buy, then labelled in words a sales team can use. These are 2017 observations from client work, not current market facts.</figcaption>
+  </figure>
+  <p><strong>“What helps here is not just the cluster identification. It is the cluster interpretation that comes along with it.”</strong> <a class="ts" href="?t=20:53">20:53</a> But he wasn’t satisfied with a few words under a chart: “what needs to go behind the scenes is an understanding of how one goes about creating these clusters.” To show what that understanding feels like, he borrowed someone else’s work.</p>
+</section>
+
+<!-- ================= ACT III ================= -->
+<section class="chap" id="car" data-act="III · The ladder" data-title="A car that turns 2°">
+  <div class="act" data-n="3">The ladder</div>
+  <h2>A car that turns <em>2 degrees</em></h2>
+  <p>“Some of you may have seen Bret Victor’s talk or blog post titled ‘Up and Down the Ladder of Abstraction.’” The essay is <a href="https://worrydream.com/LadderOfAbstraction/"><strong>Bret Victor’s</strong> <em>Up and Down the Ladder of Abstraction</em></a> (2011). Everything in this section is his design, which Anand demonstrated in his browser. <a class="ts" href="?t=21:31">21:31</a></p>
+  <p>The demo nearly didn’t load. “I’ve most certainly made a mistake in not pre-loading this,” Anand said, holding his data card up and offering to “hold it closer to the tower,” until someone offered a faster connection. <a class="ts" href="?t=22:11">22:11</a> While it loaded, he explained why he’d brought it:</p>
+  <blockquote class="said">
+    <p>“We don’t understand models through the mathematics of it; that’s not the language that we are used to. We understand models through kinesthetics, by touching and feeling these models.”</p>
+    <footer>Anand, on Bret Victor’s idea <a class="ts" href="?t=22:40">22:40</a></footer>
+  </blockquote>
+  <p>The model is deliberately silly. A car drives along a road with a bend. Its only rule: <strong>move forward one pixel; if you’re left of the road, turn right by some angle; if you’re right of it, turn left.</strong> It has one setting, the angle. At 2°, Anand played it, and it was over before anyone could see what happened. “It’s not going too fast. But it is going too fast for my ability to interpret.” <a class="ts" href="?t=24:30">24:30</a></p>
+  <figure class="frame">
+    <a class="shot" href="slides/f2642-one-trajectory.webp" data-lightbox data-caption="26:42 — Bret Victor's simulation at a 2.2° turning rate: the car's path (red) overshoots the bend. Screenshot from Anand's demo of Bret Victor's essay."><img src="slides/f2642-one-trajectory.webp" width="854" height="480" loading="lazy" alt="Bret Victor's essay in a browser: a rule card reads 'Move forward 1 pixel. If left of the road, turn right by 2.2°. If right of the road, turn left by 2.2°' with a slider. Below, a grey road with a hump and a yellow centre line; a red trajectory swings high above the hump and dips below the road afterwards."><span class="stamp">FILM · 26:42</span></a>
+    <figcaption>The first rung up: <b>replace the moving car with its whole path.</b> From <a href="https://worrydream.com/LadderOfAbstraction/">Bret Victor’s essay</a> as Anand showed it.</figcaption>
+  </figure>
+  <p>So you climb. First a slider for time, to pause and scrub. Then the whole path drawn at once. Then a slider for the angle, and the question every modeller asks: <strong>“If it’s not 2 degrees, maybe it should be 3 degrees?”</strong> By 8° he had lost track: “I’ve now even forgotten what were the numbers that I used in the past.” <a class="ts" href="?t=25:31">25:31</a></p>
+</section>
+
+<section class="chap" id="ladder" data-act="III · The ladder" data-title="Up and down">
+  <div class="act" data-n="3">The ladder</div>
+  <h2>Up the ladder, <em>and back down</em></h2>
+  <blockquote class="said">
+    <p>“What we want is to be able to put a curve like this that summarizes all of what I saw.”</p>
+    <footer>Anand <a class="ts" href="?t=26:29">26:29</a></footer>
+  </blockquote>
+  <p>Bret Victor’s answer is to stack views. Draw every angle’s path at once, then compress each path to a single score. That gives one line covering every angle. Next comes the move that makes it useful: <strong>step back down.</strong> Pick a point on the summary and look at the actual path behind it. Anand: “Moving one level down the abstraction.” <a class="ts" href="?t=27:01">27:01</a></p>
+
+  <div class="lab" id="ladder-lab">
+    <div class="lab-head"><span class="lbl">Experiment 3 · A small recreation</span><h3>Tune the car yourself, then climb</h3></div>
+    <p class="disclaim"><b>This is a simplified recreation written for this page, not Bret Victor’s code.</b> The rule is his. The road, the start position and the score (share of the trip spent off the road) are ours, so the numbers won’t match his essay. <a href="https://worrydream.com/LadderOfAbstraction/">Try his original ↗</a></p>
+    <div class="rule-card" id="rule-card">At each step: move forward 1 pixel.<br>If left of the road, turn right by <b>2.0°</b>.<br>If right of the road, turn left by <b>2.0°</b>.</div>
+    <div class="ladder-ctrl">
+      <label for="theta">Angle</label>
+      <input type="range" id="theta" min="0" max="10" step="0.1" value="2">
+      <output id="theta-out" for="theta">2.0°</output>
+      <button class="chip" type="button" id="drive"><i class="bi bi-play-fill" aria-hidden="true"></i> Drive</button>
+    </div>
+    <div class="levels seg" role="group" aria-label="Rung of the ladder of abstraction">
+      <button class="chip" type="button" data-lvl="0" aria-pressed="false"><span class="n">Rung 0</span>Watch it move</button>
+      <button class="chip" type="button" data-lvl="1" aria-pressed="true"><span class="n">Rung 1</span>Its whole path</button>
+      <button class="chip" type="button" data-lvl="2" aria-pressed="false"><span class="n">Rung 2</span>Every angle</button>
+    </div>
+    <svg class="road-svg" id="road-svg" viewBox="0 -125 720 180" role="img" aria-labelledby="road-t">
+      <title id="road-t">A road with a hump and the car's path for the chosen turning angle.</title>
+      <path class="road" id="road-band" d="" fill="none" stroke-width="28" stroke-linecap="butt"/>
+      <path class="center" id="road-center" d="" fill="none" stroke-width="2"/>
+      <g id="ghosts"></g>
+      <path class="trace" id="trace" d=""/>
+      <g id="car-g" transform="translate(0 10)"><rect class="car" x="-9" y="-5" width="18" height="10" rx="3"/></g>
+    </svg>
+    <div class="scrub" id="scrub-row"><span>time</span><input type="range" id="scrub" min="0" max="1000" value="1000" aria-label="Scrub through time"><span id="scrub-t">end</span></div>
+    <svg class="sum-svg" id="sum-svg" viewBox="0 0 720 190" role="img" aria-labelledby="sum-t">
+      <title id="sum-t">Rung 3: share of the trip spent off the road for every turning angle from 0 to 10 degrees. Click or drag to step back down to that angle.</title>
+    </svg>
+    <p class="readout" id="readout" aria-live="polite"></p>
+    <div class="embed-orig">
+      <a class="chip" href="https://worrydream.com/LadderOfAbstraction/" id="load-orig"><i class="bi bi-box-arrow-in-down" aria-hidden="true"></i> Load Bret Victor’s original here</a>
+      <span class="cap" style="margin-left:.5rem">Opens his full interactive essay in a frame below; it’s large.</span>
+      <div id="orig-slot"></div>
+    </div>
+  </div>
+
+  <p>Even this toy shows what Anand pointed out on stage. Small angles do badly, and <strong>0° looks oddly respectable</strong>: the car ignores the bend and drives straight through. In Bret Victor’s version, Anand found the good scores at the left edge came from cars “so far off the curve that the numbers are failing… I’m just completely ignoring the bend and just plowing straight through.” <a class="ts" href="?t=28:30">28:30</a> <strong>A summary can mislead you until you step down and look at a real example.</strong></p>
+  <div class="pair wide">
+    <figure class="frame">
+      <a class="shot" href="slides/f2846-many-trajectories.webp" data-lightbox data-caption="28:46 — Rung two in Bret Victor's essay: every turning angle's path overlaid in blue; the 0° path in red runs straight through."><img src="slides/f2846-many-trajectories.webp" width="854" height="480" loading="lazy" alt="Many blue trajectories overlaid on the road; some loop in circles; a dashed red line at 0 degrees goes straight along the bottom."><span class="stamp">FILM · 28:46</span></a>
+      <figcaption>Every angle at once, in Bret Victor’s essay. The loops are cars that over-steer.</figcaption>
+    </figure>
+    <figure class="frame">
+      <a class="shot" href="slides/f2936-three-steps-up.webp" data-lightbox data-caption="29:36 — 'Three Steps Up': for every bend angle (x) and turning rate (y), colour shows time to completion. Bret Victor's essay."><img src="slides/f2936-three-steps-up.webp" width="854" height="480" loading="lazy" alt="Section titled Three Steps Up in Bret Victor's essay: a square image with bend angle 10 to 90 degrees on the x-axis and turning rate 1 to 10 on the y-axis; a red band on the left, black and white texture elsewhere."><span class="stamp">FILM · 29:36</span></a>
+      <figcaption>Three rungs up: every road bend × every turning rate. Bret Victor’s essay.</figcaption>
+    </figure>
+  </div>
+  <p>Bret Victor goes one rung higher, varying the road’s bend as well as the car’s turn, so the whole model fits in one picture. Anand’s takeaway was general:</p>
+  <blockquote class="said">
+    <p>“And this is a trivial model. The model literally says go forward by one pixel, turn left or right by X degrees. That’s it. And this is true for almost any kind of model, no matter how simple or complex.”</p>
+    <footer>Anand <a class="ts" href="?t=29:59">29:59</a></footer>
+  </blockquote>
+</section>
+
+<!-- ================= ACT IV ================= -->
+<section class="chap" id="hedge" data-act="IV · The matrix" data-title="Consolidate or hedge">
+  <div class="act" data-n="4">The matrix</div>
+  <h2>Consolidate, <em>or hedge?</em></h2>
+  <p>For the last example Anand left models behind and applied the ladder to plain data: exchange rates against the US dollar, plus a few stock indices and metals. At the bottom rung is a single cell: “on the 6th of November 2013, the Australian dollar was trading at 0.9497 USD.” Each rung up throws away detail and adds comparison. <a class="ts" href="?t=30:14">30:14</a></p>
+  <div class="strip wide">
+    <figure><a class="shot" href="slides/f3032-raw-rates.webp" data-lightbox data-caption="30:32 — Level 0: one rate per row. AUD at 0.9497 on 6 Nov 2013."><img src="slides/f3032-raw-rates.webp" width="854" height="480" loading="lazy" alt="Excel sheet with Date, Rate, Currency columns: 06-11-13, 0.9497, AUD and earlier dates."><span class="lvl">L0</span></a><figcaption>Raw values<small>One rate per row · 30:32</small></figcaption></figure>
+    <figure><a class="shot" href="slides/f3102-sparklines.webp" data-lightbox data-caption="31:02 — Level 1: each security as a sparkline with mean, growth, variance and range."><img src="slides/f3102-sparklines.webp" width="854" height="480" loading="lazy" alt="Excel table with columns Security, Trend sparkline, Mean, Growth, Variance, Range% for FTSE, S&amp;P, Nasdaq, AUD, BRL, CAD, CHF, CNY, EUR, GBP."><span class="lvl">L1</span></a><figcaption>Each series<small>Sparkline + summary stats · 31:02</small></figcaption></figure>
+    <figure><a class="shot" href="slides/f3200-scatter-aud-cny.webp" data-lightbox data-caption="32:00 — Level 2: AUD against CNY as a scatter plot. 'Even stronger, about 80%.'"><img src="slides/f3200-scatter-aud-cny.webp" width="854" height="480" loading="lazy" alt="Excel scatter plot of Australian dollar against Chinese yuan daily values with a rising trend line."><span class="lvl">L2</span></a><figcaption>Pairs<small>AUD vs CNY scatter · 32:00</small></figcaption></figure>
+    <figure><a class="shot" href="slides/f3246-correlation-matrix.webp" data-lightbox data-caption="32:46 — Level 3: every pair's correlation coefficient, from Excel's Data Analysis Toolpak."><img src="slides/f3246-correlation-matrix.webp" width="854" height="480" loading="lazy" alt="Lower-triangular correlation matrix in Excel for FTSE, S&amp;P, Nasdaq, AUD, BRL, CAD, CHF, CNY, EUR, GBP, HKD, ILS, INR, ISK, JPY; mostly green positive values with orange negatives in the ISK row."><span class="lvl">L3</span></a><figcaption>Every pair<small>Correlation matrix · 32:46</small></figcaption></figure>
+  </div>
+  <p class="cap" style="margin-top:0">Four rungs, all in Excel, from the live demo. Tap any frame to enlarge.</p>
+  <p>Sparklines show the Canadian dollar, Indian rupee and Philippine peso all dipping and recovering. “Wait a second, I said that three times.” Scatter plots then test whether two currencies move together, and a correlation matrix does that for every pair. The last step came from an earlier Gramener publication: <strong>cluster the matrix itself</strong>, so securities that move together sit together. “In other words, we were doing clustering on top of correlation.” <a class="ts" href="?t=33:34">33:34</a></p>
+  <figure class="frame">
+    <a class="shot" href="slides/f3404-clustered-heatmap.webp" data-lightbox data-caption="34:04 — The clustered correlation heatmap: a dendrogram on the left, a block of correlated currencies (SGD, JPY, gold, CHF, CNY) and red off-diagonal blocks that move the opposite way."><img src="slides/f3404-clustered-heatmap.webp" width="642" height="480" loading="lazy" alt="Correlation heatmap with a hierarchical-clustering dendrogram on the left. Cells contain small scatter plots and correlation numbers. A box marks 'Block of correlated currencies' around Singapore dollar, Japanese yen, gold, Swiss franc and Chinese yuan. Red cells show negative correlation between that block and Sensex, FTSE and S&amp;P."><span class="stamp">FILM · 34:04</span></a>
+    <figcaption><b>Green blocks move together; red blocks move apart.</b> Singapore dollar, yen, gold, Swiss franc and yuan formed one block, while the stock indices ran the other way. A tooltip on the slide gives the window: six months of daily values, apparently from 2013.</figcaption>
+  </figure>
+  <p>And here the picture turns into a decision:</p>
+  <blockquote class="said">
+    <p>“For a portfolio manager, there are two kinds of decisions: When should I consolidate? When should I hedge?”</p>
+    <footer>Anand <a class="ts" href="?t=34:14">34:14</a></footer>
+  </blockquote>
+  <p>Two holdings in the same green block are “practically the same stock”, so you can consolidate. For a hedge, you look for the deepest red. Anand walked through an example: holding Singapore dollars and yen is redundant, so keep the yen; the most negatively correlated asset to the yen was “the Sensex at the moment.” Then the anecdote: <strong>when Gramener shared this view with a client, “they made their largest trade in the portfolio segment using this visual.”</strong> <a class="ts" href="?t=35:24">35:24</a></p>
+  <blockquote class="said">
+    <p>“Not because they weren’t using correlations before. The problem was really about communication.”</p>
+    <footer>Anand <a class="ts" href="?t=35:24">35:24</a></footer>
+  </blockquote>
+  <div class="note">
+    <b class="h">Not investment advice</b>
+    <p>This is a 2013 snapshot used as a teaching example. Correlations between currencies change with regimes, and a six-month window can mislead. Correlation says nothing about why two assets move together. The client trade is Anand’s account; no figures were given. The lasting point is about the <em>view</em>, not the positions.</p>
+  </div>
+</section>
+
+<!-- ================= CLOSE ================= -->
+<section class="chap" id="summary" data-act="Close" data-title="Build a visual summary">
+  <div class="act" data-n="5">Close</div>
+  <h2>Build a <em>visual summary</em></h2>
+  <p>With eight minutes left, Anand put up his conclusion. He didn’t soften it:</p>
+  <blockquote class="said">
+    <p>“Increasingly, the models that are accurate are black-box models. They were complex enough before; now they are beyond hope in terms of understanding. Don’t even try. And therefore, they need interpretation even more so than ever before.”</p>
+    <footer>Anand <a class="ts" href="?t=35:45">35:45</a></footer>
+  </blockquote>
+  <figure class="frame">
+    <a class="shot" href="slides/f3620-takeaways.webp" data-lightbox data-caption="36:20 — What you should take away: black-box models are increasingly accurate; black-box models need interpretation (even more); build visual summaries to explain models; tools are less important than technique."><img src="slides/f3620-takeaways.webp" width="642" height="480" loading="lazy" alt="Dark slide titled What you should take away, with three glowing boxes: Black-box models are increasingly accurate. Black-box models need interpretation (even more). Build visual summaries to explain models. Footer: Tools are less important than technique."><span class="stamp">FILM · 36:20</span></a>
+    <figcaption>The closing slide.</figcaption>
+  </figure>
+  <p>Note what he’s <em>not</em> saying. Don’t go back to decision trees. Don’t give up accuracy. <strong>Keep the accurate model, and build the view that lets a human use it.</strong> “Don’t expect people to say, ‘Okay, because it’s Random Forest, it has to be right.’ That’s the same as saying because it’s witch magic, it will work.” <a class="ts" href="?t=36:09">36:09</a></p>
+  <blockquote class="said">
+    <p>“Start at a low level, build it up, summarize it. Then go one level lower and show an example. Build it up two levels. Allow them to change the parameters. Allow them to interact. Walk up and down the ladder of abstraction.”</p>
+    <footer>Anand <a class="ts" href="?t=36:28">36:28</a></footer>
+  </blockquote>
+</section>
+
+<section class="chap" id="tools" data-act="Close" data-title="People are the constraint">
+  <div class="act" data-n="5">Close</div>
+  <h2>Tools are rarely the constraint. <em>People are.</em></h2>
+  <p>He knew the next question, so he answered it before Q&amp;A. Gramener’s 2017 stack was Excel or R for analysis, Python with <a href="https://pandas.pydata.org/">pandas</a> and <a href="https://www.tornadoweb.org/">Tornado</a> on the server, and in the browser JavaScript with a templating library such as <a href="https://lodash.com/">Lodash</a> and <a href="https://d3js.org/">D3</a> for charts. <a class="ts" href="?t=36:54">36:54</a> Then he waved the choice away:</p>
+  <blockquote class="said">
+    <p>“I’ve been doing Excel for 25 years and Python for less than 10 years. Anything that I can do in Python, I can do in Excel. Without exception.”</p>
+    <footer>Anand <a class="ts" href="?t=38:29">38:29</a></footer>
+  </blockquote>
+  <p>A good part of the demo was in fact Excel: the district map, the VLOOKUPs, all four currency rungs. <strong>“The point is that tools are versatile enough and are rarely the constraint. People are the constraint. Techniques are the constraint.”</strong> <a class="ts" href="?t=38:57">38:57</a> His advice: “Pick a person, let them work with whatever tool they’re familiar with.” He signed off by pointing to more examples at <a href="https://gramener.com/demo">gramener.com/demo</a> (today’s page may differ from 2017’s) and one last request: “please do try explaining them as well.” <a class="ts" href="?t=39:27">39:27</a></p>
+</section>
+
+<section class="chap" id="qa" data-act="Close" data-title="Show something, ask for an inference">
+  <div class="act" data-n="5">Close</div>
+  <h2>Show something. <em>Ask what they see.</em></h2>
+  <p>There was time for one question. Partho, from General Motors, asked how to pick the right visualisation, like the dendrogram-plus-heatmap he had just seen. <a class="ts" href="?t=40:22">40:22</a> Anand pointed him to Noah Iliinsky and a chart matching data types to encodings, though he couldn’t recall the book’s title on stage. It is probably <a href="https://www.oreilly.com/library/view/designing-data-visualizations/9781449314774/"><em>Designing Data Visualizations</em></a> (2011), co-written with Julie Steele. Colour for categories; angles only when there are few of them; ordered categories need something else. <a class="ts" href="?t=40:40">40:40</a></p>
+  <p>Then he undercut the rulebook. Chart-picker wizards in Tableau, Power BI and Google Sheets follow those principles and still leave you with too many options. <strong>“By following these techniques, you will only learn new ways of going wrong.”</strong> <a class="ts" href="?t=41:53">41:53</a></p>
+  <blockquote class="said">
+    <p>“Show something, ask the user to make an inference. If the first inference that they make is not what you want, try something else.”</p>
+    <footer>Anand <a class="ts" href="?t=42:31">42:31</a></footer>
+  </blockquote>
+  <p>That is the telecom story turned into a method. Test the view on the person who has to act, early. In the telecom project, their first inference was a question, “How?”, and it arrived only after the model was finished. The session host cut the Q&amp;A short for time (“Really sorry.”), and the talk ended mid-thought. <a class="ts" href="?t=43:06">43:06</a></p>
+</section>
+
+<section class="chap" id="coda" data-act="Close" data-title="Back to the telecom">
+  <div class="act" data-n="5">Coda</div>
+  <h2>Back to the <em>telecom</em></h2>
+  <p>Read the whole talk again from the opening. A tree turned ₹6.61 of churn loss into ₹4.0, and marketing could follow it. A support vector machine turned it into ₹2.2, and nobody could say why. In the rest of the talk, a cluster label became a map, a profile and a name; a steering rule became a path, a bundle of paths and a curve; a column of exchange rates became a heatmap that told someone what to trade. <strong>Each time, the model was only usable once someone could see why it said what it said.</strong></p>
+  <p>The model didn’t fail at predicting. <strong>It failed at being explained</strong>, and nobody tested that until the project was already dead.</p>
+  <div class="note blue">
+    <b class="h">Afterword, 2026</b>
+    <p>The talk predates the tools most people now associate with “explainable AI,” and didn’t mention any of them. The year before, Ribeiro, Singh and Guestrin had framed the same worry in <a href="https://arxiv.org/abs/1602.04938">“Why Should I Trust You?”</a> (KDD 2016): people won’t act on a model they don’t trust. Explanation methods have multiplied since. They carry a caveat Anand’s tree didn’t: a simple explanation of a complex model can itself be wrong. A local reason isn’t the whole model, and explaining a model is not the same job as explaining a business decision.</p>
+  </div>
+</section>
+
+</main>
+
+<aside class="dock" id="dock" aria-label="Video of the talk">
+  <div class="dock-head"><span><b>The talk</b> · 43 min · YouTube</span><span id="dock-mode-label">Story focus</span></div>
+  <div class="vwrap">
+    <div id="yt"><div class="nojs"><img class="poster" src="https://i.ytimg.com/vi/sORnCj52COw/hqdefault.jpg" alt=""><a href="https://youtu.be/sORnCj52COw" style="position:relative;color:#fff">Watch on YouTube ↗</a></div></div>
+  </div>
+  <div class="resume" id="resume"><button type="button" id="resume-btn"><i class="bi bi-play-fill" aria-hidden="true"></i> <span>Play</span></button></div>
+  <div class="now" id="now" aria-live="polite"><span class="t" id="now-t">00:00</span><span id="now-title">Press play, or tap any ▶ time in the story</span><span class="in-story" id="now-story"></span></div>
+  <div class="dock-ctrls">
+    <button class="dbtn mode" id="mode-btn" type="button" aria-pressed="false"><i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span></button>
+    <button class="dbtn" id="share-btn" type="button" aria-label="Share this moment"><i class="bi bi-link-45deg" aria-hidden="true"></i> <span>Share</span></button>
+    <a class="dbtn wide-only" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+    <button class="dbtn dock-min" id="min-btn" type="button" aria-expanded="true" aria-label="Hide the mini video"><i class="bi bi-chevron-down" aria-hidden="true"></i></button>
+  </div>
+  <details class="chapters" open>
+    <summary>Chapters · tap to jump</summary>
+    <ol id="chapters"></ol>
+  </details>
+</aside>
+</div>
+
+<section class="band" id="takeaways" data-act="Close" data-title="What to carry out" aria-labelledby="tk-h">
+  <div class="inner">
+    <div class="band-label">Takeaways</div>
+    <h2 id="tk-h">Before you improve the model, ask who has to act on it</h2>
+    <p class="sub">Four habits from a 2017 talk that still apply to any model whose output a person has to use.</p>
+    <div class="cards">
+      <div class="card"><div class="num">1</div><h3>Score the decision, not the model</h3><p>The telecom measured rupees per customer, not accuracy. Yet a model that was 66% better shipped nothing, because the people who had to act on it couldn’t. <a class="ts" href="?t=03:00">03:00</a></p></div>
+      <div class="card"><div class="num">2</div><h3>The algorithm is the easy part</h3><p>Five minutes of K-means gave 0, 1, 2, 3. Maps, profiles and plain-English names made them usable. <a class="ts" href="?t=10:25">10:25</a></p></div>
+      <div class="card"><div class="num">3</div><h3>Climb, then step back down</h3><p>Summarise many runs into one curve, then go back to a single example to check the summary isn’t lying. <a class="ts" href="?t=27:28">27:28</a></p></div>
+      <div class="card"><div class="num">4</div><h3>Show it, then ask</h3><p>Put the view in front of the person who decides and ask what they infer. If it’s wrong, change the view, not the person. <a class="ts" href="?t=42:31">42:31</a></p></div>
+    </div>
+    <div class="finale">
+      <p>“Build a visual summary that explains the model.”</p>
+      <footer>Anand S, DataHack Summit, 9 November 2017 <a class="ts" href="?t=36:09">36:09</a></footer>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div><strong>They improved the model. The client cancelled.</strong> · Anand S, “Visualizing Machine Learning,” <a href="https://www.analyticsvidhya.com/datahack-summit-2017/">Analytics Vidhya DataHack Summit 2017</a> (9–11 Nov, Bengaluru; this talk on Thursday 9 Nov 2017). Event context: <a href="https://www.analyticsvidhya.com/blog/2017/11/2-days-to-go-for-the-datahack-summit/">Analytics Vidhya’s preview, 6 Nov 2017</a>.</div>
+  <div>Media: <a href="https://youtu.be/sORnCj52COw">full talk on YouTube</a> (uploaded 28 Mar 2020) · <a href="https://github.com/sanand0/talks/releases/download/talks/2017-11-09-datahack-visualizing-machine-learning.opus">audio (opus)</a> · <a href="transcript.md" data-transcript>transcript</a> · <a href="comic-page.avif" data-lightbox data-caption="The talk as an AI-drawn comic page: an illustrated reflection, not a record.">comic page</a> · separate <a href="https://youtu.be/5-KSAyfB3JE">7-minute conference highlight</a>. A different 2019 FOSSASIA talk shares the title; this page is only about the 2017 recording.</div>
+  <div>Credits &amp; sources: <a href="https://worrydream.com/LadderOfAbstraction/">Bret Victor, Up and Down the Ladder of Abstraction</a> (the car simulation and its views are his) · <a href="https://cbhidghs.mohfw.gov.in/WriteReadData/l892s/Demographic%20Indicators-2012.pdf">National Health Profile 2012 (640 districts, Census 2011)</a> · <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html">scikit-learn KMeans</a> · <a href="https://arxiv.org/abs/1602.04938">Ribeiro et al. 2016</a> (<a href="https://doi.org/10.1145/2939672.2939778">DOI</a>) · <a href="https://www.oreilly.com/library/view/designing-data-visualizations/9781449314774/">Iliinsky &amp; Steele, Designing Data Visualizations</a></div>
+  <div>How this page was made: quotes are verbatim from an automated transcript, checked against the recording. Images marked FILM are frames from the YouTube video; the original 2017 slide deck, client data and code were not recovered. The tree subscribers, the black-box outputs and the steering recreation are labelled reconstructions. Keyboard: <kbd>V</kbd> toggles video focus, <kbd>[</kbd> / <kbd>]</kbd> move between sections.</div>
+</footer>
+
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump on-hero" aria-label="Jump to section">
+  <button id="jump-prev" type="button" aria-label="Previous section"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+  <button class="jump-cur" id="jump-cur" type="button" aria-expanded="false" aria-controls="jump-menu"><i class="bi bi-list-ul" aria-hidden="true"></i><span id="jump-cur-label">Cold open</span></button>
+  <button id="jump-next" type="button" aria-label="Next section"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+</nav>
+<div class="jump-menu" id="jump-menu" role="dialog" aria-label="All sections"></div>
+
+<dialog class="pop" id="pop" aria-labelledby="pop-title">
+  <div class="pop-head"><h3 id="pop-title">Transcript</h3><button class="icon-btn" type="button" id="pop-close" aria-label="Close"><i class="bi bi-x-lg" aria-hidden="true"></i></button></div>
+  <div class="pop-search" id="pop-search"><i class="bi bi-search" aria-hidden="true"></i><label class="sr-only" for="pop-q">Search the transcript</label><input id="pop-q" type="search" placeholder="Search the transcript…" autocomplete="off"><span id="pop-count"></span></div>
+  <div class="pop-body" id="pop-body"></div>
+</dialog>
+
+<dialog class="lightbox" id="lightbox" aria-label="Enlarged image">
+  <img id="lb-img" alt="">
+  <div class="lb-bar"><span id="lb-cap"></span><span><a id="lb-open" href="#" target="_blank" rel="noopener">Open full size <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a> <button type="button" id="lb-close">Close</button></span></div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js" defer></script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const body = document.body;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isNarrow = () => matchMedia("(max-width: 999px)").matches;
+  const cssVar = (n) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(n)) || 0;
+  const parseT = (s) => {
+    if (s == null || s === "") return null;
+    const p = String(s).split(":").map(Number);
+    return p.some(Number.isNaN) ? null : p.reduce((a, b) => a * 60 + b, 0);
+  };
+  const fmt = (t) => { t = Math.max(0, Math.floor(t)); return String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0"); };
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // ---------- theme ----------
+  $("#theme-btn").addEventListener("click", () => {
+    const root = document.documentElement;
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+    try { localStorage.setItem("datahack-2017-theme", root.dataset.theme); } catch (e) {}
+  });
+
+  // ---------- chapters (video moments → story sections) ----------
+  const CHAPTERS = [
+    ["00:00", "Title card", "canned"], ["00:19", "A telecom wants to stop churn", "churn"], ["00:58", "₹80 missed, ₹40 wasted", "churn"],
+    ["01:15", "The decision tree", "tree"], ["01:45", "39% better: ₹4.0", "tree"], ["02:18", "SVM: ₹2.2, 66% better", "better"],
+    ["03:00", "Four months later, canned", "better"], ["03:36", "“The sheer confusion”", "better"], ["04:05", "Commodity neural nets", "magic"],
+    ["05:05", "Witch magic", "magic"], ["05:41", "K-means on the census", "census"], ["06:48", "Hindi speakers, and the rest", "census"],
+    ["08:38", "How many clusters?", "census"], ["10:00", "0, 1, 2, 3", "label"], ["10:53", "Plot it on a map", "label"],
+    ["12:53", "Two Indias", "label"], ["13:16", "A tool for profiles", "bright"], ["15:40", "Pick the brightest colors", "bright"],
+    ["18:29", "Poor, Breakout, Aspirant…", "names"], ["19:11", "Advertiser clusters", "names"], ["21:31", "Bret Victor’s ladder", "car"],
+    ["23:25", "A car that turns 2°", "car"], ["26:29", "A curve that summarises", "ladder"], ["28:30", "Why 0° looks good", "ladder"],
+    ["29:06", "Three steps up", "ladder"], ["30:14", "Exchange rates", "hedge"], ["32:43", "The correlation matrix", "hedge"],
+    ["34:14", "Consolidate or hedge", "hedge"], ["35:45", "Black boxes need interpretation", "summary"], ["36:54", "The tool question", "tools"],
+    ["39:27", "Thank you", "tools"], ["40:22", "Q&A: which chart?", "qa"], ["42:31", "Show, ask, iterate", "qa"],
+  ].map(([t, title, sec]) => ({ t: parseT(t), label: t, title, sec }));
+  const chapOl = $("#chapters");
+  chapOl.innerHTML = CHAPTERS.map((c, i) =>
+    `<li><a href="?t=${c.label}" data-chap="${i}" class="ts-chap"><span class="ct">${c.label}</span><span>${esc(c.title)}</span></a></li>`).join("");
+  const chapLinks = $$("#chapters a");
+  const chapFor = (t) => { let i = -1; CHAPTERS.forEach((c, k) => { if (c.t <= t + 0.5) i = k; }); return i; };
+  const sections = $$(".chap, #takeaways");
+  const secTitle = (id) => { const s = document.getElementById(id); return s ? s.dataset.title : ""; };
+
+  // ---------- URL state: ?t=mm:ss&view=video#section ----------
+  const urlState = () => {
+    const u = new URL(location.href);
+    return { t: parseT(u.searchParams.get("t")), view: u.searchParams.get("view") };
+  };
+  const buildUrl = ({ t, hash } = {}) => {
+    const u = new URL(location.href);
+    if (t != null) u.searchParams.set("t", fmt(t)); else if (t === null) u.searchParams.delete("t");
+    if (body.classList.contains("watch")) u.searchParams.set("view", "video"); else u.searchParams.delete("view");
+    if (hash !== undefined) u.hash = hash ? "#" + hash : "";
+    return u.pathname + u.search.replace(/%3A/gi, ":") + u.hash;
+  };
+  let urlT = urlState().t;
+
+  // ---------- one persistent YouTube player (IFrame Player API) ----------
+  // Created once inside .vwrap and never moved or re-created: story/video focus only changes CSS.
+  const VID = "sORnCj52COw";
+  let player = null, ready = false, pending = null, lastT = urlT || 0, poll = 0;
+  const resume = $("#resume"), resumeBtn = $("#resume-btn");
+  let resumeT = urlT || 0;
+  const state = () => (ready && player.getPlayerState ? player.getPlayerState() : -1);
+  const getT = () => (ready && player.getCurrentTime ? player.getCurrentTime() || lastT : lastT);
+  const showResume = (t) => { resumeT = t; resumeBtn.querySelector("span").textContent = `Play from ${fmt(t)}`; resume.classList.add("show"); };
+  const hideResume = () => resume.classList.remove("show");
+
+  window.onYouTubeIframeAPIReady = () => {
+    const vars = { playsinline: 1, rel: 0, modestbranding: 1 };
+    if (urlT) vars.start = Math.floor(urlT);
+    if (/^https?:/.test(location.protocol)) vars.origin = location.origin;
+    player = new YT.Player("yt", {
+      videoId: VID, width: "100%", height: "100%", playerVars: vars,
+      events: {
+        onReady: () => {
+          ready = true;
+          player.getIframe().title = "Visualizing Machine Learning: Anand S at DataHack Summit, 9 November 2017 (YouTube)";
+          if (pending != null) { const t = pending; pending = null; startAt(t); }
+          else if (urlT) { onTime(); showResume(urlT); }
+        },
+        onStateChange: (e) => {
+          if (e.data === 1) {
+            hideResume();
+            if (body.classList.contains("dock-collapsed")) { body.classList.remove("dock-collapsed"); syncMin(); }
+            clearInterval(poll); poll = setInterval(() => { lastT = player.getCurrentTime(); onTime(); }, 300);
+          } else {
+            clearInterval(poll);
+            if (ready) { lastT = player.getCurrentTime() || lastT; onTime(); }
+          }
+        },
+      },
+    });
+  };
+  const tag = document.createElement("script");
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
+
+  const startAt = (t) => {
+    lastT = t;
+    const s = state();
+    if (s === 1 || s === 2 || s === 3) player.seekTo(t, true);
+    else player.loadVideoById({ videoId: VID, startSeconds: t });
+    player.playVideo();
+    onTime();
+    setTimeout(() => { const s2 = state(); if (s2 !== 1 && s2 !== 3) showResume(t); }, 1800);
+  };
+  const ensureDockVisible = () => {
+    if (isNarrow()) { body.classList.remove("dock-collapsed"); syncMin(); return; }
+    const r = $("#dock").getBoundingClientRect();
+    if (r.top > innerHeight - 80 || r.bottom < 60) $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  };
+  const playAt = (t, { push = false, el = null } = {}) => {
+    if (push) {
+      const sec = el && el.closest(".chap, #takeaways");
+      history.pushState({ t }, "", buildUrl({ t, hash: sec ? sec.id : undefined }));
+      urlT = t;
+    }
+    ensureDockVisible();
+    if (ready) startAt(t); else { pending = t; lastT = t; onTime(); }
+    if (el) { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+  };
+  resumeBtn.addEventListener("click", () => {
+    if (!ready) return;
+    const s = state();
+    if (s === 2 || s === 1) player.playVideo(); else startAt(resumeT);
+    hideResume();
+  });
+
+  const enhanceTs = (root = document) => {
+    $$("a.ts", root).forEach((a) => {
+      if (a.dataset.t) return;
+      const t = parseT(new URL(a.href, location.href).searchParams.get("t"));
+      a.dataset.t = t;
+      a.insertAdjacentHTML("afterbegin", '<i class="bi bi-play-fill" aria-hidden="true"></i>');
+      a.setAttribute("aria-label", `Play the talk from ${a.textContent.trim()}`);
+    });
+  };
+  enhanceTs();
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a.ts, a.ts-chap");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const t = a.classList.contains("ts-chap") ? CHAPTERS[+a.dataset.chap].t : +a.dataset.t;
+    const dlg = a.closest("dialog");
+    if (dlg) dlg.close();
+    playAt(t, { push: true, el: a.classList.contains("ts") && !dlg ? a : null });
+  });
+
+  // now-playing sync
+  const nowT = $("#now-t"), nowTitle = $("#now-title"), nowStory = $("#now-story");
+  let curChap = -2;
+  const onTime = () => {
+    const t = getT();
+    nowT.textContent = fmt(t);
+    const i = chapFor(t);
+    if (i === curChap) return;
+    curChap = i;
+    chapLinks.forEach((a, k) => { a.classList.toggle("is-now", k === i); if (k === i) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
+    if (i >= 0) {
+      const c = CHAPTERS[i];
+      nowTitle.textContent = c.title;
+      nowStory.innerHTML = `In the story: <a href="#${c.sec}">${esc(secTitle(c.sec))} ↓</a>`;
+      sections.forEach((s) => s.classList.toggle("is-now", s.id === c.sec));
+      const link = chapLinks[i], box = link.closest(".chapters");
+      if (box && box.scrollHeight > box.clientHeight) {
+        const lr = link.getBoundingClientRect(), br = box.getBoundingClientRect();
+        if (lr.top < br.top || lr.bottom > br.bottom) box.scrollTop += lr.top - br.top - box.clientHeight / 3;
+      }
+    }
+  };
+  if (urlT) onTime();
+
+  // story → chapter hints
+  const tsSeen = new Set();
+  let hintRaf = 0;
+  const tsIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? tsSeen.add(e.target) : tsSeen.delete(e.target)));
+    hintRaf ||= requestAnimationFrame(() => {
+      hintRaf = 0;
+      const idx = new Set([...tsSeen].map((a) => chapFor(+a.dataset.t)));
+      chapLinks.forEach((a, k) => a.classList.toggle("in-view", idx.has(k)));
+    });
+  });
+  $$("a.ts").filter((a) => !a.closest("dialog, .dock")).forEach((a) => tsIO.observe(a));
+
+  const shareBtn = $("#share-btn");
+  shareBtn.addEventListener("click", async () => {
+    const t = Math.floor(getT());
+    const sec = curChap >= 0 ? CHAPTERS[curChap].sec : "";
+    const u = new URL(location.href);
+    u.search = "?t=" + fmt(t); u.hash = sec ? "#" + sec : "";
+    const label = shareBtn.querySelector("span");
+    try { await navigator.clipboard.writeText(u.href.replace(/%3A/gi, ":")); label.textContent = `Copied ${fmt(t)}`; }
+    catch (e) { history.replaceState(history.state, "", u.pathname + u.search.replace(/%3A/gi, ":") + u.hash); label.textContent = "Link in address bar"; }
+    setTimeout(() => (label.textContent = "Share"), 2200);
+  });
+
+  // ---------- story ⇄ video focus (same iframe, CSS only) ----------
+  const modeBtn = $("#mode-btn"), modeLabel = $("#dock-mode-label");
+  const pickAnchor = () => {
+    const top = 80 + (isNarrow() && body.classList.contains("watch") ? cssVar("--dock-h") : 0);
+    return $$(".story .chap > *").find((el) => el.getBoundingClientRect().bottom > top);
+  };
+  const setMode = (watch, { replace = true } = {}) => {
+    if (body.classList.contains("watch") === watch) return;
+    const anchor = pickAnchor();
+    const before = anchor ? anchor.getBoundingClientRect().top : 0;
+    const storyVisible = $("#room").getBoundingClientRect().top < innerHeight * 0.5;
+    body.classList.toggle("watch", watch);
+    if (watch) body.classList.remove("dock-collapsed");
+    syncMin();
+    modeBtn.setAttribute("aria-pressed", String(watch));
+    modeBtn.innerHTML = watch
+      ? '<i class="bi bi-book" aria-hidden="true"></i> <span>Focus story</span>'
+      : '<i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span>';
+    modeLabel.textContent = watch ? "Video focus" : "Story focus";
+    if (replace) history.replaceState(history.state, "", buildUrl());
+    updateDockH();
+    if (anchor && storyVisible) {
+      const start = performance.now();
+      const keep = () => {
+        const d = anchor.getBoundingClientRect().top - before;
+        if (Math.abs(d) > 1) window.scrollBy({ top: d, behavior: "instant" });
+        if (performance.now() - start < 700) requestAnimationFrame(keep);
+      };
+      requestAnimationFrame(keep);
+    }
+  };
+  modeBtn.addEventListener("click", () => setMode(!body.classList.contains("watch")));
+  $("#hero-watch").addEventListener("click", (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    setMode(true);
+    $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  });
+  const updateDockH = () => {
+    const h = isNarrow() && body.classList.contains("watch") ? $("#dock").offsetHeight : 0;
+    document.documentElement.style.setProperty("--dock-h", h + "px");
+  };
+  new ResizeObserver(updateDockH).observe($("#dock"));
+  addEventListener("resize", updateDockH);
+  const minBtn = $("#min-btn");
+  function syncMin() {
+    const c = body.classList.contains("dock-collapsed");
+    minBtn.setAttribute("aria-expanded", String(!c));
+    minBtn.setAttribute("aria-label", c ? "Show the mini video" : "Hide the mini video");
+    minBtn.innerHTML = `<i class="bi ${c ? "bi-chevron-up" : "bi-chevron-down"}" aria-hidden="true"></i>`;
+  }
+  minBtn.addEventListener("click", () => { body.classList.toggle("dock-collapsed"); syncMin(); });
+  if (isNarrow() && !urlT) { body.classList.add("dock-collapsed"); syncMin(); }
+  if (urlState().view === "video") setMode(true, { replace: false });
+  if (urlT) showResume(urlT);
+
+  // ---------- history ----------
+  addEventListener("popstate", () => {
+    const { t, view } = urlState();
+    setMode(view === "video", { replace: false });
+    if (t != null && t !== urlT) {
+      lastT = t;
+      if (ready) { const s = state(); if (s === 1 || s === 2 || s === 3) player.seekTo(t, true); else player.cueVideoById({ videoId: VID, startSeconds: t }); }
+      onTime();
+      if (state() !== 1) showResume(t);
+    }
+    urlT = t;
+  });
+
+  // ---------- section jump nav ----------
+  const menu = $("#jump-menu"), backdrop = $("#jump-backdrop"), curBtn = $("#jump-cur"), curLabel = $("#jump-cur-label");
+  const groups = [];
+  sections.forEach((s) => {
+    const g = s.dataset.act;
+    if (!groups.length || groups[groups.length - 1].name !== g) groups.push({ name: g, items: [] });
+    groups[groups.length - 1].items.push(s);
+  });
+  menu.innerHTML = groups.map((g) => `<div class="jm-group">${esc(g.name)}</div><div class="jump-grid">${g.items.map((s) => {
+    const h = ((s.querySelector("h2") || {}).textContent || "").trim();
+    const same = h.replace(/\W/g, "").toLowerCase() === s.dataset.title.replace(/\W/g, "").toLowerCase();
+    return `<a href="#${s.id}" data-sec="${s.id}">${esc(s.dataset.title)}${same ? "" : `<small>${esc(h)}</small>`}</a>`;
+  }).join("")}</div>`).join("");
+  const openMenu = (open) => {
+    menu.classList.toggle("open", open); backdrop.classList.toggle("open", open);
+    curBtn.setAttribute("aria-expanded", String(open));
+    if (open) (menu.querySelector("a.is-cur") || menu.querySelector("a")).focus();
+    else if (menu.contains(document.activeElement)) curBtn.focus();
+  };
+  curBtn.addEventListener("click", () => openMenu(!menu.classList.contains("open")));
+  backdrop.addEventListener("click", () => openMenu(false));
+  menu.addEventListener("click", (e) => { if (e.target.closest("a")) openMenu(false); });
+  menu.addEventListener("keydown", (e) => { if (e.key === "Escape") openMenu(false); });
+  let curIdx = 0;
+  const goSec = (i) => {
+    i = Math.max(0, Math.min(sections.length - 1, i));
+    sections[i].scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+    history.pushState(history.state, "", buildUrl({ hash: sections[i].id }));
+  };
+  $("#jump-prev").addEventListener("click", () => goSec(curIdx - 1));
+  $("#jump-next").addEventListener("click", () => goSec(curIdx + 1));
+  const progress = $("#progress"), jumpNav = $(".jump");
+  const onScroll = () => {
+    const line = innerHeight * 0.3 + cssVar("--dock-h");
+    let i = 0;
+    sections.forEach((s, k) => { if (s.getBoundingClientRect().top <= line) i = k; });
+    if (i !== curIdx || !curLabel.dataset.init) {
+      curIdx = i; curLabel.dataset.init = 1;
+      curLabel.textContent = sections[i].dataset.title;
+      $$("a", menu).forEach((a) => a.classList.toggle("is-cur", a.dataset.sec === sections[i].id));
+      $("#jump-prev").disabled = i === 0;
+      $("#jump-next").disabled = i === sections.length - 1;
+    }
+    jumpNav.classList.toggle("on-hero", $("#room").getBoundingClientRect().top > innerHeight * 0.75 && !menu.classList.contains("open"));
+    const h = document.documentElement.scrollHeight - innerHeight;
+    progress.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%";
+  };
+  let ticking = false;
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { onScroll(); ticking = false; }); } }, { passive: true });
+  onScroll();
+
+  // keyboard shortcuts
+  document.addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest("input, textarea, select, dialog, [contenteditable]")) return;
+    if (e.key === "v" || e.key === "V") setMode(!body.classList.contains("watch"));
+    else if (e.key === "[") goSec(curIdx - 1);
+    else if (e.key === "]") goSec(curIdx + 1);
+  });
+
+  // ---------- transcript popup ----------
+  const pop = $("#pop"), popBody = $("#pop-body"), popTitle = $("#pop-title"), popSearch = $("#pop-search"), popQ = $("#pop-q"), popCount = $("#pop-count");
+  let popReturn = null;
+  const openPop = (title, html, { search = false } = {}) => {
+    popReturn = document.activeElement;
+    popTitle.textContent = title; popBody.innerHTML = html; enhanceTs(popBody);
+    popSearch.classList.toggle("on", search); popQ.value = ""; popCount.textContent = "";
+    pop.showModal(); popBody.scrollTop = 0;
+    if (search) popQ.focus();
+  };
+  pop.addEventListener("close", () => { if (popReturn && popReturn.focus) popReturn.focus(); });
+  $("#pop-close").addEventListener("click", () => pop.close());
+  pop.addEventListener("click", (e) => { if (e.target === pop) pop.close(); });
+  popQ.addEventListener("keydown", (e) => { if (e.key === "Escape") { e.preventDefault(); pop.close(); } });
+  const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  popQ.addEventListener("input", () => {
+    const q = popQ.value.trim();
+    const blocks = $$(":scope > p, :scope > ul, :scope > ol", popBody).filter((b) => !b.classList.contains("intro"));
+    $$("mark", popBody).forEach((m) => m.replaceWith(m.textContent));
+    popBody.normalize();
+    let n = 0;
+    blocks.forEach((b) => {
+      const hit = !q || b.textContent.toLowerCase().includes(q.toLowerCase());
+      b.classList.toggle("hide", !hit);
+      if (hit && q) {
+        n++;
+        const re = new RegExp(escRe(q), "gi");
+        const walker = document.createTreeWalker(b, NodeFilter.SHOW_TEXT);
+        const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach((node) => {
+          if (!re.test(node.nodeValue)) return; re.lastIndex = 0;
+          const span = document.createElement("span");
+          span.innerHTML = esc(node.nodeValue).replace(re, (m) => `<mark>${m}</mark>`);
+          node.replaceWith(...span.childNodes);
+        });
+      }
+    });
+    popCount.textContent = q ? `${n} passage${n === 1 ? "" : "s"}` : "";
+  });
+  let transcriptHtml = null;
+  document.addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-transcript]");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    if (!transcriptHtml) {
+      try {
+        let md = await (await fetch("transcript.md")).text();
+        md = md.replace(/<!--[\s\S]*?-->/g, "").replace(/^# Transcript\s*/, "")
+          .replace(/\[(\d{1,2}):(\d{2})\]/g, (m, a1, b1) => `<a class="ts" href="?t=${a1}:${b1}">${a1}:${b1}</a>`);
+        transcriptHtml = window.marked ? marked.parse(md) : md.split(/\n\n+/).map((p) => `<p>${p}</p>`).join("");
+        transcriptHtml = '<p class="intro">An automated transcript, made in ten-minute segments, of the 43-minute recording. Times match the YouTube video, so tap one to play that moment. Bold phrases were added for scanning; some technical words or numbers may be misheard. “Unsure” marks the session host, who is not identified in the recording.</p>' + transcriptHtml;
+      } catch (err) { location.href = a.href; return; }
+    }
+    openPop("Transcript", transcriptHtml, { search: true });
+  });
+
+  // ---------- lightbox ----------
+  const lb = $("#lightbox"), lbImg = $("#lb-img"), lbCap = $("#lb-cap"), lbOpen = $("#lb-open");
+  let lbReturn = null;
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-lightbox]");
+    if (!el || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    const src = el.getAttribute("href") || el.currentSrc || el.src;
+    const img = el.tagName === "IMG" ? el : el.querySelector("img");
+    lbImg.src = src; lbImg.alt = img ? img.alt : (el.dataset.caption || "");
+    lbCap.textContent = el.dataset.caption || "";
+    lbOpen.href = src;
+    lbReturn = document.activeElement;
+    lb.showModal();
+    $("#lb-close").focus();
+  });
+  $("#lb-close").addEventListener("click", () => lb.close());
+  lb.addEventListener("click", (e) => { if (e.target === lb || e.target === lbImg) lb.close(); });
+  lb.addEventListener("close", () => { if (lbReturn && lbReturn.focus) lbReturn.focus(); });
+
+  window.__story = { enhanceTs };
+})();
+</script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const enhance = (root) => window.__story && window.__story.enhanceTs(root);
+
+  // ---------- experiment 1: walk the tree, then meet the box ----------
+  // Invented subscribers. Tree structure from the 01:42 slide.
+  const CUST = {
+    A: { days: 2, rech: 3, amt: "above", box: 0 },
+    B: { days: 9, rech: 1, amt: "below", box: 1 },
+    C: { days: 11, rech: 1, amt: "above", box: 1 },
+    D: { days: 23, rech: 0, amt: "none", box: 1 },
+  };
+  const truth = (c) => ({
+    root: c.days <= 4 ? "a" : c.days >= 15 ? "c" : "b",
+    rech: c.rech > 1 ? "by" : "bn",
+    amt: c.amt === "above" ? "bny" : "bnn",
+  });
+  const NODES = {
+    root: { ask: "When did this subscriber last make an outgoing call?", opts: [["0–4 days ago", "a"], ["5–14 days ago", "b"], ["15+ days ago", "c"]] },
+    rech: { ask: "More than one recharge last quarter?", opts: [["Yes", "by"], ["No", "bn"]] },
+    amt: { ask: "Was the recharge amount above the cutoff?", opts: [["Yes", "bny"], ["No", "bnn"]] },
+  };
+  const NEXT = { a: "L-a", c: "L-c", b: "rech", by: "L-by", bn: "amt", bny: "L-bny", bnn: "L-bnn" };
+  const LEAF = { "L-a": 0, "L-c": 1, "L-by": 0, "L-bny": 0, "L-bnn": 1 };
+  let cur = "B", node = "root", path = [];
+  const pick = $("#cust-pick"), card = $("#cust-card"), ask = $("#q-ask"), opts = $("#q-opts"), hint = $("#q-hint");
+  const verdict = $("#tree-verdict"), stage = $("#box-stage"), svg = $("#tree-svg");
+  pick.innerHTML = Object.keys(CUST).map((k) => `<button class="chip" type="button" data-c="${k}" aria-pressed="${k === cur}"><span class="n">Subscriber</span>${k}</button>`).join("");
+  const reason = (step, c) => ({
+    a: `made an outgoing call ${c.days} days ago`,
+    c: `hasn’t made an outgoing call in ${c.days} days`,
+    b: `last called out ${c.days} days ago`,
+    by: `recharged ${c.rech} times last quarter`,
+    bn: c.rech ? "recharged only once last quarter" : "didn’t recharge at all last quarter",
+    bny: "but the recharge was above the cutoff",
+    bnn: c.rech ? "and the amount was small" : "",
+  }[step]);
+  const drawTree = () => {
+    $$("[data-n]", svg).forEach((g) => g.classList.remove("on"));
+    $$(".edge", svg).forEach((e) => e.classList.remove("on"));
+    svg.querySelector('[data-n="root"]').classList.add("on");
+    path.forEach((s) => {
+      svg.querySelector(`.edge[data-e="${s}"]`).classList.add("on");
+      const n = svg.querySelector(`[data-n="${NEXT[s]}"]`);
+      if (n) n.classList.add("on");
+    });
+  };
+  const renderQ = () => {
+    const c = CUST[cur];
+    card.innerHTML = `<p class="who">Subscriber ${cur} · invented</p><dl>
+      <dt>Last outgoing call</dt><dd>${c.days} days ago</dd>
+      <dt>Recharges last quarter</dt><dd>${c.rech}</dd>
+      <dt>Recharge amount</dt><dd>${c.amt === "none" ? "—" : c.amt + " cutoff"}</dd></dl>`;
+    drawTree();
+    if (NODES[node]) {
+      ask.textContent = NODES[node].ask;
+      opts.innerHTML = NODES[node].opts.map(([l, v]) => `<button class="chip" type="button" data-v="${v}">${l}</button>`).join("");
+      $("#tree-q").hidden = false;
+      verdict.classList.remove("show");
+    } else {
+      $("#tree-q").hidden = true;
+      const out = LEAF[node];
+      const why = path.map((s) => reason(s, c)).filter(Boolean).join(", ");
+      verdict.innerHTML = `<p class="big ${out ? "r1" : "r0"}">${out ? "1 · Likely to leave → send the retention offer" : "0 · Likely to stay → no offer needed"}</p>
+        <p style="margin:0 0 .5rem">What you can tell marketing: <em>“This subscriber ${why}.”</em></p>
+        <p style="margin:0 0 .6rem">A rule a person can repeat, check and argue with.</p>
+        <button class="chip" type="button" id="to-box">Now try the upgraded model <i class="bi bi-arrow-right" aria-hidden="true"></i></button>`;
+      verdict.classList.add("show");
+      $("#to-box").addEventListener("click", () => showBox(out));
+    }
+  };
+  const showBox = (treeOut) => {
+    const c = CUST[cur];
+    stage.classList.add("show");
+    $("#bb-in").textContent = `Subscriber ${cur}`;
+    const o = $("#bb-out");
+    o.textContent = c.box; o.style.background = c.box ? "var(--red)" : "var(--green)";
+    $("#bb-line").innerHTML = c.box === treeOut
+      ? `The box agrees with the tree: <strong>${c.box}</strong>. Fine, but it can’t tell you <em>why</em>, so nobody can check it.`
+      : `<strong>The box says ${c.box}; the tree said ${treeOut}.</strong> Do you spend ₹40 on this subscriber? What do you tell the person who signs off on the budget?`;
+    $$("#bb-answers button").forEach((b) => b.setAttribute("aria-pressed", "false"));
+    $("#bb-reveal").classList.remove("show");
+    stage.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "nearest" });
+  };
+  $("#bb-answers").addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    $$("#bb-answers button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    const r = $("#bb-reveal");
+    r.classList.add("show");
+    enhance(r);
+  });
+  opts.addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    const want = truth(CUST[cur])[node];
+    if (b.dataset.v !== want) {
+      b.classList.add("no");
+      hint.textContent = "Not quite. Check the subscriber card.";
+      return;
+    }
+    hint.textContent = "";
+    path.push(b.dataset.v);
+    node = NEXT[b.dataset.v];
+    renderQ();
+    const first = opts.querySelector("button");
+    if (first && !$("#tree-q").hidden) first.focus();
+    else if ($("#to-box")) $("#to-box").focus();
+  });
+  pick.addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    cur = b.dataset.c; node = "root"; path = [];
+    $$("button", pick).forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    stage.classList.remove("show"); hint.textContent = "";
+    renderQ();
+  });
+  renderQ();
+
+  // ---------- experiment 2: label → map → profile → name (real frames) ----------
+  const STEPS = [
+    { tab: "The answer", img: "slides/05-map-segments.webp", w: 1280, h: 720, stamp: "~10:20", ts: "10:00",
+      alt: "Excel sheet census_cluster.csv with columns District code, cluster, State name, District name; rows for Jammu & Kashmir districts each with a cluster number.",
+      head: "A column of numbers", body: "640 rows. Kupwara is 3, Badgam is 3, and so on. You know which districts share a number. You don’t know what the number <em>means</em>.", r: 0, rl: "Can you plan a channel? No." },
+    { tab: "On a map", img: "slides/f1145-four-clusters.webp", w: 854, h: 480, stamp: "11:45", ts: "11:39",
+      alt: "India district map in Excel coloured by four clusters: yellow across the north-east and parts of Jammu and Kashmir, orange and blue across the plains, green specks near metros.",
+      head: "Now it has a place", body: "Yellow covers the north-east and parts of Jammu &amp; Kashmir. Most of AP and Telangana fall together. Green clusters around Mumbai, Pune, Bengaluru and Kolkata. You can see a pattern, but you can’t yet explain it.", r: 1, rl: "A hunch" },
+    { tab: "Two clusters", img: "slides/f1312-two-clusters.webp", w: 854, h: 480, stamp: "13:12", ts: "12:53",
+      alt: "India district map with just two colours, orange and blue; orange covers much of the south, Maharashtra and belts of UP, Bihar and West Bengal.",
+      head: "Test the client’s own model", body: "Ask for two clusters, like the client’s Hindi / non-Hindi split. Belts of UP and Bihar come out <strong>closer to the South</strong> than to the rest of the North. That’s something you can take back to the programming team.", r: 2, rl: "One decision" },
+    { tab: "Profile", img: "slides/f1622-auto-highlight.webp", w: 854, h: 480, stamp: "16:22", ts: "16:20",
+      alt: "Cluster profile tool listing the strongest differences: Cluster 3 has low Rural %; Cluster 4 has high Christian %, low Total population; Cluster 5 has high Sikh %.",
+      head: "Now it has a description", body: "Average every variable per cluster and let a slider surface the extremes. Cluster 3 (in this six-cluster run) is the one with <strong>low rural share</strong>: the cities. With a description, you can start to design for it.", r: 3, rl: "Several decisions" },
+    { tab: "A name", img: "slides/f1912-segments-slide.webp", w: 642, h: 480, stamp: "19:12", ts: "18:29",
+      alt: "Client slide naming six district segments: Poor, Breakout, Aspirant, Owner, Business and Rich, with a coloured India map and descriptions.",
+      head: "Now it has a name and a strategy", body: "“Rich: urban educated population working in skilled jobs. All metros, large cities, parts of Kerala, TN.” A planner can commission a show for that. <strong>The clustering hasn’t changed since the first step. Only the way it’s shown has.</strong>", r: 4, rl: "Ready to act" },
+  ];
+  const tabs = $("#steps-tabs"), panels = $("#steps-panels");
+  tabs.innerHTML = STEPS.map((s, i) => `<button role="tab" type="button" id="st-${i}" aria-controls="sp-${i}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}"><span class="n">${i + 1}</span>${s.tab}</button>`).join("");
+  panels.innerHTML = STEPS.map((s, i) => `<div role="tabpanel" id="sp-${i}" aria-labelledby="st-${i}" ${i ? "hidden" : ""} tabindex="0">
+      <a class="shot" href="${s.img}" data-lightbox data-caption="${s.stamp}: ${s.head}"><img src="${s.img}" width="${s.w}" height="${s.h}" loading="lazy" alt="${s.alt}"><span class="stamp">FILM · ${s.stamp}</span></a>
+      <div class="side"><p style="font:700 1.05rem var(--font-ui)">${s.head}</p><p>${s.body}</p>
+        <div class="ready-l">Can you act on “cluster 3” yet?</div>
+        <div class="ready" aria-hidden="true">${[0, 1, 2, 3].map((k) => `<i class="${k < s.r ? "f" : ""}"></i>`).join("")}</div>
+        <p style="font:600 .9rem var(--font-ui);margin:.2rem 0 .6rem">${s.rl}</p>
+        <a class="ts" href="?t=${s.ts}">${s.ts}</a></div></div>`).join("");
+  enhance(panels);
+  let step = 0;
+  const setStep = (i, focus = false) => {
+    step = Math.max(0, Math.min(STEPS.length - 1, i));
+    $$("[role=tab]", tabs).forEach((t, k) => { t.setAttribute("aria-selected", String(k === step)); t.tabIndex = k === step ? 0 : -1; if (k === step && focus) t.focus(); });
+    $$("[role=tabpanel]", panels).forEach((p, k) => (p.hidden = k !== step));
+    $("#step-prev").disabled = step === 0;
+    $("#step-next").disabled = step === STEPS.length - 1;
+  };
+  tabs.addEventListener("click", (e) => { const t = e.target.closest("[role=tab]"); if (t) setStep(+t.id.slice(3)); });
+  tabs.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") { e.preventDefault(); setStep(step + 1, true); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); setStep(step - 1, true); }
+    if (e.key === "Home") { e.preventDefault(); setStep(0, true); }
+    if (e.key === "End") { e.preventDefault(); setStep(STEPS.length - 1, true); }
+  });
+  $("#step-prev").addEventListener("click", () => setStep(step - 1));
+  $("#step-next").addEventListener("click", () => setStep(step + 1));
+  setStep(0);
+
+  // ---------- experiment 3: steering-car recreation (rule after Bret Victor) ----------
+  const W = 720, HW = 14, BUMP = 90, B0 = 170, B1 = 470, Y0 = 10, MAXN = 4000;
+  const centre = (x) => (x < B0 || x > B1 ? 0 : -BUMP * (1 - Math.cos((2 * Math.PI * (x - B0)) / (B1 - B0))) / 2);
+  const simulate = (deg) => {
+    const r = (deg * Math.PI) / 180;
+    let x = 0, y = Y0, h = 0, off = 0, n = 0;
+    const pts = [[x, y, h]];
+    while (x < W && n < MAXN) {
+      const d = y - centre(x);
+      if (d < -HW) h += r; else if (d > HW) h -= r;
+      x += Math.cos(h); y += Math.sin(h); n++;
+      if (Math.abs(y - centre(x)) > HW) off++;
+      pts.push([x, y, h]);
+    }
+    return { pts, off: off / n, done: x >= W };
+  };
+  const toPath = (pts, upto = pts.length) => { let d = ""; for (let i = 0; i < upto; i += 2) d += (i ? "L" : "M") + pts[i][0].toFixed(1) + " " + pts[i][1].toFixed(1); return d; };
+  let rd = "M0 0"; for (let x = 0; x <= W; x += 4) rd += `L${x} ${centre(x).toFixed(1)}`;
+  $("#road-band").setAttribute("d", rd); $("#road-band").setAttribute("stroke-width", 2 * HW);
+  $("#road-center").setAttribute("d", rd);
+  const SWEEP = Array.from({ length: 101 }, (_, i) => { const d = i / 10; const s = simulate(d); return { d, off: s.off }; });
+  const best = SWEEP.reduce((a, b) => (b.off < a.off ? b : a));
+  const theta = $("#theta"), thetaOut = $("#theta-out"), trace = $("#trace"), car = $("#car-g"), scrub = $("#scrub"), scrubT = $("#scrub-t"), ghosts = $("#ghosts"), readout = $("#readout");
+  ghosts.innerHTML = Array.from({ length: 21 }, (_, i) => `<path class="ghost" d="${toPath(simulate(i / 2).pts)}"/>`).join("");
+  let run = simulate(2), lvl = 1, anim = 0;
+  const placeCar = (k) => {
+    const p = run.pts[Math.min(k, run.pts.length - 1)];
+    car.setAttribute("transform", `translate(${p[0].toFixed(1)} ${p[1].toFixed(1)}) rotate(${((p[2] * 180) / Math.PI).toFixed(1)})`);
+    trace.setAttribute("d", toPath(run.pts, k + 1));
+    scrubT.textContent = k >= run.pts.length - 1 ? "end" : `step ${k}`;
+  };
+  const sumSvg = $("#sum-svg");
+  const SX = (d) => 44 + (d / 10) * 660, SY = (v) => 156 - v * 140;
+  const drawSum = () => {
+    const deg = +theta.value;
+    const line = SWEEP.map((p, i) => (i ? "L" : "M") + SX(p.d).toFixed(1) + " " + SY(p.off).toFixed(1)).join("");
+    const cur = SWEEP[Math.round(deg * 10)];
+    sumSvg.innerHTML = `<title>Rung 3: share of the trip spent off the road for every turning angle from 0 to 10 degrees. Click or drag to step back down to that angle.</title>
+      ${[0, 0.25, 0.5, 0.75, 1].map((v) => `<line class="grid" x1="44" x2="704" y1="${SY(v)}" y2="${SY(v)}"/><text x="38" y="${SY(v) + 4}" text-anchor="end">${v * 100}%</text>`).join("")}
+      ${[0, 2, 4, 6, 8, 10].map((d) => `<text x="${SX(d)}" y="176" text-anchor="middle">${d}°</text>`).join("")}
+      <text x="44" y="10" style="font-weight:700;letter-spacing:.08em">RUNG 3 · OFF-ROAD SHARE FOR EVERY ANGLE</text>
+      <path class="line" d="${line}"/>
+      <circle class="marker" cx="${SX(cur.d)}" cy="${SY(cur.off)}" r="7"/>
+      <rect class="hit" x="44" y="14" width="660" height="146"/>`;
+  };
+  const setLvl = (l) => {
+    lvl = l;
+    $$("[data-lvl]").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.lvl === l)));
+    ghosts.style.display = l === 2 ? "" : "none";
+    if (l !== 0) { cancelAnimationFrame(anim); placeCar(run.pts.length - 1); scrub.value = 1000; }
+  };
+  const update = () => {
+    const deg = +theta.value;
+    thetaOut.textContent = deg.toFixed(1) + "°";
+    $("#rule-card").innerHTML = `At each step: move forward 1 pixel.<br>If left of the road, turn right by <b>${deg.toFixed(1)}°</b>.<br>If right of the road, turn left by <b>${deg.toFixed(1)}°</b>.`;
+    run = simulate(deg);
+    cancelAnimationFrame(anim);
+    placeCar(run.pts.length - 1); scrub.value = 1000;
+    drawSum();
+    const pct = Math.round(run.off * 100);
+    readout.innerHTML = `At <strong>${deg.toFixed(1)}°</strong> the car spends <strong>${pct}%</strong> of the trip off the road${run.done ? "" : " and never finishes"}. ` +
+      (deg === 0 ? "It ignores the bend and drives straight through, which scores better than 0.5°. That’s the artefact Anand pointed out." :
+       `Lowest in this recreation: ${best.d.toFixed(1)}° (${Math.round(best.off * 100)}%). The curve is bumpy, so check a few angles near it.`);
+  };
+  const drive = () => {
+    setLvl(0);
+    cancelAnimationFrame(anim);
+    if (reduced) { placeCar(run.pts.length - 1); return; }
+    let k = 0;
+    const tick = () => { k += 5; placeCar(k); scrub.value = Math.round((Math.min(k, run.pts.length - 1) / (run.pts.length - 1)) * 1000); if (k < run.pts.length - 1) anim = requestAnimationFrame(tick); };
+    tick();
+  };
+  theta.addEventListener("input", update);
+  $("#drive").addEventListener("click", drive);
+  $$("[data-lvl]").forEach((b) => b.addEventListener("click", () => (+b.dataset.lvl === 0 ? drive() : setLvl(+b.dataset.lvl))));
+  scrub.addEventListener("input", () => { cancelAnimationFrame(anim); placeCar(Math.round((+scrub.value / 1000) * (run.pts.length - 1))); });
+  let dragging = false;
+  const fromSum = (e) => {
+    const r = sumSvg.getBoundingClientRect();
+    const x = ((e.clientX - r.left) / r.width) * 720;
+    theta.value = Math.max(0, Math.min(10, Math.round(((x - 44) / 660) * 100) / 10));
+    update();
+  };
+  sumSvg.addEventListener("pointerdown", (e) => { dragging = true; sumSvg.setPointerCapture(e.pointerId); fromSum(e); });
+  sumSvg.addEventListener("pointermove", (e) => { if (dragging) fromSum(e); });
+  sumSvg.addEventListener("pointerup", () => (dragging = false));
+  update(); setLvl(1);
+
+  // load Bret Victor's original on request
+  $("#load-orig").addEventListener("click", (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const slot = $("#orig-slot");
+    if (!slot.firstChild) slot.innerHTML = '<iframe src="https://worrydream.com/LadderOfAbstraction/" title="Bret Victor: Up and Down the Ladder of Abstraction (original, 2011)" loading="lazy"></iframe><p class="cap">Bret Victor, <a href="https://worrydream.com/LadderOfAbstraction/">Up and Down the Ladder of Abstraction</a>. Embedded from worrydream.com.</p>';
+    slot.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "nearest" });
+  });
+})();
+</script>
+</body>
+</html>

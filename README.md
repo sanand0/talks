@@ -44,7 +44,7 @@ I speak regularly at:
 - 11 Sep 2026. **[How to Build AI Products — and Prove They Work](2026-09-06-how-to-build-ai-products/ ":ignore")** at [SUTD DAI Signature Master Class · Expert Industry Series](https://www.sutd.edu.sg/), Singapore University of Technology and Design, Singapore.  
   Build AI products around evidence, not ideas: prototype quickly, test with agents and real users, and iterate until the product proves its value.  
   [📖 Day 1](2026-09-06-how-to-build-ai-products/day1.html ":ignore") · [📖 Day 2](2026-09-06-how-to-build-ai-products/day2.html ":ignore") · [📖 Day 3](2026-09-06-how-to-build-ai-products/day3.html ":ignore") · [📖 Day 4](2026-09-06-how-to-build-ai-products/day4.html ":ignore") · [📖 Day 5](2026-09-06-how-to-build-ai-products/day5.html ":ignore") · [💬 Transcript Day 1](2026-09-06-how-to-build-ai-products/transcript-day-1.md) · [💬 Transcript Day 2](2026-09-06-how-to-build-ai-products/transcript-day-2.md) · [💬 Transcript Day 3](2026-09-06-how-to-build-ai-products/transcript-day-3.md) · [💬 Transcript Day 4](2026-09-06-how-to-build-ai-products/transcript-day-4.md) · [💬 Transcript Day 5](2026-09-06-how-to-build-ai-products/transcript-day-5.md)
-- 03 Sep 2026. **[What's Left For Us](2026-09-03-convergence-jio-institute/ ":ignore")** at [Convergence 2026](https://www.jioinstitute.edu.in/convergence-2026), Nanyang Executive Centre, NTU, Singapore.  
+- 03 Sep 2026. **[What's Left For Us](2026-09-03-convergence-jio-institute/ ":ignore")** at [Jio Institute Convergence 2026](https://www.jioinstitute.edu.in/convergence-2026), Nanyang Executive Centre, NTU, Singapore.  
   As AI takes over production, human value shifts to judgment, context, and verification. The real bottleneck is the cost of checking AI's work.  
   [📖 Survey](2026-09-03-convergence-jio-institute/survey.html ":ignore") · [⏯️ Video (15m)](https://youtu.be/liS63TzFJIU) · [💬 Transcript](2026-09-03-convergence-jio-institute/transcript.md) · [🎧 Audio (15m)](https://github.com/sanand0/talks/releases/download/talks/2026-09-03-convergence-jio-institute.opus ":ignore")
 - 22 Aug 2026. **[You Don't Even Need to Code](2026-08-22-ai-unboxed-vibe-coding/ ":ignore")** at [IIM Alumni Singapore — AI Unboxed (4/4)](https://iimalumni.sg/), Singapore / Teams.  
@@ -235,6 +235,9 @@ I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtu
 - 19 Nov 2017. **[Prisoners of Birth](2017-11-19-tedx-whitefield/ ":ignore")** at [TEDx Whitefield, 2017](https://www.ted.com/tedx/events/24163), Bengaluru.  
   Names, pass marks, birthdays and parents' jobs all predicted Indian exam marks. Each turned out to reflect a child's starting point rather than the child.  
   [⏯️ Video (18m)](https://youtu.be/UwV9WPDY6u8) · [⏯️ Official TEDx upload (archive) (17m)](https://youtu.be/ew5_-7cwSm0) · [🪧 Download slides](https://github.com/sanand0/talks/releases/download/talks/2017-11-19-TEDx-Whitefield-Prisoners-of-Birth.pptx) · [🪧 View slides](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/2017-11-19-TEDx-Whitefield-Prisoners-of-Birth.pptx) · [💬 Transcript](2017-11-19-tedx-whitefield/transcript.md) · [🎧 Audio (18m)](https://github.com/sanand0/talks/releases/download/talks/2017-11-19-tedx-whitefield.opus ":ignore")
+- 09 Nov 2017. **[Visualizing Machine Learning](2017-11-09-datahack-visualizing-machine-learning/ ":ignore")** at [Analytics Vidhya DataHack Summit 2017](https://www.analyticsvidhya.com/datahack-summit-2017/), Bengaluru.  
+  A telecom's churn model got 66% cheaper per customer and was cancelled because nobody could explain it to marketing; maps, cluster profiles, Bret Victor's ladder of abstraction and correlation heatmaps turn model output into decisions.  
+  [⏯️ Video (uploaded 28 Mar 2020) (43m)](https://youtu.be/sORnCj52COw) · [⏯️ My video copy (43m)](https://youtu.be/khJZHHJLs88) · [💬 Transcript](2017-11-09-datahack-visualizing-machine-learning/transcript.md) · [🎧 Audio (43m)](https://github.com/sanand0/talks/releases/download/talks/2017-11-09-datahack-visualizing-machine-learning.opus ":ignore")
 - 28 Feb 2015. **[Visualizing Politics](2015-02-28-tedx-nmims-bangalore/ ":ignore")** at [TEDx NMIMS Bangalore, 2015](https://www.ted.com/tedx/events/13132).  
   Political data becomes more understandable when visualized at human scale. Maps and charts can expose voting patterns, representation, and anomalies that tables conceal.  
   [⏯️ Video (13m)](https://youtu.be/XuawdPb2F5A) · [🪧 Download slides](https://github.com/sanand0/talks/releases/download/talks/2015-02-28-TEDx-NMIMS-Bangalore-Visualizing-Politics.pptx) · [🪧 View slides](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/2015-02-28-TEDx-NMIMS-Bangalore-Visualizing-Politics.pptx) · [💬 Transcript](2015-02-28-tedx-nmims-bangalore/transcript.md) · [🎧 Audio (13m)](https://github.com/sanand0/talks/releases/download/talks/2015-02-28-tedx-nmims-bangalore.opus ":ignore")
@@ -244,6 +247,12 @@ I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtu
 - 15 May 2014. **NCERT NRG Workshop**  
   A practical workshop on using data and visualization to explore educational questions, turning raw information into patterns that are easier to understand and discuss.  
   [🪧 Download compressed slides](https://github.com/sanand0/talks/releases/download/talks/2014-05-15-NCERT-NRG-Workshop-small.pptx) · [🪧 Download slides](https://github.com/sanand0/talks/releases/download/talks/NCERT-NRG-Workshop.pptx) · [🪧 View compressed slides](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/2014-05-15-NCERT-NRG-Workshop-small.pptx) · [🪧 View slides](https://view.officeapps.live.com/op/view.aspx?src=https://github.com/sanand0/talks/releases/download/talks/NCERT-NRG-Workshop.pptx)
+- 01 Sep 2013. **[Data Visualisation in PowerPoint with Python](2013-09-01-pycon-powerpoint-python/ ":ignore")** at [PyCon India 2013](https://in.pycon.org/2013/), NIMHANS Convention Centre, Bangalore.  
+  A PowerPoint slide can be a program: Python drove PowerPoint through COM to make 250 IMDb posters re-sort themselves in place, because newspaper and boardroom clients needed editable work to end up in PowerPoint.  
+  [⏯️ Video (43m)](https://youtu.be/aKCXj1DyEhM) · [💬 Transcript](2013-09-01-pycon-powerpoint-python/transcript.md) · [🎧 Audio (43m)](https://github.com/sanand0/talks/releases/download/talks/2013-09-01-pycon-powerpoint-python.opus ":ignore") · [💻 Code](https://github.com/sanand0/ipython-notebooks/blob/master/Office.ipynb)
+- 20 Oct 2012. **[Beautiful Visualizations with d3.js](2012-10-20-jsfoo-d3-visualizations/ ":ignore")** at [JSFoo 2012](https://jsfoo.in/2012/), NIMHANS Convention Centre, Bangalore.  
+  D3 lets you draw almost anything, but not what to draw: an audience question about bubble charts turned a showreel into a lesson on choosing encodings that help people compare.  
+  [⏯️ Video (61m)](https://youtu.be/JAlZ0uJnqkA) · [💬 Transcript](2012-10-20-jsfoo-d3-visualizations/transcript.md) · [🎧 Audio (61m)](https://github.com/sanand0/talks/releases/download/talks/2012-10-20-jsfoo-d3-visualizations.opus ":ignore") · [💻 Code](https://github.com/sanand0/beautiful-visualisations)
 - 17 Feb 2011. **Python Imaging**  
   Python can automate image processing tasks such as transformation, measurement, composition, and batch manipulation, making visual workflows programmable and reproducible.  
   [💻 Code](python-imaging/)
@@ -347,14 +356,13 @@ I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtu
   [⏯️ Video (1m)](https://youtu.be/vXaPu2K7x70)
 - 13 May 2021. **Albus Dumbledore and the Bar Chart Race | Build With Gramex by Anand S | S01 E01**  
   [⏯️ Video (3m)](https://youtu.be/Zoq1zOFKgyo)
-- 22 Jan 2021. **Programming Minecraft with WebSockets in JavaScript**  
-  [⏯️ Video (34m)](https://youtu.be/bjanNXXwQbo)
+- 22 Jan 2021. **[Programming Minecraft with WebSockets in JavaScript](2021-01-22-minecraft-websockets-javascript/ ":ignore")**  
+  Deleting one console.log made a Node program faster and left its Minecraft pyramid unfinished: logging had been throttling the sender, and the real fix was backpressure, capping in-flight requests and letting each reply release the next.  
+  [⏯️ Video (34m)](https://youtu.be/bjanNXXwQbo) · [💬 Transcript](2021-01-22-minecraft-websockets-javascript/transcript.md) · [🎧 Audio (34m)](https://github.com/sanand0/talks/releases/download/talks/2021-01-22-minecraft-websockets-javascript.opus ":ignore") · [💻 Code](https://github.com/sanand0/minecraft-websocket/tree/master/tutorial)
 - 23 Jul 2020. **Data as Kingmaker - Kotak: Chasing Growth**  
   [⏯️ Video (58m)](https://youtu.be/C4Weh0HYWCg)
 - 01 May 2020. **CIR Interview with CEO- Mr Anand S, CEO, Gramener**  
   [⏯️ Video (36m)](https://youtu.be/Dns-yPuKp9U)
-- 28 Mar 2020. **Visualizing Machine Learning | Anand S**  
-  [⏯️ Video (43m)](https://youtu.be/sORnCj52COw) · [⏯️ My video copy (43m)](https://youtu.be/khJZHHJLs88)
 - 06 Mar 2020. **Engaging your audience with interactive PowerPoint decks**  
   [⏯️ Video (43m)](https://youtu.be/9tJ4882mGQ0)
 - 03 Mar 2020. **\[WEBINAR\] How to make interactive data driven PPTs | S Anand**  
@@ -461,14 +469,10 @@ I'll migrate old talks here over time. This [YouTube Playlist](https://www.youtu
   [⏯️ Video (23m)](https://youtu.be/N3rZAO_JRe8)
 - 21 Mar 2014. **UNICOM India Big Data Week 2014 Part 5**  
   [⏯️ Video (9m)](https://youtu.be/ZSZ3Y9l8aMg)
-- 06 Sep 2013. **Data Visualization in PowerPoint with Python by Anand S**  
-  [⏯️ Video (43m)](https://youtu.be/aKCXj1DyEhM)
 - 27 Jul 2013. **Scraping the Government with Javascript - Anand S**  
   [⏯️ Video (32m)](https://youtu.be/NH4E0PEyx3I)
 - 04 Jul 2013. **Python Pandas tutorial by S. Anand**  
   [⏯️ Video (71m)](https://youtu.be/YLiwCKpoW1Q)
-- 07 Dec 2012. **Anand S - Beautiful visualizations with d3.js**  
-  [⏯️ Video (61m)](https://youtu.be/JAlZ0uJnqkA)
 - 01 Oct 2012. **1st october 2012 thinking with data part 1**  
   [⏯️ Video (49m)](https://youtu.be/vfDsO0SBEpk)
 - 01 Oct 2012. **1st october 2012 thinking with data part 3**  

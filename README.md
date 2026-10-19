@@ -23,6 +23,9 @@ I speak regularly at:
 <!-- BEGIN GENERATED TALKS -->
 ## Latest talks
 
+- 18 Oct 2026. **[The Roll Call: When Do You Let AI Act?](2026-10-18-aipl-when-do-you-let-ai-act/ ":ignore")** at [AI Product Leadership (AIPL) 2026, Module 5 Session 1 — LeadUp Universe with E&ICT Academy, IIT Kanpur](https://leadupuniverse.com/), Online (Zoom).  
+  A leadership workshop on delegating to AI stalled on a hard question; the instructor let AI act on the room, then asked it how to fix the workshop, and the session ended on an untested experiment for knowing when to stop AI.  
+  [💬 Transcript](2026-10-18-aipl-when-do-you-let-ai-act/transcript.md) · [🎧 Audio (113m)](https://github.com/sanand0/talks/releases/download/talks/2026-10-18-aipl-when-do-you-let-ai-act.opus ":ignore")
 - 12 Oct 2026. **[The Exam Is a Hypothesis](2026-10-12-tds-ideation/ ":ignore")** at [TDS Course Ideation — Open Design Meeting, Sep 2026](https://tds.s-anand.net/), Remote.  
   Inside an open TDS course-design meeting: the instructors invent agent-friendly assessments, a student asks what they will measure, and the difference between getting work done and learning becomes the hardest test.  
   [⏯️ Video (69m)](https://media.s-anand.net/2026-10-12-tds-course-ideation.webm ":ignore") · [💬 Transcript](2026-10-12-tds-ideation/transcript.md) · [🎧 Audio (69m)](https://github.com/sanand0/talks/releases/download/talks/2026-10-12-tds-ideation.opus ":ignore")

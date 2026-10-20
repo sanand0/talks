@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Exam Has to Pass Its Own Exam · TDS open design meeting · 19 Oct 2026</title>
+<meta name="description" content="A week after inventing agent-friendly assessments in public, the IIT Madras Tools in Data Science team meets running code, student questions, checking budgets, leaky graders and a $500 experiment that didn't ship.">
+<meta property="og:title" content="The Exam Has to Pass Its Own Exam">
+<meta property="og:description" content="Inside the third open TDS course-design meeting, 19 Oct 2026: a market, a marketplace, a phone pen, a $500 question that was dropped, and what a pass rate really counts.">
+<meta property="og:image" content="https://talks.s-anand.net/2026-10-19-tds-ideation/comic-page.avif">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2317202e'/%3E%3Ctext x='10' y='28' font-family='monospace' font-size='18' fill='%237ee2b8'%3E%E2%9C%93%3C/text%3E%3Ctext x='10' y='50' font-family='monospace' font-size='18' fill='%23ff8f80'%3E%E2%9C%97%3C/text%3E%3Crect x='30' y='16' width='24' height='5' rx='2' fill='%23d7dde6'/%3E%3Crect x='30' y='38' width='18' height='5' rx='2' fill='%23d7dde6'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&amp;family=IBM+Plex+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script>
+  (() => {
+    let t = null;
+    try { t = localStorage.getItem("tds-ideation-3-theme"); } catch (e) {}
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  })();
+</script>
+<style>
+/* =========================================================
+   Design note: the page is a test report on the exam itself.
+   It borrows the look of a CI run (GitHub Actions / pytest):
+   every idea is a test case that ships, fails, or is pending.
+   Green = it survived. Red = it broke before students saw it.
+   Amber = untested or hypothetical. Blue = said on the call.
+   Violet = what the code/question text actually says.
+   ========================================================= */
+:root {
+  --paper: #f4f2ec; --paper2: #e9e6dc; --card: #fffdf8; --ink: #17202e; --muted: #535b69; --line: #d4d0c4;
+  --pass: #1d7356; --pass-soft: #dcefe6; --fail: #b8352a; --fail-soft: #f7ddd8; --pend: #855d00; --pend-soft: #f6e8c4;
+  --sig: #2b48ab; --sig-soft: #e1e7f7; --code: #6a3b9e; --code-soft: #ece3f6;
+  --term: #0d1117; --term2: #161b24; --on-term: #d7dde6; --term-muted: #97a1b2; --term-green: #7ee2b8; --term-red: #ff8f80; --term-amber: #f0c35e; --term-link: #a9c8ff;
+  --font-display: "Bricolage Grotesque", "Trebuchet MS", sans-serif; --font-body: "Newsreader", Georgia, serif; --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --measure: 40rem; --pad: clamp(1rem, 3vw, 2.4rem); --dock-w: 400px; --ease: cubic-bezier(.2,.7,.2,1);
+  --shadow: 0 1px 0 rgba(0,0,0,.04), 0 14px 34px -20px rgba(20,30,50,.45);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #10151d; --paper2: #171e29; --card: #1a2230; --ink: #e6e9ee; --muted: #a6afbd; --line: #2e3848;
+    --pass: #6fd3a8; --pass-soft: #15302a; --fail: #ff8f80; --fail-soft: #3a1d1b; --pend: #f0c35e; --pend-soft: #382c10;
+    --sig: #9db4ff; --sig-soft: #1d2848; --code: #c9a8ff; --code-soft: #2a2040;
+    --term: #080b10; --term2: #121822; --shadow: 0 14px 34px -20px rgba(0,0,0,.85);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #10151d; --paper2: #171e29; --card: #1a2230; --ink: #e6e9ee; --muted: #a6afbd; --line: #2e3848;
+  --pass: #6fd3a8; --pass-soft: #15302a; --fail: #ff8f80; --fail-soft: #3a1d1b; --pend: #f0c35e; --pend-soft: #382c10;
+  --sig: #9db4ff; --sig-soft: #1d2848; --code: #c9a8ff; --code-soft: #2a2040;
+  --term: #080b10; --term2: #121822; --shadow: 0 14px 34px -20px rgba(0,0,0,.85);
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { margin: 0; font-family: var(--font-body); font-size: 19px; line-height: 1.7; color: var(--ink); background: var(--paper); overflow-x: hidden; }
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; line-height: 1.08; margin: 0; letter-spacing: -.02em; }
+a { color: var(--sig); text-decoration-thickness: 1px; text-underline-offset: .18em; }
+a:hover { text-decoration-thickness: 2px; }
+strong { font-weight: 600; }
+img { max-width: 100%; height: auto; }
+:focus-visible { outline: 3px solid var(--fail); outline-offset: 2px; border-radius: 2px; }
+.skip { position: absolute; left: -9999px; top: 0; background: var(--ink); color: var(--paper); padding: .5rem 1rem; z-index: 1000; }
+.skip:focus { left: .5rem; top: .5rem; }
+.sr-only { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.muted { color: var(--muted); }
+.small { font-size: .85rem; }
+kbd { font: .8em var(--font-mono); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 3px; padding: 0 .3em; background: var(--card); }
+code { font: .86em var(--font-mono); background: var(--paper2); padding: .05em .3em; border-radius: 3px; }
+
+.progress { position: fixed; left: 0; top: 0; height: 3px; width: 0; background: var(--pass); z-index: 900; }
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .7rem var(--pad); font: 500 .82rem var(--font-mono); border-bottom: 1px solid var(--line); }
+.topbar a { color: var(--ink); text-decoration: none; }
+.tb-right { display: flex; align-items: center; gap: .8rem; color: var(--muted); }
+.icon-btn { appearance: none; border: 1px solid var(--line); background: var(--card); color: var(--ink); width: 2.2rem; height: 2.2rem; border-radius: 50%; cursor: pointer; display: inline-grid; place-items: center; }
+.icon-btn:hover { border-color: var(--ink); }
+
+/* ---------- hero ---------- */
+.hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); gap: clamp(1.5rem, 4vw, 4rem); max-width: 1320px; margin: 0 auto; padding: clamp(2rem, 5vw, 4.5rem) var(--pad) 3rem; align-items: start; }
+.kicker { display: flex; flex-wrap: wrap; gap: .3rem .7rem; align-items: center; font: 600 .74rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.2rem; }
+.kicker .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pass); }
+.hero h1 { font-size: clamp(2.9rem, 7.6vw, 6.2rem); line-height: .95; letter-spacing: -.035em; margin-bottom: 1.5rem; font-weight: 800; }
+.hero h1 em { font-style: normal; color: var(--pass); }
+.hero h1 .strike { position: relative; white-space: nowrap; }
+.deck { font-size: clamp(1.18rem, 2vw, 1.4rem); line-height: 1.5; max-width: 40rem; margin: 0 0 1.1rem; }
+.who { font-size: 1rem; color: var(--muted); max-width: 40rem; margin: 0 0 1.5rem; line-height: 1.6; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.3rem; }
+.btn { display: inline-flex; align-items: center; gap: .5rem; font: 600 .9rem var(--font-mono); padding: .7rem 1.05rem; border-radius: 6px; text-decoration: none; background: var(--ink); color: var(--paper); border: 1.5px solid var(--ink); cursor: pointer; }
+.btn:hover { background: var(--pass); border-color: var(--pass); color: var(--paper); }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.audio-line { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem; font: .82rem var(--font-mono); color: var(--muted); margin-bottom: 1.6rem; }
+.audio-line audio { height: 36px; max-width: 100%; }
+
+/* the run log */
+.runlog { background: var(--term); color: var(--on-term); border-radius: 8px; font: .84rem/1.6 var(--font-mono); box-shadow: var(--shadow); max-width: 44rem; overflow: hidden; }
+.runlog-head { display: flex; justify-content: space-between; gap: 1rem; padding: .55rem .9rem; background: var(--term2); color: var(--term-muted); font-size: .74rem; letter-spacing: .04em; }
+.runlog-head .dots i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 4px; background: #39424f; }
+.runlog ol { list-style: none; margin: 0; padding: .7rem .9rem .9rem; }
+.runlog li { display: grid; grid-template-columns: 1.3rem minmax(0, 11.5rem) minmax(0, 1fr); gap: .5rem; padding: .1rem 0; opacity: 0; animation: logIn .35s var(--ease) forwards; }
+.runlog li:nth-child(1) { animation-delay: .15s; } .runlog li:nth-child(2) { animation-delay: .3s; } .runlog li:nth-child(3) { animation-delay: .45s; }
+.runlog li:nth-child(4) { animation-delay: .6s; } .runlog li:nth-child(5) { animation-delay: .75s; } .runlog li:nth-child(6) { animation-delay: .9s; }
+.runlog li:nth-child(7) { animation-delay: 1.05s; } .runlog li:nth-child(8) { animation-delay: 1.2s; }
+@keyframes logIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.runlog .ok { color: var(--term-green); } .runlog .no { color: var(--term-red); } .runlog .wait { color: var(--term-amber); }
+.runlog .nm { color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.runlog .why { color: var(--term-muted); }
+.runlog a { color: var(--term-link); }
+.runlog .sum { border-top: 1px dashed #333c4a; margin: .5rem .9rem 0; padding: .55rem 0 .8rem; color: var(--term-muted); }
+.runlog .sum b { color: #fff; font-weight: 600; }
+
+.comic { margin: 0; position: relative; }
+.comic a { display: block; background: #fff; padding: 8px; border: 1px solid var(--line); border-radius: 4px; box-shadow: var(--shadow); cursor: zoom-in; transition: transform .4s var(--ease); }
+.comic a:hover, .comic a:focus-visible { transform: translateY(-3px); }
+.comic img { width: 100%; height: auto; display: block; }
+.comic figcaption { font: .84rem/1.5 var(--font-body); color: var(--muted); margin-top: .8rem; }
+.comic .tag { position: absolute; top: -12px; left: 12px; z-index: 2; font: 600 .72rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--paper); background: var(--code); border-radius: 4px; padding: .2rem .55rem; }
+
+/* evidence key */
+.evkey { max-width: 1320px; margin: 0 auto 2.5rem; padding: 0 var(--pad); }
+.evkey-inner { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); padding: .9rem 0; display: flex; flex-wrap: wrap; gap: .6rem 1.3rem; align-items: center; font: .84rem var(--font-body); color: var(--muted); }
+.evkey-inner > span:first-child { font: 600 .7rem var(--font-mono); color: var(--ink); letter-spacing: .1em; text-transform: uppercase; }
+.ev { display: inline-block; font: 600 .64rem/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; padding: .28rem .42rem .24rem; border-radius: 3px; vertical-align: .2em; white-space: nowrap; border: 1px solid currentColor; }
+.ev-w { color: var(--sig); background: var(--sig-soft); }
+.ev-c { color: var(--code); background: var(--code-soft); }
+.ev-x { color: var(--pass); background: var(--pass-soft); }
+.ev-i { color: var(--muted); background: var(--paper2); }
+.ev-p { color: var(--pend); background: var(--pend-soft); }
+
+/* ---------- reading room: story + dock ---------- */
+.room { display: flex; align-items: flex-start; max-width: 1640px; margin: 0 auto; }
+.story { flex: 1 1 0; min-width: 0; padding: 0 var(--pad) 7rem; }
+.dock {
+  flex: 0 0 var(--dock-w); position: sticky; top: .8rem; align-self: flex-start; margin: .8rem var(--pad) 0 0;
+  max-height: calc(100vh - 1.6rem); display: flex; flex-direction: column; gap: .6rem;
+  background: var(--term); color: var(--on-term); border-radius: 8px; padding: .75rem; box-shadow: var(--shadow); z-index: 300;
+  transition: flex-basis .5s var(--ease);
+}
+body.watch .dock { flex-basis: 60%; }
+.dock a { color: var(--term-link); }
+.dock-head { display: flex; justify-content: space-between; gap: .5rem; font: .7rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--term-muted); }
+.dock-head b { color: var(--on-term); font-weight: 600; }
+.vwrap { position: relative; flex: none; background: #000; aspect-ratio: 16 / 9; border-radius: 4px; overflow: hidden; }
+.dock-head, .now, .dock-ctrls { flex: none; }
+.vwrap video { width: 100%; height: 100%; object-fit: contain; display: block; }
+.resume { position: absolute; inset: auto 0 0 0; display: none; justify-content: center; padding: .9rem; background: linear-gradient(transparent, rgba(0,0,0,.75)); }
+.resume.show { display: flex; }
+.resume button { font: 600 .9rem var(--font-mono); background: var(--term-green); color: #06140e; border: 0; border-radius: 4px; padding: .5rem 1rem; cursor: pointer; }
+.now { font: .86rem/1.4 var(--font-mono); min-height: 2.6em; }
+.now .t { color: var(--term-green); margin-right: .45rem; }
+.now .in-story { display: block; font-size: .76rem; color: var(--term-muted); margin-top: .15rem; }
+.dock-ctrls { display: flex; flex-wrap: wrap; gap: .4rem; }
+.dbtn { appearance: none; border: 1px solid #3a4456; background: var(--term2); color: var(--on-term); border-radius: 4px; padding: .42rem .7rem; font: 600 .78rem var(--font-mono); cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; text-decoration: none; }
+.dock a.dbtn { color: var(--on-term); }
+.dbtn:hover, .dock a.dbtn:hover { background: #2a3446; color: #fff; }
+.dbtn.mode { background: var(--term-green); color: #06140e; border-color: var(--term-green); }
+.dbtn.mode:hover { background: #b4f3d6; color: #06140e; border-color: #b4f3d6; }
+.chapters { overflow-y: auto; min-height: 0; flex: 1 1 auto; scrollbar-width: thin; }
+.chapters summary { font: .7rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--term-muted); cursor: pointer; padding: .25rem 0; }
+.chapters ol { list-style: none; margin: .2rem 0 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 1px; }
+body.watch .chapters ol { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: .6rem; }
+.chapters li a { display: flex; gap: .55rem; align-items: baseline; padding: .28rem .45rem; border-radius: 3px; text-decoration: none; font: .84rem/1.3 var(--font-body); }
+.dock .chapters li a { color: var(--on-term); }
+.chapters li a .ct { font: .72rem var(--font-mono); color: var(--term-green); flex: 0 0 auto; }
+.chapters li a:hover { background: var(--term2); }
+.dock .chapters li a.is-now { background: var(--on-term); color: var(--term); }
+.chapters li a.is-now .ct { color: #0b5b3f; }
+.chapters li a.in-view { box-shadow: inset 3px 0 0 var(--term-green); }
+.chapters li a.is-target { outline: 1px dashed var(--term-green); outline-offset: -1px; }
+.chapters li a.is-target:not(.is-now) { background: var(--term2); }
+.dock .dock-min { display: none; }
+body.watch .story { font-size: 17px; }
+body.watch .story .chap { opacity: .6; transition: opacity .3s; }
+body.watch .story .chap.is-now, body.watch .story .chap:hover, body.watch .story .chap:focus-within { opacity: 1; }
+
+/* ---------- story typography ---------- */
+.chap { position: relative; padding: 3.2rem 0 1rem; scroll-margin-top: 1rem; }
+.chap > * { max-width: var(--measure); margin-left: auto; margin-right: auto; }
+.chap > .wide { max-width: 62rem; }
+.chap p { margin: 0 auto 1.15rem; }
+.act { font: 600 .74rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: .6rem; margin-bottom: .9rem; }
+.act .st { padding: .18rem .45rem; border-radius: 3px; color: var(--paper); letter-spacing: .06em; }
+.act .st.ok { background: var(--pass); } .act .st.no { background: var(--fail); } .act .st.wait { background: var(--pend); } .act .st.info { background: var(--sig); }
+.act::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
+.chap h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); margin-bottom: 1.3rem; }
+.chap h2 em { font-style: normal; color: var(--pass); }
+.chap h2 em.red { color: var(--fail); }
+.chap h3 { font-size: 1.45rem; margin: 2rem auto .7rem; }
+.lede { font-size: 1.14em; line-height: 1.6; }
+.act-open { padding-top: 5rem; }
+.act-banner { max-width: var(--measure); margin: 0 auto 2rem; font-family: var(--font-mono); }
+.act-banner .n::before { content: attr(data-n); }
+.act-banner .n { font: 800 clamp(3.5rem, 8vw, 6rem)/1 var(--font-display); color: var(--line); letter-spacing: -.04em; display: block; }
+.act-banner .t { font: 600 .82rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink); }
+.act-banner .q { display: block; font: italic 1.15rem/1.45 var(--font-body); color: var(--muted); margin-top: .3rem; letter-spacing: 0; text-transform: none; }
+
+/* timestamp chips */
+a.ts { display: inline-flex; align-items: center; gap: .18rem; font: 600 .72rem/1 var(--font-mono); color: var(--sig); background: var(--sig-soft); border: 1px solid transparent; padding: .24rem .42rem .2rem .3rem; border-radius: 3px; text-decoration: none; vertical-align: .14em; white-space: nowrap; }
+a.ts:hover { border-color: var(--sig); }
+a.ts .bi { font-size: .9em; }
+a.ts.flash { animation: flash 1.4s var(--ease); }
+@keyframes flash { 0%, 40% { background: var(--pass); color: var(--paper); } 100% { background: var(--sig-soft); } }
+
+/* quotes */
+.say { margin: 2rem auto; padding: .1rem 0 .1rem 1.3rem; border-left: 4px solid var(--sig); }
+.say p { font: 600 clamp(1.35rem, 2.5vw, 1.75rem)/1.25 var(--font-display); letter-spacing: -.015em; margin: 0 0 .55rem; }
+.say footer { font: .82rem var(--font-mono); color: var(--muted); }
+.say footer a.ts { margin-left: .35rem; }
+.say footer b { color: var(--ink); font-weight: 600; }
+.say.stu { border-color: var(--pass); }
+.say.stu footer b { color: var(--pass); }
+.say.red { border-color: var(--fail); }
+.say.big { border: 0; padding: 0; text-align: center; max-width: 52rem; margin: 3rem auto; }
+.say.big p { font-size: clamp(1.9rem, 4.4vw, 3.2rem); line-height: 1.05; letter-spacing: -.03em; }
+.exch { margin: 2rem auto; border-left: 3px solid var(--line); padding-left: 1.2rem; }
+.exch p { margin: 0 0 .55rem; font-size: 1.02rem; line-height: 1.5; }
+.exch b { font: 600 .74rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--sig); margin-right: .35rem; }
+.exch .s b { color: var(--pass); }
+.aside { font-size: .95rem; line-height: 1.6; color: var(--muted); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: .9rem 0; margin: 1.8rem auto; }
+.aside strong { color: var(--ink); }
+
+/* figures */
+.shot { margin: 2rem auto 2.4rem; }
+.shot > a { display: block; cursor: zoom-in; }
+.shot img { display: block; width: 100%; border: 1px solid var(--line); border-radius: 6px; background: #111; box-shadow: var(--shadow); }
+.shot figcaption, .lab-cap { font-size: .9rem; line-height: 1.5; color: var(--muted); margin-top: .7rem; }
+.shot figcaption a.ts { margin-left: .2rem; }
+
+/* prompt box (live dictation) */
+.prompt-box { background: var(--term); color: var(--on-term); border-radius: 8px; padding: 1rem 1.2rem 1.1rem; margin: 2rem auto; font: .92rem/1.6 var(--font-mono); box-shadow: var(--shadow); }
+.prompt-box .plabel { font: 600 .68rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--term-amber); margin-bottom: .5rem; display: flex; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }
+.prompt-box p { margin: 0 0 .7rem; }
+.prompt-box img { display: block; width: 100%; border-radius: 4px; margin: .4rem 0 .9rem; }
+.prompt-box .pause { color: var(--term-muted); font-style: italic; }
+.prompt-box a { color: var(--term-link); }
+.prompt-box a.ts { color: #06140e; background: var(--term-green); }
+
+/* interactive labs: a CI job panel */
+.lab { margin: 2.4rem auto 2.8rem; background: var(--card); border: 1.5px solid var(--ink); border-radius: 8px; box-shadow: var(--shadow); font-family: var(--font-body); overflow: hidden; }
+.lab-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1rem; align-items: baseline; padding: .75rem 1.1rem; border-bottom: 1px solid var(--line); background: var(--paper2); }
+.lab-head h3 { font: 600 1.25rem var(--font-display); margin: 0; }
+.lab-body { padding: 1rem 1.1rem 1.2rem; font-size: .98rem; line-height: 1.55; }
+.lab-body p { margin: 0 0 .8rem; }
+.seg { display: flex; flex-wrap: wrap; gap: .35rem; margin: 0 0 1rem; }
+.seg button, .chip { appearance: none; font: 600 .8rem var(--font-mono); padding: .45rem .7rem; border-radius: 4px; border: 1.5px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; }
+.seg button[aria-pressed="true"], .chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.seg button:hover, .chip:hover { border-color: var(--pass); }
+.seg button:disabled { opacity: .45; cursor: default; }
+.verdict { border-left: 3px solid var(--pass); padding: .55rem .8rem; background: var(--pass-soft); margin: .8rem 0 0; border-radius: 0 4px 4px 0; }
+.tip { border-bottom: 1px dotted var(--sig); cursor: help; position: relative; }
+.tip::after { content: attr(data-tip); position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: .5rem .7rem; border-radius: 4px; font: .82rem/1.4 var(--font-body); width: min(240px, 80vw); pointer-events: none; display: none; z-index: 50; }
+.tip:hover::after, .tip:focus::after { display: block; }
+@media (max-width: 640px) { .tip::after { left: 0; transform: none; } }
+.verdict.red { border-color: var(--fail); background: var(--fail-soft); }
+.verdict strong { color: var(--ink); }
+.svgbox svg { width: 100%; height: auto; display: block; font-family: var(--font-mono); font-size: 12px; }
+.svgbox svg text { fill: var(--ink); }
+.svgbox svg .m { fill: var(--muted); }
+.hyp-tag { font: 600 .66rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--pend); background: var(--pend-soft); border: 1px solid currentColor; border-radius: 3px; padding: .2rem .4rem; }
+.real-tag { font: 600 .66rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--sig); background: var(--sig-soft); border: 1px solid currentColor; border-radius: 3px; padding: .2rem .4rem; }
+.code-tag { font: 600 .66rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--code); background: var(--code-soft); border: 1px solid currentColor; border-radius: 3px; padding: .2rem .4rem; }
+.range { display: grid; grid-template-columns: minmax(0, 9rem) minmax(0, 1fr) 3.4rem; gap: .6rem; align-items: center; font: .82rem var(--font-mono); margin: .35rem 0; }
+.range input { width: 100%; accent-color: var(--pass); }
+.range output { text-align: right; font-weight: 600; }
+
+/* market guess */
+.mkt-row { display: grid; grid-template-columns: 7.2rem minmax(0, 1fr) 2.8rem; gap: .5rem; align-items: center; font: .8rem var(--font-mono); padding: .08rem .3rem; border-radius: 3px; cursor: pointer; border: 1px solid transparent; background: none; color: var(--ink); width: 100%; text-align: left; }
+.mkt-row:hover { border-color: var(--line); }
+.mkt-row[aria-pressed="true"] { border-color: var(--ink); background: var(--paper2); }
+.mkt-row .bar { height: 14px; background: var(--paper2); border-radius: 2px; position: relative; overflow: hidden; }
+.mkt-row .bar i { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--sig); border-radius: 2px; transition: width .7s var(--ease); }
+.mkt-row .pct { text-align: right; color: var(--muted); }
+.mkt[data-revealed="0"] .pct { visibility: hidden; }
+.mkt-row.mine .bar i { background: var(--pass); }
+.mkt-row.top .bar i { background: var(--sig); }
+
+/* spec diff */
+.diff { font: .86rem/1.55 var(--font-mono); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--card); }
+.diff .dl { display: grid; grid-template-columns: 1.4rem minmax(0, 1fr) auto; gap: .5rem; padding: .35rem .7rem; align-items: start; }
+.diff .dl.del { background: var(--fail-soft); }
+.diff .dl.add { background: var(--pass-soft); }
+.diff .dl .sg { font-weight: 600; }
+.diff .dl.del .sg { color: var(--fail); } .diff .dl.add .sg { color: var(--pass); }
+.diff .dl .who:empty { display: none; }
+.diff .dl .who { font-size: .72rem; color: var(--muted); white-space: nowrap; }
+.diff .dl .who a.ts { margin-left: .2rem; }
+.diff-head { padding: .45rem .7rem; font-size: .74rem; color: var(--muted); border-bottom: 1px solid var(--line); background: var(--paper2); }
+
+/* check budget */
+.students { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; margin-top: .8rem; }
+.stud { border: 1px solid var(--line); border-radius: 6px; padding: .7rem .8rem; background: var(--paper); }
+.stud h4 { font: 600 1rem var(--font-display); margin-bottom: .2rem; }
+.stud .d { font-size: .84rem; color: var(--muted); line-height: 1.4; min-height: 2.8em; }
+.stud .score { font: 800 2rem/1 var(--font-display); margin: .5rem 0 .2rem; }
+.stud .meter { height: 8px; background: var(--paper2); border-radius: 4px; overflow: hidden; }
+.stud .meter i { display: block; height: 100%; background: var(--pass); width: 0; transition: width .5s var(--ease); }
+.stud .checks { font: .74rem var(--font-mono); color: var(--muted); margin-top: .35rem; }
+
+/* tangram bank */
+.bank { display: grid; grid-template-columns: repeat(20, minmax(0, 1fr)); gap: 3px; margin: .6rem auto; max-width: 560px; }
+.bank i { aspect-ratio: 1; border-radius: 2px; background: var(--paper2); border: 1px solid var(--line); transition: background .3s; }
+.bank i.solved { background: var(--fail); border-color: var(--fail); }
+.bank i.mine { outline: 2px solid var(--ink); outline-offset: 1px; }
+
+/* slices */
+.solids { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; }
+.solid { border: 1px solid var(--line); border-radius: 6px; padding: .5rem; text-align: center; background: var(--paper); transition: opacity .3s, border-color .3s; }
+.solid svg { width: 100%; height: auto; max-height: 150px; }
+.solid .nm { font: 600 .8rem var(--font-mono); }
+.solid.out svg { opacity: .35; }
+.solid.out .nm { color: var(--muted); }
+.solid.keep { border-color: var(--pass); }
+.solid svg .body { fill: var(--sig-soft); stroke: var(--sig); stroke-width: 2; }
+.solid svg .cut { fill: none; stroke: var(--fail); stroke-width: 2.5; stroke-dasharray: 5 4; }
+.solid svg .sec { fill: var(--fail-soft); stroke: var(--fail); stroke-width: 2; }
+
+/* cipher */
+.cipher { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); gap: 3px; margin: .7rem 0; }
+.cipher button { appearance: none; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 3px; padding: .25rem 0 .2rem; font: .74rem/1.15 var(--font-mono); cursor: pointer; display: flex; flex-direction: column; align-items: center; }
+.cipher button b { font: 800 1.05rem/1 var(--font-display); margin-top: .15rem; color: var(--pass); }
+.cipher button.bad { border-color: var(--fail); background: var(--fail-soft); }
+.cipher button.bad b { color: var(--fail); }
+.cipher button.none b { color: var(--muted); }
+.cipher button[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: 1px; }
+.cipher-line { font: 600 1rem var(--font-mono); letter-spacing: .12em; margin: .3rem 0; word-break: break-all; }
+.cipher-line .x { color: var(--fail); text-decoration: underline wavy; }
+.cipher-detail { font-size: .92rem; background: var(--paper2); border-radius: 4px; padding: .55rem .75rem; margin-top: .5rem; min-height: 3em; }
+
+/* difficulty anatomy */
+.frac { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; margin: 1rem 0; }
+.frac > div { border: 1px solid var(--line); border-radius: 6px; padding: .8rem .9rem; background: var(--paper); }
+.frac h4 { font: 600 .74rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: .4rem; }
+.frac ul { margin: 0; padding-left: 1.1rem; font-size: .93rem; line-height: 1.5; }
+.guess { display: grid; gap: .4rem; margin: .6rem 0; }
+.guess button { appearance: none; text-align: left; font: .95rem/1.4 var(--font-body); padding: .55rem .8rem; border: 1.5px solid var(--line); border-radius: 6px; background: var(--paper); color: var(--ink); cursor: pointer; }
+.guess button:hover { border-color: var(--ink); }
+.guess button.right { border-color: var(--pass); background: var(--pass-soft); }
+.guess button.wrong { border-color: var(--fail); background: var(--fail-soft); }
+.guess[data-done="1"] button { cursor: default; }
+
+/* bands */
+.band { width: 100vw; margin-left: calc(50% - 50vw); background: var(--term); color: var(--on-term); padding: 3rem var(--pad); margin-top: 2.5rem; margin-bottom: 2.5rem; }
+.band-in { max-width: 62rem; margin: 0 auto; }
+.band .lbl { font: 600 .72rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--term-amber); margin-bottom: .8rem; }
+.band p { color: var(--on-term); }
+.band a { color: var(--term-link); }
+.band strong { color: #fff; }
+.band a.ts { color: #06140e; background: var(--term-green); }
+.band .say p { color: #fff; }
+.band .say { border-color: var(--term-green); }
+.band .say footer, .band .say footer b { color: var(--term-muted); }
+.band .say footer b { color: var(--on-term); }
+.room .band { width: auto; margin-left: calc(-1 * var(--pad)); margin-right: calc(-1 * var(--pad)); max-width: none; }
+
+/* ---------- takeaways ---------- */
+.takeaways { background: var(--term); color: var(--on-term); padding: 4rem var(--pad) 4.5rem; margin-bottom: 0; }
+.takeaways .inner { max-width: 1200px; margin: 0 auto; }
+.takeaways .band-label { font: 600 .74rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--term-amber); margin-bottom: .6rem; }
+.takeaways h2 { font-size: clamp(2rem, 4.4vw, 3.4rem); margin-bottom: .8rem; color: #fff; }
+.takeaways .sub { color: var(--term-muted); font-size: 1.1rem; max-width: 46rem; margin: 0 0 2rem; }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.card { background: var(--term2); border: 1px solid #2c3546; border-radius: 8px; padding: 1.1rem 1.15rem 1.2rem; }
+.card .num { font: 600 .72rem var(--font-mono); color: var(--term-green); letter-spacing: .08em; margin-bottom: .5rem; }
+.card h3 { font-size: 1.3rem; color: #fff; margin-bottom: .5rem; }
+.card p { color: var(--on-term); font-size: .97rem; line-height: 1.55; margin: 0; }
+.card a { color: var(--term-link); }
+.card a.ts { color: #06140e; background: var(--term-green); }
+.finale { margin: 3rem auto 0; text-align: center; max-width: 50rem; }
+.finale p { font: 600 clamp(1.5rem, 3vw, 2.2rem)/1.2 var(--font-display); color: #fff; margin: 0 0 .7rem; letter-spacing: -.02em; }
+.finale footer { font: .84rem var(--font-mono); color: var(--term-muted); }
+.finale a.ts { color: #06140e; background: var(--term-green); }
+
+footer.site { max-width: 1200px; margin: 0 auto; padding: 2.5rem var(--pad) 6rem; font-size: .92rem; line-height: 1.65; color: var(--muted); display: grid; gap: .7rem; }
+footer.site strong { color: var(--ink); }
+
+/* ---------- jump nav ---------- */
+.jump { position: fixed; left: 1rem; bottom: 1rem; z-index: 800; display: flex; background: var(--ink); border-radius: 6px; box-shadow: var(--shadow); transition: opacity .3s, transform .3s; }
+.jump.on-hero { opacity: 0; transform: translateY(10px); pointer-events: none; }
+.jump button { appearance: none; background: transparent; color: var(--paper); border: 0; font: 600 .8rem var(--font-mono); padding: .6rem .7rem; cursor: pointer; display: inline-flex; align-items: center; gap: .45rem; }
+.jump button:disabled { opacity: .35; cursor: default; }
+.jump button:hover:not(:disabled) { color: var(--pass-soft); }
+.jump-cur { max-width: 16rem; border-left: 1px solid rgba(128,128,128,.4) !important; border-right: 1px solid rgba(128,128,128,.4) !important; }
+.jump-cur span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.jump-backdrop { position: fixed; inset: 0; z-index: 790; background: rgba(10,15,25,.3); display: none; }
+.jump-backdrop.open { display: block; }
+.jump-menu { position: fixed; left: 1rem; bottom: 4rem; z-index: 810; width: min(600px, calc(100vw - 2rem)); max-height: 72vh; overflow: auto; background: var(--card); border: 1.5px solid var(--ink); border-radius: 8px; padding: .8rem; display: none; box-shadow: var(--shadow); }
+.jump-menu.open { display: block; }
+.jm-group { font: 600 .66rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: .55rem .3rem .3rem; }
+.jump-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .3rem; }
+.jump-grid a { display: block; padding: .45rem .6rem; border-radius: 4px; text-decoration: none; color: var(--ink); font-size: .92rem; line-height: 1.3; border: 1px solid var(--line); }
+.jump-grid a small { display: block; color: var(--muted); font-size: .76rem; }
+.jump-grid a:hover { border-color: var(--ink); }
+.jump-grid a.is-cur { background: var(--ink); color: var(--paper); }
+.jump-grid a.is-cur small { color: var(--line); }
+
+/* ---------- dialogs ---------- */
+dialog.pop { border: 1.5px solid var(--ink); border-radius: 8px; padding: 0; width: min(800px, 94vw); max-height: 88vh; background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+dialog.pop::backdrop { background: rgba(8,12,20,.6); }
+.pop-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .8rem 1.1rem; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--card); z-index: 2; }
+.pop-head h3 { font-size: 1.4rem; }
+.pop-search { padding: .6rem 1.1rem; border-bottom: 1px solid var(--line); display: none; gap: .6rem; align-items: center; font: .82rem var(--font-mono); color: var(--muted); position: sticky; top: 3.6rem; background: var(--card); z-index: 2; }
+.pop-search.on { display: flex; }
+.pop-search input { flex: 1; min-width: 0; font: 1rem var(--font-body); padding: .4rem .6rem; border: 1px solid var(--line); border-radius: 4px; background: var(--paper); color: var(--ink); }
+.pop-body { padding: 1rem 1.2rem 1.5rem; font-size: 1rem; line-height: 1.6; overflow: auto; }
+.pop-body h1, .pop-body h2, .pop-body h3 { font-family: var(--font-display); margin: 1rem 0 .5rem; }
+.pop-body p { margin: 0 0 .8rem; }
+.pop-body ul, .pop-body ol { margin: 0 0 .8rem 1.4rem; padding: 0; }
+.pop-body li { margin-bottom: .3rem; }
+.pop-body blockquote { margin: 0 0 .8rem; padding-left: .9rem; border-left: 3px solid var(--line); }
+.pop-body pre { white-space: pre-wrap; font: .85rem var(--font-mono); background: var(--paper2); padding: .6rem; border-radius: 4px; }
+.pop-body hr { border: 0; border-top: 1px dashed var(--line); margin: 1.2rem 0; }
+.pop-body .hide { display: none; }
+.pop-body mark { background: #ffe08a; color: #16202e; }
+.pop-body table { border-collapse: collapse; font-size: .88rem; margin-bottom: 1rem; width: 100%; }
+.pop-body th, .pop-body td { border: 1px solid var(--line); padding: .3rem .45rem; text-align: left; vertical-align: top; }
+dialog.lightbox { border: 0; padding: 0; background: transparent; max-width: 96vw; max-height: 96vh; overflow: visible; }
+dialog.lightbox::backdrop { background: rgba(5,8,12,.92); }
+dialog.lightbox img { max-width: 96vw; max-height: 86vh; width: auto; height: auto; background: #fff; display: block; }
+.lb-bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .6rem 1rem; align-items: center; color: #e8ecf2; font: .88rem var(--font-body); margin-top: .6rem; }
+.lb-bar a { color: var(--term-link); }
+.lb-bar button { background: transparent; color: #fff; border: 1px solid #6c7686; border-radius: 4px; padding: .3rem .7rem; cursor: pointer; font: 600 .8rem var(--font-mono); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1200px) { :root { --dock-w: 330px; } .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 999px) {
+  .hero { grid-template-columns: 1fr; }
+  .comic { max-width: 560px; width: 100%; margin: 1rem auto 0; }
+  .room { display: block; }
+  .dock { position: fixed; right: .7rem; bottom: 4.3rem; top: auto; margin: 0; width: min(48vw, 260px); max-height: none; padding: .45rem; gap: .4rem; transition: width .4s var(--ease); }
+  .dock .dock-head, .dock .now, .dock .chapters, .dock .dock-ctrls .wide-only { display: none; }
+  .dock .dbtn { padding: .35rem .5rem; font-size: .72rem; flex: 1 1 auto; justify-content: center; }
+  .dock .dock-min { display: inline-flex; }
+  body.dock-collapsed:not(.watch) .dock .vwrap { display: none; }
+  body.dock-collapsed:not(.watch) .dock { width: auto; }
+  body.dock-collapsed:not(.watch) .dock #share-btn { display: none; }
+  body.watch .dock { left: 0; right: 0; top: 0; bottom: auto; width: auto; border-radius: 0 0 8px 8px; padding: .5rem .6rem .6rem; }
+  body.watch .dock .now { display: block; font-size: .78rem; min-height: 0; }
+  body.watch .dock .now .in-story { display: none; }
+  body.watch .dock .dock-min { display: none; }
+  body.watch { padding-top: var(--dock-h, 0px); }
+  body.watch .chap { scroll-margin-top: calc(var(--dock-h, 0px) + .5rem); }
+  body.watch .story .chap { opacity: .85; }
+  .jump { left: .7rem; bottom: .7rem; }
+  .jump-menu { left: .7rem; bottom: 3.9rem; width: calc(100vw - 1.4rem); }
+}
+@media (max-width: 640px) {
+  body { font-size: 17.5px; }
+  .students, .frac, .solids { grid-template-columns: minmax(0, 1fr); }
+  .solids { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cards { grid-template-columns: minmax(0, 1fr); }
+  .cipher { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+  .bank { grid-template-columns: repeat(10, minmax(0, 1fr)); }
+  .jump-grid { grid-template-columns: minmax(0, 1fr); }
+  .topbar .long { display: none; }
+  .say { padding-left: 1rem; }
+  .runlog li { grid-template-columns: 1.1rem minmax(0, 1fr); }
+  .runlog li .why { grid-column: 2; }
+  .diff .dl { grid-template-columns: 1.1rem minmax(0, 1fr); }
+  .diff .dl .who { grid-column: 2; }
+  .mkt-row { grid-template-columns: 6.2rem minmax(0, 1fr) 2.6rem; }
+  .range { grid-template-columns: minmax(0, 1fr) 3rem; }
+  .range label { grid-column: 1 / -1; }
+  .lab-body { padding: .9rem .8rem 1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#story">Skip to the story</a>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<header class="topbar">
+  <a href="../"><span class="long">Talks · </span>S Anand</a>
+  <div class="tb-right">
+    <span class="long">19 Oct 2026 · 60 min video</span>
+    <button class="icon-btn" id="theme-btn" type="button" aria-label="Toggle dark mode"><i class="bi bi-moon-stars" aria-hidden="true"></i></button>
+  </div>
+</header>
+
+<section class="hero" aria-labelledby="title">
+  <div>
+    <div class="kicker"><span>Tools in Data Science</span><span class="dot"></span><span>IIT Madras</span><span class="dot"></span><span>Open design meeting · episode 3</span><span class="dot"></span><span>19 Oct 2026</span></div>
+    <h1 id="title">The exam has to pass its <em>own exam</em>.</h1>
+    <p class="deck">A week earlier, the teachers of an AI-permitted course invented new assessments in public. <strong>By this Monday, three of those ideas were running — and the meeting became a test of the tests:</strong> what does a question really measure, what does checking an answer cost, and can the examiner trust its own grader?</p>
+    <p class="who">An unrehearsed, recorded working session of the <a href="https://tds.s-anand.net/">Tools in Data Science</a> team at IIT Madras — <a href="https://www.s-anand.net/">Anand S</a>, Jayakrishnan Warriem (JK) and Carlton D’Silva — with TA Mayank and students Preethi and Adwitiya among those who spoke. It follows the <a href="../2026-10-05-tds-orientation/">5 Oct orientation</a> and the <a href="../2026-10-12-tds-ideation/">12 Oct ideation</a>.</p>
+    <div class="hero-actions">
+      <a class="btn" href="?view=video" id="hero-watch"><i class="bi bi-play-btn-fill" aria-hidden="true"></i> Watch alongside</a>
+      <a class="btn ghost" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+      <a class="btn ghost" href="#cold"><i class="bi bi-book" aria-hidden="true"></i> Start reading</a>
+    </div>
+    <div class="audio-line">
+      <span><i class="bi bi-headphones" aria-hidden="true"></i> Audio only</span>
+      <audio controls preload="none" aria-label="Audio recording of the meeting">
+        <source src="https://github.com/sanand0/talks/releases/download/talks/2026-10-19-tds-ideation.opus" type="audio/ogg; codecs=opus">
+      </audio>
+    </div>
+    <div class="runlog" role="group" aria-label="The meeting summarised as a test run">
+      <div class="runlog-head"><span class="dots"><i></i><i></i><i></i></span><span>$ test exam-designs --week 3</span></div>
+      <ol>
+        <li><span class="ok">✓</span><span class="nm">prediction_market</span><span class="why">shipped · “200 to 300” trades, as reported</span></li>
+        <li><span class="ok">✓</span><span class="nm">human_exchange</span><span class="why">shipped · offers being recorded; no trades yet</span></li>
+        <li><span class="ok">✓</span><span class="nm">air_ink</span><span class="why">shipped · drawing phase only</span></li>
+        <li><span class="no">✗</span><span class="nm">distributed_invoices</span><span class="why">dropped after ~$500 of simulation</span></li>
+        <li><span class="no">✗</span><span class="nm">tangram_v1</span><span class="why">solved for everyone: 100 fixed shapes</span></li>
+        <li><span class="wait">…</span><span class="nm">checks_cost_marks</span><span class="why">proposed for GA3; not yet observed</span></li>
+        <li><span class="wait">…</span><span class="nm">slices · harness · evals</span><span class="why">ideas, untested</span></li>
+        <li><span class="wait">?</span><span class="nm">difficulty.py</span><span class="why">counts who scored above zero</span></li>
+      </ol>
+      <div class="sum"><b>3 shipped · 2 broke · 3 pending.</b> A summary of the meeting written as a test log, not a log the course produced.</div>
+    </div>
+  </div>
+  <figure class="comic">
+    <span class="tag">the comic version</span>
+    <a href="comic-page.avif" data-lightbox data-caption="The meeting as an AI-drawn eight-panel comic: an interpretation, not a record." aria-label="Enlarge the comic page">
+      <img src="comic-page.avif" width="1055" height="1491" alt="Eight-panel comic of the meeting. 1: Project 1 as a training ground for an agentic world, with signposts for tools, people, real world and judgment. 2: the prediction market, with class predictions clustering around $10 to $20 and crowd wisdom plus private context leading to better trades. 3: a Human Exchange bazaar where students sell one human answer, interview practice, counselling and hardware access for credits, marked legal and not limited to TDS. 4: an offers page with sort buttons for most recent, max credits and most purchased, and a recording turned into a transcript and auto title. 5: Air Ink, a phone tilted to draw letters whose sensor trajectory becomes a machine-learning puzzle. 6: GA3 questions arriving in stages on a conveyor belt, a shrinking clock, limited verification tokens and a scale trading more checks for fewer marks. 7: new question themes: catch AI mistakes, calibrate confidence, organise information with vector, graph or agentic search. 8: harder ideas: 3D cross-sections, harness design, evals of evals, business simulations and a 17th-century cipher, under the line: design the task, tooling and test so humans and agents win together.">
+    </a>
+    <figcaption>Tap to enlarge. <strong>An interpretation, not evidence.</strong> The “382 offers”, star ratings and buy-again buttons are the illustrator’s: no marketplace was trading yet. And panel 8 drew a literal safety harness; the meeting meant agent software.</figcaption>
+  </figure>
+</section>
+
+<aside class="evkey" aria-label="How to read the evidence on this page">
+  <div class="evkey-inner">
+    <span>Evidence key</span>
+    <span><span class="ev ev-w">Witnessed</span> said or shown on the call</span>
+    <span><span class="ev ev-c">Code</span> the course’s question text or source, as inspected 20 Oct</span>
+    <span><span class="ev ev-x">Research</span> an external finding</span>
+    <span><span class="ev ev-i">Inference</span> our reading</span>
+    <span><span class="ev ev-p">Hypothetical</span> invented to think with</span>
+  </div>
+</aside>
+
+<div class="room" id="room">
+<main class="story" id="story">
+
+<!-- ================= COLD OPEN ================= -->
+<section class="chap" id="cold" data-act="Cold open" data-title="The $500 question">
+  <div class="act"><span class="st no">✗ dropped</span> Cold open · 27:24</div>
+  <h2>Five hundred dollars to <em class="red">not</em> set a question</h2>
+  <p class="lede">Twenty-seven minutes into the meeting, between a list of client problems and a plan for 3D puzzles, Anand mentioned a bill. He said it the way people mention a parking fine.</p>
+  <div class="say red"><p>“One question that we discussed last time that I simulated, unfortunately at a cost of $500. … Yeah, it just escaped me.”</p><footer><b>Anand</b>, instructor <a class="ts" href="?t=27:24">27:24</a></footer></div>
+  <p>The question was last week’s favourite. At the <a href="../2026-10-12-tds-ideation/#invoices">12 October meeting</a> the team had sketched it: scatter a client’s invoices across the class, so each student must trade with others to reconstruct their own. In the week since, Anand had an AI generate the invoices and then <strong>simulate how students would try to beat it</strong> — agents included, <q>which is where I think it got out of hand</q>. <span class="ev ev-w">Witnessed</span> The $500 is his own account, not an audited bill.</p>
+  <p>The simulations found the flaw. If many people and many agents may collaborate, and the puzzle has an optimal route, then <strong>one good route serves everyone</strong>: <q>a hard exercise to frame given how we are organizing it</q>. So he dropped it — <q>or at least the way I had structured it</q>. <a class="ts" href="?t=27:56">27:56</a></p>
+  <div class="band"><div class="band-in">
+    <div class="lbl">What this meeting is about</div>
+    <p style="font-size:1.25rem;line-height:1.5;margin:0">$500 sounds like a lot to spend on a question nobody will answer. <strong>It is very little next to grading an entire cohort on a question that measures nothing.</strong> <span class="ev ev-i" style="color:var(--term-muted);background:transparent">Inference</span> The invoice puzzle failed the most useful test an exam can fail: the one it takes <em>before</em> students do.</p>
+  </div></div>
+  <p>That is the thread through this hour. On <a href="../2026-10-05-tds-orientation/">5 October</a> the course told students its philosophy: use agents, use friends, get real work done — and verify it. On <a href="../2026-10-12-tds-ideation/">12 October</a> the teachers invented questions out loud and a student asked them what they would actually measure. <strong>By 19 October some of those ideas were live, and the questions changed from <em>“is this clever?”</em> to <em>“is this useful, what does it cost to check, and does it break?”</em></strong></p>
+  <p>To see how, rewind to minute one — where three ideas from last week had already shipped.</p>
+</section>
+
+<!-- ================= ACT I ================= -->
+<section class="chap act-open" id="market" data-act="I · Ship it" data-title="A market for a bill">
+  <div class="act-banner"><span class="n" data-n="I" aria-hidden="true"></span><span class="t">Ship it</span><span class="q">What happens when an idea meets a student?</span></div>
+  <div class="act"><span class="st ok">✓ shipped</span> Project 1 · question 1</div>
+  <h2>A market for a bill <em>nobody has seen</em></h2>
+  <p class="lede">The meeting opened with a fix. Someone had flagged a submission problem on Project 1’s second question; Anand said a pull request from Mayank, a TA, plus a few tweaks, had fixed it. <q>Mayank, are you able to?</q> <q>Yes.</q> <a class="ts" href="?t=00:28">00:28</a> Then Anand shared his screen and walked through what he called <q>the philosophy behind the questions</q>.</p>
+  <p>The first is a <a href="https://tds-network-games.sanand.workers.dev/">prediction market</a>. Students forecast how much the course’s shared AI gateway, <span class="tip" tabindex="0" data-tip="The course’s metered gateway to LLM APIs. It publishes daily spend as open data.">AI Pipe</span>, will cost in the week of <strong>2–8 November</strong> — a week that had not started. <span class="ev ev-c">Code</span> The market reads <a href="https://stats.aipipe.org/usage.json">AI Pipe’s public usage feed</a>, opened on 17 October, and settles only after 8 November. Nobody, including the teachers, knew the answer.</p>
+  <p>Anand reported <q>about 200 to 300 predictions or trades made so far</q> <a class="ts" href="?t=01:32">01:32</a> and put the panel of answers on screen. Before you see it: <strong>where would you have put the class’s bet?</strong></p>
+
+  <div class="lab wide mkt" id="mkt" data-revealed="0">
+    <div class="lab-head"><h3>Guess the class’s forecast</h3><span class="real-tag">Real · from the screen at 01:40</span></div>
+    <div class="lab-body">
+      <p id="mkt-msg">Pick the weekly AI Pipe bill you think <em>most of the class</em> backed. Then see what the screen showed.</p>
+      <div id="mkt-rows" role="group" aria-label="Weekly AI Pipe cost ranges"></div>
+      <div class="verdict" id="mkt-verdict" hidden></div>
+      <p class="lab-cap">Shares of “how the group answered” on the AI Pipe weekly cost v2 market, read off the screen share at 01:40 (they sum to 101% through rounding). This is a snapshot of beliefs on 19 October, <strong>not a result</strong>: the market had not settled and could not until after 8 November.</p>
+    </div>
+  </div>
+
+  <p>The point is not the number. Anand named the skill twice in one breath. First, <strong>using a crowd’s knowledge an agent lacks</strong> — <q>like you know where the course is going based on discussions with others, which an agent will not be able to figure out.</q> Second, something more mischievous:</p>
+  <div class="say"><p>“And B, are you in a position to influence these? That’s another element.”</p><footer><b>Anand</b> <a class="ts" href="?t=02:52">02:52</a></footer></div>
+  <p>A class that spends AI Pipe credits can move the very number it is forecasting. <span class="ev ev-x">Research</span> That is a real property of markets: in <a href="https://arxiv.org/abs/2503.03312">a 2025 field experiment across 817 markets</a>, Rasooly and Rozzi found deliberate price shocks left lasting effects, though markets with more trading and outside estimates resisted better. <span class="ev ev-c">Code</span> The course seems to have priced this in. Its market rules, in the games’ source, say credits are game points, not money; marks come from <strong>time-weighted accuracy, starting early and one revision after new facts</strong> — and “trading is not needed for marks.” Winning credits earns nothing.</p>
+</section>
+
+<section class="chap" id="exchange" data-act="I · Ship it" data-title="The specification problem">
+  <div class="act"><span class="st ok">✓ shipped</span> Project 1 · question 2 · 03:04</div>
+  <h2>The specification problem, <em>said out loud</em></h2>
+  <p class="lede">The second question was the one Anand rated highest.</p>
+  <div class="say"><p>“This may be the most important, at least of the three P1 questions and perhaps of many questions that we’ve designed so far.”</p><footer><b>Anand</b> <a class="ts" href="?t=03:12">03:12</a></footer></div>
+  <p>It is called the <strong>TDS Human Exchange</strong>. Each student records up to sixty seconds promising a service another student would find useful. Later, a marketplace will let classmates buy those services with course credits at prices the two sides agree; <q>it’s when people buy your offering that your score goes up.</q> <a class="ts" href="?t=05:00">05:00</a> Anand’s reason for it fits in two sentences: <q>The idea is agents can do anything. How do we figure out what is useful?</q> <a class="ts" href="?t=03:24">03:24</a></p>
+  <figure class="shot wide" style="max-width:46rem">
+    <a href="assets/exchange-offer.webp" data-lightbox data-caption="The Human Exchange recorder as shared at 04:00. The signed-in email below it is cropped out."><img src="assets/exchange-offer.webp" width="650" height="225" alt="Recorder page titled 'TDS Human Exchange: Offer something useful', saying submissions open Monday 19 October at 8 AM IST and warning that past recordings can’t be played back after upload." loading="lazy"></a>
+    <figcaption>The recorder students use, on screen at <a class="ts" href="?t=04:00">04:00</a>. <span class="ev ev-c">Code</span> The question asks each offer to say what a buyer receives, why it’s useful, how fast it can be delivered, its limits, and <strong>how the buyer can verify delivery</strong> — a specification template in all but name. Agents may help plan, script and deliver; the voice must be the student’s own.</figcaption>
+  </figure>
+  <p>Then something happened that the teachers hadn’t planned. The people in the room started <strong>writing the product spec</strong> with him.</p>
+  <div class="exch">
+    <p><b>JK</b> Should everything be tied to… anchored around TDS? <a class="ts" href="?t=06:00">06:00</a></p>
+    <p><b>Anand</b> The service does not necessarily have to be limited to TDS. It can be about anything.</p>
+    <p><b>JK</b> Legally, legally permissible. You have to add that. <a class="ts" href="?t=06:44">06:44</a></p>
+    <p class="s"><b>Preethi</b> Sir, is there a minimum, maximum limit to the services being offered? <a class="ts" href="?t=08:28">08:28</a></p>
+    <p class="s"><b>Preethi</b> …lending an ear for 10 minutes or something of that sort… I should [already have a buyer]? <a class="ts" href="?t=10:24">10:24</a></p>
+    <p><b>Anand</b> That’s going to be tricky before Wednesday. No. You estimate what will have high demand and that you can fulfill, and you offer it.</p>
+    <p><b>Anand</b> Keep in mind there are going to be hundreds of services on a portal. <a class="ts" href="?t=11:28">11:28</a></p>
+    <p><b>JK</b> How do you top the Craigslist list? <a class="ts" href="?t=11:46">11:46</a></p>
+    <p><b>Carlton</b> How does it decide what goes on top? Is there some algorithm? … Because that will also make a difference in how you pitch it, right? <a class="ts" href="?t=11:56">11:56</a></p>
+    <p><b>Anand</b> I think random will be the most, uh, how should I put it? Fair. <a class="ts" href="?t=12:12">12:12</a></p>
+  </div>
+  <p>None of these questions is about AI. They are about <strong>scope, law, pricing, repeat buyers and discovery</strong> — the questions a product manager asks before launch. Preethi, a student, wasn’t asking something basic; <span class="ev ev-i">Inference</span> she was doing the user research. And the spec moved. About an hour after the call ended, the question text in the course’s exam source had been edited:</p>
+
+  <div class="lab wide" id="spec">
+    <div class="lab-head"><h3>The spec, before and after the meeting</h3><span class="code-tag">Code · question text</span></div>
+    <div class="lab-body">
+      <div class="diff" role="list" aria-label="Changes to the Human Exchange question text">
+        <div class="diff-head">Human Exchange question · last commit 17 Oct → local edit saved ~1 hour after the meeting (seen 20 Oct, not yet committed)</div>
+        <div class="dl del" role="listitem"><span class="sg">−</span><span>Offer something that another student would genuinely want to buy.</span><span class="who"></span></div>
+        <div class="dl del" role="listitem"><span class="sg">−</span><span>You can offer your time, skills, attention, experience, access, real-world observations, or anything else that is safe and permitted.</span><span class="who"></span></div>
+        <div class="dl add" role="listitem"><span class="sg">+</span><span>Offer a service that another student would find useful.</span><span class="who"></span></div>
+        <div class="dl add" role="listitem"><span class="sg">+</span><span>It can be about anything, not just TDS.</span><span class="who">JK <a class="ts" href="?t=06:00">06:00</a></span></div>
+        <div class="dl add" role="listitem"><span class="sg">+</span><span>It must be legal and follow the IITM BS programme guidelines.</span><span class="who">legality <a class="ts" href="?t=06:44">06:44</a></span></div>
+        <div class="dl add" role="listitem"><span class="sg">+</span><span>When the marketplace opens: You can buy and sell services as often as you wish.</span><span class="who">Preethi <a class="ts" href="?t=08:28">08:28</a></span></div>
+        <div class="dl add" role="listitem"><span class="sg">+</span><span>The buyer and seller agree on a price in credits. We will record each trade when both agree to it.</span><span class="who">Anand <a class="ts" href="?t=09:08">09:08</a></span></div>
+        <div class="dl add" role="listitem"><span class="sg">+</span><span>Offers will appear in random order by default.</span><span class="who">Carlton <a class="ts" href="?t=11:56">11:56</a></span></div>
+        <div class="dl add" role="listitem"><span class="sg">+</span><span>You will be able to sort them by total credits traded, number of trades and other measures.</span><span class="who">Anand <a class="ts" href="?t=12:20">12:20</a></span></div>
+      </div>
+      <p class="lab-cap">Lines quoted from the question’s source; unchanged lines omitted. The right-hand column links each addition to the moment it was asked for. The edit is a working copy we inspected on 20 October, so treat it as a draft of what students will see.</p>
+    </div>
+  </div>
+
+  <p>This is the course’s philosophy working at the smallest scale. A vague goal — <em>learn what is useful</em> — became a specification only because <strong>real users poked at it in public</strong>. <span class="ev ev-c">Code</span> What it still isn’t is a market: the question says plainly that <q>you do not need to deliver or trade this week</q>. Recordings are live; trades are future. Whether anyone buys anything is the actual test, and it hadn’t run.</p>
+</section>
+
+<section class="chap" id="airink" data-act="I · Ship it" data-title="A pen made of a phone">
+  <div class="act"><span class="st ok">✓ shipped</span> Project 1 · question 3 · 13:20</div>
+  <h2>A pen made of <em>a phone</em></h2>
+  <p class="lede">The third question can’t be done on a laptop, which made it hard to demo on one. Anand turned off his background blur and held his phone up to the webcam. <q>There should be a little dot that you can see that moves around… as I tilt it will move.</q> <a class="ts" href="?t=14:28">14:28</a></p>
+  <figure class="shot wide">
+    <a href="assets/air-ink-calibration.webp" data-lightbox data-caption="Air Ink’s calibration screen on the shared laptop, and the phone actually doing the work, at 14:40."><img src="assets/air-ink-calibration.webp" width="980" height="442" alt="Left: the Air Ink 'Set up your pen' page on a laptop with an empty white canvas and calibration buttons. Right: Anand’s webcam, holding up a phone showing the same app." loading="lazy"></a>
+    <figcaption>The demo in one frame <a class="ts" href="?t=14:40">14:40</a>: the laptop shows the calibration page and an empty canvas; the phone on the webcam is where the drawing happens. As JK explained to students who saw a frozen screen: <q>whatever we have discussed till now will not work on a PC.</q> <a class="ts" href="?t=17:32">17:32</a></figcaption>
+  </figure>
+  <p><strong>Air Ink</strong> turns a phone into a pen. Hold it flat, calibrate by tilting to each edge, then press and hold to ink while you tilt; release to lift. Anand said students would draw <q>three words, random letters</q>; <span class="ev ev-c">Code</span> the question calls them <strong>three short character codes</strong>, checked offline for legibility, with no live score. Carlton asked the user’s question: <q>will there be a way to pause after writing a character?</q> <a class="ts" href="?t=16:32">16:32</a> Release and it stops. The skill required, Anand said, is <q>about as much as balancing a little bit of water in your hand.</q> <a class="ts" href="?t=17:04">17:04</a></p>
+  <p>The drawing is the easy part. It is also a <strong>data-collection step</strong> for a harder one:</p>
+  <div class="say"><p>“Given the underlying tilt data… can we figure out the word that people drew? That will be the machine learning exercise.”</p><footer><b>Anand</b> <a class="ts" href="?t=15:44">15:44</a></footer></div>
+  <p>And for once in this course, a rule against agents: <q>don’t use agents for this</q> <a class="ts" href="?t=16:08">16:08</a> — for a five-minute physical task where an agent would cost more than it saves. That is a narrow rule for a narrow step, not a change of philosophy. The trade-offs are the interesting part. <span class="ev ev-c">Code</span> The question asks for consent first, because it records motion, orientation, pen timing, battery, network and (optionally) location. <span class="ev ev-x">Research</span> Browsers expose these sensors only on secure pages and, on many phones, after a permission prompt (<a href="https://www.w3.org/TR/orientation-event/">W3C Device Orientation and Motion</a>), and nothing guarantees two phones measure alike. <span class="ev ev-i">Inference</span> As of 20 October the question text doesn’t say what a student without a suitable phone should do. No classifier had been trained; the ML task is next week’s plan.</p>
+
+  <div class="band"><div class="band-in">
+    <div class="lbl">Three shipped questions, one pattern</div>
+    <p style="font-size:1.15rem;line-height:1.55">Each moves the hard part <strong>somewhere an agent can’t simply reach</strong>: the market into the future and the class’s hallway talk; the exchange into another person’s decision to pay; Air Ink into a hand holding a phone. <span class="ev ev-i" style="color:var(--term-muted);background:transparent">Inference</span> That is a design idea, not yet a result. On 19 October none of the three had produced a single grade.</p>
+  </div></div>
+</section>
+
+<!-- ================= ACT II ================= -->
+<section class="chap act-open" id="budget" data-act="II · Price the check" data-title="When checking isn’t free">
+  <div class="act-banner"><span class="n" data-n="II" aria-hidden="true"></span><span class="t">Price the check</span><span class="q">If you can test an answer a hundred times, what is the question testing?</span></div>
+  <div class="act"><span class="st wait">… proposed</span> GA3 · 17:56</div>
+  <h2>When checking <em>isn’t free</em></h2>
+  <p class="lede">Then Anand turned to the next graded assignment, GA3, and to a problem with all of them. <q>One of the things that I’m exploring is cost and time of verification.</q> <a class="ts" href="?t=18:00">18:00</a></p>
+  <p>The course’s remote online exam gives students very little time. The weekly assignments give a week or ten days, <q>that allows agents more time and attention and plus as a group people can collaborate and solve, and therefore is not realistic enough practice</q>. <a class="ts" href="?t=18:24">18:24</a> So he proposed two changes. GA3’s deadline would stay, but <strong>questions would be released in stages</strong>, some with only a day or two to solve. And <strong>some questions would limit how often you can check an answer</strong>. He picked the example of a GeoGuessr-style location game a TA had built:</p>
+  <div class="say"><p>“We can now type in every single combination of latitude and longitude to the third decimal… and eventually figure out if it gets it right. So that’s a brute force thing. In real life, you would not have the luxury of such rapid iterations, nor would verification be free.”</p><footer><b>Anand</b> <a class="ts" href="?t=19:48">19:48</a></footer></div>
+  <p>The fix: <q>It may be limited number of verifications or tradeoff verification against marks. So you decide to pay for one more verification if you think that that will substantially improve your score.</q> <a class="ts" href="?t=20:20">20:20</a> Try it. Three made-up students take one 10-mark question. Each answer they produce is right with some probability; each believes something about that probability. They check when they think a check is worth its price.</p>
+
+  <div class="lab wide" id="checks">
+    <div class="lab-head"><h3>Pay for one more check?</h3><span class="hyp-tag">Hypothetical students &amp; numbers</span></div>
+    <div class="lab-body">
+      <div class="seg" role="group" aria-label="Checks allowed" id="chk-n">
+        <span class="sr-only">Checks allowed:</span>
+        <button type="button" data-n="0" aria-pressed="false">0 checks</button>
+        <button type="button" data-n="1" aria-pressed="false">1 check</button>
+        <button type="button" data-n="3" aria-pressed="false">3 checks</button>
+        <button type="button" data-n="999" aria-pressed="true">Unlimited</button>
+      </div>
+      <div class="range"><label for="chk-c">Cost per check (marks)</label><input type="range" id="chk-c" min="0" max="3" step="0.5" value="0"><output id="chk-c-out" for="chk-c">0</output></div>
+      <div class="students" id="chk-students"></div>
+      <div class="verdict" id="chk-verdict"></div>
+      <p class="lab-cap">Model: an answer is right with probability <i>p</i>. A student checks if the expected gain — chance they’re wrong × chance a retry is right × 10 marks, using what they <em>believe</em> <i>p</i> is — beats the price. A failed check means a fresh attempt. Scores are expected values. <strong>Not TDS rules or data</strong>; the actual GA3 design was still being written.</p>
+    </div>
+  </div>
+
+  <p>With unlimited free checks, the guesser and the expert tie at full marks: the question measures stamina. Put a price on checking and the scores pull apart — and the gap that opens is not just skill but <strong>calibration</strong>, knowing how likely you are to be right. <span class="ev ev-i">Inference</span> That is no accident. Five minutes later, listing what Straive’s clients most want from LLM engineers, Anand put this first: systems that catch AI mistakes, <q>so a sense of confidence calibration both from models but also from humans is going to be an important part.</q> <a class="ts" href="?t=26:12">26:12</a></p>
+  <p>But scarcity has a second edge. A one- or two-day release window rewards students who are free on those days; a check priced in marks taxes the anxious more than the reckless. <span class="ev ev-i">Inference</span> Fixed limits can teach real-world judgment, and they can also <strong>measure availability instead of ability</strong>. Someone in the room said so.</p>
+</section>
+
+<section class="chap" id="record" data-act="II · Price the check" data-title="On the record">
+  <div class="act"><span class="st info">⚖ negotiated</span> 21:20</div>
+  <h2>“I just wanted to get you <em>on record</em>”</h2>
+  <p class="lede">Carlton interrupted before Anand could move on, with what he called a question <q>from an operations perspective</q>. GA3 would be the fourth of the four assignments that decide whether a student may sit the end-term exam.</p>
+  <div class="say"><p>“Are you happy that this kind of a GA is okay… in terms of the gradual release and people having this sudden change in expectation for an end-term eligibility GA?”</p><footer><b>Carlton</b> <a class="ts" href="?t=21:36">21:36</a></footer></div>
+  <p>JK’s answer was procedural: GA0 to GA2 had run to plan, and the design and evaluation were explained to students up front. <a class="ts" href="?t=22:28">22:28</a> Carlton agreed, and then did something unusual for a meeting: he said why he had asked.</p>
+  <div class="say"><p>“I just wanted to get you on record saying that so that when we show the video, people understand what’s happening and why.”</p><footer><b>Carlton</b> <a class="ts" href="?t=23:00">23:00</a></footer></div>
+  <p>What followed was a negotiation conducted for an audience. Anand offered to move the date if needed; the shortened duration was the point. <a class="ts" href="?t=23:12">23:12</a> JK set a limit — <q>it’s not like all 10 questions are going to be of that nature</q> — and Anand pinned it: <q>more than one or two, but not more than five.</q> <a class="ts" href="?t=24:00">24:00</a> JK did the arithmetic: of 10 to 12 questions, five constrained, so students could still reach <q>60 to 70% without the vagaries</q>. <a class="ts" href="?t=24:08">24:08</a> (He said “GA4” at one point; the conversation was about GA3. It was a slip, not a policy.) Carlton noted that scores on the first three assignments were <q>very heavily… right skewed</q>: most students score high. <a class="ts" href="?t=24:24">24:24</a></p>
+  <div class="say"><p>“I play the quartermaster towards the operational decisions, and some of these decisions happen like this, when someone points out this could be like this. So this is how we come to an arbitration.”</p><footer><b>JK</b> <a class="ts" href="?t=25:04">25:04</a></footer></div>
+  <p>The compromise caps how much of a grade an experiment can touch. <span class="ev ev-x">Research</span> It does not, by itself, show the experiment is fair: assessment standards such as <a href="https://ncme.org/involvement/committees/classroom-assessment/classroom-assessment-standards/">NCME’s</a> judge fairness by how scores are used and who can access the task, not by the shape of a histogram. What the students on the call got was rarer than a guarantee: <strong>they watched the trade-off being made, and heard who argued which side.</strong> Anand said the first GA3 questions would go out the next day. <a class="ts" href="?t=19:28">19:28</a></p>
+</section>
+
+<!-- ================= ACT III ================= -->
+<section class="chap act-open" id="lab" data-act="III · Break it first" data-title="Too easy or too hard">
+  <div class="act-banner"><span class="n" data-n="III" aria-hidden="true"></span><span class="t">Break it before the students do</span><span class="q">Most clever questions fail. The skill is finding out first.</span></div>
+  <div class="act"><span class="st info">ⓘ off-screen</span> 25:24</div>
+  <h2>“Too easy or <em class="red">too hard</em>”</h2>
+  <p class="lede">To decide what GA3 should teach, Anand had asked an AI to mine his work for the LLM-engineering tasks clients were asking his employer, <a href="https://www.straive.com/">Straive</a>, for. He stopped sharing his screen — <q>there are a few things that probably shouldn’t be going into</q> — and summarised. <a class="ts" href="?t=25:44">25:44</a></p>
+  <p>Three themes. <strong>Verification</strong>: <q>can we build verification systems that can catch AI mistakes?</q>, filtering uncertain results for humans to review. <a class="ts" href="?t=25:56">25:56</a> <strong>Organising information</strong>: <q>Do I need to construct an index? Does it need to be a vector index? Does it need to be a graph index? Does agentic search work fine?</q> <a class="ts" href="?t=26:32">26:32</a> And <strong>workflows</strong>, which he left half-said. Then the admission that sets up this whole act:</p>
+  <div class="say red"><p>“I tried a few, they ended up either being too easy or too hard, and therefore I had to give up.”</p><footer><b>Anand</b> <a class="ts" href="?t=27:12">27:12</a></footer></div>
+  <p>The invoice puzzle was one of them — the <a href="#cold">$500 simulation</a>. The next was a puzzle students had already played.</p>
+</section>
+
+<section class="chap" id="tangram" data-act="III · Break it first" data-title="A hundred answers">
+  <div class="act"><span class="st no">✗ leaked</span> 28:24 · 54:00</div>
+  <h2>A hard puzzle with <em class="red">a hundred answers</em></h2>
+  <p class="lede">The course’s Tangram question gives each student a silhouette and asks them to rebuild it from seven pieces. It was the question a student struggled with at the end of <a href="../2026-10-12-tds-ideation/#cold">last week’s meeting</a>. Anand called it <q>moderately promising</q>, and then explained why it couldn’t be reused:</p>
+  <div class="say red"><p>“It was based on a set of 100 seed configurations. Once that set of seed configurations is solved, it is solved for everyone.”</p><footer><b>Anand</b> <a class="ts" href="?t=28:32">28:32</a></footer></div>
+  <p>Near the end of the meeting, JK asked how students had actually cracked it. Anand relayed what Bharat had found: a mix of techniques, two of them design flaws. A filter endpoint had <strong>exposed solutions from other students</strong> — <q>so that gives one catalog</q> — and many shapes came from a popular public collection of tangrams. <a class="ts" href="?t=54:04">54:04</a></p>
+  <div class="say"><p>“The filter endpoint exposes an actual solution, which is otherwise harmless, but in such cases it trivializes the solution. And that it was a fixed vocabulary of just 100.”</p><footer><b>Anand</b> <a class="ts" href="?t=54:40">54:40</a></footer></div>
+
+  <div class="lab wide" id="bank-lab">
+    <div class="lab-head"><h3>How fast does a fixed bank leak?</h3><span class="hyp-tag">Hypothetical class</span></div>
+    <div class="lab-body">
+      <div class="range"><label for="bank-k">Solutions shared so far</label><input type="range" id="bank-k" min="0" max="300" step="1" value="0"><output id="bank-k-out" for="bank-k">0</output></div>
+      <div class="bank" id="bank" role="img" aria-label="A grid of 100 tangram targets"></div>
+      <div class="verdict red" id="bank-verdict"></div>
+      <p class="lab-cap">100 targets, each student assigned one at random; every shared solution covers a random target. The outlined square is “yours”. Real classes share faster than random — a single endpoint can publish many at once. No real target or solution is shown.</p>
+    </div>
+  </div>
+
+  <p>Notice what failed. Not the puzzle — rebuilding a silhouette is still a fine exercise in visual reasoning — but the <strong>answer surface</strong> around it: a finite bank, and a grader-adjacent endpoint that returned solution-shaped data. Both were found by students, in the open, after grading. <span class="ev ev-i">Inference</span> Anand’s framing was the right one: <q>both of which are learnings from a question design perspective.</q> <a class="ts" href="?t=54:56">54:56</a></p>
+</section>
+
+<section class="chap" id="slices" data-act="III · Break it first" data-title="Ask for another cut">
+  <div class="act"><span class="st wait">… idea</span> 28:52</div>
+  <h2>Ask for <em>another cut</em></h2>
+  <p class="lede">The replacement idea keeps the visual reasoning and removes the finite bank. It came from Sujal, an intern at Straive: <strong>show students cross-sections of a hidden 3D shape and ask what produced them.</strong> <a class="ts" href="?t=29:00">29:00</a> The catch is the interesting part: <q>what you may get may be valid but is not necessarily the shape that produced it. You may ask for additional cross-sections, up to maybe three.</q> <a class="ts" href="?t=29:32">29:32</a></p>
+  <p>Anand’s hunch was that people do this well — <q>“if I tilt it this way and maybe ask for a cut here, will it help?”</q> — <q>because they have an intuitive feel of 3D space that models currently lack.</q> <a class="ts" href="?t=30:00">30:00</a> <span class="ev ev-i">Inference</span> That is an impression, not a measured comparison. The skill itself is easy to feel:</p>
+
+  <div class="lab wide" id="slice-lab">
+    <div class="lab-head"><h3>Which cut tells you the most?</h3><span class="hyp-tag">Illustration, not the proposed task</span></div>
+    <div class="lab-body">
+      <p>A hidden solid is one of these three. Its top-down slice is a circle — true of all three. You can ask for one more cut.</p>
+      <div class="seg" role="group" aria-label="Choose a cut" id="slice-cuts">
+        <button type="button" data-cut="h" aria-pressed="true">Horizontal cut</button>
+        <button type="button" data-cut="v" aria-pressed="false">Vertical cut through the middle</button>
+        <button type="button" data-cut="o" aria-pressed="false">Vertical cut off-centre</button>
+      </div>
+      <div class="solids" id="solids"></div>
+      <div class="verdict" id="slice-verdict"></div>
+    </div>
+  </div>
+
+  <p>Carlton raised a flag straight away: research he half-remembered suggested <q>a gender bias</q> in manipulating 3D objects — <q>I need to verify that, there’s just something to be aware of.</q> <a class="ts" href="?t=30:28">30:28</a> Anand: no handicap or bonus, <q>but something to be aware</q> of. <a class="ts" href="?t=31:04">31:04</a> <span class="ev ev-x">Research</span> A <a href="https://pubmed.ncbi.nlm.nih.gov/41566416/">2026 meta-analysis</a> does find an average male–female gap on specific mental-rotation tests, with wide variation between studies. Averages on lab tests say nothing about any individual student. The responsible version of Carlton’s point is a design question — practice rounds, scaffolds, alternatives — not a verdict on who can do 3D. Anand closed the monologue with one more untested idea, <strong>Monopoly-like business simulations</strong> for groups. <a class="ts" href="?t=31:16">31:16</a></p>
+</section>
+
+<section class="chap" id="evals" data-act="III · Break it first" data-title="Who evaluates the evals?">
+  <div class="act"><span class="st wait">… idea</span> 32:12</div>
+  <h2>Who evaluates <em>the evals?</em></h2>
+  <p class="lede">“That was a good half an hour of monologuing,” Anand said, and asked the instructors for ideas. <a class="ts" href="?t=31:32">31:32</a> JK offered <strong>harness engineering</strong>: building the scaffolding — tools, prompts, hooks — around a model. <a class="ts" href="?t=32:12">32:12</a> Anand’s reply set a higher bar.</p>
+  <div class="say"><p>“The thing I suspect will be still useful when students graduate will be: how do you optimize a harness for unknown scenarios? Meaning where you don’t necessarily know what is correct or what to expect.”</p><footer><b>Anand</b> <a class="ts" href="?t=33:04">33:04</a></footer></div>
+  <p>Tuning an agent against a known test suite, he argued, is close to solved when the tests are thorough. <a class="ts" href="?t=32:52">32:52</a> So the sketch: a cheap model, a configurable agent harness (he named <a href="https://github.com/earendil-works/pi">Pi</a>), and <q>a class of problems, a subset of which reaches you. You have limited knowledge on what subset of tasks will reach the agent.</q> <a class="ts" href="?t=34:00">34:00</a> Students would have to use judgment about the domain, not just the score. His own status report: <q>Very likely P1 question. I just need to test how well this can be evaluated.</q> <a class="ts" href="?t=34:40">34:40</a></p>
+  <p>JK went one level up — <strong>have students build their own evals</strong> — and Anand went one level higher still:</p>
+  <div class="exch">
+    <p><b>JK</b> Have students build their own evals… <a class="ts" href="?t=35:08">35:08</a></p>
+    <p><b>Anand</b> How do we evaluate evals? <a class="ts" href="?t=35:32">35:32</a></p>
+    <p><b>JK</b> (laughing) Yeah, I mean, I don’t want it to be another 500 dollar. <a class="ts" href="?t=35:36">35:36</a></p>
+  </div>
+  <p>JK had been reading about making evals more deterministic with an observability layer around the harness. <a class="ts" href="?t=36:04">36:04</a> Anand did what he does with open questions. He turned to ChatGPT and dictated, in front of everyone:</p>
+  <div class="prompt-box">
+    <div class="plabel"><span>Dictated live to an agent · 36:44 → 38:24</span><a class="ts" href="?t=36:44">36:44</a></div>
+    <img src="assets/live-dictation.webp" width="674" height="143" alt="ChatGPT’s home screen reading 'Hey, Anand. Ready to dive in?' with a dictation waveform running in the input box." loading="lazy">
+    <p>“One of the questions we are thinking of in TDS is how can we teach students to create effective evals or benchmarks. … I’d like you to go through my corpus of work, where there have been … a reasonably large number of benchmarks of various kinds created. … But the crux of the question I have is: <strong>how do you evaluate evals in the first place?</strong> Is it that you check if the evals cover enough of a canonical or a golden set of criteria? Do you actually run the evals — which can be expensive — and see how well they match the original results? … Now overlay this with the conversations that we’ve had about TDS, how the course is designed, how students work with agents and collaborate… Filter them based on which ones are the most robust, have clear learning, and are a valid test of individual capability.”</p>
+    <p class="pause">“This will take half an hour. Let it run.” — then thirty seconds of silence on the call — “Okay, that should cover it. Let’s see what comes out of it.” <a class="ts" href="?t=38:56">38:56</a></p>
+  </div>
+  <p>Two things are worth noticing. The teachers are agent users too, and the meeting shows their real workflow: <strong>a hard question goes to an agent in the middle of a sentence</strong>, and the answer arrives later. And Anand’s last filter — <em>a valid test of individual capability</em> — is the same bar every question on this page has to clear. <span class="ev ev-x">Research</span> The research answer to “how do you evaluate an eval?” is not “run it and see.” Surveys of agent benchmarks (<a href="https://link.springer.com/article/10.1007/s10462-026-11678-4">Nageshwaran et al., 2026</a>) flag leakage, nondeterminism, scoring uncertainty and weak links to real deployment. <span class="ev ev-i">Inference</span> A classroom version could ask: does a student’s eval tell a deliberately broken system from a working one? Does its ranking survive a reworded task? Does it catch the teacher’s held-back counterexamples? We don’t know what the agent replied; the meeting moved on.</p>
+</section>
+
+<!-- ================= ACT IV ================= -->
+<section class="chap act-open" id="help" data-act="IV · Real is harder to grade" data-title="The student who hasn’t started">
+  <div class="act-banner"><span class="n" data-n="IV" aria-hidden="true"></span><span class="t">Real is harder to grade</span><span class="q">The closer a task gets to the world, the harder it is to check.</span></div>
+  <div class="act"><span class="st info">ⓘ support gap</span> 39:12</div>
+  <h2>The student who <em>hasn’t started</em></h2>
+  <p class="lede">JK opened the floor: <q>It’s okay if things go above your head.</q> <a class="ts" href="?t=39:28">39:28</a> Preethi took him at his word. She had barely used agents — once, on a Tangram question, <q>using Claude or something where I had to switch it on and then switch it off immediately</q>. <a class="ts" href="?t=39:52">39:52</a></p>
+  <div class="say stu"><p>“I hear that we have to use multiple agents… in a containerized environment so that they don’t go haywire or what not. So if such a session… can be arranged to guide us how to go about doing it.”</p><footer><b>Preethi</b>, student <a class="ts" href="?t=40:00">40:00</a></footer></div>
+  <p>Anand: <q>That would probably be for a different session… This is more an ideation on what questions to ask.</q> <a class="ts" href="?t=40:20">40:20</a> JK pointed to TAs in the live sessions, and the team promised a session on setting up agents. <a class="ts" href="?t=40:48">40:48</a> <span class="ev ev-i">Inference</span> It was the right answer for the agenda and still a small alarm. <strong>A course that assumes agents has to teach students to run them safely</strong>, and the students furthest behind are rarely the ones who unmute to say so.</p>
+  <p>JK then suggested <strong>agents as research scientists</strong>, noting that maths researchers are being told AI is competition. <a class="ts" href="?t=41:04">41:04</a> Anand’s reply explains a lot of this course’s design:</p>
+  <div class="say"><p>“Maths is actually ridiculously difficult to frame as a question in TDS… Once we get a solution, it’s done. But personalizing it is hopeless.”</p><footer><b>Anand</b> <a class="ts" href="?t=41:24">41:24</a></footer></div>
+  <p>Physics, on the other hand, comes with a personal instrument. Anand’s to-do list: open a web page, swing your phone like a pendulum, let the accelerometer and gyroscope estimate Earth’s gravity — <q>a simple grade six physics experiment using mobile as an instrument.</q> <a class="ts" href="?t=42:52">42:52</a> Then go further: show that <q>coefficient of friction does vary based on the actual surface that is used.</q> <a class="ts" href="?t=43:12">43:12</a></p>
+  <div class="say"><p>“What real life experimental design is enabled by the devices that we have, and how does that inform or enable data science?”</p><footer><b>Anand</b> <a class="ts" href="?t=43:40">43:40</a></footer></div>
+  <p><span class="ev ev-i">Inference</span> The appeal is obvious after the Tangram: every phone, surface and swing is different, so <strong>nobody can copy your measurement</strong>. So is the cost. Phone sensors drift and differ by model; a fair grade would have to reward handling uncertainty, not landing on 9.8. And, as with Air Ink, it assumes a phone. It is a research direction, not a graded experiment.</p>
+</section>
+
+<section class="chap" id="cipher" data-act="IV · Real is harder to grade" data-title="One cipher, two editions">
+  <div class="act"><span class="st wait">? verify</span> 44:08</div>
+  <h2>One cipher, <em>two editions</em></h2>
+  <p class="lede">Carlton offered what he called <q>a crazy idea or silly idea… or maybe both</q>: <q>maybe we should find problems that have prizes and just solve them using agents and use the group think of TDS. You know, win a million dollars and… TDS might get nominated for the Nobel Prize.</q> <a class="ts" href="?t=44:12">44:12</a> JK pointed at the compute bill. Anand took the idea seriously, with Carlton’s standing question attached — <q>how do we link it to learning?</q> <a class="ts" href="?t=45:04">45:04</a> — and proposed <strong>weird, niche problems</strong> instead of famous ones. He shared his screen to show one.</p>
+  <p>The transcript heard it as “the Cipher of the Stitch.” It is the <strong>Cyphral Distich</strong>: 64 numbers attributed to Sir Thomas Urquhart, the Scottish writer whose <em>Logopandecteision</em> appeared in <strong>1653</strong> (Anand guessed the 15th or 16th century; it is the 17th). In August, <a href="https://www.vals.ai/blogs/fable-solves-cyphral-distich">Vals AI reported</a> that Claude Fable 5.1 had cracked it. Anand summarised the rule: <q>for the first cipher number you go to the first section and count to that numbered word and take its first letter.</q> <a class="ts" href="?t=47:28">47:28</a> It reads <q>O God, uphold King Charles II</q>, with Charles spelled CHARLS. <a class="ts" href="?t=47:48">47:48</a></p>
+  <p>The page on his screen was <a href="https://github.com/sanand0/research/tree/main/cyphral-distich">his own check of that claim</a>, and it says more than he had time to say. Run it yourself:</p>
+
+  <div class="lab wide" id="cipher-lab">
+    <div class="lab-head"><h3>Verify the decipherment</h3><span class="code-tag">Real · Anand’s reproduction</span></div>
+    <div class="lab-body">
+      <div class="seg" role="group" aria-label="Which source text" id="cipher-src">
+        <button type="button" data-src="1834" aria-pressed="true">1834 reprint, as printed</button>
+        <button type="button" data-src="vals" aria-pressed="false">Vals’ transcription</button>
+        <button type="button" data-src="1653" aria-pressed="false">1653 original</button>
+      </div>
+      <div class="cipher" id="cipher-grid" role="group" aria-label="The 64 cipher numbers; select one to see its lookup"></div>
+      <div class="cipher-line" id="cipher-out" aria-live="polite"></div>
+      <div class="cipher-detail" id="cipher-detail">Select any number to see which word it points to.</div>
+      <div class="verdict" id="cipher-verdict"></div>
+      <p class="lab-cap">Lookups from <a href="https://github.com/sanand0/research/blob/main/cyphral-distich/coordinates.csv">coordinates.csv</a>, made by <a href="https://github.com/sanand0/research/blob/main/cyphral-distich/verify.py">verify.py</a> against the <a href="https://archive.org/details/worksofsirthomas00mait/page/417/mode/1up">1834 <em>Works</em>, p. 417</a>, using two counting conventions (“hinc inde” as one word, “parol-breaking” as two). The <a href="https://archive.org/details/bim_early-english-books-1641-1700_logopandecteision-or-an_urquhart-sir-thomas_1653">1653 scan</a> was checked by reading it; no letters are computed for it here.</p>
+    </div>
+  </div>
+
+  <p>So three different things are true. <span class="ev ev-c">Code</span> Against the <strong>1834 reprint</strong>, the rule decodes all 64 letters. Against the ciphertext <strong>as Vals printed it</strong>, one letter fails, because the blog has 33 where the page (and an <a href="https://en.wikisource.org/wiki/Page:Notes_and_Queries_-_Series_9_-_Volume_3.djvu/134">1899 printing</a>) has 38. And the surviving <strong>1653 book</strong> doesn’t contain the distich at all; its 32 petitions are in a different order, so the key isn’t there. <span class="ev ev-x">Research</span> Independent checks by <a href="https://github.com/reticuli-labs/panel-artifacts/blob/main/distich-refutation-2026-09-01/FINDINGS.md">Reticuli Labs</a> and <a href="https://dbourdeau.github.io/cyphersolver/urquhart.html">Daniel Bourdeau</a> hit the same wall. The accurate claim is narrower and more interesting than the headline: <strong>a model found a reproducible reading of an 1834 text; how it relates to Urquhart’s 1653 book is unresolved.</strong></p>
+  <p>Carlton loved the genre. He knew someone who used to win magazine crossword prizes because <q>not many people actually apply for the prize</q> — tickets to Paris, gift hampers. <a class="ts" href="?t=48:40">48:40</a> Niche problems with real value would make a great bonus question. Anand: <q>Solve one, get a bonus mark. It’s actually very tempting. Yeah, let’s just do that.</q> <a class="ts" href="?t=49:52">49:52</a> Then Carlton asked how it would be graded.</p>
+  <div class="exch">
+    <p><b>Carlton</b> How do we go about constructing a measurable outcome so that we can give a bonus mark? <a class="ts" href="?t=50:40">50:40</a></p>
+    <p><b>Anand</b> I have not validated this, but solve one of these and we will have… ChatGPT, Claude also verify that you have in fact solved it. And if it does, then you get the bonus mark. <a class="ts" href="?t=50:52">50:52</a></p>
+    <p><b>Carlton</b> Even for hard problems, the verifiability is usually the easier part. <a class="ts" href="?t=51:24">51:24</a></p>
+  </div>
+  <div class="band"><div class="band-in">
+    <div class="lbl">The verification story inside the story</div>
+    <p style="font-size:1.2rem;line-height:1.55;margin:0">The cipher still on screen was the counterexample. Checking that 64 numbers spell a sentence takes an 85-line script. <strong>Checking which text the numbers were written against took two archive scans and still isn’t settled.</strong> <span class="ev ev-i" style="color:var(--term-muted);background:transparent">Inference</span> A model asked “is this solved?” would most likely check the first. Verification is easy only once you have decided what you are verifying.</p>
+  </div></div>
+</section>
+
+<section class="chap" id="shortcut" data-act="IV · Real is harder to grade" data-title="A student’s shortcut">
+  <div class="act"><span class="st ok">✓ solved</span> 55:44</div>
+  <h2>A student <em>teaches the teachers</em></h2>
+  <p class="lede">With minutes left, JK asked students to go back to whatever agent they had used on the harder questions, ask it how it solved them, and post a short description on the course forum — <q>think of it as a bonus</q>. <a class="ts" href="?t=55:04">55:04</a> Adwitiya, a student, unmuted with a better story than any agent’s.</p>
+  <div class="say stu"><p>“A quick workaround of what I used was that I used one of my AI Pipe tokens to get a simple answer for a question: which model are you? … If it’s from the mini family, then it says that exact phrase no matter how many times you prompted it.”</p><footer><b>Adwitiya</b>, student <a class="ts" href="?t=56:16">56:16</a></footer></div>
+  <p>The GA2 question needed a prompt that made a model give a particular yes/no answer. Classmates, Adwitiya said, were digging into <q>rather complex… differences in how the model analyzes some problems</q>. Adwitiya’s prompt simply told the model: if you are from the mini family, answer no; otherwise, yes. <q>So that effectively solved the question.</q> <a class="ts" href="?t=56:44">56:44</a> Anand: <q>That was a useful — oh, that’s an interesting…</q> <a class="ts" href="?t=56:56">56:56</a></p>
+  <p><span class="ev ev-i">Inference</span> It is a lovely piece of lateral thinking: <strong>don’t reason about the model’s behaviour; ask the model who it is</strong>. It is also one student’s account, not a technique tested across models and prompts. And it sharpens a tension the meeting never resolved. Posting how you solved a question is peer teaching for this cohort. For the next cohort, if the question is reused, it is the Tangram’s catalog again. <strong>The same write-up is learning in October and leakage in January.</strong> JK told Adwitiya to post it with the right forum tags; Anand handed the TAs homework: draft GA4 questions to test on Wednesday. <a class="ts" href="?t=57:24">57:24</a></p>
+</section>
+
+<section class="chap" id="difficulty" data-act="IV · Real is harder to grade" data-title="What a pass rate counts">
+  <div class="act"><span class="st wait">? measured</span> 57:56</div>
+  <h2>What a pass rate <em>actually counts</em></h2>
+  <p class="lede">The meeting was over. Then Carlton asked one more question. Earlier, Anand had shown the team an evaluation of past questions’ difficulty. <q>Could you share with us how you did the evaluations of those questions, what you used actually?</q> <a class="ts" href="?t=58:00">58:00</a> Anand opened the course’s exam repository and a file called <code>difficulty.md</code>.</p>
+  <figure class="shot wide" style="max-width:40rem">
+    <a href="assets/difficulty-md.webp" data-lightbox data-caption="difficulty.md as shared at 59:12: each question’s pass rate, with passes over attempts."><img src="assets/difficulty-md.webp" width="610" height="415" alt="A rendered Markdown file titled Difficulty, listing questions from a 2026-09 GA0 with percentages such as '57%: q-axis-scale-manipulation-repair (102 / 180)'." loading="lazy"></a>
+    <figcaption>On screen at <a class="ts" href="?t=59:00">59:00</a>: per-question percentages for an earlier assignment, e.g. <strong>57% (102 / 180)</strong>.</figcaption>
+  </figure>
+  <p>Before the answer: <strong>what do you think that 57% is?</strong></p>
+  <div class="lab wide" id="diff-lab">
+    <div class="lab-head"><h3>Carlton’s question, as a quiz</h3><span class="code-tag">Code · difficulty.py</span></div>
+    <div class="lab-body">
+      <div class="guess" id="diff-guess" role="group" aria-label="What does 57% measure?">
+        <button type="button" data-k="agent">An AI agent rated how hard the question is.</button>
+        <button type="button" data-k="full">The share of the class that got full marks on it.</button>
+        <button type="button" data-k="enrol">The share of all enrolled students who solved it.</button>
+        <button type="button" data-k="ok">The share of students who submitted the assignment and scored above zero on it.</button>
+      </div>
+      <div class="verdict" id="diff-verdict" hidden></div>
+    </div>
+  </div>
+  <div class="exch">
+    <p><b>Carlton</b> So the difficulty.py uses an agent? <a class="ts" href="?t=59:08">59:08</a></p>
+    <p><b>Anand</b> No, deterministic. Actually, all of this is…</p>
+    <p><b>Carlton</b> Oh, okay, okay. I was under the impression you used an agent to evaluate how difficult the question [was].</p>
+    <p><b>Anand</b> …offline, post facto, on a one-off basis. But this is simply saying percentage of… <a class="ts" href="?t=59:24">59:24</a></p>
+  </div>
+  <p>That is the whole instrument. <span class="ev ev-c">Code</span> For each question, the script counts students whose score on it was <strong>above zero</strong> in any saved submission, and divides by students with a score recorded for it — here, all 180 who submitted the assignment. No agent, no model of difficulty: a ratio. And a ratio is a fine thing to have, as long as nobody mistakes it for something else.</p>
+  <div class="frac wide">
+    <div><h4>What 102 / 180 contains</h4><ul><li>Students who submitted the assignment (all 180 here)</li><li>…and earned any marks at all</li><li>…by any route: alone, with agents, with friends, with a shared solver</li></ul></div>
+    <div><h4>What it can’t see</h4><ul><li>Whether answers leaked (a 100-shape bank, an endpoint)</li><li>How many checks were brute-forced</li><li>Who had the time, hardware or help</li><li>Whether anyone could do it again, alone, next month</li></ul></div>
+  </div>
+  <p><span class="ev ev-x">Research</span> The last line is the one that matters. In a <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12232635/">randomised study of about 1,000 high-school maths students</a> (Bastani et al., <em>PNAS</em> 2025), those given an unguarded GPT-4 tutor did <strong>48% better on practice problems — and 17% worse on the later exam without it</strong>; a tutor designed to give hints rather than answers avoided the drop. Completion with help and learning are different quantities. A pass rate measures the first.</p>
+  <div class="say big"><p>The exam has to pass its own exam. Its pass rate is where that test begins, not where it ends.</p></div>
+  <p>That is the humbling turn at the end of an ambitious hour. The team had shown a live market, a marketplace and a phone pen, and argued about verification budgets, agent harnesses and evals of evals. <strong>The most consequential instrument in the room was a percentage</strong> — and the most useful thing anyone did with it was ask what it counted. <span class="ev ev-i">Inference</span> None of this proves the course has found a new way to teach. What the meeting showed is a habit worth copying: <strong>put each question through students, agents and colleagues, find where it breaks, and say so on the record.</strong></p>
+</section>
+
+</main>
+
+<aside class="dock" id="dock" aria-label="Video of the meeting">
+  <div class="dock-head"><span><b>Meeting video</b> · 59:36</span><span id="dock-mode-label">Story focus</span></div>
+  <div class="vwrap">
+    <video id="vid" controls preload="metadata" playsinline>
+      <source src="https://media.s-anand.net/2026-10-19-tds-course-ideation.webm" type="video/webm">
+      <track kind="captions" src="captions.vtt" srclang="en" label="English (meeting captions)" default>
+      <a href="https://media.s-anand.net/2026-10-19-tds-course-ideation.webm">Download the video</a>
+    </video>
+    <div class="resume" id="resume"><button type="button" id="resume-btn"><i class="bi bi-play-fill" aria-hidden="true"></i> <span>Play</span></button></div>
+  </div>
+  <div class="now" id="now" aria-live="polite"><span class="t" id="now-t">00:00</span><span id="now-title">Press play, or tap any ▶ time in the story</span><span class="in-story" id="now-story"></span></div>
+  <div class="dock-ctrls">
+    <button class="dbtn mode" id="mode-btn" type="button" aria-pressed="false"><i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span></button>
+    <button class="dbtn" id="share-btn" type="button"><i class="bi bi-link-45deg" aria-hidden="true"></i> <span>Share moment</span></button>
+    <a class="dbtn wide-only" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+    <button class="dbtn dock-min" id="min-btn" type="button" aria-expanded="true" aria-label="Hide the mini video"><i class="bi bi-chevron-down" aria-hidden="true"></i></button>
+  </div>
+  <details class="chapters" open>
+    <summary>Chapters · tap to jump</summary>
+    <ol id="chapters"></ol>
+  </details>
+</aside>
+</div>
+
+<section class="takeaways" id="takeaways" data-act="Close" data-title="A checklist for the next question" aria-labelledby="tk-h">
+  <div class="inner">
+    <div class="band-label">Takeaways · run these before the students do</div>
+    <h2 id="tk-h">Six tests every question should pass</h2>
+    <p class="sub">Not a proven recipe — an hour of a course team catching its own mistakes, written down so the next question can be caught sooner.</p>
+    <div class="cards">
+      <div class="card"><div class="num">01 · SPECIFY</div><h3>Name the ability, not the task</h3><p>“Agents can do anything. How do we figure out what is useful?” Write down what a student should be able to do afterwards — then let real users poke holes in the spec, as Preethi, JK and Carlton did. <a class="ts" href="?t=03:24">03:24</a></p></div>
+      <div class="card"><div class="num">02 · SITUATE</div><h3>Put the hard part in the world</h3><p>A future number, a buyer’s choice, a hand on a phone. Real environments resist copying — and also exclude people without the phone, the time or the setup. Check who can’t reach it. <a class="ts" href="?t=13:20">13:20</a></p></div>
+      <div class="card"><div class="num">03 · PRICE</div><h3>Decide what a check costs</h3><p>Unlimited free checks turn a question into a search. Priced checks reward calibration — and can tax availability. Say who pays, and cap the stakes while you learn. <a class="ts" href="?t=19:48">19:48</a></p></div>
+      <div class="card"><div class="num">04 · ATTACK</div><h3>Break it before release</h3><p>Simulate students and agents attacking the question. $500 that buys a confident “drop it” is cheap next to grading a cohort on a puzzle with one shared answer. <a class="ts" href="?t=27:24">27:24</a></p></div>
+      <div class="card"><div class="num">05 · AUDIT</div><h3>Check the answer surface</h3><p>Fixed banks, helpful endpoints and next term’s forum posts all leak. Ask what the grader reveals, how many answers exist, and what a shared write-up does to reuse. <a class="ts" href="?t=54:40">54:40</a></p></div>
+      <div class="card"><div class="num">06 · TRANSFER</div><h3>Read the numerator</h3><p>A pass rate counts who scored above zero. Verify <em>what</em> was verified (1834 or 1653?), and test learning on a fresh case, alone, later. <a class="ts" href="?t=59:08">59:08</a></p></div>
+    </div>
+    <div class="finale">
+      <p>“How do we evaluate evals?”</p>
+      <footer>— Anand, a minute before he asked an agent the same thing <a class="ts" href="?t=35:32">35:32</a></footer>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div><strong>The Exam Has to Pass Its Own Exam</strong> · the third open course-design meeting of <a href="https://tds.s-anand.net/">Tools in Data Science</a> (<a href="https://study.iitm.ac.in/ds/course_pages/BSSE2002.html">IIT Madras BS, BSSE2002</a>), September 2026 term · Monday 19 Oct 2026, remote, recorded for students.</div>
+  <div>Media: <a href="https://media.s-anand.net/2026-10-19-tds-course-ideation.webm">video (webm)</a> · <a href="https://github.com/sanand0/talks/releases/download/talks/2026-10-19-tds-ideation.opus">audio (opus)</a> · <a href="transcript.md" data-transcript>transcript</a> · <a href="captions.vtt">captions</a> · <a href="comic-page.avif" data-lightbox data-caption="The meeting as an AI-drawn eight-panel comic: an interpretation, not a record.">comic page</a> · <a href="research-notes.md" data-md="Research notes">research notes</a> · <a href="story-context.md" data-md="Story context">story context</a></div>
+  <div>Course: <a href="https://tds.s-anand.net/">course page</a> · <a href="https://exam.sanand.workers.dev/tds-2026-09-p1">Project 1 portal</a> · <a href="https://exam.sanand.workers.dev/tds-2026-09-ga0">GA0 portal</a> · <a href="https://tds-network-games.sanand.workers.dev/">network games</a> · <a href="https://github.com/sanand0/tools-in-data-science-public">public course repository</a> · the series: <a href="../2026-10-05-tds-orientation/">5 Oct orientation</a> · <a href="../2026-10-12-tds-ideation/">12 Oct ideation</a> · <a href="../2026-10-07-iitm-ed-data-visualization/">7 Oct data visualisation</a> · <a href="https://www.s-anand.net/blog/how-i-use-ai-to-teach/">How I use AI to teach</a></div>
+  <div>Sources: <a href="https://github.com/sanand0/research/tree/main/cyphral-distich">Cyphral Distich reproduction</a> · <a href="https://www.vals.ai/blogs/fable-solves-cyphral-distich">Vals AI</a> · <a href="https://archive.org/details/worksofsirthomas00mait/page/417/mode/1up">1834 Works</a> · <a href="https://archive.org/details/bim_early-english-books-1641-1700_logopandecteision-or-an_urquhart-sir-thomas_1653">1653 Logopandecteision</a> · <a href="https://github.com/reticuli-labs/panel-artifacts/blob/main/distich-refutation-2026-09-01/FINDINGS.md">Reticuli Labs</a> · <a href="https://dbourdeau.github.io/cyphersolver/urquhart.html">Bourdeau</a> · <a href="https://doi.org/10.1073/pnas.2422633122">Bastani et al. 2025</a> · <a href="https://arxiv.org/abs/2503.03312">Rasooly &amp; Rozzi 2025</a> · <a href="https://link.springer.com/article/10.1007/s10462-026-11678-4">Nageshwaran et al. 2026</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/41566416/">Hervin &amp; Gibson 2026</a> · <a href="https://www.w3.org/TR/orientation-event/">W3C Device Orientation</a> · <a href="https://ncme.org/involvement/committees/classroom-assessment/classroom-assessment-standards/">NCME standards</a> · <a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI RMF</a></div>
+  <div class="muted">Quotes are from the recording, checked against its speaker-labelled captions and trimmed with ellipses; where the transcript and captions disagree on a speaker, the captions were followed. Screenshots are crops of the recording; a signed-in email and client material are cut out. Question text and code were inspected on 20 Oct 2026 and may since have changed. Interactive “hypothetical” labs use invented numbers. Keyboard: <kbd>V</kbd> toggles video focus, <kbd>[</kbd> / <kbd>]</kbd> move between sections.</div>
+</footer>
+
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump on-hero" aria-label="Jump to section">
+  <button id="jump-prev" type="button" aria-label="Previous section"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+  <button class="jump-cur" id="jump-cur" type="button" aria-expanded="false" aria-controls="jump-menu"><i class="bi bi-list-ul" aria-hidden="true"></i><span id="jump-cur-label">Cold open</span></button>
+  <button id="jump-next" type="button" aria-label="Next section"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+</nav>
+<div class="jump-menu" id="jump-menu" role="dialog" aria-label="All sections"></div>
+
+<dialog class="pop" id="pop" aria-labelledby="pop-title">
+  <div class="pop-head"><h3 id="pop-title">Source</h3><button class="icon-btn" type="button" id="pop-close" aria-label="Close"><i class="bi bi-x-lg" aria-hidden="true"></i></button></div>
+  <div class="pop-search" id="pop-search"><i class="bi bi-search" aria-hidden="true"></i><label class="sr-only" for="pop-q">Search the transcript</label><input id="pop-q" type="search" placeholder="Search the transcript…" autocomplete="off"><span id="pop-count"></span></div>
+  <div class="pop-body" id="pop-body"></div>
+</dialog>
+
+<dialog class="lightbox" id="lightbox" aria-label="Enlarged image">
+  <img id="lb-img" alt="">
+  <div class="lb-bar"><span id="lb-cap"></span><span><a id="lb-open" href="#" target="_blank" rel="noopener">Open full size <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a> <button type="button" id="lb-close">Close</button></span></div>
+</dialog>
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js" defer></script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const body = document.body;
+  const vid = $("#vid");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isNarrow = () => matchMedia("(max-width: 999px)").matches;
+  const cssVar = (n) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(n)) || 0;
+  const store = {
+    get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} },
+  };
+
+  // ---------- time helpers (story times are video times, checked against the embedded captions) ----------
+  const parseT = (s) => {
+    if (s == null || s === "") return null;
+    if (/^\d+(\.\d+)?$/.test(s)) return +s;
+    const p = String(s).split(":").map(Number);
+    if (p.some(isNaN)) return null;
+    return p.reduce((a, b) => a * 60 + b, 0);
+  };
+  const fmt = (t) => {
+    t = Math.max(0, Math.floor(t));
+    const m = Math.floor(t / 60), s = t % 60;
+    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  };
+
+  // ---------- theme ----------
+  const themeBtn = $("#theme-btn");
+  const isDark = () => document.documentElement.dataset.theme
+    ? document.documentElement.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  const syncThemeIcon = () => {
+    themeBtn.innerHTML = `<i class="bi ${isDark() ? "bi-sun" : "bi-moon-stars"}" aria-hidden="true"></i>`;
+    themeBtn.setAttribute("aria-label", `Switch to ${isDark() ? "light" : "dark"} mode`);
+  };
+  themeBtn.addEventListener("click", () => {
+    const next = isDark() ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    store.set("tds-ideation-3-theme", next);
+    syncThemeIcon();
+  });
+  syncThemeIcon();
+
+  // ---------- chapters (video time → story section) ----------
+  const CHAPTERS = [
+    ["00:00", "A submission bug, fixed", "market"], ["00:52", "The philosophy behind P1", "market"],
+    ["01:16", "The prediction market, live", "market"], ["02:20", "Crowds — and influence", "market"],
+    ["03:04", "“The most important” question", "exchange"], ["04:20", "Credits change hands", "exchange"],
+    ["05:56", "JK: not just TDS", "exchange"], ["06:44", "Legally permissible", "exchange"],
+    ["08:28", "Preethi: how many services?", "exchange"], ["10:24", "Do I need a buyer first?", "exchange"],
+    ["11:16", "Hundreds of offers", "exchange"], ["11:52", "Carlton: what goes on top?", "exchange"],
+    ["13:20", "Air Ink", "airink"], ["15:12", "Three codes, then ML", "airink"],
+    ["16:08", "Don’t use agents — for this", "airink"], ["16:28", "How do you pause a pen?", "airink"],
+    ["17:56", "GA3: the cost of checking", "budget"], ["19:04", "Release in stages", "budget"],
+    ["19:32", "Limited checks; GeoGuessr", "budget"], ["21:20", "Carlton: eligibility", "record"],
+    ["23:00", "“On the record”", "record"], ["23:28", "Not more than five", "record"],
+    ["25:04", "The quartermaster", "record"], ["25:24", "What clients ask for", "lab"],
+    ["27:12", "Too easy or too hard", "lab"], ["27:24", "The $500 question", "cold"],
+    ["28:24", "Tangram: 100 seeds", "tangram"], ["28:52", "3D cross-sections", "slices"],
+    ["30:20", "Carlton: a fairness flag", "slices"], ["31:16", "Business simulations", "slices"],
+    ["32:12", "Harness engineering", "evals"], ["33:04", "Harness for unknown tasks", "evals"],
+    ["35:08", "Students build evals", "evals"], ["35:32", "How do we evaluate evals?", "evals"],
+    ["36:44", "Dictating to an agent", "evals"], ["39:12", "Students, your turn", "help"],
+    ["39:44", "Preethi: help me set up agents", "help"], ["41:00", "Agents as researchers", "help"],
+    ["42:04", "The phone as a lab", "help"], ["44:08", "Problems with prizes", "cipher"],
+    ["46:44", "The Cyphral Distich", "cipher"], ["48:24", "Prizes nobody claims", "cipher"],
+    ["50:16", "How would we grade it?", "cipher"], ["51:48", "How many P1 questions?", "cipher"],
+    ["53:08", "No correct strategy", "shortcut"], ["54:00", "How Tangram was solved", "tangram"],
+    ["55:04", "Post how you solved it", "shortcut"], ["55:44", "Adwitiya’s shortcut", "shortcut"],
+    ["57:24", "GA4 homework", "shortcut"], ["57:56", "How was difficulty measured?", "difficulty"],
+    ["59:08", "“No, deterministic”", "difficulty"],
+  ].map(([t, title, sec]) => ({ t: parseT(t), label: t, title, sec }));
+  const chapOl = $("#chapters");
+  chapOl.innerHTML = CHAPTERS.map((c, i) =>
+    `<li><a href="?t=${c.label}" data-chap="${i}" class="ts-chap"><span class="ct">${c.label}</span><span>${c.title}</span></a></li>`).join("");
+
+  const sections = $$(".chap, #takeaways");
+  const secTitle = (id) => { const s = document.getElementById(id); return s ? s.dataset.title : ""; };
+
+  // ---------- URL state: ?t=mm:ss&view=video#section ----------
+  const urlState = () => {
+    const u = new URL(location.href);
+    return { t: parseT(u.searchParams.get("t")), view: u.searchParams.get("view"), hash: u.hash.slice(1) };
+  };
+  const buildUrl = ({ t, hash } = {}) => {
+    const u = new URL(location.href);
+    if (t != null) u.searchParams.set("t", fmt(t)); else if (t === null) u.searchParams.delete("t");
+    if (body.classList.contains("watch")) u.searchParams.set("view", "video"); else u.searchParams.delete("view");
+    if (hash !== undefined) u.hash = hash ? "#" + hash : "";
+    return u.pathname + u.search.replace(/%3A/gi, ":") + u.hash;
+  };
+  let urlT = urlState().t;
+
+  // ---------- player ----------
+  const resume = $("#resume"), resumeBtn = $("#resume-btn");
+  const seek = (t) => new Promise((res) => {
+    const go = () => { vid.currentTime = t; res(); };
+    if (vid.readyState >= 1) go(); else { vid.addEventListener("loadedmetadata", go, { once: true }); if (vid.preload === "none") vid.load(); }
+  });
+  const showResume = (t) => { resumeBtn.querySelector("span").textContent = `Play from ${fmt(t)}`; resume.classList.add("show"); };
+  const syncMin = () => {
+    const c = body.classList.contains("dock-collapsed");
+    minBtn.setAttribute("aria-expanded", String(!c));
+    minBtn.setAttribute("aria-label", c ? "Show the mini video" : "Hide the mini video");
+    minBtn.innerHTML = `<i class="bi ${c ? "bi-chevron-up" : "bi-chevron-down"}" aria-hidden="true"></i>`;
+  };
+  const ensureDockVisible = () => {
+    if (isNarrow()) { body.classList.remove("dock-collapsed"); syncMin(); return; }
+    const r = $("#dock").getBoundingClientRect();
+    if (r.top > innerHeight - 80 || r.bottom < 60) $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  };
+  const playAt = async (t, { push = false, el = null } = {}) => {
+    if (push) {
+      const sec = el && el.closest(".chap, #takeaways");
+      history.pushState({ t }, "", buildUrl({ t, hash: sec ? sec.id : undefined }));
+      urlT = t;
+    }
+    await seek(t);
+    ensureDockVisible();
+    try { await vid.play(); resume.classList.remove("show"); } catch (e) { showResume(t); }
+    if (el) { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+  };
+  resumeBtn.addEventListener("click", () => { vid.play(); resume.classList.remove("show"); });
+  vid.addEventListener("play", () => resume.classList.remove("show"));
+
+  const enhanceTs = (root = document) => {
+    $$("a.ts", root).forEach((a) => {
+      if (a.dataset.t) return;
+      const t = parseT(new URL(a.href, location.href).searchParams.get("t"));
+      a.dataset.t = t;
+      a.insertAdjacentHTML("afterbegin", '<i class="bi bi-play-fill" aria-hidden="true"></i>');
+      a.setAttribute("aria-label", `Play the meeting video from ${a.textContent.trim()}`);
+    });
+  };
+  enhanceTs();
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a.ts, a.ts-chap");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const t = a.classList.contains("ts-chap") ? CHAPTERS[+a.dataset.chap].t : +a.dataset.t;
+    const dlg = a.closest("dialog");
+    if (dlg) dlg.close();
+    playAt(t, { push: true, el: a.classList.contains("ts") && !dlg ? a : null });
+  });
+
+  // now-playing sync
+  const nowT = $("#now-t"), nowTitle = $("#now-title"), nowStory = $("#now-story");
+  const chapLinks = $$("#chapters a");
+  let curChap = -1;
+  const chapFor = (t) => { let i = -1; for (let k = 0; k < CHAPTERS.length; k++) if (CHAPTERS[k].t <= t + 0.5) i = k; return i; };
+  const onTime = () => {
+    const t = vid.currentTime;
+    nowT.textContent = fmt(t);
+    const i = chapFor(t);
+    if (i === curChap) return;
+    curChap = i;
+    chapLinks.forEach((a, k) => { a.classList.toggle("is-now", k === i); if (k === i) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
+    if (i >= 0) {
+      const c = CHAPTERS[i];
+      nowTitle.textContent = c.title;
+      nowStory.innerHTML = `In the story: <a href="#${c.sec}">${secTitle(c.sec)} ↓</a>`;
+      sections.forEach((s) => s.classList.toggle("is-now", s.id === c.sec));
+      const link = chapLinks[i], box = link.closest(".chapters");
+      if (box && box.scrollHeight > box.clientHeight) {
+        const lr = link.getBoundingClientRect(), br = box.getBoundingClientRect();
+        if (lr.top < br.top || lr.bottom > br.bottom) box.scrollTop += lr.top - br.top - box.clientHeight / 3;
+      }
+    }
+  };
+  vid.addEventListener("timeupdate", onTime);
+  vid.addEventListener("seeked", onTime);
+
+  // story → chapter hints
+  const revealChap = (first, last = first, pad = 8) => {
+    const box = first.closest(".chapters");
+    if (!box || box.scrollHeight <= box.clientHeight) return;
+    const top = first.getBoundingClientRect().top, bottom = last.getBoundingClientRect().bottom, br = box.getBoundingClientRect();
+    if (top >= br.top + pad && bottom <= br.bottom - pad) return;
+    box.scrollTop += bottom - top > br.height - 2 * pad ? top - br.top - pad : (top + bottom) / 2 - (br.top + br.bottom) / 2;
+  };
+  const tsSeen = new Set();
+  let hintKey = "", hintRaf = 0, tsHover = null;
+  const syncHints = () => {
+    hintRaf = 0;
+    const idx = [...new Set([...tsSeen].map((a) => chapFor(+a.dataset.t)).filter((i) => i >= 0))].sort((a, b) => a - b);
+    const key = idx.join();
+    if (key === hintKey) return;
+    hintKey = key;
+    chapLinks.forEach((a, k) => a.classList.toggle("in-view", idx.includes(k)));
+    if (idx.length && vid.paused && !tsHover) revealChap(chapLinks[idx[0]], chapLinks[idx.at(-1)]);
+  };
+  const tsIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? tsSeen.add(e.target) : tsSeen.delete(e.target)));
+    hintRaf ||= requestAnimationFrame(syncHints);
+  });
+  $$("a.ts").filter((a) => !a.closest("dialog, .dock")).forEach((a) => tsIO.observe(a));
+  const setTarget = (a) => {
+    if (tsHover === a) return;
+    tsHover = a;
+    chapLinks.forEach((l) => l.classList.remove("is-target"));
+    const i = a ? chapFor(+a.dataset.t) : -1;
+    if (i >= 0) { chapLinks[i].classList.add("is-target"); revealChap(chapLinks[i]); }
+  };
+  document.addEventListener("mouseover", (e) => setTarget(e.target.closest?.("a.ts") || (document.activeElement?.matches?.("a.ts") ? document.activeElement : null)));
+  document.addEventListener("focusin", (e) => setTarget(e.target.closest?.("a.ts") || null));
+  document.addEventListener("focusout", (e) => { if (e.target.matches?.("a.ts")) setTarget(null); });
+
+  const shareBtn = $("#share-btn");
+  shareBtn.addEventListener("click", async () => {
+    const t = Math.floor(vid.currentTime || 0);
+    const sec = curChap >= 0 ? CHAPTERS[curChap].sec : "";
+    const u = new URL(location.href);
+    u.search = "?t=" + fmt(t); u.hash = sec ? "#" + sec : "";
+    const label = shareBtn.querySelector("span");
+    try { await navigator.clipboard.writeText(u.href); label.textContent = `Copied ${fmt(t)}`; }
+    catch (e) { history.replaceState(history.state, "", u.pathname + u.search + u.hash); label.textContent = "Link in address bar"; }
+    setTimeout(() => (label.textContent = "Share moment"), 2200);
+  });
+
+  // ---------- story ⇄ video emphasis (same <video>, never remounted) ----------
+  const modeBtn = $("#mode-btn"), modeLabel = $("#dock-mode-label"), minBtn = $("#min-btn");
+  const updateDockH = () => {
+    const h = isNarrow() && body.classList.contains("watch") ? $("#dock").offsetHeight : 0;
+    document.documentElement.style.setProperty("--dock-h", h + "px");
+  };
+  const pickAnchor = () => {
+    const top = 80 + (isNarrow() && body.classList.contains("watch") ? cssVar("--dock-h") : 0);
+    return $$(".chap > *, #takeaways").find((el) => el.getBoundingClientRect().bottom > top);
+  };
+  const setMode = (watch, { replace = true } = {}) => {
+    if (body.classList.contains("watch") === watch) return;
+    const anchor = pickAnchor();
+    const before = anchor ? anchor.getBoundingClientRect().top : 0;
+    const storyVisible = $("#room").getBoundingClientRect().top < innerHeight * 0.5;
+    body.classList.toggle("watch", watch);
+    modeBtn.setAttribute("aria-pressed", String(watch));
+    modeBtn.innerHTML = watch
+      ? '<i class="bi bi-book" aria-hidden="true"></i> <span>Focus story</span>'
+      : '<i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span>';
+    modeLabel.textContent = watch ? "Video focus" : "Story focus";
+    if (replace) history.replaceState(history.state, "", buildUrl());
+    updateDockH();
+    if (anchor && storyVisible) {
+      const start = performance.now();
+      const keep = () => {
+        const d = anchor.getBoundingClientRect().top - before;
+        if (Math.abs(d) > 1) window.scrollBy({ top: d, behavior: "instant" });
+        if (performance.now() - start < 750) requestAnimationFrame(keep);
+      };
+      requestAnimationFrame(keep);
+    }
+  };
+  modeBtn.addEventListener("click", () => setMode(!body.classList.contains("watch")));
+  $("#hero-watch").addEventListener("click", (e) => {
+    e.preventDefault();
+    setMode(true);
+    $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  });
+  new ResizeObserver(updateDockH).observe($("#dock"));
+  addEventListener("resize", updateDockH);
+  minBtn.addEventListener("click", () => { body.classList.toggle("dock-collapsed"); syncMin(); });
+  if (isNarrow()) { body.classList.add("dock-collapsed"); syncMin(); }
+  vid.addEventListener("play", () => { if (body.classList.contains("dock-collapsed")) { body.classList.remove("dock-collapsed"); syncMin(); } });
+
+  // ---------- history ----------
+  addEventListener("popstate", () => {
+    const { t, view } = urlState();
+    setMode(view === "video", { replace: false });
+    if (t != null && t !== urlT) seek(t).then(() => { if (vid.paused) showResume(t); });
+    urlT = t;
+  });
+
+  // ---------- section jump nav ----------
+  const menu = $("#jump-menu"), backdrop = $("#jump-backdrop"), curBtn = $("#jump-cur"), curLabel = $("#jump-cur-label");
+  const groups = [];
+  sections.forEach((s) => {
+    const g = s.dataset.act;
+    if (!groups.length || groups[groups.length - 1].name !== g) groups.push({ name: g, items: [] });
+    groups[groups.length - 1].items.push(s);
+  });
+  menu.innerHTML = groups.map((g) => `<div class="jm-group">${g.name}</div><div class="jump-grid">${
+    g.items.map((s) => { const h = ((s.querySelector("h2") || {}).textContent || "").trim(); return `<a href="#${s.id}" data-sec="${s.id}">${s.dataset.title}<small>${h}</small></a>`; }).join("")}</div>`).join("");
+  const openMenu = (open) => {
+    menu.classList.toggle("open", open); backdrop.classList.toggle("open", open);
+    curBtn.setAttribute("aria-expanded", String(open));
+    if (open) (menu.querySelector("a.is-cur") || menu.querySelector("a")).focus();
+  };
+  curBtn.addEventListener("click", () => openMenu(!menu.classList.contains("open")));
+  backdrop.addEventListener("click", () => openMenu(false));
+  menu.addEventListener("click", (e) => { if (e.target.closest("a")) openMenu(false); });
+  let curIdx = 0;
+  const goSec = (i) => {
+    i = Math.max(0, Math.min(sections.length - 1, i));
+    sections[i].scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+    history.pushState(history.state, "", buildUrl({ hash: sections[i].id }));
+  };
+  $("#jump-prev").addEventListener("click", () => goSec(curIdx - 1));
+  $("#jump-next").addEventListener("click", () => goSec(curIdx + 1));
+  const progress = $("#progress"), jumpNav = $(".jump");
+  const onScroll = () => {
+    const line = innerHeight * 0.3 + cssVar("--dock-h");
+    let i = 0;
+    sections.forEach((s, k) => { if (s.getBoundingClientRect().top <= line) i = k; });
+    if (i !== curIdx || !curLabel.dataset.init) {
+      curIdx = i; curLabel.dataset.init = 1;
+      curLabel.textContent = sections[i].dataset.title;
+      $$("a", menu).forEach((a) => a.classList.toggle("is-cur", a.dataset.sec === sections[i].id));
+      $("#jump-prev").disabled = i === 0;
+      $("#jump-next").disabled = i === sections.length - 1;
+    }
+    jumpNav.classList.toggle("on-hero", $("#room").getBoundingClientRect().top > innerHeight * 0.75 && !menu.classList.contains("open"));
+    const h = document.documentElement.scrollHeight - innerHeight;
+    progress.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%";
+  };
+  let ticking = false;
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { onScroll(); ticking = false; }); } }, { passive: true });
+  onScroll();
+
+  // ---------- popups: transcript + markdown ----------
+  const pop = $("#pop"), popBody = $("#pop-body"), popTitle = $("#pop-title"), popSearch = $("#pop-search"), popQ = $("#pop-q"), popCount = $("#pop-count");
+  let popReturn = null;
+  const openPop = (title, html, { search = false } = {}) => {
+    popReturn = document.activeElement;
+    popTitle.textContent = title; popBody.innerHTML = html; enhanceTs(popBody);
+    popSearch.classList.toggle("on", search); popQ.value = ""; popCount.textContent = "";
+    pop.showModal(); popBody.scrollTop = 0; pop.scrollTop = 0;
+    if (search) popQ.focus();
+  };
+  pop.addEventListener("close", () => { if (popReturn && popReturn.focus) popReturn.focus(); });
+  $("#pop-close").addEventListener("click", () => pop.close());
+  pop.addEventListener("click", (e) => { if (e.target === pop) pop.close(); });
+  const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  popQ.addEventListener("input", () => {
+    const q = popQ.value.trim();
+    const blocks = $$(":scope > p, :scope > ol, :scope > ul, :scope > hr", popBody).filter((b) => !b.classList.contains("intro"));
+    $$("mark", popBody).forEach((m) => m.replaceWith(m.textContent));
+    popBody.normalize();
+    let n = 0;
+    blocks.forEach((b) => {
+      const hit = !q || b.textContent.toLowerCase().includes(q.toLowerCase());
+      b.classList.toggle("hide", !hit || (q && b.tagName === "HR"));
+      if (hit && q) {
+        n++;
+        const re = new RegExp(escRe(q), "gi");
+        const walker = document.createTreeWalker(b, NodeFilter.SHOW_TEXT);
+        const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach((node) => {
+          if (!re.test(node.nodeValue)) return; re.lastIndex = 0;
+          const span = document.createElement("span");
+          span.innerHTML = node.nodeValue.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])).replace(re, (m) => `<mark>${m}</mark>`);
+          node.replaceWith(...span.childNodes);
+        });
+      }
+    });
+    popCount.textContent = q ? `${n} passage${n === 1 ? "" : "s"}` : "";
+  });
+  const mdToHtml = (md) => window.marked ? marked.parse(md) : `<pre style="white-space:pre-wrap">${md.replace(/</g, "&lt;")}</pre>`;
+  let transcriptHtml = null;
+  document.addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-transcript]");
+    if (!a || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    if (!transcriptHtml) {
+      try {
+        let md = await (await fetch("transcript.md")).text();
+        md = md.replace(/<!--[\s\S]*?-->/g, "").replace(/^---\n[\s\S]*?\n---\n/, "")
+          .replace(/\[recording ends\]/g, "[transcription gap — the recording continues]")
+          .replace(/\[(\d{1,3}):(\d{2})\]/g, (m, a1, b1) => { const t = +a1 * 60 + +b1; return `<a class="ts" href="?t=${fmt(t)}">${fmt(t)}</a>`; });
+        transcriptHtml = '<p class="muted small intro">AI transcription; tap any time to play that moment (times are approximate, within a few seconds). Speaker labels can err: the GA2 workaround at 55:43 is Adwitiya’s, not Carlton’s; the captions credit Carlton with the bonus-grading question at 50:16. “Cipher of the Stitch” is the Cyphral Distich. The 36:40 passage is dictated to an AI agent.</p>' + mdToHtml(md);
+      } catch (err) { location.href = a.href; return; }
+    }
+    openPop("Transcript", transcriptHtml, { search: true });
+  });
+  const mdCache = {};
+  document.addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-md]");
+    if (!a || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    const href = a.getAttribute("href");
+    try {
+      mdCache[href] ||= mdToHtml((await (await fetch(href)).text()).replace(/<!--[\s\S]*?-->/g, "").replace(/^---\n[\s\S]*?\n---\n/, ""));
+      openPop(a.dataset.md, mdCache[href] + `<p><a href="${href}" target="_blank" rel="noopener">Open the raw file</a></p>`);
+    } catch (err) { location.href = href; }
+  });
+
+  // ---------- lightbox ----------
+  const lb = $("#lightbox"), lbImg = $("#lb-img"), lbCap = $("#lb-cap"), lbOpen = $("#lb-open");
+  let lbReturn = null;
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-lightbox]");
+    if (!el || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    const src = el.getAttribute("href") || el.currentSrc || el.src;
+    const img = el.tagName === "IMG" ? el : el.querySelector("img");
+    lbImg.src = src; lbImg.alt = img ? img.alt : (el.dataset.caption || "");
+    lbCap.textContent = el.dataset.caption || "";
+    lbOpen.href = src;
+    lbReturn = document.activeElement;
+    lb.showModal();
+  });
+  $("#lb-close").addEventListener("click", () => lb.close());
+  lb.addEventListener("click", (e) => { if (e.target === lb || e.target === lbImg) lb.close(); });
+  lb.addEventListener("close", () => { if (lbReturn && lbReturn.focus) lbReturn.focus(); });
+
+  window.__tds = { $, $$, reduced, store, parseT, fmt, menu, curBtn, pop, lb, openMenu, setMode, goSec, getCur: () => curIdx, vid, seek, showResume, onTime, isNarrow, syncMin, ensureDockVisible, urlState, updateDockH };
+})();
+</script>
+<script>
+(() => {
+  const { $, $$, reduced, store, fmt, menu, curBtn, pop, lb, openMenu, setMode, goSec, getCur, vid, seek, showResume, onTime, isNarrow, syncMin, ensureDockVisible, urlState, updateDockH } = window.__tds;
+  const pressOnly = (btns, b) => btns.forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+
+  // ---------- 1. market: guess, then reveal (real shares from the 01:40 screen) ----------
+  (() => {
+    const MKT = [["0–1¢", 1], ["1–2¢", 1], ["2–5¢", 1], ["5–10¢", 10], ["10–20¢", 10], ["20–50¢", 1], ["50¢–$1", 1], ["$1–2", 1], ["$2–5", 5],
+      ["$5–10", 11], ["$10–20", 44], ["$20–50", 6], ["$50–100", 5], ["$100–200", 1], ["$200–500", 1], ["$500–1,000", 1], ["$1,000+", 1]];
+    const box = $("#mkt"), rows = $("#mkt-rows"), verdict = $("#mkt-verdict");
+    rows.innerHTML = MKT.map(([l, v], i) => `<button type="button" class="mkt-row" data-i="${i}" aria-pressed="false"><span>${l}</span><span class="bar"><i></i></span><span class="pct">${v}%</span></button>`).join("");
+    const btns = $$(".mkt-row", rows);
+    btns.forEach((b) => b.addEventListener("click", () => {
+      const i = +b.dataset.i;
+      pressOnly(btns, b);
+      box.dataset.revealed = "1";
+      btns.forEach((x, k) => { x.classList.toggle("mine", k === i); x.querySelector("i").style.width = (MKT[k][1] / 44 * 100) + "%"; x.setAttribute("aria-label", `${MKT[k][0]}: ${MKT[k][1]}%`); });
+      const [l, v] = MKT[i];
+      verdict.hidden = false;
+      verdict.innerHTML = (i === 10 ? `<strong>You matched the crowd.</strong> 44% of the class’s answers sat on $10–20 a week.`
+        : `<strong>The class put 44% on $10–20.</strong> Your pick, ${l}, drew ${v}%.`)
+        + ` But look at the second hump: <strong>a fifth of the answers sat between 5 and 20 cents</strong>. Two different theories of how the class would use AI Pipe, in one chart. <span class="ev ev-i">Inference</span> Who is right is exactly what the market exists to find out.`;
+    }));
+  })();
+
+  // ---------- 2. pay for a check? (hypothetical) ----------
+  (() => {
+    const S = [
+      { n: "Asha", d: "Right 70% of the time — and knows it.", p: 0.7, b: 0.7 },
+      { n: "Ben", d: "Right half the time, but sure he is (believes 95%).", p: 0.5, b: 0.95 },
+      { n: "Chitra", d: "Guessing: right 5% of the time, and she knows it.", p: 0.05, b: 0.05 },
+    ];
+    let N = 999, C = 0;
+    const run = (p, b, n, c) => {
+      const wants = c === 0 ? (1 - b) * b > 0 : (1 - b) * b * 10 > c;
+      let v = 10 * p, k = 0;
+      if (!wants) return { v, k };
+      for (let i = 1; i <= Math.min(n, 2000); i++) { v = -c + p * 10 + (1 - p) * v; k = 1 + (1 - p) * k; }
+      return { v, k };
+    };
+    const nBtns = $$("#chk-n button"), cIn = $("#chk-c"), cOut = $("#chk-c-out");
+    const draw = () => {
+      const R = S.map((s) => ({ ...s, ...run(s.p, s.b, N, C) }));
+      $("#chk-students").innerHTML = R.map((r) => `<div class="stud"><h4>${r.n}</h4><div class="d">${r.d}</div><div class="score">${r.v.toFixed(1)}<small style="font-size:.9rem;color:var(--muted)"> / 10</small></div><div class="meter"><i style="width:${Math.max(0, r.v) * 10}%"></i></div><div class="checks">${r.k < 0.05 ? "doesn’t check" : `uses ${r.k.toFixed(1)} checks on average`}</div></div>`).join("");
+      const ben = R[1], benCal = run(0.5, 0.5, N, C);
+      const vs = R.map((r) => r.v), spread = Math.max(...vs) - Math.min(...vs);
+      let h;
+      if (Math.min(...vs) > 9.4) h = "<strong>Everyone scores about 10.</strong> With free, unlimited checks, the expert and the guesser are indistinguishable: the question measures persistence, not skill — Anand’s GeoGuessr problem.";
+      else if (N === 0 || R.every((r) => r.k < 0.05)) h = `<strong>No checking happens</strong>, so scores are simply skill: ${R.map((r) => `${r.n} ${r.v.toFixed(1)}`).join(", ")}. Nobody has to judge their own odds.`;
+      else h = `<strong>Scores spread by ${spread.toFixed(1)} marks.</strong> ` + (benCal.v - ben.v > 0.3 ? `Overconfidence now costs: a Ben who knew his real odds would score ${benCal.v.toFixed(1)}, not ${ben.v.toFixed(1)}. ` : "") + (R[2].v < 5 ? "Guessing until the checker says yes no longer pays. " : "") + "That gap is calibration — and the student with less time or money to spend on checks pays it too.";
+      $("#chk-verdict").innerHTML = h;
+    };
+    nBtns.forEach((b) => b.addEventListener("click", () => { pressOnly(nBtns, b); N = +b.dataset.n; draw(); }));
+    cIn.addEventListener("input", () => { C = +cIn.value; cOut.textContent = C; draw(); });
+    draw();
+  })();
+
+  // ---------- 3. fixed bank leakage (hypothetical) ----------
+  (() => {
+    const bank = $("#bank"), kIn = $("#bank-k"), kOut = $("#bank-k-out"), MINE = 37;
+    bank.innerHTML = Array.from({ length: 100 }, (_, i) => `<i${i === MINE ? ' class="mine"' : ""}></i>`).join("");
+    const cells = $$("i", bank);
+    let x = 12345; const seq = Array.from({ length: 300 }, () => { x = (x * 1103515245 + 12345) % 2147483648; return Math.floor(x / 2147483648 * 100); });
+    const draw = () => {
+      const k = +kIn.value, solved = new Set(seq.slice(0, k));
+      kOut.textContent = k;
+      cells.forEach((c, i) => c.classList.toggle("solved", solved.has(i)));
+      const d = solved.size;
+      bank.setAttribute("aria-label", `${d} of 100 targets have a shared solution`);
+      $("#bank-verdict").innerHTML = k === 0 ? "Drag the slider: each shared solution is one student posting theirs, or one answer exposed by an endpoint."
+        : `<strong>${d} of 100 targets now have a public answer</strong> — so a student assigned a random target has a ${d}% chance theirs is already solved. Yours ${solved.has(MINE) ? "<strong>is</strong>" : "isn’t yet"}. ${k >= 200 ? "Past a few hundred shares, the question is a lookup." : ""}`;
+    };
+    kIn.addEventListener("input", draw);
+    draw();
+  })();
+
+  // ---------- 4. which cut? (illustration) ----------
+  (() => {
+    const side = {
+      cylinder: '<rect class="body" x="30" y="20" width="60" height="100" rx="3"/><ellipse class="body" cx="60" cy="20" rx="30" ry="7"/>',
+      cone: '<polygon class="body" points="60,18 28,120 92,120"/><ellipse class="body" cx="60" cy="120" rx="32" ry="6"/>',
+      sphere: '<circle class="body" cx="60" cy="70" r="48"/>',
+    };
+    const cutLine = { h: '<line class="cut" x1="10" y1="70" x2="110" y2="70"/>', v: '<line class="cut" x1="60" y1="8" x2="60" y2="132"/>', o: '<line class="cut" x1="76" y1="8" x2="76" y2="132"/>' };
+    const sec = {
+      h: { cylinder: '<circle class="sec" cx="160" cy="70" r="26"/>', cone: '<circle class="sec" cx="160" cy="70" r="14"/>', sphere: '<circle class="sec" cx="160" cy="70" r="26"/>' },
+      v: { cylinder: '<rect class="sec" x="142" y="40" width="36" height="60"/>', cone: '<polygon class="sec" points="160,40 141,100 179,100"/>', sphere: '<circle class="sec" cx="160" cy="70" r="29"/>' },
+      o: { cylinder: '<rect class="sec" x="148" y="40" width="24" height="60"/>', cone: '<path class="sec" d="M146,100 Q160,52 174,100 Z"/>', sphere: '<circle class="sec" cx="160" cy="70" r="24"/>' },
+    };
+    const HIDDEN = "cone", names = ["cylinder", "cone", "sphere"];
+    const V = {
+      h: "<strong>Wasted cut.</strong> Every candidate gives a circle, so the answer could still be any of the three. Information you already had.",
+      v: "<strong>Decisive.</strong> The section comes back as a triangle: only the cone fits. One well-chosen cut beats three lazy ones.",
+      o: "<strong>Also decisive — but harder to read.</strong> The section is a curved arch (a hyperbola), which neither the rectangle nor the circle can produce. Choosing the cut <em>and</em> reading it is the skill.",
+    };
+    const btns = $$("#slice-cuts button");
+    const draw = (cut) => {
+      const obs = sec[cut][HIDDEN];
+      $("#solids").innerHTML = names.map((n) => {
+        const keep = cut === "h" || n === HIDDEN;
+        return `<div class="solid ${keep ? "keep" : "out"}"><svg viewBox="0 0 200 140" role="img" aria-label="${n}: side view with the cut, and its cross-section"><g>${side[n]}${cutLine[cut]}</g>${sec[cut][n]}<text x="160" y="132" text-anchor="middle" class="m" style="font-size:11px">section</text></svg><div class="nm">${n} ${keep ? "✓ still possible" : "✗ ruled out"}</div></div>`;
+      }).join("");
+      $("#slice-verdict").innerHTML = `<svg viewBox="120 30 80 80" width="44" height="44" style="vertical-align:middle;margin-right:.5rem" aria-hidden="true">${obs}</svg>` + V[cut];
+    };
+    btns.forEach((b) => b.addEventListener("click", () => { pressOnly(btns, b); draw(b.dataset.cut); }));
+    draw("h");
+  })();
+
+  // ---------- 5. Cyphral Distich verifier (real lookups from coordinates.csv) ----------
+  (() => {
+    const N = [5,3,27,38,32,14,21,8,66,8,70,39,5,9,12,18,2,3,56,5,1,7,3,2,13,19,3,25,9,3,16,6, 25,15,13,6,11,20,5,1,2,12,1,20,20,49,20,20,35,33,4,6,8,35,5,38,5,5,18,10,3,11,32,42];
+    const W = "of grant of desire uprightness part him of latitude dwells knavish in name greatest culpable hitherto Author reasons looked Scotland That his exemplary sublime ease commerce overthrow not deserveth are noble desire much a kept equity hath is meerly That he expansed Seeing usually paid race every made English relished unwillingness less ecclesiastical reach of for the have into sustained love actually none duely".split(" ");
+    const VALS = 55; // line 2, position 24: the blog prints 33; the 1834 page prints 38
+    const grid = $("#cipher-grid"), out = $("#cipher-out"), detail = $("#cipher-detail"), verdict = $("#cipher-verdict");
+    const btns = $$("#cipher-src button");
+    let src = "1834", sel = -1;
+    const letter = (i) => src === "1653" ? "·" : (src === "vals" && i === VALS ? "T" : W[i][0].toUpperCase());
+    const draw = () => {
+      grid.innerHTML = N.map((n, i) => {
+        const num = src === "vals" && i === VALS ? 33 : n;
+        const cls = src === "1653" ? "none" : (src === "vals" && i === VALS ? "bad" : "");
+        return `<button type="button" class="${cls}" data-i="${i}" aria-pressed="${i === sel}" aria-label="Line ${i < 32 ? 1 : 2}, number ${i % 32 + 1}: ${num}${src === "1653" ? "" : ", letter " + letter(i)}">${num}<b>${letter(i)}</b></button>`;
+      }).join("");
+      const line = (a, b) => N.slice(a, b).map((_, k) => { const i = a + k, l = letter(i); return src === "vals" && i === VALS ? `<span class="x">${l}</span>` : l; }).join("");
+      out.innerHTML = src === "1653" ? "<span class=\"muted\">no distich in this copy</span>" : `${line(0, 32)}<br>${line(32, 64)}`;
+      verdict.className = "verdict" + (src === "1834" ? "" : " red");
+      verdict.innerHTML = {
+        "1834": "<strong>64 / 64 letters.</strong> O GOD UPHOLD KING CHARLS THE SECOND AND / MAKE HIM THE SUPREME RULER OF THIS LAND. Fully reproducible against the 1834 printing.",
+        vals: "<strong>63 / 64.</strong> One transcription slip — 33 instead of the printed 38 — turns “OF THIS LAND” into “OT THIS LAND”. Always check the source, not the copy of the source.",
+        "1653": "<strong>Can’t run.</strong> The surviving 1653 copy ends its petitions, prints a verse, says FINIS — and has no distich. Its 32 petitions are also in a different order, so “word 5 of petition 1” points somewhere else. The key isn’t there.",
+      }[src];
+      if (sel >= 0) explain(sel);
+    };
+    const explain = (i) => {
+      const line = i < 32 ? 1 : 2, pos = i % 32 + 1;
+      if (src === "1653") detail.innerHTML = `Line ${line}, number ${pos}: the rule says “petition ${pos}, word ${N[i]}”. In the 1653 copy, petition ${pos} is not the same text as in 1834 — and the distich itself is absent.`;
+      else if (src === "vals" && i === VALS) detail.innerHTML = `Line 2, number 24: Vals prints <strong>33</strong>. Word 33 of petition 24 is “thing” → <strong>T</strong>. The 1834 page prints <strong>38</strong>: “for” → <strong>F</strong>.`;
+      else detail.innerHTML = `Line ${line}, number ${pos}: petition ${pos}, word ${N[i]} is “<strong>${W[i]}</strong>” → <strong>${W[i][0].toUpperCase()}</strong>.`;
+    };
+    grid.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; sel = +b.dataset.i; draw(); grid.querySelector(`[data-i="${sel}"]`).focus(); });
+    btns.forEach((b) => b.addEventListener("click", () => { pressOnly(btns, b); src = b.dataset.src; if (src === "vals" && sel < 0) sel = VALS; draw(); }));
+    draw();
+  })();
+
+  // ---------- 6. what does 57% count? ----------
+  (() => {
+    const box = $("#diff-guess"), v = $("#diff-verdict");
+    const WHY = {
+      agent: "That was Carlton’s guess too — and the answer was “No, deterministic.”",
+      full: "Close, but the script doesn’t look for full marks: <em>any</em> score above zero on the question counts.",
+      enrol: "No — the denominator is students with a recorded score for that assignment, not the course roster.",
+      ok: "Right.",
+    };
+    box.addEventListener("click", (e) => {
+      const b = e.target.closest("button"); if (!b) return;
+      $$("button", box).forEach((x) => x.classList.toggle("right", x.dataset.k === "ok"));
+      b.classList.toggle("wrong", b.dataset.k !== "ok");
+      box.dataset.done = "1";
+      v.hidden = false;
+      v.className = "verdict" + (b.dataset.k === "ok" ? "" : " red");
+      v.innerHTML = `${WHY[b.dataset.k]} <strong>102 of the 180 students who submitted that assignment scored above zero on that question.</strong> It is a count of outcomes, conditional on who showed up, what help they had, and what had leaked.`;
+    });
+  })();
+
+  // ---------- keyboard ----------
+  addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && menu.classList.contains("open")) { openMenu(false); curBtn.focus(); return; }
+    if (e.metaKey || e.ctrlKey || e.altKey || pop.open || lb.open) return;
+    if (/^(INPUT|TEXTAREA|SELECT|VIDEO|AUDIO)$/.test(e.target.tagName) || e.target.isContentEditable) return;
+    if (e.key === "v" || e.key === "V") setMode(!document.body.classList.contains("watch"));
+    else if (e.key === "]") goSec(getCur() + 1);
+    else if (e.key === "[") goSec(getCur() - 1);
+  });
+
+  // ---------- initial state from URL (never autoplays) ----------
+  const init = urlState();
+  if (init.view === "video") setMode(true, { replace: false });
+  if (init.t != null) {
+    seek(init.t).then(() => {
+      showResume(init.t);
+      onTime();
+      const scope = (init.hash && document.getElementById(init.hash)) || document;
+      const link = $$("a.ts", scope).find((a) => +a.dataset.t === init.t) || $$("a.ts").find((a) => +a.dataset.t === init.t);
+      if (link) { link.scrollIntoView({ block: "center" }); link.classList.add("flash"); }
+      else if (init.hash) document.getElementById(init.hash)?.scrollIntoView();
+      if (!isNarrow() && !link) ensureDockVisible();
+      if (isNarrow()) { document.body.classList.remove("dock-collapsed"); syncMin(); }
+    });
+  }
+  updateDockH();
+})();
+</script>
+</body>
+</html>

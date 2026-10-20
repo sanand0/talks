@@ -1,0 +1,80 @@
+# Research notes / fact-check shelf — 19 Oct 2026 TDS ideation
+
+**Prepared 20 October 2026.** For the future Claude author, not a ready-to-publish essay. Choose a few *load-bearing* sources; avoid flooding the narrative with citations. Distinguish **meeting testimony**, **repository state observed on 20 Oct**, **independent publication**, **our inference**, **proposed experiment**. This shelf is not a source of unpublished client details or live student data.
+
+## Highest-value independent evidence and contrasts
+
+### 1. Success with AI ≠ human learning
+
+- **Primary controlled study:** Hamsa Bastani et al., *Generative AI without guardrails can harm learning: Evidence from high school mathematics*, PNAS, published June/July 2025, https://doi.org/10.1073/pnas.2422633122; open full text https://pmc.ncbi.nlm.nih.gov/articles/PMC12232635/ .
+- Around 1,000 high-school maths students used a GPT-4-based tutor, a hint-scaffolded tutor, or no tutor. Assisted work improved, but later **unassisted** scores in the unguarded group were worse than control; hint-scaffolded tutoring mitigated this in that setting. This is evidence for separating *completion with a tool* from *independent later learning*; **not** a randomized trial of the IITM TDS design, coding agents, or collaborative markets.
+- The TDS analogy is inference: a later novel case with changed resources, changed task, justified tool choices and/or short individual reflection could measure transfer. For a tool-permitting course, “no AI” alone may be a poor proxy for the actual target ability. Assess specification, verification, allocation of checking time and judgment as appropriate.
+
+### 2. Evaluating an eval is not “run it and see”
+
+- **Peer-reviewed systematic survey:** Vinoth Nageshwaran et al., *Large language model agent evaluation and benchmarking: a systematic survey, meta-taxonomy, and critical research roadmap*, Artificial Intelligence Review, 15 Sep 2026, https://link.springer.com/article/10.1007/s10462-026-11678-4 .
+- **Peer-reviewed survey:** Tanzila Kehkashan et al., *From benchmarks to deployment: a comprehensive review of agentic AI evaluation*, Apr 2026, https://doi.org/10.1007/s10462-026-11571-0 .
+- Agent benchmarks measure different **capabilities, scoring regimes and environments**. Task-success is not sufficient for deployment relevance; leakage/contamination, nondeterminism, scoring uncertainty, safety, cost and transfer matter. The first article reports a methodological 17-benchmark audit—be careful not to extrapolate it to every benchmark.
+- A practical **test of a student-produced eval**: (a) define construct/task domain and representative slice; (b) deliberately include easy/hard/boundary/adversarial and unknown cases; (c) verify answer key and ambiguous labels; (d) seed known broken/correct systems and ask whether the eval discriminates; (e) check ranking stability over task perturbations, annotators, models and repeated runs; (f) quantify run/verification costs and leakage; (g) use held-out, teacher-kept counterexamples. That is **a proposed assessment design**, not a reported TDS result.
+- **NIST AI Risk Management Framework** reference: https://www.nist.gov/itl/ai-risk-management-framework ; use for measurement, governance, validation, quality and risk principles, not as proof a particular benchmark is valid.
+
+### 3. A “difficult” problem can be easy with the wrong answer surface
+
+- In this meeting, the Tangram's **100-source shape bank** and filter endpoint returning solution-shaped information are acknowledged as failure modes. This is direct first-party account [28:25; 54:03]. Confirm actual code state on the relevant date before asserting implementation details.
+- A percentage of correct submissions in ~/code/exam/dumps/difficulty.py and difficulty.md is an **empirical conditional completion proportion**. If students differ in tools, practice, collaboration, retries, time and exposed answer banks, it does not isolate item complexity, fairness or learner capability. [57:57–59:33] contains the rare explicit correction from “agent judged difficulty” to “deterministic aggregation.”
+- **Assessment standards:** NCME *Classroom Assessment Standards*, https://ncme.org/involvement/committees/classroom-assessment/classroom-assessment-standards/ . Validity, accessibility and fairness depend on interpretation/use of scores and consistency with learning goals, not shape of a score histogram. A counterexample might be 90% completion on a memorized 100-case library; this does not show 90% have learned to generalize. Illustrative figures must be labeled invented.
+- Geoguessr-style response brute-force and costly/limited checks: [19:35] establishes the *rationale*. A fixed number of checks can teach risk management and metacognition, but may penalize students with weaker access, connectivity, disability, caring/work responsibilities or little money. Check whether free practice/demo modes and accessibility alternatives are provided before praising fairness.
+
+### 4. Markets aggregate information but can also reflect incentives
+
+- **Primary field experiment:** Itzhak Rasooly and Roberto Rozzi, *How manipulable are prediction markets?*, Mar 2025, https://arxiv.org/abs/2503.03312 . Artificial shocks across 817 markets had effects persisting, while liquid markets with external estimates were harder to manipulate. Field is not an exact analogue of a virtual-credit class.
+- **Earlier experimental study:** *Affecting policy by manipulating prediction markets: Experimental evidence*, Journal of Economic Behavior & Organization (2013), https://doi.org/10.1016/j.jebo.2012.10.017 . Large manipulators can degrade information in experiment settings; context/incentives matter.
+- In TDS, distinction A: using distributed student knowledge to **predict** aggregate AI Pipe spend; distinction B: changing that spending with your own behavior. The designers explicitly want to explore both, but credit returns/forecasts can be strategically gamed. P1 prediction scoring in the current games is time-weighted with behavior/reflections, **not “profit earns marks.”** See ~/code/tds-network-games/PREDICTION-MARKETS.md. Treat estimated 200–300 trades and $10–$20 sentiment as *Anand's live verbal account*, not audited figures; avoid revealing individual portfolios.
+- The current AI Pipe seven-day target is **2–8 November 2026 (UTC)**, future relative to the 19 Oct meeting; no outcome was then known. The repository describes an updated v2 configuration and privacy. If displaying a screenshot from a newer game state, caption the exact date and version.
+
+### 5. Physical-world data: phones can help, but aren't equivalent instruments
+
+- **Primary Web API standard:** W3C *Device Orientation and Motion*, https://www.w3.org/TR/orientation-event/ . The events depend on orientation/motion permissions and secure-context support. No universal accuracy across phone hardware is guaranteed by this specification.
+- Actual P1 task code: ~/code/exam/src/q-motion-air-ink.js . It requires three short drawn codes, calibration, motion collection and an offline legibility check. The future recognition problem is an instructor plan. It may collect orientation, motion, device timing, network/battery and optionally geolocation: **do not surface individual records or suggest sensor traces are anonymous by nature**. Readers should see the “consent first” promise and note device-access accommodations.
+- Proposed pendulum/friction experiments [41:24–43:58] are **not** proof of accurate local gravitational acceleration or coefficient-of-friction measurements. Estimating g from phone motion needs a documented geometry/timing/instrument-calibration procedure, uncertainty and repeated measurements. Phone IMUs drift and device models vary. Earning marks for experimentation needs to reward uncertainty handling, not a magically precise number.
+- **Meta-analysis of spatial-task differences:** Jacob Hervin and Claire L. Gibson, *A Systematic Review and Meta-Analysis Examining Sex Differences in Mental Rotation Ability*, Quarterly Journal of Experimental Psychology, Jan/Jul 2026, https://pubmed.ncbi.nlm.nih.gov/41566416/ . Aggregated male-female mean differences on specific mental-rotation tests were observed (pooled d~0.60), with substantial heterogeneity. **Do not** generalize this to all spatial skills, the capabilities of individual students, the TDS cohort, fixed innate abilities or a settled case against 3D tasks. Fair assessment can offer scaffolds/practice/accessibility without making sex-based assumptions.
+- Claim “current models lack human 3D intuition” was *Anand's impression*, not a controlled comparison; do not assert model-level rankings or categorical agent inability without a documented head-to-head.
+
+### 6. The Cyphral Distich: a wonderful “verify the verifier” story
+
+- **Original Vals announcement:** https://www.vals.ai/blogs/fable-solves-cyphral-distich (31 Aug 2026); says Claude Fable 5.1 solved Sir Thomas Urquhart's 64-number Cyphral Distich via index positions in 32 Proquiritations. Its displayed ciphertext has a likely misprint (33 instead of 38 for a later coordinate).
+- **Anand's fully reproducible local research:** ~/code/research/cyphral-distich/README.md , verify.py , coordinates.csv , cyphral-distich-p417.avif . Independently verifies **64/64 decoded letters against the 1834 printing**, allowing documented word-count conventions. First four numbers 5,3,27,38 index initial letters **O G O D**. Read the script/CSV if showing the arithmetic.
+- **Primary historical 1834 scan:** *The Works of Sir Thomas Urquhart of Cromarty, Knight*, https://archive.org/details/worksofsirthomas00mait/page/417/mode/1up . Cipher follows reordered Proquiritations; same printed cipher number is **38**, not Vals’ 33.
+- **Primary surviving 1653 edition:** https://archive.org/details/bim_early-english-books-1641-1700_logopandecteision-or-an_urquhart-sir-thomas_1653 . The checked original ends without this distich and has a **different order of the 32 Proquiritations**, invalidating straightforward application of the 1834 key to that printing.
+- **Independent critical studies:** https://github.com/reticuli-labs/panel-artifacts/blob/main/distich-refutation-2026-09-01/FINDINGS.md and https://dbourdeau.github.io/cyphersolver/urquhart.html . They flag the original-text mismatch; don't conflate the *Distich* with the longer *Octastich*, a distinct analysis.
+- Accurate formulation: “Claude produced a convincing 64-letter reading of an 1834 text. Whether that establishes the 1653 author's original encoding remains unresolved from the surviving original checked.” This is much stronger educationally than “Claude solved a 373-year-old cipher.” Urquhart is **17th century**, not 15th/16th as the speaker guessed. The transcript mishears **Cyphral Distich** as “Cipher of the Stitch.” It is a useful lesson in **source selection, reproducibility, versioning, and defining what a verifier has actually verified**.
+- Treat Vals blog content as authors' claim; local independent reproduction as stronger verification for the narrower 1834 result. Do not hotlink the scan image into the public page without checking the image's reuse status; safe alternative: link to the archive page and render a tiny original coordinates illustration.
+
+## First-party project evidence (do not dump private sources into published story)
+
+- **Project 1 question inventory**, as of the 20 Oct inspection: ~/code/exam/src/exam-tds-2026-09-p1.js imports q-prediction-aipipe-server.js, q-audio-tds-human-exchange.js and q-motion-air-ink.js. This is evidence of live question implementations, not of completed marketplaces.
+- **Human Exchange instructions**: ~/code/exam/src/q-audio-tds-human-exchange.js . On the 20 Oct version, recordings are allowed through Wed **21 October 2026 23:59:59 IST**, max three submissions (two revisions); buyers and sellers later mutually approve transfers; initial service offer does **not** require a buyer yet. Offer subject to legality and IITM BS guidelines, free choice of service, repeat transactions and random-sort-by-default. Recording/offer details, not proof of successful trades or demand.
+- **Air Ink**: ~/code/exam/src/q-motion-air-ink.js . Submission closes **26 October 2026 23:59:59 IST**, after the meeting date, with phone/calibration requirement; physical-capture step not an agent-using task; future ML reuse.
+- **Markets**: ~/code/tds-network-games/PREDICTION-MARKETS.md , ~/code/tds-network-games/src/prediction/markets.ts and matching P1 question. A forecast explanation/trade journal, 1,000 virtual starting credits, privacy constraints, time-weighted participation/scoring; explain credits aren't real money. Distinguish market feature as described *now* from details shown *live* in video; do not project newer documentation backward.
+- **Tangram**: ~/code/tds-network-games/datasets/visual-banks/tangram-hard-v1.json and test/tangram.test.ts, plus ~/code/exam/... . The vulnerability described live may have since been patched; source the *19 Oct conversation*, not present live exploit state.
+- **Difficulty**: ~/code/exam/dumps/difficulty.py and difficulty.md . Read implementation before charting results; do not publish any unredacted student submissions or private scores.
+- **12 October prepared evidence**: ../2026-10-12-tds-ideation/{research-notes.md,links.md,story-context.md}. Valuable for continuity and reminding readers that last week's open invoice/P1 concepts were proposals, whereas this week shows which have shipped.
+
+## Less reliable claims: leave out or qualify
+
+- “Indian government banned all Bluetooth peer-to-peer” [07:11–08:06] — speakers discuss an unspecified app and platform policy; a vague anecdote, **not a verified general legal rule**. Do not amplify.
+- “Google released open-source Harness 2” [32:11] — the speaker himself had not read the work; exact project/title not independently identified during preparation. Use the *idea* of harness engineering, without product claim.
+- “Strong agents cannot rotate/interpret 3D shapes like humans” — not benchmarked in this meeting. Don’t assert categorical incapacity.
+- “Paying for validation makes an exam fairer” — only a hypothesis; resource/ability confounding likely.
+- “An agent can simply confirm a prize-winning cipher solution” — a model judge can share errors/biases with the solver; require independent source checks, held-out cases, reproducible proof or human expert.
+- “Human Exchange services are already trading” — false at meeting time; marketplace described as a later phase.
+- “Tangram has a verified engine defect” — no such claim justified by this meeting; fixed-bank and leaked solutions are different issues from validator correctness.
+- “The reported $500 is audited finance data” — unsupported; storyteller should say “Anand says he spent about $500 testing it.”
+- “An end-term eligibility threshold ensures all students are treated fairly” — operational guardrail, not independent validity finding.
+- “The transcript's speaker label is always right” — false; the added transcript metadata says the GA2 workaround was explained by **Adwitiya**, while the body says **Carlton**. Check the late dialogue against footage.
+
+## Questions a rigorous article might let readers actually test
+
+Can a hypothetical student with access to a solver succeed in a familiar game but fail a structurally new version? Could a cheaper, different verifier disagree with the scorer? How many extra validation calls should one buy when the last call improved certainty only marginally? Does a well-specified human offer earn credit only after *actual mutual acceptance*? If a 3D cut distinguishes two solids, is it the most informative cut and how would you know? Would a 1834-only cipher decode count as “solving the original 1653 problem”? And if “70% solved” goes in a dashboard, what exactly are its numerator and denominator?
+
+These are **creative teaching prompts, not empirical results**. Make a reader feel the difference between an attractive result and a defensible one.

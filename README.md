@@ -23,6 +23,9 @@ I speak regularly at:
 <!-- BEGIN GENERATED TALKS -->
 ## Latest talks
 
+- 19 Oct 2026. **[The Exam Has to Pass Its Own Exam](2026-10-19-tds-ideation/ ":ignore")** at [TDS Course Ideation — Open Design Meeting, Sep 2026](https://tds.s-anand.net/), Remote.  
+  A week after inventing agent-friendly assessments in public, the TDS team meets running code, student questions, checking budgets, a dropped $500 experiment, leaky graders, and a pass rate that only counts who scored above zero.  
+  [⏯️ Video (60m)](https://media.s-anand.net/2026-10-19-tds-course-ideation.webm ":ignore") · [💬 Transcript](2026-10-19-tds-ideation/transcript.md) · [💬 captions](2026-10-19-tds-ideation/captions.vtt) · [🎧 Audio (60m)](https://github.com/sanand0/talks/releases/download/talks/2026-10-19-tds-ideation.opus ":ignore")
 - 18 Oct 2026. **[The Roll Call: When Do You Let AI Act?](2026-10-18-aipl-when-do-you-let-ai-act/ ":ignore")** at [AI Product Leadership (AIPL) 2026, Module 5 Session 1 — LeadUp Universe with E&ICT Academy, IIT Kanpur](https://leadupuniverse.com/), Online (Zoom).  
   A leadership workshop on delegating to AI stalled on a hard question; the instructor let AI act on the room, then asked it how to fix the workshop, and the session ended on an untested experiment for knowing when to stop AI.  
   [💬 Transcript](2026-10-18-aipl-when-do-you-let-ai-act/transcript.md) · [🎧 Audio (113m)](https://github.com/sanand0/talks/releases/download/talks/2026-10-18-aipl-when-do-you-let-ai-act.opus ":ignore")

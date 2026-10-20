@@ -1,4 +1,22 @@
-# Build prompt — AIPL Session 1, 18 October 2026
+# AIPL Session 1
+
+## Include video, 20 Oct 2026
+
+<!--
+cd ~/code/talks
+dev.sh -p ~/code:ro,~/Documents:ro,~/r2:ro -- claude --dangerously-skip-permissions --model sonnet --effort medium
+-->
+
+https://media.s-anand.net/2026-10-18-aipl-session-1.webm has the video for 2026-10-18-aipl-when-do-you-let-ai-act/
+Update config.json to reflect this and run `just build` to update README.md, index.html.
+Also embed the video in 2026-10-18-aipl-when-do-you-let-ai-act/ elegantly (similar to how we've embedded such .webm files in 2026-08-22-ai-unboxed-vibe-coding/ or 2026-08-10-tds-ama/), below the comic.
+
+The timestamps for the video do not align with the audio because the audio trims the breakout and starts at a slightly different time.
+Mention this subtly. There is no need to modify the timestamps or modify the a.ts links point to the video. Treat the video as independent.
+
+<!-- claude --resume 279d3992-ece8-4bee-b425-2acfc97de5b6 -->
+
+## Build prompt, 18 October 2026
 
 <!-- Comic page: https://chatgpt.com/c/6ad5a81c-6f38-83ec-a40f-bdc79ee0a5af -->
 <!-- Source: https://chatgpt.com/c/6ad582ef-aa64-83ec-a44c-e944452acd1b -->

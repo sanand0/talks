@@ -23,6 +23,9 @@ I speak regularly at:
 <!-- BEGIN GENERATED TALKS -->
 ## Latest talks
 
+- 02 Nov 2026. **[Should a Student Even Read the Exam?](2026-11-02-tds-ideation/ ":ignore")** at [TDS Course Ideation — Open Design Meeting, Sep 2026](https://tds.s-anand.net/), Remote.  
+  In the fourth open TDS design meeting, the teachers ask what is left to teach once an agent can read and solve the exam — while doubling a spending cap students are forecasting, finding only eight drawings that fool every AI guess, and admitting a marketplace rewarded trading over usefulness.  
+  [⏯️ Video (62m)](https://media.s-anand.net/2026-11-02-tds-course-ideation.webm ":ignore") · [💬 Transcript](2026-11-02-tds-ideation/transcript.md) · [💬 Captions](2026-11-02-tds-ideation/captions.vtt) · [🎧 Audio (62m)](https://github.com/sanand0/talks/releases/download/talks/2026-11-02-tds-ideation.opus ":ignore") · [💬 Meeting chat](2026-11-02-tds-ideation/chat.md)
 - 19 Oct 2026. **[The Exam Has to Pass Its Own Exam](2026-10-19-tds-ideation/ ":ignore")** at [TDS Course Ideation — Open Design Meeting, Sep 2026](https://tds.s-anand.net/), Remote.  
   A week after inventing agent-friendly assessments in public, the TDS team meets running code, student questions, checking budgets, a dropped $500 experiment, leaky graders, and a pass rate that only counts who scored above zero.  
   [⏯️ Video (60m)](https://media.s-anand.net/2026-10-19-tds-course-ideation.webm ":ignore") · [💬 Transcript](2026-10-19-tds-ideation/transcript.md) · [💬 Captions](2026-10-19-tds-ideation/captions.vtt) · [🎧 Audio (60m)](https://github.com/sanand0/talks/releases/download/talks/2026-10-19-tds-ideation.opus ":ignore")

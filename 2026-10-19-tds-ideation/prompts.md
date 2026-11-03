@@ -5,6 +5,7 @@ cd ~/code/talks/
 dev.sh -p ~/code:ro,~/r2/media:ro,~/Documents/chatgpt:ro -- claude --dangerously-skip-permissions --model opus --effort medium
 -->
 
+<!-- Source: https://chatgpt.com/c/6ad6b3d4-12a0-83ec-97b2-e792263fffb5 -->
 <!-- Prompt/comic provenance: https://chatgpt.com/c/6ad6b1e5-0264-83ec-9bb8-f3780a1658f9 -->
 <!-- The comic was generated separately; do NOT regenerate it. -->
 

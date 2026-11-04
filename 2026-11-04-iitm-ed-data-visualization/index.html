@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Changed Your Mind? · ED5518 Data Visualization, IIT Madras · 4 Nov 2026</title>
+<meta name="description" content="A live-lab class at IIT Madras: commit to an answer, discuss, and learn from the gap. How to test whether a visualization — or a phone app — is correct and actually works for its audience.">
+<meta property="og:title" content="What Changed Your Mind?">
+<meta property="og:description" content="Testing visualizations and phone apps with real people, AI, and A-or-B comparisons. ED5518, IIT Madras, 4 Nov 2026.">
+<meta property="og:image" content="https://talks.s-anand.net/2026-11-04-iitm-ed-data-visualization/comic-page.avif">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230d6b62'/%3E%3Ctext x='15' y='45' font-family='Arial' font-weight='700' font-size='30' fill='%23f5c84c'%3EA%3C/text%3E%3Ctext x='36' y='45' font-family='Arial' font-weight='700' font-size='30' fill='%23fff'%3EB%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script>
+  try { const t = localStorage.getItem("ed5518-1104-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+<style>
+:root {
+  --paper: #f6f3ea; --card: #fffdf7; --ink: #1d2125; --muted: #565c63; --line: #d8d1c0;
+  --accent: #0d6b62; --link: #0a5a52; --before: #b4410f; --after: #1f4fc7; --hl: #f5c84c; --hl-soft: #fbeab0;
+  --shadow: 0 10px 30px rgba(20, 25, 30, .12);
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-body: "Source Serif 4", Georgia, serif;
+  --font-mono: "DM Mono", ui-monospace, monospace;
+  /* fixed band colours: identical in light and dark themes */
+  --band: #18212a; --band-ink: #ece7da; --band-muted: #b8bfc6; --band-link: #8fe0d4; --band-line: #34414d;
+  --yel: #f3d36b; --yel-ink: #1d2125; --yel-muted: #4a4535; --yel-link: #0b4a43;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #121518; --card: #1a1f24; --ink: #e8e4da; --muted: #a9aca6; --line: #323a42;
+    --accent: #5cc8b9; --link: #86dccf; --before: #fb9a5b; --after: #8fb0ff; --hl-soft: #4a3f17;
+    --shadow: 0 10px 30px rgba(0, 0, 0, .45); --band: #212b35; --band-line: #3c4a57;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #121518; --card: #1a1f24; --ink: #e8e4da; --muted: #a9aca6; --line: #323a42;
+  --accent: #5cc8b9; --link: #86dccf; --before: #fb9a5b; --after: #8fb0ff; --hl-soft: #4a3f17;
+  --shadow: 0 10px 30px rgba(0, 0, 0, .45); --band: #212b35; --band-line: #3c4a57;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 4rem; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; font-family: var(--font-body); font-size: 19px; line-height: 1.75; color: var(--ink); background: var(--paper); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; height: auto; display: block; }
+h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.12; letter-spacing: -.015em; margin: 0; }
+p { margin: 0 0 1.15rem; }
+strong { font-weight: 600; }
+code { font-family: var(--font-mono); font-size: .85em; }
+
+/* base link colour — lowest specificity, defined before components */
+a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: .18em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--hl); outline-offset: 2px; }
+
+.progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--accent); z-index: 1000; }
+
+/* masthead */
+.masthead { position: sticky; top: 0; z-index: 900; background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.masthead-in { max-width: 1180px; margin: 0 auto; padding: .55rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; font: 500 .74rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+.masthead-in a { color: var(--ink); text-decoration: none; }
+.masthead-in a:hover { text-decoration: underline; }
+.mh-right { display: flex; align-items: center; gap: .9rem; }
+.icon-btn { appearance: none; background: transparent; border: 1px solid var(--line); color: var(--ink); border-radius: 6px; padding: .2rem .45rem; cursor: pointer; font-size: .9rem; line-height: 1; }
+.icon-btn:hover { border-color: var(--ink); }
+
+/* hero */
+.hero { padding: 4.5rem 1rem 3rem; border-bottom: 1px solid var(--line); background:
+  radial-gradient(circle at 85% 20%, color-mix(in srgb, var(--hl) 35%, transparent), transparent 40%), var(--paper); }
+.hero-in { max-width: 860px; margin: 0 auto; }
+.kicker { font: 500 .78rem var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+.hero h1 { font-size: clamp(2.6rem, 7vw, 5.2rem); font-weight: 800; letter-spacing: -.035em; line-height: .98; }
+.hero h1 .mark { background: linear-gradient(transparent 58%, var(--hl) 58%, var(--hl) 92%, transparent 92%); color: inherit; }
+:root[data-theme="dark"] .hero h1 .mark { background: none; color: var(--hl); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hero h1 .mark { background: none; color: var(--hl); } }
+.hero .dek { font-size: 1.28rem; line-height: 1.55; color: var(--muted); max-width: 44rem; margin: 1.4rem 0 1.8rem; }
+.meta-line { font: .85rem var(--font-mono); color: var(--muted); display: flex; flex-wrap: wrap; gap: .3rem 1.1rem; margin-bottom: 1.5rem; }
+.meta-line > span { white-space: normal; }
+.meta-line i { margin-right: .35rem; }
+.listen { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; display: grid; gap: .6rem; max-width: 44rem; box-shadow: var(--shadow); }
+.listen-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; font: 500 .8rem var(--font-mono); letter-spacing: .04em; }
+.listen-top a { font-weight: 500; }
+.listen audio { width: 100%; }
+.series { font: .82rem var(--font-mono); color: var(--muted); margin-top: 1.2rem; }
+
+/* layout */
+.chap { padding: 3.5rem 0 1rem; position: relative; }
+.chap + .chap { border-top: 1px solid var(--line); }
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 1.25rem; }
+.wide { max-width: 1180px; margin: 0 auto 2.75rem; padding: 0 1.25rem; }
+.act { font: 500 .74rem var(--font-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin-bottom: .6rem; }
+.chap h2 { font-size: clamp(2rem, 4.6vw, 3rem); font-weight: 800; margin-bottom: 1.6rem; }
+.chap h3 { font-size: 1.35rem; font-weight: 700; margin: 2.2rem 0 .8rem; }
+.lede::first-letter { font-family: var(--font-display); font-weight: 800; float: left; font-size: 3.6em; line-height: .85; padding: .08em .1em 0 0; color: var(--accent); }
+
+/* timestamps → audio */
+a.ts { font: 500 .72rem var(--font-mono); color: var(--muted); text-decoration: none; border: 1px solid var(--line); border-radius: 4px; padding: 0 .3rem; white-space: nowrap; vertical-align: .1em; margin-left: .15rem; }
+a.ts::before { content: "▶ "; font-size: .62rem; }
+a.ts:hover, a.ts:focus-visible { color: var(--paper); background: var(--accent); border-color: var(--accent); }
+
+/* tooltips */
+.tip { border-bottom: 1px dotted var(--accent); cursor: help; position: relative; }
+.tip::after { content: attr(data-tip); position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translateX(-50%); width: min(280px, 80vw); background: var(--band); color: var(--band-ink); font: .82rem/1.45 var(--font-body); padding: .6rem .75rem; border-radius: 8px; box-shadow: var(--shadow); opacity: 0; pointer-events: none; transition: opacity .15s; z-index: 50; font-style: normal; font-weight: 400; text-align: left; }
+.tip:hover::after, .tip:focus::after { opacity: 1; }
+a.tip { border-bottom: 0; text-decoration-style: dotted; }
+
+/* pull quotes */
+.pull { margin: 2.6rem -12% 2.8rem; padding: .3rem 0 .3rem 1.6rem; border-left: 5px solid var(--hl); }
+.pull p { font-family: var(--font-display); font-size: clamp(1.45rem, 3vw, 2rem); line-height: 1.25; font-weight: 600; letter-spacing: -.015em; margin: 0 0 .7rem; }
+.pull cite { display: block; font: normal .8rem var(--font-mono); color: var(--muted); letter-spacing: .04em; }
+.pull.student { border-left-color: var(--after); }
+@media (max-width: 900px) { .pull { margin-left: 0; margin-right: 0; } }
+
+/* inline quote */
+q { quotes: "“" "”" "‘" "’"; }
+
+/* prompt / question box */
+.qbox { background: var(--card); border: 1px solid var(--line); border-left: 5px solid var(--accent); border-radius: 10px; padding: 1.1rem 1.25rem; margin: 1.8rem 0 2.2rem; box-shadow: var(--shadow); }
+.qbox .qlabel { font: 500 .7rem var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: .4rem; }
+.qbox p { font-family: var(--font-display); font-size: 1.2rem; line-height: 1.4; font-weight: 600; margin: 0 0 .5rem; }
+.qbox p.small { font: .92rem/1.55 var(--font-body); color: var(--muted); margin: 0; }
+.chat { background: #0f1418; color: #e3e6e8; border-radius: 10px; padding: 1.1rem 1.25rem; margin: 1.6rem 0 2.2rem; font: .86rem/1.6 var(--font-mono); }
+.chat .clabel { font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: #f5c84c; margin-bottom: .35rem; }
+.chat p { margin: 0 0 .9rem; }
+.chat p:last-child { margin-bottom: 0; }
+.chat .reply { border-top: 1px solid #2b3540; padding-top: .8rem; color: #c7f0e9; }
+.chat a { color: #8fe0d4; }
+
+/* bands */
+.band { background: var(--band); color: var(--band-ink); padding: 3.2rem 0 2.6rem; margin: 0 0 2.75rem; }
+.band-in { max-width: 1180px; margin: 0 auto; padding: 0 1.25rem; }
+.band-label { font: 500 .78rem var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--hl); margin-bottom: .7rem; }
+.band h3 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 800; color: var(--band-ink); margin: 0 0 .8rem; }
+.band p { color: var(--band-ink); }
+.band .sub { color: var(--band-muted); font-size: 1rem; max-width: 46rem; }
+.band a { color: var(--band-link); }
+.band strong { color: #fff; }
+.band figcaption { color: var(--band-muted); }
+.band figcaption a { color: var(--band-link); }
+.yband { background: var(--yel); color: var(--yel-ink); padding: 3rem 0 2.4rem; margin: 0 0 2.75rem; }
+.yband p { color: var(--yel-ink); }
+.yband .band-label { color: #6b4c00; }
+.yband .sub { color: var(--yel-muted); }
+.yband a { color: var(--yel-link); }
+.yband strong { color: var(--yel-ink); }
+.yband h3 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 800; color: var(--yel-ink); margin: 0 0 .8rem; }
+
+/* comic */
+.comic-band { background: #20262c; padding: 2.6rem 1rem 2.2rem; margin: 0 0 1rem; }
+.comic-band figure { max-width: 900px; margin: 0 auto; }
+.comic-band img { width: 100%; border-radius: 6px; box-shadow: 0 20px 50px rgba(0,0,0,.5); cursor: zoom-in; }
+.comic-band figcaption { color: #c6ccd2; font: .82rem/1.5 var(--font-mono); text-align: center; margin-top: 1rem; }
+.comic-band figcaption a { color: #8fe0d4; }
+
+/* figures */
+figure { margin: 0; }
+.fig { margin: 2rem 0 2.6rem; }
+.fig img { border-radius: 8px; border: 1px solid var(--line); cursor: zoom-in; }
+.fig figcaption, .shot figcaption { font: .82rem/1.5 var(--font-mono); color: var(--muted); margin-top: .7rem; }
+.shot-grid { display: grid; gap: 1.4rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.shot-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.shot img { border-radius: 8px; border: 1px solid var(--band-line); cursor: zoom-in; background: #fff; }
+.shot.span2 { grid-column: span 2; }
+@media (max-width: 820px) { .shot-grid, .shot-grid.three { grid-template-columns: minmax(0, 1fr); } .shot.span2 { grid-column: auto; } }
+
+/* note / try-this box */
+.try { border: 2px dashed var(--accent); border-radius: 12px; padding: 1.1rem 1.25rem 1rem; margin: 2rem 0 2.4rem; background: color-mix(in srgb, var(--accent) 6%, var(--card)); }
+.try .tlabel { font: 500 .72rem var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: .35rem; }
+.try p:last-child, .try ol:last-child { margin-bottom: 0; }
+.try ol { margin: .2rem 0 1rem 1.2rem; padding: 0; }
+.wrap ul, .wrap ol { padding-left: 1.3rem; margin: 0 0 1.2rem; }
+.wrap li { margin-bottom: .35rem; }
+</style>
+<style id="css-components">
+/* bar charts */
+.bars { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 1.3rem 1.4rem 1.1rem; max-width: 900px; margin: 0 auto; box-shadow: var(--shadow); }
+.bars-head { display: flex; justify-content: space-between; font: 500 .74rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: .9rem; }
+.bar { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) 2.2rem; gap: .9rem; align-items: center; padding: .38rem 0; border-top: 1px solid color-mix(in srgb, var(--line) 60%, transparent); font-size: .95rem; line-height: 1.35; }
+.bt { height: 14px; background: color-mix(in srgb, var(--line) 45%, transparent); border-radius: 7px; overflow: hidden; }
+.bt span { display: block; height: 100%; background: var(--accent); border-radius: 7px; }
+.bn { font: 500 .95rem var(--font-mono); text-align: right; }
+.bar.is-key .bt span { background: var(--after); }
+.bar.is-key .bn { color: var(--after); }
+.bar.is-zero .bt { background: transparent; border: 1.5px dashed var(--before); }
+.bar.is-zero .bn, .bar.is-zero .bl { color: var(--before); }
+.bars figcaption { font: .8rem/1.5 var(--font-mono); color: var(--muted); margin-top: .9rem; }
+@media (max-width: 640px) { .bar { grid-template-columns: minmax(0, 1fr) 2rem; } .bar .bt { grid-column: 1 / -1; grid-row: 2; } }
+
+/* idea cards */
+.idea-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.idea { background: var(--card); border: 1px solid var(--line); border-top: 4px solid var(--accent); border-radius: 12px; padding: 1.1rem 1.1rem 1rem; display: flex; flex-direction: column; }
+.idea-tag { font: 500 .7rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: .6rem; }
+.idea-q { font-style: italic; font-size: .93rem; line-height: 1.55; border-left: 3px solid var(--hl); padding-left: .7rem; }
+.idea-why { font-size: .9rem; line-height: 1.55; color: var(--muted); margin: auto 0 0; }
+.idea-why strong { color: var(--ink); }
+@media (max-width: 1100px) { .idea-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .idea-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* 2×2 matrix */
+.matrix { display: grid; grid-template-columns: minmax(7rem, .55fr) 1fr 1fr; gap: .6rem; max-width: 900px; margin: 0 auto; }
+.mx-col, .mx-row { font: 500 .76rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: flex; align-items: flex-end; padding: .2rem .3rem; }
+.mx-row { align-items: center; }
+.mx-cell { border-radius: 12px; padding: 1rem 1.1rem; border: 1px solid var(--line); min-height: 7rem; }
+.mx-cell b { display: block; font-family: var(--font-display); font-size: 1.3rem; margin-bottom: .25rem; }
+.mx-cell span { font-size: .92rem; line-height: 1.5; display: block; }
+.mx-cell.good { background: color-mix(in srgb, #2e8b57 16%, var(--card)); }
+.mx-cell.warn { background: color-mix(in srgb, #d99a00 18%, var(--card)); }
+.mx-cell.danger { background: color-mix(in srgb, #d0342c 20%, var(--card)); border: 2px solid color-mix(in srgb, #d0342c 70%, var(--card)); }
+.mx-cell.bad { background: color-mix(in srgb, var(--muted) 14%, var(--card)); }
+.mx-cap { text-align: center; font: .82rem/1.55 var(--font-mono); color: var(--muted); margin: 1rem auto 0; max-width: 46rem; }
+@media (max-width: 640px) { .matrix { grid-template-columns: 1fr 1fr; } .mx-corner { display: none; } .mx-row { grid-column: 1 / -1; padding-top: .6rem; } }
+
+/* embeds */
+.embed iframe { width: 100%; height: 85vh; min-height: 520px; border: 1px solid var(--line); border-radius: 12px; background: #fff; display: block; }
+.embed figcaption { font: .82rem/1.5 var(--font-mono); color: var(--muted); margin-top: .7rem; text-align: center; }
+
+/* stat tiles */
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.tile { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.1rem 1rem; }
+.tile b { display: block; font: 800 2.3rem/1 var(--font-display); color: var(--accent); margin-bottom: .5rem; letter-spacing: -.02em; }
+.tile:last-child b { color: var(--before); }
+.tile span { font-size: .9rem; line-height: 1.5; display: block; }
+.tiles-cap { font: .8rem var(--font-mono); color: var(--muted); text-align: center; margin: .9rem 0 0; }
+@media (max-width: 1000px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .tiles { grid-template-columns: minmax(0, 1fr); } }
+
+/* sticky notes */
+.notes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.3rem; }
+.notes.two { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 1.6rem 0 2rem; }
+.note { background: var(--hl-soft); border-radius: 4px 4px 14px 4px; padding: 1.1rem 1.1rem .9rem; box-shadow: 0 6px 16px rgba(0,0,0,.08); transform: rotate(-.6deg); }
+.note:nth-child(even) { transform: rotate(.7deg); }
+.note blockquote { margin: 0 0 .7rem; font-size: .98rem; line-height: 1.5; }
+.note figcaption { font: .74rem/1.4 var(--font-mono); color: var(--muted); }
+@media (max-width: 1000px) { .notes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .notes, .notes.two { grid-template-columns: minmax(0, 1fr); } .note, .note:nth-child(even) { transform: none; } }
+
+/* AI roles */
+.role-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; max-width: 1000px; margin: 0 auto; }
+.role { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1.2rem; }
+.role i { font-size: 1.6rem; color: var(--accent); }
+.role h4 { font-size: 1.15rem; margin: .4rem 0 .4rem; }
+.role p { font-size: .93rem; line-height: 1.55; margin: 0; }
+@media (max-width: 760px) { .role-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* steps */
+.steps { list-style: none; counter-reset: st; padding: 0; margin: 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.steps li { counter-increment: st; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem; position: relative; }
+.steps li::before { content: counter(st); font: 800 2rem/1 var(--font-display); color: var(--hl); -webkit-text-stroke: 1px var(--ink); display: block; margin-bottom: .3rem; }
+.steps b { display: block; font-family: var(--font-display); font-size: 1.15rem; margin-bottom: .3rem; }
+.steps span { font-size: .92rem; line-height: 1.55; display: block; }
+@media (max-width: 1000px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .steps { grid-template-columns: minmax(0, 1fr); } }
+
+/* A/B pair game */
+.pair { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 1.2rem; margin-bottom: 1.8rem; box-shadow: var(--shadow); }
+.pair-head { display: flex; align-items: baseline; gap: .8rem; margin-bottom: .8rem; }
+.pair-n { font: 500 .74rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; background: var(--ink); color: var(--paper); padding: .15rem .5rem; border-radius: 4px; }
+.pair-t { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; }
+.pair-stage { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.pair-stage figure { margin: 0; }
+.pair-stage img { width: 100%; aspect-ratio: 4 / 3; object-fit: contain; background: #fff; border: 1px solid var(--line); border-radius: 10px; cursor: zoom-in; transition: filter .35s; }
+.pair-stage figcaption { font: .82rem var(--font-mono); color: var(--muted); margin-top: .4rem; text-align: center; }
+.pair-stage figcaption b { color: var(--ink); }
+.pair-stage.veiled img { filter: blur(22px) grayscale(.4); }
+.pair-stage.veiled a { pointer-events: none; }
+.veil-btn { position: absolute; left: 50%; top: 45%; transform: translate(-50%, -50%); appearance: none; border: 0; border-radius: 999px; background: var(--ink); color: var(--paper); font: 600 1rem var(--font-display); padding: .8rem 1.4rem; cursor: pointer; box-shadow: var(--shadow); display: none; }
+.pair-stage.veiled .veil-btn { display: inline-flex; gap: .5rem; align-items: center; }
+.veil-btn:hover { background: var(--hl); color: #1d2125; }
+.veil-timer { position: absolute; right: .6rem; top: .6rem; font: 800 2rem/1 var(--font-display); color: #fff; background: rgba(13, 107, 98, .92); border-radius: 10px; padding: .3rem .6rem; display: none; }
+.pair-stage.timing .veil-timer { display: block; }
+.vote { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-top: 1rem; font: 500 .82rem var(--font-mono); }
+.vote button { appearance: none; border: 2px solid var(--ink); background: transparent; color: var(--ink); font: 700 1rem var(--font-display); padding: .35rem 1.1rem; border-radius: 8px; cursor: pointer; }
+.vote button:hover { background: var(--ink); color: var(--paper); }
+.vote button.chosen { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+.vote button.skip { font: 500 .8rem var(--font-mono); border-width: 1px; border-color: var(--line); color: var(--muted); }
+.vote button.skip:hover { color: var(--paper); }
+.reveal { margin-top: 1.1rem; border-top: 1px solid var(--line); padding-top: 1.1rem; }
+.split { display: flex; height: 2.2rem; border-radius: 8px; overflow: hidden; font: 600 .85rem var(--font-mono); }
+.split span { display: flex; align-items: center; justify-content: center; color: #fff; white-space: nowrap; overflow: hidden; }
+.split .sa { background: #0d6b62; }
+.split .sb { background: #1f4fc7; }
+.split .sn { background: #6b7178; }
+.you { font: .85rem var(--font-mono); color: var(--muted); margin: .6rem 0 1rem; }
+.why { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.why h5 { font: 500 .74rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; margin: 0 0 .4rem; color: var(--muted); }
+.why blockquote { margin: 0 0 .6rem; padding-left: .8rem; border-left: 3px solid var(--line); font-size: .93rem; line-height: 1.5; font-style: italic; }
+.why > div:first-child blockquote { border-left-color: #0d6b62; }
+.why > div:last-child blockquote { border-left-color: #1f4fc7; }
+.ctx { background: color-mix(in srgb, var(--hl) 22%, var(--card)); border-radius: 10px; padding: .9rem 1rem; font-size: .95rem; line-height: 1.6; margin: .8rem 0 0; }
+@media (max-width: 700px) { .pair-stage, .why { grid-template-columns: minmax(0, 1fr); } }
+
+/* versus table */
+.versus { max-width: 1000px; margin: 0 auto; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--card); }
+.vs-row { display: grid; grid-template-columns: minmax(8rem, .6fr) 1fr 1fr; border-top: 1px solid var(--line); }
+.vs-row:first-child { border-top: 0; }
+.vs-row > span { padding: .85rem 1rem; font-size: .93rem; line-height: 1.5; }
+.vs-row > span + span { border-left: 1px solid var(--line); font-style: italic; }
+.vs-row small { display: block; font: normal .7rem var(--font-mono); color: var(--muted); margin-top: .25rem; }
+.vs-head > span { font: 500 .74rem var(--font-mono) !important; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-style: normal !important; }
+.vs-f { font-family: var(--font-display); font-weight: 700; }
+@media (max-width: 700px) { .vs-row { grid-template-columns: minmax(0, 1fr); } .vs-row > span + span { border-left: 0; border-top: 1px dashed var(--line); } .vs-head { display: none; } }
+
+/* flip cards */
+.flip-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; max-width: 1000px; margin: 0 auto; }
+.flip { background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
+.flip summary { list-style: none; cursor: pointer; padding: 1rem 1.1rem; font-style: italic; font-size: 1rem; line-height: 1.5; }
+.flip summary::-webkit-details-marker { display: none; }
+.flip summary:hover { background: color-mix(in srgb, var(--accent) 6%, var(--card)); border-radius: 12px; }
+.flab { display: block; font: normal 500 .68rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--before); margin-bottom: .3rem; }
+.flip p .flab { color: var(--accent); }
+.fhint { display: block; font: normal .76rem var(--font-mono); color: var(--link); margin-top: .5rem; }
+.flip[open] .fhint { display: none; }
+.flip p { margin: 0; padding: .9rem 1.1rem 1.1rem; border-top: 1px dashed var(--line); font-size: .97rem; line-height: 1.55; }
+@media (max-width: 700px) { .flip-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* app reviews */
+.app-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.app { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem; font-size: .9rem; line-height: 1.5; }
+.app h4 { font-size: 1.15rem; margin-bottom: .35rem; }
+.app p { margin: 0 0 .55rem; }
+.app .does { color: var(--muted); }
+.app .plus b { color: var(--accent); }
+.app .minus { margin: 0; }
+.app .minus b { color: var(--before); }
+@media (max-width: 760px) { .app-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* takeaways */
+.takeaways { background: var(--band); color: var(--band-ink); padding: 4rem 0 3.4rem; margin-top: 2rem; }
+.takeaways h2 { font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 800; color: var(--band-ink); margin: 0 0 2rem; max-width: 46rem; }
+.tk-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.1rem; }
+.tk { background: rgba(255, 255, 255, .06); border: 1px solid var(--band-line); border-radius: 14px; padding: 1.3rem 1.3rem 1.1rem; }
+.tk-n { font: 500 .78rem var(--font-mono); color: var(--hl); letter-spacing: .1em; }
+.tk h4 { font-size: 1.3rem; color: var(--band-ink); margin: .35rem 0 .55rem; }
+.tk p { font-size: .95rem; line-height: 1.6; color: var(--band-muted); margin: 0; }
+.tk strong { color: #fff; }
+.tk em { color: var(--band-ink); }
+@media (max-width: 1000px) { .tk-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .tk-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* footer */
+.foot { padding: 3rem 0 6rem; font-size: .9rem; color: var(--muted); }
+.foot h3 { font-size: 1.1rem; color: var(--ink); margin-bottom: .8rem; }
+.foot li { margin-bottom: .45rem; }
+
+/* jump nav */
+.jump { position: fixed; left: 1rem; bottom: 1rem; z-index: 800; display: flex; background: var(--ink); border-radius: 8px; box-shadow: var(--shadow); transition: opacity .3s, transform .3s; }
+.jump.on-hero { opacity: 0; transform: translateY(10px); pointer-events: none; }
+.jump button { appearance: none; background: transparent; color: var(--paper); border: 0; font: 500 .78rem var(--font-mono); padding: .6rem .75rem; cursor: pointer; display: inline-flex; align-items: center; gap: .45rem; }
+.jump button:disabled { opacity: .35; cursor: default; }
+.jump button:hover:not(:disabled) { text-decoration: underline; text-underline-offset: .25em; }
+.jump-cur { max-width: 17rem; border-left: 1px solid rgba(128,128,128,.45) !important; border-right: 1px solid rgba(128,128,128,.45) !important; }
+.jump-cur span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.jump-backdrop { position: fixed; inset: 0; z-index: 790; background: rgba(10, 15, 25, .35); display: none; }
+.jump-backdrop.open { display: block; }
+.jump-menu { position: fixed; left: 1rem; bottom: 4.2rem; z-index: 810; width: min(680px, calc(100vw - 2rem)); max-height: 72vh; overflow: auto; background: var(--card); color: var(--ink); border: 1.5px solid var(--ink); border-radius: 10px; padding: .9rem; display: none; box-shadow: var(--shadow); }
+.jump-menu.open { display: block; }
+.jm-group { font: 500 .68rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: .8rem 0 .35rem; }
+.jm-group:first-child { margin-top: 0; }
+.jump-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .35rem; }
+.jump-grid a { display: block; padding: .45rem .6rem; border-radius: 6px; text-decoration: none; color: var(--ink); font-size: .9rem; line-height: 1.3; border: 1px solid var(--line); }
+.jump-grid a small { display: block; color: var(--muted); font-size: .74rem; margin-top: .15rem; }
+.jump-grid a:hover { border-color: var(--ink); }
+.jump-grid a.is-cur { background: var(--ink); color: var(--paper); }
+.jump-grid a.is-cur small { color: var(--line); }
+@media (max-width: 640px) {
+  .jump { left: .6rem; bottom: .6rem; }
+  .jump-cur { max-width: 11.5rem; }
+  .jump-menu { left: .6rem; bottom: 3.8rem; width: calc(100vw - 1.2rem); }
+  .jump-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* mini audio player */
+.mini { position: fixed; right: 1rem; bottom: 1rem; z-index: 800; display: flex; align-items: center; gap: .4rem; background: var(--accent); color: #fff; border-radius: 999px; padding: .3rem .5rem; box-shadow: var(--shadow); font: 500 .8rem var(--font-mono); }
+.mini[hidden] { display: none; }
+.mini button { appearance: none; border: 0; background: rgba(255,255,255,.18); color: #fff; width: 2rem; height: 2rem; border-radius: 50%; cursor: pointer; font-size: 1rem; display: grid; place-items: center; }
+.mini button:hover { background: rgba(255,255,255,.32); }
+:root[data-theme="dark"] .mini, :root[data-theme="dark"] .mini button { color: #0b1a18; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .mini, :root:not([data-theme="light"]) .mini button { color: #0b1a18; } }
+@media (max-width: 640px) { .mini { right: .6rem; bottom: 3.9rem; } }
+
+/* dialogs */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+dialog.pop { border: 1.5px solid var(--ink); border-radius: 10px; padding: 0; width: min(820px, 94vw); max-height: 88vh; background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+dialog.pop::backdrop { background: rgba(8, 12, 20, .6); }
+.pop-head { position: sticky; top: 0; display: flex; gap: .6rem; align-items: center; justify-content: space-between; padding: .7rem 1rem; background: var(--card); border-bottom: 1px solid var(--line); z-index: 2; }
+.pop-head h2 { font: 500 .82rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; margin: 0; }
+.close-x { appearance: none; border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 6px; padding: .3rem .6rem; font: 500 .78rem var(--font-mono); cursor: pointer; }
+.close-x:hover { border-color: var(--ink); }
+.pop-search { display: none; align-items: center; gap: .5rem; padding: .6rem 1rem; border-bottom: 1px solid var(--line); position: sticky; top: 2.9rem; background: var(--card); z-index: 2; }
+.pop-search.on { display: flex; }
+.pop-search input { flex: 1; font: .95rem var(--font-body); padding: .45rem .6rem; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 6px; }
+.pop-search span { font: .74rem var(--font-mono); color: var(--muted); }
+#pop-body { padding: 1rem 1.3rem 1.5rem; font-size: 1rem; line-height: 1.65; }
+#pop-body h1, #pop-body h2, #pop-body h3 { font-size: 1.15rem; margin: 1.2rem 0 .5rem; }
+#pop-body p { margin: 0 0 .85rem; }
+#pop-body ul, #pop-body ol { margin: 0 0 .85rem 1.4rem; padding: 0; }
+#pop-body li { margin-bottom: .3rem; }
+#pop-body hr { border: 0; border-top: 1px solid var(--line); margin: 1.2rem 0; }
+#pop-body .hide { display: none; }
+#pop-body mark { background: var(--hl); color: #1d2125; }
+#pop-body .intro { font-size: .85rem; color: var(--muted); }
+dialog.lightbox { border: 0; padding: 0; background: transparent; max-width: 96vw; max-height: 96vh; overflow: visible; }
+dialog.lightbox::backdrop { background: rgba(5, 8, 12, .92); }
+dialog.lightbox img { max-width: 96vw; max-height: 86vh; width: auto; height: auto; background: #fff; display: block; margin: 0 auto; border-radius: 4px; }
+.lb-bar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; color: #eee; font: .8rem var(--font-mono); padding: .6rem .2rem 0; }
+.lb-bar a { color: #fff; }
+.lb-bar button { appearance: none; background: #fff; color: #111; border: 0; border-radius: 4px; padding: .35rem .7rem; font: 500 .8rem var(--font-mono); cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<header class="masthead">
+  <div class="masthead-in">
+    <a href="../">Talks · S Anand</a>
+    <div class="mh-right">
+      <span>ED5518 · 4 Nov 2026</span>
+      <button class="icon-btn" id="theme-btn" type="button" aria-label="Toggle dark mode"><i class="bi bi-moon-stars" aria-hidden="true"></i></button>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="top" aria-labelledby="title">
+  <div class="hero-in">
+    <div class="kicker">ED5518 Data Visualization · IIT Madras</div>
+    <h1 id="title">What changed <span class="mark">your mind?</span></h1>
+    <p class="dek">An 81-minute class run as a live lab. Students wrote down how they would test a visualization, argued with their neighbours, and wrote again. They guessed which charts a stranger would understand, then swapped phones to test each other’s sensor apps. This page is the study guide: the ideas, the evidence, and what 24 students’ answers revealed.</p>
+    <div class="meta-line">
+      <span><i class="bi bi-calendar3" aria-hidden="true"></i> Wed 4 Nov 2026, 2:00 pm IST</span>
+      <span><i class="bi bi-geo-alt" aria-hidden="true"></i> <a href="https://ed.iitm.ac.in/">Dept. of Engineering Design</a>, IIT Madras</span>
+      <span><i class="bi bi-person" aria-hidden="true"></i> <a href="https://www.s-anand.net/">Anand S</a>, in <a href="https://ed.iitm.ac.in/~palramu/">Dr Palaniappan Ramu</a>’s course</span>
+    </div>
+    <div class="listen">
+      <div class="listen-top"><span><i class="bi bi-headphones" aria-hidden="true"></i> Listen to the class (81 min)</span><span><a href="transcript.md" data-transcript>Read the transcript</a> · <a href="https://github.com/sanand0/talks/releases/download/talks/2026-11-04-iitm-ed-data-visualization.opus">download audio</a></span></div>
+      <audio id="aud" controls preload="metadata">
+        <source src="https://github.com/sanand0/talks/releases/download/talks/2026-11-04-iitm-ed-data-visualization.opus" type="audio/ogg; codecs=opus">
+      </audio>
+    </div>
+    <p class="series">Earlier in this series: <a href="../2026-08-12-iitm-ed-data-visualization/">Why are you even sitting in this class?</a> (12 Aug) · <a href="../2026-10-07-iitm-ed-data-visualization/">Looks right. Isn’t.</a> (7 Oct). Tap any <a class="ts" href="?t=00:40" tabindex="-1" aria-hidden="true">00:40</a> marker below to hear that moment.</p>
+  </div>
+</section>
+
+<div class="comic-band">
+  <figure>
+    <a href="comic-page.avif" data-lightbox data-caption="The class as a comic page"><img src="comic-page.avif" width="1055" height="1491" alt="Nine-panel comic. 1: If lectures and AI can deliver content, what is class for? Students say attendance, friends, doubts, credit. 2: So class became a live lab: answer first, then discuss — a QR code, a 3:00 timer, 42/50 responses. 3: Your first answer is a hypothesis; the change after discussion is learning — before and after mind maps. 4: The group upgraded the plan: test with many relevant people, not just one; a chart may also need a supporting sentence; what decision should this drive? 5: A good visual must be clear, correct, honest and hard to misread — raw data checked against bars. 6: AI helps by recalculating, suggesting designs and inventing failure cases. 7: But AI and humans see differently — humans see caterpillar, cave, donkey; AI sees an owl humans cannot. 8: To get feedback from busy people, make it easy: A or B, not rank 10 designs — fast, playful, more feedback. 9: The same logic applies to apps: swap phones, test, report whose app, what it does, what you tried, what worked, one improvement. Footer: In the AI era, class isn't just for content — it's a practice ground for testing, prioritizing, and changing your mind." loading="eager"></a>
+    <figcaption>The class as a comic page (AI-generated from the transcript; an interpretation, not a record). Tap to enlarge.</figcaption>
+  </figure>
+</div>
+
+<section class="chap" id="why" data-act="Opening" data-title="Why are you here?">
+  <div class="wrap">
+    <div class="act">Opening</div>
+    <h2>Why are you even here?</h2>
+    <p class="lede">While latecomers trickled in, Anand ran a show of hands. Startup right after college? Higher studies? A job? <strong>Most of the room wanted to work.</strong> The last time he had asked a batch this, in 2010, it was a larger class of chemical engineers, three of them planned a startup, and <q>the majority were planning to study right after.</q> <a class="ts" href="?t=01:21">01:21</a> Why work? <q>Finance,</q> said one student. Wouldn’t an extra degree pay more over a career? The nods said it wasn’t about lifetime return. It was about cash flow now.</p>
+    <p>Then, at two o’clock, the real question, one that hangs over every class in the age of AI: <q>Why do you bother attending classes? You can get this from a lecture online.</q> <a class="ts" href="?t=04:13">04:13</a></p>
+    <p>Palani got the first laugh: <q>Well, it’s good that you’re asking the question towards the end of the course.</q> The students gave real answers. <em>Attendance.</em> <em>Credit</em>, though a classmate pointed out that <q>there are people who don’t attend the class, but they come and write the exam.</q> <em>Reading is boring.</em> <em>Doubt clearance</em>, which Anand answered in four words: <q>Which you can ask AI.</q> <a class="ts" href="?t=05:42">05:42</a> And the most honest one:</p>
+  </div>
+
+  <div class="wrap">
+    <blockquote class="pull student">
+      <p>“This is like a dedicated slot so that we will come here and listen. But if I want to do that in my room, it’s like it won’t happen.”</p>
+      <cite>— A student, on why class still matters <a class="ts" href="?t=05:04">05:04</a></cite>
+    </blockquote>
+  </div>
+
+  <div class="wrap">
+    <p>Someone said they come to meet friends. <q>In which case, you should be talking to them, not staring at me.</q> <a class="ts" href="?t=05:50">05:50</a> Anand then admitted something teachers rarely say aloud:</p>
+    <blockquote class="pull">
+      <p>“See, the education system is designed more for teachers, perhaps, than for students.”</p>
+      <cite>— Anand <a class="ts" href="?t=05:50">05:50</a></cite>
+    </blockquote>
+    <p>Having everyone pay attention to one speaker and take the same test is convenient for the teacher. <strong>Content is the one thing a classroom no longer has a monopoly on.</strong> A room full of people can do other things, though. They can commit to an answer without seeing anyone else’s. They can argue face to face. Most usefully for a course on visualization, <strong>they can be each other’s test audience</strong>. So: <q>since you are here, and AI is anyway eating up our lives, why don’t we do something slightly different today?</q> <a class="ts" href="?t=05:50">05:50</a></p>
+    <p>That design didn’t come out of nowhere. That morning, Anand had asked ChatGPT to scan the possibilities:</p>
+    <div class="chat">
+      <div class="clabel">Anand’s prompt, the morning of class</div>
+      <p>What are ways by which we could explore ways of teaching that can leverage my physical presence and synchronous presence in a way that offline and asynchronous cannot? Based on that, for this particular course, what could we do that is powerful and interesting?</p>
+      <p class="reply"><span class="clabel">ChatGPT, in part</span><br>Rather than another talk or live-coding demonstration, make the students simultaneously designers, experimental subjects, skeptical customers, and investigators. … An AI can generate a beautiful visualization. Only testing it against reality and unfamiliar people tells us whether it works.</p>
+    </div>
+    <p>The class kept that skeleton and dropped the props: <strong>predict privately, discuss, revise; then test charts on each other, then test apps on each other.</strong> Everything ran through a live form on Anand’s laptop. The form’s title was the agenda: <em>Verify, compare, test.</em></p>
+    <div class="try">
+      <div class="tlabel"><i class="bi bi-inbox" aria-hidden="true"></i> Housekeeping from class</div>
+      <p>Anand had seen 32 submissions for the visualization assignment and 31 for the mobile app, from a class of about 48. If yours is missing, check that it is where it should be and that he can open it. On access: <q>I’m not going to give you my email ID. This much you should be able to do with Google.</q> <a class="ts" href="?t=07:00">07:00</a> An AI agent will do the first pass of grading, and <q>it is just very happily going to give you a zero</q> <a class="ts" href="?t=08:15">08:15</a> for anything it can’t open.</p>
+    </div>
+  </div>
+</section>
+
+<section class="chap" id="hypothesis" data-act="I · Commit first" data-title="First answer = hypothesis">
+  <div class="wrap">
+    <div class="act">Act I · Commit first</div>
+    <h2>Your first answer is a hypothesis</h2>
+    <p class="lede">The students had already built a visualization for <em>Varuna</em>, the factory dataset from earlier homework, and revised it into a replay aimed at a manager’s decision. Now someone had to grade it: Anand, his agent, and Palani. <q>How should we evaluate it is the point of discussion.</q> <a class="ts" href="?t=08:45">08:45</a> Before any discussion, though, each student answered one question alone, on their phone:</p>
+    <div class="qbox">
+      <div class="qlabel">Question 1 · answer alone, locked after submitting</div>
+      <p>You have created a visualization. How would you test whether it is correct and whether it achieves its intended purpose for its intended audience?</p>
+      <p class="small">Describe the specific checks or experiments you would run, what evidence you would collect, and what findings would make you revise or reject it.</p>
+    </div>
+    <p>Then came the wait. Six responses in four minutes. Ten. Seventeen. Nineteen. Anand watched the counter crawl and said what every teacher thinks:</p>
+    <blockquote class="pull">
+      <p>“Some guys get it; there’s no point teaching them. Some don’t; there’s no point teaching them. What do we do with the middle?”</p>
+      <cite>— Anand, waiting for the counter to reach 25 <a class="ts" href="?t=17:44">17:44</a></cite>
+    </blockquote>
+    <p>Why write first and talk later? Because of something Anand noticed in ninth or tenth standard. He would read a book, it would make perfect sense, and he would conclude he had learned nothing: <q>Something makes perfect sense when you read it, and I started assuming therefore that I knew it beforehand.</q> <a class="ts" href="?t=18:43">18:43</a> If someone had asked him before he read it, he would probably have given a different answer, or said he had no clue. Psychologists call this <a class="tip" href="https://en.wikipedia.org/wiki/Hindsight_bias" data-tip="Once you know an answer, it feels as if you knew it all along. It hides how much you actually learned.">hindsight bias</a>. Its classroom cousin is the <a class="tip" href="https://en.wikipedia.org/wiki/Illusion_of_explanatory_depth" data-tip="We believe we understand things (a zip, a toilet, a chart) far better than we can explain them, until someone asks us to.">illusion of explanatory depth</a>.</p>
+  </div>
+
+  <div class="yband">
+    <div class="band-in" style="max-width:900px">
+      <div class="band-label">The core method of this class</div>
+      <h3>“Put a hypothesis on the table … see what is the difference between that and what I have learned. At least that difference now constitutes net learning.”</h3>
+      <p class="sub">Anand, on why the answers were locked once submitted <a class="ts" href="?t=18:43">18:43</a></p>
+      <p>Write first, then discuss, then write again. Educators call this <a href="https://en.wikipedia.org/wiki/Peer_instruction">peer instruction</a>. Committing to an answer before you see the explanation is a form of the <a href="https://en.wikipedia.org/wiki/Testing_effect">testing effect</a>, and a <a href="https://www.pnas.org/doi/10.1073/pnas.1319030111">meta-analysis of 225 STEM studies</a> found that active classes like this one beat lectures. The written first answer matters because <strong>you can’t measure how much you moved if you never recorded where you started.</strong></p>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="try">
+      <div class="tlabel"><i class="bi bi-pencil" aria-hidden="true"></i> Try it yourself before reading on</div>
+      <p>Take a chart you made recently. In three lines, write how you would prove that it is <em>correct</em> and that it <em>works</em> for the person it is meant for. Keep the note. By the end of this page you will have something to compare it with, which is the whole point.</p>
+    </div>
+  </div>
+</section>
+
+<section class="chap" id="answers" data-act="I · Commit first" data-title="What 24 students wrote">
+  <div class="wrap">
+    <div class="act">Act I · Commit first</div>
+    <h2>Half a test, twice over</h2>
+    <p class="lede">Twenty-four students answered. Read their answers side by side and they split into two families. One family asks <strong>“Is it true?”</strong> Do the numbers match the raw data, are the axes and labels honest? The other asks <strong>“Does it work?”</strong> Can a real person look at it and get the message? Each family was well represented. Few answers had both.</p>
+  </div>
+
+  <div class="wide">
+    <figure class="bars" aria-labelledby="bars-q1-cap">
+      <div class="bars-head"><span>What students proposed, before any discussion</span><span>of 24</span></div>
+      <div class="bar"><span class="bl">Show it to people and see what they understand</span><span class="bt"><span style="width:54.2%"></span></span><span class="bn">13</span></div>
+      <div class="bar"><span class="bl">Check it against the raw data or ground truth</span><span class="bt"><span style="width:50%"></span></span><span class="bn">12</span></div>
+      <div class="bar is-key"><span class="bl"><strong>Did both</strong></span><span class="bt"><span style="width:20.8%"></span></span><span class="bn">5</span></div>
+      <div class="bar"><span class="bl">Use AI agents as the audience or the checker</span><span class="bt"><span style="width:8.3%"></span></span><span class="bn">2</span></div>
+      <div class="bar"><span class="bl">Compare it against a simpler baseline, like a plain table</span><span class="bt"><span style="width:4.2%"></span></span><span class="bn">1</span></div>
+      <div class="bar"><span class="bl">Check that shapes are proportional to the numbers</span><span class="bt"><span style="width:4.2%"></span></span><span class="bn">1</span></div>
+      <div class="bar"><span class="bl">Deliberately try to misread it</span><span class="bt"><span style="width:4.2%"></span></span><span class="bn">1</span></div>
+      <div class="bar is-zero"><span class="bl">Say in advance what result would count as failure</span><span class="bt"><span style="width:0"></span></span><span class="bn">0</span></div>
+      <figcaption id="bars-q1-cap">Hand-coded from the 24 first answers to Question 1; an answer can fall in several rows. The rare ideas are the valuable ones.</figcaption>
+    </figure>
+  </div>
+
+  <div class="wrap">
+    <p>The common answer was a good start. <q>Ask friends to skim through the visualization and tell insights they get from it, then compare it with our objective,</q> wrote one student. Another: <q>Find people who have no prior knowledge about thr data. Then show them the visualization and ask them to interpret it.</q> Neither is wrong. <strong>The trouble is what neither one checks.</strong> Showing a chart to people tests whether the message gets across. It doesn’t test whether the message is true. Checking the data tests whether it is true, not whether anyone can read it.</p>
+    <p>The rare answers had the ideas that make a test strong. Four of them deserve a closer look:</p>
+  </div>
+
+  <div class="wide">
+    <div class="idea-grid">
+      <article class="idea">
+        <div class="idea-tag">Baseline + rejection rule</div>
+        <p class="idea-q">“I’d first check the numbers myself, recalculating them from the raw data … Then I’d show it to 5-8 people from the real audience, ask what they take away with no hints from me, and compare how they do against a plain table. If the numbers are off, people misread it, or the table works just as well, I’d rework it or scrap it.”</p>
+        <p class="idea-why">The most complete answer. It does both halves, uses real audience members, gives no hints, and <strong>compares the chart with the simplest alternative</strong>. It even says what would make the student throw the chart away.</p>
+      </article>
+      <article class="idea">
+        <div class="idea-tag">Encoding, not just values</div>
+        <p class="idea-q">“Compare the aggregated values shown in the visualization directly against actual data / Verify that geometric proportions (e.g., bar lengths) scale correctly with the data values”</p>
+        <p class="idea-why">A chart can print the right numbers and still draw them wrong. Think of a truncated axis, or a bubble scaled by radius instead of area. Tufte called the size of that distortion the <a href="https://en.wikipedia.org/wiki/Misleading_graph">lie factor</a>.</p>
+      </article>
+      <article class="idea">
+        <div class="idea-tag">Attack your own chart</div>
+        <p class="idea-q">“Thinking of ways to misrepresent my own visualisation, to have a sense of how easy it is to misinterpret the intended purpose”</p>
+        <p class="idea-why">This is <a href="https://en.wikipedia.org/wiki/Red_team">red-teaming</a>. Instead of asking “do they get it?”, ask <strong>“how could a reasonable person get it wrong?”</strong></p>
+      </article>
+      <article class="idea">
+        <div class="idea-tag">Cold read, then warm read</div>
+        <p class="idea-q">“I would then ask a few friends to go through it without giving them any background context … After that, I would explain the context … and then check if their interpretation or opinion changes.”</p>
+        <p class="idea-why">This separates what the chart says on its own from what your explanation adds. <strong>In real life, you won’t be standing next to your chart to explain it.</strong></p>
+      </article>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <p>The empty last row of the chart is the gap the rest of the class kept returning to. <strong>No one said what result would count as a failure before running the test.</strong> “If they understand it, it works” sounds like a test. Without a threshold it can’t fail, so it isn’t one. A real test sounds like this: <em>“Shown the chart for 20 seconds, at least four of five plant managers pick the right station to fix.”</em> (The four-of-five is an illustration, not a standard. The point is that you write it down <em>before</em> you look.)</p>
+  </div>
+</section>
+
+<section class="chap" id="agree" data-act="I · Commit first" data-title="If everyone agrees…">
+  <div class="wrap">
+    <div class="act">Act I · Commit first</div>
+    <h2>“If people agree, the visualization works”</h2>
+    <p class="lede">Anand read that line from one of the answers to the room. <q>Makes sense. Any problem with that, though?</q> <a class="ts" href="?t=30:05">30:05</a> The class took it apart in three moves.</p>
+    <p>First, agreeing isn’t the same as understanding. Second, from a student who had clearly been thinking about it: <q>everyone understands, but what if … it doesn’t clearly answer the question? … have the facts from the data been taken properly, right?</q> <a class="ts" href="?t=30:42">30:42</a> And third, the sharpest point in the hour:</p>
+    <blockquote class="pull student">
+      <p>“There is a common mode, right? Like you might be asking all the people of same group. So, they might be blind to it.”</p>
+      <cite>— A student <a class="ts" href="?t=31:06">31:06</a></cite>
+    </blockquote>
+    <p><a class="tip" href="https://en.wikipedia.org/wiki/Common_cause_failure" data-tip="An engineering term: redundant systems that share a hidden cause (same supplier, same software, same assumption) fail together, so the redundancy is an illusion.">Common mode</a> is a reliability engineer’s idea, and it fits here exactly. Five classmates who share your background, your course and your assumptions are not five independent checks. They are one check repeated five times. Anand split the fix in two. Part A: ask enough people, and the <em>right</em> people. Part B: make sure you are showing them the right thing.</p>
+    <blockquote class="pull">
+      <p>“If I show a graph which says men live longer, women live less, and everyone agrees on the same interpretation, except that, in truth, the reverse is the case, chart is just plain wrong.”</p>
+      <cite>— Anand <a class="ts" href="?t=31:22">31:22</a></cite>
+    </blockquote>
+    <p>He then praised the rare answers by name. Recalculating from the raw data. Checking geometric proportions: <q>it’s one thing to say, “I have written 24 and 25 here.” It’s another thing to show that difference as 3x, 4x, which absolutely is unwarranted.</q> <a class="ts" href="?t=31:45">31:45</a> And deliberately looking for ways to misread the chart: <q>That’s powerful.</q> <a class="ts" href="?t=32:26">32:26</a> Searching for misreadings also protects against the common-mode problem, because <q>somebody who we don’t even know might be looking at it in a different way.</q></p>
+  </div>
+
+  <div class="wide">
+    <div class="matrix" role="table" aria-label="Two independent tests: is it true, and does it work">
+      <div class="mx-corner" role="presentation"></div>
+      <div class="mx-col" role="columnheader">People get the intended message</div>
+      <div class="mx-col" role="columnheader">People misread it</div>
+      <div class="mx-row" role="rowheader">The data is right</div>
+      <div class="mx-cell good" role="cell"><b>Ship it</b><span>True and understood. Rarer than it looks; prove both.</span></div>
+      <div class="mx-cell warn" role="cell"><b>Redesign</b><span>Honest numbers nobody can use. Most “data-correct” charts land here.</span></div>
+      <div class="mx-row" role="rowheader">The data is wrong</div>
+      <div class="mx-cell danger" role="cell"><b>Danger</b><span>Everyone confidently agrees with a falsehood. “People agree” <em>cannot</em> catch this.</span></div>
+      <div class="mx-cell bad" role="cell"><b>Scrap it</b><span>Wrong and confusing. At least nobody acts on it.</span></div>
+    </div>
+    <p class="mx-cap">Two independent tests. Audience testing tells you which <em>column</em> you are in. Only checking against the data tells you which <em>row</em>.</p>
+  </div>
+</section>
+
+<section class="chap" id="owl" data-act="II · Who’s looking?" data-title="The owl nobody saw">
+  <div class="wrap">
+    <div class="act">Act II · Who’s looking?</div>
+    <h2>The owl nobody saw</h2>
+    <p class="lede">A few answers suggested a shortcut: skip the people and test the chart on an AI audience. One proposed <q>creating some ai agents as a audience lets say some roles like project manager, employee etc.</q> Another laid out a six-step pipeline of independent agents checking each other, with a human deciding at the end. Anand’s verdict: <q>This is both good and bad.</q> <a class="ts" href="?t=32:57">32:57</a></p>
+    <p>The good part: an AI can play roles you can’t easily recruit for. <q>You can ask it to take the personality of some extremist who is looking at the data trying to misinterpret it.</q> That is red-teaming on demand. The bad part is a question nobody had asked: <strong>does an AI even <em>see</em> the way your audience does?</strong> <q>And it is crazy. Let me show you this.</q></p>
+    <p>He switched screens to a results page from his other course, <em>Tools in Data Science</em>. Students there had each drawn objects in a minute. Other students, and three AI model families, then tried to name each drawing from ten options.</p>
+  </div>
+
+  <div class="band">
+    <div class="band-in">
+      <div class="band-label">Humans Only · 866 drawings · 4,186 human guesses · 7,794 AI guesses</div>
+      <h3>Every human saw it. No AI did. And the reverse.</h3>
+      <p class="sub">From the anonymised <a href="https://files.s-anand.net/pages/tds-2026-09-ga3-q5-humans-only/">Humans Only results page</a> that Anand showed in class. Green labels are correct guesses, red are wrong; each AI model family made three attempts.</p>
+      <div class="shot-grid">
+        <figure class="shot span2">
+          <a href="humans-only-humans-win.webp" data-lightbox data-caption="All humans right, all AI wrong: bed, cave, donkey, ladder, lamp, mango, medal, pressure cooker"><img src="humans-only-humans-win.webp" width="1360" height="930" loading="lazy" alt="Grid of eight sketches where every human guessed right and all nine AI guesses were wrong: bed (AI said chair, bookshelf), cave (AI said mountain nine times), donkey (AI said sheep, cow, horse, pig, turkey), ladder (AI said saw), lamp (AI said hammock), mango (AI said pear), medal (AI said shuttlecock, whistle), pressure cooker (AI said kettle, teapot)."></a>
+          <figcaption>The eight drawings where every human was right and all nine AI attempts were wrong. A two-stroke cave was <q>mountain</q> nine times out of nine. The donkey became a sheep, a cow, a horse, a pig and a turkey. <a href="https://files.s-anand.net/pages/tds-2026-09-ga3-q5-humans-only/?finding=human-only">Open this filter ↗</a></figcaption>
+        </figure>
+        <figure class="shot">
+          <a href="humans-only-caterpillar.webp" data-lightbox data-caption="Caterpillar drawings: a single 'C' that every human got"><img src="humans-only-caterpillar.webp" width="1320" height="590" loading="lazy" alt="Caterpillar search results. A single stroke 'C' scored 5 of 5 humans right but only 1 of 9 AI (mostly 'snail'). Other entries spell the word out, which AI reads easily."></a>
+          <figcaption>A single <q>C</q> for caterpillar. Five of five humans got it; the AI mostly said <q>snail</q>. Notice the drawings that simply <em>write the word</em>: the AI reads those perfectly. <a href="https://files.s-anand.net/pages/tds-2026-09-ga3-q5-humans-only/?q=caterpillar&amp;finding=human-unanimous">Open ↗</a></figcaption>
+        </figure>
+        <figure class="shot">
+          <a href="humans-only-ai-wins.webp" data-lightbox data-caption="No humans right, all AI right: owl and seahorse"><img src="humans-only-ai-wins.webp" width="700" height="500" loading="lazy" alt="Two drawings where no human was right and all AI were right: an owl (humans said pigeon, penguin, flamingo, crow, eagle) and a three-stroke seahorse (humans said jellyfish, whale, fish, lobster)."></a>
+          <figcaption>The reverse. Humans guessed pigeon, penguin, flamingo, crow and eagle. <q>None of the models had even the slightest doubt that this is an owl. Yeah, I can’t see the owl.</q> <a class="ts" href="?t=34:51">34:51</a> <a href="https://files.s-anand.net/pages/tds-2026-09-ga3-q5-humans-only/?finding=ai-only">Open ↗</a></figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <p>The conclusion is plain: <q>an agent has a very different kind of perception.</q> <a class="ts" href="?t=35:14">35:14</a> And if they perceive differently, <strong>they make different mistakes</strong>. They have far more patience: <q>They will check, double check, triple check, quadruple check. What human does that?</q> Yet they also stumble where no human would: <q>And what human can’t count the number of R’s in “strawberry” if they know English?</q></p>
+    <blockquote class="pull">
+      <p>“Don’t use agents as a full substitute for humans.”</p>
+      <cite>— Anand <a class="ts" href="?t=35:39">35:39</a></cite>
+    </blockquote>
+    <p>Put this next to the common-mode problem and a useful idea falls out. <strong>An AI reviewer is valuable precisely because it fails differently from you.</strong> It is a check whose blind spots don’t overlap with your friends’ blind spots. That makes it a good <em>additional</em> reviewer. It makes it a bad <em>stand-in</em> for your audience. If GPT reads your chart perfectly, you have learned something about GPT. You haven’t learned much about the plant manager. Anand’s write-up of the experiment, <a href="https://www.s-anand.net/blog/drawing-humans-only-captchas/">Drawing humans-only CAPTCHAs</a>, goes further into what kinds of drawing fool which kinds of eye.</p>
+  </div>
+
+  <div class="wide">
+    <figure class="embed">
+      <iframe src="https://files.s-anand.net/pages/tds-2026-09-ga3-q5-humans-only/?finding=humans-better" title="Humans Only drawing results explorer" loading="lazy"></iframe>
+      <figcaption>Explore it yourself: filter by “AI model families disagree” or “Everyone chose the same wrong word”. <a href="https://files.s-anand.net/pages/tds-2026-09-ga3-q5-humans-only/" target="_blank" rel="noopener">Open the full results page in a new tab ↗</a></figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="chap" id="changed" data-act="III · What changed" data-title="What changed your mind?">
+  <div class="wrap">
+    <div class="act">Act III · What changed</div>
+    <h2>“I’m very patient”</h2>
+    <p class="lede">The second question was the first one turned back on the student. Eight minutes of talking with neighbours, then a new box on the same form:</p>
+    <div class="qbox">
+      <div class="qlabel">Question 2 · after discussing</div>
+      <p>Discuss with your neighbours. What have you changed your mind on?</p>
+      <p class="small">Not changing your mind was allowed. Anand asked only that you notice the difference: <q>Have you changed your opinion on anything from the previous answer you gave?</q> <a class="ts" href="?t=25:38">25:38</a></p>
+    </div>
+    <p>When he asked the room to share, there was a silence. <q>Anyone wants to share something that you felt, “Okay, I thought X before, now I think Y” … ? I’m very patient.</q> <a class="ts" href="?t=36:11">36:11</a> Then three students spoke, and each named a different kind of change.</p>
+  </div>
+
+  <div class="wide">
+    <div class="tiles">
+      <div class="tile"><b>2 → 7</b><span>answers mentioning AI, before vs after discussion. AI became <em>the</em> topic at the tables.</span></div>
+      <div class="tile"><b>1 → 3</b><span>answers about deliberately misreading or sabotaging the chart. One student’s idea spread.</span></div>
+      <div class="tile"><b>4</b><span>students said plainly that they hadn’t changed their mind. That’s allowed, and honest.</span></div>
+      <div class="tile"><b>0 → 0</b><span>answers saying what result would count as failure. Discussion added techniques, not pass/fail criteria.</span></div>
+    </div>
+    <p class="tiles-cap">Hand-coded from 24 students’ first and second answers, matched by student.</p>
+  </div>
+
+  <div class="wrap">
+    <h3>From one opinion to the decision that matters</h3>
+    <p>The first student had planned to show the chart to someone from the domain. Discussion changed that: <q>it is better to show to the multiple, you know, such affected people and they will give their different opinion, and then maybe we can kind of decide upon which is that parameter which actually drives them to take the decision.</q> <a class="ts" href="?t=37:03">37:03</a> Anand summed it up: show it to many, not a few, and ask specifically about <strong>the parameter that drives the decision</strong>. <q>That’s a powerful one.</q> This moves the test upstream. Before you check whether the chart delivers its message, check that the message answers the question the decision-maker actually has.</p>
+
+    <h3>A chart may need a sentence</h3>
+    <p>The second student had arrived thinking a graph is enough and left with this: <q>I think just the graph is not enough.</q> <a class="ts" href="?t=38:38">38:38</a> In other words, <strong>a narrative line is part of the visualization</strong>. Another wrote on the form, <q>I will add my final conclusion in addition to the visualization where the graph is an evidence.</q> That is good practice, with one trap: a headline can prime readers to agree. So test the chart <em>with</em> and <em>without</em> the sentence. If people only “get it” when told the answer, the chart is not doing the work.</p>
+
+    <h3>One visualization is a step, not a destination</h3>
+    <p>The third student started with validating against labelled data and ended up somewhere bigger: <q>Visualization is a iterative one until the required information passed to the audience.</q> <a class="ts" href="?t=39:01">39:01</a> Anand ran with it: <q>a good visualization is one that leads to more questions.</q></p>
+    <blockquote class="pull">
+      <p>“If somebody looks at the visualization, says, ‘Ah, okay, but,’ and moves on to another topic, you’ve done a fantastic job. It feels terrible, by the way.”</p>
+      <cite>— Anand, on why the best charts create more work for you <a class="ts" href="?t=39:40">39:40</a></cite>
+    </blockquote>
+    <p>It feels terrible because you put in a lot of sweat, they glance at it, and now they want three more charts. But that is what success looks like. The chart didn’t get in the way. The reader understood it, believed it, and moved on to the next question in their decision.</p>
+  </div>
+
+  <div class="wide">
+    <div class="notes" aria-label="Selected answers to question 2">
+      <figure class="note"><blockquote>“I used to think correct results were enough, but now I understand that testing also means checking whether the system achieves its intended purpose reliably.”</blockquote><figcaption>The clearest shift: from <em>true</em> to <em>true and useful</em></figcaption></figure>
+      <figure class="note"><blockquote>“So first we should check the visualization against the data before ai agents are writing their opinions.”</blockquote><figcaption>An AI-first plan, corrected by its own author</figcaption></figure>
+      <figure class="note"><blockquote>“No changes in the discussion, everyone thought same just one smart friend told to think how can I interpret this chart wrong”</blockquote><figcaption>“No change”, followed by the best idea at the table</figcaption></figure>
+      <figure class="note"><blockquote>“Can give the whole visualisation to a llm and ask it to wantedly misinterpret or try to derive misinterpretations”</blockquote><figcaption>Red-teaming, delegated to AI</figcaption></figure>
+      <figure class="note"><blockquote>“Then ask an AI agent to also generate a visualisation based on the same context that I have. Then we can involve the audience to compare the two visualisations”</blockquote><figcaption>A/B testing against an AI rival, before class reached A/B</figcaption></figure>
+      <figure class="note"><blockquote>“May be i shouldnt ask gpt..”</blockquote><figcaption>The shortest answer in the set</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <p>Then Anand pointed out what the answer counter had shown. <strong>The first question was far easier for the class than the second.</strong> Answers to “How would you test a visualization?” came quickly. Answers to “What did five minutes of discussion change?” came slowly, and they were short.</p>
+    <blockquote class="pull">
+      <p>“The first question you can ask an AI and get the answer to. Second question is how you are changing yourself.”</p>
+      <cite>— Anand <a class="ts" href="?t=40:26">40:26</a></cite>
+    </blockquote>
+    <p>Here is the skill he meant: <q>I have a point of view. I know my point of view. Somebody else has a point of view. I am able to listen to that point of view, and I am able to find out the difference … and adjust mine accordingly, or choose not to adjust mine accordingly.</q> <a class="ts" href="?t=41:02">41:02</a> It is also <strong>what wins group discussions</strong>, in MBA interviews and in meetings: keep track of where you agree and disagree, distill it, and fold it into your view.</p>
+  </div>
+</section>
+
+<section class="chap" id="blindspot" data-act="III · What changed" data-title="The blind spot">
+  <div class="wrap">
+    <div class="act">Act III · What changed</div>
+    <h2>The question nobody discussed</h2>
+    <p class="lede">The second signal was an absence. <q>None of the discussions have anything that would tell me what would make a visualization fail.</q> <a class="ts" href="?t=41:50">41:50</a> One student had written about deliberate misreading in their first answer. The groups never took the idea up together. <strong>Adversarial testing was the class’s collective blind spot.</strong></p>
+    <p>Who does think this way by default? <q>Journalists would. Journalists would think almost exactly about how would this chart be misinterpreted. A journalistic editor, in particular.</q> <a class="ts" href="?t=42:27">42:27</a> And the cost of not thinking that way:</p>
+    <blockquote class="pull">
+      <p>“All of you, when you produce visualizations, you will assume that your result is correct and will get tripped up maybe 5% of the time, but you are likely to get tripped up. Just be aware of that.”</p>
+      <cite>— Anand <a class="ts" href="?t=42:27">42:27</a></cite>
+    </blockquote>
+    <p>He read on from his notes, an AI summary of the answers that had come in minutes earlier, and added with a straight face: <q>I’m not projecting. I’m just reading my notes.</q> <a class="ts" href="?t=43:53">43:53</a> Taken together, the class had found <strong>three jobs for AI in testing a chart</strong>, and probably no single student had thought of all three at the start:</p>
+  </div>
+
+  <div class="wide">
+    <div class="role-grid">
+      <article class="role"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i><h4>Generate failure cases</h4><p>Ask it to misread the chart on purpose, as a sceptic, an extremist, a hurried manager. <q>It can think differently.</q></p></article>
+      <article class="role"><i class="bi bi-calculator" aria-hidden="true"></i><h4>Recalculate independently</h4><p>Give it the source data, not your chart, and see if it reaches the same numbers. That checks the <em>row</em> of the matrix above.</p></article>
+      <article class="role"><i class="bi bi-palette" aria-hidden="true"></i><h4>Propose alternative designs</h4><p>Use it as a <q>design partner</q>. Each alternative becomes the B in an A/B test of your chart.</p></article>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <p>Note what is <em>not</em> on the list: standing in for the audience. The owl took care of that.</p>
+    <p>Then Anand announced how grading would work. <strong>The class’s collected answers would become the rubric</strong>, and he would apply it to their Varuna visualizations, as a human and with AI. <q>Let’s evaluate it against all of these criteria that you have laid out, and see what the gaps are between your collective knowledge versus that.</q> <a class="ts" href="?t=45:00">45:00</a> The students had, without knowing it, written their own marking scheme.</p>
+    <div class="try">
+      <div class="tlabel"><i class="bi bi-bullseye" aria-hidden="true"></i> Exercise: write a test that could fail your chart</div>
+      <ol>
+        <li><strong>Claim.</strong> One sentence: what should a reader conclude? (“Station 30 is the real bottleneck.”)</li>
+        <li><strong>Truth check.</strong> Recompute that conclusion from the raw data, ideally by someone (or something) that hasn’t seen your chart.</li>
+        <li><strong>Task.</strong> Pick who reads it (the intended audience, not your friends), how long they see it, and what question they answer. (“Which station would you invest in?”)</li>
+        <li><strong>Threshold, written before you test.</strong> (“At least 4 of 5 choose ST30 in 20 seconds without help.”)</li>
+        <li><strong>Attack.</strong> Name the most likely wrong conclusion, and check whether anyone reaches it.</li>
+        <li><strong>Baseline.</strong> Run the same task with a plain table. If the table does as well, what is the chart for?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="chap" id="stop" data-act="III · What changed" data-title="When do I stop?">
+  <div class="wrap">
+    <div class="act">Act III · What changed</div>
+    <h2>“When do I stop?”</h2>
+    <p class="lede">A student raised a real worry. On an unfamiliar, multi-domain dataset, <q>AI largely drives what we make out of the data.</q> And people fixate: <q>when we get the first, you know, clue of somewhere something is wrong, we generally tend to stop there.</q> <a class="ts" href="?t=45:26">45:26</a> They give <q>an undue weightage to only that first flaw</q> instead of collecting every fault, relating them, and ranking them. Radiologists know this trap well. Once you find one fracture, you are less likely to spot the second. It is a cousin of <a href="https://en.wikipedia.org/wiki/Anchoring_effect">anchoring</a>. Under that worry was a bigger question: <q>how much of time are we supposed to spend on a particular visualization is an open-ended question.</q></p>
+    <p>Anand restated it the way every working engineer has felt it:</p>
+    <blockquote class="pull">
+      <p>“Boss, I start solving a problem, I can solve it to death. When do I stop?”</p>
+      <cite>— Anand, restating a student’s question <a class="ts" href="?t=46:44">46:44</a></cite>
+    </blockquote>
+    <p>The class answered it themselves, one rule at a time.</p>
+  </div>
+
+  <div class="wide">
+    <ol class="steps">
+      <li><b>Deadline</b><span>“If I have 2 days to do it and I can only spare a day out of it, so I sit a day, do it for half a day with half a day of rest, and whatever comes, then I just send it.” <a class="ts" href="?t=46:56">46:56</a></span></li>
+      <li><b>Prioritise</b><span>Ten problems don’t each get a tenth of the time. The most important get most of it. <q>Priority, exactly.</q> <a class="ts" href="?t=47:26">47:26</a></span></li>
+      <li><b>Threshold</b><span>“Does the visualization at least do the bare minimum part? It has to catch one fault.” Below the bar, keep going; above it, <q>it’s just a bonus.</q> <a class="ts" href="?t=47:58">47:58</a></span></li>
+      <li><b>Build capacity</b><span>Spend some time getting faster for next time: <q>maybe 10% faster, 50% faster, 20% more effective.</q> <a class="ts" href="?t=49:01">49:01</a></span></li>
+    </ol>
+  </div>
+
+  <div class="wrap">
+    <p>The fourth rule is why the course exists. <q>What we’re doing in this class really is … investing a certain amount of time to say, “At some point, something will go to the back of my head.”</q> <a class="ts" href="?t=49:27">49:27</a> And the effort itself is the point: <q>the harder your brain works at that point, the deeper it sticks, the quicker it comes back.</q> <a class="ts" href="?t=49:51">49:51</a> Learning scientists call this a <a href="https://en.wikipedia.org/wiki/Desirable_difficulty">desirable difficulty</a>. It is also a fair warning about letting AI do the thinking for you.</p>
+    <p>A last student named the real constraint: feedback. <q>If I’m actually creating a visualization for someone like a manager-level who has to take a decision, how much of the bandwidth do I get with that manager to take any feedback?</q> <a class="ts" href="?t=50:29">50:29</a> Anand agreed, and gave the two reasons busy people refuse: <q>One: you take too much time. Two: it is- I don’t see the point.</q> <a class="ts" href="?t=50:56">50:56</a> The next exercise was built to answer the first one.</p>
+  </div>
+</section>
+
+<section class="chap" id="pairs" data-act="IV · Feedback, fast" data-title="A or B, in 10 seconds">
+  <div class="wrap">
+    <div class="act">Act IV · Feedback, fast</div>
+    <h2>A or B, in ten seconds</h2>
+    <p class="lede">Six charts came from Anand’s July workshop at <a href="https://www.vizchitra.com/">VizChitra</a>, <a href="../2026-07-04-vizchitra-dialog-curators-dilemma/">The Curator’s Dilemma</a>, where data-visualization practitioners voted on which they would sign their names to. Here they were paired off. Anand flashed each pair for about ten seconds, with no explanation: <q>The screen flashes, flashes, don’t worry about it.</q> <a class="ts" href="?t=51:34">51:34</a></p>
+    <p>The wording of the question was chosen with care. When Anand asked ChatGPT to help draft it, it pushed back on “which is better?”:</p>
+    <div class="chat">
+      <div class="clabel">ChatGPT, while designing the form</div>
+      <p class="reply" style="border:0;padding:0">I’d recommend measuring predicted comprehension, rather than asking which is simply “better.” That’s a more precise question, and it gives you something you can subsequently test. … I would force an A/B choice, even when students think both are poor.</p>
+    </div>
+    <div class="qbox">
+      <div class="qlabel">Questions 3–5 · the same wording for all three pairs</div>
+      <p>Imagine a student unfamiliar with either subject sees each visualization for just 10 seconds, without any explanation. Which visualization is more likely to help that student correctly understand its main message?</p>
+      <p class="small">Start with A or B, then name the specific visual features behind your prediction.</p>
+    </div>
+    <p><strong>Play along.</strong> For each pair, tap <em>Show for 10 seconds</em>, make your prediction, and then see how the class split and why. (Afterwards you can open any chart at full size.)</p>
+  </div>
+
+  <div class="wide" id="pair-game">
+    <div class="pair" data-pair="1">
+      <div class="pair-head"><span class="pair-n">Pair 1</span><span class="pair-t">The two crowd favourites</span></div>
+      <div class="pair-stage veiled">
+        <figure><a href="../2026-07-04-vizchitra-dialog-curators-dilemma/chart-a.avif" data-lightbox data-caption="A · Statoistics: Study more, wait longer"><img src="../2026-07-04-vizchitra-dialog-curators-dilemma/chart-a.avif" width="940" height="1300" loading="lazy" alt="Statoistics poster: two lines across education levels, share of 25–34 year olds in salaried jobs and waiting for work; the gap widens to 10.2 percentage points for the most educated. Headline: Study more, wait longer: India's education-jobs paradox."></a><figcaption><b>A</b> · Statoistics</figcaption></figure>
+        <figure><a href="../2026-07-04-vizchitra-dialog-curators-dilemma/chart-d.avif" data-lightbox data-caption="B · The Popularity Paradox"><img src="../2026-07-04-vizchitra-dialog-curators-dilemma/chart-d.avif" width="1300" height="924" loading="lazy" alt="The Popularity Paradox: scatter of IMDb rank against total votes for top films."></a><figcaption><b>B</b> · Popularity Paradox</figcaption></figure>
+        <button class="veil-btn" type="button"><i class="bi bi-stopwatch" aria-hidden="true"></i> Show for 10 seconds</button>
+        <div class="veil-timer" aria-live="polite"></div>
+      </div>
+      <div class="vote"><span>Your prediction:</span><button type="button" data-v="A">A</button><button type="button" data-v="B">B</button><button type="button" class="skip" data-v="">Just show me</button></div>
+      <div class="reveal" hidden>
+        <div class="split" role="img" aria-label="Class prediction: 18 chose A, 6 chose B"><span class="sa" style="flex:18">A · 18</span><span class="sb" style="flex:6">B · 6</span></div>
+        <p class="you"></p>
+        <div class="why">
+          <div><h5>Why A</h5><blockquote>“with A , I already knew what to look for when looking at the graph.”</blockquote><blockquote>“it had 2 line graphs sharing same axis, so it was easy to compare and see the ‘gap’ which was the point”</blockquote></div>
+          <div><h5>Why B</h5><blockquote>“Because it has very less text compared to A which makes it easier to interpret”</blockquote><blockquote>“A had something called pp which I couldn’t understand in 10 secs.”</blockquote></div>
+        </div>
+        <p class="ctx"><b>What you weren’t told:</b> A was made 100% by AI and was the VizChitra crowd’s top pick (13 first-round votes). B (10 votes) was written for data-literate culture journalists, who would <q>pounce on cherry-picking and causal language</q>, not for a student glancing at it for ten seconds. And notice the B voter who tripped on <em>pp</em>, short for percentage points: <strong>one undefined abbreviation can lose a novice reader.</strong></p>
+      </div>
+    </div>
+
+    <div class="pair" data-pair="2">
+      <div class="pair-head"><span class="pair-n">Pair 2</span><span class="pair-t">Different trade-offs</span></div>
+      <div class="pair-stage veiled">
+        <figure><a href="../2026-07-04-vizchitra-dialog-curators-dilemma/chart-e.avif" data-lightbox data-caption="A · LLM Pricing"><img src="../2026-07-04-vizchitra-dialog-curators-dilemma/chart-e.avif" width="1300" height="924" loading="lazy" alt="LLM Pricing: language models plotted by ELO score against cost per million tokens, with many labelled circles."></a><figcaption><b>A</b> · LLM Pricing</figcaption></figure>
+        <figure><a href="../2026-07-04-vizchitra-dialog-curators-dilemma/chart-b.avif" data-lightbox data-caption="B · Popular Actors"><img src="../2026-07-04-vizchitra-dialog-curators-dilemma/chart-b.avif" width="1300" height="924" loading="lazy" alt="Popular Actors: a scatter of actor face photos placed by an image-embedding model along 'Chinese-ness' and 'African-ness' axes."></a><figcaption><b>B</b> · Popular Actors</figcaption></figure>
+        <button class="veil-btn" type="button"><i class="bi bi-stopwatch" aria-hidden="true"></i> Show for 10 seconds</button>
+        <div class="veil-timer" aria-live="polite"></div>
+      </div>
+      <div class="vote"><span>Your prediction:</span><button type="button" data-v="A">A</button><button type="button" data-v="B">B</button><button type="button" class="skip" data-v="">Just show me</button></div>
+      <div class="reveal" hidden>
+        <div class="split" role="img" aria-label="Class prediction: 9 chose A, 14 chose B, 1 neither"><span class="sa" style="flex:9">A · 9</span><span class="sb" style="flex:14">B · 14</span><span class="sn" style="flex:1.4">–</span></div>
+        <p class="you"></p>
+        <div class="why">
+          <div><h5>Why A</h5><blockquote>“B uses images to represent points and it becomes so clumsy”</blockquote><blockquote>“in B it is difficult to comprehend the facial data alongwith the statistical one since that is subjective.”</blockquote></div>
+          <div><h5>Why B</h5><blockquote>“could ‘relate’ by seeing extremes”</blockquote><blockquote>“Because we don’t have to interpret X and Y axis together to arrive at the conclusion. We have to just track one axis at a time”</blockquote></div>
+        </div>
+        <p class="ctx"><b>What you weren’t told:</b> B was built to <em>audit an image-embedding model</em>: <q>useful pattern, or reproduced stereotype?</q> Its intended readers were an AI-fairness committee. Yet one student who chose it wrote, <q>Just looking at the faces we can compare of what origin the actors are.</q> <strong>The chart invited the very inference it was built to question.</strong> Understanding a chart’s message and accepting it are different things.</p>
+      </div>
+    </div>
+
+    <div class="pair" data-pair="3">
+      <div class="pair-head"><span class="pair-n">Pair 3</span><span class="pair-t">Two complex charts</span></div>
+      <div class="pair-stage veiled">
+        <figure><a href="../2026-07-04-vizchitra-dialog-curators-dilemma/chart-f.avif" data-lightbox data-caption="A · GDPVal"><img src="../2026-07-04-vizchitra-dialog-curators-dilemma/chart-f.avif" width="1300" height="924" loading="lazy" alt="GDPVal treemap: rectangles for US occupations grouped by sector, coloured red to green by AI task-augmentation potential."></a><figcaption><b>A</b> · GDPVal</figcaption></figure>
+        <figure><a href="../2026-07-04-vizchitra-dialog-curators-dilemma/chart-c.avif" data-lightbox data-caption="B · Temporal Rosette"><img src="../2026-07-04-vizchitra-dialog-curators-dilemma/chart-c.avif" width="1300" height="924" loading="lazy" alt="Temporal Rosette: eight dual-ring radial glyphs showing weekly activity rhythms."></a><figcaption><b>B</b> · Temporal Rosette</figcaption></figure>
+        <button class="veil-btn" type="button"><i class="bi bi-stopwatch" aria-hidden="true"></i> Show for 10 seconds</button>
+        <div class="veil-timer" aria-live="polite"></div>
+      </div>
+      <div class="vote"><span>Your prediction:</span><button type="button" data-v="A">A</button><button type="button" data-v="B">B</button><button type="button" class="skip" data-v="">Just show me</button></div>
+      <div class="reveal" hidden>
+        <div class="split" role="img" aria-label="Class prediction: 15 chose A, 7 chose B, 2 neither"><span class="sa" style="flex:15">A · 15</span><span class="sb" style="flex:7">B · 7</span><span class="sn" style="flex:2">–</span></div>
+        <p class="you"></p>
+        <div class="why">
+          <div><h5>Why A</h5><blockquote>“can understand clear greens and clear reds so can learn some info. Plus it’s grouped so it’s helpful to see sectors”</blockquote><blockquote>“because the colour differences are evident although I have no idea what the area denotes”</blockquote></div>
+          <div><h5>Why B</h5><blockquote>“Visualization A requires us to read through a huge block of text. Even after reading I was not able to fully grasp the jist”</blockquote><blockquote>“Data has been represented per activity and easy to interpret in one glance”</blockquote></div>
+        </div>
+        <p class="ctx"><b>What you weren’t told:</b> B was produced by AI from the prompt <q>create a visualization nobody has ever seen</q>, and Anand’s own verdict at VizChitra was <q>I have no idea what it’s saying.</q> One A voter called B <q>one of the most un interpretable graphs I have ever seen</q>; seven classmates picked it as the clearer one. Two students refused both.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chap" id="features" data-act="IV · Feedback, fast" data-title="Same feature, opposite verdicts">
+  <div class="wrap">
+    <div class="act">Act IV · Feedback, fast</div>
+    <h2>Same feature, opposite verdicts</h2>
+    <p class="lede">The vote counts are the least interesting part of the result. The reasons are better. <strong>Students cited the very same feature as the reason a chart works and as the reason it fails.</strong></p>
+  </div>
+
+  <div class="wide">
+    <div class="versus">
+      <div class="vs-row vs-head"><span>Feature</span><span>“It helps”</span><span>“It hurts”</span></div>
+      <div class="vs-row"><span class="vs-f">Explanatory text</span><span>“A, title and sentence below that” <small>Pair 1</small></span><span>“B: Because it has very less text compared to A which makes it easier to interpret” <small>Pair 1</small></span></div>
+      <div class="vs-row"><span class="vs-f">The <em>same</em> text, on GDPVal</span><span>“a has limited, precise text and easily understandable compared to B” <small>Pair 3</small></span><span>“Visualization A requires us to read through a huge block of text” <small>Pair 3</small></span></div>
+      <div class="vs-row"><span class="vs-f">Faces as data points</span><span>“The faces have been given instead of just names.” <small>Pair 2</small></span><span>“B uses images to represent points and it becomes so clumsy” <small>Pair 2</small></span></div>
+      <div class="vs-row"><span class="vs-f">The axes</span><span>“B is better, as the axes are clear and easy to understand.” <small>Pair 2</small></span><span>“B was misleading because in the X axis it was supposed to be how Chinese a actor looks, but that was presented in the y axis.” <small>Pair 2</small></span></div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <p>Two students looked at the same GDPVal treemap and disagreed about whether it had “limited, precise text” or “a huge block of text.” Neither is lying. They were reading different things, or reading at different speeds, or bringing different backgrounds. That is the point of testing on people: <strong>a feature has no fixed value. Its effect depends on the reader and the task.</strong> Faces help you recognise someone fast. They make precise comparison harder. Which matters depends on the job the chart is supposed to do.</p>
+    <p>Three more patterns are worth learning from:</p>
+    <ul>
+      <li><strong>Seeing a pattern isn’t decoding it.</strong> <q>The colour differences are evident although I have no idea what the area denotes.</q> That student predicted a chart would communicate well while admitting they couldn’t read one of its two encodings. Recognising that a chart has a signal is not the same as understanding what it says.</li>
+      <li><strong>Students judged as themselves, not as the imagined reader.</strong> The question asked about a student <em>unfamiliar</em> with the subject. Yet the reasons included <q>it was a topic I have an idea on</q> and <q>most of the graphs we see are A type rather than B type.</q> Predicting how someone else will read a chart is hard. That’s exactly why you test on real people instead of predicting.</li>
+      <li><strong>Taste may cluster, and it may not.</strong> Six of the seven students who preferred the Temporal Rosette also preferred Popular Actors, which suggests a group drawn to pictures and compact shapes. With 24 people, that could easily be chance. Treat it as a hypothesis to test, not a finding.</li>
+    </ul>
+    <p>Finally, remember what this exercise measured: <strong>predictions</strong> of comprehension. Nobody checked whether a novice actually understood the GDPVal chart in ten seconds. Measuring that would be the next experiment, and it would be easy to run.</p>
+    <div class="try">
+      <div class="tlabel"><i class="bi bi-clipboard-check" aria-hidden="true"></i> Turn a preference into a measurement</div>
+      <p>Show GDPVal to three people who have never seen it, for 10 seconds. Ask them separately: (1) What do the colours mean? (2) What does the size of a rectangle mean? (3) Which three jobs should a company pilot AI on first? The first two test <em>decoding</em>. The third tests whether the chart supports its <em>decision</em>. It’s common to pass the first two and fail the third.</p>
+    </div>
+  </div>
+</section>
+
+<section class="chap" id="binary" data-act="IV · Feedback, fast" data-title="Make it binary, make it a game">
+  <div class="wrap">
+    <div class="act">Act IV · Feedback, fast</div>
+    <h2>Make it binary. Make it a game.</h2>
+    <p class="lede">So, how do you get feedback from people who are busy and want to see impact? <q>If I had to pick one mini, but very important lesson on gathering feedback from people who are busy and want to see clear impact, it is: make sure that it is a binary comparison. Do you want this or this?</q> <a class="ts" href="?t=61:38">61:38</a></p>
+    <p>To show why, he pulled up <q>bad design that I implemented in one of my exams just a short while ago intentionally.</q> <a class="ts" href="?t=62:09">62:09</a> TDS students had to morph one face into another. The same exam also asked them to <strong>rank ten face pairs by how easy each would be to morph</strong>. Ten things at once is hard. A 1-to-10 score for each would have been even worse. A ranking at least lets you reason locally: <q>man to man, that’s slightly easier. Black and white man to color woman, that’s pretty hard.</q> <a class="ts" href="?t=62:47">62:47</a> But it still takes a long time.</p>
+    <p>Then he showed the alternative: the same work, two at a time.</p>
+  </div>
+
+  <div class="band">
+    <div class="band-in">
+      <div class="band-label">Face Review · TDS GA3 · “Compare two at a time. One tap.”</div>
+      <h3>Three questions, each asked as A or B</h3>
+      <p class="sub">Students review classmates’ face experiments on the <a href="https://tds-network-games.sanand.workers.dev/face-review/">Face Review</a> page (it requires a course login, so these are screenshots). Every screen asks one question with three buttons: A, B, or “Both about equal.”</p>
+      <div class="shot-grid three">
+        <figure class="shot"><a href="face-review-3d.webp" data-lightbox data-caption="Face Review: which 3D reconstruction looks more like its photo?"><img src="face-review-3d.webp" width="1400" height="922" loading="lazy" alt="Face Review page asking 'Which reconstruction looks more like its assigned face photograph?' Two student-made rotating 3D head models, each beside its reference photo, with buttons A looks closer, Both about equal, B looks closer."></a><figcaption><b>3D faces.</b> Which model looks more like its own photo? The models rotate as you watch.</figcaption></figure>
+        <figure class="shot"><a href="face-review-morph.webp" data-lightbox data-caption="Face Review: which morph video moves more naturally?"><img src="face-review-morph.webp" width="1400" height="818" loading="lazy" alt="Face Review page asking 'Which morph moves more naturally between its assigned faces?' Two morph videos with from and to photos, and buttons A morphs better, Both about equal, B morphs better."></a><figcaption><b>Morph videos.</b> Which morph moves more naturally between its assigned faces?</figcaption></figure>
+        <figure class="shot"><a href="face-review-pairs.webp" data-lightbox data-caption="Face Review: which face pair would be easier to morph?"><img src="face-review-pairs.webp" width="1400" height="800" loading="lazy" alt="Face Review page titled 'Which is better?' asking 'Which pair would be easier to morph convincingly?' Two from–to photo pairs with buttons A seems easier, Both about equal, B seems easier."></a><figcaption><b>Face pairs.</b> The ten-way ranking from the exam, redone as a single A-or-B choice.</figcaption></figure>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <p>He ran it live. On the first pair of 3D faces: <q>A looks closer.</q> On the second, the room split. <q>Now we’re divided, right? How many people say A? How many people say B?</q> <a class="ts" href="?t=64:00">64:00</a> The split itself was informative:</p>
+    <blockquote class="pull">
+      <p>“Some people say what matters is alignment to the facial features … What others say is, ‘Look, a 3D visualization has got to be a 3D visualization, not a face plastered on top of a sphere.’ Both are valid perspectives. But it’s important to know.”</p>
+      <cite>— Anand <a class="ts" href="?t=64:12">64:12</a></cite>
+    </blockquote>
+    <p>The other effect showed up at once: <strong>speed creates momentum</strong>. <q>When I started playing this, I couldn’t stop. I’m saying “playing,” this is actually an exam question.</q> <a class="ts" href="?t=64:58">64:58</a></p>
+    <blockquote class="pull">
+      <p>“What you want people to do is give them a clear, simple task, and they will do it for a long time … So, if you can gamify the whole thing, nothing like it. Then you will get plenty of feedback.”</p>
+      <cite>— Anand <a class="ts" href="?t=65:21">65:21</a></cite>
+    </blockquote>
+    <p>This answers the manager problem from earlier. Busy people won’t sit through your 20-minute walkthrough. They will tap A or B on their phone a dozen times. You also lose little information. Statisticians have known for a century that many simple pairwise judgments add up to a reliable ranking. That is Thurstone’s <a href="https://en.wikipedia.org/wiki/Law_of_comparative_judgment">law of comparative judgment</a> and the <a href="https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model">Bradley–Terry model</a>, the same maths that sits behind chess ratings and LLM leaderboards. <strong>For your next chart, don’t ask for “feedback”. Show version A and version B, and ask which one helps them decide.</strong></p>
+  </div>
+</section>
+
+<section class="chap" id="formats" data-act="V · Same test, new formats" data-title="600 students, one WhatsApp group">
+  <div class="wrap">
+    <div class="act">Act V · Same test, new formats</div>
+    <h2>Six hundred students, one WhatsApp group</h2>
+    <p class="lede">With twelve minutes left, Anand asked how many people had built a mobile app for the first time for this course’s homework. <strong>About half the class.</strong> Almost nobody had drawn a chart for the first time in this course; they did that in school. That gap is the point: <q>the number of formats with which you can communicate data is exploding.</q> <a class="ts" href="?t=67:05">67:05</a></p>
+    <p>The 3D faces they had just judged came from a TDS exam question worth half a percent. <q>If anybody had spent more than 15 minutes doing that, they would have been wasting their time.</q> The students knew it, and they were organised:</p>
+    <blockquote class="pull">
+      <p>“All 600 of them created a WhatsApp group, just posted, ‘Has anybody solved this problem? Which tool does it right?’”</p>
+      <cite>— Anand, on TDS students and the 3D-face question <a class="ts" href="?t=67:42">67:42</a></cite>
+    </blockquote>
+    <p>The group settled quickly on <a href="https://www.meshy.ai/">Meshy</a>: a decent free tier, a better paid tier for a few dollars. And yet: <q>the sad part is, even with this knowledge, even with this group, you saw the kinds of visualizations people were trying to create and submit.</q> <a class="ts" href="?t=68:01">68:01</a></p>
+    <blockquote class="pull">
+      <p>“It is one thing that it’s possible to create something well, the technology exists. It’s another thing to know it. It’s another thing to use it. So, there is a long tail.”</p>
+      <cite>— Anand <a class="ts" href="?t=68:01">68:01</a></cite>
+    </blockquote>
+    <p>A phone is one of these new formats, with a twist. In their assignment the students weren’t displaying data on the phone. They were <strong>collecting it</strong>, using the accelerometer, gyroscope, microphone, camera and GPS (through browser APIs like <a href="https://developer.mozilla.org/en-US/docs/Web/API/DeviceOrientationEvent">DeviceOrientationEvent</a> and the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API">Web Audio API</a>): <q>You were actually using it as a sensor, as a data collection source.</q> <a class="ts" href="?t=68:20">68:20</a> A sensor app gets tested twice: is the reading true, and does the app work for the person holding the phone? It’s the same pair of tests as for a chart.</p>
+  </div>
+</section>
+
+<section class="chap" id="apps" data-act="V · Same test, new formats" data-title="How would you test an app?">
+  <div class="wrap">
+    <div class="act">Act V · Same test, new formats</div>
+    <h2>“Help me help you”</h2>
+    <p class="lede">Anand would grade the apps, and the students were about to review each other’s. So he asked them to set the standard first: <q>I want you to help me help you.</q> <a class="ts" href="?t=68:55">68:55</a></p>
+    <div class="qbox">
+      <div class="qlabel">Question 6 · two minutes, alone</div>
+      <p>You have built a mobile app that works on your own phone. How would you test whether it works correctly and is useful to someone else?</p>
+      <p class="small">What would you try, what would you observe or measure, and what would count as a failure?</p>
+    </div>
+    <p>This time the answers were stronger. Weeks of building had given the students concrete failure modes to think about. Hand-coding the 24 answers:</p>
+  </div>
+
+  <div class="wide">
+    <figure class="bars" aria-labelledby="bars-q6-cap">
+      <div class="bars-head"><span>How students would test their own app</span><span>of 24</span></div>
+      <div class="bar"><span class="bl">Watch a new or target user try it, or ask if it’s useful</span><span class="bt"><span style="width:50%"></span></span><span class="bn">12</span></div>
+      <div class="bar"><span class="bl">Try other phones, screen sizes or browsers</span><span class="bt"><span style="width:33.3%"></span></span><span class="bn">8</span></div>
+      <div class="bar"><span class="bl">Compare readings with a known reference or ground truth</span><span class="bt"><span style="width:29.2%"></span></span><span class="bn">7</span></div>
+      <div class="bar"><span class="bl">Deliberately push it into edge cases or failure</span><span class="bt"><span style="width:25%"></span></span><span class="bn">6</span></div>
+      <div class="bar is-zero"><span class="bl">Give a number for how accurate is accurate enough</span><span class="bt"><span style="width:0"></span></span><span class="bn">0</span></div>
+      <figcaption id="bars-q6-cap">Hand-coded, non-exclusive. As with charts, most answers covered either the instrument or the user, and no one gave a numerical pass mark.</figcaption>
+    </figure>
+  </div>
+
+  <div class="wrap">
+    <p>Some of the answers were excellent checklists:</p>
+    <div class="notes two">
+      <figure class="note"><blockquote>“Test on different phones / Try no internet, low battery / Deny permissions, rotate screen / Watch a new user try it / Fail- crashes, wrong readings,confusion”</blockquote><figcaption>Failure-first testing in five lines</figcaption></figure>
+      <figure class="note"><blockquote>“If i try something and the developer didnt mention anywhere that i shouldnt do that/warn me about that specific case., then its a failure...”</blockquote><figcaption>A user’s definition of a bug</figcaption></figure>
+      <figure class="note"><blockquote>“I would measure with know data whether the app predicts the same data or not, giving false positives is a failure. For my floor level checker app it is whether it detects the floor as levelled or bumpy when tested.”</blockquote><figcaption>Ground truth, plus a named failure</figcaption></figure>
+      <figure class="note"><blockquote>“A test is considered a failure if the user is confused and asks what to do, or if the application crashes, freezes during interruptions, or lacks the utility to be used more than once.”</blockquote><figcaption>Failure covers usefulness, not just crashes</figcaption></figure>
+    </div>
+    <p>One student made the opposite case: the app <q>should be reliable on at least single phone at a time. Not necessarily robust as time might be a constraint for a full scalable project.</q> That is a fair position, <strong>if you say so up front</strong>. A one-phone prototype that is honest about being a prototype passes. The same app sold as “works for everyone” fails. The test depends on the promise.</p>
+    <p>The same gap showed up as with charts: phrases like <q>close approximation</q>, <q>consistent results</q> and <q>work as intended</q> sound like criteria, but they can’t fail. Here is how to make each vague check falsifiable:</p>
+  </div>
+
+  <div class="wide">
+    <div class="flip-grid">
+      <details class="flip"><summary><span class="flab">Vague</span>“if the walking distance or step count is close approximation or not?”<span class="fhint">Make it testable ▾</span></summary><p><span class="flab">Testable</span>Walk 100 hand-counted steps, three times, on two phones. Pass if every run reads 95–105, and standing still for a minute adds zero.</p></details>
+      <details class="flip"><summary><span class="flab">Vague</span>“compare the app speedometer reading with the actual speed the person might be going in.”<span class="fhint">Make it testable ▾</span></summary><p><span class="flab">Testable</span>Hold a steady 40 km/h by a reference (car GPS or a calibrated speedometer) for 30 seconds, three runs. Pass if the app’s mean is within ±3 km/h.</p></details>
+      <details class="flip"><summary><span class="flab">Vague</span>“if it is simple enough for ppl to understand without a tutorial”<span class="fhint">Make it testable ▾</span></summary><p><span class="flab">Testable</span>Give it to five people who have never seen it, with one task (“Is this table level?”) and no help. Pass if at least four answer correctly within a minute without asking anything.</p></details>
+      <details class="flip"><summary><span class="flab">Vague</span>“UI is working proportionately across all devices and not just my phone”<span class="fhint">Make it testable ▾</span></summary><p><span class="flab">Testable</span>Run the same three tasks on an old Android, a new Android and an iPhone, in two browsers. Pass if all of them load, ask for sensor permission and finish, and their readings agree within your stated tolerance.</p></details>
+    </div>
+    <p class="mx-cap">The numbers are illustrations, not standards. Choosing and defending your own threshold is the actual skill. Turn each failure you find into a <a href="https://en.wikipedia.org/wiki/Regression_testing">regression test</a>, so it can’t come back unnoticed.</p>
+  </div>
+</section>
+
+<section class="chap" id="swap" data-act="V · Same test, new formats" data-title="Swap phones">
+  <div class="wrap">
+    <div class="act">Act V · Same test, new formats</div>
+    <h2>Swap phones</h2>
+    <p class="lede">The last ten minutes were the experiment itself. The instructions:</p>
+    <blockquote class="pull">
+      <p>“Submit a voice recording in which you read out saying, firstly, whose app you tested … what it does … what you tried, what works well, and one thing to improve.”</p>
+      <cite>— Anand <a class="ts" href="?t=73:32">73:32</a></cite>
+    </blockquote>
+    <p>One rule mattered most: <q>Before you ask them what the app does, try it out once.</q> <a class="ts" href="?t=73:55">73:55</a> That is the cold read from Act I, applied to apps. The room got noisy. <q>My app requires a mic. Can we clap?</q> asked one student. <q>Yeah, go ahead. Make all the noise you want.</q> <a class="ts" href="?t=75:31">75:31</a> About twenty voice reviews came in, transcribed by Gemini after class. Here is a sample of what classmates had built and what their testers found:</p>
+  </div>
+
+  <div class="wide">
+    <div class="app-grid">
+      <article class="app"><h4>SetupScope</h4><p class="does">Guitar tuner and setup tool using the mic. Detects each string, and checks intonation at the 12th fret.</p><p class="plus"><b>Worked:</b> “it gives specific instructions, like ‘move the saddle back 1.5 mm’, instead of just saying something is out of tune.”</p><p class="minus"><b>Improve:</b> accuracy “when multiple strings are ringing”; save results over time.</p></article>
+      <article class="app"><h4>NoiseLens</h4><p class="does">Live noise levels, a day-by-day split, and how much of it is speech.</p><p class="plus"><b>Worked:</b> a “sensor trust level”, i.e. how far the readings can be trusted.</p><p class="minus"><b>Improve:</b> “a live spectrogram is given there, which seems too complex for someone like me to understand, so it won’t help naive audience.”</p></article>
+      <article class="app"><h4>Belt-tension checker</h4><p class="does">Flick a factory belt; the phone hears its frequency and says tighten or loosen.</p><p class="plus"><b>Worked:</b> “it works pretty well”; much easier than strumming and guessing.</p><p class="minus"><b>Improve:</b> “I only figured it out once he explained it to me on his own verbally.”</p></article>
+      <article class="app"><h4>Room-echo tester</h4><p class="does">Record three claps; it plots how fast the sound decays and suggests whether the room needs cushioning (<a href="https://en.wikipedia.org/wiki/Reverberation">reverberation</a>).</p><p class="plus"><b>Worked:</b> the clap test ran and showed the decay.</p><p class="minus"><b>Improve:</b> “the UI is good, but it is not telling what the app is exactly doing.”</p></article>
+      <article class="app"><h4>Light meter</h4><p class="does">Measures light intensity around a room using the camera and screen.</p><p class="plus"><b>Worked:</b> readings changed as the tester moved about. <b>Noticed:</b> “When I keep my hand on nothing, it doesn’t show zero, but it shows some noise like 2 to 3, 5.”</p><p class="minus"><b>Improve:</b> a map of light across the room instead of a daily min/max.</p></article>
+      <article class="app"><h4>Solar-panel setup</h4><p class="does">Tilt angle vs. the ideal for your city, plus shade, combined into expected energy.</p><p class="plus"><b>Worked:</b> four clear tabs: setup, tilt, shade, results.</p><p class="minus"><b>Improve:</b> “there could have been a better visualization graph.”</p></article>
+      <article class="app"><h4>Study-spot finder</h4><p class="does">Logs noise and how often you got distracted, so you can compare places to study.</p><p class="plus"><b>Worked:</b> “nice visualizations are created where you can compare different locations”.</p><p class="minus"><b>Improve:</b> “it’s usually probably just a one-time thing that I would do.”</p></article>
+      <article class="app"><h4>Motion IQ</h4><p class="does">Detects walking, hiking, cycling, bus or car; tracks location; exports CSV.</p><p class="plus"><b>Worked:</b> long-term activity tracking and data export.</p><p class="minus"><b>Improve:</b> “the visualization part of the app could have been better.”</p></article>
+      <article class="app"><h4>RoadSense</h4><p class="does">Checks hand tremor before you drive, then tracks speed and harsh moves.</p><p class="plus"><b>Worked:</b> “in the classroom where I could test it, it’s working fine”.</p><p class="minus"><b>Improve:</b> “We haven’t tested it with the actual scenario.”</p></article>
+    </div>
+    <p class="mx-cap">Also tested: a neck-posture monitor, a scroll counter, a best-seat-in-class acoustics map, a road-quality driving score, a sound-by-location logger, a vibration meter, and several tilt recorders. One had a <em>set-zero</em> button, another magnified tiny tilts onto a compass. Reviews quoted from the Gemini transcripts; names omitted.</p>
+  </div>
+
+  <div class="wrap">
+    <p>Read twenty reviews in a row and the lessons of the whole class come back:</p>
+    <ul>
+      <li><strong>The cold read caught real failures.</strong> At least three testers couldn’t tell what an app did until its maker explained. That is a usability failure, found in under a minute, for free. In real use, the maker won’t be around to explain.</li>
+      <li><strong>Where you test limits what you can learn.</strong> <q>I couldn’t try much because I thought it would disturb if I shout in this classroom, and I couldn’t move outside.</q> A driving app tested at a desk, or a noise app tested in a quiet lecture hall, can only pass the tests the room allows.</li>
+      <li><strong>The visualizations were the weakest part, in a visualization course.</strong> Most suggestions were about the charts: too few, too static, or, like the spectrogram, too technical for a newcomer.</li>
+      <li><strong>Good praise is specific, and so is good engineering.</strong> “Move the saddle back 1.5 mm” is the best instruction in the set. The light-meter tester’s noise floor of 2–5 was the best measurement. A reading that won’t go to zero is exactly the kind of thing ground-truth testing should catch.</li>
+      <li><strong>Almost nobody tried to break anything.</strong> Testers tilted, clapped and walked around, which is normal use. Hardly anyone denied a permission, switched off the network or rotated the screen, though those ideas were in their own written answers ten minutes earlier. The blind spot from Act III survived contact with a real app.</li>
+    </ul>
+    <p>The form ran on Anand’s laptop, so it would go offline when he left. <q>Anyone who’s completed it, feel free to head out.</q> <a class="ts" href="?t=81:01">81:01</a></p>
+  </div>
+</section>
+
+<section class="takeaways" id="takeaways" data-act="Close" data-title="Takeaways">
+  <div class="band-in">
+    <div class="band-label">Takeaways · six habits to practise</div>
+    <h2 id="tk-h">Before you call any chart, or any app, done</h2>
+    <div class="tk-grid">
+      <article class="tk"><span class="tk-n">01</span><h4>Commit before you discuss</h4><p>Write your answer down first. <strong>The gap between your first and second answers is what you learned.</strong> Without the first, you can’t see the gap.</p></article>
+      <article class="tk"><span class="tk-n">02</span><h4>Run two tests, not one</h4><p><em>Is it true?</em> Recompute from raw data and check the shapes match the numbers. <em>Does it work?</em> Give real readers a task. <strong>Only 5 of 24 students proposed both.</strong></p></article>
+      <article class="tk"><span class="tk-n">03</span><h4>Agreement isn’t proof</h4><p>Everyone can agree on something false, especially if they all share your blind spots. <strong>Ask how a reasonable person could misread it</strong>, the way an editor would.</p></article>
+      <article class="tk"><span class="tk-n">04</span><h4>AI sees differently</h4><p>Use it to recalculate, propose alternatives and invent failure cases. <strong>Don’t use it as a stand-in for your audience.</strong> It saw the owl no human could, and missed the donkey every human saw.</p></article>
+      <article class="tk"><span class="tk-n">05</span><h4>Ask busy people “A or B?”</h4><p>One tap is cheap, fast and fun. Disagreement shows you what different readers value. <strong>Make feedback a game and people will keep giving it.</strong></p></article>
+      <article class="tk"><span class="tk-n">06</span><h4>Write the failure condition first</h4><p>Decide the number that would make you reject the work before you test it. <strong>No student wrote one, for charts or apps.</strong> That is the next skill to build.</p></article>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <h3>Sources and notes</h3>
+    <ul>
+      <li>Recording: <a href="https://github.com/sanand0/talks/releases/download/talks/2026-11-04-iitm-ed-data-visualization.opus">audio</a> (81 min) and <a href="transcript.md" data-transcript>transcript</a> (AI-transcribed; speaker labels are approximate).</li>
+      <li>Student answers: the class’s live form <em>“ED5518: Verify, compare, test”</em>, with seven questions answered by 24 students, plus about twenty voice reviews transcribed with Gemini. Quotes are verbatim, typos included, and shown without names. Counts are hand-coded and approximate.</li>
+      <li>The six charts: <a href="../2026-07-04-vizchitra-dialog-curators-dilemma/">The Curator’s Dilemma</a>, VizChitra 2026, including each chart’s purpose, audience, provenance and vote counts.</li>
+      <li>Humans Only: <a href="https://files.s-anand.net/pages/tds-2026-09-ga3-q5-humans-only/">anonymised results</a> and Anand’s write-up, <a href="https://www.s-anand.net/blog/drawing-humans-only-captchas/">Drawing humans-only CAPTCHAs</a>.</li>
+      <li>Face Review: <a href="https://tds-network-games.sanand.workers.dev/face-review/">TDS GA3 peer-comparison page</a> (course login required; screenshots taken 4 Nov 2026).</li>
+      <li>Class design and survey analysis were done with ChatGPT, before and during the session; excerpts above are verbatim.</li>
+      <li>Background: Freeman et al., <a href="https://www.pnas.org/doi/10.1073/pnas.1319030111">“Active learning increases student performance in science, engineering, and mathematics”</a>, <em>PNAS</em> 2014. Cleveland &amp; McGill, <a href="https://doi.org/10.1080/01621459.1984.10478080">“Graphical Perception”</a>, <em>JASA</em> 1984, cited by one student as a scoring standard. Nielsen, <a href="https://www.nngroup.com/articles/why-you-only-need-to-test-with-5-users/">Why you only need to test with 5 users</a>.</li>
+    </ul>
+    <p>Comic: AI-generated from the transcript, unaltered. Story written with AI assistance from the recording, the form responses and the planning chat. <a href="../">More talks</a>.</p>
+  </div>
+</footer>
+
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump" aria-label="Jump to section">
+  <button id="jump-prev" type="button" aria-label="Previous section"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+  <button class="jump-cur" id="jump-cur" type="button" aria-expanded="false" aria-controls="jump-menu"><span id="jump-cur-label">Contents</span> <i class="bi bi-chevron-up" aria-hidden="true"></i></button>
+  <button id="jump-next" type="button" aria-label="Next section"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+  <div class="jump-menu" id="jump-menu" role="navigation" aria-label="All sections"></div>
+</nav>
+
+<div class="mini" id="mini" hidden>
+  <button type="button" id="mini-play" aria-label="Pause"><i class="bi bi-pause-fill" aria-hidden="true"></i></button>
+  <span id="mini-t">00:00</span>
+  <button type="button" id="mini-close" aria-label="Stop and hide player"><i class="bi bi-x" aria-hidden="true"></i></button>
+</div>
+
+<dialog class="pop" id="pop" aria-labelledby="pop-title">
+  <div class="pop-head"><h2 id="pop-title">Transcript</h2><button class="close-x" id="pop-close" type="button">Close ✕</button></div>
+  <div class="pop-search" id="pop-search"><label class="sr" for="pop-q">Search the transcript</label><input id="pop-q" type="search" placeholder="Search the transcript…"><span id="pop-count"></span></div>
+  <div id="pop-body"></div>
+</dialog>
+
+<dialog class="lightbox" id="lightbox" aria-label="Image viewer">
+  <img id="lb-img" src="" alt="">
+  <div class="lb-bar"><span id="lb-cap"></span><span><a id="lb-open" href="#" target="_blank" rel="noopener">Open full size ↗</a> <button id="lb-close" type="button">Close ✕</button></span></div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js" defer></script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const store = {
+    get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} },
+  };
+  const parseT = (s) => {
+    if (s == null || s === "") return null;
+    const p = String(s).split(":").map(Number);
+    return p.some(isNaN) ? null : p.reduce((a, b) => a * 60 + b, 0);
+  };
+  const fmt = (t) => { t = Math.max(0, Math.floor(t)); return `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`; };
+
+  // ---------- theme ----------
+  const themeBtn = $("#theme-btn");
+  const isDark = () => document.documentElement.dataset.theme
+    ? document.documentElement.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  const syncTheme = () => {
+    themeBtn.innerHTML = `<i class="bi ${isDark() ? "bi-sun" : "bi-moon-stars"}" aria-hidden="true"></i>`;
+    themeBtn.setAttribute("aria-label", `Switch to ${isDark() ? "light" : "dark"} mode`);
+  };
+  themeBtn.addEventListener("click", () => {
+    const next = isDark() ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    store.set("ed5518-1104-theme", next);
+    syncTheme();
+  });
+  syncTheme();
+
+  // ---------- audio: timestamp links + mini player ----------
+  const aud = $("#aud"), mini = $("#mini"), miniPlay = $("#mini-play"), miniT = $("#mini-t");
+  const syncMini = () => {
+    miniT.textContent = fmt(aud.currentTime || 0);
+    miniPlay.innerHTML = `<i class="bi ${aud.paused ? "bi-play-fill" : "bi-pause-fill"}" aria-hidden="true"></i>`;
+    miniPlay.setAttribute("aria-label", aud.paused ? "Play" : "Pause");
+  };
+  const heroVisible = () => $(".listen").getBoundingClientRect().bottom > 0;
+  const playAt = (t) => {
+    const go = () => { aud.currentTime = t; aud.play().catch(() => {}); };
+    if (aud.readyState >= 1) go(); else { aud.addEventListener("loadedmetadata", go, { once: true }); aud.load(); }
+    if (!heroVisible()) mini.hidden = false;
+  };
+  ["timeupdate", "play", "pause", "seeked"].forEach((ev) => aud.addEventListener(ev, syncMini));
+  aud.addEventListener("play", () => { if (!heroVisible()) mini.hidden = false; });
+  miniPlay.addEventListener("click", () => (aud.paused ? aud.play() : aud.pause()));
+  $("#mini-close").addEventListener("click", () => { aud.pause(); mini.hidden = true; });
+  $$("a.ts").forEach((a) => a.setAttribute("title", `Play the class recording from ${a.textContent.trim()}`));
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a.ts");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const t = parseT(new URL(a.href, location.href).searchParams.get("t"));
+    if (t == null) return;
+    const dlg = a.closest("dialog");
+    if (dlg) dlg.close();
+    playAt(t);
+  });
+
+  // ---------- section jump nav + progress ----------
+  const sections = $$(".chap, #takeaways");
+  const menu = $("#jump-menu"), backdrop = $("#jump-backdrop"), curBtn = $("#jump-cur"), curLabel = $("#jump-cur-label");
+  const groups = [];
+  sections.forEach((s) => {
+    const g = s.dataset.act;
+    if (!groups.length || groups[groups.length - 1].name !== g) groups.push({ name: g, items: [] });
+    groups[groups.length - 1].items.push(s);
+  });
+  menu.innerHTML = groups.map((g) => `<div class="jm-group">${g.name}</div><div class="jump-grid">${
+    g.items.map((s) => { const h = ((s.querySelector("h2") || {}).textContent || "").trim(); return `<a href="#${s.id}" data-sec="${s.id}">${s.dataset.title}<small>${h}</small></a>`; }).join("")}</div>`).join("");
+  const openMenu = (open) => {
+    menu.classList.toggle("open", open); backdrop.classList.toggle("open", open);
+    curBtn.setAttribute("aria-expanded", String(open));
+    if (open) (menu.querySelector("a.is-cur") || menu.querySelector("a")).focus();
+  };
+  curBtn.addEventListener("click", () => openMenu(!menu.classList.contains("open")));
+  backdrop.addEventListener("click", () => openMenu(false));
+  menu.addEventListener("click", (e) => { if (e.target.closest("a")) openMenu(false); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && menu.classList.contains("open")) { openMenu(false); curBtn.focus(); } });
+  let curIdx = -1;
+  const goSec = (i) => {
+    i = Math.max(0, Math.min(sections.length - 1, i));
+    sections[i].scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+    history.replaceState(history.state, "", "#" + sections[i].id);
+  };
+  $("#jump-prev").addEventListener("click", () => goSec(curIdx - 1));
+  $("#jump-next").addEventListener("click", () => goSec(curIdx + 1));
+  const progress = $("#progress"), jumpNav = $(".jump");
+  const onScroll = () => {
+    const line = innerHeight * 0.3;
+    let i = 0;
+    sections.forEach((s, k) => { if (s.getBoundingClientRect().top <= line) i = k; });
+    if (i !== curIdx) {
+      curIdx = i;
+      curLabel.textContent = sections[i].dataset.title;
+      $$("a", menu).forEach((a) => a.classList.toggle("is-cur", a.dataset.sec === sections[i].id));
+      $("#jump-prev").disabled = i === 0;
+      $("#jump-next").disabled = i === sections.length - 1;
+    }
+    jumpNav.classList.toggle("on-hero", sections[0].getBoundingClientRect().top > innerHeight * 0.75 && !menu.classList.contains("open"));
+    const h = document.documentElement.scrollHeight - innerHeight;
+    progress.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%";
+    if (heroVisible()) mini.hidden = true; else if (!aud.paused) mini.hidden = false;
+  };
+  let ticking = false;
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { onScroll(); ticking = false; }); } }, { passive: true });
+  addEventListener("resize", onScroll);
+  onScroll();
+
+  // ---------- popup: transcript ----------
+  const pop = $("#pop"), popBody = $("#pop-body"), popTitle = $("#pop-title"), popSearch = $("#pop-search"), popQ = $("#pop-q"), popCount = $("#pop-count");
+  let popReturn = null;
+  const openPop = (title, html, { search = false } = {}) => {
+    popReturn = document.activeElement;
+    popTitle.textContent = title; popBody.innerHTML = html;
+    popSearch.classList.toggle("on", search); popQ.value = ""; popCount.textContent = "";
+    pop.showModal(); pop.scrollTop = 0;
+    if (search) popQ.focus();
+  };
+  pop.addEventListener("close", () => { if (popReturn && popReturn.focus) popReturn.focus(); });
+  $("#pop-close").addEventListener("click", () => pop.close());
+  pop.addEventListener("click", (e) => { if (e.target === pop) pop.close(); });
+  const esc = (s) => s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  popQ.addEventListener("input", () => {
+    const q = popQ.value.trim();
+    $$("mark", popBody).forEach((m) => m.replaceWith(m.textContent));
+    popBody.normalize();
+    const blocks = $$(":scope > p, :scope > ul, :scope > ol, :scope > hr", popBody).filter((b) => !b.classList.contains("intro"));
+    let n = 0;
+    blocks.forEach((b) => {
+      const hit = !q || b.textContent.toLowerCase().includes(q.toLowerCase());
+      b.classList.toggle("hide", !hit || (q && b.tagName === "HR"));
+      if (hit && q) {
+        n++;
+        const re = new RegExp(escRe(q), "gi");
+        const walker = document.createTreeWalker(b, NodeFilter.SHOW_TEXT);
+        const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach((node) => {
+          if (!re.test(node.nodeValue)) return; re.lastIndex = 0;
+          const span = document.createElement("span");
+          span.innerHTML = esc(node.nodeValue).replace(re, (m) => `<mark>${m}</mark>`);
+          node.replaceWith(...span.childNodes);
+        });
+      }
+    });
+    popCount.textContent = q ? `${n} passage${n === 1 ? "" : "s"}` : "";
+  });
+  let transcriptHtml = null;
+  document.addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-transcript]");
+    if (!a || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    if (!transcriptHtml) {
+      try {
+        let md = await (await fetch("transcript.md")).text();
+        md = md.replace(/<!--[\s\S]*?-->/g, "").replace(/^---\n[\s\S]*?\n---\n/, "").replace(/^# Transcript\s*/, "")
+          .replace(/\[(\d{1,3}):(\d{2})\]/g, (m, a1, b1) => { const t = +a1 * 60 + +b1; return `<a class="ts" href="?t=${fmt(t)}">${fmt(t)}</a>`; });
+        const html = window.marked ? marked.parse(md) : `<pre style="white-space:pre-wrap">${esc(md)}</pre>`;
+        transcriptHtml = '<p class="intro">AI transcription of the class recording, lightly cleaned. Tap any time to play that moment. Speaker labels are approximate: “Student” and “Unsure” lines are students or the course faculty.</p>' + html;
+      } catch (err) { location.href = a.href; return; }
+    }
+    openPop("Transcript · 4 Nov 2026", transcriptHtml, { search: true });
+  });
+
+  // ---------- lightbox ----------
+  const lb = $("#lightbox"), lbImg = $("#lb-img"), lbCap = $("#lb-cap"), lbOpen = $("#lb-open");
+  let lbReturn = null;
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-lightbox]");
+    if (!el || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    const src = el.getAttribute("href");
+    const img = el.querySelector("img");
+    lbImg.src = src; lbImg.alt = img ? img.alt : "";
+    lbCap.textContent = el.dataset.caption || "";
+    lbOpen.href = src;
+    lbReturn = el;
+    lb.showModal();
+  });
+  $("#lb-close").addEventListener("click", () => lb.close());
+  lb.addEventListener("click", (e) => { if (e.target === lb || e.target === lbImg) lb.close(); });
+  lb.addEventListener("close", () => { if (lbReturn && lbReturn.focus) lbReturn.focus(); });
+
+  // ---------- A/B pair game ----------
+  const CLASS = { 1: { A: 18, B: 6, N: 0 }, 2: { A: 9, B: 14, N: 1 }, 3: { A: 15, B: 7, N: 2 } };
+  $$(".pair").forEach((pair) => {
+    const stage = $(".pair-stage", pair), btn = $(".veil-btn", stage), timer = $(".veil-timer", stage), reveal = $(".reveal", pair), you = $(".you", pair);
+    let iv = null;
+    btn.addEventListener("click", () => {
+      stage.classList.remove("veiled"); stage.classList.add("timing");
+      let n = 10; timer.textContent = n;
+      iv = setInterval(() => {
+        n--; timer.textContent = n;
+        if (n <= 0) {
+          clearInterval(iv); stage.classList.remove("timing");
+          if (reveal.hidden) { stage.classList.add("veiled"); btn.innerHTML = '<i class="bi bi-arrow-repeat" aria-hidden="true"></i> Time’s up. Predict, or look again'; }
+        }
+      }, 1000);
+    });
+    $$(".vote button", pair).forEach((b) => b.addEventListener("click", () => {
+      clearInterval(iv); stage.classList.remove("veiled", "timing");
+      $$(".vote button", pair).forEach((x) => x.classList.toggle("chosen", x === b && !!b.dataset.v));
+      const c = CLASS[pair.dataset.pair], v = b.dataset.v, total = c.A + c.B + c.N;
+      you.textContent = v
+        ? `You predicted ${v}, along with ${c[v]} of ${total} classmates.${c[v] < total / 2 ? " You’re in the minority, so read the other side’s reasons first." : ""}`
+        : `The class split ${c.A}–${c.B}${c.N ? `, with ${c.N} choosing neither` : ""}.`;
+      reveal.hidden = false;
+    }));
+  });
+})();
+</script>
+</body>
+</html>

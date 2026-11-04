@@ -23,6 +23,9 @@ I speak regularly at:
 <!-- BEGIN GENERATED TALKS -->
 ## Latest talks
 
+- 04 Nov 2026. **[What Changed Your Mind?](2026-11-04-iitm-ed-data-visualization/ ":ignore")** at [ED5518: Data Visualization for Engineers](https://ed.iitm.ac.in/), Department of Engineering Design, IIT Madras, Chennai.  
+  A live-lab class on testing visualizations and phone apps: commit to an answer before discussing, check that a chart is true and that it works for its audience, use AI as a different kind of reviewer rather than a stand-in for people, and ask busy people “A or B?”  
+  [💬 Transcript](2026-11-04-iitm-ed-data-visualization/transcript.md) · [🎧 Audio (81m)](https://github.com/sanand0/talks/releases/download/talks/2026-11-04-iitm-ed-data-visualization.opus ":ignore")
 - 02 Nov 2026. **[Should a Student Even Read the Exam?](2026-11-02-tds-ideation/ ":ignore")** at [TDS Course Ideation — Open Design Meeting, Sep 2026](https://tds.s-anand.net/), Remote.  
   In the fourth open TDS design meeting, the teachers ask what is left to teach once an agent can read and solve the exam — while doubling a spending cap students are forecasting, finding only eight drawings that fool every AI guess, and admitting a marketplace rewarded trading over usefulness.  
   [⏯️ Video (62m)](https://media.s-anand.net/2026-11-02-tds-course-ideation.webm ":ignore") · [💬 Transcript](2026-11-02-tds-ideation/transcript.md) · [💬 Captions](2026-11-02-tds-ideation/captions.vtt) · [🎧 Audio (62m)](https://github.com/sanand0/talks/releases/download/talks/2026-11-02-tds-ideation.opus ":ignore") · [💬 Meeting chat](2026-11-02-tds-ideation/chat.md)

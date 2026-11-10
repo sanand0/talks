@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Watches the Deadline Watchers? · TDS open design meeting · 9 Nov 2026</title>
+<meta name="description" content="A student built a tracker for a course that refuses to announce its deadlines. It was right and still misleading. The hour that followed asked whether a course that hides its rules teaches initiative — and who checks that anyone learned.">
+<meta property="og:title" content="Who Watches the Deadline Watchers?">
+<meta property="og:description" content="TDS open design meeting, 9 Nov 2026: a countdown that counted the wrong thing, a food court built as a prisoner’s dilemma, five answers to “what did this teach?”, and the evidence nobody has yet.">
+<meta property="og:image" content="https://talks.s-anand.net/2026-11-09-tds-ideation/comic-page.avif">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23111a2e'/%3E%3Ccircle cx='32' cy='34' r='19' fill='none' stroke='%23eef1f5' stroke-width='4'/%3E%3Cpath d='M32 34V22M32 34l9 6' stroke='%23ff8a4c' stroke-width='4' stroke-linecap='round'/%3E%3Crect x='26' y='8' width='12' height='6' rx='2' fill='%23eef1f5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Spectral:ital,wght@0,400;0,600;1,400&amp;family=Martian+Mono:wght@400;600&amp;family=Big+Shoulders+Display:wght@700;800&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script>
+  (() => {
+    let t = null;
+    try { t = localStorage.getItem("tds-ideation-5-theme"); } catch (e) {}
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  })();
+</script>
+<style>
+/* =========================================================
+   Design note: a control room for time. Cool timetable paper,
+   navy ink, signal-vermilion for deadlines, teal for the windows
+   you must be present in, and a dark "departure board" band for
+   the moments the room argued with itself.
+   ========================================================= */
+:root {
+  --paper: #eef1f5; --paper2: #e2e7ee; --card: #fbfcfe; --ink: #111a2e; --ink2: #27324a; --muted: #4c576c; --line: #cbd3de;
+  --signal: #c2410c; --signal-soft: #fde4d6; --window: #0f766e; --window-soft: #d3efeb; --amber: #8a5a0b; --amber-soft: #fbefd4;
+  --link: #1d4ed8; --gray-dot: #a9b3c2;
+  --board: #0e1626; --board2: #17223a; --on-board: #e8edf5; --board-muted: #a8b6cc; --board-link: #9cc3ff; --board-accent: #ffb06b; --board-teal: #5eead4;
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-body: "Spectral", Georgia, serif;
+  --font-mono: "Martian Mono", ui-monospace, Menlo, monospace;
+  --font-clock: "Big Shoulders Display", "Arial Narrow", sans-serif;
+  --measure: 690px; --pad: 1.4rem; --dock-w: 400px;
+  --shadow: 0 10px 30px rgba(17, 26, 46, .13);
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0b111c; --paper2: #121a28; --card: #141d2c; --ink: #e7ecf4; --ink2: #cdd5e2; --muted: #a5b1c4; --line: #2a3547;
+    --signal: #ff8a5c; --signal-soft: #3a1d12; --window: #3dd6c2; --window-soft: #0f2d2a; --amber: #f2b85a; --amber-soft: #33270f;
+    --link: #8ab4ff; --gray-dot: #56637a;
+    --board: #05090f; --board2: #0f1828;
+    --shadow: 0 10px 30px rgba(0, 0, 0, .45);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0b111c; --paper2: #121a28; --card: #141d2c; --ink: #e7ecf4; --ink2: #cdd5e2; --muted: #a5b1c4; --line: #2a3547;
+  --signal: #ff8a5c; --signal-soft: #3a1d12; --window: #3dd6c2; --window-soft: #0f2d2a; --amber: #f2b85a; --amber-soft: #33270f;
+  --link: #8ab4ff; --gray-dot: #56637a;
+  --board: #05090f; --board2: #0f1828;
+  --shadow: 0 10px 30px rgba(0, 0, 0, .45);
+  color-scheme: dark;
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto !important; } *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; font: 400 19px/1.72 var(--font-body); color: var(--ink); background: var(--paper); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; height: auto; }
+a { color: var(--link); text-underline-offset: .18em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--signal); outline-offset: 2px; border-radius: 2px; }
+strong { font-weight: 600; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.08; letter-spacing: -.005em; margin: 0; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: -999px; top: .5rem; background: var(--ink); color: var(--paper); padding: .5rem .8rem; z-index: 2000; }
+.skip:focus { left: .5rem; }
+#progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--signal); z-index: 1500; }
+.muted { color: var(--muted); }
+.small { font-size: .86rem; }
+
+/* ---------- top bar ---------- */
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .7rem var(--pad); font: .74rem var(--font-mono); letter-spacing: .04em; border-bottom: 1px solid var(--line); }
+.topbar a { color: var(--ink); text-decoration: none; font-weight: 600; }
+.tb-right { display: flex; align-items: center; gap: .8rem; color: var(--muted); }
+.icon-btn { appearance: none; background: transparent; border: 1px solid var(--line); color: var(--ink); width: 2.1rem; height: 2.1rem; border-radius: 50%; cursor: pointer; display: inline-grid; place-items: center; font-size: .95rem; }
+.icon-btn:hover { border-color: var(--ink); }
+
+/* ---------- hero ---------- */
+.hero { max-width: 1240px; margin: 0 auto; padding: 2.6rem var(--pad) 2.4rem; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .9fr); gap: 3rem; align-items: start; }
+.kicker { font: 600 .7rem/1.5 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); display: flex; flex-wrap: wrap; gap: .2rem 1.1rem; }
+.kicker b { color: var(--signal); font-weight: 600; }
+.hero h1 { font-size: clamp(2.9rem, 6.4vw, 5.4rem); margin: 1rem 0 1.2rem; }
+.hero h1 em { color: var(--signal); }
+.deck { font-size: 1.2rem; line-height: 1.6; margin: 0 0 1.1rem; color: var(--ink2); }
+.who { font-size: .96rem; color: var(--muted); margin: 0 0 1.4rem; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.2rem; }
+.btn { display: inline-flex; align-items: center; gap: .5rem; padding: .62rem 1rem; border-radius: 999px; font: 600 .78rem var(--font-mono); text-decoration: none; background: var(--ink); color: var(--paper); border: 1.5px solid var(--ink); cursor: pointer; }
+.btn:hover { background: var(--signal); border-color: var(--signal); color: #fff; text-decoration: none; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.audio-line { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .9rem; font: .74rem var(--font-mono); color: var(--muted); margin-bottom: 1.4rem; }
+.audio-line audio { height: 36px; flex: 1 1 260px; max-width: 420px; }
+.howto { border-top: 1.5px solid var(--ink); padding-top: .9rem; font-size: .92rem; }
+.howto h2 { font: 600 .7rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; margin-bottom: .5rem; }
+.howto ul { margin: 0; padding-left: 1.1rem; }
+.howto li { margin-bottom: .3rem; }
+.evrow { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .35rem; }
+.ev { display: inline-block; font: 600 .6rem/1.3 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; padding: .22rem .45rem; border-radius: 3px; border: 1px solid currentColor; white-space: nowrap; max-width: 100%; vertical-align: .15em; }
+.ev-call { color: var(--ink2); }
+.ev-chat { color: var(--link); }
+.ev-code { color: var(--window); }
+.ev-res { color: var(--amber); }
+.ev-read { color: var(--muted); border-style: dashed; }
+.ev-toy { color: var(--signal); border-style: dashed; }
+.comic { margin: 0; position: relative; }
+.comic a { display: block; border-radius: 6px; overflow: hidden; box-shadow: var(--shadow); cursor: zoom-in; border: 1px solid var(--line); }
+.comic img { display: block; width: 100%; }
+.comic figcaption { font-size: .84rem; line-height: 1.5; color: var(--muted); margin-top: .7rem; }
+.comic .tag { position: absolute; top: -.8rem; right: .8rem; background: var(--signal); color: #fff; font: 600 .64rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; padding: .3rem .55rem; border-radius: 3px; z-index: 2; }
+
+/* ---------- room: story + dock ---------- */
+.room { display: flex; align-items: flex-start; max-width: 1640px; margin: 0 auto; }
+.story { flex: 1 1 auto; min-width: 0; padding: 0 var(--pad) 2rem; }
+.story > .chap { max-width: var(--measure); margin: 0 auto; }
+.chap { padding: 3.2rem 0 1rem; scroll-margin-top: 1rem; }
+.chap + .chap { border-top: 1px solid var(--line); }
+.chap > p, .chap > ul, .chap > ol { margin: 0 0 1.15rem; }
+.chap > ul, .chap > ol { padding-left: 1.3rem; }
+.chap li { margin-bottom: .4rem; }
+.act { font: 600 .68rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--signal); display: flex; justify-content: space-between; gap: 1rem; margin-bottom: .7rem; }
+.act span:last-child { color: var(--muted); font-weight: 400; }
+.chap h2 { font-size: clamp(2.1rem, 4.4vw, 3rem); margin-bottom: 1.2rem; }
+.chap h2 em { color: var(--signal); }
+.lede { font-size: 1.14rem; }
+q { quotes: "“" "”" "‘" "’"; }
+
+/* timestamp links */
+a.ts { font: 600 .66rem/1 var(--font-mono); color: var(--window); text-decoration: none; border: 1px solid currentColor; border-radius: 999px; padding: .22rem .45rem .2rem .35rem; white-space: nowrap; vertical-align: .14em; display: inline-flex; align-items: center; gap: .15rem; transition: background .15s, color .15s; }
+a.ts .bi { font-size: .78rem; }
+a.ts:hover, a.ts:focus-visible { background: var(--window); color: var(--card); }
+a.ts.flash { animation: flash 1.1s var(--ease); }
+@keyframes flash { 0% { background: var(--amber); color: var(--card); } 100% { background: transparent; } }
+
+/* quotes */
+.say { margin: 1.8rem -2.5rem; padding: 1.1rem 0 1.1rem 1.6rem; border-left: 4px solid var(--signal); }
+.say p { font: italic 400 1.42rem/1.42 var(--font-display); margin: 0 0 .55rem; color: var(--ink); }
+.say.big p { font-size: clamp(1.7rem, 3.4vw, 2.2rem); line-height: 1.25; }
+.say footer { font: .74rem/1.9 var(--font-mono); color: var(--muted); }
+.say footer a.ts { margin-left: .4rem; }
+.say footer b { color: var(--ink); font-weight: 600; }
+.say.chat { border-left-color: var(--link); }
+.say.chat p { font: 400 1.06rem/1.5 var(--font-mono); }
+
+/* side notes (our caveats) */
+.note { font-size: .92rem; line-height: 1.6; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--amber); padding: .9rem 1.1rem; margin: 1.5rem 0; border-radius: 0 4px 4px 0; }
+.note .lbl { display: block; font: 600 .64rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--amber); margin-bottom: .25rem; }
+.note p { margin: 0 0 .5rem; }
+.note p:last-child { margin-bottom: 0; }
+
+/* cite chips */
+.cite { appearance: none; font: 600 .6rem/1 var(--font-mono); color: var(--amber); background: transparent; border: 1px solid currentColor; border-radius: 3px; padding: .18rem .3rem; cursor: pointer; vertical-align: .3em; text-decoration: none; margin-left: .1rem; }
+.cite:hover, .cite:focus-visible { background: var(--amber); color: var(--card); }
+
+/* dark board band (inside story column, wider) */
+.board { background: var(--board); color: var(--on-board); margin: 2.2rem -3rem; padding: 1.8rem 2.2rem; border-radius: 6px; }
+.board .lbl { font: 600 .66rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--board-accent); margin-bottom: .5rem; }
+.board p { margin: 0 0 .8rem; color: var(--on-board); }
+.board p:last-child { margin-bottom: 0; }
+.board .big { font: 400 1.7rem/1.25 var(--font-display); color: #fff; }
+.board a { color: var(--board-link); }
+.board strong { color: #fff; }
+.board .ev { color: var(--board-muted); }
+.board a.ts { color: var(--board-teal); }
+.board a.ts:hover, .board a.ts:focus-visible { background: var(--board-teal); color: var(--board); }
+
+/* evidence figure */
+.shots { display: grid; grid-template-columns: 1.15fr 1fr; gap: 1rem; margin: 1.8rem -3rem 1.4rem; }
+.shot { margin: 0; background: var(--board); border-radius: 6px; padding: .6rem; color: var(--on-board); display: flex; flex-direction: column; }
+.shot a.img { display: block; border-radius: 3px; overflow: hidden; cursor: zoom-in; position: relative; }
+.shot img { display: block; width: 100%; }
+.shot .pin { position: absolute; border: 2.5px solid var(--board-accent); border-radius: 4px; box-shadow: 0 0 0 999px rgba(0, 0, 0, .0); pointer-events: none; }
+.shot figcaption { font-size: .84rem; line-height: 1.5; padding: .7rem .3rem .2rem; color: var(--board-muted); }
+.shot figcaption b { color: #fff; font-weight: 600; }
+.shot figcaption a { color: var(--board-link); }
+.shot figcaption a.ts { color: var(--board-teal); }
+.shot .hd { font: 600 .64rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--board-accent); padding: .1rem .3rem .5rem; }
+
+/* ---------- widgets (shared) ---------- */
+.widget { background: var(--card); border: 1.5px solid var(--ink); border-radius: 6px; margin: 2rem -3rem 2rem; padding: 1.3rem 1.4rem 1.2rem; box-shadow: var(--shadow); }
+.widget > header { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: .6rem; }
+.widget h3 { font-size: 1.65rem; }
+.widget .intro { font-size: .95rem; margin: 0 0 1rem; color: var(--ink2); }
+.widget .fine { font-size: .8rem; line-height: 1.5; color: var(--muted); margin: .9rem 0 0; }
+.seg { display: inline-flex; border: 1.5px solid var(--ink); border-radius: 999px; overflow: hidden; flex-wrap: wrap; }
+.seg button { appearance: none; border: 0; background: transparent; color: var(--ink); font: 600 .72rem var(--font-mono); padding: .45rem .8rem; cursor: pointer; }
+.seg button + button { border-left: 1.5px solid var(--ink); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.seg button:hover:not([aria-pressed="true"]) { background: var(--paper2); }
+.wbtn { appearance: none; font: 600 .74rem var(--font-mono); background: var(--ink); color: var(--paper); border: 1.5px solid var(--ink); border-radius: 999px; padding: .5rem .9rem; cursor: pointer; display: inline-flex; gap: .4rem; align-items: center; }
+.wbtn:hover { background: var(--signal); border-color: var(--signal); color: #fff; }
+.wbtn.ghost { background: transparent; color: var(--ink); }
+.wbtn.ghost:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.wbtn:disabled { opacity: .45; cursor: default; }
+.guess { background: var(--paper2); border-radius: 5px; padding: .9rem 1rem; margin: 0 0 1rem; }
+.guess p { margin: 0 0 .6rem; font-size: .98rem; }
+.guess .opts { display: flex; flex-wrap: wrap; gap: .45rem; }
+.guess .opts button { appearance: none; font: 600 .74rem var(--font-mono); background: var(--card); color: var(--ink); border: 1.5px solid var(--ink); border-radius: 5px; padding: .5rem .75rem; cursor: pointer; }
+.guess .opts button:hover { background: var(--ink); color: var(--paper); }
+.guess .opts button.right { background: var(--window); border-color: var(--window); color: var(--card); }
+.guess .opts button.wrong { background: transparent; border-style: dashed; color: var(--muted); }
+.guess .reveal { margin: .7rem 0 0; font-size: .95rem; }
+.guess .reveal[hidden] { display: none; }
+
+/* ---------- W1: the week ---------- */
+.week-svg { width: 100%; height: auto; display: block; font-family: var(--font-mono); }
+.week-svg .day { fill: var(--paper2); }
+.week-svg .day.alt { fill: transparent; }
+.week-svg .dlab { fill: var(--muted); font-size: 11px; }
+.week-svg .lane-lab { fill: var(--ink); font-size: 11.5px; font-weight: 600; }
+.week-svg .lane-sub { fill: var(--muted); font-size: 10px; }
+.week-svg .bar-count { fill: var(--signal); opacity: .22; }
+.week-svg .bar-count-edge { fill: var(--signal); }
+.week-svg .bar-open { fill: var(--window); opacity: .16; }
+.week-svg .slot { fill: var(--window); }
+.week-svg .slot.past { fill: var(--gray-dot); }
+.week-svg .slot-lab { fill: var(--window); font-size: 10px; font-weight: 600; }
+.week-svg .slot-lab.past { fill: var(--muted); }
+.week-svg .final { fill: var(--signal); }
+.week-svg .ghost { fill: none; stroke: var(--muted); stroke-dasharray: 3 3; }
+.week-svg .ghost-lab { fill: var(--muted); font-size: 10px; }
+.week-svg .now-line { stroke: var(--ink); stroke-width: 2; }
+.week-svg .now-dot { fill: var(--ink); }
+.week-svg .past-shade { fill: var(--ink); opacity: .07; }
+.week-ctrl { display: grid; grid-template-columns: auto 1fr; gap: .6rem 1rem; align-items: center; margin: .9rem 0 .4rem; }
+.week-ctrl label { font: 600 .7rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+.week-ctrl input[type="range"] { width: 100%; accent-color: var(--signal); }
+.readout { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.4fr); gap: 1rem; margin-top: .8rem; }
+.clock { background: var(--board); color: var(--on-board); border-radius: 5px; padding: .9rem 1rem; }
+.clock .when { font: .7rem/1.5 var(--font-mono); color: var(--board-muted); }
+.clock .digits { font: 800 3.2rem/1 var(--font-clock); color: var(--board-accent); letter-spacing: .02em; margin: .3rem 0 .2rem; }
+.clock .digits small { font-size: 1.1rem; color: var(--board-muted); font-weight: 700; margin-left: .3rem; }
+.clock .lab { font: .68rem/1.4 var(--font-mono); color: var(--board-muted); }
+.clock .local { font: .66rem/1.45 var(--font-mono); color: var(--board-muted); margin-top: .5rem; border-top: 1px solid rgba(255, 255, 255, .15); padding-top: .45rem; }
+.reality { list-style: none; margin: 0; padding: 0; font-size: .9rem; line-height: 1.45; }
+.reality li { padding: .45rem .6rem; border-radius: 4px; margin-bottom: .35rem; border-left: 4px solid var(--line); background: var(--paper2); }
+.reality li b { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .02em; display: block; }
+.reality li.ok { border-left-color: var(--window); }
+.reality li.warn { border-left-color: var(--amber); }
+.reality li.gone { border-left-color: var(--signal); background: var(--signal-soft); }
+.reality li.live { border-left-color: var(--window); background: var(--window-soft); }
+
+/* ---------- W2: food court ---------- */
+.stalls { display: grid; gap: .55rem; margin: .4rem 0 1rem; }
+.stall { display: grid; grid-template-columns: 6.8rem auto minmax(0, 1fr) 4.6rem; gap: .8rem; align-items: center; }
+.stall .nm { font: 600 .78rem var(--font-mono); }
+.stall .nm small { display: block; font-weight: 400; color: var(--muted); font-size: .64rem; }
+.stall .seg button { padding: .38rem .6rem; }
+.stall .gbar { height: 1.15rem; background: var(--paper2); border-radius: 3px; position: relative; overflow: hidden; }
+.stall .gbar i { position: absolute; inset: 0 auto 0 0; background: var(--window); border-radius: 3px; transition: width .45s var(--ease); }
+.stall .gbar i.own { background: var(--amber); opacity: .9; }
+.stall .gval { font: 800 1.45rem/1 var(--font-clock); text-align: right; }
+.stall.you .nm { color: var(--signal); }
+.fc-sum { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; align-items: baseline; border-top: 1px solid var(--line); padding-top: .7rem; font: .74rem var(--font-mono); color: var(--muted); }
+.fc-sum b { font: 800 1.6rem/1 var(--font-clock); color: var(--ink); margin-right: .3rem; }
+.fc-legend { display: flex; flex-wrap: wrap; gap: 1rem; font: .66rem var(--font-mono); color: var(--muted); margin-bottom: .6rem; }
+.fc-legend i { display: inline-block; width: .8rem; height: .8rem; border-radius: 2px; vertical-align: -.1rem; margin-right: .3rem; }
+.fc-btns { display: flex; flex-wrap: wrap; gap: .45rem; margin: .9rem 0 .2rem; }
+.fc-log { font: .74rem/1.55 var(--font-mono); background: var(--board); color: var(--on-board); border-radius: 5px; padding: .7rem .9rem; margin-top: .7rem; min-height: 3.2rem; max-height: 11rem; overflow: auto; }
+.fc-log .hl { color: var(--board-accent); }
+.fc-log .ok { color: var(--board-teal); }
+.fc-log .m { color: var(--board-muted); }
+
+/* ---------- W3: learning matrix ---------- */
+.lm { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.2rem; align-items: start; margin-top: .9rem; }
+.dots { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; max-width: 320px; }
+.dots i { aspect-ratio: 1; border-radius: 50%; background: var(--gray-dot); transition: background .35s var(--ease), transform .35s var(--ease); }
+.dots i.pp { background: var(--window); opacity: .55; }
+.dots i.fp { background: var(--window); box-shadow: 0 0 0 1.5px var(--card), 0 0 0 3px var(--window); }
+.dots i.pf { background: var(--signal); }
+.dots i.ff { background: var(--gray-dot); }
+.lm-key { list-style: none; margin: .7rem 0 0; padding: 0; font: .7rem/1.6 var(--font-mono); color: var(--muted); }
+.lm-key i { display: inline-block; width: .7rem; height: .7rem; border-radius: 50%; margin-right: .4rem; vertical-align: -.05rem; }
+.lm-stats { display: grid; gap: .55rem; }
+.lm-stat { background: var(--paper2); border-radius: 4px; padding: .55rem .75rem; }
+.lm-stat b { font: 800 1.9rem/1 var(--font-clock); display: block; }
+.lm-stat span { font: .68rem/1.35 var(--font-mono); color: var(--muted); }
+.lm-bars { display: grid; gap: .35rem; margin-top: .2rem; }
+.lm-bar { display: grid; grid-template-columns: 8.5rem 1fr 2.8rem; gap: .5rem; align-items: center; font: .66rem var(--font-mono); color: var(--muted); }
+.lm-bar div { height: .8rem; background: var(--card); border-radius: 2px; overflow: hidden; }
+.lm-bar div i { display: block; height: 100%; background: var(--window); transition: width .45s var(--ease); }
+.lm-bar.f div i { background: var(--amber); }
+.lm-bar b { font: 600 .74rem var(--font-mono); color: var(--ink); text-align: right; }
+.lm-say { margin: 1rem 0 0; padding: .8rem 1rem; border-left: 4px solid var(--signal); background: var(--paper2); font-size: .96rem; border-radius: 0 4px 4px 0; }
+
+/* ---------- W4: crossfade vs morph ---------- */
+.mf { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.mf figure { margin: 0; text-align: center; }
+.mf svg { width: 100%; max-width: 260px; height: auto; background: var(--paper2); border-radius: 6px; display: block; margin: 0 auto; }
+.mf figcaption { font: 600 .7rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; margin-top: .5rem; }
+.mf figcaption small { display: block; font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--muted); font-size: .7rem; margin-top: .15rem; }
+.mf-ctrl { display: grid; grid-template-columns: auto 1fr auto; gap: .8rem; align-items: center; margin-top: 1rem; font: .7rem var(--font-mono); }
+.mf-ctrl input { width: 100%; accent-color: var(--signal); }
+
+/* five answers */
+.answers { list-style: none; margin: 1.6rem -3rem; padding: 0; border-top: 1.5px solid var(--ink); }
+.answers li { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 1rem; padding: .95rem 0; border-bottom: 1px solid var(--line); }
+.answers .who { font: 600 .74rem/1.45 var(--font-mono); margin: 0; color: var(--ink); }
+.answers .who small { display: block; font-weight: 400; color: var(--muted); }
+.answers h3 { font-size: 1.45rem; margin-bottom: .2rem; }
+.answers p { margin: 0; font-size: .96rem; }
+
+/* split box: automate vs learn */
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 1.8rem -3rem; border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden; }
+.split > div { padding: 1rem 1.2rem; }
+.split > div + div { border-left: 1.5px solid var(--ink); background: var(--window-soft); }
+.split h3 { font-size: 1.35rem; margin-bottom: .5rem; }
+.split ul { margin: 0; padding-left: 1.1rem; font-size: .94rem; }
+.split li { margin-bottom: .35rem; }
+
+/* evidence ladder */
+.ladder { margin: 1.8rem -3rem; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; }
+.rung { background: var(--card); border: 1px solid var(--line); border-top: 4px solid var(--line); border-radius: 4px; padding: .8rem .85rem; font-size: .9rem; line-height: 1.5; }
+.rung h3 { font: 600 .68rem/1.4 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; margin-bottom: .45rem; }
+.rung p { margin: 0; }
+.rung.r1 { border-top-color: var(--ink2); }
+.rung.r2 { border-top-color: var(--amber); }
+.rung.r3 { border-top-color: var(--signal); }
+.rung.r4 { border-top-color: var(--window); border-style: dashed; border-top-style: solid; }
+.rung .st { display: block; font: 600 .62rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; margin-top: .6rem; color: var(--muted); }
+
+/* ---------- dock (one persistent video) ---------- */
+.dock {
+  flex: 0 0 var(--dock-w); position: sticky; top: .8rem; align-self: flex-start; margin: .8rem var(--pad) 0 0;
+  background: var(--board); color: var(--on-board); border-radius: 8px; padding: .8rem; display: flex; flex-direction: column; gap: .6rem;
+  max-height: calc(100vh - 1.6rem); box-shadow: var(--shadow); transition: flex-basis .45s var(--ease);
+}
+body.watch .dock { flex-basis: 56%; }
+.dock a { color: var(--board-link); }
+.dock-head { display: flex; justify-content: space-between; gap: .5rem; font: .64rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--board-muted); }
+.dock-head b { color: var(--on-board); }
+.dock-head, .now, .dock-ctrls { flex: none; }
+.vwrap { position: relative; background: #000; border-radius: 4px; overflow: hidden; flex: none; }
+.vwrap video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; }
+.resume { position: absolute; inset: auto 0 0 0; display: none; justify-content: center; padding: .9rem; background: linear-gradient(transparent, rgba(0, 0, 0, .78)); }
+.resume.show { display: flex; }
+.resume button { font: 600 .8rem var(--font-mono); background: var(--board-accent); color: #1a0d03; border: 0; border-radius: 999px; padding: .55rem 1rem; cursor: pointer; }
+.fallback-note { display: none; font: .7rem/1.5 var(--font-mono); color: var(--board-muted); }
+.dock.audio-mode .fallback-note { display: block; }
+.dock audio { width: 100%; display: none; }
+.dock.audio-mode audio { display: block; }
+.dock.audio-mode .vwrap { display: none; }
+.now { font: .78rem/1.4 var(--font-mono); min-height: 2.6em; }
+.now .t { color: var(--board-accent); margin-right: .45rem; }
+.now .in-story { display: block; font-size: .7rem; color: var(--board-muted); margin-top: .15rem; }
+.dock-ctrls { display: flex; flex-wrap: wrap; gap: .4rem; }
+.dbtn { appearance: none; display: inline-flex; align-items: center; gap: .35rem; font: 600 .68rem var(--font-mono); background: var(--board2); color: var(--on-board); border: 1px solid rgba(255, 255, 255, .18); border-radius: 999px; padding: .42rem .7rem; cursor: pointer; text-decoration: none; }
+.dbtn:hover { border-color: var(--board-accent); }
+.dock a.dbtn { color: var(--on-board); }
+.dbtn.mode { background: var(--board-accent); color: #1a0d03; border-color: var(--board-accent); }
+.chapters { overflow-y: auto; min-height: 0; flex: 1 1 auto; scrollbar-width: thin; }
+.chapters summary { font: .64rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--board-muted); cursor: pointer; padding: .25rem 0; }
+.chapters ol { list-style: none; margin: .2rem 0 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 1px; }
+body.watch .chapters ol { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: .6rem; }
+.chapters li a { display: flex; gap: .55rem; align-items: baseline; padding: .26rem .45rem; border-radius: 3px; text-decoration: none; font: .82rem/1.3 var(--font-body); }
+.dock .chapters li a { color: var(--on-board); }
+.chapters li a .ct { font: .66rem var(--font-mono); color: var(--board-teal); flex: 0 0 auto; }
+.chapters li a:hover { background: var(--board2); }
+.dock .chapters li a.is-now { background: var(--on-board); color: var(--board); }
+.chapters li a.is-now .ct { color: #0b5e57; }
+.chapters li a.in-view { box-shadow: inset 3px 0 0 var(--board-teal); }
+.chapters li a.is-target { outline: 1px dashed var(--board-teal); outline-offset: -1px; }
+.chapters li.sep { font: 600 .6rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--board-accent); padding: .5rem .45rem .15rem; }
+body.watch .chapters li.sep { grid-column: 1 / -1; }
+.dock .dock-min { display: none; }
+body.watch .story { font-size: 17.5px; }
+body.watch .story .chap { opacity: .6; transition: opacity .3s; }
+body.watch .story .chap.is-now, body.watch .story .chap:hover, body.watch .story .chap:focus-within { opacity: 1; }
+.chap.is-now .act::before { content: "▶ playing"; color: var(--window); margin-right: auto; }
+body:not(.watch) .chap.is-now .act::before { content: none; }
+
+/* ---------- takeaways ---------- */
+.takeaways { width: 100vw; margin-left: calc(50% - 50vw); background: var(--board); color: var(--on-board); padding: 4rem var(--pad) 3.5rem; margin-top: 2rem; margin-bottom: 0; }
+.takeaways .inner { max-width: 1180px; margin: 0 auto; }
+.band-label { font: 600 .7rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--board-accent); margin-bottom: .6rem; }
+.takeaways h2 { font-size: clamp(2.2rem, 4.6vw, 3.4rem); color: #fff; margin-bottom: .6rem; }
+.takeaways .sub { color: var(--board-muted); max-width: 46rem; margin: 0 0 2rem; }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.card { background: var(--board2); border: 1px solid rgba(255, 255, 255, .12); border-radius: 6px; padding: 1.2rem 1.2rem 1rem; }
+.card .num { font: 600 .64rem var(--font-mono); letter-spacing: .1em; color: var(--board-accent); margin-bottom: .5rem; }
+.card h3 { font-size: 1.55rem; color: #fff; margin-bottom: .5rem; }
+.card p { margin: 0; font-size: .95rem; line-height: 1.6; color: var(--on-board); }
+.card a { color: var(--board-link); }
+.card a.ts { color: var(--board-teal); }
+.card a.ts:hover, .card a.ts:focus-visible { background: var(--board-teal); color: var(--board); }
+.card.try { background: var(--board-accent); color: #1a0d03; border-color: var(--board-accent); }
+.card.try h3, .card.try p, .card.try .num { color: #1a0d03; }
+.card.try ol { margin: .4rem 0 0; padding-left: 1.1rem; font-size: .92rem; line-height: 1.5; }
+.finale { max-width: 46rem; margin: 2.6rem auto 0; font-size: 1.12rem; }
+.finale p { margin: 0 0 1rem; }
+.finale strong { color: #fff; }
+
+/* ---------- footer ---------- */
+.foot { max-width: 1180px; margin: 0 auto; padding: 3rem var(--pad) 6rem; font-size: .92rem; }
+.foot h2 { font-size: 1.8rem; margin: 0 0 .9rem; }
+.foot ul { padding-left: 1.1rem; margin: 0 0 1.4rem; }
+.foot li { margin-bottom: .45rem; }
+.series { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .6rem; margin-bottom: 2.4rem; }
+.series a { display: block; border: 1.5px solid var(--line); border-radius: 5px; padding: .7rem .8rem; text-decoration: none; color: var(--ink); font: 400 1.15rem/1.2 var(--font-display); }
+.series a small { display: block; font: .62rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: .3rem; }
+.series a:hover { border-color: var(--ink); }
+.series a.here { border-color: var(--signal); background: var(--signal-soft); }
+
+/* ---------- jump nav ---------- */
+.jump { position: fixed; left: 1rem; bottom: 1rem; z-index: 800; display: flex; background: var(--ink); border-radius: 999px; box-shadow: var(--shadow); transition: opacity .3s, transform .3s; }
+.jump.on-hero { opacity: 0; transform: translateY(10px); pointer-events: none; }
+.jump button { appearance: none; background: transparent; color: var(--paper); border: 0; font: 600 .7rem var(--font-mono); padding: .62rem .8rem; cursor: pointer; display: inline-flex; align-items: center; gap: .45rem; }
+.jump button:disabled { opacity: .35; cursor: default; }
+.jump button:hover:not(:disabled) { text-decoration: underline; text-underline-offset: .25em; }
+.jump-cur { max-width: 16rem; border-left: 1px solid rgba(128, 128, 128, .45) !important; border-right: 1px solid rgba(128, 128, 128, .45) !important; }
+.jump-cur span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.jump-backdrop { position: fixed; inset: 0; z-index: 790; background: rgba(10, 15, 25, .35); display: none; }
+.jump-backdrop.open { display: block; }
+.jump-menu { position: fixed; left: 1rem; bottom: 4rem; z-index: 810; width: min(640px, calc(100vw - 2rem)); max-height: 72vh; overflow: auto; background: var(--card); border: 1.5px solid var(--ink); border-radius: 8px; padding: .8rem; display: none; box-shadow: var(--shadow); }
+.jump-menu.open { display: block; }
+.jm-group { font: 600 .62rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--signal); margin: .6rem 0 .35rem; }
+.jm-group:first-child { margin-top: 0; }
+.jump-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .3rem; }
+.jump-grid a { display: block; padding: .45rem .6rem; border-radius: 4px; text-decoration: none; color: var(--ink); font-size: .92rem; line-height: 1.3; border: 1px solid var(--line); }
+.jump-grid a small { display: block; color: var(--muted); font-size: .74rem; }
+.jump-grid a:hover { border-color: var(--ink); }
+.jump-grid a.is-cur { background: var(--ink); color: var(--paper); }
+.jump-grid a.is-cur small { color: var(--line); }
+
+/* ---------- dialogs ---------- */
+dialog { border: 0; padding: 0; }
+dialog::backdrop { background: rgba(5, 9, 15, .72); }
+.pop { width: min(760px, calc(100vw - 1.5rem)); max-height: 86vh; border-radius: 8px; background: var(--card); color: var(--ink); box-shadow: var(--shadow); display: none; flex-direction: column; overflow: hidden; }
+.pop[open] { display: flex; }
+.pop-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .9rem 1.2rem; border-bottom: 1px solid var(--line); }
+.pop-head h2 { font-size: 1.6rem; }
+.pop-search { display: none; gap: .6rem; align-items: center; padding: .6rem 1.2rem; border-bottom: 1px solid var(--line); font: .72rem var(--font-mono); color: var(--muted); }
+.pop-search.on { display: flex; }
+.pop-search input { flex: 1; font: .9rem var(--font-body); padding: .45rem .6rem; border: 1px solid var(--line); border-radius: 4px; background: var(--paper); color: var(--ink); }
+#pop-body { overflow: auto; padding: 1rem 1.2rem 1.4rem; font-size: .96rem; line-height: 1.65; }
+#pop-body h1, #pop-body h2, #pop-body h3 { font-size: 1.4rem; margin: 1.1rem 0 .5rem; }
+#pop-body p { margin: 0 0 .8rem; }
+#pop-body ul, #pop-body ol { margin: 0 0 .8rem 1.3rem; padding: 0; }
+#pop-body li { margin-bottom: .35rem; }
+#pop-body blockquote { margin: 0 0 .8rem; padding-left: .9rem; border-left: 3px solid var(--line); color: var(--muted); }
+#pop-body hr { border: 0; border-top: 1px solid var(--line); margin: 1rem 0; }
+#pop-body .hide { display: none; }
+#pop-body mark { background: var(--amber-soft); color: var(--ink); }
+#pop-body .intro { font-size: .84rem; color: var(--muted); }
+.close-x { appearance: none; border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 999px; padding: .3rem .7rem; font: 600 .72rem var(--font-mono); cursor: pointer; }
+.close-x:hover { border-color: var(--ink); }
+.lightbox { background: transparent; max-width: 96vw; max-height: 96vh; }
+.lightbox[open] { display: flex; flex-direction: column; align-items: center; gap: .6rem; }
+.lightbox img { max-width: 94vw; max-height: 86vh; object-fit: contain; border-radius: 4px; background: #fff; }
+.lb-bar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: 100%; color: #fff; font: .76rem/1.45 var(--font-mono); }
+.lb-bar a { color: #fff; }
+.lb-bar button { appearance: none; background: #fff; color: #111; border: 0; border-radius: 999px; padding: .38rem .8rem; font: 600 .74rem var(--font-mono); cursor: pointer; margin-left: .6rem; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1280px) { :root { --dock-w: 340px; } .say, .widget, .board, .shots, .answers, .split, .ladder { margin-left: -1.2rem; margin-right: -1.2rem; } }
+@media (max-width: 999px) {
+  .hero { grid-template-columns: 1fr; gap: 2rem; }
+  .comic { max-width: 560px; margin: 0 auto; }
+  .room { display: block; }
+  .dock { position: fixed; right: .7rem; bottom: 4.3rem; top: auto; margin: 0; width: min(52vw, 280px); max-height: none; padding: .45rem; gap: .4rem; z-index: 700; transition: width .4s var(--ease); }
+  .dock .dock-head, .dock .now, .dock .chapters, .dock .dock-ctrls .wide-only { display: none; }
+  .dock .dbtn { padding: .38rem .55rem; font-size: .66rem; flex: 1 1 auto; justify-content: center; }
+  .dock .dock-min { display: inline-flex; }
+  body.dock-collapsed:not(.watch) .dock .vwrap, body.dock-collapsed:not(.watch) .dock audio { display: none; }
+  body.dock-collapsed:not(.watch) .dock { width: auto; }
+  body.dock-collapsed:not(.watch) .dock #share-btn { display: none; }
+  body.watch .dock { left: 0; right: 0; top: 0; bottom: auto; width: auto; border-radius: 0 0 8px 8px; padding: .5rem .6rem .6rem; }
+  body.watch .dock .now { display: block; font-size: .74rem; min-height: 0; }
+  body.watch .dock .now .in-story { display: none; }
+  body.watch .dock .dock-min { display: none; }
+  body.watch { padding-top: var(--dock-h, 0px); }
+  body.watch .chap { scroll-margin-top: calc(var(--dock-h, 0px) + .5rem); }
+  body.watch .story .chap { opacity: .92; }
+  .say, .widget, .board, .shots, .answers, .split, .ladder { margin-left: 0; margin-right: 0; }
+  .jump { left: .7rem; bottom: .7rem; }
+  .jump-menu { left: .7rem; bottom: 3.9rem; width: calc(100vw - 1.4rem); }
+  .ladder { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .series { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  body { font-size: 17.5px; }
+  :root { --pad: 1rem; }
+  .shots, .readout, .lm, .split { grid-template-columns: 1fr; }
+  .split > div + div { border-left: 0; border-top: 1.5px solid var(--ink); }
+  .cards { grid-template-columns: 1fr; }
+  .series { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .say { padding-left: 1rem; }
+  .say p { font-size: 1.26rem; }
+  .board { padding: 1.3rem 1.1rem; }
+  .widget { padding: 1rem .9rem; }
+  .stall { grid-template-columns: 1fr auto; grid-template-areas: "nm val" "seg seg" "bar bar"; gap: .35rem .6rem; padding-bottom: .5rem; border-bottom: 1px solid var(--line); }
+  .stall .nm { grid-area: nm; } .stall .seg { grid-area: seg; } .stall .gbar { grid-area: bar; } .stall .gval { grid-area: val; }
+  .answers li { grid-template-columns: 1fr; gap: .2rem; }
+  .ladder { grid-template-columns: 1fr; }
+  .mf-ctrl { grid-template-columns: 1fr; text-align: center; }
+  .week-ctrl { grid-template-columns: 1fr; }
+  .jump-cur { max-width: 11rem; }
+  .jump-grid { grid-template-columns: minmax(0, 1fr); }
+  .topbar .long { display: none; }
+}
+@media (min-width: 721px) and (max-width: 1100px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>
+</head>
+<body>
+<a class="skip" href="#story">Skip to the story</a>
+<div id="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <a href="../"><span class="long">Talks · </span>S Anand</a>
+  <div class="tb-right">
+    <span class="long">9 Nov 2026 · 77 min recording</span>
+    <button class="icon-btn" id="theme-btn" type="button" aria-label="Toggle dark mode"><i class="bi bi-moon-stars" aria-hidden="true"></i></button>
+  </div>
+</header>
+
+<section class="hero" aria-labelledby="title">
+  <div>
+    <div class="kicker"><span><b>IIT Madras</b> · Tools in Data Science</span><span>Open design meeting · episode 5</span><span>Mon 9 Nov 2026 · remote</span></div>
+    <h1 id="title">Who watches the <em>deadline</em> watchers?</h1>
+    <p class="deck">A course stopped announcing its deadlines, on purpose. A student built a countdown to keep everyone safe. <strong>It was correct, and it still pointed at the wrong moment.</strong> The meeting that followed asked whether a course that hides its rules teaches initiative or just rewards whoever has time to keep up. It also asked who checks that anyone actually learned.</p>
+    <p class="who">This is a recorded, unrehearsed working session of the <a href="https://tds.s-anand.net/">Tools in Data Science</a> (TDS) team, streamed so students could watch the course being argued over. In the room: instructor <a href="https://www.s-anand.net/">Anand S</a>; JK (Jayakrishnan Warriem) and Carlton D’Silva of the programme team; TAs Hritik, Jaideep and Agrim; and students Preethi, Saptadev and Swarnam. Anand left at 66:26, and the last eleven minutes went on without him.</p>
+    <div class="hero-actions">
+      <a class="btn" href="?view=video" id="hero-watch"><i class="bi bi-play-btn-fill" aria-hidden="true"></i> Watch alongside</a>
+      <a class="btn ghost" href="#watcher"><i class="bi bi-book" aria-hidden="true"></i> Start reading</a>
+      <a class="btn ghost" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+      <a class="btn ghost" href="chat.md" data-md="Meeting chat"><i class="bi bi-chat-left-text" aria-hidden="true"></i> Chat</a>
+    </div>
+    <div class="audio-line">
+      <span><i class="bi bi-headphones" aria-hidden="true"></i> Audio only</span>
+      <audio controls preload="none" aria-label="Audio recording of the meeting">
+        <source src="https://github.com/sanand0/talks/releases/download/talks/2026-11-09-tds-ideation.opus" type="audio/ogg; codecs=opus">
+      </audio>
+    </div>
+    <div class="howto" role="note" aria-labelledby="howto-h">
+      <h2 id="howto-h">How to read this</h2>
+      <ul>
+        <li>Every <a class="ts" href="?t=10:32">10:32</a> plays that moment in the video panel, keeping your place in the story. The URL updates, so any moment is shareable.</li>
+        <li>Quotations are checked against the recording’s captions. Trims are marked “…”.</li>
+        <li>Tags say how we know a thing:
+          <span class="evrow"><span class="ev ev-call">On the call</span><span class="ev ev-chat">Meeting chat</span><span class="ev ev-code">In the code</span><span class="ev ev-res">Research</span><span class="ev ev-read">Our reading</span><span class="ev ev-toy">Toy model</span></span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <figure class="comic">
+    <span class="tag">The comic version</span>
+    <a href="comic-page.avif" data-lightbox data-caption="The meeting as an AI-drawn eight-panel comic: an illustrator’s interpretation, not a record." aria-label="Enlarge the comic page">
+      <img src="comic-page.avif" width="1055" height="1491" alt="Eight-panel comic titled ‘TDS course ideation: why this course feels so strange’. 1: an instructor pulls a curtain from an ‘old exam world’ (memorize, solve, write, repeat) to an ‘AI-era training ground’ of agents, tools and dashboards: ‘Yes, this is deliberate.’ 2: deadlines, news and opportunities parachute in; a student’s ‘My watcher’ laptop and an alert bot catch them: signal, alert, action; ‘unannounced deadlines are intentional’. 3: hourglasses shrink from 10 days to 4 days to 20 minutes as a student sprints past hurdles labelled context, live response and turnaround. 4: ‘Food Court challenge’: four students at stalls A–D with 0/10/20% discount buttons, a live profit chart, a group chat agreeing to avoid a price war, and a two-stall payoff sketch. 5: ‘the TDS pit crew’: tools, multiple agents, classmates and websites with a verify checklist: ‘cheat better’ means legitimate leverage. 6: a student with a magnifying glass at a failed login asks ‘bug or your setup?’ beside a thought bubble ‘what am I learning?’ linking tool choice, verification, benchmarking and observation. 7: robots do routine BTech work while students climb steps of judgment, curiosity, collaboration and learning how to learn. 8: students pass under an arch reading ‘Upgrade faster than the world’: build alerts, run experiments, ask better questions, learn from grievances.">
+    </a>
+    <figcaption>Tap to enlarge. <strong>An illustrator’s interpretation, not evidence.</strong> It is faithful to the arguments but tidier than the meeting. Panel 4’s payoff table and profit chart are invented, not the game’s real numbers. The real grade is 60% team profit and 40% your own. Panel 3’s “20 minutes” is the length of a game sitting, not a deadline.</figcaption>
+  </figure>
+</section>
+
+<div class="room" id="room">
+<main class="story" id="story">
+
+<!-- ================= ACT I ================= -->
+<section class="chap" id="watcher" data-act="I · The watcher" data-title="Six days, six hours">
+  <div class="act"><span>I · The watcher</span><span>09:24 – 12:38</span></div>
+  <h2>Six days, <em>six hours</em></h2>
+  <p class="lede">Ten minutes into the meeting, Anand pulled up a website one of his students had built. TDS no longer pre-announces when questions appear or when they close. <strong>It wants students to build their own alarms.</strong> A student, Aaryan Panda, had done exactly that. <a href="https://aaryanpanda.github.io/tds-watcher/">TDS Watcher</a> reads the course site and the exam portal and shows a countdown for everything that is open. Carlton had mentioned it in the chat; Anand was <q>hoping there’d be more such sites</q>. <a class="ts" href="?t=09:24">09:24</a></p>
+  <p>Then he asked the question the course asks of every student: <strong>is it up to date?</strong> He opened it and shared his screen. The big number said GA4, the week-4 graded assignment, had <strong>6d 6h</strong> left. That was right. The deadline had been pushed back that very morning to Sunday 15 November, 11:59 pm IST, and the Watcher had picked up the change. Then Anand read the rows underneath.</p>
+  <div class="say big"><p>“This is a mistake, because the Food Court is a live session…”</p><footer><b>Anand</b>, reading the tracker aloud <a class="ts" href="?t=10:32">10:32</a></footer></div>
+  <p>GA4 Q2 is a game, played live. You join one of three <strong>20-minute</strong> sittings: Tuesday 6:00 pm, Wednesday 7:30 am or Wednesday 9:00 pm IST. Q3 is a team poster built in one of three <strong>45-minute</strong> sittings, Thursday to Saturday. The Watcher listed both with the same <q>6d 6h</q> as the final deadline. <strong>Read literally, it said you had until Sunday to play a game that would be over by Wednesday night.</strong></p>
+  <p>JK dropped a link to a second student tracker, <a href="https://dueline-tds.vercel.app/">DueLine</a>, into the chat. <a class="ts" href="?t=11:22">11:22</a> It was smarter about the game: it showed each Food Court sitting as its own card. But its “GA4 overall deadline” card still sat on <strong>Wednesday 11 November</strong>, the date the deadline had just been moved <em>from</em>. <q>Yeah, this is misleading</q>, Anand said, without saying which part he meant. <a class="ts" href="?t=12:08">12:08</a></p>
+
+  <div class="shots" role="group" aria-label="The two student trackers as shown on screen in the meeting">
+    <figure class="shot">
+      <div class="hd">TDS Watcher · on screen at 10:28</div>
+      <a class="img" href="tracker-watcher.webp" data-lightbox data-caption="TDS Watcher as shown in the meeting at 10:28: GA4 due Sun 15 Nov, 11:59 PM, 6d 6h left; Q1 face review, Q2 Food Court (20 minutes) and Q3 Time Use Charts (45 minutes) each show 6d 6h."><img src="tracker-watcher.webp" width="940" height="536" loading="lazy" alt="Screenshot of TDS Watcher in dark mode. Under ‘Open now — submit before the countdown hits zero. Times are IST’: GA4 Week-4, due Sun 15 Nov, 11:59 PM, 6d 6h left. Three questions, two new: Q1 Review classmates’ GA3 faces, Q2 Food Court: share a food court, live (20 minutes), Q3 Time Use Charts: make a data poster with your team, live (45 minutes). Each row shows 6d 6h. A side panel offers email alerts when something changes."></a>
+      <figcaption><b>Right deadline, flat clock.</b> The final date is correct. But all three questions count down to Sunday, including the two you can only do at set times earlier in the week. <a class="ts" href="?t=10:28">10:28</a></figcaption>
+    </figure>
+    <figure class="shot">
+      <div class="hd">DueLine · on screen at 12:00</div>
+      <a class="img" href="tracker-dueline.webp" data-lightbox data-caption="DueLine as shown in the meeting at about 12:00: ‘Never miss a TDS deadline again’. GA4 Question 2 Session 1 on Tue 10 Nov 6:00 PM; on Wed 11 Nov, Session 2 at 7:30 AM, Session 3 at 9:00 PM and ‘GA4 overall deadline’ at 11:59 PM."><img src="tracker-dueline.webp" width="700" height="536" loading="lazy" alt="Screenshot of DueLine in dark mode, headed ‘Never miss a TDS deadline again’, all times IST. Tue 10 Nov: GA4 Question 2, Session 1, 6:00 PM. Wed 11 Nov: Project 1, Question 1; GA4 Question 2 Session 2, 7:30 AM; GA4 Question 2 Session 3, 9:00 PM; GA4 Overall deadline, 11:59 PM. A ‘Next up’ panel shows GA4 Question 2 Session 1, tomorrow 6:00 PM."></a>
+      <figcaption><b>Right sessions, stale deadline.</b> It shows the three game sittings, but the “overall deadline” is Wednesday’s, from before the extension. <a class="ts" href="?t=12:00">12:00</a></figcaption>
+    </figure>
+  </div>
+
+  <div class="say"><p>“We will need our own tracker for all these trackers. Meta tracker.”</p><footer><b>JK</b>, programme team, unmuting <a class="ts" href="?t=12:28">12:28</a></footer></div>
+  <p>It got a laugh, and it is the best one-line summary of the hour. Neither site was broken. Each was a fast, free, public tool that classmates had signed up to; the Watcher’s alert panel said fourteen students were getting its emails. <strong>Neither got the arithmetic wrong. Each got the model of the world wrong.</strong> A final submission deadline is one kind of event. A sitting you must be present for is another. A deadline that moved this morning is a third. A tracker that has only the first kind can count perfectly and still mislead you. <span class="ev ev-read">Our reading</span></p>
+  <p>That is the course’s own lesson coming back at it. TDS says that when agents do the execution, humans have to <a href="../2026-10-05-tds-orientation/">specify and verify</a>. The student did what the course asked: built a tool to watch the course. <strong>The next skill is checking that the tool understood what it was watching.</strong> The same goes for the course, as the rest of the meeting showed.</p>
+
+  <div class="widget" id="w-week" aria-labelledby="w-week-h">
+    <header><h3 id="w-week-h">What a countdown can’t see</h3><span class="ev ev-code">GA4 schedule, as coded 9 Nov</span></header>
+    <p class="intro">The GA4 week in <strong>IST</strong>. Slide “now” and compare the one number a countdown shows with what you can still actually do.</p>
+    <div class="guess" id="wk-guess">
+      <p><strong>Guess first.</strong> It’s <strong>Thursday 12 Nov, 9:00 am IST</strong>. The countdown says GA4 has <strong>3d 14h</strong> left. Which question can you no longer attempt at all?</p>
+      <div class="opts" role="group" aria-label="Your guess">
+        <button type="button" data-g="q1">Q1 Face review</button>
+        <button type="button" data-g="q2">Q2 Food Court</button>
+        <button type="button" data-g="q3">Q3 Time Use Charts</button>
+        <button type="button" data-g="none">None — 3 days is plenty</button>
+      </div>
+      <p class="reveal" id="wk-reveal" hidden aria-live="polite"></p>
+    </div>
+    <svg class="week-svg" id="wk-svg" viewBox="0 0 1000 268" role="img" aria-labelledby="wk-svg-t">
+      <title id="wk-svg-t">Timeline of GA4, Monday 9 to Sunday 15 November 2026 in IST: a single countdown bar to Sunday 23:59; Q1 face review open throughout; three 20-minute Food Court sittings on Tuesday 6 pm and Wednesday 7:30 am and 9 pm; three 45-minute Time Use Charts sittings on Thursday 9 pm, Friday 6 pm and Saturday 8 am; the old deadline of Wednesday 23:59 shown dashed.</title>
+      <g id="wk-g"></g>
+    </svg>
+    <div class="week-ctrl">
+      <label for="wk-now">Now (IST)</label>
+      <input type="range" id="wk-now" min="0" max="100" step="1" value="0" aria-describedby="wk-when">
+    </div>
+    <div class="readout">
+      <div class="clock" aria-live="polite">
+        <div class="when" id="wk-when">Mon 9 Nov, 5:30 pm IST</div>
+        <div class="digits" id="wk-digits">6d 6h</div>
+        <div class="lab">what a single countdown shows</div>
+        <div class="local" id="wk-local"></div>
+      </div>
+      <ul class="reality" id="wk-real" aria-live="polite"></ul>
+    </div>
+    <p class="fine">Sittings and deadline from the GA4 page as committed to the exam’s source on 9 Nov. Food Court opens 15 minutes before each sitting and closes to joiners 90 seconds after the start. Time Use Charts needs you for the full 45 minutes. The dashed marker is the old deadline, replaced at 9:28 am IST on 9 Nov. Nothing here says who can or can’t attend at those times.</p>
+  </div>
+</section>
+
+<section class="chap" id="design" data-act="I · The watcher" data-title="Hard to track, on purpose">
+  <div class="act"><span>I · The watcher</span><span>05:50 – 16:16</span></div>
+  <h2>Hard to track, <em>on purpose</em></h2>
+  <p>None of this was an accident. Five minutes earlier, Anand had set out the policy in plain terms. Question timings are <q>not pre-announced and this is intentional</q>. <a class="ts" href="?t=06:16">06:16</a> He compared it to work: noticing when a request for proposals drops, when news means you must sell a stock before anyone else, when a tender opens. <strong>The skill is an alert system you build yourself, and later one your agent acts on.</strong></p>
+  <div class="say"><p>“So our hope is that we will be able to take it to the point where your agent can act on it.”</p><footer><b>Anand</b> <a class="ts" href="?t=07:24">07:24</a></footer></div>
+  <p>Then came a sketch of where it was heading, and it is worth reading as a <em>proposal</em>, not a schedule: <q>in a term or two from now there will be questions that will be announced at midnight whose deadline will be 4:00 a.m.</q> <a class="ts" href="?t=07:32">07:32</a> Agents, not sleepy students, would answer them; <q>the smarter configurations will be able to solve it. The lesser configurations will not</q>. The current three-to-four-day windows, he said, are <q>temporary</q> and will shrink. <a class="ts" href="?t=09:12">09:12</a> <span class="ev ev-call">On the call</span></p>
+  <p>Students heard it live. Swarnam typed into the chat that the first Food Court sitting clashed with a viva for another course. <a class="ts" href="?t=09:04">09:04</a> Anand had a ready answer: <q>No problem. Take it instead on 11th November. That’s why we have three slots.</q> <a class="ts" href="?t=11:44">11:44</a></p>
+  <p>JK then gave the programme’s view. Most TDS assessments keep the ordinary 10-day window; <q>one or two or maybe maximum four</q> carry this kind of pressure. <a class="ts" href="?t=12:52">12:52</a> Any well-made exam, he argued, mixes questions that almost anyone can attempt with a few <q>highly discriminatory</q> ones that separate people with a specific skill. <a class="ts" href="?t=13:24">13:24</a> Carlton suggested a gentler word in the chat: <q>differentiators</q>. <a class="ts" href="?t=13:17">13:17</a> JK said that when students raise reasonable grievances, the team has turned questions into bonus marks. <a class="ts" href="?t=15:12">15:12</a></p>
+  <div class="board">
+    <div class="lbl">The counterargument that bites</div>
+    <p class="big">Three sittings fix one clash. They don’t show who could make none of them.</p>
+    <p>Tuesday evening, Wednesday early morning, Wednesday night. A student with a job, a viva and a family could miss all three, and we don’t know how many did. The midnight-to-4am plan goes further. If <strong>“smarter configurations”</strong> win, the question may grade the machine, the subscription and the electricity supply as much as the student. Anand presents that as the lesson, a nudge to set up better agents. It is also a cost, and some can pay it more easily than others. <span class="ev ev-read">Our reading</span></p>
+    <p><strong>Evidence that would settle it:</strong> how many students could attend no sitting; whether scores differ by which sitting people could make; and whether students who were told the windows a week ahead did any better at the actual skill than students who had to find them.</p>
+  </div>
+</section>
+
+<section class="chap" id="check" data-act="I · The watcher" data-title="“Why don’t you check?”">
+  <div class="act"><span>I · The watcher</span><span>16:16 – 22:30</span></div>
+  <h2>“Why don’t you <em>check</em>?”</h2>
+  <p>Two students then showed the policy’s two faces in about five minutes.</p>
+  <p>Saptadev had posted the same problem on the course forum several times and again in the chat. <a class="ts" href="?t=14:39">14:39</a> The GA4 face-review app kept telling him to <q>Sign in from GA3</q>. When he did, it sent him back to the same message. He had a guess: he had not attempted GA3. Carlton gave him the floor.</p>
+  <div class="say"><p>“So it always says sign in from GA3. I cannot sign in even from my mobile device or some other device.”</p><footer><b>Saptadev</b>, student <a class="ts" href="?t=17:56">17:56</a></footer></div>
+  <p>Two other students had the same problem, he said. Anand’s reply was the course in miniature: <q>Figure out how to fix it.</q> <a class="ts" href="?t=18:12">18:12</a> Unless TAs had confirmed a bug, he reasoned, <q>if the majority of the people are not facing the problem… then it’s your configuration</q>. <a class="ts" href="?t=18:32">18:32</a> Then he gave a real debugging recipe: <q>Find somebody else’s machine. See if it is only this particular email ID that fails.</q> <a class="ts" href="?t=19:00">19:00</a> He also said he had run a health scan of the system the day before and that day, and that a confirmed systemic issue would be <q>easy enough to fix</q>. <a class="ts" href="?t=21:32">21:32</a></p>
+  <div class="note"><span class="lbl">Our note</span><p><strong>“Most people can log in” proves the system works for most people, not for everyone.</strong> A bug that only hits one group, say students who skipped GA3, looks exactly like a configuration problem from the outside. That is what Saptadev suspected. The meeting didn’t settle it, and neither can we. Three students reporting the same message is a reason to test that group, not proof either way.</p></div>
+  <p>Preethi raised a second problem from the chat: students who <em>had</em> done GA3 couldn’t paste their participation receipt. <a class="ts" href="?t=16:18">16:18</a> That one had an answer: <q>That is intended</q>, Anand said, because the review was still open. <a class="ts" href="?t=19:32">19:32</a> When would that be? <q>I’m consciously not telling you</q>, he said, because finding out is part of the work. <a class="ts" href="?t=20:04">20:04</a> Preethi tried to pin it down anyway.</p>
+  <div class="say big"><p>Preethi: “…the GA4 is 11th is the deadline, right?”<br>Anand: “Why don’t you check?”<br>Preethi: “Oh, God.”</p><footer><b>Preethi</b>, student, and <b>Anand</b> <a class="ts" href="?t=20:40">20:40</a></footer></div>
+  <p>Anand was smiling. <q>But the news is good, not bad.</q> <a class="ts" href="?t=20:56">20:56</a> She found the GA4 page and read out the new date: Sunday 15 November. In twenty seconds she had done what DueLine hadn’t, and <strong>the “Oh, God” is the sound of what that discovery costs</strong>: the jolt of realising that what you thought you knew may already have changed.</p>
+  <p>The course has a fair defence. The change was not hidden. The GA4 page said in a yellow box that the deadline had been <q>extended from Wednesday 11 November</q>, and one student-built tracker had caught it by the evening. <span class="ev ev-code">In the code</span> Anand added, for the TAs, that he had just introduced a question that would probably fail on Safari, on purpose, to see who notices that browsers differ. <a class="ts" href="?t=22:04">22:04</a></p>
+  <div class="board">
+    <div class="lbl">Where Act I lands</div>
+    <p class="big">What a learner can figure out alone, the system still has to state, and keep working.</p>
+    <p>The good news reached Preethi because she was on a live call and was told to look. A student who wasn’t there had to find the yellow box, or trust a tracker that had or hadn’t noticed. <strong>Self-reliance is a fine skill to teach. It’s a poor way to deliver a fix for a bug only a few people hit.</strong> The course seems to know this: it ran health scans, kept three sittings and turned hard questions into bonus marks. The open question is whether anyone measures what slips through. <span class="ev ev-read">Our reading</span></p>
+  </div>
+</section>
+
+<!-- ================= ACT II ================= -->
+<section class="chap" id="foodcourt" data-act="II · The food court" data-title="Four stalls, twenty minutes">
+  <div class="act"><span>II · The food court</span><span>22:30 – 29:46</span></div>
+  <h2>Four stalls, twelve months, <em>twenty minutes</em></h2>
+  <p class="lede">Why squeeze the clock at all? Anand’s answer started with an overstatement: <q>AI can answer anything given time</q>. <a class="ts" href="?t=23:16">23:16</a> His real point was narrower: <strong>people still want a good answer now.</strong> <q>People still expect, I ask you a question, I want a smart answer immediately.</q> <a class="ts" href="?t=23:36">23:36</a> To show what that means, he opened a spreadsheet.</p>
+  <p>The Food Court is a live game. In one of the three sittings, four or five classmates land in a room. Each runs a stall in the same food court for a simulated year. <strong>Every month each stall picks one of three discounts: 0%, 10% or 20%.</strong> A discount pulls customers from rivals and brings more people into the whole court, but you earn less on each meal. Customers remember last month. There is a chat box. After twenty minutes, whatever plan you last saved is the plan you run. <a class="ts" href="?t=25:20">25:20</a> <span class="ev ev-code">In the code</span></p>
+  <div class="say"><p>“If everybody gets it to 20%, customer is happy but all of you are making less profit. You can chat. You can all decide to collude and set it to 0%.”</p><footer><b>Anand</b>, sketching the game in a spreadsheet <a class="ts" href="?t=26:56">26:56</a></footer></div>
+  <p>He summed it up as <q>how can you collaborate and win</q> <a class="ts" href="?t=27:24">27:24</a>, and he told students to use their agents, with a twist: <q>it’s not as much about the agent. It is more about whether you can convince your peers the right way.</q> <a class="ts" href="?t=28:28">28:28</a> He guessed the humans might even beat their best agents here, <q>because you know</q> your classmates. Preethi asked in the chat whether they could play all three sittings. JK: <q>Yes</q>. <a class="ts" href="?t=28:49">28:49</a></p>
+  <div class="note"><span class="lbl">Read the rule, not the speech</span><p>On the call, Anand said <q>your marks are going to be based on your profit</q>. <a class="ts" href="?t=27:12">27:12</a> The question as published says otherwise. <strong>Your mark is 60% the whole court’s profit and 40% your own.</strong> Both are scored against the best result that is actually achievable, and your best signed result from up to three sittings counts. The spoken version is a shortcut; the code is the contract. <span class="ev ev-code">In the code</span></p></div>
+
+  <div class="widget" id="w-fc" aria-labelledby="w-fc-h">
+    <header><h3 id="w-fc-h">A food court with one decision a year</h3><span class="ev ev-toy">Toy: real formula, simplified play</span></header>
+    <p class="intro">Four stalls, using the game’s published economics and its 60/40 grade, with one change: <strong>each stall picks a single discount for the whole year</strong>. The real game lets you change every month, and customers remember, which is where most of the negotiating happens.</p>
+    <div class="guess" id="fc-guess">
+      <p><strong>Guess first.</strong> All four stalls “collude” at 0% for the year. Compared with a full price war, everyone at 20%, the court’s total profit is…</p>
+      <div class="opts" role="group" aria-label="Your guess">
+        <button type="button" data-g="higher">Much higher</button>
+        <button type="button" data-g="same">About the same</button>
+        <button type="button" data-g="lower">Lower</button>
+      </div>
+      <p class="reveal" id="fc-reveal" hidden aria-live="polite"></p>
+    </div>
+    <div class="fc-legend"><span><i style="background:var(--window)"></i>grade (60% team + 40% own), out of 100</span></div>
+    <div class="stalls" id="fc-stalls"></div>
+    <div class="fc-sum" aria-live="polite"><span><b id="fc-team">–</b>team score</span><span><b id="fc-mean">–</b>average grade</span><span><b id="fc-profit">–</b>court profit / year</span></div>
+    <div class="fc-btns">
+      <button class="wbtn ghost" type="button" data-preset="0,0,0,0">Everyone 0%</button>
+      <button class="wbtn ghost" type="button" data-preset="10,10,10,10">Everyone 10%</button>
+      <button class="wbtn ghost" type="button" data-preset="20,20,20,20">Everyone 20%</button>
+      <button class="wbtn" type="button" id="fc-br"><i class="bi bi-arrow-repeat" aria-hidden="true"></i> Let each stall chase its own grade</button>
+    </div>
+    <div class="fc-log" id="fc-log" aria-live="polite"><span class="m"># Start from “Everyone 10%”, then press the last button.</span></div>
+    <p class="fine">Formula from the game’s source (rooms of four; attraction, loyalty, shared footfall and season as published), scored against the source’s exact best achievable totals. Whole-year constant plans only, so the real game’s best plans may differ, and we deliberately haven’t worked them out. Rupee figures use the game’s scale (₹200 meal, ₹80 food cost). No student results are used.</p>
+  </div>
+  <p>Two things fall out of the toy, and both bear on what the game can teach. <strong>First, “collude at 0%” isn’t the safe group play it sounds like.</strong> Discounts bring people into the whole court, so a court where nobody discounts leaves money on the table. Over a year, it scores the same as an all-out price war, to one decimal place. <strong>Second, the 60% team weight doesn’t remove the temptation.</strong> From “everyone at 10%”, any one stall can lift its own grade by jumping to 20%. Each rival then does the same, and the room slides to 20/20/20/20, where everyone does worse than where they started. That is the textbook <a href="https://en.wikipedia.org/wiki/Prisoner%27s_dilemma">prisoner’s dilemma</a>, played with classmates, a chat box and a clock. <span class="ev ev-toy">Toy model</span></p>
+  <p>JK put a label on it: <q>operation research at an MTech level</q> plus the street-smart <i>baniya</i> instinct from a film like <i>Guru</i>. <a class="ts" href="?t=29:46">29:46</a> Anand went further: <q>today, why would I hire a BTech or a BS? An agent can do that.</q> <a class="ts" href="?t=31:03">31:03</a> JK agreed he now wanted <q>close to PhD level skill sets</q> from people working under him. <a class="ts" href="?t=32:28">32:28</a> These are two employers’ views, not labour-market data. They explain why the course keeps raising the bar, and how high the bar is.</p>
+  <div class="board">
+    <div class="lbl">What a good score can’t tell you</div>
+    <p class="big">An agent can optimise the spreadsheet. Only the chat shows whether anyone learned to persuade.</p>
+    <p>Suppose one student asks an agent for the best plan and pastes it into the chat, and the room trusts it. The room scores well, but did anyone learn negotiation, or game theory? The grade can’t say. <strong>The hypothesis, that twenty minutes of live haggling builds an intuition for strategic decisions, is plausible and untested.</strong> The game does keep each room’s chat, so it could be tested by reading what rooms actually said, not just what they earned. <span class="ev ev-read">Our reading</span></p>
+  </div>
+</section>
+
+<!-- ================= ACT III ================= -->
+<section class="chap" id="figure" data-act="III · What did you learn?" data-title="“You figure it out”">
+  <div class="act"><span>III · What did you learn?</span><span>31:42 – 42:18</span></div>
+  <h2>“You figure it <em>out</em>”</h2>
+  <p class="lede">JK opened the floor: <q>if you are silent at this point of time, forever you will stay silent</q>. <a class="ts" href="?t=31:48">31:48</a> Hritik, a TA, passed on what students keep asking him. Looking at a question, they want to know <strong>what they are meant to be learning</strong>, and what a live session can teach them. They want it pinned down to tools and skills. <a class="ts" href="?t=33:36">33:36</a></p>
+  <div class="say big"><p>“If somebody asked me what am I learning, my first answer will be: you figure it out. That’s also part of the learning.”</p><footer><b>Anand</b> <a class="ts" href="?t=34:00">34:00</a></footer></div>
+  <p>He gave reasons. One question can teach several things. <q>Learning is a choice.</q> <a class="ts" href="?t=34:20">34:20</a> Teachers, he argued, <q>are not actually trying to teach students. They are creating an environment so that students will be able to learn.</q> <a class="ts" href="?t=34:28">34:28</a> Later he split his answer in three. A: work out what you learned. B: he has things he means to teach, and will share his intent <q>when the time is right</q>. C: you learn something just by practising, even if you can’t name it. <a class="ts" href="?t=39:00">39:00</a> He backed C with an image, not a statistic: you can’t learn to swim in a classroom. <a class="ts" href="?t=37:44">37:44</a> (His <q>90% of our actions are subconscious</q> is a figure of speech, not a measurement.)</p>
+  <p>Then he made a claim that can be checked. The team had measured, he said, how often a student who failed a skill on one assignment passed it on a later one.</p>
+  <div class="say"><p>“On the good questions, the learning seems to be only around 20 or 30%… For some reason, we have created questions where students are doing even worse the second time… Luckily, more than half the questions, there is a certain amount of positive learning that we can measure.”</p><footer><b>Anand</b> <a class="ts" href="?t=35:12">35:12</a></footer></div>
+  <p>That is a striking and honest number: <strong>even on the best questions, only 20 to 30% improved by his measure, and some questions went backwards.</strong> But “failed, then passed” is a slippery signal. The later question may be easier. Agents may have improved between quizzes. The students who failed may simply have tried harder the second time. The widget below uses made-up numbers to show the trap.</p>
+
+  <div class="widget" id="w-lm" aria-labelledby="w-lm-h">
+    <header><h3 id="w-lm-h">Did they learn it, or are they just good?</h3><span class="ev ev-toy">Illustrative numbers, not TDS data</span></header>
+    <p class="intro">1,000 hypothetical students, one dot per 10. Each sat an <strong>earlier question</strong> and then a <strong>later API-deployment question</strong>. Switch the earlier question and watch which numbers move.</p>
+    <div class="seg" role="group" aria-label="Which earlier question?" id="lm-seg">
+      <button type="button" aria-pressed="true" data-s="same">Earlier: same skill</button>
+      <button type="button" aria-pressed="false" data-s="unrel">Earlier: unrelated skill</button>
+      <button type="button" aria-pressed="false" data-s="bottle">A real bottleneck</button>
+    </div>
+    <div class="lm">
+      <div>
+        <div class="dots" id="lm-dots" role="img" aria-label="Dot grid of 100 dots"></div>
+        <ul class="lm-key">
+          <li><i style="background:var(--window)"></i>failed earlier → passed later (“improved”)</li>
+          <li><i style="background:var(--signal)"></i>passed earlier → failed later (“worsened”)</li>
+          <li><i style="background:var(--window);opacity:.55"></i>passed both <i style="background:var(--gray-dot);margin-left:.8rem"></i>failed both</li>
+        </ul>
+      </div>
+      <div class="lm-stats" aria-live="polite">
+        <div class="lm-stat"><b id="lm-ratio">–</b><span>improved for every one who worsened: the headline number</span></div>
+        <div class="lm-stat"><span>later pass rate, by how they did earlier</span>
+          <div class="lm-bars">
+            <div class="lm-bar"><span>passed earlier</span><div><i id="lm-bp"></i></div><b id="lm-vp">–</b></div>
+            <div class="lm-bar f"><span>failed earlier</span><div><i id="lm-bf"></i></div><b id="lm-vf">–</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="lm-say" id="lm-say"></p>
+    <p class="fine">Every number in this widget is invented to show the logic, not TDS results. It reflects the design the course team is using: same students, earlier vs later, scored pass/fail, compared against an unrelated earlier question as a control.</p>
+  </div>
+  <p>This isn’t a hypothetical worry. The team’s exploratory analysis behind Anand’s figure is unpublished, and we could not rerun it, so we don’t quote its numbers. <span class="ev ev-read">Not independently checked</span> But its own write-up flags this exact problem. For one of its best-looking pairs, an earlier question on a <em>different</em> skill predicted later success almost as well as the related one did. <strong>“They improved” was real. “They learned that skill” didn’t follow.</strong> The same write-up found the opposite pattern on a terminal-recording task: earlier success strongly predicted later success. That points to a real skill. It also means the students who lacked it mostly hadn’t picked it up by the next test.</p>
+
+  <p>Carlton then brought in the outside world. He had shared a BBC piece in the chat <a class="ts" href="?t=36:58">36:58</a>: <a href="https://www.bbc.com/news/articles/c820vz6wyp65o">“Graduates are managing AI – but are they learning much else?”</a> by MaryLou Costa, 4 November 2026. His reading was upbeat. Lotte Underwood, 25, a recent graduate, works in the AI team of a London PR agency, Fight or Flight. The team has built around 30 agents for research, client reports and interview prep, and her job is to manage them and check their output. <q>She’s effectively become an AI manager. And that’s the kind of upskill that companies are looking for.</q> <a class="ts" href="?t=40:20">40:20</a> He added a story about a non-coding insurance founder running his office on agents, and <q>access to an unlimited number of PhDs for $20 a month</q>. <a class="ts" href="?t=42:00">42:00</a></p>
+  <div class="board">
+    <div class="lbl">The same article, read the other way</div>
+    <p class="big">The headline is a question, and the piece doesn’t answer it with a yes.</p>
+    <p>Under the subheading “Learning the trade”, the BBC asks whether graduates whose working day is spent on AI <strong>miss the professional craft they were hired into</strong>. Underwood herself says there are traditional PR skills, like pitching directly to the media, that she <q>hasn’t had the chance to do yet</q>. <span class="ev ev-res">Research</span> That is the strongest objection to Anand’s “let agents do the BTech work; you do the layer on top”. Where does the judgment for the layer on top come from? JK, after Anand had left, called it the missing <a href="#after">“battle scars”</a>.</p>
+  </div>
+</section>
+
+<section class="chap" id="morph" data-act="III · What did you learn?" data-title="One question, five lessons">
+  <div class="act"><span>III · What did you learn?</span><span>42:18 – 64:49</span></div>
+  <h2>One question, <em>five lessons</em></h2>
+  <p class="lede">So Anand ran an experiment on the spot. He opened the September GA3 and asked the TAs and students what the face-morphing questions teach. In Q7 you make a video that morphs one face into another. In Q8 you rank ten pairs of faces by how easy they would be to morph. <q>Not that there’s necessarily a right or wrong answer.</q> <a class="ts" href="?t=42:18">42:18</a> <strong>He got five different answers, and each was defensible.</strong></p>
+  <ol class="answers">
+    <li><p class="who">Preethi<small>student · chat <a class="ts" href="?t=43:16">43:16</a></small></p><div><h3>Observation</h3><p>She typed <q>observation skills?</q>, then unmuted to recall the morphing in Michael Jackson’s “Black or White” video and reason it out. Similar face shape, sex and hair should morph smoothly; black-and-white to colour, or blonde to black hair, should be harder. <a class="ts" href="?t=43:36">43:36</a> Anand put up his own list of AI-era skills, which includes <strong>Noticing</strong>: <q>Spotting important, interesting, risky, … stuff before anyone asks for it.</q> <a class="ts" href="?t=44:44">44:44</a></p></div></li>
+    <li><p class="who">Hritik<small>TA <a class="ts" href="?t=49:35">49:35</a></small></p><div><h3>What the model understands</h3><p>From a photo, the skeleton limits which faces are possible, so a 3D reconstruction shows whether a model understands human anatomy. Anand reframed it as a way to benchmark <q>how well LLMs understand the human body structure</q>. <a class="ts" href="?t=50:30">50:30</a> In the chat, Hritik also suggested Q8 exposes a model’s bias. <a class="ts" href="?t=46:59">46:59</a></p></div></li>
+    <li><p class="who">Agrim<small>TA · chat <a class="ts" href="?t=51:04">51:04</a></small></p><div><h3>Spatial understanding</h3><p>Two words in the chat, while the others talked. They name a capability, not a tool.</p></div></li>
+    <li><p class="who">JK<small>programme team <a class="ts" href="?t=50:52">50:52</a></small></p><div><h3>Depth, and choosing a model</h3><p>Depth perception, as in search and rescue or terrain reconstruction, where decisions depend on the 3D model being accurate. Later he added benchmarking: <strong>knowing which model to use for which task</strong> will be <q>number one question</q> for graduates joining a firm. <a class="ts" href="?t=57:45">57:45</a></p></div></li>
+    <li><p class="who">Anand<small>instructor <a class="ts" href="?t=53:52">53:52</a></small></p><div><h3>Find the tool</h3><p>A free service like <a href="https://www.meshy.ai/">Meshy</a> turns a photo into a decent 3D model. <q>It’s largely about discovery.</q> Then the line most likely to be quoted out of context: <q>The point here is to bloody cheat. Do as little work as possible to get the best possible score.</q> <a class="ts" href="?t=54:36">54:36</a> He meant cheating <q>in the conventional sense where everybody is supposed to work independently</q>: in a course that allows agents and classmates, asking for help is the method. <a class="ts" href="?t=55:04">55:04</a></p></div></li>
+  </ol>
+  <p>The disagreement is the finding. <strong>Same question, five learning objectives, all reasonable, none measured.</strong> A rubric that rewards a good morph can’t tell you which, if any, the student took away. Anand’s own hope was modest. Reflection <q>requires potentially 5 minutes of thinking afterwards… why did I get this question wrong. I’m conscious not everybody has the time</q>. <a class="ts" href="?t=45:32">45:32</a></p>
+  <p>Hritik then named what most of the five share: can a student choose the tools an agent needs, and can they <strong>verify the results</strong>? <a class="ts" href="?t=55:28">55:28</a> <q>Exactly the kinds of learnings we want</q>, Anand said. <a class="ts" href="?t=55:54">55:54</a> Before moving on, JK told an old IIT story. A professor set a test no one passed. Asked why, he said he <q>thought at least one of you would</q> solve it, and the hostel threw a party. <a class="ts" href="?t=60:16">60:16</a></p>
+  <p>Then Anand made the distinction concrete. <q>It’s not just what model but what tool.</q> <a class="ts" href="?t=61:40">61:40</a> He played two submitted videos side by side. One faded from face to face. The other morphed: <q>if you pause it at roughly any point, it approximately looks like a plausible face.</q> <a class="ts" href="?t=62:04">62:04</a></p>
+
+  <div class="widget" id="w-mf" aria-labelledby="w-mf-h">
+    <header><h3 id="w-mf-h">A fade or a morph?</h3><span class="ev ev-toy">Abstract illustration</span></header>
+    <p class="intro">Two drawn faces, not student work or real photos. Drag to the middle. A <strong>crossfade</strong> blends pixels, so halfway you see two faces at once. A <strong>morph</strong> blends <em>shape</em>, so every frame is one plausible face.</p>
+    <div class="mf">
+      <figure><svg id="mf-fade" viewBox="0 0 200 220" role="img" aria-label="Crossfade between two drawn faces"></svg><figcaption>Crossfade<small>“just done smooth transition”</small></figcaption></figure>
+      <figure><svg id="mf-morph" viewBox="0 0 200 220" role="img" aria-label="Shape morph between two drawn faces"></svg><figcaption>Morph<small>“looks like a plausible face”</small></figcaption></figure>
+    </div>
+    <div class="mf-ctrl"><span>Face A</span><input type="range" id="mf-t" min="0" max="100" value="50" aria-label="Position between face A and face B"><span>Face B</span></div>
+    <p class="fine">A drawing to show the difference, not a morphing algorithm. Real face morphing finds matching landmarks (eyes, mouth corners, jaw) and warps both images toward them before blending, or uses a generative model to do it.</p>
+  </div>
+
+  <p>How did the better students do it? <q>If you go to any StyleGAN2 kind of network… let’s take <a href="https://facemorph.me/">facemorph.me</a>. Upload the two images</q>, and you get <q>a fantastic morph</q>. <a class="ts" href="?t=62:24">62:24</a> The best part was his confession. He hadn’t known about it either. He had assumed students would mark control points by hand.</p>
+  <div class="say big"><p>“Then I saw facemorph.me and said, damn it, this is a trivial question… I should not give this question. Then I paused again, said, wait, hold on, I didn’t know this.”</p><footer><b>Anand</b> <a class="ts" href="?t=62:52">62:52</a></footer></div>
+  <p>He kept the question for the students who wouldn’t know either. He described a spectrum of submissions: manual fades, agents told to do it badly, people who never checked what classmates had done, and those who found the right tool, <q>maybe the hard way, maybe the easy way</q>. <a class="ts" href="?t=63:36">63:36</a> <strong>The most learning, he said, came to students who went from “this is hard” to “oh, this is easy”.</strong> <a class="ts" href="?t=64:08">64:08</a> GA4 Q1, the face review Saptadev couldn’t get into, exists to show everyone that spread. <a class="ts" href="?t=64:32">64:32</a></p>
+  <div class="split">
+    <div><h3>Worth automating</h3><ul><li>Producing the morph video</li><li>Converting a photo into a 3D mesh</li><li>Running ten face pairs through three services</li><li>Writing a benchmark script</li></ul></div>
+    <div><h3>Worth learning</h3><ul><li>Suspecting that a hard-looking task is already solved, and searching for it</li><li>Telling a fade from a morph, and a groove that shouldn’t exist in a 3D model</li><li>Choosing which tool or model to trust, for this task</li><li>Knowing when the result is wrong</li></ul></div>
+  </div>
+</section>
+
+<!-- ================= ACT IV ================= -->
+<section class="chap" id="after" data-act="IV · Who measures?" data-title="After the instructor left">
+  <div class="act"><span>IV · Who measures?</span><span>64:49 – 77:48</span></div>
+  <h2>After the instructor <em>left</em></h2>
+  <p class="lede">The meeting had run over. JK asked for <q>one small thing</q> and moved from what students learn to <em>how</em>. <a class="ts" href="?t=64:52">64:52</a></p>
+  <div class="say big"><p>“Learning how to learn is a very critical skill… in education terminology we call it metacognition.”</p><footer><b>JK</b> <a class="ts" href="?t=65:16">65:16</a></footer></div>
+  <p>His advice was specific. Over the term, look back at each assignment and ask what you learned <em>and how</em>, because <q>how I learned is more critical than what I learned</q>: the how transfers, while the what gets made obsolete. <a class="ts" href="?t=66:00">66:00</a> At 66:24, he said <q>like what Anand was saying</q>. Two seconds later, Anand typed into the chat: <q>I have a hard stop. Need to drop. Thanks!</q> <a class="ts" href="?t=66:26">66:26</a> <span class="ev ev-chat">Meeting chat</span> <strong>The last eleven minutes went on without him, and they are where the course turned the measuring tools on itself.</strong></p>
+  <p>JK described each student as running a <q>learner model</q>. Every assessment, in every course, <q>is giving you a new set of data that you should mine and improve yourself</q>. <a class="ts" href="?t=67:40">67:40</a> The team does the same at a pace that would once have been absurd: a year ago a lesson changed next <em>term’s</em> questions; <q>nowadays it is like, okay, I learned this, next week what should my assessment be?</q> <a class="ts" href="?t=68:20">68:20</a></p>
+  <p>Carlton then mentioned the most concrete step of the day. He had drafted <strong>three questions to track the same students’ progress</strong> on a repeated skill, put them on a branch of the exam portal, and sent them to JK for review, asking whether it would <q>work for GA5</q>. <a class="ts" href="?t=68:36">68:36</a> <span class="ev ev-call">Proposal, not released</span> JK said he drafts deep-research plans in Gemini and has ChatGPT critique them. Carlton turned that into advice for students:</p>
+  <div class="say"><p>“Not to just rely on a single agent, but to actually use multiple agents… and use each of them to critique each other, and… it will cover the blind spots that those agents have.”</p><footer><b>Carlton</b> <a class="ts" href="?t=70:32">70:32</a></footer></div>
+  <p>Then JK did something the instructor’s half of the meeting hadn’t. He named the students’ experience without arguing with it. The course <q>seems to be overwhelming for a large majority of you</q>, and the feeling of <q>I don’t know what I learned</q> after working with AI is <q>a common phenomena</q>. <q>You’re not alone.</q> <a class="ts" href="?t=71:00">71:00</a> Carlton admitted the same about writing the GA5 questions with an AI: <q>it produced more stuff than I could comprehend</q>. He had to go back and ask it to explain itself before he could judge whether a question was worth anything. <a class="ts" href="?t=71:36">71:36</a></p>
+  <div class="say big"><p>“The handicap that the current generation of students will have when they pass out from a degree is that they don’t have that battle scars that a senior employee used to have.”</p><footer><b>JK</b> <a class="ts" href="?t=73:20">73:20</a></footer></div>
+  <p>That is the BBC article’s worry in JK’s words, and his answer was to <strong>fail on purpose, early, and pay attention to how you recover</strong>: <q>it’s not the CG that’s important</q> (CG being the grade average). <q>How is a failure made more productive?</q> <a class="ts" href="?t=74:00">74:00</a> Hritik added the students’ side. He had typed it earlier in the chat <a class="ts" href="?t=73:47">73:47</a> and now said it aloud: when everyone has an agent, <q>if students are able to ask a good question, they will able to learn</q>. <a class="ts" href="?t=74:48">74:48</a> JK closed by renaming complaints as grievances and hoping the session had dealt with half of them. Then he asked for the opposite of applause.</p>
+  <div class="say big"><p>“If you’re disagreeing, do a thumbs down. That is also fine, because that is what the whole purpose of education is.”</p><footer><b>JK</b>, closing the session <a class="ts" href="?t=77:04">77:04</a></footer></div>
+
+  <div class="board">
+    <div class="lbl">The evidence on “figure it out”</div>
+    <p class="big">Reflection helps most when someone shows you how to do it.</p>
+    <p>The Education Endowment Foundation’s <a href="https://educationendowmentfoundation.org.uk/16-19/developing-independent-learners/metacognition-and-self-regulation">guidance on metacognition for 16–19 learners</a> (August 2026) recommends teaching planning, monitoring and evaluation <strong>explicitly</strong>: model it, practise it with support, then hand over. It warns against assuming students develop these habits unaided. <span class="ev ev-res">Research</span> Those are school and college students in England, not adults online at IIT Madras, and the guidance doesn’t show that TDS’s approach fails. But it sides with JK’s structured “look back at how you learned” and with Anand’s plan B, sharing his intent afterwards, more than with “you figure it out” alone. It is the same idea as <a href="https://www.aft.org/ae/winter1991/collins_brown_holum">cognitive apprenticeship</a>: make the expert’s thinking visible.</p>
+  </div>
+
+  <p>Put the meeting’s claims on a ladder and you can see what the course knows and what it hopes. <strong>A course that asks students to verify agents should verify its own claims about learning</strong>, and the ladder shows how far it has climbed.</p>
+  <div class="ladder" role="list" aria-label="Ladder of evidence for learning claims">
+    <div class="rung r1" role="listitem"><h3>1 · Claimed</h3><p>“Students learn initiative from moving deadlines.” “Twenty minutes builds business intuition.” “The how transfers.”</p><span class="st">Status: argued on the call</span></div>
+    <div class="rung r2" role="listitem"><h3>2 · Performance rises</h3><p>Some students who failed a skill pass it later: 20–30% on the good questions, by Anand’s report.</p><span class="st">Status: reported, unpublished</span></div>
+    <div class="rung r3" role="listitem"><h3>3 · Beats a control</h3><p>The improvement is bigger than an unrelated earlier question would predict, for that specific skill.</p><span class="st">Status: mixed in the exploratory analysis</span></div>
+    <div class="rung r4" role="listitem"><h3>4 · Transfers</h3><p>Students succeed on a new, unseen task needing the skill, with skill-level probes rather than a single pass/fail per question.</p><span class="st">Status: not yet measured · GA5 drafts aim here</span></div>
+  </div>
+  <p>That is not an indictment. Most courses never get to rung two, and few say their weak results out loud on a public stream. But it does answer the question the student tracker raised at 10:28. <strong>Who watches the watchers? Here, the people being watched, if the course keeps doing this in the open.</strong> Students spotted the tracker’s blind spots and the login failures. A TA noticed that one question had five objectives. A news article forced the counterargument. A programme lead asked for thumbs down.</p>
+</section>
+
+</main>
+
+<aside class="dock" id="dock" aria-label="Video of the meeting">
+  <div class="dock-head"><span><b>Meeting video</b> · 77:48</span><span id="dock-mode-label">Story focus</span></div>
+  <div class="vwrap">
+    <video id="vid" controls preload="metadata" playsinline>
+      <source src="https://media.s-anand.net/2026-11-09-tds-course-ideation.webm" type="video/webm">
+      <track kind="captions" src="captions.vtt" srclang="en" label="English (auto captions)" default>
+      <a href="https://media.s-anand.net/2026-11-09-tds-course-ideation.webm">Download the video</a>
+    </video>
+    <div class="resume" id="resume"><button type="button" id="resume-btn"><i class="bi bi-play-fill" aria-hidden="true"></i> <span>Play</span></button></div>
+  </div>
+  <audio id="aud" controls preload="none" aria-label="Audio-only fallback of the meeting">
+    <source src="https://github.com/sanand0/talks/releases/download/talks/2026-11-09-tds-ideation.opus" type="audio/ogg; codecs=opus">
+  </audio>
+  <p class="fallback-note">The video couldn’t play in this browser, so the timestamps now drive the audio recording. <a href="https://media.s-anand.net/2026-11-09-tds-course-ideation.webm">Download the video</a>.</p>
+  <div class="now" id="now" aria-live="polite"><span class="t" id="now-t">00:00</span><span id="now-title">Press play, or tap any ▶ time in the story</span><span class="in-story" id="now-story"></span></div>
+  <div class="dock-ctrls">
+    <button class="dbtn mode" id="mode-btn" type="button" aria-pressed="false"><i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span></button>
+    <button class="dbtn" id="share-btn" type="button"><i class="bi bi-link-45deg" aria-hidden="true"></i> <span>Share moment</span></button>
+    <a class="dbtn wide-only" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+    <button class="dbtn dock-min" id="min-btn" type="button" aria-expanded="true" aria-label="Hide the mini video"><i class="bi bi-chevron-down" aria-hidden="true"></i></button>
+  </div>
+  <details class="chapters" open>
+    <summary>Chapters · tap to jump</summary>
+    <ol id="chapters"></ol>
+  </details>
+</aside>
+</div>
+
+<section class="takeaways" id="takeaways" data-act="Close" data-title="Takeaways" aria-labelledby="tk-h">
+  <div class="inner">
+    <div class="band-label">Takeaways · for anyone who sets, takes or builds for a moving target</div>
+    <h2 id="tk-h">Check the watcher, then check yourself</h2>
+    <p class="sub">Not a proven method: an hour of a course team arguing with itself and its students, turned into things you can use this week.</p>
+    <div class="cards">
+      <div class="card"><div class="num">01 · MODEL THE EVENTS</div><h3>A deadline is not a schedule</h3><p>Before you count down, list the kinds of event: the final submission, sittings you must attend, things that open late, things that moved. A tracker that knows only one kind can be exactly right and still steer you wrong. <a class="ts" href="?t=10:32">10:32</a></p></div>
+      <div class="card"><div class="num">02 · READ THE CONTRACT</div><h3>Trust the rule over the speech</h3><p>“Your marks are based on your profit” was a shortcut; the code says 60% team, 40% you. Whatever the incentive is, find where it’s written down and read it before the clock starts. <a class="ts" href="?t=27:12">27:12</a></p></div>
+      <div class="card"><div class="num">03 · SEPARATE BUGS</div><h3>“Most people are fine” isn’t a diagnosis</h3><p>Try another machine, another login, another browser: Anand’s recipe works. For whoever runs the system, three reports of the same message are a group worth testing, not noise. <a class="ts" href="?t=19:00">19:00</a></p></div>
+      <div class="card"><div class="num">04 · CONTROL IT</div><h3>Improvement needs a comparison</h3><p>“Failed, then passed” can come from an easier question, a better model or a stronger student. Compare against an unrelated earlier question before calling it transfer. <a class="ts" href="?t=35:12">35:12</a></p></div>
+      <div class="card"><div class="num">05 · NAME THE LESSON</div><h3>“Figure it out” needs a debrief</h3><p>One morph question had five plausible objectives. Let learners guess first, then show yours, the way Anand did with the TAs. The evidence favours modelled reflection over hoping it happens. <a class="ts" href="?t=42:18">42:18</a></p></div>
+      <div class="card try"><div class="num">06 · TRY IT TONIGHT</div><h3>The two-minute postmortem</h3><p>After your next assignment, AI-assisted or not, write four lines:</p><ol><li>What did I try first, and why?</li><li>Where did I stop understanding the output?</li><li>How would I know if the answer were wrong?</li><li>What tool or person would I go to first next time?</li></ol></div>
+    </div>
+    <div class="finale">
+      <p>The comic ends with a slogan: <em>upgrade faster than the world.</em> The meeting was more useful than that, because the upgrading ran both ways. <strong>A student built a watcher; the teachers found its blind spots; the teachers made a claim about learning; their own analysis found its blind spots; and the students were invited to find the rest.</strong></p>
+      <p>Deadlines that move teach you to watch. Whether watching teaches anything else is the course’s own open question. <strong>The honest answer, after 77 minutes, is that nobody knows yet, and that the GA5 questions are where they mean to find out.</strong></p>
+    </div>
+  </div>
+</section>
+
+<footer class="foot" aria-labelledby="foot-h">
+  <h2>The series</h2>
+  <nav class="series" aria-label="Other episodes">
+    <a href="../2026-10-05-tds-orientation/"><small>5 Oct · orientation</small>Get the job done, and verify it</a>
+    <a href="../2026-10-12-tds-ideation/"><small>12 Oct · episode 2</small>The exam is a hypothesis</a>
+    <a href="../2026-10-19-tds-ideation/"><small>19 Oct · episode 3</small>The exam has to pass its own exam</a>
+    <a href="../2026-11-02-tds-ideation/"><small>2 Nov · episode 4</small>Should a student even read the exam?</a>
+    <a class="here" href="#title" aria-current="page"><small>9 Nov · episode 5</small>Who watches the deadline watchers?</a>
+  </nav>
+  <h2 id="foot-h">Sources and method</h2>
+  <ul>
+    <li>Recording: <a href="https://media.s-anand.net/2026-11-09-tds-course-ideation.webm">video</a> (77:48) and <a href="https://github.com/sanand0/talks/releases/download/talks/2026-11-09-tds-ideation.opus">audio</a>; <a href="transcript.md" data-transcript>transcript</a>; <a href="captions.vtt">auto captions</a> (embedded in the video); <a href="chat.md" data-md="Meeting chat">meeting chat</a>. Quotations checked against the captions; where transcript and captions disagree on wording, we quote only what both support or paraphrase.</li>
+    <li>Student trackers as shown on screen at 10:28 and 12:00: <a href="https://aaryanpanda.github.io/tds-watcher/">TDS Watcher</a> by Aaryan Panda and <a href="https://dueline-tds.vercel.app/">DueLine</a>. Both are live sites and may have changed since.</li>
+    <li>GA4 schedule, extension and Food Court rules: the GA4 page and question as committed to the exam’s source on 8–9 Nov 2026 (extension committed 9 Nov, 09:28 IST). Food Court economics from the game’s model and design notes (verified 8 Nov). Time Use Charts uses India’s <a href="https://microdata.gov.in/NADA/index.php/catalog/236">Time Use Survey 2024</a> (MoSPI).</li>
+    <li>Learning-transfer figures: Anand’s report on the call; the course team’s exploratory analysis of 4 Nov 2026 is unpublished, was not rerun for this story, and no numbers from it are shown.</li>
+    <li>MaryLou Costa, <a href="https://www.bbc.com/news/articles/c820vz6wyp65o">“Graduates are managing AI – but are they learning much else?”</a>, BBC News, 4 Nov 2026.</li>
+    <li>Education Endowment Foundation, <a href="https://educationendowmentfoundation.org.uk/16-19/developing-independent-learners/metacognition-and-self-regulation">Metacognition and self-regulation (16–19)</a>, Aug 2026; and the <a href="https://educationendowmentfoundation.org.uk/education-evidence/teaching-learning-toolkit/metacognition-and-self-regulation">Teaching and Learning Toolkit entry</a>.</li>
+    <li>Collins, Brown &amp; Holum, <a href="https://www.aft.org/ae/winter1991/collins_brown_holum">“Cognitive Apprenticeship: Making Thinking Visible”</a>, <em>American Educator</em>, 1991.</li>
+    <li>Course: <a href="https://tds.s-anand.net/">Tools in Data Science</a>, IIT Madras, September 2026 term (<a href="https://github.com/sanand0/tools-in-data-science-public">public source</a>).</li>
+    <li>Left out on purpose: an anecdote about agents coordinating through a wiki (56:28), which we couldn’t trace to a source; student submissions and faces from GA3; anything from grader internals.</li>
+  </ul>
+  <p>Comic: AI-generated from the meeting, unaltered; an interpretation, not a record. Story written with AI assistance from the recording, captions, chat and course material. <a href="../">More talks</a>.</p>
+</footer>
+
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump" aria-label="Jump to section">
+  <button id="jump-prev" type="button" aria-label="Previous section"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+  <button class="jump-cur" id="jump-cur" type="button" aria-expanded="false" aria-controls="jump-menu"><span id="jump-cur-label">Contents</span> <i class="bi bi-chevron-up" aria-hidden="true"></i></button>
+  <button id="jump-next" type="button" aria-label="Next section"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+  <div class="jump-menu" id="jump-menu" role="navigation" aria-label="All sections"></div>
+</nav>
+
+<dialog class="pop" id="pop" aria-labelledby="pop-title">
+  <div class="pop-head"><h2 id="pop-title">Transcript</h2><button class="close-x" id="pop-close" type="button">Close ✕</button></div>
+  <div class="pop-search" id="pop-search"><label class="sr" for="pop-q">Search the transcript</label><input id="pop-q" type="search" placeholder="Search the transcript…"><span id="pop-count"></span></div>
+  <div id="pop-body"></div>
+</dialog>
+
+<dialog class="lightbox" id="lightbox" aria-label="Image viewer">
+  <img id="lb-img" src="" alt="">
+  <div class="lb-bar"><span id="lb-cap"></span><span><a id="lb-open" href="#" target="_blank" rel="noopener">Open full size ↗</a><button id="lb-close" type="button">Close ✕</button></span></div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js" defer></script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const body = document.body;
+  const vid = $("#vid"), aud = $("#aud"), dock = $("#dock");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isNarrow = () => matchMedia("(max-width: 999px)").matches;
+  const cssVar = (n) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(n)) || 0;
+  const store = {
+    get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} },
+  };
+
+  // ---------- time helpers (story times are video times, checked against the embedded captions) ----------
+  const parseT = (s) => {
+    if (s == null || s === "") return null;
+    if (/^\d+(\.\d+)?$/.test(s)) return +s;
+    const p = String(s).split(":").map(Number);
+    if (p.some(isNaN)) return null;
+    return p.reduce((a, b) => a * 60 + b, 0);
+  };
+  const fmt = (t) => {
+    t = Math.max(0, Math.floor(t));
+    const m = Math.floor(t / 60), s = t % 60;
+    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  };
+
+  // ---------- theme ----------
+  const themeBtn = $("#theme-btn");
+  const isDark = () => document.documentElement.dataset.theme
+    ? document.documentElement.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  const syncThemeIcon = () => {
+    themeBtn.innerHTML = `<i class="bi ${isDark() ? "bi-sun" : "bi-moon-stars"}" aria-hidden="true"></i>`;
+    themeBtn.setAttribute("aria-label", `Switch to ${isDark() ? "light" : "dark"} mode`);
+  };
+  themeBtn.addEventListener("click", () => {
+    const next = isDark() ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    store.set("tds-ideation-5-theme", next);
+    syncThemeIcon();
+  });
+  syncThemeIcon();
+
+  // ---------- one player: the video, or the audio if the video can't play ----------
+  let player = vid;
+  const useAudio = () => {
+    if (player === aud) return;
+    const t = vid.currentTime || 0;
+    dock.classList.add("audio-mode");
+    player = aud;
+    bindPlayer(aud);
+    if (t) seek(t);
+  };
+  const vsrc = vid.querySelector("source");
+  vsrc.addEventListener("error", useAudio);
+  vid.addEventListener("error", useAudio);
+
+  // ---------- chapters (video time → story section) ----------
+  const RAW = [
+    ["sep", "I · The watcher"],
+    ["00:00", "Diwali, and JK’s agenda", "design"], ["03:39", "Short and long windows together", "design"],
+    ["05:50", "Unannounced, on purpose", "design"], ["07:24", "Agents that act; midnight tasks (proposed)", "design"],
+    ["09:04", "A viva clashes (chat)", "design"], ["09:24", "Is the student tracker up to date?", "watcher"],
+    ["10:28", "“6d 6h” and the 20-minute sittings", "watcher"], ["11:22", "DueLine", "watcher"],
+    ["12:28", "“Meta tracker”", "watcher"], ["12:38", "JK: a few discriminating questions", "design"],
+    ["15:12", "Grievances and bonus marks", "design"], ["16:16", "Saptadev can’t sign in", "check"],
+    ["18:12", "“Figure out how to fix it”", "check"], ["19:16", "The receipt that isn’t ready", "check"],
+    ["20:40", "“Why don’t you check?”", "check"], ["21:32", "Health scans; a Safari test", "check"],
+    ["sep", "II · The food court"],
+    ["22:30", "Why the clock is shrinking", "foodcourt"], ["24:40", "Food Court in a spreadsheet", "foodcourt"],
+    ["26:56", "Price war or collusion?", "foodcourt"], ["27:56", "Three chances; convince your peers", "foodcourt"],
+    ["29:46", "“OR at an MTech level”", "foodcourt"], ["31:03", "“Why would I hire a BTech?”", "foodcourt"],
+    ["sep", "III · What did you learn?"],
+    ["31:42", "JK: speak now", "figure"], ["33:36", "Hritik: what are we learning?", "figure"],
+    ["34:00", "“You figure it out”", "figure"], ["35:08", "Measured: 20–30% on good questions", "figure"],
+    ["36:04", "Decisions on the floor", "figure"], ["37:36", "Swimming and the subconscious", "figure"],
+    ["39:00", "A three-part answer", "figure"], ["39:36", "Carlton: the BBC article", "figure"],
+    ["40:40", "An insurance founder’s agents", "figure"], ["42:18", "What does the morph question teach?", "morph"],
+    ["43:36", "Preethi: observation", "morph"], ["44:44", "Noticing", "morph"],
+    ["47:04", "Ask an agent for a benchmark", "morph"], ["49:35", "Hritik: does the model know anatomy?", "morph"],
+    ["50:52", "JK: depth perception", "morph"], ["52:02", "Benchmarking 3D models", "morph"],
+    ["53:52", "“Bloody cheat”: discovery", "morph"], ["55:28", "Hritik: pick tools, verify results", "morph"],
+    ["56:20", "An agent-swarm anecdote (unverified)", "morph"], ["57:45", "JK: which model for which task", "morph"],
+    ["60:00", "The test no one passed", "morph"], ["61:40", "Not just what model: what tool", "morph"],
+    ["62:44", "facemorph.me: “a trivial question”", "morph"], ["63:36", "A spectrum of submissions", "morph"],
+    ["sep", "IV · After the instructor left"],
+    ["64:52", "JK: metacognition", "after"], ["66:26", "Anand leaves (chat)", "after"],
+    ["67:28", "Your learner model", "after"], ["68:36", "Carlton: three questions for GA5", "after"],
+    ["69:28", "Gemini plans, GPT critiques", "after"], ["71:00", "“I don’t know what I learned”", "after"],
+    ["73:20", "Battle scars", "after"], ["74:40", "Hritik: ask good questions", "after"],
+    ["76:02", "Grievances, and thumbs down", "after"],
+  ];
+  const CHAPTERS = RAW.filter((r) => r[0] !== "sep").map(([t, title, sec]) => ({ t: parseT(t), label: t, title, sec }));
+  let ci = 0;
+  $("#chapters").innerHTML = RAW.map((r) => r[0] === "sep"
+    ? `<li class="sep" aria-hidden="true">${r[1]}</li>`
+    : `<li><a href="?t=${r[0]}" data-chap="${ci++}" class="ts-chap"><span class="ct">${r[0]}</span><span>${r[1]}</span></a></li>`).join("");
+
+  const sections = $$(".chap, #takeaways");
+  const secTitle = (id) => { const s = document.getElementById(id); return s ? s.dataset.title : ""; };
+
+  // ---------- URL state: ?t=mm:ss&view=video#section ----------
+  const urlState = () => {
+    const u = new URL(location.href);
+    return { t: parseT(u.searchParams.get("t")), view: u.searchParams.get("view"), hash: u.hash.slice(1) };
+  };
+  const buildUrl = ({ t, hash } = {}) => {
+    const u = new URL(location.href);
+    if (t != null) u.searchParams.set("t", fmt(t)); else if (t === null) u.searchParams.delete("t");
+    if (body.classList.contains("watch")) u.searchParams.set("view", "video"); else u.searchParams.delete("view");
+    if (hash !== undefined) u.hash = hash ? "#" + hash : "";
+    return u.pathname + u.search.replace(/%3A/gi, ":") + u.hash;
+  };
+  let urlT = urlState().t;
+
+  // ---------- player ----------
+  const resume = $("#resume"), resumeBtn = $("#resume-btn"), minBtn = $("#min-btn");
+  const seek = (t) => new Promise((res) => {
+    const p = player;
+    const go = () => { try { p.currentTime = t; } catch (e) {} res(); };
+    if (p.readyState >= 1) go(); else { p.addEventListener("loadedmetadata", go, { once: true }); if (p.preload === "none") { p.preload = "metadata"; p.load(); } }
+  });
+  const showResume = (t) => {
+    if (player !== vid) return;
+    resumeBtn.querySelector("span").textContent = `Play from ${fmt(t)}`; resume.classList.add("show");
+  };
+  const syncMin = () => {
+    const c = body.classList.contains("dock-collapsed");
+    minBtn.setAttribute("aria-expanded", String(!c));
+    minBtn.setAttribute("aria-label", c ? "Show the mini video" : "Hide the mini video");
+    minBtn.innerHTML = `<i class="bi ${c ? "bi-chevron-up" : "bi-chevron-down"}" aria-hidden="true"></i>`;
+  };
+  const ensureDockVisible = () => {
+    if (isNarrow()) { body.classList.remove("dock-collapsed"); syncMin(); return; }
+    const r = dock.getBoundingClientRect();
+    if (r.top > innerHeight - 80 || r.bottom < 60) $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  };
+  const playAt = async (t, { push = false, el = null } = {}) => {
+    if (push) {
+      const sec = el && el.closest(".chap, #takeaways");
+      history.pushState({ t }, "", buildUrl({ t, hash: sec ? sec.id : undefined }));
+      urlT = t;
+    }
+    await seek(t);
+    ensureDockVisible();
+    try { await player.play(); resume.classList.remove("show"); } catch (e) { showResume(t); }
+    if (el && !reduced) { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+  };
+  resumeBtn.addEventListener("click", () => { player.play(); resume.classList.remove("show"); });
+
+  const enhanceTs = (root = document) => {
+    $$("a.ts", root).forEach((a) => {
+      if (a.dataset.t) return;
+      const t = parseT(new URL(a.href, location.href).searchParams.get("t"));
+      a.dataset.t = t;
+      a.insertAdjacentHTML("afterbegin", '<i class="bi bi-play-fill" aria-hidden="true"></i>');
+      a.setAttribute("aria-label", `Play the meeting recording from ${a.textContent.trim()}`);
+    });
+  };
+  enhanceTs();
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a.ts, a.ts-chap");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const t = a.classList.contains("ts-chap") ? CHAPTERS[+a.dataset.chap].t : +a.dataset.t;
+    const dlg = a.closest("dialog");
+    if (dlg) dlg.close();
+    playAt(t, { push: true, el: a.classList.contains("ts") && !dlg ? a : null });
+  });
+
+  // now-playing sync
+  const nowT = $("#now-t"), nowTitle = $("#now-title"), nowStory = $("#now-story");
+  const chapLinks = $$("#chapters a");
+  let curChap = -1;
+  const chapFor = (t) => { let i = -1; for (let k = 0; k < CHAPTERS.length; k++) if (CHAPTERS[k].t <= t + 0.5) i = k; return i; };
+  const onTime = () => {
+    const t = player.currentTime;
+    nowT.textContent = fmt(t);
+    const i = chapFor(t);
+    if (i === curChap) return;
+    curChap = i;
+    chapLinks.forEach((a, k) => { a.classList.toggle("is-now", k === i); if (k === i) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
+    if (i >= 0) {
+      const c = CHAPTERS[i];
+      nowTitle.textContent = t > 4662 ? "The recording ends" : c.title;
+      nowStory.innerHTML = `In the story: <a href="#${c.sec}">${secTitle(c.sec)} ↓</a>`;
+      sections.forEach((s) => s.classList.toggle("is-now", s.id === c.sec));
+      const link = chapLinks[i], box = link.closest(".chapters");
+      if (box && box.scrollHeight > box.clientHeight) {
+        const lr = link.getBoundingClientRect(), br = box.getBoundingClientRect();
+        if (lr.top < br.top || lr.bottom > br.bottom) box.scrollTop += lr.top - br.top - box.clientHeight / 3;
+      }
+    }
+  };
+  const bindPlayer = (p) => {
+    p.addEventListener("timeupdate", onTime);
+    p.addEventListener("seeked", onTime);
+    p.addEventListener("play", () => {
+      resume.classList.remove("show");
+      if (body.classList.contains("dock-collapsed")) { body.classList.remove("dock-collapsed"); syncMin(); }
+    });
+  };
+  bindPlayer(vid);
+  if (!vid.canPlayType("video/webm")) useAudio();
+
+  // story → chapter hints (which chapters the visible text cites)
+  const revealChap = (first, last = first, pad = 8) => {
+    const box = first.closest(".chapters");
+    if (!box || box.scrollHeight <= box.clientHeight) return;
+    const top = first.getBoundingClientRect().top, bottom = last.getBoundingClientRect().bottom, br = box.getBoundingClientRect();
+    if (top >= br.top + pad && bottom <= br.bottom - pad) return;
+    box.scrollTop += bottom - top > br.height - 2 * pad ? top - br.top - pad : (top + bottom) / 2 - (br.top + br.bottom) / 2;
+  };
+  const tsSeen = new Set();
+  let hintKey = "", hintRaf = 0, tsHover = null;
+  const syncHints = () => {
+    hintRaf = 0;
+    const idx = [...new Set([...tsSeen].map((a) => chapFor(+a.dataset.t)).filter((i) => i >= 0))].sort((a, b) => a - b);
+    const key = idx.join();
+    if (key === hintKey) return;
+    hintKey = key;
+    chapLinks.forEach((a, k) => a.classList.toggle("in-view", idx.includes(k)));
+    if (idx.length && player.paused && !tsHover) revealChap(chapLinks[idx[0]], chapLinks[idx.at(-1)]);
+  };
+  const tsIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? tsSeen.add(e.target) : tsSeen.delete(e.target)));
+    hintRaf ||= requestAnimationFrame(syncHints);
+  });
+  $$("a.ts").filter((a) => !a.closest("dialog, .dock, .hero")).forEach((a) => tsIO.observe(a));
+  const setTarget = (a) => {
+    if (tsHover === a) return;
+    tsHover = a;
+    chapLinks.forEach((l) => l.classList.remove("is-target"));
+    const i = a ? chapFor(+a.dataset.t) : -1;
+    if (i >= 0) { chapLinks[i].classList.add("is-target"); revealChap(chapLinks[i]); }
+  };
+  document.addEventListener("mouseover", (e) => setTarget(e.target.closest?.("a.ts") || null));
+  document.addEventListener("focusin", (e) => setTarget(e.target.closest?.("a.ts") || null));
+  document.addEventListener("focusout", (e) => { if (e.target.matches?.("a.ts")) setTarget(null); });
+
+  const shareBtn = $("#share-btn");
+  shareBtn.addEventListener("click", async () => {
+    const t = Math.floor(player.currentTime || 0);
+    const sec = curChap >= 0 ? CHAPTERS[curChap].sec : "";
+    const u = new URL(location.href);
+    u.search = "?t=" + fmt(t); u.hash = sec ? "#" + sec : "";
+    const label = shareBtn.querySelector("span");
+    try { await navigator.clipboard.writeText(u.href); label.textContent = `Copied ${fmt(t)}`; }
+    catch (e) { history.replaceState(history.state, "", u.pathname + u.search + u.hash); label.textContent = "Link in address bar"; }
+    setTimeout(() => (label.textContent = "Share moment"), 2200);
+  });
+
+  // ---------- story ⇄ video emphasis (same <video>, never remounted) ----------
+  const modeBtn = $("#mode-btn"), modeLabel = $("#dock-mode-label");
+  const updateDockH = () => {
+    const h = isNarrow() && body.classList.contains("watch") ? dock.offsetHeight : 0;
+    document.documentElement.style.setProperty("--dock-h", h + "px");
+  };
+  const pickAnchor = () => {
+    const top = 80 + (isNarrow() && body.classList.contains("watch") ? cssVar("--dock-h") : 0);
+    return $$(".chap > *, #takeaways").find((el) => el.getBoundingClientRect().bottom > top);
+  };
+  const setMode = (watch, { replace = true } = {}) => {
+    if (body.classList.contains("watch") === watch) return;
+    const anchor = pickAnchor();
+    const before = anchor ? anchor.getBoundingClientRect().top : 0;
+    const storyVisible = $("#room").getBoundingClientRect().top < innerHeight * 0.5;
+    body.classList.toggle("watch", watch);
+    modeBtn.setAttribute("aria-pressed", String(watch));
+    modeBtn.innerHTML = watch
+      ? '<i class="bi bi-book" aria-hidden="true"></i> <span>Focus story</span>'
+      : '<i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span>';
+    modeLabel.textContent = watch ? "Video focus" : "Story focus";
+    if (replace) history.replaceState(history.state, "", buildUrl());
+    updateDockH();
+    if (anchor && storyVisible) {
+      const start = performance.now();
+      const keep = () => {
+        const d = anchor.getBoundingClientRect().top - before;
+        if (Math.abs(d) > 1) window.scrollBy({ top: d, behavior: "instant" });
+        if (performance.now() - start < 750) requestAnimationFrame(keep);
+      };
+      requestAnimationFrame(keep);
+    }
+  };
+  modeBtn.addEventListener("click", () => setMode(!body.classList.contains("watch")));
+  $("#hero-watch").addEventListener("click", (e) => {
+    e.preventDefault();
+    setMode(true);
+    $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  });
+  new ResizeObserver(updateDockH).observe(dock);
+  addEventListener("resize", updateDockH);
+  minBtn.addEventListener("click", () => { body.classList.toggle("dock-collapsed"); syncMin(); });
+  if (isNarrow()) { body.classList.add("dock-collapsed"); syncMin(); }
+
+  // ---------- history ----------
+  addEventListener("popstate", () => {
+    const { t, view } = urlState();
+    setMode(view === "video", { replace: false });
+    if (t != null && t !== urlT) seek(t).then(() => { if (player.paused) showResume(t); });
+    urlT = t;
+  });
+
+  // ---------- section jump nav ----------
+  const menu = $("#jump-menu"), backdrop = $("#jump-backdrop"), curBtn = $("#jump-cur"), curLabel = $("#jump-cur-label");
+  const groups = [];
+  sections.forEach((s) => {
+    const g = s.dataset.act;
+    if (!groups.length || groups[groups.length - 1].name !== g) groups.push({ name: g, items: [] });
+    groups[groups.length - 1].items.push(s);
+  });
+  menu.innerHTML = groups.map((g) => `<div class="jm-group">${g.name}</div><div class="jump-grid">${
+    g.items.map((s) => { const h = ((s.querySelector("h2") || {}).textContent || "").trim(); return `<a href="#${s.id}" data-sec="${s.id}">${s.dataset.title}<small>${h}</small></a>`; }).join("")}</div>`).join("");
+  const openMenu = (open) => {
+    menu.classList.toggle("open", open); backdrop.classList.toggle("open", open);
+    curBtn.setAttribute("aria-expanded", String(open));
+    if (open) (menu.querySelector("a.is-cur") || menu.querySelector("a")).focus();
+  };
+  curBtn.addEventListener("click", () => openMenu(!menu.classList.contains("open")));
+  backdrop.addEventListener("click", () => openMenu(false));
+  menu.addEventListener("click", (e) => { if (e.target.closest("a")) openMenu(false); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && menu.classList.contains("open")) { openMenu(false); curBtn.focus(); } });
+  let curIdx = 0;
+  const goSec = (i) => {
+    i = Math.max(0, Math.min(sections.length - 1, i));
+    sections[i].scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+    history.pushState(history.state, "", buildUrl({ hash: sections[i].id }));
+  };
+  $("#jump-prev").addEventListener("click", () => goSec(curIdx - 1));
+  $("#jump-next").addEventListener("click", () => goSec(curIdx + 1));
+  const progress = $("#progress"), jumpNav = $(".jump");
+  const onScroll = () => {
+    const line = innerHeight * 0.3 + cssVar("--dock-h");
+    let i = 0;
+    sections.forEach((s, k) => { if (s.getBoundingClientRect().top <= line) i = k; });
+    if (i !== curIdx || !curLabel.dataset.init) {
+      curIdx = i; curLabel.dataset.init = 1;
+      curLabel.textContent = sections[i].dataset.title;
+      $$("a", menu).forEach((a) => a.classList.toggle("is-cur", a.dataset.sec === sections[i].id));
+      $("#jump-prev").disabled = i === 0;
+      $("#jump-next").disabled = i === sections.length - 1;
+    }
+    jumpNav.classList.toggle("on-hero", $("#room").getBoundingClientRect().top > innerHeight * 0.75 && !menu.classList.contains("open"));
+    const h = document.documentElement.scrollHeight - innerHeight;
+    progress.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%";
+  };
+  let ticking = false;
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { onScroll(); ticking = false; }); } }, { passive: true });
+  onScroll();
+
+  // ---------- popups: transcript, chat ----------
+  const pop = $("#pop"), popBody = $("#pop-body"), popTitle = $("#pop-title"), popSearch = $("#pop-search"), popQ = $("#pop-q"), popCount = $("#pop-count");
+  let popReturn = null;
+  const openPop = (title, html, { search = false } = {}) => {
+    popReturn = document.activeElement;
+    popTitle.textContent = title; popBody.innerHTML = html; enhanceTs(popBody);
+    popSearch.classList.toggle("on", search); popQ.value = ""; popCount.textContent = "";
+    pop.showModal(); popBody.scrollTop = 0;
+    if (search) popQ.focus();
+  };
+  pop.addEventListener("close", () => { if (popReturn && popReturn.focus) popReturn.focus(); });
+  $("#pop-close").addEventListener("click", () => pop.close());
+  pop.addEventListener("click", (e) => { if (e.target === pop) pop.close(); });
+  const esc = (s) => s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  popQ.addEventListener("input", () => {
+    const q = popQ.value.trim();
+    const blocks = $$(":scope > p, :scope > ol, :scope > ul, :scope > hr", popBody).filter((b) => !b.classList.contains("intro"));
+    $$("mark", popBody).forEach((m) => m.replaceWith(m.textContent));
+    popBody.normalize();
+    let n = 0;
+    blocks.forEach((b) => {
+      const hit = !q || b.textContent.toLowerCase().includes(q.toLowerCase());
+      b.classList.toggle("hide", !hit || (q && b.tagName === "HR"));
+      if (hit && q) {
+        n++;
+        const re = new RegExp(escRe(q), "gi");
+        const walker = document.createTreeWalker(b, NodeFilter.SHOW_TEXT);
+        const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach((node) => {
+          if (!re.test(node.nodeValue)) return; re.lastIndex = 0;
+          const span = document.createElement("span");
+          span.innerHTML = esc(node.nodeValue).replace(re, (m) => `<mark>${m}</mark>`);
+          node.replaceWith(...span.childNodes);
+        });
+      }
+    });
+    popCount.textContent = q ? `${n} passage${n === 1 ? "" : "s"}` : "";
+  });
+  const mdToHtml = (md) => window.marked ? marked.parse(md) : `<pre style="white-space:pre-wrap">${esc(md)}</pre>`;
+  const linkify = (s) => esc(s).replace(/https?:\/\/[^\s<]+/g, (u) => `<a href="${u.replace(/[?&]utm_source=[^&\s]*/, "")}" target="_blank" rel="noopener">${u.replace(/[?&]utm_source=[^&\s]*/, "")}</a>`);
+  let transcriptHtml = null;
+  document.addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-transcript]");
+    if (!a || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    if (!transcriptHtml) {
+      try {
+        let md = await (await fetch("transcript.md")).text();
+        md = md.replace(/<!--[\s\S]*?-->/g, "").replace(/^---\n[\s\S]*?\n---\n/, "").replace(/^# Transcript\s*/, "")
+          .replace(/\[(\d{1,3}):(\d{2})\]/g, (m, a1, b1) => { const t = +a1 * 60 + +b1; return `<a class="ts" href="?t=${fmt(t)}">${fmt(t)}</a>`; });
+        transcriptHtml = '<p class="intro">AI transcription, lightly cleaned; tap any time to play that moment. Times are approximate and some long passages carry a single time marker. Use the chapter list in the video panel for finer navigation. Anand leaves at 66:26 (see the chat); everything after is JK, Carlton and Hritik.</p>' + mdToHtml(md);
+      } catch (err) { location.href = a.href; return; }
+    }
+    openPop("Transcript", transcriptHtml, { search: true });
+  });
+  const mdCache = {};
+  document.addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-md]");
+    if (!a || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    const href = a.getAttribute("href");
+    try {
+      if (!mdCache[href]) {
+        const txt = await (await fetch(href)).text();
+        const rows = [...txt.matchAll(/^(\d\d):(\d\d):(\d\d)\.\d+,[^\n]*\n([^\n]+)/gm)].map((m) => {
+          const t = +m[1] * 3600 + +m[2] * 60 + +m[3];
+          const [who, ...rest] = m[4].split(": ");
+          return `<li><a class="ts" href="?t=${fmt(t)}">${fmt(t)}</a> <b>${esc(who.replace(/\b(\w)(\w*)/g, (x, f, r) => f + r.toLowerCase()))}</b>: ${linkify(rest.join(": "))}</li>`;
+        });
+        mdCache[href] = rows.length
+          ? `<p class="intro">Messages typed in the meeting chat, at their time in the recording. Tap a time to play it.</p><ul style="list-style:none;margin-left:0">${rows.join("")}</ul>`
+          : mdToHtml(txt);
+      }
+      openPop(a.dataset.md, mdCache[href] + `<p><a href="${href}" target="_blank" rel="noopener">Open the raw file</a></p>`);
+    } catch (err) { location.href = href; }
+  });
+
+  // ---------- lightbox ----------
+  const lb = $("#lightbox"), lbImg = $("#lb-img"), lbCap = $("#lb-cap"), lbOpen = $("#lb-open");
+  let lbReturn = null;
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-lightbox]");
+    if (!el || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    const src = el.getAttribute("href") || el.dataset.src;
+    const img = el.querySelector("img");
+    lbImg.src = src; lbImg.alt = img ? img.alt : (el.dataset.caption || "");
+    lbCap.textContent = el.dataset.caption || "";
+    lbOpen.href = src;
+    lbReturn = el;
+    lb.showModal();
+  });
+  $("#lb-close").addEventListener("click", () => lb.close());
+  lb.addEventListener("click", (e) => { if (e.target === lb || e.target === lbImg) lb.close(); });
+  lb.addEventListener("close", () => { if (lbReturn && lbReturn.focus) lbReturn.focus(); });
+
+  // initial deep link: ?t= seeks (no autoplay) and shows a play button; ?view=video focuses the video
+  const init = urlState();
+  if (init.view === "video") setMode(true, { replace: false });
+  if (init.t != null) {
+    seek(init.t).then(() => { showResume(init.t); onTime(); });
+    if (isNarrow()) { body.classList.remove("dock-collapsed"); syncMin(); }
+  }
+})();
+</script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const pressOne = (group, btn) => $$("button", group).forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+
+  // =====================================================================
+  // 1. The week: what a countdown can't see (GA4 schedule as coded, 9 Nov 2026)
+  // =====================================================================
+  const H = 3600e3, M = 60e3;
+  const ist = (d, h, m = 0) => Date.UTC(2026, 10, d, h, m) - 5.5 * H;   // November 2026, IST → epoch ms
+  const T0 = ist(9, 0), T1 = ist(16, 6);
+  const START = ist(9, 17, 30), END = ist(15, 23, 30);
+  const FINAL = ist(15, 23, 59) + 59e3, OLD = ist(11, 23, 59) + 59e3;
+  const FC = [ist(10, 18), ist(11, 7, 30), ist(11, 21)].map((s) => ({ s, e: s + 20 * M }));
+  const TU = [ist(12, 21), ist(13, 18), ist(14, 8)].map((s) => ({ s, e: s + 45 * M }));
+  const fIST = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Kolkata", weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit", hour12: true });
+  const fLocal = new Intl.DateTimeFormat(undefined, { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit", timeZoneName: "short" });
+  const istStr = (ms) => fIST.format(ms).replace(/ (am|pm)/, " $1") + " IST";
+  const dur = (ms) => {
+    const d = Math.floor(ms / (24 * H)), h = Math.floor((ms % (24 * H)) / H), m = Math.floor((ms % H) / M);
+    return d ? `${d}d ${h}h` : h ? `${h}h ${m}m` : `${m}m`;
+  };
+  const svg = $("#wk-svg");
+  const LANES = [
+    { lab: "Countdown", sub: "what trackers show" },
+    { lab: "Q1 Face review", sub: "any time" },
+    { lab: "Q2 Food Court", sub: "3 × 20 min, live" },
+    { lab: "Q3 Time Use Charts", sub: "3 × 45 min, live" },
+    { lab: "Final submission", sub: "Sun 11:59 pm" },
+  ];
+  // wide: labels in a left column; narrow: labels above each lane, bigger type
+  let G, lanes;
+  const layout = () => {
+    const narrow = svg.parentElement.clientWidth < 560;
+    G = narrow
+      ? { W: 560, H: 372, X0: 6, X1: 552, top: 30, gap: 64, first: 92, fs: 16, fsSub: 14, fsDay: 15, fsSlot: 14, narrow }
+      : { W: 1000, H: 268, X0: 150, X1: 990, top: 22, gap: 44, first: 52, fs: 11.5, fsSub: 10, fsDay: 11, fsSlot: 10, narrow };
+    svg.setAttribute("viewBox", `0 0 ${G.W} ${G.H}`);
+    lanes = LANES.map((l, i) => ({ ...l, y: G.first + i * G.gap }));
+  };
+  const x = (ms) => G.X0 + ((ms - T0) / (T1 - T0)) * (G.X1 - G.X0);
+  layout();
+  const range = $("#wk-now");
+  const steps = Math.round((END - START) / (30 * M));
+  range.max = steps;
+  const nowOf = () => START + (+range.value) * 30 * M;
+  const slotLab = (ms) => fIST.format(ms).replace(/^(\w+) \d+ \w+,? /, "$1 ").replace(/:00/, "").replace(/ (am|pm)/, "$1");
+  const drawWeek = (now) => {
+    let g = "";
+    const bottom = G.H - 12, dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    for (let d = 0; d < 8; d++) {
+      const a = ist(9 + d, 0), b = Math.min(ist(10 + d, 0), T1);
+      g += `<rect class="day${d % 2 ? " alt" : ""}" x="${x(a)}" y="${G.top}" width="${x(b) - x(a)}" height="${bottom - G.top}"/>`;
+      if (d < 7) g += `<text class="dlab" style="font-size:${G.fsDay}px" x="${x(a) + 4}" y="${G.top - 7}">${G.narrow ? dayNames[d].slice(0, 2) : dayNames[d]} ${9 + d}</text>`;
+    }
+    g += `<rect class="past-shade" x="${G.X0}" y="${G.top}" width="${Math.max(0, x(now) - G.X0)}" height="${bottom - G.top}"/>`;
+    lanes.forEach((l) => {
+      g += G.narrow
+        ? `<text class="lane-lab" style="font-size:${G.fs}px" x="${G.X0 + 2}" y="${l.y - 17}">${l.lab} <tspan class="lane-sub" style="font-size:${G.fsSub}px">· ${l.sub}</tspan></text>`
+        : `<text class="lane-lab" x="0" y="${l.y - 2}">${l.lab}</text><text class="lane-sub" x="0" y="${l.y + 12}">${l.sub}</text>`;
+    });
+    g += `<rect class="bar-count" x="${x(now)}" y="${lanes[0].y - 10}" width="${Math.max(0, x(FINAL) - x(now))}" height="20" rx="3"/>`;
+    g += `<rect class="bar-count-edge" x="${x(FINAL) - 3}" y="${lanes[0].y - 10}" width="3" height="20"/>`;
+    g += `<rect class="bar-open" x="${G.X0}" y="${lanes[1].y - 10}" width="${x(FINAL) - G.X0}" height="20" rx="3"/>`;
+    const slots = (arr, l) => arr.forEach((o, k) => {
+      const past = o.e <= now ? " past" : "";
+      const w = Math.max(7, x(o.e) - x(o.s));
+      g += `<rect class="slot${past}" x="${x(o.s) - (w - (x(o.e) - x(o.s))) / 2}" y="${l.y - 11}" width="${w}" height="22" rx="2"><title>${istStr(o.s)}</title></rect>`;
+      if (!G.narrow) g += `<text class="slot-lab${past}" x="${x(o.s) + 7}" y="${l.y + (k % 2 ? 22 : -14)}" text-anchor="${k === arr.length - 1 && arr === TU ? "end" : "start"}">${slotLab(o.s)}</text>`;
+    });
+    slots(FC, lanes[2]); slots(TU, lanes[3]);
+    g += `<rect class="ghost" x="${x(OLD) - 4}" y="${lanes[4].y - 10}" width="8" height="20" rx="2"/>`;
+    if (!G.narrow) g += `<text class="ghost-lab" x="${x(OLD) - 8}" y="${lanes[4].y + 4}" text-anchor="end">old deadline (until 9 Nov)</text>`;
+    else g += `<text class="ghost-lab" style="font-size:${G.fsSlot}px" x="${x(OLD) - 8}" y="${lanes[4].y + 5}" text-anchor="end">old</text>`;
+    g += `<rect class="final" x="${x(FINAL) - 4}" y="${lanes[4].y - 10}" width="8" height="20" rx="2"/>`;
+    g += `<line class="now-line" x1="${x(now)}" x2="${x(now)}" y1="${G.top + 2}" y2="${bottom}"/><circle class="now-dot" cx="${x(now)}" cy="${G.top + 2}" r="4"/>`;
+    $("#wk-g").innerHTML = g;
+  };
+  const sittingState = (arr, now, minutes, extra) => {
+    const live = arr.find((o) => o.s <= now && now < o.e);
+    const left = arr.filter((o) => o.s >= now);
+    if (live) return live.s === now
+      ? { cls: "live", txt: `Starting now: join within 90 seconds. ${left.length - 1} more after this.` }
+      : { cls: "warn", txt: `A sitting is under way, but it is too late to join. ${left.length ? `${left.length} left; next ${istStr(left[0].s)}.` : "It was the last one."}` };
+    if (!left.length) return { cls: "gone", txt: `<strong>All three sittings are over. You can no longer attempt this question</strong>, whatever the countdown says.` };
+    return { cls: left.length === 1 ? "warn" : "ok", txt: `${left.length} of 3 sittings left. Next: <strong>${istStr(left[0].s)}</strong>, in ${dur(left[0].s - now)}. ${extra}`, next: left[0].s };
+  };
+  const tzName = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const offIST = (ms) => new Date(ms).getTimezoneOffset() === -330;
+  const renderWeek = () => {
+    const now = nowOf();
+    drawWeek(now);
+    $("#wk-when").textContent = istStr(now);
+    const left = FINAL - now;
+    $("#wk-digits").innerHTML = `${dur(left)}<small>left</small>`;
+    const q2 = sittingState(FC, now, 20, "Be there at the start; 20 minutes.");
+    const q3 = sittingState(TU, now, 45, "Stay all 45 minutes.");
+    $("#wk-real").innerHTML = [
+      `<li class="ok"><b>Q1 · Face review</b>Open until the final deadline. Any time.</li>`,
+      `<li class="${q2.cls}"><b>Q2 · Food Court</b>${q2.txt}</li>`,
+      `<li class="${q3.cls}"><b>Q3 · Time Use Charts</b>${q3.txt}</li>`,
+      `<li class="${left < 24 * H ? "warn" : "ok"}"><b>Final submission</b>Sun 15 Nov, 11:59 pm IST. The countdown is right about this, and only this.</li>`,
+    ].join("");
+    const nxt = q2.next || q3.next;
+    $("#wk-local").textContent = offIST(now)
+      ? "Your browser is on IST, so these times are already yours."
+      : `Your time zone (${tzName}): now is ${fLocal.format(now)}${nxt ? `; the next live sitting is ${fLocal.format(nxt)}` : ""}.`;
+    range.setAttribute("aria-valuetext", `${istStr(now)}; countdown ${dur(left)}`);
+  };
+  range.addEventListener("input", renderWeek);
+  let wkW = 0;
+  new ResizeObserver(() => { const w = svg.parentElement.clientWidth; if (Math.abs(w - wkW) > 4) { wkW = w; layout(); renderWeek(); } }).observe(svg.parentElement);
+  renderWeek();
+  const wkReveal = $("#wk-reveal");
+  $$("#wk-guess .opts button").forEach((b) => b.addEventListener("click", () => {
+    $$("#wk-guess .opts button").forEach((o) => o.classList.toggle(o.dataset.g === "q2" ? "right" : "wrong", true));
+    const ok = b.dataset.g === "q2";
+    wkReveal.hidden = false;
+    wkReveal.innerHTML = `${ok ? "<strong>Right.</strong>" : "<strong>It’s Q2, the Food Court.</strong>"} Its last sitting ended Wednesday at 9:20 pm IST, so by Thursday morning it’s gone, while the countdown still shows 3d 14h. All three Time Use Charts sittings are still ahead. The slider has moved to Thursday 9 am.`;
+    range.value = Math.round((ist(12, 9) - START) / (30 * M));
+    renderWeek();
+  }));
+
+  // =====================================================================
+  // 2. Food court: the game's published formula, one choice per stall per year
+  // =====================================================================
+  const SEASON = [0.8, 0.9, 0.95, 1.1, 1.2, 1.0, 0.95, 1.1, 1.25, 1.15, 1.0, 0.9];
+  const CEIL = { team: 95.24064064675935, individual: 36.81052427429191 };   // exact maxima for rooms of 4, from the game's source
+  const outcome = (d) => {
+    const n = d.length, tot = Array(n).fill(0);
+    for (let t = 0; t < 12; t++) {
+      const xs = d.map((v) => v / 10), prev = d.map((v) => (t ? v / 10 : 0));
+      const a = xs.map((xi, i) => Math.exp(0.9 * xi + 0.2 * prev[i]));
+      const sA = a.reduce((s, v) => s + v, 0);
+      const foot = 1 + 0.5 * (1 - Math.exp(-xs.reduce((s, v) => s + v, 0)));
+      xs.forEach((xi, i) => { tot[i] += SEASON[t] * (6 - xi) * (0.45 / n + 0.55 * a[i] / sA) * foot; });
+    }
+    const team = tot.reduce((s, v) => s + v, 0);
+    const teamScore = 100 * team / CEIL.team;
+    return { tot, team, teamScore, grade: tot.map((v) => 0.6 * teamScore + 0.4 * (100 * v / CEIL.individual)) };
+  };
+  const NAMES = ["Alpha", "Beta", "Gamma", "Delta"];
+  let plan = [10, 10, 10, 10];
+  const stallsEl = $("#fc-stalls");
+  stallsEl.innerHTML = NAMES.map((nm, i) => `<div class="stall${i === 0 ? " you" : ""}" data-i="${i}">
+    <div class="nm">${nm}${i === 0 ? " (you)" : ""}<small data-p></small></div>
+    <div class="seg" role="group" aria-label="${nm}'s discount for the year">${[0, 10, 20].map((v) => `<button type="button" data-v="${v}" aria-pressed="false">${v}%</button>`).join("")}</div>
+    <div class="gbar" aria-hidden="true"><i></i></div>
+    <div class="gval" data-g>–</div></div>`).join("");
+  const lakh = (u) => "₹" + (u * 1e4 / 1e5).toFixed(2) + " L";
+  const renderFC = () => {
+    const o = outcome(plan);
+    $$(".stall", stallsEl).forEach((row, i) => {
+      $$(".seg button", row).forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.v === plan[i])));
+      row.querySelector(".gbar i").style.width = o.grade[i].toFixed(1) + "%";
+      row.querySelector("[data-g]").textContent = o.grade[i].toFixed(1);
+      row.querySelector("[data-p]").textContent = `${lakh(o.tot[i])} profit`;
+    });
+    $("#fc-team").textContent = o.teamScore.toFixed(1);
+    $("#fc-mean").textContent = (o.grade.reduce((s, v) => s + v, 0) / 4).toFixed(1);
+    $("#fc-profit").textContent = lakh(o.team);
+    return o;
+  };
+  const log = $("#fc-log");
+  const say = (html, reset = false) => { if (reset) log.innerHTML = ""; log.insertAdjacentHTML("beforeend", `<div>${html}</div>`); log.scrollTop = log.scrollHeight; };
+  let running = false;
+  stallsEl.addEventListener("click", (e) => {
+    const b = e.target.closest(".seg button"); if (!b || running) return;
+    const i = +b.closest(".stall").dataset.i;
+    const before = outcome(plan).grade[i];
+    plan[i] = +b.dataset.v;
+    const o = renderFC();
+    say(`<span class="hl">${NAMES[i]} → ${plan[i]}%</span> · own grade ${before.toFixed(1)} → ${o.grade[i].toFixed(1)} · team ${o.teamScore.toFixed(1)}`);
+  });
+  $$("[data-preset]").forEach((b) => b.addEventListener("click", () => {
+    if (running) return;
+    plan = b.dataset.preset.split(",").map(Number);
+    const o = renderFC();
+    say(`<span class="m"># ${b.textContent}: every stall gets ${o.grade[0].toFixed(1)}, team ${o.teamScore.toFixed(1)}</span>`, true);
+  }));
+  const wait = (ms) => new Promise((r) => setTimeout(r, reduced ? 0 : ms));
+  const brBtn = $("#fc-br");
+  brBtn.addEventListener("click", async () => {
+    if (running) return;
+    running = true; brBtn.disabled = true;
+    const startMean = outcome(plan).grade.reduce((s, v) => s + v, 0) / 4;
+    say(`<span class="m"># Each stall, in turn, switches to whatever raises its own grade.</span>`, true);
+    let moved = true, rounds = 0, any = false;
+    while (moved && rounds < 6) {
+      moved = false; rounds++;
+      for (let i = 0; i < 4; i++) {
+        const cur = outcome(plan);
+        let best = plan[i], bv = cur.grade[i];
+        for (const v of [0, 10, 20]) { const p = [...plan]; p[i] = v; const g = outcome(p).grade[i]; if (g > bv + 1e-9) { bv = g; best = v; } }
+        if (best !== plan[i]) {
+          const from = plan[i];
+          plan[i] = best; moved = true; any = true;
+          const o = renderFC();
+          const others = o.grade.filter((_, k) => k !== i).map((g) => g.toFixed(1)).join(" / ");
+          say(`<span class="hl">${NAMES[i]}: ${from}% → ${best}%</span> · own grade ${cur.grade[i].toFixed(1)} → ${o.grade[i].toFixed(1)} · others now ${others}`);
+          await wait(900);
+        }
+      }
+    }
+    const o = renderFC();
+    const mean = o.grade.reduce((s, v) => s + v, 0) / 4;
+    say(any
+      ? `<span class="ok">Settled at ${plan.join(" / ")}. Average grade ${startMean.toFixed(1)} → ${mean.toFixed(1)}. No stall can do better by moving alone, and every stall is worse off than where it started.</span>`
+      : `<span class="ok">Nobody moves: no stall can raise its own grade alone from here. Try “Everyone 10%” first.</span>`);
+    running = false; brBtn.disabled = false;
+  });
+  renderFC();
+  const fcReveal = $("#fc-reveal");
+  $$("#fc-guess .opts button").forEach((b) => b.addEventListener("click", () => {
+    $$("#fc-guess .opts button").forEach((o) => o.classList.toggle(o.dataset.g === "same" ? "right" : "wrong", true));
+    const ok = b.dataset.g === "same";
+    plan = [0, 0, 0, 0];
+    const a = renderFC();
+    const w = outcome([20, 20, 20, 20]);
+    fcReveal.hidden = false;
+    fcReveal.innerHTML = `${ok ? "<strong>Right: the same, to one decimal place.</strong>" : "<strong>About the same: identical to one decimal place.</strong>"} Team score ${a.teamScore.toFixed(1)} at all-0% and ${w.teamScore.toFixed(1)} at all-20%. Nobody discounting means nobody draws extra visitors into the court; everybody discounting draws them but gives away the margin. Now try “Everyone 10%”.`;
+    say(`<span class="m"># Everyone 0%: every stall gets ${a.grade[0].toFixed(1)}, team ${a.teamScore.toFixed(1)}</span>`, true);
+  }));
+
+  // =====================================================================
+  // 3. Learning matrix: illustrative numbers only (100 dots = 1,000 students)
+  // =====================================================================
+  const LM = {
+    same: { pp: 59, pf: 6, fp: 21, ff: 14,
+      say: "<strong>Looks like learning.</strong> 3.5 students improved for every one who worsened, and 60% of those who failed earlier passed later. Now switch the earlier question to an unrelated skill." },
+    unrel: { pp: 58, pf: 7, fp: 22, ff: 13,
+      say: "<strong>Almost nothing changed.</strong> An earlier question on a <em>different</em> skill gives nearly the same headline ratio and a similar gap. So the headline was mostly measuring something general: an easier later question, better AI help, or stronger students. It wasn’t measuring this skill." },
+    bottle: { pp: 57, pf: 3, fp: 8, ff: 32,
+      say: "<strong>A real, specific skill, and a stuck one.</strong> Passing earlier now strongly predicts passing later (a 75-point gap), far more than an unrelated question would. Most who lacked the skill still lacked it next time. The improve-to-worsen ratio barely moved, which is why it’s a poor headline." },
+  };
+  const dots = $("#lm-dots");
+  dots.innerHTML = Array.from({ length: 100 }, () => "<i></i>").join("");
+  const renderLM = (k) => {
+    const d = LM[k];
+    const cls = [...Array(d.pp).fill("pp"), ...Array(d.pf).fill("pf"), ...Array(d.fp).fill("fp"), ...Array(d.ff).fill("ff")];
+    $$("i", dots).forEach((el, i) => { el.className = cls[i]; });
+    const rp = d.pp / (d.pp + d.pf), rf = d.fp / (d.fp + d.ff);
+    $("#lm-ratio").textContent = (d.fp / d.pf).toFixed(1) + " : 1";
+    $("#lm-bp").style.width = (rp * 100) + "%"; $("#lm-vp").textContent = Math.round(rp * 100) + "%";
+    $("#lm-bf").style.width = (rf * 100) + "%"; $("#lm-vf").textContent = Math.round(rf * 100) + "%";
+    $("#lm-say").innerHTML = d.say;
+    dots.setAttribute("aria-label", `Of 100 dots: ${d.pp} passed both, ${d.fp} improved, ${d.pf} worsened, ${d.ff} failed both.`);
+  };
+  $$("#lm-seg button").forEach((b) => b.addEventListener("click", () => { pressOne($("#lm-seg"), b); renderLM(b.dataset.s); }));
+  renderLM("same");
+
+  // =====================================================================
+  // 4. Crossfade vs morph (drawn faces; an illustration, not an algorithm)
+  // =====================================================================
+  const A = { rx: 64, ry: 70, cy: 122, eyeY: 112, eyeDX: 27, eyeR: 6.5, browY: 96, browT: -4, nose: 14, mouthY: 152, mouthW: 28, curve: 9, hairTop: 40, hairLen: 6, skin: [232, 185, 143], hair: [59, 42, 31] };
+  const B = { rx: 49, ry: 84, cy: 118, eyeY: 104, eyeDX: 19, eyeR: 8.5, browY: 86, browT: 5, nose: 24, mouthY: 166, mouthW: 18, curve: -3, hairTop: 22, hairLen: 78, skin: [141, 90, 60], hair: [214, 168, 74] };
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const mix = (p, q, t) => { const o = {}; for (const k in p) o[k] = Array.isArray(p[k]) ? p[k].map((v, i) => Math.round(lerp(v, q[k][i], t))) : lerp(p[k], q[k], t); return o; };
+  const rgb = (c) => `rgb(${c.join(",")})`;
+  const face = (p, op = 1) => {
+    const L = 100 - p.eyeDX, R = 100 + p.eyeDX, top = p.cy - p.ry;
+    return `<g opacity="${op.toFixed(3)}">
+      <rect x="${100 - p.rx - 8}" y="${p.cy - 30}" width="${2 * p.rx + 16}" height="${30 + p.hairLen}" rx="18" fill="${rgb(p.hair)}"/>
+      <ellipse cx="100" cy="${p.cy}" rx="${p.rx}" ry="${p.ry}" fill="${rgb(p.skin)}"/>
+      <path d="M${100 - p.rx - 6} ${p.cy - 18} Q100 ${top - p.hairTop} ${100 + p.rx + 6} ${p.cy - 18} Q100 ${top + 18} ${100 - p.rx - 6} ${p.cy - 18}Z" fill="${rgb(p.hair)}"/>
+      <path d="M${L - 11} ${p.browY + p.browT} L${L + 11} ${p.browY - p.browT}M${R - 11} ${p.browY - p.browT} L${R + 11} ${p.browY + p.browT}" stroke="#1d1712" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+      <ellipse cx="${L}" cy="${p.eyeY}" rx="${p.eyeR * 1.6}" ry="${p.eyeR}" fill="#fff"/><ellipse cx="${R}" cy="${p.eyeY}" rx="${p.eyeR * 1.6}" ry="${p.eyeR}" fill="#fff"/>
+      <circle cx="${L}" cy="${p.eyeY}" r="${p.eyeR * 0.62}" fill="#1d1712"/><circle cx="${R}" cy="${p.eyeY}" r="${p.eyeR * 0.62}" fill="#1d1712"/>
+      <path d="M100 ${p.eyeY + 6} L${100 - 6} ${p.eyeY + 6 + p.nose} L${100 + 3} ${p.eyeY + 8 + p.nose}" stroke="rgba(0,0,0,.45)" stroke-width="2.4" fill="none" stroke-linejoin="round"/>
+      <path d="M${100 - p.mouthW} ${p.mouthY} Q100 ${p.mouthY + p.curve * 2} ${100 + p.mouthW} ${p.mouthY}" stroke="#7a2e22" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+    </g>`;
+  };
+  const mfT = $("#mf-t");
+  const renderMF = () => {
+    const t = +mfT.value / 100;
+    $("#mf-fade").innerHTML = face(A, 1 - t) + face(B, t);
+    $("#mf-morph").innerHTML = face(mix(A, B, t));
+    mfT.setAttribute("aria-valuetext", `${Math.round(t * 100)}% of the way from face A to face B`);
+  };
+  mfT.addEventListener("input", renderMF);
+  renderMF();
+})();
+</script>
+</body>
+</html>

@@ -23,6 +23,9 @@ I speak regularly at:
 <!-- BEGIN GENERATED TALKS -->
 ## Latest talks
 
+- 09 Nov 2026. **[Who Watches the Deadline Watchers?](2026-11-09-tds-ideation/ ":ignore")** at [TDS Course Ideation — Open Design Meeting, Sep 2026](https://tds.s-anand.net/), Remote.  
+  In the fifth open TDS design meeting, a student’s deadline tracker counts correctly but misses the live sessions, a food-court game turns out to be a prisoner’s dilemma, one question yields five learning objectives, and the team admits its evidence that students learn is still unproven.  
+  [⏯️ Video (78m)](https://media.s-anand.net/2026-11-09-tds-course-ideation.webm ":ignore") · [💬 Transcript](2026-11-09-tds-ideation/transcript.md) · [💬 Captions](2026-11-09-tds-ideation/captions.vtt) · [🎧 Audio (78m)](https://github.com/sanand0/talks/releases/download/talks/2026-11-09-tds-ideation.opus ":ignore") · [💬 Meeting chat](2026-11-09-tds-ideation/chat.md)
 - 04 Nov 2026. **[What Changed Your Mind?](2026-11-04-iitm-ed-data-visualization/ ":ignore")** at [ED5518: Data Visualization for Engineers](https://ed.iitm.ac.in/), Department of Engineering Design, IIT Madras, Chennai.  
   A live-lab class on testing visualizations and phone apps: commit to an answer before discussing, check that a chart is true and that it works for its audience, use AI as a different kind of reviewer rather than a stand-in for people, and ask busy people “A or B?”  
   [💬 Transcript](2026-11-04-iitm-ed-data-visualization/transcript.md) · [🎧 Audio (81m)](https://github.com/sanand0/talks/releases/download/talks/2026-11-04-iitm-ed-data-visualization.opus ":ignore")

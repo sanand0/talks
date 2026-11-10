@@ -134,7 +134,7 @@ Link conventions:
 
 ### 5. Generate in chunks
 
-Claude stalls generating large HTML in one shot. Write the file in small chunks or layered
+Generating large HTML in one shot may be hard. Write the file in small chunks or layered
 edits (≤100KB each, practically ~200–400 lines): scaffold+head+hero first, then narrative
 sections, then closing (takeaways, footer, overlays, scripts). Save and sanity-check after
 each chunk; end every chunk at a complete element boundary. The sanity check includes tag

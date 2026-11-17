@@ -23,6 +23,9 @@ I speak regularly at:
 <!-- BEGIN GENERATED TALKS -->
 ## Latest talks
 
+- 16 Nov 2026. **[The Score Can’t See Who Built the Solver](2026-11-16-tds-ideation/ ":ignore")** at [TDS Course Ideation — Open Design Meeting, Sep 2026](https://tds.s-anand.net/), Remote.  
+  In the sixth open TDS design meeting, a student turns a hard timed question into a standalone solver that needs no AI model, and Food Court, peer grades, picture stories and forecasts all turn out to be measuring something other than what their designers meant.  
+  [⏯️ Video (67m)](https://media.s-anand.net/2026-11-16-tds-course-ideation.webm ":ignore") · [💬 Transcript](2026-11-16-tds-ideation/transcript.md) · [💬 Captions](2026-11-16-tds-ideation/captions.vtt) · [🎧 Audio (67m)](https://github.com/sanand0/talks/releases/download/talks/2026-11-16-tds-ideation.opus ":ignore")
 - 09 Nov 2026. **[Who Watches the Deadline Watchers?](2026-11-09-tds-ideation/ ":ignore")** at [TDS Course Ideation — Open Design Meeting, Sep 2026](https://tds.s-anand.net/), Remote.  
   In the fifth open TDS design meeting, a student’s deadline tracker counts correctly but misses the live sessions, a food-court game turns out to be a prisoner’s dilemma, one question yields five learning objectives, and the team admits its evidence that students learn is still unproven.  
   [⏯️ Video (78m)](https://media.s-anand.net/2026-11-09-tds-course-ideation.webm ":ignore") · [💬 Transcript](2026-11-09-tds-ideation/transcript.md) · [💬 Captions](2026-11-09-tds-ideation/captions.vtt) · [🎧 Audio (78m)](https://github.com/sanand0/talks/releases/download/talks/2026-11-09-tds-ideation.opus ":ignore") · [💬 Meeting chat](2026-11-09-tds-ideation/chat.md)

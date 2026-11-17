@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Score Can’t See Who Built the Solver · TDS open design meeting · 16 Nov 2026</title>
+<meta name="description" content="A student turned a hard, timed exam question into a single HTML file that runs without any AI model. The same hour, three other scores turned out to measure something other than what their designers meant. A postmortem in public from the IIT Madras Tools in Data Science course.">
+<meta property="og:title" content="The Score Can’t See Who Built the Solver">
+<meta property="og:description" content="TDS open design meeting, 16 Nov 2026: a solver built with Fable 5.2 that runs without it, professionals who negotiated themselves to a lower score, a crow that beat an astronaut, and a forecast that was right in dollars and wrong in cents.">
+<meta property="og:image" content="https://talks.s-anand.net/2026-11-16-tds-ideation/comic-page.avif">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2315122b'/%3E%3Cpath d='M42 16H22v32h20M22 32h15' fill='none' stroke='%23b49cff' stroke-width='5' stroke-linecap='round' stroke-dasharray='3 6'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gloock&amp;family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&amp;family=Schibsted+Grotesk:wght@500;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script>
+  (() => {
+    let t = null;
+    try { t = localStorage.getItem("tds-ideation-6-theme"); } catch (e) {}
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  })();
+</script>
+<style>
+/* =========================================================
+   Design note: invisible ink under UV light. Cool lab-bench
+   paper, green-black ink, ultraviolet for the solver and the
+   things a score can't see, coral for the workshop / warnings,
+   teal for the TDS students. Dark "UV lamp" bands for the
+   moments the room changed its mind.
+   ========================================================= */
+:root {
+  --paper: #eef1ee; --paper2: #e1e7e2; --card: #fbfcfa; --ink: #12201b; --muted: #4a5852; --line: #c9d3cc;
+  --uv: #5a2fc2; --uv-soft: #e9e2fb; --coral: #b23c0c; --coral-soft: #fbe3d6; --teal: #0d6b62; --teal-soft: #d8eee9;
+  --amber: #7d5200; --amber-soft: #f6e9c6;
+  --lamp: #15122b; --lamp2: #221d42; --on-lamp: #ece9ff; --lamp-muted: #b9b2dc; --lamp-link: #cbbcff; --lamp-glow: #9d7bff; --lamp-line: #3a3366;
+  --link: #4a23a8;
+  --font-display: "Gloock", "Georgia", serif;
+  --font-body: "Literata", "Georgia", serif;
+  --font-ui: "Schibsted Grotesk", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --measure: 680px; --pad: 1.4rem; --dock-w: 400px;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  --shadow: 0 12px 34px rgba(18, 32, 27, .10);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f1513; --paper2: #16201c; --card: #17211d; --ink: #e5ece8; --muted: #a2b0a9; --line: #2d3a35;
+    --uv: #b8a2ff; --uv-soft: #2a2350; --coral: #ff9f73; --coral-soft: #3d2117; --teal: #62d3c3; --teal-soft: #143430;
+    --amber: #f0c56a; --amber-soft: #3a2e12;
+    --lamp: #0b0918; --lamp2: #17132e; --lamp-line: #2f2955;
+    --link: #c3b0ff; --shadow: 0 12px 34px rgba(0, 0, 0, .4);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0f1513; --paper2: #16201c; --card: #17211d; --ink: #e5ece8; --muted: #a2b0a9; --line: #2d3a35;
+  --uv: #b8a2ff; --uv-soft: #2a2350; --coral: #ff9f73; --coral-soft: #3d2117; --teal: #62d3c3; --teal-soft: #143430;
+  --amber: #f0c56a; --amber-soft: #3a2e12;
+  --lamp: #0b0918; --lamp2: #17132e; --lamp-line: #2f2955;
+  --link: #c3b0ff; --shadow: 0 12px 34px rgba(0, 0, 0, .4);
+  color-scheme: dark;
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto !important; } *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
+body { font: 400 1.1rem/1.75 var(--font-body); background: var(--paper); color: var(--ink); overflow-x: clip; }
+img, svg, video { max-width: 100%; height: auto; display: block; }
+a { color: var(--link); text-underline-offset: .18em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--uv); outline-offset: 2px; border-radius: 3px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+strong { font-weight: 600; }
+::selection { background: var(--uv); color: var(--paper); }
+.hero-art ::selection, .lamp ::selection, .dock ::selection, .takeaways ::selection, .scene ::selection { background: var(--lamp-glow); color: #120d26; }
+
+/* ---------- top ---------- */
+#progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--uv); z-index: 1000; }
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; max-width: 1640px; margin: 0 auto; padding: .8rem var(--pad); font: 500 .74rem var(--font-ui); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.topbar a { color: var(--muted); text-decoration: none; }
+.topbar a:hover { color: var(--ink); }
+.icon-btn { background: none; border: 1px solid var(--line); border-radius: 50%; width: 2.2rem; height: 2.2rem; display: inline-grid; place-items: center; color: var(--ink); }
+.icon-btn:hover { border-color: var(--uv); }
+
+/* ---------- hero ---------- */
+.hero { max-width: 1240px; margin: 0 auto; padding: 2.2rem var(--pad) 2.6rem; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); gap: 2.4rem; align-items: center; }
+.kicker { font: 600 .74rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--uv); margin-bottom: 1rem; }
+.hero h1 { font: 400 clamp(2.5rem, 6.4vw, 5rem)/1 var(--font-display); letter-spacing: -.01em; margin-bottom: 1.2rem; text-wrap: balance; }
+.hero h1 em { font-style: normal; color: var(--uv); }
+.dek { font-size: 1.22rem; line-height: 1.6; max-width: 40rem; color: var(--ink); margin-bottom: 1.5rem; }
+.hero-meta { font: .82rem/1.6 var(--font-ui); color: var(--muted); margin-bottom: 1.4rem; }
+.hero-meta b { color: var(--ink); font-weight: 700; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.btn { display: inline-flex; align-items: center; gap: .45rem; font: 700 .86rem var(--font-ui); padding: .62rem 1rem; border-radius: 999px; border: 1.5px solid var(--ink); color: var(--ink); background: transparent; text-decoration: none; }
+.btn:hover { background: var(--ink); color: var(--paper); }
+.btn.primary { background: var(--uv); border-color: var(--uv); color: #fff; }
+.btn.primary:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+:root[data-theme="dark"] .btn.primary { color: #120d26; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.primary { color: #120d26; } }
+.hero-art { background: var(--lamp); border-radius: 14px; padding: 1.2rem 1.2rem .9rem; color: var(--on-lamp); box-shadow: var(--shadow); }
+.hero-art svg { width: 100%; height: auto; }
+.hero-art figcaption { font: .78rem/1.5 var(--font-ui); color: var(--lamp-muted); margin-top: .6rem; }
+.hero-art figcaption b { color: var(--on-lamp); }
+.ink-path { fill: none; stroke: var(--lamp-glow); stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1 14; }
+.ink-draw { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 900; stroke-dashoffset: 900; animation: draw 5.5s var(--ease) .6s infinite; }
+@keyframes draw { 0% { stroke-dashoffset: 900; } 55%, 80% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -900; } }
+@media (prefers-reduced-motion: reduce) { .ink-draw { animation: none; stroke-dashoffset: 0; } }
+
+/* ---------- how to read ---------- */
+.howto { max-width: 1240px; margin: 0 auto 2.4rem; padding: 0 var(--pad); }
+.howto-inner { border-top: 1.5px solid var(--ink); border-bottom: 1px solid var(--line); padding: 1rem 0; display: grid; grid-template-columns: auto 1fr; gap: 1rem 2rem; align-items: start; }
+.howto h2 { font: 700 .74rem var(--font-ui); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding-top: .2rem; }
+.howto p { font: .9rem/1.6 var(--font-ui); color: var(--ink); }
+.legend { display: flex; flex-wrap: wrap; gap: .45rem .9rem; margin-top: .5rem; }
+.legend span { font: .78rem var(--font-ui); color: var(--muted); }
+
+/* ---------- evidence chips ---------- */
+.ev { display: inline-block; font: 600 .62rem/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; padding: .32rem .45rem; border-radius: 3px; vertical-align: .12em; white-space: nowrap; }
+.ev-said { background: var(--teal-soft); color: var(--teal); }
+.ev-data { background: var(--uv-soft); color: var(--uv); }
+.ev-later { background: var(--amber-soft); color: var(--amber); }
+.ev-prop { background: var(--coral-soft); color: var(--coral); }
+.ev-toy { background: var(--paper2); color: var(--muted); border: 1px dashed var(--muted); }
+
+/* ---------- room: story + dock ---------- */
+.room { display: flex; align-items: flex-start; max-width: 1640px; margin: 0 auto; }
+.story { flex: 1 1 auto; min-width: 0; padding: 0 var(--pad) 3rem; }
+.chap { max-width: var(--measure); margin: 0 auto 4.4rem; scroll-margin-top: 1.2rem; transition: box-shadow .3s; }
+.act { max-width: var(--measure); margin: 0 auto 1.4rem; font: 700 .72rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--uv); display: flex; align-items: center; gap: .8rem; }
+.act::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.eyebrow { font: 600 .7rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: .6rem; display: flex; flex-wrap: wrap; gap: .4rem .8rem; align-items: center; }
+.chap h2 { font: 400 clamp(2rem, 4.4vw, 2.9rem)/1.05 var(--font-display); margin-bottom: 1.3rem; text-wrap: balance; }
+.chap h2 em { font-style: normal; color: var(--uv); }
+.chap h3 { font: 700 1.05rem/1.3 var(--font-ui); margin: 2rem 0 .6rem; }
+.chap p { margin-bottom: 1.15rem; }
+.chap p.lede::first-letter { font: 400 3.6em/.8 var(--font-display); float: left; margin: .08em .1em 0 0; color: var(--uv); }
+.chap ul.plain, .chap ol.plain { margin: 0 0 1.2rem 1.3rem; }
+.chap ul.plain li, .chap ol.plain li { margin-bottom: .45rem; }
+.chap.is-now { box-shadow: -6px 0 0 -2px var(--uv-soft); }
+
+/* timestamp buttons */
+a.ts { display: inline-flex; align-items: center; gap: .15rem; font: 600 .74rem/1 var(--font-mono); color: var(--uv); background: var(--uv-soft); border-radius: 999px; padding: .26rem .5rem .26rem .38rem; text-decoration: none; vertical-align: .1em; white-space: nowrap; }
+a.ts:hover, a.ts:focus-visible { background: var(--uv); color: #fff; }
+:root[data-theme="dark"] a.ts:hover, :root[data-theme="dark"] a.ts:focus-visible { color: #120d26; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) a.ts:hover, :root:not([data-theme="light"]) a.ts:focus-visible { color: #120d26; } }
+a.ts .bi { font-size: .9em; }
+a.ts.flash { animation: flash 1.2s var(--ease); }
+@keyframes flash { 0%, 40% { box-shadow: 0 0 0 6px var(--uv-soft); } 100% { box-shadow: 0 0 0 0 transparent; } }
+
+/* tooltips */
+.tip { border-bottom: 1.5px dotted var(--uv); cursor: help; position: relative; }
+.tip::after { content: attr(data-tip); position: absolute; left: 50%; bottom: calc(100% + .5rem); transform: translateX(-50%); width: min(260px, 70vw); background: var(--lamp); color: var(--on-lamp); font: .8rem/1.45 var(--font-ui); padding: .55rem .7rem; border-radius: 6px; display: none; pointer-events: none; z-index: 50; text-align: left; }
+.tip:hover::after, .tip:focus-visible::after { display: block; }
+
+/* quotes */
+.say { margin: 2rem -2.2rem 2.2rem; padding: .3rem 0 .3rem 1.6rem; border-left: 4px solid var(--uv); }
+.say p { font: 400 clamp(1.4rem, 2.6vw, 1.85rem)/1.3 var(--font-display); margin-bottom: .7rem; text-wrap: pretty; }
+.say footer { font: .82rem/1.5 var(--font-ui); color: var(--muted); display: flex; flex-wrap: wrap; gap: .4rem .7rem; align-items: center; }
+.say footer b { color: var(--ink); }
+.say.student { border-color: var(--teal); }
+.say.chat { border-left-style: dashed; }
+.say.chat p { font: 400 1.15rem/1.5 var(--font-mono); }
+.mini-q { font-style: italic; }
+
+/* dialogue scene */
+.scene { margin: 2rem -2.2rem 2.4rem; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1.2rem 1.4rem; box-shadow: var(--shadow); }
+.scene .line { display: grid; grid-template-columns: 6.6rem 1fr; gap: .8rem; padding: .55rem 0; border-bottom: 1px dashed var(--line); }
+.scene .line:last-child { border-bottom: 0; }
+.scene .who { font: 700 .76rem/1.6 var(--font-ui); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.scene .who small { display: block; font: 400 .7rem var(--font-mono); text-transform: none; letter-spacing: 0; }
+.scene .who.s { color: var(--teal); }
+.scene .txt { font-size: 1.04rem; line-height: 1.55; }
+.scene .txt.big { font: 400 1.4rem/1.3 var(--font-display); }
+.scene .stage { font: italic .9rem/1.5 var(--font-body); color: var(--muted); padding: .55rem 0; border-bottom: 1px dashed var(--line); }
+
+/* note boxes */
+.note { margin: 1.8rem 0; padding: 1rem 1.2rem; border-radius: 10px; background: var(--paper2); font: .92rem/1.6 var(--font-ui); }
+.note h4 { font: 700 .72rem var(--font-ui); letter-spacing: .1em; text-transform: uppercase; color: var(--coral); margin-bottom: .4rem; }
+.note.uv h4 { color: var(--uv); }
+.note p { margin-bottom: .6rem; }
+.note p:last-child, .note ul:last-child { margin-bottom: 0; }
+.note ul { margin: 0 0 .6rem 1.1rem; }
+
+/* ---------- widgets ---------- */
+.widget { margin: 2.2rem -2.2rem 2.6rem; background: var(--card); border: 1.5px solid var(--ink); border-radius: 14px; padding: 1.3rem 1.4rem 1.2rem; box-shadow: var(--shadow); font-family: var(--font-ui); }
+.widget > header { display: flex; justify-content: space-between; align-items: baseline; gap: .6rem 1rem; flex-wrap: wrap; margin-bottom: .9rem; }
+.widget h3 { font: 400 1.45rem/1.15 var(--font-display); margin: 0; }
+.widget .hint { font-size: .9rem; color: var(--muted); margin-bottom: .9rem; line-height: 1.5; }
+.choices { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: .9rem; }
+.choice { border: 1.5px solid var(--line); background: var(--paper); border-radius: 999px; padding: .5rem .95rem; font: 700 .86rem var(--font-ui); color: var(--ink); }
+.choice:hover { border-color: var(--uv); }
+.choice[aria-pressed="true"] { background: var(--uv); border-color: var(--uv); color: #fff; }
+:root[data-theme="dark"] .choice[aria-pressed="true"] { color: #120d26; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .choice[aria-pressed="true"] { color: #120d26; } }
+.reveal { font-size: .95rem; line-height: 1.55; padding: .8rem 1rem; border-radius: 8px; background: var(--uv-soft); margin-bottom: 1rem; }
+.reveal b { color: var(--uv); }
+.wsrc { font-size: .74rem; color: var(--muted); margin-top: .8rem; line-height: 1.5; }
+.wbtn { border: 1.5px solid var(--ink); background: transparent; border-radius: 6px; padding: .45rem .8rem; font: 700 .8rem var(--font-ui); display: inline-flex; gap: .35rem; align-items: center; }
+.wbtn:hover { background: var(--ink); color: var(--paper); }
+.wbtn:disabled { opacity: .4; cursor: default; background: transparent; color: var(--ink); }
+.statrow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; margin: .9rem 0; }
+.stat { border-top: 3px solid var(--line); padding-top: .45rem; }
+.stat b { display: block; font: 400 1.7rem/1.05 var(--font-display); }
+.stat span { font-size: .78rem; color: var(--muted); line-height: 1.35; display: block; }
+.stat.w { border-color: var(--coral); } .stat.w b { color: var(--coral); }
+.stat.s { border-color: var(--teal); } .stat.s b { color: var(--teal); }
+.stat.u { border-color: var(--uv); } .stat.u b { color: var(--uv); }
+
+/* food court strip */
+.strip svg { width: 100%; height: auto; overflow: visible; }
+.strip .axis text { font: 11px var(--font-mono); fill: var(--muted); }
+.strip .axis line { stroke: var(--line); }
+.strip .lab { font: 700 12px var(--font-ui); fill: var(--ink); }
+.strip .sub { font: 11px var(--font-ui); fill: var(--muted); }
+.strip .dot-w { fill: var(--coral); }
+.strip .dot-s { fill: var(--teal); opacity: .75; }
+.strip .mean { stroke: var(--ink); stroke-width: 2.5; }
+.strip .meanlab { font: 700 12px var(--font-mono); fill: var(--ink); }
+.strip .hidden-data { opacity: 0; transition: opacity .6s; }
+.strip.on .hidden-data { opacity: 1; }
+.strip .veil { font: 600 13px var(--font-ui); fill: var(--muted); transition: opacity .3s; }
+.strip.on .veil { opacity: 0; }
+.slope { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.2rem; align-items: center; margin-top: 1rem; }
+.slope svg text { font: 11px var(--font-mono); fill: var(--muted); }
+.slope svg .big { font: 700 15px var(--font-mono); fill: var(--coral); }
+.slope p { font-size: .9rem; line-height: 1.55; }
+
+/* Bradley–Terry */
+.bt-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-bottom: .9rem; }
+.bt-card { border: 1.5px solid var(--line); border-radius: 10px; padding: .8rem .9rem; background: var(--paper); }
+.bt-card h4 { font: 700 .95rem var(--font-ui); display: flex; justify-content: space-between; gap: .5rem; }
+.bt-card h4 span { font: 600 .78rem var(--font-mono); color: var(--muted); }
+.bt-card svg { width: 100%; height: auto; margin: .5rem 0 .3rem; }
+.bt-card svg text { font: 10px var(--font-mono); fill: var(--muted); }
+.bt-card .w { fill: var(--uv); }
+.bt-card .l { fill: none; stroke: var(--muted); stroke-width: 1.4; }
+.bt-card .score { font: 400 1.6rem/1 var(--font-display); color: var(--uv); min-height: 1.6rem; }
+.bt-card .score small { font: .74rem var(--font-ui); color: var(--muted); margin-left: .3rem; }
+
+/* picture stories scatter */
+.ps-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
+.ps-plot svg { width: 100%; height: auto; touch-action: manipulation; }
+.ps-plot .pt { fill: var(--muted); opacity: .38; }
+.ps-plot .pt.hl { fill: var(--uv); opacity: 1; }
+.ps-plot .pt.pick { fill: var(--coral); opacity: 1; stroke: var(--card); stroke-width: 1.5; }
+.ps-plot .axis text { font: 11px var(--font-mono); fill: var(--muted); }
+.ps-plot .axis .t { font: 700 12px var(--font-ui); fill: var(--ink); }
+.ps-plot .axis line, .ps-plot .axis path { stroke: var(--line); }
+.ps-plot .trend { stroke: var(--coral); stroke-width: 2; stroke-dasharray: 6 5; fill: none; }
+.ps-plot .ann { font: 600 11px var(--font-ui); fill: var(--ink); }
+.ps-side .chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .8rem; }
+.ps-card { border: 1px solid var(--line); border-radius: 10px; padding: .8rem; background: var(--paper); min-height: 12rem; font-size: .88rem; line-height: 1.5; }
+.ps-card a { display: block; cursor: zoom-in; }
+.ps-card img { width: 100%; max-width: 360px; border-radius: 6px; margin-bottom: .6rem; aspect-ratio: 1; object-fit: contain; background: var(--paper2); }
+.ps-card .bars { display: grid; grid-template-columns: 6.5rem 1fr 2.2rem; gap: .2rem .5rem; align-items: center; font: .74rem var(--font-mono); margin-top: .6rem; }
+.ps-card .bars i { display: block; height: .5rem; border-radius: 2px; background: var(--uv); }
+.ps-card .bars i.p { background: var(--coral); }
+
+/* forecast */
+.fc-mock { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
+.fc-box { border: 1.5px solid var(--line); border-radius: 10px; padding: .8rem .9rem; background: var(--paper); font-size: .9rem; }
+.fc-box h4 { font: 700 .7rem var(--font-ui); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
+.fc-box .reason { font: .92rem/1.55 var(--font-mono); }
+.fc-opt { display: flex; gap: .55rem; align-items: center; padding: .25rem .3rem; border-radius: 5px; font: .9rem var(--font-mono); }
+.fc-opt .r { width: .9rem; height: .9rem; border-radius: 50%; border: 2px solid var(--muted); flex: none; }
+.fc-opt.sel .r { background: var(--ink); border-color: var(--ink); box-shadow: inset 0 0 0 2px var(--paper); }
+.fc-opt.bad { outline: 2px solid var(--coral); background: var(--coral-soft); }
+.fc-opt.good { outline: 2px dashed var(--teal); }
+.mark-bad { background: var(--coral-soft); color: var(--coral); border-radius: 3px; padding: 0 .15rem; }
+.tbars { display: grid; gap: .45rem; margin-top: .4rem; }
+.tbar { display: grid; grid-template-columns: 7.2rem 1fr 3.4rem; gap: .6rem; align-items: center; font-size: .82rem; }
+.tbar div { background: var(--paper2); border-radius: 3px; height: 1.1rem; overflow: hidden; }
+.tbar i { display: block; height: 100%; background: var(--uv); }
+.tbar b { font: 600 .82rem var(--font-mono); text-align: right; }
+.tbar small { display: block; color: var(--muted); font-size: .7rem; }
+
+/* solver flow diagram */
+.flow { margin: 2.2rem -2.2rem 2.4rem; background: var(--lamp); color: var(--on-lamp); border-radius: 14px; padding: 1.3rem 1.4rem 1.1rem; }
+.flow h3 { font: 400 1.4rem/1.2 var(--font-display); margin: 0 0 .3rem; color: var(--on-lamp); }
+.flow .hint { font: .86rem/1.5 var(--font-ui); color: var(--lamp-muted); margin-bottom: .9rem; }
+.flow ol { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; counter-reset: f; }
+.flow li { background: var(--lamp2); border: 1px solid var(--lamp-line); border-radius: 10px; padding: .75rem .8rem; font: .84rem/1.45 var(--font-ui); color: var(--on-lamp); position: relative; }
+.flow li b { display: block; font-size: .92rem; margin-bottom: .25rem; }
+.flow li .ctr { display: block; font: 600 .7rem var(--font-mono); letter-spacing: .05em; text-transform: uppercase; color: var(--lamp-glow); margin-bottom: .35rem; }
+.flow li.open { border-style: dashed; border-color: #ff9f73; }
+.flow li.open .ctr { color: #ffb38f; }
+.flow .meter { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; margin-top: .9rem; font: .8rem var(--font-mono); color: var(--lamp-muted); }
+.flow .meter b { color: var(--on-lamp); font-size: 1rem; }
+.flow a { color: var(--lamp-link); }
+
+/* three learners */
+.trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin: 2rem -2.2rem 2.2rem; }
+.trio article { border: 1.5px solid var(--line); border-radius: 12px; padding: 1rem; background: var(--card); font: .9rem/1.5 var(--font-ui); }
+.trio .n { font: 400 2.4rem/1 var(--font-display); color: var(--uv); }
+.trio h4 { font: 700 1rem var(--font-ui); margin: .3rem 0 .4rem; }
+.trio .sees { margin-top: .6rem; padding-top: .55rem; border-top: 1px dashed var(--line); font-size: .8rem; color: var(--muted); }
+.trio .sees b { color: var(--ink); }
+
+/* proposed ROE */
+.roe { margin: 2.2rem -2.2rem 2.4rem; border: 2px dashed var(--coral); border-radius: 14px; padding: 1.2rem 1.3rem; background: var(--card); font-family: var(--font-ui); }
+.roe .stamp { display: inline-block; font: 700 .7rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--coral); border: 1.5px solid var(--coral); padding: .25rem .5rem; border-radius: 4px; transform: rotate(-2deg); margin-bottom: .6rem; }
+.roe h3 { font: 400 1.4rem/1.2 var(--font-display); margin: 0 0 .4rem; }
+.roe svg { width: 100%; height: auto; margin: .6rem 0; }
+.roe svg text { font: 11px var(--font-ui); fill: var(--ink); }
+.roe svg .rm { fill: var(--paper2); stroke: var(--line); stroke-width: 1.5; }
+.roe svg .me { fill: var(--uv); }
+.roe svg .task { fill: var(--card); stroke: var(--coral); stroke-width: 1.5; }
+.roe svg .path { stroke: var(--muted); stroke-dasharray: 4 4; fill: none; }
+.roe .opts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; margin-top: .4rem; }
+.roe .opt { border: 1.5px solid var(--line); background: var(--paper); border-radius: 10px; padding: .7rem .8rem; text-align: left; font: .86rem/1.4 var(--font-ui); }
+.roe .opt b { display: block; margin-bottom: .2rem; }
+.roe .opt[aria-pressed="true"] { border-color: var(--uv); background: var(--uv-soft); }
+.roe .out { font-size: .9rem; line-height: 1.55; margin-top: .8rem; min-height: 3rem; }
+
+/* lamp band (inside story column but wider) */
+.lamp { margin: 2.4rem -2.2rem 2.6rem; background: var(--lamp); color: var(--on-lamp); border-radius: 14px; padding: 1.6rem 1.6rem 1.4rem; }
+.lamp p { color: var(--on-lamp); }
+.lamp .big { font: 400 clamp(1.5rem, 3vw, 2.1rem)/1.25 var(--font-display); margin-bottom: .9rem; }
+.lamp .big em { font-style: normal; color: var(--lamp-glow); }
+.lamp small, .lamp .muted { color: var(--lamp-muted); font: .82rem/1.5 var(--font-ui); }
+.lamp a { color: var(--lamp-link); }
+.lamp a.ts { background: var(--lamp2); color: var(--lamp-link); }
+.lamp a.ts:hover, .lamp a.ts:focus-visible { background: var(--lamp-link); color: var(--lamp); }
+.lamp strong { color: #fff; }
+
+/* figure */
+.fig { margin: 2rem -2.2rem 2.2rem; }
+.fig img { border-radius: 10px; border: 1px solid var(--line); background: #fff; }
+.fig figcaption { font: .82rem/1.5 var(--font-ui); color: var(--muted); margin-top: .55rem; }
+.fig a.zoom { display: block; cursor: zoom-in; }
+
+/* comic: full-width band, red-pen marks on top of the art */
+.comic-band.chap { max-width: none; margin: 0 0 3rem; width: 100vw; margin-left: calc(50% - 50vw); background: var(--paper2); padding: 3rem var(--pad) 2.6rem; box-shadow: none; }
+.comic-head { max-width: 1055px; margin: 0 auto 1.4rem; }
+.comic-head p:not(.eyebrow) { max-width: 46rem; }
+.seg { display: inline-flex; border: 1.5px solid var(--ink); border-radius: 999px; padding: 2px; gap: 2px; background: var(--card); }
+.seg button { background: none; border: 0; border-radius: 999px; padding: .32rem .85rem; font: 600 .8rem var(--font-ui); color: var(--ink); }
+.seg button:hover { background: var(--paper2); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.comic-fig { max-width: 1055px; margin: 0 auto; }
+.comic-stage { position: relative; }
+.comic-stage > a { display: block; cursor: zoom-in; }
+.comic-stage img { width: 100%; border-radius: 8px; box-shadow: var(--shadow); }
+.comic-fig figcaption { font: .8rem/1.5 var(--font-ui); color: var(--muted); margin-top: .7rem; }
+.mk { position: absolute; left: var(--l); top: var(--t); width: var(--w); height: var(--h); z-index: 2; outline: none; }
+.mk .ring { position: absolute; inset: -7px -9px; border: 2.5px solid #e0301e; opacity: .8; transition: opacity .2s; border-radius: 46% 54% 50% 50% / 55% 45% 55% 45%; transform: rotate(-1.5deg); box-shadow: 0 0 0 2px rgba(255,255,255,.55); pointer-events: none; }
+.mk .badge, .fixes .badge { display: inline-grid; place-items: center; width: 1.55rem; height: 1.55rem; border-radius: 50%; background: #e0301e; color: #fff; font: 700 .8rem var(--font-ui); box-shadow: 0 2px 6px rgba(0,0,0,.35); flex: none; }
+.mk .badge { position: absolute; left: -1.3rem; top: -1.1rem; cursor: help; width: 1.35rem; height: 1.35rem; font-size: .72rem; }
+.mk .tag { display: none; position: absolute; left: -9px; top: calc(100% + 12px); width: max-content; max-width: 17rem; background: #fffdf3; color: #1d1a12; border: 1.5px solid #e0301e; border-radius: 6px; padding: .32rem .6rem; font: 600 .86rem/1.35 var(--font-ui); box-shadow: 0 6px 18px rgba(0,0,0,.28); transform: rotate(-1deg); }
+.mk .tag s { color: #b3200f; text-decoration-thickness: 2px; font-weight: 500; }
+.mk .tag-more { display: none; font-weight: 400; margin-top: .3rem; }
+.mk .tag-more b { font-weight: 700; }
+.mk .tag a { color: #4a23a8; }
+.mk-above .tag { top: auto; bottom: calc(100% + 12px); }
+.mk-below-left .tag { left: auto; right: -9px; }
+.mk:hover, .mk:focus, .mk:focus-within { z-index: 5; }
+.comic-stage.notes .mk .tag { display: block; }
+.mk:hover .tag, .mk:focus .tag, .mk:focus-within .tag { display: block; max-width: 19rem; width: 19rem; transform: none; }
+.mk:hover .tag-more, .mk:focus .tag-more, .mk:focus-within .tag-more { display: block; }
+.mk:hover .ring, .mk:focus .ring, .comic-stage.notes .ring { opacity: 1; }
+.mk:focus-visible .ring { border-color: #7b2cff; }
+.comic-stage:not(.plain) .mk { cursor: help; }
+.comic-stage.plain .mk { display: none; }
+.fixes { list-style: none; font: .9rem/1.5 var(--font-ui); display: none; margin-top: 1rem; }
+.fixes li { display: flex; gap: .6rem; padding: .6rem 0; border-bottom: 1px dashed var(--line); }
+.fixes li .p { font: 600 .74rem var(--font-mono); color: var(--muted); }
+.fixes s { color: var(--coral); text-decoration-thickness: 1.5px; }
+@media (max-width: 760px) {
+  .comic-stage .mk .tag { display: none !important; }
+  .seg [data-v="notes"] { display: none; }
+  .comic-stage.notes .mk { display: block; }
+  .mk .badge { left: -.7rem; top: -.9rem; width: 1.3rem; height: 1.3rem; font-size: .7rem; }
+  .mk .ring { inset: -4px -5px; border-width: 2px; }
+  .fixes { display: block; }
+}
+
+/* ---------- dock (one persistent video) ---------- */
+.dock {
+  flex: 0 0 var(--dock-w); position: sticky; top: .8rem; align-self: flex-start; margin: .8rem var(--pad) 0 0;
+  background: var(--lamp); color: var(--on-lamp); border-radius: 12px; padding: .7rem; display: flex; flex-direction: column; gap: .55rem;
+  max-height: calc(100vh - 1.6rem); box-shadow: var(--shadow); transition: flex-basis .45s var(--ease); z-index: 20;
+}
+body.watch .dock { flex-basis: 56%; }
+.dock, .hero-art, .lamp, .takeaways { color-scheme: dark; scrollbar-color: var(--lamp-line) transparent; }
+.dock a { color: var(--lamp-link); }
+.dock-head { display: flex; justify-content: space-between; gap: .5rem; font: .64rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--lamp-muted); }
+.dock-head b { color: var(--on-lamp); }
+.dock-head, .now, .dock-ctrls { flex: none; }
+.vwrap { position: relative; background: #000; border-radius: 8px; overflow: hidden; aspect-ratio: 16 / 9; flex: none; }
+.vwrap video { width: 100%; height: 100%; }
+.resume { position: absolute; inset: auto 0 3.2rem 0; display: none; justify-content: center; }
+.resume.show { display: flex; }
+.resume button { background: var(--lamp-glow); color: #120d26; border: 0; border-radius: 999px; padding: .5rem 1rem; font: 700 .85rem var(--font-ui); display: inline-flex; gap: .3rem; align-items: center; box-shadow: 0 6px 18px rgba(0,0,0,.4); }
+.fallback-note { display: none; font: .76rem/1.4 var(--font-ui); color: var(--lamp-muted); }
+.dock.audio-mode .fallback-note { display: block; }
+.dock audio { width: 100%; display: none; }
+.dock.audio-mode audio { display: block; }
+.dock.audio-mode .vwrap { display: none; }
+.now { font: .8rem/1.4 var(--font-ui); color: var(--on-lamp); min-height: 2.3rem; }
+.now .t { font: 600 .8rem var(--font-mono); color: var(--lamp-glow); margin-right: .45rem; }
+.now .in-story { display: block; font-size: .74rem; color: var(--lamp-muted); }
+.dock-ctrls { display: flex; flex-wrap: wrap; gap: .4rem; }
+.dbtn { display: inline-flex; align-items: center; gap: .35rem; background: var(--lamp2); color: var(--on-lamp); border: 1px solid var(--lamp-line); border-radius: 6px; padding: .4rem .65rem; font: 600 .74rem var(--font-ui); text-decoration: none; }
+.dbtn:hover { border-color: var(--lamp-glow); }
+.dock a.dbtn { color: var(--on-lamp); }
+.dbtn.mode { background: var(--lamp-glow); color: #120d26; border-color: var(--lamp-glow); }
+.chapters { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+.chapters summary { font: 600 .66rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--lamp-muted); cursor: pointer; padding: .2rem 0; }
+.chapters ol { list-style: none; overflow-y: auto; flex: 1 1 auto; min-height: 0; max-height: 42vh; padding-right: .2rem; scrollbar-width: thin; }
+body.watch .chapters ol { max-height: none; }
+.dock .chapters li a { display: grid; grid-template-columns: 3.1rem 1fr; gap: .4rem; padding: .28rem .4rem; border-radius: 5px; font: .78rem/1.35 var(--font-ui); color: var(--on-lamp); text-decoration: none; }
+.dock .chapters li a:hover { background: var(--lamp2); }
+.dock .chapters li a .ct { font: .72rem var(--font-mono); color: var(--lamp-muted); }
+.dock .chapters li a.is-now { background: var(--on-lamp); color: var(--lamp); }
+.dock .chapters li a.is-now .ct { color: var(--lamp); }
+.dock .chapters li a.in-view { box-shadow: inset 3px 0 0 var(--lamp-glow); }
+.dock .chapters li a.is-target { background: var(--lamp2); outline: 1px solid var(--lamp-glow); }
+.chapters li.sep { font: 700 .62rem var(--font-ui); letter-spacing: .1em; text-transform: uppercase; color: var(--lamp-glow); padding: .6rem .4rem .2rem; }
+.dock .dock-min { display: none; }
+
+/* ---------- after the room ---------- */
+.band { width: 100vw; margin-left: calc(50% - 50vw); margin-bottom: 3rem; }
+.takeaways { background: var(--lamp); color: var(--on-lamp); padding: 3.4rem var(--pad) 3.6rem; scroll-margin-top: 0; }
+.takeaways-inner { max-width: 1240px; margin: 0 auto; }
+.takeaways .kicker { color: var(--lamp-glow); }
+.takeaways h2 { font: 400 clamp(2rem, 4.4vw, 3rem)/1.05 var(--font-display); margin-bottom: 1.8rem; max-width: 42rem; }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.cards article { background: var(--lamp2); border: 1px solid var(--lamp-line); border-radius: 12px; padding: 1.1rem 1.15rem; font: .92rem/1.55 var(--font-ui); color: var(--on-lamp); }
+.cards .n { font: 600 .72rem var(--font-mono); color: var(--lamp-glow); letter-spacing: .08em; }
+.cards h3 { font: 400 1.3rem/1.2 var(--font-display); margin: .35rem 0 .5rem; color: #fff; }
+.cards p { color: var(--lamp-muted); }
+.cards a { color: var(--lamp-link); }
+.cards a.ts { background: var(--lamp); color: var(--lamp-link); }
+.cards a.ts:hover, .cards a.ts:focus-visible { background: var(--lamp-link); color: var(--lamp); }
+.closing { max-width: 46rem; margin: 2.2rem 0 0; font: 400 1.35rem/1.45 var(--font-display); color: var(--on-lamp); }
+.closing em { font-style: normal; color: var(--lamp-glow); }
+
+.after { max-width: 1240px; margin: 0 auto 2rem; padding: 0 var(--pad); }
+.after h2 { font: 700 .76rem var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0 0 .9rem; }
+.series { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .6rem; margin-bottom: 2.6rem; }
+.series a { display: block; border: 1.5px solid var(--line); border-radius: 8px; padding: .7rem .8rem; text-decoration: none; color: var(--ink); font: 400 1.05rem/1.2 var(--font-display); }
+.series a:hover { border-color: var(--uv); }
+.series a small { display: block; font: .62rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: .3rem; }
+.series a.here { background: var(--uv); border-color: var(--uv); color: #fff; }
+.series a.here small { color: #e8e0ff; }
+:root[data-theme="dark"] .series a.here { color: #120d26; } :root[data-theme="dark"] .series a.here small { color: #2a2350; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .series a.here { color: #120d26; } :root:not([data-theme="light"]) .series a.here small { color: #2a2350; } }
+.sources { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 2.4rem; font: .86rem/1.6 var(--font-ui); }
+.sources h3 { font: 700 .95rem var(--font-ui); margin-bottom: .3rem; }
+.sources ul { margin: 0 0 1rem 1.1rem; }
+.sources li { margin-bottom: .3rem; }
+footer.foot { max-width: 1240px; margin: 0 auto; padding: 1.4rem var(--pad) 6rem; border-top: 1px solid var(--line); font: .8rem/1.6 var(--font-ui); color: var(--muted); }
+
+/* ---------- jump nav ---------- */
+.jump-backdrop { position: fixed; inset: 0; background: rgba(10, 8, 24, .35); opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 850; }
+.jump-backdrop.open { opacity: 1; pointer-events: auto; }
+.jump { position: fixed; left: 50%; bottom: .9rem; transform: translateX(-50%); z-index: 900; display: flex; align-items: center; gap: .2rem; background: var(--ink); color: var(--paper); border-radius: 999px; padding: .3rem; box-shadow: 0 10px 30px rgba(0,0,0,.25), 0 0 0 1px rgba(255,255,255,.14); transition: opacity .25s, transform .25s; max-width: calc(100vw - 1.4rem); }
+.jump.on-hero { opacity: 0; pointer-events: none; transform: translate(-50%, 1rem); }
+.jump > button { background: none; border: 0; color: var(--paper); border-radius: 999px; padding: .45rem .7rem; font: 700 .8rem var(--font-ui); display: inline-flex; align-items: center; gap: .35rem; min-width: 2.3rem; justify-content: center; }
+.jump > button:hover:not(:disabled) { background: rgba(255,255,255,.14); }
+.jump > button:disabled { opacity: .35; cursor: default; }
+.jump-cur { max-width: 15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.jump-menu { position: absolute; bottom: calc(100% + .6rem); left: 50%; transform: translateX(-50%); width: min(720px, calc(100vw - 1.4rem)); max-height: 70vh; overflow-y: auto; background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: 14px; padding: .9rem; box-shadow: var(--shadow); display: none; text-align: left; }
+.jump-menu.open { display: block; }
+.jm-group { font: 700 .66rem var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--uv); margin: .6rem 0 .35rem; }
+.jm-group:first-child { margin-top: 0; }
+.jump-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .35rem; }
+.jump-grid a { display: block; padding: .5rem .6rem; border-radius: 8px; border: 1px solid var(--line); text-decoration: none; color: var(--ink); font: 700 .82rem/1.3 var(--font-ui); }
+.jump-grid a small { display: block; font: 400 .74rem/1.3 var(--font-ui); color: var(--muted); margin-top: .15rem; }
+.jump-grid a:hover, .jump-grid a.is-cur { border-color: var(--uv); background: var(--uv-soft); }
+
+/* ---------- dialogs ---------- */
+dialog { border: 0; padding: 0; background: transparent; color: var(--ink); max-width: 100vw; max-height: 100vh; }
+dialog::backdrop { background: rgba(10, 8, 24, .6); }
+.pop { width: min(820px, calc(100vw - 1.4rem)); height: min(88vh, 1000px); margin: auto; background: var(--card); border-radius: 14px; overflow: hidden; }
+.pop[open] { display: flex; flex-direction: column; }
+.pop-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .9rem 1.2rem; border-bottom: 1px solid var(--line); }
+.pop-head h2 { font: 400 1.4rem var(--font-display); }
+.close-x { background: none; border: 1px solid var(--line); border-radius: 6px; padding: .35rem .65rem; font: 600 .8rem var(--font-ui); }
+.pop-search { display: none; gap: .6rem; align-items: center; padding: .6rem 1.2rem; border-bottom: 1px solid var(--line); font: .8rem var(--font-ui); color: var(--muted); }
+.pop-search.on { display: flex; }
+.pop-search input { flex: 1; font: .95rem var(--font-ui); padding: .45rem .7rem; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); color: var(--ink); }
+#pop-body { overflow-y: auto; padding: 1rem 1.3rem 2rem; font-size: 1rem; line-height: 1.65; }
+#pop-body h1, #pop-body h2, #pop-body h3 { font: 400 1.3rem var(--font-display); margin: 1.3rem 0 .5rem; }
+#pop-body p { margin: 0 0 .8rem; }
+#pop-body ul, #pop-body ol { margin: 0 0 .8rem 1.4rem; }
+#pop-body li { margin-bottom: .35rem; }
+#pop-body blockquote { margin: 0 0 .8rem; padding-left: .9rem; border-left: 3px solid var(--line); }
+#pop-body code { font: .88em var(--font-mono); }
+#pop-body .intro { font: .86rem/1.5 var(--font-ui); color: var(--muted); background: var(--paper2); padding: .7rem .9rem; border-radius: 8px; }
+#pop-body .hide { display: none; }
+#pop-body mark { background: var(--amber-soft); color: inherit; }
+.lightbox { width: 100vw; height: 100vh; margin: 0; background: rgba(10, 8, 24, .92); }
+.lightbox[open] { display: flex; flex-direction: column; }
+.lightbox img { flex: 1 1 auto; min-height: 0; object-fit: contain; margin: 1rem auto 0; max-width: calc(100vw - 2rem); cursor: zoom-out; }
+.lb-bar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .8rem 1rem; color: #ece9ff; font: .85rem var(--font-ui); flex-wrap: wrap; }
+.lb-bar a { color: #cbbcff; margin-right: .8rem; }
+.lb-bar button { background: none; border: 1px solid #5b5390; color: #ece9ff; border-radius: 6px; padding: .35rem .65rem; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1280px) { :root { --dock-w: 340px; } .say, .widget, .scene, .flow, .trio, .roe, .lamp, .fig { margin-left: -1.1rem; margin-right: -1.1rem; } }
+@media (max-width: 999px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-art { max-width: 520px; }
+  .room { display: block; }
+  .dock { position: fixed; right: .7rem; bottom: 4.3rem; top: auto; margin: 0; width: min(52vw, 280px); max-height: none; padding: .45rem; gap: .4rem; z-index: 700; transition: width .4s var(--ease); }
+  .dock .dock-head, .dock .now, .dock .chapters, .dock .dock-ctrls .wide-only { display: none; }
+  .dock .dbtn { padding: .38rem .55rem; font-size: .68rem; flex: 1 1 auto; justify-content: center; }
+  .dock .dock-min { display: inline-flex; }
+  body.dock-collapsed:not(.watch) .dock .vwrap, body.dock-collapsed:not(.watch) .dock audio { display: none; }
+  body.dock-collapsed:not(.watch) .dock { width: auto; }
+  body.dock-collapsed:not(.watch) .dock #share-btn { display: none; }
+  body.watch .dock { left: 0; right: 0; top: 0; bottom: auto; width: auto; border-radius: 0 0 10px 10px; padding: .5rem .6rem .6rem; }
+  body.watch .dock .now { display: block; font-size: .74rem; min-height: 0; }
+  body.watch .dock .now .in-story { display: none; }
+  body.watch .dock .dock-min { display: none; }
+  body.watch { padding-top: var(--dock-h, 0px); }
+  body.watch .chap { scroll-margin-top: calc(var(--dock-h, 0px) + .5rem); }
+  .series { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  :root { --pad: 1rem; }
+  body { font-size: 1.04rem; }
+  .say, .widget, .scene, .flow, .trio, .roe, .lamp, .fig { margin-left: 0; margin-right: 0; }
+  .widget, .scene, .flow, .roe, .lamp { padding: 1rem; }
+  .say { padding-left: 1rem; }
+  .howto-inner { grid-template-columns: 1fr; gap: .4rem; }
+  .scene .line { grid-template-columns: 1fr; gap: .1rem; }
+  .flow ol, .trio, .roe .opts, .cards, .sources, .bt-pair, .ps-grid, .fc-mock, .slope { grid-template-columns: 1fr; }
+  .statrow { grid-template-columns: 1fr; }
+  .stat b { font-size: 1.35rem; }
+  .jump-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .series { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .jump-cur { max-width: 52vw; }
+}
+@media (min-width: 721px) and (max-width: 1100px) { .flow ol { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media print { .dock, .jump, .jump-backdrop, #progress { display: none !important; } .room { display: block; } }
+</style>
+</head>
+<body>
+<div id="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <a href="../">Talks · S Anand</a>
+  <span>TDS open design meeting · episode 6</span>
+  <button class="icon-btn" id="theme-btn" type="button" aria-label="Toggle dark mode"><i class="bi bi-moon-stars" aria-hidden="true"></i></button>
+</header>
+
+<section class="hero" aria-labelledby="title">
+  <div>
+    <p class="kicker">IIT Madras · Tools in Data Science · Monday 16 Nov 2026</p>
+    <h1 id="title">The score can’t see who <em>built the solver</em></h1>
+    <p class="dek">A student turned one of the hardest timed questions in the course into a single HTML file that runs <strong>without any AI model</strong>. In the same hour, three other scores turned out to be measuring something their designers hadn’t quite intended. This is the meeting where <strong>the students’ experiments made the teachers revise what counts as learning</strong>.</p>
+    <p class="hero-meta"><b>Open course-design meeting</b> · Sep 2026 cohort · Remote · 5:30 pm IST · 66 min 54 s<br>Anand (instructor) · JK (Jayakrishnan Warriem, IITM) · students Adwitiya, Preethi, Swarnam and others</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="#solver"><i class="bi bi-book" aria-hidden="true"></i> Read the story</a>
+      <a class="btn" href="?view=video" id="hero-watch"><i class="bi bi-play-btn-fill" aria-hidden="true"></i> Watch alongside</a>
+      <a class="btn" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript &amp; chat</a>
+    </div>
+  </div>
+  <figure class="hero-art">
+    <svg viewBox="0 0 360 250" role="img" aria-labelledby="hero-art-t">
+      <title id="hero-art-t">Illustration: a wobbly letter drawn in the air with a phone, traced as a dotted motion path, with a decoder guessing E, F or 3.</title>
+      <path class="ink-path" d="M168 46 C140 40 104 44 78 50 C74 90 76 150 80 200 C110 204 140 198 170 196 M80 124 C104 120 126 122 146 126"/>
+      <path class="ink-draw" d="M168 46 C140 40 104 44 78 50 C74 90 76 150 80 200 C110 204 140 198 170 196 M80 124 C104 120 126 122 146 126"/>
+      <g font-family="JetBrains Mono, monospace" font-size="13" fill="#b9b2dc">
+        <text x="214" y="58">decoder’s guess</text>
+        <text x="214" y="92" fill="#ece9ff" font-size="22" font-weight="600">E</text>
+        <rect x="240" y="78" width="88" height="14" rx="3" fill="#9d7bff"/>
+        <text x="214" y="126" fill="#ece9ff" font-size="22" font-weight="600">F</text>
+        <rect x="240" y="112" width="52" height="14" rx="3" fill="#5b4a9e"/>
+        <text x="214" y="160" fill="#ece9ff" font-size="22" font-weight="600">3</text>
+        <rect x="240" y="146" width="20" height="14" rx="3" fill="#3a3366"/>
+        <text x="214" y="200">“this E is a bit</text>
+        <text x="214" y="218">of a stretch”</text>
+      </g>
+    </svg>
+    <figcaption><b>Invisible Ink</b>: students draw letters in the air with a phone; the exam records only the motion. Illustration, not exam data.</figcaption>
+  </figure>
+</section>
+
+<div class="howto" role="note" aria-labelledby="howto-h">
+  <div class="howto-inner">
+    <h2 id="howto-h">How to read this</h2>
+    <div>
+      <p>The story reads on its own. Every <a class="ts" href="?t=42:23">42:23</a> plays that moment of the meeting in the video panel, which stays put while you read; <b>Focus video</b> enlarges the same player without losing your place. Claims carry a label for where they come from:</p>
+      <div class="legend">
+        <span><span class="ev ev-said">Said</span> in the meeting</span>
+        <span><span class="ev ev-data">Data</span> recomputed from first-party files</span>
+        <span><span class="ev ev-later">Later</span> post-meeting analysis</span>
+        <span><span class="ev ev-prop">Proposed</span> an idea, not deployed</span>
+        <span><span class="ev ev-toy">Toy</span> illustrative, not real data</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="room" id="room">
+<main class="story" id="story">
+
+<p class="act">Act I · The file</p>
+
+<section class="chap" id="solver" data-act="I · The file" data-title="“No, no, no, sir”">
+  <p class="eyebrow"><span>41:10 – 47:28</span><span class="ev ev-said">Said</span></p>
+  <h2>“No, no, no, sir. <em>No AI model was required.</em>”</h2>
+
+  <p class="lede">About forty minutes into the meeting, Anand was explaining why one question in the course’s first project had defeated the machines. <a href="https://tds-network-games.sanand.workers.dev/realtime/air-ink-classifier/" target="_blank" rel="noopener">Invisible Ink</a> asks students to draw letters in the air with their phones. The exam records only the phone’s motion, a stream of numbers in a <span class="tip" tabindex="0" data-tip="JSON Lines: one JSON record per line. Here, one motion sample per line.">JSONL</span> file, and students must work out which letters were written. It is timed, and the letters are wobbly. <strong>A person squinting at a plot of the motion can often guess the letter. The frontier models, he said, could not.</strong> <a class="ts" href="?t=40:28">40:28</a></p>
+
+  <p>“I don’t know why a model is not able to do that with its rather stunning vision capabilities,” he said. Then a student unmuted.</p>
+
+  <div class="scene" aria-label="Exchange between Adwitiya and Anand, 41:10 to 42:33">
+    <div class="line"><span class="who s">Adwitiya<small>student · 41:10</small></span><span class="txt">Sir, Fable performed quite well on this problem. … I created a solver. … Of course, I can’t say that with 100% certainty, because I don’t have the answers.</span></div>
+    <div class="line"><span class="who">Anand<small>41:44</small></span><span class="txt">It’s one thing to say, okay, choice of model and choice of prompt, and share that. It’s another thing to build a deterministic solver that you can share the link to, and others just upload their file, and it works for them.</span></div>
+    <div class="line"><span class="who">Anand<small>42:17</small></span><span class="txt">Got you. However, the person who’s using the solver would need Fable 5.2, right?</span></div>
+    <div class="line"><span class="who s">Adwitiya<small>42:23</small></span><span class="txt big">No, no, no, sir. It was a standalone model, just an HTML page encoded with the weights of the model, and no AI model was required for that.</span></div>
+  </div>
+  <p style="margin-top:-1.2rem"><a class="ts" href="?t=41:10">41:10</a> <a class="ts" href="?t=42:17">42:17</a> <a class="ts" href="?t=42:23">42:23</a></p>
+
+  <p><a href="https://www.anthropic.com/claude-fable-and-mythos-5-2" target="_blank" rel="noopener">Claude Fable 5.2</a> had been released one week earlier, on 9 November. Adwitiya had used a limited-time promotional offer to <strong>point the newest frontier model at the problem, and had it build something that no longer needed the frontier model</strong>: a page you download, open in a browser, and give your motion file. He had even, he explained a few minutes later, “eliminated that dependency for Python on the end-user’s machine.” <a class="ts" href="?t=45:12">45:12</a></p>
+
+  <p>That is a different achievement from “the AI solved the exam.” It is closer to what an engineer does when a prototype becomes a product. The expensive intelligence went into <em>making</em> the tool. Using it costs nothing.</p>
+
+  <div class="flow" role="figure" aria-labelledby="flow-h">
+    <h3 id="flow-h">Where the model was, and where it wasn’t</h3>
+    <p class="hint">The solver’s life cycle as Adwitiya described it. The last step is the one nobody has done yet.</p>
+    <ol>
+      <li><span class="ctr">Build time · model used</span><b>Fable 5.2 builds a recogniser</b>Student’s own data and prompts; a frontier model writes and trains the decoder.</li>
+      <li><span class="ctr">Packaging · 0 calls</span><b>One HTML file, weights inside</b>Python dependency removed; the model’s weights are encoded into the page.</li>
+      <li><span class="ctr">Run time · 0 calls (claimed)</span><b>Anyone uploads a JSONL</b>Shared in the student group; Anand downloads it and runs his own file live.</li>
+      <li class="open"><span class="ctr">Not done yet</span><b>Score against labels</b>No held-out accuracy test in the meeting. Visual inspection only.</li>
+    </ol>
+    <div class="meter"><span>remote model calls at run time: <b>0</b> <small>(student’s claim; not audited here)</small></span><span>tokens per extra user: <b>0</b></span><span>verified accuracy: <b>unknown</b></span></div>
+  </div>
+
+  <h3>Then the teacher tried it</h3>
+  <p>Anand downloaded the page from the student group, shared his screen, and gave it one of his own motion files. <a class="ts" href="?t=44:08">44:08</a> The decoder began laying out letters. And here the scene turns into something every data scientist will recognise: <strong>two humans peering at a machine’s output, unsure whether it is right, with no answer key in front of them.</strong></p>
+
+  <div class="say">
+    <p>“Based on a visual inspection, I think, for instance, out here, the F seems to be reasonable, but this E is a bit of a stretch. … V might be a stretch as well. H is definitely a stretch. Y is possible.”</p>
+    <footer><b>Anand</b>, squinting at the decoded strokes <a class="ts" href="?t=45:40">45:40</a></footer>
+  </div>
+
+  <p>JK, looking at the same screen, offered “P, C, D” for the left side, and then: “E, I’m not sure.” <a class="ts" href="?t=46:10">46:10</a> Adwitiya had said as much at the start: he couldn’t be certain because he didn’t have the answers either. <strong>What the meeting saw was a working, portable tool, not a measured one.</strong> “We’ll have to see how well it actually is doing against the results,” Anand said.</p>
+
+  <p>There was a second solver. Adwitiya pasted a link to a <a href="https://github.com/sreekarsarma55/temp-repo" target="_blank" rel="noopener">public GitHub repository</a> by another student, Shrikar. Anand opened it, saw it needed installing, and said, reasonably, that it was “going to be more work than I’ll do in this session.” <a class="ts" href="?t=46:24">46:24</a> Nobody ran it.</p>
+
+  <div class="lamp">
+    <p class="big">“If both of these are deterministic … and any others are able to solve this in a way that <em>does not require tokens</em>, that’s saying something. That’s saying something.”</p>
+    <p><small>Anand <a class="ts" href="?t=46:52">46:52</a></small></p>
+    <p>His next sentence was about his own job. If students can use a frontier model to manufacture a free, shareable solver within a week of its release, then the exam designer has to <strong>“go start looking for problems that are at the cusp of what is possible, not so hard that no one can do it, not so easy that everyone can do it.”</strong> <a class="ts" href="?t=47:16">47:16</a></p>
+    <p class="muted" style="margin-bottom:0">The question he had called hard for agents had become a question one student had already packaged for the rest. The test hadn’t been broken. It had been moved.</p>
+  </div>
+</section>
+
+<section class="chap" id="learners" data-act="I · The file" data-title="Finder, user, builder">
+  <p class="eyebrow"><span>47:28 – 50:58</span><span class="ev ev-said">Said</span></p>
+  <h2>Three students, one file, <em>three different lessons</em></h2>
+
+  <p>JK went straight to the consequence. The student group where the solver was pinned is not just this term’s cohort; it is “a historic group which has seen a lot of people from across the terms joining in.” <strong>How many of them used the solver? Did scores rise around it?</strong> <a class="ts" href="?t=47:28">47:28</a> Could the course see a network effect? And, he suggested, why not let students <em>cite</em> where a solution came from? <a class="ts" href="?t=48:40">48:40</a></p>
+
+  <p>Anand noted that the citation already happens by accident: when one URL gets copy-pasted around, the first submission of it is effectively the source. Then he laid out what may be the most useful idea of the meeting: <strong>the same shared file produces three different kinds of learning, depending on who you are.</strong> <a class="ts" href="?t=49:12">49:12</a></p>
+
+  <div class="trio" role="list">
+    <article role="listitem">
+      <div class="n">1</div>
+      <h4>The finder</h4>
+      <p>“I can’t solve it, I don’t know how to solve it, and I don’t know how to find people.” The agent can solve it. <em>Finding the people</em> is the skill: join a community, or form one.</p>
+      <p class="sees">What the grader sees: <b>a correct submission</b></p>
+    </article>
+    <article role="listitem">
+      <div class="n">2</div>
+      <h4>The user</h4>
+      <p>“Somebody solves it for me, I take it and use it. Do I still learn something?” Anand: “absolutely.” You learn the problem <em>is solvable, and how</em>, and you can point to it next year.</p>
+      <p class="sees">What the grader sees: <b>a correct submission</b></p>
+    </article>
+    <article role="listitem">
+      <div class="n">3</div>
+      <h4>The builder</h4>
+      <p>A few people will create many of these solvers; for them it may be a career path. But “not applicable for everyone, it’s probably a bad idea for everyone.”</p>
+      <p class="sees">What the grader sees: <b>a correct submission</b></p>
+    </article>
+  </div>
+
+  <div class="say">
+    <p>“90% of what we really need is an exposure to, ‘Here is a kind of problem, it is solvable this way, rest the agent can take care.’ … The vast majority of people need to learn how they can apply what people have created, not how they can themselves create.”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=49:58">49:58</a> <a class="ts" href="?t=50:40">50:40</a></footer>
+  </div>
+
+  <p>This is a hypothesis about learning, offered in conversation, not a measured result. But it exposes a measurement problem that is real and immediate. <strong>The builder, the user and the finder all upload the same answer. The exam’s score cannot tell them apart.</strong> One learned design, one learned that the problem is tractable, one learned whom to ask. A fourth may have learned only how to paste.</p>
+
+  <p>That riddle, <em>what is this number actually measuring?</em>, turns out to be the thread that ran through the whole meeting. The solver arrived late in the hour. Before it, the faculty had spent forty minutes looking at three other scores that each, in its own way, had measured something other than what its designers meant.</p>
+</section>
+
+<p class="act">Act II · Three scores that measured something else</p>
+
+<section class="chap" id="foodcourt" data-act="II · Three scores" data-title="More talk, less profit">
+  <p class="eyebrow"><span>00:26 – 07:41</span><span class="ev ev-said">Said</span><span class="ev ev-data">Data</span></p>
+  <h2>The adults negotiated, <em>and earned less</em></h2>
+
+  <p class="lede">The meeting had opened with a small experiment. Over the weekend Anand had run a data-science workshop for experienced professionals and given them exactly the assignment TDS students had played the week before: <strong>Food Court</strong>. Four or five players each run a stall in the same food court for a simulated year. Every month each stall offers a 0%, 10% or 20% discount. Discounts pull customers in and shave margins, and they pull customers away from your neighbours. <strong>Marks are 60% the whole court’s profit and 40% your own</strong>, so the game rewards restraint and punishes price wars. Players have twenty minutes and a chat box. <a class="ts" href="?t=00:26">00:26</a></p>
+
+  <p>Before showing the numbers, Anand asked JK to guess. JK expected the professionals to <strong>cooperate less</strong> than students who had spent weeks together and had marks at stake, but to bring <strong>better strategy</strong> and <strong>better powers of persuasion</strong>: “at least to management they should have, right?” <a class="ts" href="?t=01:29">01:29</a></p>
+
+  <div class="widget" id="w-fc" aria-labelledby="w-fc-h">
+    <header><h3 id="w-fc-h">Make JK’s call before you see it</h3><span class="ev ev-data">Room team scores, recomputed</span></header>
+    <p class="hint">Each dot will be one room’s team score out of 100: 7 workshop rooms (first workshop session, 15 Nov) and 161 TDS rooms (three sittings, 10–11 Nov). Which group of teams scored higher?</p>
+    <div class="choices" role="group" aria-label="Your guess">
+      <button class="choice" type="button" data-g="w" aria-pressed="false">Professionals</button>
+      <button class="choice" type="button" data-g="s" aria-pressed="false">TDS students</button>
+      <button class="choice" type="button" data-g="e" aria-pressed="false">About the same</button>
+    </div>
+    <p class="reveal" id="fc-reveal" hidden aria-live="polite"></p>
+    <div class="strip" id="fc-strip">
+      <svg viewBox="0 0 640 250" role="img" aria-labelledby="fc-svg-t" id="fc-svg">
+        <title id="fc-svg-t">Strip plot of room team scores. Workshop, 7 rooms: mean 88.06, range 83.8 to 91.8. TDS 10 Nov 6 pm, 61 rooms: mean 92.51. TDS 11 Nov 7:30 am, 25 rooms: mean 95.57. TDS 11 Nov 9 pm, 75 rooms: mean 94.13.</title>
+      </svg>
+    </div>
+    <div class="statrow">
+      <div class="stat w"><b>88.06</b><span>workshop mean team score · 7 rooms, 32 players</span></div>
+      <div class="stat s"><b>92.5 · 95.6 · 94.1</b><span>TDS means across three sittings · 61, 25, 75 rooms</span></div>
+      <div class="stat u"><b>29% vs 76%</b><span>rooms reaching 90+ · workshop vs TDS</span></div>
+    </div>
+    <p class="wsrc">Source: per-player results files from the Food Court game server, grouped by room so five-player rooms aren’t double-weighted. Recomputed for this story; matches the numbers on Anand’s screen (“88 versus 92.5, 95 and 94”). No player or room identifiers are shown.</p>
+  </div>
+
+  <p>JK was right about cooperation and wrong about strategy. “They were even more clueless than the students,” Anand said. <strong>About half the workshop’s final monthly choices were 20% discounts</strong>, the move that, in this model, “completely kills the population.” In the TDS sittings it was a quarter or less. Some of the professionals objected that they didn’t know how to run a food court. “Well, it’s not as if students know how to run any business.” <a class="ts" href="?t=05:44">05:44</a> <a class="ts" href="?t=06:24">06:24</a></p>
+
+  <p>But the strangest finding was about JK’s third guess, persuasion. The game records each room’s position at fixed checkpoints. <strong>As the workshop rooms talked, their scores went down.</strong></p>
+
+  <div class="widget" aria-labelledby="w-slope-h">
+    <header><h3 id="w-slope-h">Twenty minutes of negotiating</h3><span class="ev ev-later">Post-session analysis</span></header>
+    <div class="slope">
+      <svg viewBox="0 0 300 190" role="img" aria-labelledby="slope-t">
+        <title id="slope-t">Workshop average team score fell from 91.81 at the first checkpoint, about 7 minutes in, to 85.95 at the last, about 21 minutes in. Six of seven rooms ended lower than they started.</title>
+        <line x1="60" y1="20" x2="60" y2="165" stroke="currentColor" opacity=".2"/>
+        <line x1="240" y1="20" x2="240" y2="165" stroke="currentColor" opacity=".2"/>
+        <text x="60" y="184" text-anchor="middle">first checkpoint</text>
+        <text x="240" y="184" text-anchor="middle">last checkpoint</text>
+        <line x1="60" y1="48" x2="240" y2="140" stroke="var(--coral)" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="60" cy="48" r="7" fill="var(--coral)"/><circle cx="240" cy="140" r="7" fill="var(--coral)"/>
+        <text class="big" x="50" y="40" text-anchor="end">91.81</text>
+        <text class="big" x="250" y="132" text-anchor="start">85.95</text>
+        <text x="150" y="80" text-anchor="middle" transform="rotate(27 150 80)">−5.86 points</text>
+      </svg>
+      <div>
+        <div class="statrow" style="grid-template-columns:repeat(2,minmax(0,1fr));margin-top:0">
+          <div class="stat w"><b>6 of 7</b><span>workshop rooms ended below their first checkpoint</span></div>
+          <div class="stat w"><b>37 vs 24</b><span>saved plans per room, workshop vs TDS</span></div>
+          <div class="stat w"><b>23 vs 44</b><span>chat messages per room, workshop vs TDS</span></div>
+          <div class="stat s"><b>0–2</b><span>typical TDS drop per sitting, points</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="wsrc">From the analysis run on the workshop’s event logs the same day. Checkpoint averages are a different quantity from the 88.06 session score above. In the meeting Anand rounded this to “92 to 86.”</p>
+  </div>
+
+  <div class="say">
+    <p>“On the margin, it would have been better for them to stay silent rather than speak.”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=07:08">07:08</a></footer>
+  </div>
+
+  <p>The workshop teams weren’t idle. They saved <em>more</em> plans per room than the students did and sent about half as many messages. In one room a player kept arguing against year-round 20% discounts while a neighbouring stall’s final plan offered 20% in every one of the twelve months. <strong>They were experimenting individually and not converging together.</strong> “Maybe they are better at speaking than typing,” Anand offered. “I’m not sure.” <a class="ts" href="?t=07:36">07:36</a></p>
+
+  <div class="say chat">
+    <p>“we had to scroll down for chatting &amp; scroll up for adjusting the discounts … a floating chat window would have been better I think”</p>
+    <footer><b>Preethi</b>, a TDS student, in the meeting chat <a class="ts" href="?t=09:26">09:26</a> · on negotiation: “it got better with each iteration” <a class="ts" href="?t=11:07">11:07</a></footer>
+  </div>
+
+  <p>That chat message is worth more than it looks. <strong>If the controls and the conversation can’t be on screen together, the game is partly measuring who tolerates the interface</strong>, and a group meeting it for the first time pays most. Workshop players also asked where the Save button was and whether all the stalls were one team.</p>
+
+  <div class="note">
+    <h4>Why this isn’t “students beat professionals”</h4>
+    <ul>
+      <li><strong>Seven rooms.</strong> One unusually bad room moves the workshop mean by a point or more.</li>
+      <li><strong>Mixed sample.</strong> 8 of the 32 workshop entrants used IITM student email addresses; 4 had played an earlier TDS round.</li>
+      <li><strong>Different stakes and setup.</strong> Workshop points vs course marks; more five-player rooms; first-time interface for most. Two later workshop sessions the same day (12 and 9 players) averaged 89.7 and 84.7.</li>
+      <li><strong>What does survive:</strong> more experimentation and more talk did not produce more collective value, here, under this interface.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="chap" id="thirteen" data-act="II · Three scores" data-title="Thirteen wins, two grades">
+  <p class="eyebrow"><span>07:56 – 12:37</span><span class="ev ev-said">Said</span><span class="ev ev-later">Later</span></p>
+  <h2>Thirteen wins out of twenty-six, <em>two different grades</em></h2>
+
+  <p class="lede">The second score was the one the faculty had just finished computing. In the third graded assignment students had built a <strong>3D model of a face</strong> and a <strong>face-morph video</strong>, and then judged each other’s work in pairs: which of these two is better? Thousands of such votes came in. The question was how to turn them into marks. <a class="ts" href="?t=07:56">07:56</a></p>
+
+  <p>JK asked first about sample sizes: were the numbers of submissions comparable across questions? Roughly, in the 600–700 range, Anand said, except the ranking question, which drew more entries because it only asked for an opinion. <a class="ts" href="?t=09:19">09:19</a> Then he explained the method with a real case.</p>
+
+  <div class="widget" id="w-bt" aria-labelledby="w-bt-h">
+    <header><h3 id="w-bt-h">Who deserves more bonus marks?</h3><span class="ev ev-toy">Schematic opponents</span></header>
+    <p class="hint">Two 3D faces each won 13 of their 26 peer comparisons. Each dot is one opponent, placed by how strong that opponent turned out to be across everyone’s votes. Filled dots are wins. (The real opponents aren’t shown; the pattern is schematic.)</p>
+    <div class="bt-pair">
+      <div class="bt-card"><h4>Face A <span>13 / 26 wins</span></h4><svg id="bt-a" viewBox="0 0 280 70" aria-hidden="true"></svg><div class="score" id="bt-sa" aria-live="polite"></div></div>
+      <div class="bt-card"><h4>Face B <span>13 / 26 wins</span></h4><svg id="bt-b" viewBox="0 0 280 70" aria-hidden="true"></svg><div class="score" id="bt-sb" aria-live="polite"></div></div>
+    </div>
+    <div class="choices" role="group" aria-label="Your verdict">
+      <button class="choice" type="button" data-bt="a" aria-pressed="false">Face A deserves more</button>
+      <button class="choice" type="button" data-bt="b" aria-pressed="false">Face B deserves more</button>
+      <button class="choice" type="button" data-bt="same" aria-pressed="false">Same: 13 is 13</button>
+    </div>
+    <p class="reveal" id="bt-reveal" hidden aria-live="polite"></p>
+    <p class="wsrc">The two bonus marks (out of 7.5) are the ones the course’s scoring analysis reported for two real 13/26 submissions after the faculty chose min–max-scaled Bradley–Terry on 16 Nov. The dot layout is illustrative.</p>
+  </div>
+
+  <div class="say">
+    <p>“The student got 13 wins out of 26. … But in the latter case, the 13 that they won were tougher opposition.”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=10:55">10:55</a></footer>
+  </div>
+
+  <p>The method is the <a href="https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model" target="_blank" rel="noopener">Bradley–Terry model</a>, from 1952, the same family of ideas behind chess ratings. Each entry gets a hidden strength; the chance that one beats another depends on the gap between them; the model finds the strengths that best explain every vote at once. Anand compared it, loosely, to <span class="tip" tabindex="0" data-tip="A loose analogy: PageRank also values links from important pages more. Bradley–Terry is a probability model of pairwise outcomes, not a link graph.">Google’s PageRank</span>. <strong>A win against a strong opponent is worth more than a win against a weak one.</strong> The scores were then stretched so the weakest eligible entry gets zero bonus and the strongest gets the full 7.5. <a class="ts" href="?t=11:51">11:51</a></p>
+
+  <p>That sounds like a technicality. It isn’t. Choosing raw win rate, a percentile, a reliability-shrunk score or Bradley–Terry moves real marks between real students, and the faculty compared all four on edge cases before choosing. <strong>The model also assumes things that peer votes don’t guarantee</strong>: that quality runs along one dimension, that A beating B and B beating C makes A likely to beat C, that the comparisons connect everyone.</p>
+
+  <div class="note uv">
+    <h4>The trade-off nobody saw in the meeting</h4>
+    <p>The third question asked students to predict which face pairs would be easiest to morph, originally to be checked against how the morphs actually turned out. Not enough pairs had been morphed and rated to do that, so the faculty approved a <strong>proxy: how hard other students judged each pair to be</strong>. Related, not identical. Separately, 136 entries with no usable comparisons (unreachable or broken media) were given zero. Scoring used 24,052 peer votes. <span class="ev ev-later">Later</span> At the time of that analysis, the marks had been sent to the course team for review; the live gradebook had not been changed.</p>
+  </div>
+</section>
+
+<section class="chap" id="stories" data-act="II · Three scores" data-title="The crow beats the astronaut">
+  <p class="eyebrow"><span>19:01 – 29:07</span><span class="ev ev-said">Said</span><span class="ev ev-data">Public data</span></p>
+  <h2>The crow beats <em>the astronaut</em></h2>
+
+  <p class="lede">The third score came from a creative task. Each student made a <strong>wordless picture story</strong>, usually with an image model, and then read and ranked classmates’ stories. Every story got three numbers: <strong>uniqueness</strong> (how different it was from every other story), <strong>understanding</strong> (whether readers could retell it) and <strong>preference</strong> (whether readers liked it more than the others). Anand had written up the results in <a href="https://www.s-anand.net/blog/picture-stories-we-understand-and-like/" target="_blank" rel="noopener">a blog post</a> on 7 November and now walked JK through the <a href="https://files.s-anand.net/pages/tds-2026-09-p1-q7-picture-stories/?tab=patterns" target="_blank" rel="noopener">public results gallery</a>. <a class="ts" href="?t=19:01">19:01</a></p>
+
+  <div class="widget" id="w-ps" aria-labelledby="w-ps-h">
+    <header><h3 id="w-ps-h">Original or loved?</h3><span class="ev ev-data">Public results, 329 stories</span></header>
+    <div id="ps-guess">
+      <p class="hint">Two stories from the class. Before you look at the chart, which one did classmates <em>prefer</em>?</p>
+      <div class="choices" role="group" aria-label="Your guess">
+        <button class="choice" type="button" data-ps="crow" aria-pressed="false">A thirsty crow drops pebbles into a pitcher</button>
+        <button class="choice" type="button" data-ps="moon" aria-pressed="false">An astronaut lands on the moon and takes a phone call</button>
+      </div>
+    </div>
+    <p class="reveal" id="ps-reveal" hidden aria-live="polite"></p>
+    <div class="ps-grid">
+      <div class="ps-plot">
+        <svg id="ps-svg" viewBox="0 0 420 340" role="img" aria-labelledby="ps-svg-t"><title id="ps-svg-t">Scatter plot of 329 picture stories: uniqueness on the horizontal axis, preference on the vertical axis, both 0 to 10. The cloud slopes downward: correlation about −0.37. Familiar stories such as the thirsty crow sit top-left; unusual ones such as the moon-landing phone call and the unwanted gift sit bottom-right. The Bhagavad Gita and a bribery satire sit top-right as exceptions.</title></svg>
+      </div>
+      <div class="ps-side">
+        <div class="chips" role="group" aria-label="Highlight a story" id="ps-chips"></div>
+        <div class="ps-card" id="ps-card" aria-live="polite"><p class="hint" style="margin:0">Pick a story above, or tap a highlighted dot, to see it.</p></div>
+      </div>
+    </div>
+    <p class="wsrc">Data: <a href="https://files.s-anand.net/pages/tds-2026-09-p1-q7-picture-stories/?tab=patterns" target="_blank" rel="noopener">public results file</a>, excluding 19 stories marked dropped. <span class="tip" tabindex="0" data-tip="Each story’s text was embedded; uniqueness = how far its single nearest neighbour is, scaled 0–10. A model’s notion of similarity, not a human judgment of originality.">Uniqueness</span> comes from text-embedding similarity; preference from peer rankings. Images and story summaries are from the author’s public gallery; student identities aren’t shown there or here. Including dropped stories, r ≈ −0.41.</p>
+  </div>
+
+  <p>The least unique stories clustered around a handful of templates: <strong>the thirsty crow and the pitcher, a child adopting a dog, an old man rescuing a child’s kite, a robot watering a plant</strong>. “Frame for frame, same story,” Anand said. And the class loved them. <a class="ts" href="?t=23:34">23:34</a></p>
+
+  <div class="say">
+    <p>“Hey, this is why mass cinemas work, Anand.”</p>
+    <footer><b>JK</b> · Anand: “No, exactly, right? Exactly. Look at the preference.” <a class="ts" href="?t=23:38">23:38</a></footer>
+  </div>
+
+  <p>At the other end sat the strange ones: a woman who receives a gift she doesn’t want and says “Thanks, I love it”; an astronaut who steps onto the moon and answers a phone. Very unique. “But all three had surprisingly low preference rating.” <a class="ts" href="?t=25:20">25:20</a> <strong>Within this class, uniqueness and preference pulled in opposite directions.</strong> Anand’s blog is candid about the reason: “I’m not sure why.”</p>
+
+  <p>There were exceptions, and they matter. The <strong>highest-scoring story of all was a Bhagavad Gita panel</strong>: Arjuna troubled in his chariot, Krishna’s cosmic form. Fairly unique and much liked. The second was a satire of a rich man bribing a policeman while a beggar child is shooed away, then a politician showering a crowd with cash; JK was surprised “satire scored so high in the understanding and popularity,” since satire is so hard to get across a border. <a class="ts" href="?t=21:57">21:57</a> <a class="ts" href="?t=28:16">28:16</a> <strong>Original and loved is possible. It is just rarer, and harder.</strong></p>
+
+  <div class="note">
+    <h4>Hypotheses the meeting floated, not findings</h4>
+    <p>JK wondered whether the template-story students had shared prompts with each other. Looking at a cartoon version of the dog story that had done worse, they wondered whether <strong>people prefer realistic images to cartoons</strong>. “I should test that hypothesis,” Anand said. <a class="ts" href="?t=26:39">26:39</a> Nobody has. The negative correlation is one cohort, one task, one embedding model’s idea of “unique”; it isn’t evidence that audiences dislike originality in general.</p>
+  </div>
+
+  <p>The rubric here was deliberately built from all three numbers, because the course wants students to practise three things AI makes newly important: <strong>creating something distinct, communicating it clearly, and reaching an audience</strong>. The data says those are different skills that can trade off against each other. A single total hides that. A student who wrote the fortieth crow story and a student who wrote the only Gita story can land close together for opposite reasons.</p>
+
+  <h3>An aside on owning what you generate</h3>
+  <p>Earlier, JK had asked whether generative media would wipe out conventional content agencies. Anand’s answer came with a client story <a class="ts" href="?t=14:48">14:48</a>: a large company that pays an agency handsomely to localise the same ad for festival after festival, country after country. His team showed a proof of concept that AI could do it. Would the client now let its own team take over? No.</p>
+
+  <div class="say">
+    <p>“Supposing there is a copyright claim, some copyright-related issue, or some cultural sensitivity … My team does it, I don’t have any of this infrastructure in place. I need an external neck to catch. But I can use this to show them and negotiate the price.”</p>
+    <footer><b>Anand</b>, recounting the client’s answer <a class="ts" href="?t=16:04">16:04</a></footer>
+  </div>
+
+  <p><strong>Being able to generate the output is not the same as being willing to own its risk.</strong> In the chat, Swarnam pointed out that AI-created content has liability issues and court cases. <a class="ts" href="?t=18:20">18:20</a> Anand replied that large providers now indemnify enterprise customers. That is true but narrow: Google’s <a href="https://cloud.google.com/terms/generative-ai-indemnified-services" target="_blank" rel="noopener">generated-output indemnity</a> covers listed services and unmodified output, with exceptions. It isn’t a warranty against cultural missteps or a client contract that says “no AI.” Anand made the same point himself: some businesses have promised their clients exactly that, “a shrinking number.” <a class="ts" href="?t=20:36">20:36</a></p>
+</section>
+
+<section class="chap" id="forecast" data-act="II · Three scores" data-title="Right in dollars, wrong in cents">
+  <p class="eyebrow"><span>29:07 – 35:46</span><span class="ev ev-said">Said</span><span class="ev ev-later">Later</span></p>
+  <h2>Right in dollars, <em>wrong in cents</em></h2>
+
+  <p class="lede">The fourth score was a forecast. Students had to predict how much the course’s shared AI gateway, <a href="https://aipipe.org/" target="_blank" rel="noopener">AI Pipe</a>, would spend in one week, 2–8 November, by choosing a range and updating it as the days went by. The actual spend was <strong>$5.31</strong>, which put the winning range at $5–$10. <a class="ts" href="?t=29:07">29:07</a></p>
+
+  <div class="statrow">
+    <div class="stat u"><b>123</b><span>students whose first forecast was in the winning range</span></div>
+    <div class="stat u"><b>262</b><span>whose last on-time forecast was, out of 621</span></div>
+    <div class="stat s"><b>169 vs 30</b><span>moved wrong → right vs right → wrong</span></div>
+  </div>
+  <p style="font:.78rem/1.5 var(--font-ui);color:var(--muted);margin-top:-.4rem">The transcript prints Anand saying “242”; the recording’s captions and the ledger analysis he was reading from both say <b>262</b>. <a class="ts" href="?t=29:36">29:36</a></p>
+
+  <p>Some of the best reasoning came from students who stopped extrapolating and started using constraints. One wrote, in effect: <em>we’ve already spent $5.24; to cross $10 by tomorrow we’d need another $4.76; is that even possible?</em> <a class="ts" href="?t=30:04">30:04</a> Another had ridden October’s spike from $5–$10 up to $100–$200 and then backed down, day by day, as the spending refused to cooperate.</p>
+
+  <p>Then Anand said the thing that makes this a story about measurement rather than forecasting.</p>
+
+  <div class="say">
+    <p>“Students with better information, actually, sometimes got worse marks.”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=30:28">30:28</a> · JK: “Oh.”</footer>
+  </div>
+
+  <p>The rubric rewarded <strong>forecasting early and holding a position</strong>, not just being right at the end. That was a deliberate choice; it pays for participation discipline as well as judgment. But it means a student who joined late with sharper evidence could finish below one who guessed early and sat tight.</p>
+
+  <div class="widget" aria-labelledby="w-early-h">
+    <header><h3 id="w-early-h">When you started mattered more than what you knew</h3><span class="ev ev-later">Post-meeting ledger analysis</span></header>
+    <div class="tbars">
+      <div class="tbar"><span>Before 2 Nov<small>433 students</small></span><div><i style="width:47.8%"></i></div><b>4.78</b></div>
+      <div class="tbar"><span>2–4 Nov<small>92 students</small></span><div><i style="width:31.8%"></i></div><b>3.18</b></div>
+      <div class="tbar"><span>5–8 Nov<small>96 students</small></span><div><i style="width:15.1%"></i></div><b>1.51</b></div>
+    </div>
+    <p class="wsrc">Mean forecast score out of 10 by the date of a student’s first forecast; 621 students matched to on-time forecasts. Students who started during the target week could already see most of it, yet scored lowest. Partly by design; not evidence that early forecasters reasoned better.</p>
+  </div>
+
+  <p>And then there were the clicks. Some students worked out “$5 to $10” correctly in their written reasoning and <strong>selected 5 to 10 cents in the interface</strong>.</p>
+
+  <div class="widget" id="w-cents" aria-labelledby="w-cents-h">
+    <header><h3 id="w-cents-h">Spot the mistake</h3><span class="ev ev-toy">Reconstruction of a real pattern</span></header>
+    <div class="fc-mock">
+      <div class="fc-box"><h4>Reasoning the student typed</h4><p class="reason">About $0.80 a day for 7 days is about $5.60. I expect the week to land between <span id="cents-why">$5 and $10</span>.</p></div>
+      <div class="fc-box"><h4>Range the student selected</h4>
+        <div class="fc-opt"><span class="r"></span>$0.01 – $0.05</div>
+        <div class="fc-opt sel" id="cents-sel"><span class="r"></span>$0.05 – $0.10</div>
+        <div class="fc-opt"><span class="r"></span>$0.10 – $0.50</div>
+        <div class="fc-opt" id="cents-ok"><span class="r"></span>$5 – $10</div>
+        <div class="fc-opt"><span class="r"></span>$10 – $20</div>
+      </div>
+    </div>
+    <p style="margin-top:.9rem"><button class="wbtn" type="button" id="cents-btn" aria-expanded="false"><i class="bi bi-search" aria-hidden="true"></i> Show the mistake</button></p>
+    <p class="reveal" id="cents-reveal" hidden>The reasoning says dollars; the saved choice says cents, a factor of 100. The grader scores the <b>saved state</b>, not the intention. One student fixed it two minutes later; another wrote “stay in that dollar range” while the record said 5¢–10¢. The ranges shown are illustrative; the pattern is from real forecast histories.</p>
+  </div>
+
+  <div class="say">
+    <p>“Good reasoning, poor execution.”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=31:20">31:20</a></footer>
+  </div>
+
+  <p>JK had seen this across courses: students who apply the right model and land off by a factor of ten or a hundred, even when a calculator is allowed. <a class="ts" href="?t=31:25">31:25</a> Anand answered with a confession. He can’t remember faces; he swaps digits; his short-term memory for process is poor, so he became an obsessive note-taker early in life. <a class="ts" href="?t=32:32">32:32</a> <strong>Everyone has blind spots. What matters is noticing which ones are consequential, deciding whether to fix them, and having the discipline to do it.</strong> The score can do the first job: it tells you that you stumbled. The other two are the student’s.</p>
+
+  <div class="say chat">
+    <p>“Patterns you expect often end up overshadowing the patterns that exist in your memory”</p>
+    <footer><b>Adwitiya</b>, in the meeting chat <a class="ts" href="?t=33:37">33:37</a></footer>
+  </div>
+
+  <p>This is also why he describes the course as a <strong>menu rather than a syllabus</strong>: “There are 100 things one can learn from any arbitrary exam or course.” A student who already knows A, B and C should leave having learned E, F and G. <a class="ts" href="?t=33:50">33:50</a> The cents mistake might be the one thing a particular student needed to learn, or it might not matter to them at all. An agent told to fill in the form, he added, is less likely to make it.</p>
+
+  <div class="lamp">
+    <p class="big">Four scores, four surprises. <em>Each measured what its design rewarded</em>, which wasn’t always what its designers believed they were measuring.</p>
+    <p style="margin-bottom:0"><small>Food Court rewarded coordination under a clumsy interface. Peer grading rewarded beating strong opponents. Picture stories rewarded the familiar as much as the original. The forecast rewarded starting early. And the Invisible Ink score can’t tell the student who built the solver from the one who pasted it.</small></p>
+  </div>
+</section>
+
+<p class="act">Act III · The next exam</p>
+
+<section class="chap" id="roe" data-act="III · The next exam" data-title="One avatar, many rooms">
+  <p class="eyebrow"><span>50:58 – 59:04</span><span class="ev ev-said">Said</span><span class="ev ev-prop">Proposed</span></p>
+  <h2>The next exam has <em>only one avatar</em></h2>
+
+  <p class="lede">With the solver on the table, JK reminded everyone that Anand had promised a very different <span class="tip" tabindex="0" data-tip="The course’s remote online exam: a timed, end-of-term assessment.">ROE</span>. Anand described what he was imagining. Not a list of questions, but <strong>a game: a world of rooms that players walk through, bumping into each other, negotiating, buying, selling, solving problems sometimes together, sometimes alone.</strong> <a class="ts" href="?t=51:15">51:15</a></p>
+
+  <p>There would be no question numbers. “Now it’s, ‘Okay, I’m in this room where there is a chest or whatever, and I opened the chest, and I found the problem.’ Except the same problem might appear for somebody else” somewhere else, at a different time. <a class="ts" href="?t=52:00">52:00</a> And crucially, each student would have <strong>one character</strong>.</p>
+
+  <div class="say">
+    <p>“You will not easily be able to run multiple agents in parallel because you have only one character. … At any point, you can be in only one place, and is that where you want to be?”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=52:59">52:59</a></footer>
+  </div>
+
+  <div class="roe" id="w-roe" aria-labelledby="w-roe-h">
+    <span class="stamp">Proposed · not built · not deployed</span>
+    <h3 id="w-roe-h">Twelve minutes left. Where does your one character go?</h3>
+    <p class="hint" style="font-size:.9rem;color:var(--muted)">A sketch of the kind of choice Anand described, with made-up rooms and marks. The point is the trade-off, not the numbers.</p>
+    <svg viewBox="0 0 600 170" role="img" aria-labelledby="roe-svg-t">
+      <title id="roe-svg-t">Sketch: your character stands in the hallway between three rooms. Room A holds a half-solved problem worth 4 marks. Room B holds a new problem worth 6 marks that someone in the class chat says they have a solver for. Room C holds a trade offer: 5 extra minutes in exchange for 1 mark.</title>
+      <rect class="rm" x="10" y="14" width="170" height="120" rx="10"/><text x="24" y="38" font-weight="700">Room A</text><rect class="task" x="24" y="52" width="140" height="64" rx="6"/><text x="34" y="74">half-solved problem</text><text x="34" y="94">worth 4 · stuck 6 min</text>
+      <rect class="rm" x="215" y="14" width="170" height="120" rx="10"/><text x="229" y="38" font-weight="700">Room B</text><rect class="task" x="229" y="52" width="140" height="64" rx="6"/><text x="239" y="74">new problem, worth 6</text><text x="239" y="94">“there’s a solver” (chat)</text>
+      <rect class="rm" x="420" y="14" width="170" height="120" rx="10"/><text x="434" y="38" font-weight="700">Room C</text><rect class="task" x="434" y="52" width="140" height="64" rx="6"/><text x="444" y="74">trade: +5 minutes</text><text x="444" y="94">for −1 mark</text>
+      <path class="path" d="M300 160 C 200 160 120 150 95 136 M300 160 L300 136 M300 160 C 400 160 480 150 505 136"/>
+      <circle class="me" cx="300" cy="160" r="8"/>
+    </svg>
+    <div class="opts" role="group" aria-label="Your move">
+      <button class="opt" type="button" data-roe="a" aria-pressed="false"><b>Persist in A</b>You know this problem. Six more minutes might crack it.</button>
+      <button class="opt" type="button" data-roe="b" aria-pressed="false"><b>Run to B</b>Bigger prize, and the community may already have a tool.</button>
+      <button class="opt" type="button" data-roe="c" aria-pressed="false"><b>Buy time in C</b>Pay a mark for five minutes, then decide.</button>
+    </div>
+    <p class="out" id="roe-out" aria-live="polite"></p>
+  </div>
+
+  <p>That turns the exam into a question about <strong>prioritisation, for you and for your agents</strong>. “If you put your agents at the game, you have to be very careful about figuring out what prioritization you want to give your agents.” <a class="ts" href="?t=52:40">52:40</a> Do you skip, persist, or look for a solver someone else built “while you are hopefully sitting dazed in the middle of the exam, trying to steer the agent?” <a class="ts" href="?t=53:28">53:28</a> He floated <span class="tip" tabindex="0" data-tip="Like the lifelines on a TV quiz show: a limited, costly kind of help.">“call a friend”</span> trade-offs: “do you want five minutes extra versus do you want one mark? Do you want to be able to swap questions?” He wasn’t sure whether a human or an agent would choose better, but suspected an agent fed with the class’s WhatsApp and Google Chat conversations, and steered by a human who could keep up, might do best. <a class="ts" href="?t=58:08">58:08</a> <a class="ts" href="?t=58:44">58:44</a></p>
+
+  <p>Read against the first half of the meeting, the design is a direct response to the solver. If any single well-posed task can be packaged and shared, <strong>the scarce skills become the ones a file can’t carry</strong>: choosing what to work on, finding who has already solved it, judging whether their tool is right, and coordinating with strangers under time pressure.</p>
+</section>
+
+<section class="chap" id="anon" data-act="III · The next exam" data-title="The fourth person">
+  <p class="eyebrow"><span>53:48 – 57:53</span><span class="ev ev-said">Said</span></p>
+  <h2>Who brings back <em>the fourth person?</em></h2>
+
+  <p class="lede">Adwitiya raised his hand with a design suggestion. The live games are anonymous. In his own sessions, he said, some teammates didn’t try very hard, perhaps thinking, “I have one more session. Why waste my attempt here if my score has already gone down?” That hurt the whole team. <strong>What if players saw each other’s real names?</strong> People are moved by personal gain and by how their peers see them; anonymity switches off the second. <a class="ts" href="?t=53:48">53:48</a></p>
+
+  <p>Anand agreed it would be an interesting experiment, and that the course may already have data to test it. But anonymity, he explained, had been the point.</p>
+
+  <div class="say">
+    <p>“Can you make sure that that fourth person, even though anonymous, is someone you can bring back into the game? What does it take to be able to do that?”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=55:16">55:16</a></footer>
+  </div>
+
+  <p>A class that wanted to could, within a day, build the social infrastructure to find a disengaged teammate: a shared register of everyone taking the course, a rule that players post their game handle before each session, or a group of four agreeing to play together at an unusual hour. <a class="ts" href="?t=56:00">56:00</a> His estimate of how many managed something like that: <strong>“closer to less than 10%.”</strong> <a class="ts" href="?t=55:52">55:52</a></p>
+
+  <p>One who did was in the meeting. Preethi typed that for the Time Use Charts game her team had simply <strong>opened a Google Meet</strong> alongside it, “for a clearer transfer of instructions &amp; data,” since nothing in the rules said they couldn’t. <a class="ts" href="?t=55:02">55:02</a> JK relayed it; Anand: “Exactly the kind of thing that is required. So a good ROE will require a higher level of collaboration.” <a class="ts" href="?t=57:36">57:36</a></p>
+
+  <div class="note">
+    <h4>Two goods in tension</h4>
+    <p>Real names add accountability and remove privacy; they can also bring in pressure, harassment and status effects that anonymity keeps out. Coordinating outside the game is resourceful, and it also creates channels the course can’t see or review. The course allows agents and collaboration in many tasks. That isn’t licence for impersonation or getting into what you weren’t given. Neither design is obviously right; both are now explicit experiments.</p>
+  </div>
+</section>
+
+<section class="chap" id="minusone" data-act="III · The next exam" data-title="Minus one">
+  <p class="eyebrow"><span>59:04 – 65:00</span><span class="ev ev-said">Said</span></p>
+  <h2>The arithmetic of <em>minus one</em></h2>
+
+  <p class="lede">Near the end Preethi asked, in chat, about a question in the fourth graded assignment that asked students to invent an ROE question: <strong>why could it cost a mark?</strong> <a class="ts" href="?t=60:17">60:17</a> The answer revealed one more gap between what a score <em>is</em> and how it <em>feels</em>.</p>
+
+  <p>Partly, Anand said, it is just psychology: +10 or −1 is the same spread as +11 or 0. <a class="ts" href="?t=60:36">60:36</a> Partly it was to stop people telling an agent to submit something without reading it, because he reads these himself. And most of what came in was poor, not because an agent wrote it, but because “the critique of the agent has been really poor.” Of the submissions, only about 65 were worth reading, and roughly one in ten of those looked like earning positive marks. <a class="ts" href="?t=61:04">61:04</a></p>
+
+  <div class="say">
+    <p>“It’s just minus one on a GA. It’s a tiny component of a tiny component, and the amount of emotional impact that it has …”</p>
+    <footer><b>Anand</b>, laughing <a class="ts" href="?t=62:12">62:12</a></footer>
+  </div>
+
+  <div class="say chat student">
+    <p>“Sir, in TDS we treat every mark gained as a gift given to us by the cosmos :)”</p>
+    <footer><b>Adwitiya</b> <a class="ts" href="?t=63:13">63:13</a> · <b>Preethi</b>: “so true &amp; sir is talking about -1 as if it is nothing... :(((” <a class="ts" href="?t=63:40">63:40</a></footer>
+  </div>
+
+  <p>JK explained how bonus marks are normalised by an assignment’s weight, capped at +5 for the course (rarely +10) and at 100 overall. <a class="ts" href="?t=62:20">62:20</a> Anand told a story from class seven: a history teacher set a 100-mark quiz with a 30-mark question, and the class panicked about writing forty pages, though 30 out of 100 is just 3 out of 10. <a class="ts" href="?t=63:24">63:24</a> Next time, he joked, he’d make the ROE worth one mark so every penalty is 0.1.</p>
+
+  <p>Both sides are right. <strong>As a fraction of the final grade, −1 is tiny. As an experience, a loss is louder than a gain of the same size</strong>, and a student who has been told “every mark matters” will feel it. The course’s intended lesson, <em>read what your agent wrote before you submit it</em>, is a good one. Whether students learned it, or learned to fear the question, is exactly the kind of thing a score won’t say.</p>
+</section>
+
+
+
+</main>
+
+<aside class="dock" id="dock" aria-label="Video of the meeting">
+  <div class="dock-head"><span><b>Meeting video</b> · 66:54</span><span id="dock-mode-label">Story focus</span></div>
+  <div class="vwrap">
+    <video id="vid" controls preload="metadata" playsinline>
+      <source src="https://media.s-anand.net/2026-11-16-tds-course-ideation.webm" type="video/webm">
+      <track kind="captions" src="captions.vtt" srclang="en" label="English (auto captions)" default>
+      <a href="https://media.s-anand.net/2026-11-16-tds-course-ideation.webm">Download the video</a>
+    </video>
+    <div class="resume" id="resume"><button type="button" id="resume-btn"><i class="bi bi-play-fill" aria-hidden="true"></i> <span>Play</span></button></div>
+  </div>
+  <audio id="aud" controls preload="none" aria-label="Audio-only recording of the meeting">
+    <source src="https://github.com/sanand0/talks/releases/download/talks/2026-11-16-tds-ideation.opus" type="audio/ogg; codecs=opus">
+  </audio>
+  <p class="fallback-note">The video couldn’t play in this browser, so the timestamps now drive the audio recording. <a href="https://media.s-anand.net/2026-11-16-tds-course-ideation.webm">Download the video</a>.</p>
+  <div class="now" id="now" aria-live="polite"><span class="t" id="now-t">00:00</span><span id="now-title">Press play, or tap any ▶ time in the story</span><span class="in-story" id="now-story"></span></div>
+  <div class="dock-ctrls">
+    <button class="dbtn mode" id="mode-btn" type="button" aria-pressed="false"><i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span></button>
+    <button class="dbtn" id="share-btn" type="button"><i class="bi bi-link-45deg" aria-hidden="true"></i> <span>Share moment</span></button>
+    <button class="dbtn wide-only" id="audio-btn" type="button" aria-pressed="false"><i class="bi bi-headphones" aria-hidden="true"></i> <span>Audio only</span></button>
+    <a class="dbtn wide-only" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+    <button class="dbtn dock-min" id="min-btn" type="button" aria-expanded="true" aria-label="Hide the mini video"><i class="bi bi-chevron-down" aria-hidden="true"></i></button>
+  </div>
+  <details class="chapters" open>
+    <summary>Chapters in meeting order · tap to jump</summary>
+    <ol id="chapters"></ol>
+  </details>
+</aside>
+</div>
+
+<section class="chap band comic-band" id="comic" data-act="Coda" data-title="The comic, fact-checked">
+  <div class="comic-head">
+    <p class="eyebrow"><span>A visual summary</span><span class="ev ev-toy">AI-generated</span></p>
+    <h2>The comic, <em>fact-checked</em></h2>
+    <p>An AI-generated comic was made from this meeting. It captures the mood well. In a story about scores that measure the wrong thing, it seemed only fair to <strong>score the comic</strong>. Red rings mark what it got wrong; <strong>hover or tap a ring</strong> for the real number, or switch to the <strong>original</strong> to see the art untouched.</p>
+    <div class="seg" role="group" aria-label="Comic view" id="comic-view"><button type="button" data-v="plain" aria-pressed="false">Original</button><button type="button" data-v="marks" aria-pressed="true">Red-pen marks</button><button type="button" data-v="notes" aria-pressed="false">All notes</button></div>
+  </div>
+  <figure class="comic-fig">
+    <div class="comic-stage marks" id="comic-stage">
+      <a href="comic-page.avif" data-lightbox data-caption="AI-generated comic summary of the 16 Nov 2026 TDS design meeting. Some numbers in it are wrong; see the corrections on the page."><img src="comic-page.avif" width="1055" height="1491" loading="lazy" alt="Nine-panel comic titled 'TDS Course Ideation: What are students really learning?'. Panels: Anand as a lab scientist running learning experiments; working professionals versus TDS students at a discount game, with a bar chart reading 62 versus 78; a boxing match explaining Bradley–Terry, ranking by strength of opponents; a scatter plot where familiar crowd-pleasing stories get more likes than original ones; students using constraints to forecast AI spend; a student who reasoned correctly but clicked the wrong range; students sharing a motion-ink solver; builders, sharers and users of tools; and the next ROE as a multiplayer quest."></a>
+      <div class="mk mk-below" style="--l:34.1%;--t:12.1%;--w:31.3%;--h:2.8%" tabindex="0" aria-describedby="fix-1">
+        <span class="ring" aria-hidden="true"></span><span class="badge">1</span>
+        <span class="tag"><span class="tag-short"><s>cooperated more</s> not measured</span><span class="tag-more">TDS rooms <b>chatted more</b> and gave <b>fewer 20% discounts</b>. Cooperation itself wasn’t measured, and the comparison isn’t controlled.</span></span>
+      </div>
+      <div class="mk mk-above" style="--l:47.9%;--t:31.0%;--w:14.2%;--h:2.7%" tabindex="0" aria-describedby="fix-2">
+        <span class="ring" aria-hidden="true"></span><span class="badge">2</span>
+        <span class="tag"><span class="tag-short"><s>62 vs 78</s> 88.1 vs 92.5–95.6</span><span class="tag-more">Real room means: <b>88.06</b> for the 7 workshop rooms vs <b>92.5–95.6</b> across 161 TDS rooms. A ~4–8 point gap, not +26%.</span></span>
+      </div>
+      <div class="mk mk-below" style="--l:70.1%;--t:25.8%;--w:27.5%;--h:2.7%" tabindex="0" aria-describedby="fix-3">
+        <span class="ring" aria-hidden="true"></span><span class="badge">3</span>
+        <span class="tag"><span class="tag-short"><s>Wins: 3</s> 13 of 26 each</span><span class="tag-more">The real pair each won <b>13 of 26</b> matches; Bradley–Terry gave them <b>2.875 vs 4.624</b> bonus marks because of whom they beat.</span></span>
+      </div>
+      <div class="mk mk-below" style="--l:3.8%;--t:51.6%;--w:23.7%;--h:11.4%" tabindex="0" aria-describedby="fix-4">
+        <span class="ring" aria-hidden="true"></span><span class="badge">4</span>
+        <span class="tag"><span class="tag-short">Cartoon data · real r ≈ −0.37</span><span class="tag-more">The real scatter (in <a href="#stories">the crow chapter</a>) has 329 stories and a weaker, noisier slope than this tidy cluster.</span></span>
+      </div>
+      <div class="mk mk-below-left" style="--l:87.7%;--t:52.6%;--w:10.4%;--h:2.0%" tabindex="0" aria-describedby="fix-5">
+        <span class="ring" aria-hidden="true"></span><span class="badge">5</span>
+        <span class="tag"><span class="tag-short"><s>0.50–1.00</s> 5–10¢ for $5–10</span><span class="tag-more">The real slip was a <b>units</b> mistake: picking 5–10 <b>cents</b> when the answer was $5–10.</span></span>
+      </div>
+      <div class="mk mk-above" style="--l:9.0%;--t:91.2%;--w:19.0%;--h:2.3%" tabindex="0" aria-describedby="fix-6">
+        <span class="ring" aria-hidden="true"></span><span class="badge">6</span>
+        <span class="tag"><span class="tag-short"><s>draw strokes</s> air-drawn motion</span><span class="tag-more">The solver decoded <b>phone motion recorded in the air</b>, not drawn strokes. Its accuracy wasn’t verified in the meeting.</span></span>
+      </div>
+      <div class="mk mk-below-left" style="--l:86.3%;--t:77.8%;--w:10.4%;--h:6.0%" tabindex="0" aria-describedby="fix-7">
+        <span class="ring" aria-hidden="true"></span><span class="badge">7</span>
+        <span class="tag"><span class="tag-short">Proposed, not scheduled</span><span class="tag-more">The quest-style ROE is an <b>idea</b> from this meeting. Nothing has been built or scheduled.</span></span>
+      </div>
+    </div>
+    <figcaption>AI-generated comic of the meeting. Click the art to open it full size. Red marks are corrections, not part of the original.</figcaption>
+    <ol class="fixes" aria-label="Corrections to the comic">
+      <li id="fix-1"><span class="badge">1</span><span><span class="p">P2</span> <s>cooperated more</s> → not measured. TDS rooms <b>chatted more</b> and gave <b>fewer 20% discounts</b>. Cooperation itself wasn’t measured, and the comparison isn’t controlled.</span></li>
+      <li id="fix-2"><span class="badge">2</span><span><span class="p">P2</span> <s>62 vs 78</s> → 88.1 vs 92.5–95.6. Real room means: <b>88.06</b> for the 7 workshop rooms vs <b>92.5–95.6</b> across 161 TDS rooms. A ~4–8 point gap, not +26%.</span></li>
+      <li id="fix-3"><span class="badge">3</span><span><span class="p">P3</span> <s>Wins: 3</s> → 13 of 26 each. The real pair each won <b>13 of 26</b> matches; Bradley–Terry gave them <b>2.875 vs 4.624</b> bonus marks because of whom they beat.</span></li>
+      <li id="fix-4"><span class="badge">4</span><span><span class="p">P4</span> Cartoon data · real r ≈ −0.37. The real scatter (in <a href="#stories">the crow chapter</a>) has 329 stories and a weaker, noisier slope than this tidy cluster.</span></li>
+      <li id="fix-5"><span class="badge">5</span><span><span class="p">P6</span> <s>0.50–1.00</s> → 5–10¢ for $5–10. The real slip was a <b>units</b> mistake: picking 5–10 <b>cents</b> when the answer was $5–10.</span></li>
+      <li id="fix-6"><span class="badge">6</span><span><span class="p">P7</span> <s>draw strokes</s> → air-drawn motion. The solver decoded <b>phone motion recorded in the air</b>, not drawn strokes. Its accuracy wasn’t verified in the meeting.</span></li>
+      <li id="fix-7"><span class="badge">7</span><span><span class="p">P9</span> Proposed, not scheduled. The quest-style ROE is an <b>idea</b> from this meeting. Nothing has been built or scheduled.</span></li>
+    </ol>
+  </figure>
+</section>
+
+<section class="band takeaways" id="takeaways" data-act="Close" data-title="Takeaways" aria-labelledby="tk-h">
+  <div class="takeaways-inner">
+    <p class="kicker">What to take away</p>
+    <h2 id="tk-h">Before you trust a score, ask what it rewarded</h2>
+    <div class="cards">
+      <article><span class="n">01 · THE MOVE</span><h3>Build with the model, run without it</h3><p>Use the frontier model once, to manufacture a deterministic tool everyone can run for free. Then <strong>test it against labels</strong> before you trust it. <a class="ts" href="?t=42:23">42:23</a></p></article>
+      <article><span class="n">02 · THE RIDDLE</span><h3>One file, three learnings</h3><p>The finder, the user and the builder submit the same answer. If you care which one learned what, <strong>ask for provenance</strong>, then a new task the file can’t do. <a class="ts" href="?t=49:12">49:12</a></p></article>
+      <article><span class="n">03 · FOOD COURT</span><h3>Talking isn’t coordinating</h3><p>More plans and more debate lowered the workshop’s score. <strong>Agreement that doesn’t become shared action</strong> is just noise, and an awkward interface makes it worse. <a class="ts" href="?t=07:08">07:08</a></p></article>
+      <article><span class="n">04 · PEER GRADES</span><h3>Who you beat matters</h3><p>Equal win counts can hide unequal opponents. Bradley–Terry fixes that, but only by <strong>assuming quality is one-dimensional</strong>; check the assumption. <a class="ts" href="?t=10:55">10:55</a></p></article>
+      <article><span class="n">05 · PICTURE STORIES</span><h3>The familiar wins the vote</h3><p>Audiences reward recognisable templates. <strong>Originality needs its own instrument</strong>; a popularity score will quietly punish it. <a class="ts" href="?t=23:38">23:38</a></p></article>
+      <article><span class="n">06 · FORECASTS</span><h3>Check the saved state</h3><p>Right reasoning plus the wrong click is a wrong answer. <strong>Verify what the system recorded</strong>, not what you meant to submit. <a class="ts" href="?t=31:12">31:12</a></p></article>
+    </div>
+    <p class="closing">The students tested the teachers’ games, and one of them changed what the teachers thought was hard. <em>A course that teaches verification now has to verify its own scores</em>, and find out whether finding, using and building actually transfer.</p>
+  </div>
+</section>
+
+<section class="after" aria-labelledby="series-h">
+  <h2 id="series-h">The series</h2>
+  <nav class="series" aria-label="Other episodes">
+    <a href="../2026-10-05-tds-orientation/"><small>5 Oct · orientation</small>Get the job done, and verify it</a>
+    <a href="../2026-10-12-tds-ideation/"><small>12 Oct · episode 2</small>The exam is a hypothesis</a>
+    <a href="../2026-10-19-tds-ideation/"><small>19 Oct · episode 3</small>The exam has to pass its own exam</a>
+    <a href="../2026-11-02-tds-ideation/"><small>2 Nov · episode 4</small>Should a student even read the exam?</a>
+    <a href="../2026-11-09-tds-ideation/"><small>9 Nov · episode 5</small>Who watches the deadline watchers?</a>
+    <a class="here" href="#title" aria-current="page"><small>16 Nov · episode 6</small>The score can’t see who built the solver</a>
+  </nav>
+
+  <h2 id="foot-h">Sources and method</h2>
+  <div class="sources">
+    <div>
+      <h3>The meeting</h3>
+      <ul>
+        <li><a href="https://media.s-anand.net/2026-11-16-tds-course-ideation.webm">Video</a> (66:54, with English auto-captions) · <a href="https://github.com/sanand0/talks/releases/download/talks/2026-11-16-tds-ideation.opus">audio (Opus)</a> · <a href="transcript.md" data-transcript>transcript and meeting chat</a> · <a href="captions.vtt">captions (WebVTT)</a>.</li>
+        <li>Quotes are checked against the recording’s captions. Times are video times. The transcript has a spurious <code>[00:00]</code> marker at about 49:58 and prints “242” where the captions have “262”; the story follows the captions.</li>
+        <li>Speakers: Anand (instructor), JK (Jayakrishnan Warriem), students Adwitiya, Preethi, Swarnam and others; Carlton couldn’t join.</li>
+      </ul>
+      <h3>Public sources</h3>
+      <ul>
+        <li><a href="https://www.s-anand.net/blog/picture-stories-we-understand-and-like/" target="_blank" rel="noopener">Picture stories we understand and like</a> (7 Nov) and the <a href="https://files.s-anand.net/pages/tds-2026-09-p1-q7-picture-stories/" target="_blank" rel="noopener">results gallery</a>.</li>
+        <li><a href="https://www.anthropic.com/claude-fable-and-mythos-5-2" target="_blank" rel="noopener">Introducing Claude Fable 5.2 and Claude Mythos 5.2</a>, Anthropic, 9 Nov 2026.</li>
+        <li>Shrikar’s solver: <a href="https://github.com/sreekarsarma55/temp-repo" target="_blank" rel="noopener">github.com/sreekarsarma55/temp-repo</a> (not run or evaluated). Preethi also shared <a href="https://claude.ai/artifact/Qs2N2ZyM91NFcA1Nuf34hp" target="_blank" rel="noopener">a Claude artifact</a> someone else made, which she found “super helpful” (may need sign-in; not the same as Adwitiya’s page). Adwitiya’s solver was shared in a private student group and isn’t linked here.</li>
+        <li><a href="https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model" target="_blank" rel="noopener">Bradley–Terry model</a>; Google Cloud <a href="https://cloud.google.com/terms/generative-ai-indemnified-services" target="_blank" rel="noopener">generative AI indemnified services</a>.</li>
+        <li><a href="https://tds.s-anand.net/" target="_blank" rel="noopener">Tools in Data Science</a> course site · <a href="https://tds-network-games.sanand.workers.dev/realtime/air-ink-classifier/" target="_blank" rel="noopener">Invisible Ink</a> game page (may need sign-in).</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Numbers, and what they are</h3>
+      <ul>
+        <li><b>Food Court room scores</b> <span class="ev ev-data">Data</span>: recomputed from the game’s per-player result files by averaging each room’s team score once. Workshop session 1 (15 Nov, 12:00 SGT): 32 players, 7 rooms, 88.06. TDS 10 Nov 18:00 IST: 247 / 61 / 92.51; 11 Nov 07:30: 106 / 25 / 95.57; 11 Nov 21:00: 305 / 75 / 94.13.</li>
+        <li><b>Checkpoints, discounts, chat and saves</b> <span class="ev ev-later">Later</span>: from an analysis of the workshop’s event logs run on 15 Nov (91.81 → 85.95; 49.4% vs 15–25% final 20% discounts; 23 vs 43.7 messages and 37.1 vs 24.2 saves per room).</li>
+        <li><b>Peer grading</b> <span class="ev ev-later">Later</span>: 24,052 votes; min–max-scaled Bradley–Terry chosen 16 Nov; example bonuses 2.875 and 4.624 of 7.5; Q8 peer-difficulty proxy; 136 unusable media entries zeroed; marks sent for course-team review, not yet in the gradebook at the time.</li>
+        <li><b>Picture stories</b> <span class="ev ev-data">Public data</span>: 329 non-dropped stories from the public results file; Pearson r(uniqueness, preference) ≈ −0.37 (−0.41 with all 348).</li>
+        <li><b>Forecasts</b> <span class="ev ev-later">Later</span>: settled ledger; actual spend $5.3063 for 2–8 Nov UTC; 621 students with on-time forecasts; 123 first and 262 last in range.</li>
+      </ul>
+      <h3>Privacy</h3>
+      <ul><li>No student identifiers, marks, private chat links, room IDs or exam answers are published here. Toy and reconstructed graphics are labelled. The client in the localisation anecdote is deliberately left unnamed.</li></ul>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <p>Written from the recording of the TDS open course-design meeting of Monday 16 November 2026, IIT Madras BS in Data Science. Story and interactives drafted with Claude; numbers recomputed or traced to the sources above. Comic page is AI-generated. <a href="../">More talks</a>.</p>
+</footer>
+
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump on-hero" aria-label="Jump to section">
+  <button id="jump-prev" type="button" aria-label="Previous section"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+  <button class="jump-cur" id="jump-cur" type="button" aria-expanded="false" aria-controls="jump-menu"><span id="jump-cur-label">Contents</span> <i class="bi bi-chevron-up" aria-hidden="true"></i></button>
+  <button id="jump-next" type="button" aria-label="Next section"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+  <div class="jump-menu" id="jump-menu" role="navigation" aria-label="All sections"></div>
+</nav>
+
+<dialog class="pop" id="pop" aria-labelledby="pop-title">
+  <div class="pop-head"><h2 id="pop-title">Transcript</h2><button class="close-x" id="pop-close" type="button">Close ✕</button></div>
+  <div class="pop-search" id="pop-search"><label class="sr" for="pop-q">Search the transcript</label><input id="pop-q" type="search" placeholder="Search the transcript…"><span id="pop-count"></span></div>
+  <div id="pop-body"></div>
+</dialog>
+
+<dialog class="lightbox" id="lightbox" aria-label="Image viewer">
+  <img id="lb-img" src="" alt="">
+  <div class="lb-bar"><span id="lb-cap"></span><span><a id="lb-open" href="#" target="_blank" rel="noopener">Open full size ↗</a><button id="lb-close" type="button">Close ✕</button></span></div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js" defer></script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const body = document.body;
+  const vid = $("#vid"), aud = $("#aud"), dock = $("#dock");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isNarrow = () => matchMedia("(max-width: 999px)").matches;
+  const cssVar = (n) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(n)) || 0;
+  const DURATION = 4014;
+  const store = {
+    get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} },
+  };
+  const parseT = (s) => {
+    if (s == null || s === "") return null;
+    if (/^\d+(\.\d+)?$/.test(s)) return +s;
+    const p = String(s).split(":").map(Number);
+    if (p.some(isNaN)) return null;
+    return p.reduce((a, b) => a * 60 + b, 0);
+  };
+  const fmt = (t) => {
+    t = Math.max(0, Math.floor(t));
+    const m = Math.floor(t / 60), s = t % 60;
+    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  };
+
+  // ---------- theme ----------
+  const themeBtn = $("#theme-btn");
+  const isDark = () => document.documentElement.dataset.theme
+    ? document.documentElement.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  const syncThemeIcon = () => {
+    themeBtn.innerHTML = `<i class="bi ${isDark() ? "bi-sun" : "bi-moon-stars"}" aria-hidden="true"></i>`;
+    themeBtn.setAttribute("aria-label", `Switch to ${isDark() ? "light" : "dark"} mode`);
+  };
+  themeBtn.addEventListener("click", () => {
+    const next = isDark() ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    store.set("tds-ideation-6-theme", next);
+    syncThemeIcon();
+  });
+  syncThemeIcon();
+
+  // ---------- one player: the video, or the audio ----------
+  let player = vid;
+  const audioBtn = $("#audio-btn");
+  const switchTo = (p) => {
+    if (player === p) return;
+    const t = player.currentTime || 0, wasPlaying = !player.paused;
+    player.pause();
+    dock.classList.toggle("audio-mode", p === aud);
+    audioBtn.setAttribute("aria-pressed", String(p === aud));
+    audioBtn.querySelector("span").textContent = p === aud ? "Back to video" : "Audio only";
+    player = p;
+    if (t) seek(t).then(() => { if (wasPlaying) player.play().catch(() => {}); });
+  };
+  const useAudio = () => switchTo(aud);
+  vid.querySelector("source").addEventListener("error", useAudio);
+  vid.addEventListener("error", useAudio);
+  audioBtn.addEventListener("click", () => switchTo(player === aud ? vid : aud));
+
+  // ---------- chapters: [video time, title, story section] ----------
+  const RAW = [
+    ["sep", "00–19 · Workshop and peer grades"],
+    ["00:12", "Getting started", "foodcourt"], ["00:26", "The weekend experiment", "foodcourt"],
+    ["01:29", "JK’s three guesses", "foodcourt"], ["02:07", "Screen-share trouble", "foodcourt"],
+    ["04:08", "JK asks students about Food Court", "foodcourt"], ["05:20", "88 vs 92.5, 95, 94", "foodcourt"],
+    ["05:56", "Half chose 20% discounts", "foodcourt"], ["06:24", "“Even more clueless”", "foodcourt"],
+    ["06:48", "After negotiating: 92 → 86", "foodcourt"], ["07:08", "“Better to stay silent”", "foodcourt"],
+    ["07:56", "GA3 bonus distributions", "thirteen"], ["09:19", "JK: what was the N?", "thirteen"],
+    ["09:44", "Q8, an opinion question", "thirteen"], ["10:36", "Bradley–Terry", "thirteen"],
+    ["10:55", "13 wins out of 26", "thirteen"], ["12:50", "JK: digital twins and creators", "stories"],
+    ["14:48", "A client’s localised ads", "stories"], ["16:04", "“An external neck to catch”", "stories"],
+    ["16:48", "JK: Fable videos and human taste", "stories"],
+    ["sep", "19–38 · Stories and forecasts"],
+    ["19:01", "Picture stories results", "stories"], ["20:04", "Liability and indemnity", "stories"],
+    ["20:56", "Gita and the satire", "stories"], ["23:00", "Uniqueness vs preference", "stories"],
+    ["23:38", "“Why mass cinemas work”", "stories"], ["24:40", "Unique but unloved", "stories"],
+    ["25:52", "The Gita exception", "stories"], ["26:39", "Cartoons vs realism?", "stories"],
+    ["27:27", "JK: how Hollywood sources stories", "stories"], ["29:07", "AI Pipe forecast: $5.31", "forecast"],
+    ["29:48", "From $5 to $200 and back", "forecast"], ["30:04", "Constraints, not trends", "forecast"],
+    ["30:28", "Better information, worse marks", "forecast"], ["31:12", "Dollars vs cents", "forecast"],
+    ["31:25", "JK: off by 10 or 100", "forecast"], ["32:32", "Anand’s blind spots", "forecast"],
+    ["33:50", "A menu of learning", "forecast"], ["34:44", "Recognise, decide, correct", "forecast"],
+    ["35:46", "JK: an analysis question for ROE", "forecast"],
+    ["sep", "38–51 · The solver"],
+    ["38:23", "Face classifier and Invisible Ink", "solver"], ["39:10", "JK: “somebody created a solver”", "solver"],
+    ["40:28", "“A tough problem for an agent”", "solver"], ["41:10", "Adwitiya: “Fable performed quite well”", "solver"],
+    ["41:44", "A prompt vs a shareable solver", "solver"], ["42:17", "“You’d need Fable 5.2, right?”", "solver"],
+    ["42:23", "“No, no, no, sir”", "solver"], ["43:20", "Links in the chat", "solver"],
+    ["44:08", "Anand runs it live", "solver"], ["45:00", "“Doubtful that this is a V”", "solver"],
+    ["45:40", "“This E is a bit of a stretch”", "solver"], ["46:24", "Shrikar’s repo needs installing", "solver"],
+    ["46:52", "“Does not require tokens”", "solver"], ["47:16", "At the cusp of the possible", "solver"],
+    ["47:28", "JK: network effects", "learners"], ["48:40", "Let students cite solvers", "learners"],
+    ["49:12", "Three kinds of learning", "learners"], ["49:58", "“90% … is an exposure”", "learners"],
+    ["50:12", "The builder’s path", "learners"],
+    ["sep", "51–67 · The next exam"],
+    ["50:58", "JK: a very different ROE", "roe"], ["51:15", "An exam as a game", "roe"],
+    ["52:00", "The chest in the room", "roe"], ["52:40", "Prioritising your agents", "roe"],
+    ["52:59", "Only one character", "roe"], ["53:48", "Adwitiya: names, not anonymity", "anon"],
+    ["55:00", "Bring back the fourth person", "anon"], ["55:52", "“Less than 10%”", "anon"],
+    ["56:35", "Play at an unusual hour", "anon"], ["57:36", "Preethi’s Google Meet", "anon"],
+    ["58:08", "Five minutes or one mark?", "roe"], ["58:44", "Agents that read the chat", "roe"],
+    ["59:04", "JK: share your AI sob stories", "minusone"], ["60:26", "“Why negative?”", "minusone"],
+    ["61:04", "Mostly unread responses", "minusone"], ["62:12", "“A tiny component”", "minusone"],
+    ["62:20", "JK: how bonuses scale", "minusone"], ["63:24", "The 30-mark question", "minusone"],
+    ["64:08", "A 0.1-mark ROE?", "minusone"], ["65:10", "Where to find this summary", "minusone"],
+    ["66:28", "Recording ends", "minusone"],
+  ];
+  const CHAPTERS = RAW.filter((r) => r[0] !== "sep").map(([t, title, sec]) => ({ t: parseT(t), label: t, title, sec }));
+  let ci = 0;
+  $("#chapters").innerHTML = RAW.map((r) => r[0] === "sep"
+    ? `<li class="sep" aria-hidden="true">${r[1]}</li>`
+    : `<li><a href="?t=${r[0]}" data-chap="${ci++}" class="ts-chap"><span class="ct">${r[0]}</span><span>${r[1]}</span></a></li>`).join("");
+
+  const sections = $$(".chap, #takeaways");
+  const secTitle = (id) => { const s = document.getElementById(id); return s ? s.dataset.title : ""; };
+
+  // ---------- URL state: ?t=mm:ss&view=video#section ----------
+  const urlState = () => {
+    const u = new URL(location.href);
+    return { t: parseT(u.searchParams.get("t")), view: u.searchParams.get("view"), hash: u.hash.slice(1) };
+  };
+  const buildUrl = ({ t, hash } = {}) => {
+    const u = new URL(location.href);
+    if (t != null) u.searchParams.set("t", fmt(t)); else if (t === null) u.searchParams.delete("t");
+    if (body.classList.contains("watch")) u.searchParams.set("view", "video"); else u.searchParams.delete("view");
+    if (hash !== undefined) u.hash = hash ? "#" + hash : "";
+    return u.pathname + u.search.replace(/%3A/gi, ":") + u.hash;
+  };
+  let urlT = urlState().t;
+
+  // ---------- player ----------
+  const resume = $("#resume"), resumeBtn = $("#resume-btn"), minBtn = $("#min-btn");
+  const seek = (t) => new Promise((res) => {
+    const p = player;
+    t = Math.min(Math.max(0, t), DURATION - 1);
+    const go = () => { try { p.currentTime = t; } catch (e) {} res(); };
+    if (p.readyState >= 1) go(); else { p.addEventListener("loadedmetadata", go, { once: true }); if (p.preload === "none") { p.preload = "metadata"; p.load(); } }
+  });
+  const showResume = (t) => {
+    if (player !== vid) return;
+    resumeBtn.querySelector("span").textContent = `Play from ${fmt(t)}`; resume.classList.add("show");
+  };
+  const syncMin = () => {
+    const c = body.classList.contains("dock-collapsed");
+    minBtn.setAttribute("aria-expanded", String(!c));
+    minBtn.setAttribute("aria-label", c ? "Show the mini video" : "Hide the mini video");
+    minBtn.innerHTML = `<i class="bi ${c ? "bi-chevron-up" : "bi-chevron-down"}" aria-hidden="true"></i>`;
+  };
+  const ensureDockVisible = () => {
+    if (isNarrow()) { body.classList.remove("dock-collapsed"); syncMin(); return; }
+    const r = dock.getBoundingClientRect();
+    if (r.top > innerHeight - 80 || r.bottom < 60) $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  };
+  const playAt = async (t, { push = false, el = null } = {}) => {
+    if (push) {
+      const sec = el && el.closest(".chap, #takeaways");
+      history.pushState({ t }, "", buildUrl({ t, hash: sec ? sec.id : undefined }));
+      urlT = t;
+    }
+    await seek(t);
+    ensureDockVisible();
+    try { await player.play(); resume.classList.remove("show"); } catch (e) { showResume(t); }
+    if (el && !reduced) { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+  };
+  resumeBtn.addEventListener("click", () => { player.play(); resume.classList.remove("show"); });
+
+  const enhanceTs = (root = document) => {
+    $$("a.ts", root).forEach((a) => {
+      if (a.dataset.t) return;
+      const t = parseT(new URL(a.href, location.href).searchParams.get("t"));
+      a.dataset.t = t;
+      a.insertAdjacentHTML("afterbegin", '<i class="bi bi-play-fill" aria-hidden="true"></i>');
+      a.setAttribute("aria-label", `Play the meeting recording from ${a.textContent.trim()}`);
+    });
+  };
+  enhanceTs();
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a.ts, a.ts-chap");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const t = a.classList.contains("ts-chap") ? CHAPTERS[+a.dataset.chap].t : +a.dataset.t;
+    const dlg = a.closest("dialog");
+    if (dlg) dlg.close();
+    playAt(t, { push: true, el: a.classList.contains("ts") && !dlg ? a : null });
+  });
+
+  // now-playing sync
+  const nowT = $("#now-t"), nowTitle = $("#now-title"), nowStory = $("#now-story");
+  const chapLinks = $$("#chapters a");
+  let curChap = -1;
+  const chapFor = (t) => { let i = -1; for (let k = 0; k < CHAPTERS.length; k++) if (CHAPTERS[k].t <= t + 0.5) i = k; return i; };
+  const onTime = () => {
+    const t = player.currentTime;
+    nowT.textContent = fmt(t);
+    const i = chapFor(t);
+    if (i === curChap) return;
+    curChap = i;
+    chapLinks.forEach((a, k) => { a.classList.toggle("is-now", k === i); if (k === i) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
+    if (i >= 0) {
+      const c = CHAPTERS[i];
+      nowTitle.textContent = c.title;
+      nowStory.innerHTML = `In the story: <a href="#${c.sec}">${secTitle(c.sec)} ↓</a>`;
+      sections.forEach((s) => s.classList.toggle("is-now", s.id === c.sec));
+      const link = chapLinks[i], box = link.closest("ol");
+      if (box && box.scrollHeight > box.clientHeight) {
+        const lr = link.getBoundingClientRect(), br = box.getBoundingClientRect();
+        if (lr.top < br.top || lr.bottom > br.bottom) box.scrollTop += lr.top - br.top - box.clientHeight / 3;
+      }
+    }
+  };
+  const bindPlayer = (p) => {
+    p.addEventListener("timeupdate", () => { if (p === player) onTime(); });
+    p.addEventListener("seeked", () => { if (p === player) onTime(); });
+    p.addEventListener("play", () => {
+      resume.classList.remove("show");
+      if (body.classList.contains("dock-collapsed")) { body.classList.remove("dock-collapsed"); syncMin(); }
+    });
+  };
+  bindPlayer(vid); bindPlayer(aud);
+  if (!vid.canPlayType("video/webm")) useAudio();
+
+  // story → chapter hints (which chapters the visible text cites)
+  const revealChap = (first, last = first, pad = 8) => {
+    const box = first.closest("ol");
+    if (!box || box.scrollHeight <= box.clientHeight) return;
+    const top = first.getBoundingClientRect().top, bottom = last.getBoundingClientRect().bottom, br = box.getBoundingClientRect();
+    if (top >= br.top + pad && bottom <= br.bottom - pad) return;
+    box.scrollTop += bottom - top > br.height - 2 * pad ? top - br.top - pad : (top + bottom) / 2 - (br.top + br.bottom) / 2;
+  };
+  const tsSeen = new Set();
+  let hintKey = "", hintRaf = 0, tsHover = null;
+  const syncHints = () => {
+    hintRaf = 0;
+    const idx = [...new Set([...tsSeen].map((a) => chapFor(+a.dataset.t)).filter((i) => i >= 0))].sort((a, b) => a - b);
+    const key = idx.join();
+    if (key === hintKey) return;
+    hintKey = key;
+    chapLinks.forEach((a, k) => a.classList.toggle("in-view", idx.includes(k)));
+    if (idx.length && player.paused && !tsHover) revealChap(chapLinks[idx[0]], chapLinks[idx.at(-1)]);
+  };
+  const tsIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? tsSeen.add(e.target) : tsSeen.delete(e.target)));
+    hintRaf ||= requestAnimationFrame(syncHints);
+  });
+  $$("a.ts").filter((a) => !a.closest("dialog, .dock, .hero, .howto")).forEach((a) => tsIO.observe(a));
+  const setTarget = (a) => {
+    if (tsHover === a) return;
+    tsHover = a;
+    chapLinks.forEach((l) => l.classList.remove("is-target"));
+    const i = a ? chapFor(+a.dataset.t) : -1;
+    if (i >= 0) { chapLinks[i].classList.add("is-target"); revealChap(chapLinks[i]); }
+  };
+  document.addEventListener("mouseover", (e) => setTarget(e.target.closest?.("a.ts") || null));
+  document.addEventListener("focusin", (e) => setTarget(e.target.closest?.("a.ts") || null));
+  document.addEventListener("focusout", (e) => { if (e.target.matches?.("a.ts")) setTarget(null); });
+
+  const shareBtn = $("#share-btn");
+  shareBtn.addEventListener("click", async () => {
+    const t = Math.floor(player.currentTime || 0);
+    const sec = curChap >= 0 ? CHAPTERS[curChap].sec : "";
+    const u = new URL(location.href);
+    u.search = "?t=" + fmt(t); u.hash = sec ? "#" + sec : "";
+    const label = shareBtn.querySelector("span");
+    try { await navigator.clipboard.writeText(u.href); label.textContent = `Copied ${fmt(t)}`; }
+    catch (e) { history.replaceState(history.state, "", u.pathname + u.search + u.hash); label.textContent = "Link in address bar"; }
+    setTimeout(() => (label.textContent = "Share moment"), 2200);
+  });
+
+  // ---------- story ⇄ video emphasis (same <video>, never remounted) ----------
+  const modeBtn = $("#mode-btn"), modeLabel = $("#dock-mode-label");
+  const updateDockH = () => {
+    const h = isNarrow() && body.classList.contains("watch") ? dock.offsetHeight : 0;
+    document.documentElement.style.setProperty("--dock-h", h + "px");
+  };
+  const pickAnchor = () => {
+    const top = 80 + (isNarrow() && body.classList.contains("watch") ? cssVar("--dock-h") : 0);
+    return $$(".chap > *, #takeaways").find((el) => el.getBoundingClientRect().bottom > top);
+  };
+  const setMode = (watch, { replace = true } = {}) => {
+    if (body.classList.contains("watch") === watch) return;
+    const anchor = pickAnchor();
+    const before = anchor ? anchor.getBoundingClientRect().top : 0;
+    const storyVisible = $("#room").getBoundingClientRect().top < innerHeight * 0.5;
+    body.classList.toggle("watch", watch);
+    modeBtn.setAttribute("aria-pressed", String(watch));
+    modeBtn.innerHTML = watch
+      ? '<i class="bi bi-book" aria-hidden="true"></i> <span>Focus story</span>'
+      : '<i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span>';
+    modeLabel.textContent = watch ? "Video focus" : "Story focus";
+    if (replace) history.replaceState(history.state, "", buildUrl());
+    updateDockH();
+    if (anchor && storyVisible) {
+      const start = performance.now();
+      const keep = () => {
+        const d = anchor.getBoundingClientRect().top - before;
+        if (Math.abs(d) > 1) window.scrollBy({ top: d, behavior: "instant" });
+        if (performance.now() - start < 750) requestAnimationFrame(keep);
+      };
+      requestAnimationFrame(keep);
+    }
+  };
+  modeBtn.addEventListener("click", () => setMode(!body.classList.contains("watch")));
+  $("#hero-watch").addEventListener("click", (e) => {
+    e.preventDefault();
+    setMode(true);
+    $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  });
+  new ResizeObserver(updateDockH).observe(dock);
+  addEventListener("resize", updateDockH);
+  minBtn.addEventListener("click", () => { body.classList.toggle("dock-collapsed"); syncMin(); });
+  if (isNarrow()) { body.classList.add("dock-collapsed"); syncMin(); }
+
+  // ---------- history ----------
+  addEventListener("popstate", () => {
+    const { t, view } = urlState();
+    setMode(view === "video", { replace: false });
+    if (t != null && t !== urlT) seek(t).then(() => { if (player.paused) showResume(t); });
+    urlT = t;
+  });
+
+  // ---------- section jump nav ----------
+  const menu = $("#jump-menu"), backdrop = $("#jump-backdrop"), curBtn = $("#jump-cur"), curLabel = $("#jump-cur-label");
+  const groups = [];
+  sections.forEach((s) => {
+    const g = s.dataset.act;
+    if (!groups.length || groups[groups.length - 1].name !== g) groups.push({ name: g, items: [] });
+    groups[groups.length - 1].items.push(s);
+  });
+  menu.innerHTML = groups.map((g) => `<div class="jm-group">${g.name}</div><div class="jump-grid">${
+    g.items.map((s) => { const h = ((s.querySelector("h2") || {}).textContent || "").trim(); return `<a href="#${s.id}" data-sec="${s.id}">${s.dataset.title}<small>${h}</small></a>`; }).join("")}</div>`).join("");
+  const openMenu = (open) => {
+    menu.classList.toggle("open", open); backdrop.classList.toggle("open", open);
+    curBtn.setAttribute("aria-expanded", String(open));
+    if (open) (menu.querySelector("a.is-cur") || menu.querySelector("a")).focus();
+  };
+  curBtn.addEventListener("click", () => openMenu(!menu.classList.contains("open")));
+  backdrop.addEventListener("click", () => openMenu(false));
+  menu.addEventListener("click", (e) => {
+    const a = e.target.closest("a");
+    if (!a) return;
+    e.preventDefault();
+    openMenu(false);
+    const s = document.getElementById(a.dataset.sec);
+    s.scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+    history.pushState(history.state, "", buildUrl({ hash: s.id }));
+  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && menu.classList.contains("open")) { openMenu(false); curBtn.focus(); } });
+  let curIdx = 0;
+  const goSec = (i) => {
+    i = Math.max(0, Math.min(sections.length - 1, i));
+    sections[i].scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+    history.pushState(history.state, "", buildUrl({ hash: sections[i].id }));
+  };
+  $("#jump-prev").addEventListener("click", () => goSec(curIdx - 1));
+  $("#jump-next").addEventListener("click", () => goSec(curIdx + 1));
+  const progress = $("#progress"), jumpNav = $(".jump");
+  const onScroll = () => {
+    const line = innerHeight * 0.3 + cssVar("--dock-h");
+    let i = 0;
+    sections.forEach((s, k) => { if (s.getBoundingClientRect().top <= line) i = k; });
+    if (i !== curIdx || !curLabel.dataset.init) {
+      curIdx = i; curLabel.dataset.init = 1;
+      curLabel.textContent = sections[i].dataset.title;
+      $$("a", menu).forEach((a) => a.classList.toggle("is-cur", a.dataset.sec === sections[i].id));
+      $("#jump-prev").disabled = i === 0;
+      $("#jump-next").disabled = i === sections.length - 1;
+    }
+    jumpNav.classList.toggle("on-hero", $("#room").getBoundingClientRect().top > innerHeight * 0.75 && !menu.classList.contains("open"));
+    const h = document.documentElement.scrollHeight - innerHeight;
+    progress.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%";
+  };
+  let ticking = false;
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { onScroll(); ticking = false; }); } }, { passive: true });
+  onScroll();
+
+  // ---------- transcript popup ----------
+  const pop = $("#pop"), popBody = $("#pop-body"), popTitle = $("#pop-title"), popSearch = $("#pop-search"), popQ = $("#pop-q"), popCount = $("#pop-count");
+  let popReturn = null;
+  const openPop = (title, html, { search = false } = {}) => {
+    popReturn = document.activeElement;
+    popTitle.textContent = title; popBody.innerHTML = html; enhanceTs(popBody);
+    popSearch.classList.toggle("on", search); popQ.value = ""; popCount.textContent = "";
+    pop.showModal(); popBody.scrollTop = 0;
+    if (search) popQ.focus();
+  };
+  pop.addEventListener("close", () => { if (popReturn && popReturn.focus) popReturn.focus(); });
+  $("#pop-close").addEventListener("click", () => pop.close());
+  pop.addEventListener("click", (e) => { if (e.target === pop) pop.close(); });
+  const esc = (s) => s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  popQ.addEventListener("input", () => {
+    const q = popQ.value.trim();
+    const blocks = $$(":scope > p, :scope > ol, :scope > ul, :scope > hr", popBody).filter((b) => !b.classList.contains("intro"));
+    $$("mark", popBody).forEach((m) => m.replaceWith(m.textContent));
+    popBody.normalize();
+    let n = 0;
+    blocks.forEach((b) => {
+      const hit = !q || b.textContent.toLowerCase().includes(q.toLowerCase());
+      b.classList.toggle("hide", !hit || (q && b.tagName === "HR"));
+      if (hit && q) {
+        n++;
+        const re = new RegExp(escRe(q), "gi");
+        const walker = document.createTreeWalker(b, NodeFilter.SHOW_TEXT);
+        const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach((node) => {
+          if (!re.test(node.nodeValue)) return; re.lastIndex = 0;
+          const span = document.createElement("span");
+          span.innerHTML = esc(node.nodeValue).replace(re, (m) => `<mark>${m}</mark>`);
+          node.replaceWith(...span.childNodes);
+        });
+      }
+    });
+    popCount.textContent = q ? `${n} passage${n === 1 ? "" : "s"}` : "";
+  });
+  const mdToHtml = (md) => window.marked ? marked.parse(md) : `<pre style="white-space:pre-wrap">${esc(md)}</pre>`;
+  const titleCase = (s) => s.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
+  let transcriptHtml = null;
+  document.addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-transcript]");
+    if (!a || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    if (!transcriptHtml) {
+      try {
+        let md = await (await fetch("transcript.md")).text();
+        md = md.replace(/<!--[\s\S]*?-->/g, "").replace(/^---\n[\s\S]*?\n---\n/, "").replace(/^# Transcript\s*/, "")
+          .replace(/\n## Links[\s\S]*$/, "\n");                                   // private working links: not published
+        md = md.replace(/https?:\/\/chat\.google\.com\/\S+/g, "[link to a private student group, removed]")
+          .replace(/https?:\/\/chatgpt\.com\/c\/\S+/g, "[private link removed]");
+        // meeting chat: "> 00:09:26.170,…\n> NAME: text" → timed list items
+        md = md.replace(/^> (\d\d):(\d\d):(\d\d)\.\d+,[^\n]*\n> ([^:\n]+): ([^\n]*)\n>?\n?/gm, (m, h, mi, s, who, txt) =>
+          `- [${String(+h * 60 + +mi).padStart(2, "0")}:${s}] **${titleCase(who.trim()).split(" ")[0]}**: ${txt}\n`);
+        let last = 0;
+        md = md.replace(/\[(\d{1,3}):(\d{2})\]/g, (m, a1, b1) => {
+          let t = +a1 * 60 + +b1;
+          if (t === 0 && last > 600) t = last + 8;                                // the transcript's spurious [00:00] at ~49:58
+          last = Math.max(last, t);
+          return `<a class="ts" href="?t=${fmt(t)}">${fmt(t)}</a>`;
+        });
+        transcriptHtml = '<p class="intro">AI transcription, lightly cleaned; tap any time to play that moment. Times are approximate; some long passages carry one marker, so use the chapter list for finer navigation. The meeting chat follows the spoken transcript. Where the transcript and the recording disagree (for example “242” at 29:36, which the captions give as “262”), trust the recording.</p>' + mdToHtml(md);
+      } catch (err) { location.href = a.href; return; }
+    }
+    openPop("Transcript & chat", transcriptHtml, { search: true });
+  });
+
+  // ---------- lightbox ----------
+  const lb = $("#lightbox"), lbImg = $("#lb-img"), lbCap = $("#lb-cap"), lbOpen = $("#lb-open");
+  let lbReturn = null;
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-lightbox]");
+    if (!el || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    const src = el.getAttribute("href") || el.dataset.src;
+    const img = el.querySelector("img");
+    lbImg.src = src; lbImg.alt = img ? img.alt : (el.dataset.caption || "");
+    lbCap.textContent = el.dataset.caption || "";
+    lbOpen.href = src;
+    lbReturn = el;
+    lb.showModal();
+  });
+  $("#lb-close").addEventListener("click", () => lb.close());
+  lb.addEventListener("click", (e) => { if (e.target === lb || e.target === lbImg) lb.close(); });
+  lb.addEventListener("close", () => { if (lbReturn && lbReturn.focus) lbReturn.focus(); });
+
+  // initial deep link: ?t= seeks (no autoplay) and shows a play button; ?view=video focuses the video
+  const init = urlState();
+  if (init.view === "video") setMode(true, { replace: false });
+  if (init.t != null) {
+    seek(init.t).then(() => { showResume(init.t); onTime(); });
+    if (isNarrow()) { body.classList.remove("dock-collapsed"); syncMin(); }
+  }
+})();
+</script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (tag, attrs = {}, parent) => {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  };
+  const press = (group, btn) => $$("button", group).forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+
+  // ---------- Food Court: 7 workshop rooms vs 161 TDS rooms (room team scores, sorted; no identifiers) ----------
+  const FC = [
+    { label: "Workshop", sub: "15 Nov · 7 rooms", cls: "dot-w", mean: 88.06, v: [83.8,85.5,86.7,87.7,89.2,91.7,91.8] },
+    { label: "TDS · 10 Nov 6 pm", sub: "61 rooms", cls: "dot-s", mean: 92.51, v: [81.7,82.1,83.7,84.1,84.7,85.4,85.5,85.6,86.1,86.6,86.9,87.1,87.6,87.9,88.0,88.6,88.8,89.0,89.5,90.5,90.7,90.9,91.2,91.4,91.5,92.2,92.4,92.5,92.6,92.9,93.0,93.6,93.6,93.7,94.0,94.0,94.2,94.8,94.9,95.5,95.5,96.0,96.3,96.3,96.4,96.7,96.8,96.9,97.2,97.4,97.6,98.5,98.7,98.9,99.0,99.0,99.1,99.2,99.5,99.6,100.0] },
+    { label: "TDS · 11 Nov 7:30 am", sub: "25 rooms", cls: "dot-s", mean: 95.57, v: [81.9,84.1,88.1,89.8,90.6,92.1,93.7,94.4,94.6,95.2,95.4,96.6,98.5,98.8,98.9,99.1,99.2,99.3,99.4,99.5,99.9,100.0,100.0,100.0,100.0] },
+    { label: "TDS · 11 Nov 9 pm", sub: "75 rooms", cls: "dot-s", mean: 94.13, v: [80.2,81.9,82.0,82.2,84.3,84.8,85.3,85.5,86.1,87.0,87.3,87.8,87.8,88.2,88.7,88.8,90.6,90.7,91.0,91.0,91.3,91.4,91.8,92.2,92.2,92.2,92.7,92.9,92.9,93.0,93.3,94.8,95.0,95.4,96.3,96.3,96.3,96.4,96.5,96.5,96.6,96.6,96.7,96.7,96.8,96.9,97.0,97.2,97.4,97.4,97.4,97.6,97.9,98.0,98.5,98.6,99.1,99.1,99.2,99.4,99.4,99.4,99.4,99.4,99.5,99.5,99.7,99.8,99.8,99.9,99.9,100.0,100.0,100.0,100.0] },
+  ];
+  const fcSvg = $("#fc-svg"), fcStrip = $("#fc-strip");
+  if (fcSvg) {
+    const X0 = 150, X1 = 625, lo = 80, hi = 100, x = (v) => X0 + (v - lo) / (hi - lo) * (X1 - X0);
+    const ax = el("g", { class: "axis" }, fcSvg);
+    for (let t = 80; t <= 100; t += 5) {
+      el("line", { x1: x(t), x2: x(t), y1: 8, y2: 222 }, ax);
+      el("text", { x: x(t), y: 240, "text-anchor": "middle" }, ax).textContent = t;
+    }
+    FC.forEach((row, r) => {
+      const cy = 34 + r * 54;
+      el("text", { class: "lab", x: 0, y: cy - 2 }, fcSvg).textContent = row.label;
+      el("text", { class: "sub", x: 0, y: cy + 14 }, fcSvg).textContent = row.sub;
+      const g = el("g", { class: "hidden-data" }, fcSvg);
+      const bins = {};
+      row.v.forEach((v) => {
+        const b = Math.round(v / 0.6);
+        const k = bins[b] = (bins[b] || 0) + 1;
+        const off = (k % 2 ? 1 : -1) * Math.floor(k / 2) * (row.cls === "dot-w" ? 6.5 : 4.2);
+        el("circle", { class: row.cls, cx: x(v), cy: cy + off, r: row.cls === "dot-w" ? 6 : 3.6 }, g);
+      });
+      el("line", { class: "mean", x1: x(row.mean), x2: x(row.mean), y1: cy - 20, y2: cy + 20 }, g);
+      el("text", { class: "meanlab", x: x(row.mean) + 5, y: cy - 12 }, g).textContent = row.mean.toFixed(2);
+    });
+    el("text", { class: "veil", x: (X0 + X1) / 2, y: 130, "text-anchor": "middle" }, fcSvg).textContent = "Make a guess to reveal the rooms";
+    $$("#w-fc .choice").forEach((b) => b.addEventListener("click", () => {
+      press(b.parentElement, b);
+      fcStrip.classList.add("on");
+      const r = $("#fc-reveal");
+      const lead = { w: "Not this time.", s: "Yes.", e: "Not quite." }[b.dataset.g];
+      r.innerHTML = `${lead} The workshop’s seven rooms averaged <b>88.06</b>; the three TDS sittings averaged <b>92.51, 95.57 and 94.13</b>. Every workshop room scored below 92, while nearly half of TDS rooms (74 of 161) scored 96 or more. JK had expected the professionals to cooperate less but out-strategise and out-persuade the students.`;
+      r.hidden = false;
+    }));
+  }
+
+  // ---------- Bradley–Terry: same 13/26, different opponents (schematic) ----------
+  const opp = Array.from({ length: 26 }, (_, i) => (i + 0.5) / 26);                // opponents from weakest to strongest
+  const winsA = new Set([0,1,2,3,4,5,6,7,8,9,10,12,14]);                            // beat the weak, lost to the strong
+  const winsB = new Set([2,5,8,11,13,15,16,18,19,20,22,23,25]);                     // beat many strong opponents
+  const drawBT = (svg, wins) => {
+    if (!svg) return;
+    el("line", { x1: 10, x2: 270, y1: 40, y2: 40, stroke: "currentColor", opacity: .2 }, svg);
+    opp.forEach((o, i) => el("circle", { class: wins.has(i) ? "w" : "l", cx: 14 + o * 252, cy: 40 + (i % 2 ? -9 : 9), r: 5.5 }, svg));
+    el("text", { x: 10, y: 66 }, svg).textContent = "← weaker opponents";
+    el("text", { x: 270, y: 66, "text-anchor": "end" }, svg).textContent = "stronger →";
+    el("text", { x: 10, y: 14 }, svg).textContent = "● won  ○ lost";
+  };
+  drawBT($("#bt-a"), winsA); drawBT($("#bt-b"), winsB);
+  $$("#w-bt .choice").forEach((b) => b.addEventListener("click", () => {
+    press(b.parentElement, b);
+    $("#bt-sa").innerHTML = '2.875<small>of 7.5 bonus</small>';
+    $("#bt-sb").innerHTML = '4.624<small>of 7.5 bonus</small>';
+    const lead = { a: "The model disagrees.", b: "That’s what Bradley–Terry concluded.", same: "Raw win rate would agree with you." }[b.dataset.bt];
+    const r = $("#bt-reveal");
+    r.innerHTML = `${lead} Same 13 wins, but Face B’s came against opponents who themselves won a lot, so the model infers B is stronger. After scaling, the real pair got <b>2.875</b> and <b>4.624</b> bonus marks out of 7.5: a 60% difference from identical win counts.`;
+    r.hidden = false;
+  }));
+
+  // ---------- Picture stories: uniqueness vs preference (public results, 329 stories, no author IDs) ----------
+  const PTS = "1.3,5.5;5.4,0.7;1.3,7.8;2.7,3.4;5.7,6.7;0.0,8.5;5.2,6.9;3.5,7.9;3.2,6.4;5.4,1.2;0.4,9.8;0.3,3.5;0.0,9.7;1.8,5.7;5.7,2.9;1.8,8.2;0.9,8.3;1.9,7.4;2.4,4.2;0.7,5.5;5.7,6.6;2.3,3.3;5.4,1.2;4.7,5.3;1.7,1.7;2.4,5.2;1.5,2.9;3.2,9.6;5.7,9.2;5.0,4.9;3.3,6.5;7.5,2.3;5.2,8.3;5.7,5.9;4.1,2.6;5.9,0.1;7.2,0.9;4.0,2.5;2.7,4.3;2.9,5.9;3.1,1.8;5.4,9.5;3.9,1.9;1.2,7.9;0.4,9.1;6.0,0.8;0.4,8.2;0.2,7.8;0.9,7.5;0.6,4.0;1.7,5.2;1.6,9.4;4.5,3.6;1.0,3.7;2.5,3.1;1.3,2.8;5.7,0.9;3.4,2.9;3.0,3.3;0.8,8.9;5.0,8.2;3.4,4.6;2.7,6.6;4.1,7.7;0.4,8.8;3.0,6.3;1.3,6.5;2.4,5.5;5.7,4.7;1.9,9.7;5.9,7.7;3.0,0.5;1.0,3.9;2.8,4.9;4.5,3.9;1.2,6.7;0.6,3.8;0.4,7.3;0.4,9.5;0.6,2.2;1.4,9.3;5.6,5.6;7.0,1.0;5.3,5.4;7.3,5.4;5.1,4.1;1.8,8.8;1.6,4.6;4.3,2.4;2.2,2.8;2.7,7.8;4.2,1.6;4.0,8.8;1.3,9.5;5.8,2.5;5.6,1.3;3.0,3.7;1.2,4.7;1.5,2.7;1.3,9.3;1.5,6.9;7.0,4.4;2.0,6.0;0.9,3.0;8.0,2.7;2.1,6.6;4.0,6.7;1.6,1.2;6.1,4.5;2.6,9.0;2.3,7.0;5.3,9.4;4.6,0.3;5.8,4.9;1.4,8.4;3.6,9.3;2.4,6.9;4.3,3.2;0.0,4.2;1.7,2.2;3.1,4.1;2.2,0.5;4.1,7.4;6.0,0.5;5.3,9.7;4.7,6.9;9.8,1.6;5.0,9.9;3.7,2.1;3.7,1.3;0.5,9.2;3.5,1.2;0.5,8.8;0.9,4.8;1.9,6.3;5.1,9.1;1.7,3.0;3.7,5.4;4.8,0.3;0.8,7.6;1.5,8.0;1.6,2.3;6.0,2.4;1.7,5.9;4.0,8.0;6.4,4.1;2.3,9.6;4.2,1.9;3.8,5.2;2.5,4.6;7.8,1.8;7.7,0.4;2.5,6.1;2.6,9.4;4.0,4.5;1.9,2.4;1.3,4.0;3.8,3.4;3.5,3.0;0.8,3.7;4.5,1.4;4.7,8.6;5.0,3.9;0.9,7.5;1.4,9.6;1.5,5.1;5.7,1.5;1.6,9.3;1.1,2.0;2.4,7.9;5.4,9.5;1.3,9.0;7.0,6.1;1.0,1.7;5.4,4.9;1.7,6.3;3.1,2.0;2.5,8.0;1.3,8.4;0.6,7.3;1.0,4.8;4.2,2.7;3.5,1.0;3.4,3.3;1.3,5.3;5.4,5.6;3.4,1.4;1.6,1.4;7.1,3.2;5.1,2.6;4.6,9.9;5.7,6.0;4.9,5.0;2.5,6.3;2.5,3.9;6.0,3.4;3.2,4.3;0.7,10.0;1.0,8.4;3.8,2.8;1.6,9.8;5.5,4.5;2.5,6.2;0.4,4.3;5.8,4.1;1.4,2.9;0.7,8.6;1.0,8.2;2.6,6.2;3.1,4.7;0.4,5.8;0.5,6.5;0.6,9.8;2.6,8.9;0.6,7.2;6.9,4.2;1.7,7.4;0.8,8.7;1.5,8.5;2.8,3.3;3.2,5.0;5.6,7.8;2.6,3.6;0.6,9.2;1.3,3.8;1.2,3.6;1.9,7.1;1.7,2.1;1.7,3.5;3.2,5.2;6.2,3.5;4.4,1.4;3.4,7.1;4.3,0.7;1.3,5.3;6.7,1.0;0.0,6.8;4.2,7.3;0.9,5.8;1.7,1.7;4.4,4.4;7.4,8.6;2.5,6.4;1.1,7.2;2.2,5.7;1.4,8.5;0.3,4.8;3.4,10.0;8.1,1.5;1.0,7.0;6.3,0.7;7.5,9.0;0.6,7.5;1.8,4.0;2.7,2.1;2.2,4.8;1.7,6.7;1.5,2.0;5.4,5.0;7.2,2.7;5.3,6.5;1.7,5.1;2.2,5.6;1.0,8.1;3.4,8.7;1.2,2.2;2.5,3.7;1.3,7.6;5.5,3.1;0.4,8.3;6.1,0.6;7.6,4.4;6.5,2.3;1.3,8.1;0.8,7.6;5.5,1.1;5.3,4.6;0.4,6.4;10.0,1.3;0.9,7.7;2.5,5.9;6.9,3.1;1.2,2.4;2.7,8.9;0.6,8.7;3.7,7.0;3.9,8.6;5.0,0.6;3.6,7.6;1.4,0.9;1.1,9.0;3.2,7.2;3.4,2.6;6.9,3.5;6.3,2.5;0.5,6.8;3.1,8.1;0.8,6.2;1.7,3.8;1.4,5.6;5.7,5.1;1.9,9.7;0.3,5.8;5.1,1.6;0.5,7.1;0.4,8.0;3.7,0.6;6.6,0.2;6.6,5.7;1.3,6.0;3.2,6.1;1.4,6.1;4.4,8.4;0.4,9.9;4.3,1.8;2.8,3.2;2.6,1.5;6.7,0.4;0.6,4.4;1.4,7.3;1.0,2.0;4.3,1.9;4.2,5.4;4.9,9.1;1.6,9.9;1.0,7.1;4.4,6.8;4.2,0.8;2.5,3.1".split(";").map((s) => s.split(",").map(Number));
+  const EX = [
+    { id: "P206", k: "crow", name: "Thirsty crow", u: 0.67, p: 9.97, h: 9.0, t: "A crow flies through the woods and spots a jar with water too low to reach. It gathers stones and drops them into the jar, raising the water level. At last, the crow can drink." },
+    { id: "P188", k: "kite", name: "Kite in a tree", u: 0.63, p: 7.32, h: 10.0, t: "A sad little girl finds her kite stuck in a tree. An elderly man with a cane comes by and sees her pointing to it. He uses his cane to free the kite, and they smile as they hold its string together and fly it." },
+    { id: "P133", k: "moon", name: "Phone on the moon", u: 9.8, p: 1.61, h: 10.0, t: "A spacecraft lands on a rocky moon. An astronaut steps down, takes out a phone, and calls someone; an inset shows a person at a workstation answering." },
+    { id: "P292", k: "gift", name: "Unwanted gift", u: 10.0, p: 1.33, h: 10.0, t: "Two women are together in a living room. One gives the other a wrapped present. The recipient smiles and says she loves it, but her thought bubble shows a shirt beside a sad face, suggesting the gift may not be what she wanted." },
+    { id: "P253", k: "gita", name: "Bhagavad Gita", u: 7.43, p: 8.65, h: 10.0, t: "Arjuna sits troubled in his chariot as Krishna guides him between the opposing armies. Krishna reveals a radiant, many-armed divine form, and Arjuna bows in awe. After the battle, the field lies strewn with fallen warriors and broken weapons. Arjuna kneels before Krishna and his companions in reverence." },
+    { id: "P263", k: "satire", name: "Bribe satire", u: 7.47, p: 8.96, h: 9.1, t: "A wealthy motorist hands a pink note to a uniformed officer at a red light. The officer raises his baton toward a ragged child beside the car. The child is left crouching among rubbish as the officer and car drive away. Later, a smiling politician showers a cheering crowd with cash while the child watches from the edge." },
+    { id: "P089", k: "panda", name: "Red panda photo", u: 7.34, p: 5.39, h: 7.3, t: "A photographer spots a red panda and takes its picture. He imagines the image going viral, drawing crowds, litter, and eventually leading to the panda being caged. He deletes the photo instead, then walks on through the forest, leaving the red panda free in its home." },
+  ];
+  const psSvg = $("#ps-svg");
+  if (psSvg) {
+    const L = 46, R = 410, T = 12, B = 296, sx = (u) => L + u / 10 * (R - L), sy = (p) => B - p / 10 * (B - T);
+    const ax = el("g", { class: "axis" }, psSvg);
+    for (let t = 0; t <= 10; t += 2) {
+      el("line", { x1: sx(t), x2: sx(t), y1: T, y2: B, opacity: .5 }, ax);
+      el("line", { x1: L, x2: R, y1: sy(t), y2: sy(t), opacity: .5 }, ax);
+      el("text", { x: sx(t), y: B + 15, "text-anchor": "middle" }, ax).textContent = t;
+      el("text", { x: L - 8, y: sy(t) + 4, "text-anchor": "end" }, ax).textContent = t;
+    }
+    el("text", { class: "t", x: (L + R) / 2, y: B + 34, "text-anchor": "middle" }, ax).textContent = "Uniqueness →";
+    el("text", { class: "t", x: 14, y: (T + B) / 2, "text-anchor": "middle", transform: `rotate(-90 14 ${(T + B) / 2})` }, ax).textContent = "Preference →";
+    const g = el("g", {}, psSvg);
+    PTS.forEach(([u, p]) => el("circle", { class: "pt", cx: sx(u), cy: sy(p), r: 3 }, g));
+    // least-squares trend line
+    const n = PTS.length, mu = PTS.reduce((a, d) => a + d[0], 0) / n, mp = PTS.reduce((a, d) => a + d[1], 0) / n;
+    const b1 = PTS.reduce((a, d) => a + (d[0] - mu) * (d[1] - mp), 0) / PTS.reduce((a, d) => a + (d[0] - mu) ** 2, 0);
+    el("line", { class: "trend", x1: sx(0), y1: sy(mp - b1 * mu), x2: sx(10), y2: sy(mp + b1 * (10 - mu)) }, psSvg);
+    const hl = el("g", {}, psSvg);
+    const card = $("#ps-card"), chips = $("#ps-chips");
+    const show = (ex) => {
+      $$("circle", hl).forEach((c) => c.classList.toggle("pick", c.dataset.k === ex.k));
+      $$("button", chips).forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.k === ex.k)));
+      card.innerHTML = `<a href="https://files.s-anand.net/pages/tds-2026-09-p1-q7-picture-stories/gallery/${ex.id}.webp" data-lightbox data-caption="${ex.name}: student picture story ${ex.id}, from the public results gallery"><img src="https://files.s-anand.net/pages/tds-2026-09-p1-q7-picture-stories/gallery/${ex.id}.webp" alt="Student picture story ${ex.id} (${ex.name}). ${ex.t}" width="720" height="720"></a>
+        <b>${ex.name}</b> · <span style="font:.74rem var(--font-mono);color:var(--muted)">${ex.id}</span><br>${ex.t}
+        <div class="bars"><span>uniqueness</span><i style="width:${ex.u * 10}%"></i><b>${ex.u.toFixed(1)}</b><span>understanding</span><i style="width:${ex.h * 10}%;background:var(--teal)"></i><b>${ex.h.toFixed(1)}</b><span>preference</span><i class="p" style="width:${ex.p * 10}%"></i><b>${ex.p.toFixed(1)}</b></div>`;
+    };
+    EX.forEach((ex) => {
+      const c = el("circle", { class: "pt hl", cx: sx(ex.u), cy: sy(ex.p), r: 6, tabindex: 0, role: "button", "aria-label": `${ex.name}: uniqueness ${ex.u}, preference ${ex.p}` }, hl);
+      c.dataset.k = ex.k;
+      c.style.cursor = "pointer";
+      c.addEventListener("click", () => show(ex));
+      c.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); show(ex); } });
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "choice"; b.dataset.k = ex.k; b.textContent = ex.name; b.setAttribute("aria-pressed", "false");
+      b.style.cssText = "padding:.3rem .65rem;font-size:.76rem";
+      b.addEventListener("click", () => show(ex));
+      chips.appendChild(b);
+    });
+    $$("#ps-guess .choice").forEach((b) => b.addEventListener("click", () => {
+      press(b.parentElement, b);
+      const r = $("#ps-reveal");
+      r.innerHTML = (b.dataset.ps === "crow" ? "Right." : "Most people guess the moon too.") +
+        " One thirsty-crow story scored <b>9.97 out of 10</b> on preference, near the very top of the class; the moon-landing phone call scored <b>1.6</b>, though it was among the most unique. Both were well understood (9 and 10 out of 10). Across all 329 stories the trend runs downhill (dashed line, r ≈ −0.37).";
+      r.hidden = false;
+      show(EX[b.dataset.ps === "crow" ? 0 : 2]);
+    }));
+  }
+
+  // ---------- dollars vs cents ----------
+  const cb = $("#cents-btn");
+  if (cb) cb.addEventListener("click", () => {
+    const on = cb.getAttribute("aria-expanded") !== "true";
+    cb.setAttribute("aria-expanded", String(on));
+    cb.innerHTML = on ? '<i class="bi bi-eye-slash" aria-hidden="true"></i> Hide the mistake' : '<i class="bi bi-search" aria-hidden="true"></i> Show the mistake';
+    $("#cents-sel").classList.toggle("bad", on);
+    $("#cents-ok").classList.toggle("good", on);
+    $("#cents-why").classList.toggle("mark-bad", on);
+    $("#cents-reveal").hidden = !on;
+  });
+
+  // ---------- proposed ROE ----------
+  const ROE = {
+    a: "<b>Persist.</b> Sunk cost or near-finish? Six minutes of being stuck is evidence too. An agent can keep grinding while you watch, but it can’t tell you whether this is the best use of your one body in this world.",
+    b: "<b>Run.</b> Six marks and a rumoured solver. But is the solver right? Who built it? Remember Anand squinting at the decoded E. Finding the tool is a skill; judging it is another.",
+    c: "<b>Trade.</b> You give up a certain mark for an option. Whether that’s wise depends on how well you can estimate your own odds, which is exactly what the forecasting question tried, and partly failed, to measure.",
+  };
+  $$("#w-roe .opt").forEach((b) => b.addEventListener("click", () => {
+    press(b.parentElement, b);
+    $("#roe-out").innerHTML = ROE[b.dataset.roe] + " <span style='color:var(--muted)'>There’s no right answer here; in the proposed exam, this choice is the thing being tested.</span>";
+  }));
+})();
+</script>
+<script>
+(() => {
+  const $ = (q) => document.querySelector(q);
+  // comic red-pen toggle
+  const comicStage = $("#comic-stage"), comicView = $("#comic-view");
+  comicView?.addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-v]"); if (!b) return;
+    comicStage.classList.remove("plain", "marks", "notes"); comicStage.classList.add(b.dataset.v);
+    comicView.querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+  });
+  // on phones the notes live in the list below the comic: tapping a mark jumps there
+  document.querySelectorAll(".mk").forEach((m) => m.addEventListener("click", () => {
+    if (!matchMedia("(max-width: 760px)").matches) return;
+    const li = document.getElementById(m.getAttribute("aria-describedby"));
+    li?.scrollIntoView({ behavior: "smooth", block: "center" });
+    li?.animate([{ background: "var(--coral-soft)" }, { background: "transparent" }], { duration: 1600 });
+  }));
+})();
+</script>
+</body>
+</html>

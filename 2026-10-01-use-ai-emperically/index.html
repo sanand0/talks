@@ -478,6 +478,97 @@ details.guess .reveal a { color: var(--gold-dk); }
 .photo-inner figcaption { font-family: var(--font-mono); font-size: .72rem; line-height: 1.65; color: #14315b; margin-top: .8rem; }
 .photo-inner figcaption b { display: block; font-size: .66rem; letter-spacing: .13em; text-transform: uppercase; color: var(--teal-dk); margin-bottom: .2rem; }
 .photo-inner figcaption a { color: var(--teal-dk); }
+/* ---------- video: timestamps, how-to band, one persistent dock ---------- */
+:root { --dock-w: 380px; --mast-h: 52px; --on-night: #e9f2ec; --night-muted: #a9c9b9; --night-link: #ffcf9e; --night-line: rgba(255,255,255,.2); }
+body a.ts { display: inline-flex; align-items: center; gap: .3em; font-family: var(--font-mono); font-size: .74em; font-weight: 500; letter-spacing: .02em; text-transform: none; line-height: 1; padding: .24em .55em .24em .45em; border: 1px solid currentColor; border-radius: 99px; color: inherit; text-decoration: none; vertical-align: .08em; white-space: nowrap; cursor: pointer; transition: background .15s; }
+body a.ts::before { content: "\25B6"; font-size: .72em; }
+body a.ts:hover, body a.ts:focus-visible { background: rgba(127,127,127,.2); color: inherit; }
+body a.tc.ts { border-color: #b0cbea; color: var(--teal-dk); font-size: .66rem; }
+body a.tc.ts:hover, body a.tc.ts:focus-visible { background: var(--teal-dk); border-color: var(--teal-dk); color: #fff; }
+body a.ts.flash { animation: tsflash 1s ease; }
+@keyframes tsflash { 0% { box-shadow: 0 0 0 0 rgba(183,121,31,.7); } 100% { box-shadow: 0 0 0 10px rgba(183,121,31,0); } }
+h2.sec.is-now { text-decoration: underline 3px var(--gold); text-underline-offset: .22em; text-decoration-skip-ink: none; }
+.howto-h { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; text-align: center; margin-bottom: .6rem; }
+.media-cap a { color: var(--teal-dk); }
+.media-note { font-family: var(--font-mono); font-size: .72rem; line-height: 1.65; color: var(--muted); text-align: center; margin-top: .8rem; }
+.quick-links a.watch-link { background: var(--night); color: #fff; border-color: var(--night); font-weight: 600; }
+.quick-links a.watch-link:hover { background: var(--rust-dk); border-color: var(--rust-dk); color: #fff; }
+
+.room { display: flex; align-items: flex-start; }
+.room > .article { flex: 1 1 auto; min-width: 0; }
+.room .band { width: auto; margin-left: 0; margin-right: 0; }
+.dock {
+  flex: 0 0 var(--dock-w); position: sticky; top: calc(var(--mast-h) + .8rem); margin: .8rem 1rem 0 0; z-index: 150;
+  max-height: calc(100vh - var(--mast-h) - 1.6rem); display: flex; flex-direction: column; gap: .55rem;
+  background: var(--night); color: var(--on-night); border-radius: 14px; padding: .7rem; box-shadow: 0 10px 34px rgba(15,26,22,.35);
+  transition: flex-basis .45s ease; color-scheme: dark; font-family: var(--font-mono);
+}
+body.watch .dock { flex-basis: 56%; }
+.dock a { color: var(--night-link); }
+.dock-head { display: flex; justify-content: space-between; gap: .5rem; font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; color: var(--night-muted); }
+.dock-head b { color: var(--on-night); font-weight: 600; }
+.dock-head, .now, .dock-ctrls, .fallback-note { flex: none; }
+.vwrap { position: relative; background: #000; border-radius: 8px; overflow: hidden; aspect-ratio: 16 / 9; flex: none; }
+.vwrap video { width: 100%; height: 100%; display: block; }
+.resume { position: absolute; inset: auto 0 3.2rem 0; display: none; justify-content: center; }
+.resume.show { display: flex; }
+.resume button { background: var(--night-link); color: #1b1408; border: 0; border-radius: 99px; padding: .5rem 1rem; font: 700 .8rem var(--font-mono); cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.4); }
+.fallback-note { display: none; font-size: .7rem; line-height: 1.5; color: var(--night-muted); }
+.dock.audio-mode .fallback-note { display: block; }
+.dock audio { width: 100%; display: none; }
+.dock.audio-mode audio { display: block; }
+.dock.audio-mode .vwrap { display: none; }
+.now { font-size: .76rem; line-height: 1.45; min-height: 2.3rem; }
+.now .t { font-weight: 600; color: var(--night-link); margin-right: .45rem; }
+.now .in-story, .now .clock { display: block; font-size: .68rem; color: var(--night-muted); }
+.now .hint { display: block; font-size: .7rem; color: var(--night-link); margin-top: .15rem; }
+.now .hint button { font: inherit; color: var(--night); background: var(--night-link); border: 0; border-radius: 4px; padding: .1rem .4rem; margin-left: .3rem; cursor: pointer; }
+.dock-ctrls { display: flex; flex-wrap: wrap; gap: .4rem; }
+.dbtn { display: inline-flex; align-items: center; gap: .35rem; background: var(--night2); color: var(--on-night); border: 1px solid var(--night-line); border-radius: 6px; padding: .4rem .6rem; font: 500 .7rem var(--font-mono); text-decoration: none; cursor: pointer; }
+.dbtn:hover { border-color: var(--night-link); }
+.dock a.dbtn { color: var(--on-night); }
+.dbtn.mode { background: var(--night-link); color: #1b1408; border-color: var(--night-link); font-weight: 600; }
+.chapters { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+.chapters-h { font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; color: var(--night-muted); padding: .2rem 0; flex: none; }
+.chapters ol { list-style: none; overflow-y: auto; flex: 1 1 auto; min-height: 0; padding-right: .2rem; scrollbar-width: thin; scrollbar-color: var(--night-line) transparent; }
+.dock .chapters li a { display: grid; grid-template-columns: 3rem 1fr; gap: .4rem; padding: .28rem .4rem; border-radius: 5px; font: .74rem/1.35 var(--font-body); color: var(--on-night); text-decoration: none; }
+.dock .chapters li a:hover { background: var(--night3); }
+.dock .chapters li a .ct { font: .68rem/1.6 var(--font-mono); color: var(--night-muted); }
+.dock .chapters li a.audio-only .ct::after { content: " \266A"; }
+.dock .chapters li a.is-now { background: var(--on-night); color: var(--night); }
+.dock .chapters li a.is-now .ct { color: var(--night); }
+.dock .chapters li a.in-view { box-shadow: inset 3px 0 0 var(--night-link); }
+.dock .chapters li a.is-target { outline: 1px solid var(--night-link); }
+.dock .chapters li a.is-target:not(.is-now) { background: var(--night3); }
+.chapters li.sep { font-size: .6rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--night-link); padding: .6rem .4rem .2rem; }
+.dock .dock-min { display: none; }
+.dock :focus-visible { outline-color: var(--night-link); }
+.article-tail .band { margin-top: 3.1rem; }
+@media (min-width: 1100px) {
+  .jump, .jump-menu { left: calc((100% - var(--dock-w) - 1rem) / 2); }
+  body.watch .jump, body.watch .jump-menu { left: 22%; }
+  body.watch .jump-menu { width: min(860px, 42vw); }
+}
+
+@media (max-width: 1280px) { :root { --dock-w: 340px; } }
+@media (max-width: 1099px) {
+  .room { display: block; }
+  .room .band { width: 100vw; margin-left: calc(50% - 50vw); }
+  .dock { position: fixed; right: .7rem; bottom: 4.3rem; top: auto; margin: 0; width: min(56vw, 300px); max-height: none; padding: .45rem; gap: .4rem; z-index: 700; transition: width .4s ease; }
+  .dock .dock-head, .dock .now, .dock .chapters, .dock .dock-ctrls .wide-only { display: none; }
+  .dock .dbtn { padding: .38rem .5rem; font-size: .66rem; flex: 1 1 auto; justify-content: center; }
+  .dock .dock-min { display: inline-flex; flex: 0 0 auto; }
+  body.dock-collapsed:not(.watch) .dock .vwrap, body.dock-collapsed:not(.watch) .dock audio, body.dock-collapsed:not(.watch) .dock .fallback-note { display: none; }
+  body.dock-collapsed:not(.watch) .dock { width: auto; }
+  body.dock-collapsed:not(.watch) .dock #share-btn { display: none; }
+  body.watch .dock { left: 0; right: 0; top: 0; bottom: auto; width: auto; border-radius: 0 0 10px 10px; padding: .5rem .6rem .6rem; }
+  body.watch .dock .now { display: block; font-size: .72rem; min-height: 0; }
+  body.watch .dock .now .in-story { display: none; }
+  body.watch .dock .dock-min { display: none; }
+  body.watch { padding-top: var(--dock-h, 0px); }
+  body.watch [id] { scroll-margin-top: calc(var(--dock-h, 0px) + .5rem); }
+}
+@media print { .dock, .jump, .jump-backdrop, #progress { display: none !important; } .room { display: block; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }
 </style>
 </head>
@@ -507,6 +598,7 @@ details.guess .reveal a { color: var(--gold-dk); }
     <span class="tip" data-tip="The organizers circulated this title and a description about how to (and how not to) use agents when writing software. Anand reduced it to one message, at the start of the talk.">Circulated title</span>: &ldquo;Effective use of Gen AI for personal and professional productivity&rdquo;
   </div>
   <div class="quick-links">
+    <a href="?view=video" class="watch-link" id="hero-watch"><span aria-hidden="true">&#9654;</span> Watch alongside</a>
     <a href="#haircut">The haircut</a>
     <a href="#room">Advice as hypothesis</a>
     <a href="#frontier">Choosing models</a>
@@ -521,11 +613,9 @@ details.guess .reveal a { color: var(--gold-dk); }
 <main id="main">
 <div class="band audio-wrap" id="audio">
   <div class="audio-inner">
-    <audio controls preload="metadata">
-      <source src="https://github.com/sanand0/talks/releases/download/talks/2026-10-01-use-ai-emperically.opus" type="audio/ogg; codecs=opus">
-      Your browser does not support audio. <a href="https://github.com/sanand0/talks/releases/download/talks/2026-10-01-use-ai-emperically.opus">Download the audio</a>.
-    </audio>
-    <p class="media-cap"><strong>Listen to the whole session</strong>, or <a href="transcript.md" id="transcript-btn2">read the transcript</a>. There was no deck: every page embedded below is one Anand had open on screen. Prices, rankings and model names are as of 1 October 2026.</p>
+    <h2 class="howto-h">Read it, or watch it alongside</h2>
+    <p class="media-cap">The story stands on its own. Every <a class="ts" href="?t=13:29">13:29</a> plays that moment of the session video in the panel beside the story, which stays put while you read. <strong>Focus video</strong> enlarges it, and the chapter list follows the talk. There was no deck: every page embedded below is one Anand had open on screen, and you can watch him use it. You can also <a href="transcript.md" id="transcript-btn2">read the transcript</a>. Prices, rankings and model names are as of 1 October 2026.</p>
+    <p class="media-note">Times follow the transcript and the audio. The video starts at 03:59, once the Webex room had filled, so its own scrubber runs about four minutes behind. The pre-talk exchange about the haircut is in the audio only, and its timestamps play the audio.</p>
   </div>
 </div>
 
@@ -537,11 +627,12 @@ details.guess .reveal a { color: var(--gold-dk); }
   </div>
 </div>
 
+<div class="room" id="room">
 <article class="article">
 <div class="wrap">
   <p class="lede">A couple of minutes before the planned 2:35 start, with the Webex room still filling up, Venky &mdash; Anand's contact on the DBS side, who was running the session &mdash; had a confession about a photograph.</p>
 
-  <h2 class="sec" id="haircut"><span class="sec-num">Prologue<span class="tc">00:05</span></span>The haircut that kept coming out the same</h2>
+  <h2 class="sec" id="haircut"><span class="sec-num">Prologue<a class="tc ts" href="?t=00:05">00:05</a></span>The haircut that kept coming out the same</h2>
 
   <p>The session needed a high-resolution photo of Anand for the circulation email. He didn't have one, and, as he put it later, <strong>&ldquo;who cares about lack of things these days? Venky, use your agent and make it high-resolution.&rdquo;</strong> That took a few iterations. Somewhere in the iterations, Venky had tried something more adventurous.</p>
 
@@ -576,23 +667,23 @@ details.guess .reveal a { color: var(--gold-dk); }
 
   <p>That exchange was the whole talk in miniature. <strong>An observation, a guess about why, a way to test it, and a person who agrees to go and look.</strong> Everything that followed &mdash; ninety minutes of browser tabs, chat messages and a few deliberately outrageous jokes &mdash; was a longer version of the same four moves.</p>
 
-  <p>At 04:04 Venky decided the room was ready. Mayank opened the session and framed the series: <strong>&ldquo;we are upskilling our people towards AI Native.&rdquo;</strong> Sitaram introduced the speaker as someone who <strong>&ldquo;famously calls himself an LLM psychologist&rdquo;</strong> and who studies &ldquo;how AI systems behave and fail and can be verified.&rdquo; Then Anand, at 06:23, said what he'd come to say &mdash; the talk's entire abstract.</p>
+  <p>At <a class="ts" href="?t=04:04">04:04</a> Venky decided the room was ready. Mayank opened the session and framed the series: <strong>&ldquo;we are upskilling our people towards AI Native.&rdquo;</strong> Sitaram introduced the speaker as someone who <strong>&ldquo;famously calls himself an LLM psychologist&rdquo;</strong> and who studies &ldquo;how AI systems behave and fail and can be verified.&rdquo; Then Anand, at <a class="ts" href="?t=06:23">06:23</a>, said what he'd come to say &mdash; the talk's entire abstract.</p>
 
   <blockquote class="pull big">
     <p>&ldquo;I have just one message to communicate frankly, which is: use AI in an empirical way.&rdquo;</p>
-    <cite>Anand, 06:23</cite>
+    <cite>Anand, <a class="ts" href="?t=06:23">06:23</a></cite>
   </blockquote>
 
   <p>What did that mean? <strong>&ldquo;People will say lots of things&mdash;you try it. If it works for you, good. If it doesn't work for you, good, you learned.&rdquo;</strong> He then did something that made the rest of the session an experiment too: he asked the audience for their rules.</p>
 
-  <h2 class="sec" id="room"><span class="sec-num">Act I &middot; Advice is a hypothesis<span class="tc">06:23</span></span>The room writes the hypotheses</h2>
+  <h2 class="sec" id="room"><span class="sec-num">Act I &middot; Advice is a hypothesis<a class="tc ts" href="?t=06:23">06:23</a></span>The room writes the hypotheses</h2>
 
   <p>&ldquo;What are your top prompting tips?&rdquo; he asked. &ldquo;If somebody asked you, &lsquo;How can I improve my prompts?&rsquo;, what advice would you give them?&rdquo; His own offering, dropped into the chat first, was the old standard: <strong>add &ldquo;think step-by-step.&rdquo;</strong> Then the chat window filled up.</p>
 </div>
 
 <div class="band chat-band">
   <div class="chat-inner">
-    <div class="chat-label">The Webex chat, 07:23 &ndash; 10:00 &middot; the hypotheses the rest of the session would test</div>
+    <div class="chat-label">The Webex chat, <a class="ts" href="?t=07:23">07:23</a> &ndash; 10:00 &middot; the hypotheses the rest of the session would test</div>
     <div class="chat-grid">
       <div class="msg"><b>Anand</b>Add &ldquo;think step-by-step&rdquo; to the prompt.</div>
       <div class="msg"><b>Uttam</b>Add constraints &mdash; and say what <em>not</em> to do. &ldquo;I get better output when you say, &lsquo;Don't do this.&rsquo;&rdquo;</div>
@@ -609,7 +700,7 @@ details.guess .reveal a { color: var(--gold-dk); }
 <div class="wrap">
   <p>Notice what Anand did <em>not</em> do. He didn't rank the suggestions, and he said several of them probably made sense. What he did was treat each as <strong>a claim waiting for a test</strong>. And he had a piece of fresh advice of his own to put on the bench.</p>
 
-  <h2 class="sec" id="writing"><span class="sec-num">Experiment 1<span class="tc">10:14</span></span>If you write simply, does the model think simply?</h2>
+  <h2 class="sec" id="writing"><span class="sec-num">Experiment 1<a class="tc ts" href="?t=10:14">10:14</a></span>If you write simply, does the model think simply?</h2>
 
   <p>Anand had come across a popular tip on X. Someone had complained that they couldn't follow what the latest models were saying, and Andrew Carr <a href="https://x.com/andrew_n_carr/status/2081534245370314816" target="_blank" rel="noopener">had replied</a> that his own fix was to <strong>&ldquo;only report to me in <span class="tip" data-tip="ASD-STE100 is a controlled-language standard from the European aerospace industry: a small approved vocabulary and strict grammar rules, designed so that maintenance manuals can be understood by non-native English readers.">ASD-STE100</span> Simplified Technical English.&rdquo;</strong> Another poster suggested making it a permanent instruction. It's sensible. Anand himself, he confessed, had been struggling to understand the models.</p>
 
@@ -633,7 +724,7 @@ details.guess .reveal a { color: var(--gold-dk); }
   </div>
 </div>
 <div class="wrap">
-  <h2 class="sec" id="emotion"><span class="sec-num">Experiment 2<span class="tc">13:29</span></span>Does it help to praise, shame or bribe the model?</h2>
+  <h2 class="sec" id="emotion"><span class="sec-num">Experiment 2<a class="tc ts" href="?t=13:29">13:29</a></span>Does it help to praise, shame or bribe the model?</h2>
 
   <p>The second family of folklore is more theatrical. Tell the model it's <strong>the world's best expert at mental multiplication</strong>. Tell it that even your five-year-old could solve this, so stop being lazy. Praise it. Promise it $500. &ldquo;Do they work? Do they not work? Where do they work? Where do they not work?&rdquo; Anand's response, again, was that this is &ldquo;not very hard to benchmark.&rdquo;</p>
 
@@ -650,7 +741,7 @@ details.guess .reveal a { color: var(--gold-dk); }
 </div>
 
 <div class="wrap">
-  <h2 class="sec" id="polya"><span class="sec-num">Experiment 3<span class="tc">15:36</span></span>Eighty years of mathematicians' advice, audited</h2>
+  <h2 class="sec" id="polya"><span class="sec-num">Experiment 3<a class="tc ts" href="?t=15:36">15:36</a></span>Eighty years of mathematicians' advice, audited</h2>
 
   <p>Then Anand turned the same instinct on humans. George Pólya had given mathematicians a list of 15 problem-solving heuristics in <a href="https://en.wikipedia.org/wiki/How_to_Solve_It" target="_blank" rel="noopener"><em>How to Solve It</em></a>. &ldquo;Good advice for mathematicians, and people have been using it for a long time.&rdquo; Work backwards from the desired conclusion. Enumerate all the cases. Look at the extremes. Had anyone ever measured whether the rules work? The <a href="https://sanand0.github.io/datastories/polya-for-ai/" target="_blank" rel="noopener">&ldquo;Pólya Audit&rdquo;</a> did &mdash; 6,747 runs, three models, fifteen heuristics, seven areas of mathematics.</p>
 
@@ -658,7 +749,7 @@ details.guess .reveal a { color: var(--gold-dk); }
 
   <blockquote class="pull big indigo">
     <p>&ldquo;The whole notion of general advice is something that we can start putting to rest.&rdquo;</p>
-    <cite>Anand, 17:05</cite>
+    <cite>Anand, <a class="ts" href="?t=17:05">17:05</a></cite>
   </blockquote>
 
   <p>Read that sentence carefully; he did not say advice is worthless. &ldquo;Things may work in specific situations.&rdquo; The target is <em>universal</em> advice. The good news is that <strong>AI-related advice is unusually testable</strong> &mdash; &ldquo;you try it out on a bunch of situations, see if it works, and if it doesn't work, drop the advice.&rdquo; And agents can generate the candidates too: ask a model for ten ideas, in the direction Vishnu Kiran had suggested in the chat, then <strong>do what Venkateswarlu said and test them on a golden dataset</strong>. &ldquo;Benchmark empirically.&rdquo;</p>
@@ -692,7 +783,7 @@ details.guess .reveal a { color: var(--gold-dk); }
   </div>
 </div>
 <div class="wrap">
-  <h2 class="sec" id="frontier"><span class="sec-num">Act II &middot; Models<span class="tc">19:22</span></span>The wrong question is &ldquo;which model?&rdquo;</h2>
+  <h2 class="sec" id="frontier"><span class="sec-num">Act II &middot; Models<a class="tc ts" href="?t=19:22">19:22</a></span>The wrong question is &ldquo;which model?&rdquo;</h2>
 
   <p>&ldquo;How do you select models?&rdquo; Anand asked, and the chat answered quickly. <strong>Vishnu Kiran</strong>: model intelligence &mdash; and, later, context window. <strong>Sree</strong>: complexity, or cost versus time. <strong>Jagannath Prasad</strong>: domain-specific models. <strong>Uttam</strong>: compare the output of different models on a common task and choose. Another participant wrote simply, &ldquo;benchmark and select&rdquo;. And <strong>Siddhartha</strong> asked whether the chart Anand was about to show was a &ldquo;model council&rdquo; &mdash; a discussion among LLMs. (&ldquo;Not in this case, Siddhartha.&rdquo;)</p>
 
@@ -718,12 +809,12 @@ details.guess .reveal a { color: var(--gold-dk); }
 
   <blockquote class="pull big">
     <p>&ldquo;Maybe the bigger lesson is not how do you choose a model, but rather how do you change when the new model comes?&rdquo;</p>
-    <cite>Anand, 27:01</cite>
+    <cite>Anand, <a class="ts" href="?t=27:01">27:01</a></cite>
   </blockquote>
 
   <p>The question that replaces it: <strong>&ldquo;how do we keep updating our system with newer models with least effort?&rdquo;</strong> Is your system built so that a better model costs you an afternoon, not a quarter? That's a benchmark too &mdash; of your architecture. Which brings us to the model everyone was excited about that week.</p>
 
-  <h2 class="sec" id="jev"><span class="sec-num">Case study<span class="tc">28:29</span></span>Hype, converted into a two-dollar question</h2>
+  <h2 class="sec" id="jev"><span class="sec-num">Case study<a class="tc ts" href="?t=28:29">28:29</a></span>Hype, converted into a two-dollar question</h2>
 
   <p><a href="https://typesafe.ai/blog/introducing-system-one-models-and-jev" target="_blank" rel="noopener">Jev</a> had just launched, and, in Anand's words, &ldquo;everybody's going gaga over it.&rdquo; It's an unusual kind of model: <strong>it doesn't generate text; it classifies.</strong> You give it an input and a set of allowed answers &mdash; high, medium, low; or good, bad, ugly &mdash; and it returns a choice with a confidence, in a few hundred milliseconds, for a fraction of a cent. Anand's question was whether to tell his team to switch to it for classification tasks.</p>
 
@@ -731,7 +822,7 @@ details.guess .reveal a { color: var(--gold-dk); }
 
   <blockquote class="pull teal">
     <p>&ldquo;Here I am happily saying benchmark, benchmark, benchmark. But the other question that you would have is, &lsquo;Look, Anand, somebody else is doing this for me. I get the result for free. For my task, I have to sit and spend time and effort. I have 250 other things to do. What do you think, I'm jobless?&rsquo;&rdquo;</p>
-    <cite>Anand, 31:41 &mdash; arguing with the audience's objection before they could make it</cite>
+    <cite>Anand, <a class="ts" href="?t=31:41">31:41</a> &mdash; arguing with the audience's objection before they could make it</cite>
   </blockquote>
 
   <p>His answer: <strong>&ldquo;this entire benchmark, for instance, was created with me spending five minutes.&rdquo;</strong> He'd opened ChatGPT, given it access to his machine through a local MCP connection, and had a short conversation. Here is what he typed &mdash; the five steps, verbatim from the <a href="https://chatgpt.com/share/6abe643c-b1c4-83ec-a543-f9d7be5589d4" target="_blank" rel="noopener">shared chat</a>:</p>
@@ -765,13 +856,13 @@ details.guess .reveal a { color: var(--gold-dk); }
 
   <blockquote class="pull big teal">
     <p>&ldquo;The task of benchmarking is very delegatable to agents. We are using agents to figure out how good agents are.&rdquo;</p>
-    <cite>Anand, 34:53</cite>
+    <cite>Anand, <a class="ts" href="?t=34:53">34:53</a></cite>
   </blockquote>
 
   <p>If the cost of a benchmark falls to five minutes and a couple of dollars, the economics of belief change. <strong>&ldquo;When somebody says, &lsquo;Here is universally good advice,&rsquo; you create a small little benchmark to tell yourself whether for your task, this is a good idea or not.&rdquo;</strong> That's a benchmark used adversarially &mdash; not as a leaderboard to publish, but as a way to say <em>show me</em>.</p>
 </div>
 <div class="wrap">
-  <h2 class="sec" id="image"><span class="sec-num">Callback<span class="tc">35:39</span></span>Back to the hair</h2>
+  <h2 class="sec" id="image"><span class="sec-num">Callback<a class="tc ts" href="?t=35:39">35:39</a></span>Back to the hair</h2>
 
   <p>Having shown how cheap a benchmark is, Anand circled back to Venky and the photograph &mdash; and to a benchmark with no leaderboard at all. <strong>He had wondered what the quality setting on the new image model (GPT Image 2.5, with five levels from low to max) really buys.</strong> So he asked ChatGPT to generate the same scenes at every level, look at them, and report whether it could tell the difference. &ldquo;If so, then I will take a look at it.&rdquo;</p>
 
@@ -779,7 +870,7 @@ details.guess .reveal a { color: var(--gold-dk); }
 
   <blockquote class="pull gold">
     <p>&ldquo;I will default to medium when I need any kind of decent quality, and if it involves hair, fiber, cloth, that kind of a thing, I will go to high; otherwise, stick to low.&rdquo;</p>
-    <cite>Anand, 38:45 &mdash; the rule the benchmark bought him. &ldquo;So in short, again, empiricism.&rdquo;</cite>
+    <cite>Anand, <a class="ts" href="?t=38:45">38:45</a> &mdash; the rule the benchmark bought him. &ldquo;So in short, again, empiricism.&rdquo;</cite>
   </blockquote>
 
   <p>Notice where that landed: on <strong>hair</strong>. It is the same texture Venky's bald-head edits were failing to vary. Whether raising the quality level makes the hairstyle change from person to person is still an open question &mdash; Venky had promised to send his photographs, and nothing in the session settled it. The <a href="https://sanand0.github.io/llmevals/gpt-image-flare-quality/#where-it-shows?quality=max" target="_blank" rel="noopener">published page</a> is careful in the same way: the generations are stochastic, so this is a practical visual probe, not a proof that the top tiers can never be better. It does say where the benefit shows up &mdash; <strong>make the subject large, then zoom in on skin, hairs and fabric</strong>.</p>
@@ -795,11 +886,11 @@ details.guess .reveal a { color: var(--gold-dk); }
 <div class="wrap">
   <h3 class="sub" id="leak">&ldquo;But won't public benchmarks leak into training?&rdquo;</h3>
 
-  <p>At 39:39, <strong>Sree</strong> raised the obvious worry in the chat: public benchmarks may not be reliable because of leakage during training. Anand offered three defences, each with a catch. <strong>Niche and public</strong>: Simon Willison's famous <a href="https://simonwillison.net/tags/pelican-riding-a-bicycle/" target="_blank" rel="noopener">pelican-on-a-bicycle</a> test seems not to have been trained on, with one possible DeepSeek exception, because providers have little reason to care about so specific a drawing. <strong>Human preferences</strong>, like Arena: hard to game, though Gemini somehow stayed on top for quite some time &mdash; perhaps by gaming for what the lay public likes &mdash; &ldquo;but you could say that, look, that is a relevant benchmark in the first place.&rdquo; <strong>Private held-out sets</strong>, like Artificial Analysis: hard to game &ldquo;unless somebody from that company steals the data and joins another company.&rdquo;</p>
+  <p>At <a class="ts" href="?t=39:39">39:39</a>, <strong>Sree</strong> raised the obvious worry in the chat: public benchmarks may not be reliable because of leakage during training. Anand offered three defences, each with a catch. <strong>Niche and public</strong>: Simon Willison's famous <a href="https://simonwillison.net/tags/pelican-riding-a-bicycle/" target="_blank" rel="noopener">pelican-on-a-bicycle</a> test seems not to have been trained on, with one possible DeepSeek exception, because providers have little reason to care about so specific a drawing. <strong>Human preferences</strong>, like Arena: hard to game, though Gemini somehow stayed on top for quite some time &mdash; perhaps by gaming for what the lay public likes &mdash; &ldquo;but you could say that, look, that is a relevant benchmark in the first place.&rdquo; <strong>Private held-out sets</strong>, like Artificial Analysis: hard to game &ldquo;unless somebody from that company steals the data and joins another company.&rdquo;</p>
 
   <p>The real problem, he said, is the opposite one: <strong>&ldquo;the benchmarks are getting outdated because of saturation.&rdquo;</strong> When models score 99.5% and 99.9%, you can't tell them apart. &ldquo;So the leakage seems to be less of a problem than saturation. At least so far, that's what we have seen.&rdquo; Another quiet argument for building your own: yours won't saturate, if you keep it hard.</p>
 
-  <h2 class="sec" id="agents"><span class="sec-num">Act III &middot; Agents<span class="tc">41:59</span></span>&ldquo;Please don't say benchmarking generically&rdquo;</h2>
+  <h2 class="sec" id="agents"><span class="sec-num">Act III &middot; Agents<a class="tc ts" href="?t=41:59">41:59</a></span>&ldquo;Please don't say benchmarking generically&rdquo;</h2>
 
   <p>Next question for the room: <strong>how do you choose agents?</strong> Not models &mdash; agents: ChatGPT versus Claude, Codex versus Claude Code. &ldquo;Please don't say benchmarking generically. If you are benchmarking, I would love to hear what benchmark you're using.&rdquo; Sree: &ldquo;based on level of autonomy and control.&rdquo; Vishnu Kiran: intelligence, context window, and score at low cost. And Venkateswarlu gave the answer most developers inside a large company will recognise: <strong>&ldquo;We don't have access to multiple agents at work.&rdquo;</strong> Anand's reply: &ldquo;Which is, yeah, probably the easiest way to choose! You've been given something, and that's all you can use.&rdquo;</p>
 
@@ -856,13 +947,13 @@ details.guess .reveal a { color: var(--gold-dk); }
   <p class="iframe-cap">The same prompt, three results, each shown zoomed out to fit. Scores are Anand's manual 0&ndash;10 ratings from the 2025 benchmark.</p>
 </div>
 <div class="wrap">
-  <h2 class="sec" id="own"><span class="sec-num">Your own work<span class="tc">50:01</span></span>Why invent a benchmark when you already have a history?</h2>
+  <h2 class="sec" id="own"><span class="sec-num">Your own work<a class="tc ts" href="?t=50:01">50:01</a></span>Why invent a benchmark when you already have a history?</h2>
 
   <p>That early GitHub-profile test had two properties Anand singled out. The prompt was tiny. And <strong>he could judge the output at a glance</strong>: &ldquo;If you show me these three pages and ask me to score, I can immediately say, &lsquo;Aha, this is better, this is worse.&rsquo;&rdquo;</p>
 
   <blockquote class="pull big">
     <p>&ldquo;When you are benchmarking, if you can have the agent generate something which you can assess the quality of at a glance&hellip; that is probably one of the most powerful and important things that you should be thinking about.&rdquo;</p>
-    <cite>Anand, 48:40 &mdash; even for a back-end task, convert the result into something you can see</cite>
+    <cite>Anand, <a class="ts" href="?t=48:40">48:40</a> &mdash; even for a back-end task, convert the result into something you can see</cite>
   </blockquote>
 
   <p>Then, with the clock past midway and a promise to leave half an hour for discussion, he skipped ahead to the idea he cared about more. <strong>&ldquo;When creating a benchmark, why should I have to sit and think about a new benchmark?&rdquo;</strong> So he went back to ChatGPT and said, in effect: look at the tasks I've recently been working on. One of them was the very image-quality page he had just shown &mdash; it was loading too slowly, and he'd asked a coding agent to fix it. Another was scraping WhatsApp. A third was making an MCP server's console logs readable. The agent read his logs, picked those three as good benchmarks, and proposed a comparison.</p>
@@ -882,23 +973,23 @@ details.guess .reveal a { color: var(--gold-dk); }
 
   <blockquote class="pull teal">
     <p>&ldquo;You don't necessarily need to hunt for a benchmark that suits your work. You can take your own logs and convert that to benchmarks.&rdquo;</p>
-    <cite>Anand, 52:28</cite>
+    <cite>Anand, <a class="ts" href="?t=52:28">52:28</a></cite>
   </blockquote>
 
-  <h2 class="sec" id="spec"><span class="sec-num">Venky pushes back<span class="tc">53:19</span></span>How do you compare things you can't control?</h2>
+  <h2 class="sec" id="spec"><span class="sec-num">Venky pushes back<a class="tc ts" href="?t=53:19">53:19</a></span>How do you compare things you can't control?</h2>
 
   <p>Anand then invited the room to talk, and Venky took the floor with a challenge that was really two arguments. First: an <strong>agent</strong> is a model plus a harness, and you can't open up Claude Code and change what's inside it, whereas with open-source frameworks such as <a href="https://github.com/langchain-ai/deepagents" target="_blank" rel="noopener">DeepAgents</a> you write everything yourself. How do you compare things with such different control surfaces? Second, and more provocatively:</p>
 
   <blockquote class="pull indigo">
     <p>&ldquo;So selecting models is becoming kind of obsolete. I mean, it's not a difficult decision to make: pick whatever is the cheapest and least complex, and then if you can write your own harness, put your efforts there.&rdquo;</p>
-    <cite>Venky, 53:19</cite>
+    <cite>Venky, <a class="ts" href="?t=53:19">53:19</a></cite>
   </blockquote>
 
   <p>Anand didn't defend the benchmark. He first checked he'd understood the challenge, then granted it: if model selection isn't a problem worth solving for you, <strong>&ldquo;that's a perfectly reasonable decision.&rdquo;</strong> And then he turned the question on himself, in a way that explained a lot about the ninety minutes.</p>
 
   <blockquote class="pull big">
     <p>&ldquo;Anand, if you're happy with any of these models, then that means you don't have tough enough a problem that will be able to differentiate between models.&rdquo;</p>
-    <cite>Anand, quoting what he tells himself, 56:36 &mdash; his personal learning strategy, not advice for everyone</cite>
+    <cite>Anand, quoting what he tells himself, <a class="ts" href="?t=56:36">56:36</a> &mdash; his personal learning strategy, not advice for everyone</cite>
   </blockquote>
 
   <p>&ldquo;I am trying to develop a sense of discomfort with that state wherever I can,&rdquo; he said. &ldquo;If agents are going to be doing all the work, what job will I have? I'm trying to discover that.&rdquo; The discomfort is the <em>method</em>: look for tasks where one model succeeds and another fails, because the person who can write such a task is the person who can specify hard work for agents.</p>
@@ -908,7 +999,7 @@ details.guess .reveal a { color: var(--gold-dk); }
 
 <div class="band chain-band" id="chain">
   <div class="chain-inner">
-    <div class="chain-label">What Anand told Venky he was trying to convert &ldquo;almost any product&rdquo; into &middot; 60:27</div>
+    <div class="chain-label">What Anand told Venky he was trying to convert &ldquo;almost any product&rdquo; into &middot; <a class="ts" href="?t=60:27">60:27</a></div>
     <div class="chain">
       <div class="chain-step"><div class="n">1 &middot; Specification</div><h3>Find a problem that differentiates</h3><p>One that fails under one configuration and passes under another. &ldquo;The skill to do that, I think, will be relevant for at least a few more years.&rdquo;</p></div>
       <div class="chain-step"><div class="n">2 &middot; Verification</div><h3>Write the verification criteria</h3><p>The rubric &mdash; &ldquo;even if it is a messy surface like an agent.&rdquo; Long versus short system instructions; a fixed tool list versus auto-discovery. Take a guess, test the hypothesis, iterate.</p></div>
@@ -918,7 +1009,7 @@ details.guess .reveal a { color: var(--gold-dk); }
   </div>
 </div>
 <div class="wrap">
-  <h2 class="sec" id="cynic"><span class="sec-num">Act IV &middot; The turn<span class="tc">61:34</span></span>Venky asks the question the room was thinking</h2>
+  <h2 class="sec" id="cynic"><span class="sec-num">Act IV &middot; The turn<a class="tc ts" href="?t=61:34">61:34</a></span>Venky asks the question the room was thinking</h2>
 
   <p>Venky had one more request, and it was the one most of the developers were probably waiting for. <strong>&ldquo;As agents become better and better at coding, what is the expectation from a software developer?&rdquo;</strong> He'd like Anand to share what he'd found about coding in particular.</p>
 
@@ -927,11 +1018,11 @@ details.guess .reveal a { color: var(--gold-dk); }
 
 <div class="band cynic-band">
   <div class="cynic-inner">
-    <div class="cynic-label">Anti-patterns &middot; 62:10 &ndash; 65:04 &middot; not recommendations</div>
+    <div class="cynic-label">Anti-patterns &middot; <a class="ts" href="?t=62:10">62:10</a> &ndash; 65:04 &middot; not recommendations</div>
     <h3>How to keep your job while the agents do it: three very real, very practical, very cynical suggestions</h3>
     <blockquote>
       <p>&ldquo;Try and keep your manager in the dark as much as possible once they figure out that agents can do everything that you're doing and they're getting smarter.&rdquo;</p>
-      <cite>Anand, 62:10</cite>
+      <cite>Anand, <a class="ts" href="?t=62:10">62:10</a></cite>
     </blockquote>
     <ol class="cynic-list">
       <li><strong>Security is your biggest strength.</strong> Whenever an agent might take over your job, ask: is it safe? Has compliance approved it? &ldquo;What if it hallucinates? What risk percentage are you able to tolerate?&rdquo; &ldquo;Once you bring in the language of uncertainty, you will be able to kill many agentic initiatives. It is a very potent, very powerful weapon. Wield it well.&rdquo;</li>
@@ -947,12 +1038,12 @@ details.guess .reveal a { color: var(--gold-dk); }
   <div class="pivot-inner">
     <div class="pl">Why the joke works</div>
     <p class="big">&ldquo;It is very, very hard to verify output, and with agents, you can create a lot of output.&rdquo;</p>
-    <p class="small">Anand, 63:26. The cynical playbook only functions because generation has become cheap and fast while checking and owning the result has not. The rest of the session is about closing that gap &mdash; first by looking at what people actually do, then by building verification into the workflow.</p>
+    <p class="small">Anand, <a class="ts" href="?t=63:26">63:26</a>. The cynical playbook only functions because generation has become cheap and fast while checking and owning the result has not. The rest of the session is about closing that gap &mdash; first by looking at what people actually do, then by building verification into the workflow.</p>
   </div>
 </div>
 
 <div class="wrap">
-  <h2 class="sec" id="mylogs"><span class="sec-num">Positive approach 1<span class="tc">66:00</span></span>Your agent logs are a lab notebook</h2>
+  <h2 class="sec" id="mylogs"><span class="sec-num">Positive approach 1<a class="tc ts" href="?t=66:00">66:00</a></span>Your agent logs are a lab notebook</h2>
 
   <p>&ldquo;Firstly, <strong>sharpening your tools</strong>.&rdquo; If you use agents every day, you are generating a record of exactly what you do. Anand shared his screen and showed what he'd done with his own: he'd asked Codex to read through how he uses Codex. <em>OpenAI keeps shipping features; which ones is he using, which is he ignoring, and what would it be worth?</em></p>
 
@@ -960,7 +1051,7 @@ details.guess .reveal a { color: var(--gold-dk); }
 
   <blockquote class="pull big">
     <p>&ldquo;Look Anand, when a new model comes, you have about 75 or 76% adoption. When there's a new workflow, your adoption is zero.&rdquo;</p>
-    <cite>Codex, reading Anand's own logs back to him &mdash; 66:30</cite>
+    <cite>Codex, reading Anand's own logs back to him &mdash; <a class="ts" href="?t=66:30">66:30</a></cite>
   </blockquote>
 </div>
 
@@ -990,20 +1081,20 @@ details.guess .reveal a { color: var(--gold-dk); }
 
   <blockquote class="pull teal">
     <p>&ldquo;Your agent logs are one of the most powerful diagnostic devices. Use agents on agent logs, and you will find a lot of stuff about your usage.&rdquo;</p>
-    <cite>Anand, 69:39 &mdash; the second lesson: you can't keep track of agent capabilities, and you don't need to, because agents can</cite>
+    <cite>Anand, <a class="ts" href="?t=69:39">69:39</a> &mdash; the second lesson: you can't keep track of agent capabilities, and you don't need to, because agents can</cite>
   </blockquote>
 
   <p>The whole exercise compresses to a prompt you can steal for your own tool of choice:</p>
 
   <div class="prompt-box">
-    <div class="plabel">Prompt &middot; 70:13 &middot; swap in your agent</div>
+    <div class="plabel">Prompt &middot; <a class="ts" href="?t=70:13">70:13</a> &middot; swap in your agent</div>
     <p>&ldquo;Find out all the new features of Gemini CLI [or pick your agent] that have been released in the last eight months, and find out which ones of those would have the maximum impact for me based on my logs.&rdquo;</p>
   </div>
 
   <p>(Gemini CLI was no accident: as Venky said in his closing remarks, it was the tool the organizers hoped to have available a month later.) And then the question that took the idea from a single developer to a team: <strong>&ldquo;What if you run this at a team level?&rdquo;</strong></p>
 </div>
 <div class="wrap">
-  <h2 class="sec" id="teamlogs"><span class="sec-num">Positive approach 2<span class="tc">70:36</span></span>What 1,100 sessions say that no demo does</h2>
+  <h2 class="sec" id="teamlogs"><span class="sec-num">Positive approach 2<a class="tc ts" href="?t=70:36">70:36</a></span>What 1,100 sessions say that no demo does</h2>
 
   <p>&ldquo;Which incidentally is exactly what I did a few weeks ago for one of our teams.&rdquo; Dharmendra leads a team of developers at Straive. Anand asked him to have the team put their Codex and Claude Code session logs in a shared Drive folder. <strong>Seven people did, and the folder held about 1,100 sessions</strong> &mdash; 1,112 top-level sessions after cleaning, spanning about a year, from machines on which none of Anand's own tooling was installed.</p>
 
@@ -1050,7 +1141,7 @@ details.guess .reveal a { color: var(--gold-dk); }
 
   <blockquote class="pull big">
     <p>&ldquo;Coding has become very fast, but testing and ownership has not followed.&rdquo;</p>
-    <cite>Anand, 71:26</cite>
+    <cite>Anand, <a class="ts" href="?t=71:26">71:26</a></cite>
   </blockquote>
 
   <p>He put the numbers plainly: <strong>&ldquo;only about 2% of the Codex sessions and 3% of the Claude sessions had programmatic validation,&rdquo;</strong> which in the room he summarised as people &ldquo;giving it to you 97, 98% of the time without even a unit test.&rdquo; (The careful reading is the one in the chart above.) &ldquo;Standard basic practice would be at least test at the end, and even better practice would be write the test cases first and then do it.&rdquo;</p>
@@ -1062,7 +1153,7 @@ details.guess .reveal a { color: var(--gold-dk); }
 
 <div class="band chain-band">
   <div class="chain-inner">
-    <div class="chain-label">The one behaviour change with &ldquo;the highest uplift&rdquo; &middot; 72:49 &ndash; 73:49</div>
+    <div class="chain-label">The one behaviour change with &ldquo;the highest uplift&rdquo; &middot; <a class="ts" href="?t=72:49">72:49</a> &ndash; 73:49</div>
     <div class="chain">
       <div class="chain-step"><div class="n">Minimum</div><h3>Show me the evidence</h3><p>&ldquo;At the very least, have the agent show evidence that the change worked, minimum, allowing you to manually test.&rdquo;</p></div>
       <div class="chain-step"><div class="n">Better</div><h3>Tell it how <em>you</em> would test</h3><p>&ldquo;Here is how I would have tested it; you test it the same way.&rdquo; Backend: type-check. API: call it, then write test cases. UI: &ldquo;open the browser, click, explore, run it.&rdquo;</p></div>
@@ -1078,19 +1169,19 @@ details.guess .reveal a { color: var(--gold-dk); }
   <p>The point, in other words, was never the three rules. It was that <strong>the team had never been told what its own logs said</strong> &mdash; and that reading them took an agent and a handful of prompts, not a research programme.</p>
 </div>
 <div class="wrap">
-  <h2 class="sec" id="qa"><span class="sec-num">The room asks<span class="tc">75:03</span></span>Open weights, regulators and the &ldquo;is Jev GenAI?&rdquo; problem</h2>
+  <h2 class="sec" id="qa"><span class="sec-num">The room asks<a class="tc ts" href="?t=75:03">75:03</a></span>Open weights, regulators and the &ldquo;is Jev GenAI?&rdquo; problem</h2>
 
   <p>With the experiments done, the chat turned into a proper discussion. Two questions, in particular, showed how a room of bankers' engineers actually thinks about all this &mdash; and, once more, how Anand's answers refused to be universal.</p>
 
   <div class="qa-grid">
     <div class="qa-card">
-      <div class="qwho">Ramaswamy, via chat &middot; 75:03</div>
+      <div class="qwho">Ramaswamy, via chat &middot; <a class="ts" href="?t=75:03">75:03</a></div>
       <h3>How do frontier and open-weight models evolve in regulated industries?</h3>
       <p>Open-weight models lag the frontier by &ldquo;maybe six to nine months&rdquo;, as of the day, and Chinese providers have a strong incentive to keep releasing them. In regulated settings there can be &ldquo;little choice&rdquo; &mdash; in a US emergency room, no connected device is allowed at all, so the model must be deployed on site.</p>
       <p>But <strong>&ldquo;the path to production is pretty rare&rdquo;</strong>: the quality gap and the effort are real, and the use cases where it's worth it are a small share. Three things must shrink: deployment friction (he now just tells Codex to install software and write instructions &mdash; &ldquo;those are for a future avatar of you&rdquo;), the quality gap (&ldquo;Six months ago, I would not have coded on a flight. Now I am okay to code on a flight, within reasonable limits&rdquo;), and perception bias, as with open-source software and security.</p>
     </div>
     <div class="qa-card">
-      <div class="qwho">A participant, speaking &middot; 81:19</div>
+      <div class="qwho">A participant, speaking &middot; <a class="ts" href="?t=81:19">81:19</a></div>
       <h3>If Jev handles classification so cheaply, will classical ML in companies be revamped?</h3>
       <p>Anand expects more models in the middle ground between deterministic, structured ML and free-text generation &mdash; but doubts that this makes migration easier. People will ask, &ldquo;Is Jev GenAI? &hellip; Will it make mistakes?&rdquo; The answer &ldquo;Even your ML classifier makes mistakes&rdquo; meets &ldquo;Ah, but no, that will hallucinate.&rdquo; <strong>&ldquo;Variety confuses more rather than less.&rdquo;</strong></p>
       <p>The stronger force is the pitch that moves liability: <strong>&ldquo;I will lower your cost by 80% and your risk by 70%.&rdquo;</strong> The test for Jev, then: is it moving the risk-return frontier? &ldquo;So far, it hasn't, at least on the few benchmarks that I've run.&rdquo;</p>
@@ -1099,7 +1190,7 @@ details.guess .reveal a { color: var(--gold-dk); }
 
   <p>Then Venky asked whether there was more to present, or only questions. &ldquo;Just one point, which won't take long.&rdquo; The session ran past its end time &mdash; &ldquo;I know we have spilled over, I will try and wrap up in just two minutes&rdquo; &mdash; and the point turned out to be the one that completed the argument.</p>
 
-  <h2 class="sec" id="double"><span class="sec-num">Act V &middot; Reliability<span class="tc">85:29</span></span>If errors are independent, disagreement is a signal</h2>
+  <h2 class="sec" id="double"><span class="sec-num">Act V &middot; Reliability<a class="tc ts" href="?t=85:29">85:29</a></span>If errors are independent, disagreement is a signal</h2>
 
   <p>The biggest problem with generative AI, he said, is hallucination: the model can be wrong, whether it is writing your code or producing output inside your code. Anand offered two clean ways to deal with it, and the first starts with an observation about <em>how</em> models fail. In a benchmark of 11 models classifying customer-support messages (<em>when will I receive my order? &mdash; delivery-period queue or track-order?</em>), some questions were easy for everybody, some were hard for everybody, and some tripped only some models. The mistakes <strong>were not strongly correlated</strong> &mdash; one pair he showed correlated at about 70%, another at only 5&ndash;10%. &ldquo;Meaning they are making independent mistakes, which means I can double-check, cross-check.&rdquo;</p>
 
@@ -1122,13 +1213,13 @@ details.guess .reveal a { color: var(--gold-dk); }
 <div class="wrap">
   <p>Then he gave the operations manager's version. <em>&ldquo;Look, I will reduce 72% of your work and give it to you at 99.3% quality.&rdquo;</em> &ldquo;Hey boss, my team only gets to 95% quality. 99.3 is way better than what I can do myself with humans, and at almost one-fourth the cost.&rdquo; The framing matters. <strong>Verification here isn't a gate at the end. It is a design that routes uncertainty to the right place.</strong></p>
 
-  <h2 class="sec" id="calibrate"><span class="sec-num">The second way<span class="tc">88:51</span></span>Ask the model how sure it is &mdash; then don't believe it</h2>
+  <h2 class="sec" id="calibrate"><span class="sec-num">The second way<a class="tc ts" href="?t=88:51">88:51</a></span>Ask the model how sure it is &mdash; then don't believe it</h2>
 
   <p>The other approach: ask models for their confidence. Logprobs are one way; the model's own stated percentage is another. But, he warned, <strong>when a model says it is 90% confident, it is not right 90% of the time.</strong> In the example he showed, GPT-4.1 Nano's &ldquo;80 to 90% confident&rdquo; answers were right only about half the time. &ldquo;Overconfidence is consistent across models.&rdquo;</p>
 
   <blockquote class="pull gold">
     <p>&ldquo;You can calibrate that. And you can say, when something reports 85%, treat that as like 50%.&rdquo;</p>
-    <cite>Anand, 89:30 &mdash; build the calibration curve from known answers, then cross-check only what falls below your cutoff</cite>
+    <cite>Anand, <a class="ts" href="?t=89:30">89:30</a> &mdash; build the calibration curve from known answers, then cross-check only what falls below your cutoff</cite>
   </blockquote>
 
   <p>The linked <a href="https://sanand0.github.io/llmevals/confidence-calibration/" target="_blank" rel="noopener">calibration study</a> carries the same method to a larger set of 770 banking requests and spells out the recipe: <strong>ask for uncertainty in a better way, replay reviewed cases with known answers, compare risk signals (logprobs among them), choose a cutoff from your acceptable error rate, freeze it, and confirm it on untouched cases before auto-passing anything.</strong> That last step matters. According to the project's report, a threshold frozen on the 770 development cases auto-passed 65.2% of 2,310 untouched requests at 4.38% observed error against a 5% target &mdash; but a looser 10% rule frozen the same way <em>missed</em> its target. Pass or fail, it was tested on cases it hadn't seen.</p>
@@ -1145,20 +1236,20 @@ details.guess .reveal a { color: var(--gold-dk); }
   <p>And for code, the same thought, applied to the problem the team logs had exposed: <strong>&ldquo;Have an agent adversarially test it. Find all the mistakes in this.&rdquo;</strong> That is what a code review is, he pointed out, and there is no reason a human should be the only reviewer. &ldquo;Let agents talk to other agents, and find all the mistakes, and then what comes to you should be something easy to review: &lsquo;These are the things I'm not sure about.&rsquo;&rdquo; The person doing that last review &ldquo;needs to be really experienced, but that's what we're working towards.&rdquo;</p>
 </div>
 <div class="wrap">
-  <h2 class="sec" id="test"><span class="sec-num">Epilogue<span class="tc">90:31</span></span>The ending was already written</h2>
+  <h2 class="sec" id="test"><span class="sec-num">Epilogue<a class="tc ts" href="?t=90:31">90:31</a></span>The ending was already written</h2>
 
   <p>The last minute of the recording is unusually tidy. Anand had spent ninety minutes treating other people's advice as hypotheses; now he applied the same treatment to his own. <strong>&ldquo;Look, people will say lots of things, I will happily say all kinds of things. These are things that might have worked for me.&rdquo;</strong> Then he ran through the one test he'd stand behind.</p>
 </div>
 
 <div class="band finale-band">
   <div class="finale-inner">
-    <div class="fl">90:31 &ndash; 91:30 &middot; the last minute, nearly verbatim</div>
+    <div class="fl"><a class="ts" href="?t=90:31">90:31</a> &ndash; 91:30 &middot; the last minute, nearly verbatim</div>
     <p>&ldquo;<strong>You should just test.</strong> Whether it's prompting advice, what model to use, what agents to use: test it.&rdquo;</p>
     <p>&ldquo;Your logs&mdash;session logs, and any logs in general&mdash;are probably the best way to improve any kind of workflow.&rdquo;</p>
     <p>&ldquo;Make sure <strong>verification is part of that workflow.</strong> Use test-driven development, use double-checking or triple-checking as a means for validation, use confidence calibration.&rdquo;</p>
     <p>&ldquo;Benchmarking is not just for your workflow; <strong>benchmarking is a verification mechanism and should be literally part of the delivered workflow as well.</strong>&rdquo;</p>
     <div class="lt">Let's <em>test</em>.</div>
-    <p style="font-size:.95rem;color:#a9c9b9">&mdash; Anand, 91:30</p>
+    <p style="font-size:.95rem;color:#a9c9b9">&mdash; Anand, <a class="ts" href="?t=91:30">91:30</a></p>
   </div>
 </div>
 
@@ -1171,7 +1262,7 @@ details.guess .reveal a { color: var(--gold-dk); }
 <div class="band todo-band">
   <div class="todo-inner">
     <div class="tl">A way to try this &middot; our suggestion, extending Anand's prompt</div>
-    <p>Anand's 70:13 prompt asks which new features of your agent would have helped, based on your logs. The team-log result suggests a second question worth the same treatment. Export a week or a month of your agent logs, give them to an agent, and ask it:</p>
+    <p>Anand's <a class="ts" href="?t=70:13">70:13</a> prompt asks which new features of your agent would have helped, based on your logs. The team-log result suggests a second question worth the same treatment. Export a week or a month of your agent logs, give them to an agent, and ask it:</p>
     <div class="prompt-box" style="margin:1rem 0">
       <div class="plabel">Prompt</div>
       <p>What am I repeatedly doing badly? Which new features of this agent would have helped? What one measurable behavior should I change?</p>
@@ -1180,6 +1271,37 @@ details.guess .reveal a { color: var(--gold-dk); }
   </div>
 </div>
 
+</article>
+
+<aside class="dock" id="dock" aria-label="Video of the session">
+  <div class="dock-head"><span><b>Session video</b> &middot; 88:04</span><span id="dock-mode-label">Story focus</span></div>
+  <div class="vwrap">
+    <video id="vid" controls preload="metadata" playsinline poster="poster.webp">
+      <source src="https://media.s-anand.net/2026-10-01-dbs-tech-use-ai-emperically.webm" type="video/webm">
+      <a href="https://media.s-anand.net/2026-10-01-dbs-tech-use-ai-emperically.webm">Download the video</a>
+    </video>
+    <div class="resume" id="resume"><button type="button" id="resume-btn">&#9654; <span>Play</span></button></div>
+  </div>
+  <audio id="aud" controls preload="none" aria-label="Audio-only recording of the session">
+    <source src="https://github.com/sanand0/talks/releases/download/talks/2026-10-01-use-ai-emperically.opus" type="audio/ogg; codecs=opus">
+  </audio>
+  <p class="fallback-note" id="fallback-note">Audio only. It starts four minutes before the video, so the pre-talk chat is here too. <a href="https://media.s-anand.net/2026-10-01-dbs-tech-use-ai-emperically.webm">Download the video</a>.</p>
+  <div class="now" id="now" aria-live="polite"><span class="t" id="now-t">00:00</span><span id="now-title">Press play, or tap any &#9654; time in the story</span><span class="in-story" id="now-story"></span></div>
+  <div class="dock-ctrls">
+    <button class="dbtn mode" id="mode-btn" type="button" aria-pressed="false">&#10530; <span>Focus video</span></button>
+    <button class="dbtn" id="share-btn" type="button">&#128279; <span>Share moment</span></button>
+    <button class="dbtn wide-only" id="audio-btn" type="button" aria-pressed="false">&#127911; <span>Audio only</span></button>
+    <a class="dbtn wide-only" href="transcript.md" id="transcript-btn4">&#128196; Transcript</a>
+    <button class="dbtn dock-min" id="min-btn" type="button" aria-expanded="true" aria-label="Hide the mini video">&#9662;</button>
+  </div>
+  <nav class="chapters" aria-labelledby="chapters-h">
+    <div class="chapters-h" id="chapters-h">Chapters &middot; transcript time &middot; tap to jump</div>
+    <ol id="chapters"></ol>
+  </nav>
+</aside>
+</div>
+
+<article class="article article-tail">
 <div class="band takeaways-band" id="takeaways">
   <div class="takeaways-inner">
     <h2 class="takeaways-title">Six things to take away</h2>
@@ -1224,7 +1346,7 @@ details.guess .reveal a { color: var(--gold-dk); }
 
 <footer class="footer">
   <p>Recorded live on Webex for <a href="https://www.dbs.com/dbstechindia/" target="_blank" rel="noopener">DBS Technology India</a>'s TechVerse Session 4: Agentic AI, 1 October 2026.</p>
-  <p><a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand S</a>, Head of Innovation at <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a> &middot; <a href="transcript.md" id="transcript-btn3">read the transcript</a> &middot; <a href="https://github.com/sanand0/talks/releases/download/talks/2026-10-01-use-ai-emperically.opus" target="_blank" rel="noopener">audio (opus)</a> &middot; <a href="https://talks.s-anand.net/" target="_blank" rel="noopener">more talks</a></p>
+  <p><a href="https://www.s-anand.net/" target="_blank" rel="noopener">Anand S</a>, Head of Innovation at <a href="https://straive.com/" target="_blank" rel="noopener">Straive</a> &middot; <a href="transcript.md" id="transcript-btn3">read the transcript</a> &middot; <a href="https://media.s-anand.net/2026-10-01-dbs-tech-use-ai-emperically.webm" target="_blank" rel="noopener">video (WebM, 88 min, from 03:59)</a> &middot; <a href="https://github.com/sanand0/talks/releases/download/talks/2026-10-01-use-ai-emperically.opus" target="_blank" rel="noopener">audio (Opus, the full 93 min)</a> &middot; <a href="https://talks.s-anand.net/" target="_blank" rel="noopener">more talks</a></p>
   <p>Related, though not shown live: <a href="https://www.s-anand.net/blog/how-i-verify-and-delegate-to-ai/" target="_blank" rel="noopener">How I verify and delegate to AI</a> &middot; <a href="https://talks.s-anand.net/2026-09-03-convergence-jio-institute/" target="_blank" rel="noopener">Convergence at Jio Institute</a> &middot; <a href="https://talks.s-anand.net/2026-03-15-how-students-learn-python/" target="_blank" rel="noopener">How students learn Python</a>, the log-based study that prompted this session's team-log analysis.</p>
   <p class="footer-mono">Quotes are verbatim from the transcript, lightly trimmed. Benchmark numbers come from the linked pages; every model ranking, price and &ldquo;best&rdquo; is as of 1 October 2026 and specific to the tasks tested.</p>
 </footer>
@@ -1358,7 +1480,9 @@ details.guess .reveal a { color: var(--gold-dk); }
     // Drop YAML frontmatter, and un-link app-internal /plugins/ links that only worked inside the original chat.
     const body = text.replace(/^---[\s\S]*?---\s*/, '').replace(/\]\(\/plugins\/[^)]*\)/g, ']()');
     const html = window.marked ? marked.parse(body) : body.replace(/\n/g, '<br>');
-    return html.replace(/<a href=""[^>]*>([^<]*)<\/a>/g, '$1').replace(/<a /g, '<a target="_blank" rel="noopener" ');
+    return html.replace(/<a href=""[^>]*>([^<]*)<\/a>/g, '$1').replace(/<a /g, '<a target="_blank" rel="noopener" ')
+      // Transcript times share the story's clock: make them play the recording.
+      .replace(/\[(\d{2}:\d{2})\]/g, '<a class="ts" href="?t=$1">$1</a>');
   }
 
   async function openDoc(file, title, source) {
@@ -1382,7 +1506,7 @@ details.guess .reveal a { color: var(--gold-dk); }
   }
 
   const openTranscript = e => { e.preventDefault(); openDoc('transcript.md', 'Session Transcript', ''); };
-  ['transcript-btn', 'transcript-btn2', 'transcript-btn3'].forEach(id => {
+  ['transcript-btn', 'transcript-btn2', 'transcript-btn3', 'transcript-btn4'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('click', openTranscript);
   });
@@ -1481,6 +1605,344 @@ details.guess .reveal a { color: var(--gold-dk); }
       if (e.key === 'k') go(idx - 1);
     });
   })();
+</script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const body = document.body, dock = $("#dock"), vid = $("#vid"), aud = $("#aud");
+  const narrowMQ = matchMedia("(max-width: 1099px)");
+  const isNarrow = () => narrowMQ.matches;
+
+  // ---------- one clock: the transcript's ----------
+  // Story, chapters, transcript, share links and ?t= all use transcript (= audio) time.
+  // The video starts 238.75 s into that clock, and drops ~2.4 s of audio at 56:25,
+  // so it maps in two pieces (measured by cross-correlating the two soundtracks).
+  const V0 = 238.75, CUT = 3385, V1 = 241.15, VDUR = 5284.3, ADUR = 5563;
+  const VEND = VDUR + V1;
+  const toVideo = (s) => s - (s < CUT ? V0 : V1);
+  const toSession = (v) => v + (v < CUT - V0 ? V0 : V1);
+  const inVideo = (s) => s >= V0 && s < VEND - 1;
+  const clamp = (x, a, b) => Math.min(Math.max(x, a), b);
+  const parseT = (s) => {
+    if (!s) return null;
+    const p = String(s).split(":").map(Number);
+    return p.some(isNaN) ? null : p.reduce((a, b) => a * 60 + b, 0);
+  };
+  const fmt = (t) => {
+    t = Math.max(0, Math.floor(t));
+    return `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`;
+  };
+
+  let player = vid;
+  const now = () => (player === aud ? aud.currentTime || 0 : toSession(vid.currentTime || 0));
+  const rawSeek = (p, t) => new Promise((res) => {
+    const go = () => { try { p.currentTime = t; } catch (e) {} res(); };
+    if (p.readyState >= 1) go();
+    else { p.addEventListener("loadedmetadata", go, { once: true }); if (p.preload === "none") { p.preload = "metadata"; p.load(); } }
+  });
+  const seek = (s) => (player === aud ? rawSeek(aud, clamp(s, 0, ADUR - 1)) : rawSeek(vid, clamp(toVideo(s), 0, VDUR - 1)));
+
+  // ---------- video ⇄ audio, keeping the moment ----------
+  const audioBtn = $("#audio-btn"), hintEl = document.createElement("span");
+  hintEl.className = "hint";
+  let videoBroken = false;
+  const setHint = (html) => { hintEl.innerHTML = html || ""; if (html && !hintEl.isConnected) $("#now").append(hintEl); };
+  const switchTo = async (p, { at = now(), play = !player.paused } = {}) => {
+    if (p === vid && videoBroken) return;
+    if (player !== p) {
+      player.pause();
+      player = p;
+      dock.classList.toggle("audio-mode", p === aud);
+      audioBtn.setAttribute("aria-pressed", String(p === aud));
+      audioBtn.querySelector("span").textContent = p === aud ? "Back to video" : "Audio only";
+    }
+    await seek(p === vid ? clamp(at, V0, VEND - 1) : at);
+    if (play) player.play().catch(() => {});
+    onTime(true);
+  };
+  const useAudio = () => { videoBroken = true; audioBtn.hidden = true; switchTo(aud, { play: false }); };
+  vid.querySelector("source").addEventListener("error", useAudio);
+  vid.addEventListener("error", useAudio);
+  audioBtn.addEventListener("click", () => switchTo(player === aud ? vid : aud));
+
+  // ---------- chapters: [transcript time, title, story section] ----------
+  const RAW = [
+    ["sep", "00–19 · Before the start; advice as a hypothesis"],
+    ["00:05", "Venky: the same hairstyle every time", "haircut"], ["00:49", "“I would love to benchmark”", "haircut"],
+    ["04:04", "Welcome and introductions", "haircut"], ["06:23", "“Use AI in an empirical way”", "room"],
+    ["07:23", "The chat fills with prompting tips", "room"], ["10:14", "Write simply, think simply?", "writing"],
+    ["12:06", "Simplified English made answers worse", "writing"], ["13:29", "Praise, shame or bribe the model?", "emotion"],
+    ["14:14", "Emotional prompting hurts, slightly", "emotion"], ["15:36", "Pólya’s rules for mathematicians", "polya"],
+    ["17:05", "Working backwards helps counting only", "polya"], ["18:29", "Let agents ideate; then test", "polya"],
+    ["sep", "19–42 · Models"],
+    ["19:22", "How do you select models?", "frontier"], ["21:17", "The arena-versus-price chart", "frontier"],
+    ["24:02", "High-school to PhD level, getting cheaper", "frontier"], ["27:01", "“Give me one model”", "frontier"],
+    ["27:55", "Siddhartha: a model council?", "frontier"], ["28:29", "Jev: build your own benchmark", "jev"],
+    ["31:41", "“Who has time to benchmark?”", "jev"], ["33:37", "The chat that built the benchmark", "jev"],
+    ["34:53", "Benchmarking is delegatable", "jev"], ["35:39", "Back to the hair: thinking levels", "image"],
+    ["38:45", "When high effort pays", "image"], ["39:39", "Sree: benchmark leakage", "image"],
+    ["sep", "42–61 · Agents"],
+    ["41:59", "How do you choose agents?", "agents"], ["44:09", "Terminal-Bench and cost per task", "agents"],
+    ["46:33", "Agents build a GitHub profile page", "agents"], ["48:03", "OpenCode beats Claude Code, on this task", "agents"],
+    ["48:40", "A small prompt, a visible result", "own"], ["50:01", "Your own tasks as the benchmark", "own"],
+    ["50:42", "Replaying the GPT-Image-2.5 page", "own"], ["52:28", "“Take your own logs”", "own"],
+    ["53:19", "Venky: how do you compare agents?", "spec"], ["55:36", "First, a problem worth solving", "spec"],
+    ["60:27", "Specification, verification, execution", "spec"],
+    ["sep", "61–92 · Verification"],
+    ["61:34", "Venky: what should developers do?", "cynic"], ["62:41", "“Security is your biggest strength”", "cynic"],
+    ["63:26", "Output that’s hard to verify", "cynic"], ["65:04", "“I’m giving this as anti-patterns”", "cynic"],
+    ["66:00", "Codex reads Anand’s Codex logs", "mylogs"], ["67:54", "The feature-adoption timeline", "mylogs"],
+    ["69:39", "“This is again benchmarking?”", "mylogs"], ["70:13", "One prompt to try yourself", "mylogs"],
+    ["70:36", "A team’s 1,100 sessions", "teamlogs"], ["71:26", "Coding got fast; testing didn’t", "teamlogs"],
+    ["72:49", "Tests first: the biggest uplift", "teamlogs"], ["75:03", "Ramaswamy: open weights vs frontier", "qa"],
+    ["77:31", "“The path to production is rare”", "qa"], ["81:19", "Is Jev GenAI?", "qa"],
+    ["85:29", "Hallucination, and uncorrelated errors", "double"], ["87:41", "Cross-checking: 14% → 3.7% error", "double"],
+    ["88:51", "Ask the model how sure it is", "calibrate"], ["89:30", "Calibrate that confidence", "calibrate"],
+    ["90:02", "Have an agent attack your code", "calibrate"], ["90:31", "The summary", "test"],
+    ["91:30", "“Let’s test”", "test"], ["91:45", "Thanks and goodbyes", "test"],
+  ];
+  const CHAPTERS = RAW.filter((r) => r[0] !== "sep").map(([label, title, sec]) => ({ t: parseT(label), label, title, sec }));
+  let ci = 0;
+  $("#chapters").innerHTML = RAW.map((r) => {
+    if (r[0] === "sep") return `<li class="sep" aria-hidden="true">${r[1]}</li>`;
+    const off = !inVideo(parseT(r[0]));
+    return `<li><a href="?t=${r[0]}" data-chap="${ci++}" class="ts-chap${off ? " audio-only" : ""}"${off ? ' title="Before the video starts: plays the audio"' : ""}><span class="ct">${r[0]}</span><span>${r[1]}</span></a></li>`;
+  }).join("");
+  const chapLinks = $$("#chapters a");
+  const heads = $$("h2.sec");
+  const secTitle = {};
+  $$("#jump-menu a[data-jump]").forEach((a) => (secTitle[a.dataset.jump] = a.firstChild.textContent.trim()));
+
+  // ---------- URL state: ?t=mm:ss&view=video#section ----------
+  const urlState = () => {
+    const u = new URL(location.href);
+    return { t: parseT(u.searchParams.get("t")), view: u.searchParams.get("view") };
+  };
+  const buildUrl = ({ t, hash } = {}) => {
+    const u = new URL(location.href);
+    if (t != null) u.searchParams.set("t", fmt(t));
+    if (body.classList.contains("watch")) u.searchParams.set("view", "video"); else u.searchParams.delete("view");
+    if (hash !== undefined) u.hash = hash ? "#" + hash : "";
+    return u.pathname + u.search.replace(/%3A/gi, ":") + u.hash;
+  };
+  let urlT = urlState().t;
+
+  // ---------- playing a moment ----------
+  const resume = $("#resume"), resumeBtn = $("#resume-btn"), minBtn = $("#min-btn");
+  const showResume = (t) => {
+    if (player !== vid) return;
+    resumeBtn.querySelector("span").textContent = `Play from ${fmt(t)}`;
+    resume.classList.add("show");
+  };
+  const syncMin = () => {
+    const c = body.classList.contains("dock-collapsed");
+    minBtn.setAttribute("aria-expanded", String(!c));
+    minBtn.setAttribute("aria-label", c ? "Show the mini video" : "Hide the mini video");
+    minBtn.innerHTML = c ? "&#9652;" : "&#9662;";
+  };
+  const ensureDockVisible = () => {
+    if (isNarrow()) { body.classList.remove("dock-collapsed"); syncMin(); return; }
+    const r = dock.getBoundingClientRect();
+    if (r.top > innerHeight - 80 || r.bottom < 60) $("#room").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  };
+  // Pick the medium that has this moment: the video if it can, else the audio.
+  const cue = async (t, play) => {
+    if (player === vid && !inVideo(t)) {
+      await switchTo(aud, { at: t, play: false });
+      setHint(`${t < V0 ? "Before the video starts" : "After the video ends"}: playing the audio.`);
+    } else await seek(t);
+    if (!play) return;
+    try { await player.play(); resume.classList.remove("show"); } catch (e) { showResume(t); }
+  };
+  const playAt = async (t, { push = false, el = null } = {}) => {
+    if (push) {
+      const ch = CHAPTERS[chapFor(t)];
+      const sec = el && el.closest(".room")
+        ? (heads.filter((h) => h.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING).at(-1) || {}).id
+        : ch && ch.sec;
+      history.pushState({ t }, "", buildUrl({ t, hash: sec }));
+      urlT = t;
+    }
+    ensureDockVisible();
+    await cue(t, true);
+    if (el && !reduceMotion) { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+  };
+  resumeBtn.addEventListener("click", () => { player.play(); resume.classList.remove("show"); });
+
+  $$("a.ts").forEach((a) => a.setAttribute("aria-label", `Play the recording from ${a.textContent.trim()}`));
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a.ts, a.ts-chap");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const t = a.classList.contains("ts-chap") ? CHAPTERS[+a.dataset.chap].t : parseT(new URL(a.href).searchParams.get("t"));
+    const inModal = a.closest("#doc-modal");
+    if (inModal) closeDoc();
+    playAt(t, { push: true, el: a.classList.contains("ts") && !inModal ? a : null });
+  });
+
+  // ---------- now playing ----------
+  const nowT = $("#now-t"), nowTitle = $("#now-title"), nowStory = $("#now-story");
+  const clockEl = document.createElement("span");
+  clockEl.className = "clock";
+  nowTitle.after(clockEl);
+  let curChap = -2;
+  const chapFor = (t) => { let i = -1; for (let k = 0; k < CHAPTERS.length; k++) if (CHAPTERS[k].t <= t + 0.5) i = k; return i; };
+  function onTime(force) {
+    const t = now();
+    nowT.textContent = fmt(t);
+    clockEl.textContent = player === vid ? `${fmt(vid.currentTime || 0)} on the video’s own scrubber` : "Audio recording · transcript time";
+    if (player === aud && hintEl.textContent && inVideo(t) && !videoBroken)
+      setHint('The video has this moment. <button type="button" data-back>Back to video</button>');
+    if (player === vid && hintEl.textContent) setHint("");
+    const i = chapFor(t);
+    if (i === curChap && force !== true) return;
+    curChap = i;
+    chapLinks.forEach((a, k) => { a.classList.toggle("is-now", k === i); if (k === i) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
+    if (i >= 0) {
+      const c = CHAPTERS[i];
+      nowTitle.textContent = c.title;
+      nowStory.innerHTML = `In the story: <a href="#${c.sec}">${secTitle[c.sec] || "this section"} &darr;</a>`;
+      heads.forEach((h) => h.classList.toggle("is-now", h.id === c.sec));
+      const link = chapLinks[i], box = link.closest("ol");
+      if (box && box.scrollHeight > box.clientHeight) {
+        const lr = link.getBoundingClientRect(), br = box.getBoundingClientRect();
+        if (lr.top < br.top || lr.bottom > br.bottom) box.scrollTop += lr.top - br.top - box.clientHeight / 3;
+      }
+    } else { nowTitle.textContent = "Before the session starts"; nowStory.textContent = ""; }
+  }
+  $("#now").addEventListener("click", (e) => { if (e.target.closest("[data-back]")) switchTo(vid); });
+  [vid, aud].forEach((p) => {
+    p.addEventListener("timeupdate", () => { if (p === player) onTime(); });
+    p.addEventListener("seeked", () => { if (p === player) onTime(); });
+    p.addEventListener("play", () => {
+      resume.classList.remove("show");
+      if (body.classList.contains("dock-collapsed")) { body.classList.remove("dock-collapsed"); syncMin(); }
+    });
+  });
+  // When the video ends, the last 38 s of the session continue in the audio.
+  vid.addEventListener("ended", () => { if (player === vid) cue(VEND, true); });
+
+  // ---------- story → chapter hints ----------
+  const revealChap = (first, last = first, pad = 8) => {
+    const box = first.closest("ol");
+    if (!box || box.scrollHeight <= box.clientHeight) return;
+    const top = first.getBoundingClientRect().top, bottom = last.getBoundingClientRect().bottom, br = box.getBoundingClientRect();
+    if (top >= br.top + pad && bottom <= br.bottom - pad) return;
+    box.scrollTop += bottom - top > br.height - 2 * pad ? top - br.top - pad : (top + bottom) / 2 - (br.top + br.bottom) / 2;
+  };
+  const tsT = (a) => parseT(new URL(a.href).searchParams.get("t"));
+  const tsSeen = new Set();
+  let hintKey = "", hintRaf = 0, tsHover = null;
+  const syncHints = () => {
+    hintRaf = 0;
+    const idx = [...new Set([...tsSeen].map((a) => chapFor(tsT(a))).filter((i) => i >= 0))].sort((a, b) => a - b);
+    const key = idx.join();
+    if (key === hintKey) return;
+    hintKey = key;
+    chapLinks.forEach((a, k) => a.classList.toggle("in-view", idx.includes(k)));
+    if (idx.length && player.paused && !tsHover) revealChap(chapLinks[idx[0]], chapLinks[idx.at(-1)]);
+  };
+  const tsIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? tsSeen.add(e.target) : tsSeen.delete(e.target)));
+    hintRaf ||= requestAnimationFrame(syncHints);
+  });
+  $$(".room a.ts").forEach((a) => tsIO.observe(a));
+  const setTarget = (a) => {
+    if (tsHover === a) return;
+    tsHover = a;
+    chapLinks.forEach((l) => l.classList.remove("is-target"));
+    const i = a ? chapFor(tsT(a)) : -1;
+    if (i >= 0) { chapLinks[i].classList.add("is-target"); revealChap(chapLinks[i]); }
+  };
+  document.addEventListener("mouseover", (e) => setTarget(e.target.closest?.(".room a.ts") || null));
+  document.addEventListener("focusin", (e) => setTarget(e.target.closest?.(".room a.ts") || null));
+  document.addEventListener("focusout", (e) => { if (e.target.matches?.("a.ts")) setTarget(null); });
+
+  // ---------- share the current moment ----------
+  const shareBtn = $("#share-btn");
+  shareBtn.addEventListener("click", async () => {
+    const t = Math.floor(now());
+    const sec = curChap >= 0 ? CHAPTERS[curChap].sec : "";
+    const u = new URL(location.href);
+    u.search = "?t=" + fmt(t);
+    u.hash = sec ? "#" + sec : "";
+    const label = shareBtn.querySelector("span");
+    try { await navigator.clipboard.writeText(u.href); label.textContent = `Copied ${fmt(t)}`; }
+    catch (e) { history.replaceState(history.state, "", u.pathname + u.search + u.hash); label.textContent = "Link in address bar"; }
+    setTimeout(() => (label.textContent = "Share moment"), 2200);
+  });
+
+  // ---------- story ⇄ video focus (same <video>, never remounted) ----------
+  const modeBtn = $("#mode-btn"), modeLabel = $("#dock-mode-label");
+  const updateDockH = () => {
+    const h = isNarrow() && body.classList.contains("watch") ? dock.offsetHeight : 0;
+    document.documentElement.style.setProperty("--dock-h", h + "px");
+  };
+  const pickAnchor = () => {
+    const top = 80 + (isNarrow() && body.classList.contains("watch") ? dock.offsetHeight : 0);
+    return $$(".room .article :is(h2, p, blockquote, .band)").find((el) => el.getBoundingClientRect().bottom > top);
+  };
+  const setMode = (watch, { replace = true } = {}) => {
+    if (body.classList.contains("watch") === watch) return;
+    const anchor = pickAnchor();
+    const before = anchor ? anchor.getBoundingClientRect().top : 0;
+    const storyVisible = $("#room").getBoundingClientRect().top < innerHeight * 0.5;
+    body.classList.toggle("watch", watch);
+    modeBtn.setAttribute("aria-pressed", String(watch));
+    modeBtn.innerHTML = watch ? "&#128214; <span>Focus story</span>" : "&#10530; <span>Focus video</span>";
+    modeLabel.textContent = watch ? "Video focus" : "Story focus";
+    if (replace) history.replaceState(history.state, "", buildUrl());
+    updateDockH();
+    if (anchor && storyVisible) {
+      const start = performance.now();
+      const keep = () => {
+        const d = anchor.getBoundingClientRect().top - before;
+        if (Math.abs(d) > 1) window.scrollBy({ top: d, behavior: "instant" });
+        if (performance.now() - start < 750) requestAnimationFrame(keep);
+      };
+      requestAnimationFrame(keep);
+    }
+  };
+  modeBtn.addEventListener("click", () => setMode(!body.classList.contains("watch")));
+  $("#hero-watch").addEventListener("click", (e) => {
+    e.preventDefault();
+    setMode(true);
+    $("#room").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  });
+  new ResizeObserver(updateDockH).observe(dock);
+  addEventListener("resize", updateDockH);
+  minBtn.addEventListener("click", () => { body.classList.toggle("dock-collapsed"); syncMin(); });
+  if (isNarrow()) { body.classList.add("dock-collapsed"); syncMin(); }
+
+  // ---------- history and deep links (?t= seeks without autoplay) ----------
+  addEventListener("popstate", () => {
+    const { t, view } = urlState();
+    setMode(view === "video", { replace: false });
+    if (t != null && t !== urlT) cue(t, false).then(() => { if (player.paused) showResume(t); });
+    urlT = t;
+  });
+  // Shared links (?t=…#section) must land on their section even after fonts and embeds reflow the page.
+  if (location.hash.length > 1) {
+    let userMoved = false;
+    const stop = () => (userMoved = true);
+    ["wheel", "touchstart", "keydown", "mousedown"].forEach((ev) => addEventListener(ev, stop, { once: true, passive: true }));
+    const reanchor = () => {
+      const el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (el && !userMoved) el.scrollIntoView({ behavior: "instant", block: "start" });
+    };
+    document.fonts.ready.then(reanchor);
+    addEventListener("load", () => { reanchor(); setTimeout(reanchor, 600); }, { once: true });
+  }
+  if (!vid.canPlayType("video/webm")) useAudio();
+  const init = urlState();
+  if (init.view === "video") setMode(true, { replace: false });
+  if (init.t != null) {
+    if (isNarrow()) { body.classList.remove("dock-collapsed"); syncMin(); }
+    cue(init.t, false).then(() => { showResume(init.t); onTime(true); });
+  }
+  onTime(true);
+})();
 </script>
 </body>
 </html>

@@ -1,5 +1,23 @@
 # Prompt
 
+## Include Video, 18 Nov 2026
+
+<!--
+cd ~/code/talks/
+claude --model opus --effort high
+-->
+
+The video for the talk at 2026-10-01-use-ai-emperically/ is now available at https://media.s-anand.net/2026-10-01-dbs-tech-use-ai-emperically.webm (and also at ~/r2/media/2026-10-01-dbs-tech-use-ai-emperically.webm).
+Incorporate this into the talk.
+
+The style of recent talks that include video might give you inspiration on how to do that.
+
+---
+
+Make sure the story handles the transcript / audio / video misalignment smoothly.
+
+<!-- claude --resume 0490ad4a-e56b-4f6f-9f16-f9789bf507a7 -->
+
 ## Initial Story, 01 Oct 2026
 
 <!--

@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Verifies the Verifier? · SUTD COIL · 17 Nov 2026</title>
+<meta name="description" content="A teaching story from Anand S's SUTD COIL talk on verifying AI agents: an agent passes a proctored hiring test while its owner eats an apple, and the class works out how to specify to, verify and review an intelligence smarter than you.">
+<meta property="og:title" content="The agent passed. The test failed. Who verifies the verifier?">
+<meta property="og:description" content="SUTD COIL, 17 Nov 2026: an apple, a buggy question bank, five models voting, a model that is 95% sure and 77% right, Joey's imaginary marshmallows, and one rule: log every reaction.">
+<meta property="og:image" content="https://talks.s-anand.net/2026-11-17-sutd-coil/comic-page.avif">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2317191f'/%3E%3Ccircle cx='27' cy='27' r='14' fill='none' stroke='%23ffe36e' stroke-width='5'/%3E%3Cpath d='M37 37l12 12' stroke='%23ffe36e' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M20 27l5 5 9-10' fill='none' stroke='%2347c99a' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;family=Familjen+Grotesk:wght@500;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script>
+  (() => {
+    let t = null;
+    try { t = localStorage.getItem("sutd-coil-theme"); } catch (e) {}
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  })();
+</script>
+<style>
+:root {
+  --paper: #f6f4ee; --paper2: #ebe7dc; --card: #fffdf8; --ink: #17191f; --muted: #5d5f66; --line: #d9d4c6;
+  --red: #b8301b; --red-soft: #f9e2dc; --gold: #9a6a00;
+  --green: #0f7353; --green-soft: #d8f0e5;
+  --blue: #2a4cab; --blue-soft: #e1e7fa;
+  --hi: #ffe36e; --hi-ink: #3a3000;
+  --night: #0f1720; --night2: #18222e; --night-line: #2f3d4c; --on-night: #eef2f5; --night-muted: #b4c0cc; --night-link: #ffe36e; --night-green: #6fe0b4; --night-red: #ff9b85;
+  --shadow: 0 14px 40px rgba(25, 20, 10, .13);
+  --font-display: "DM Serif Display", Georgia, serif;
+  --font-body: "Source Serif 4", Georgia, serif;
+  --font-ui: "Familjen Grotesk", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --measure: 700px; --pad: 1.3rem;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #12151a; --paper2: #1b2027; --card: #1d232b; --ink: #ebe7df; --muted: #a9adb5; --line: #333b46;
+    --red: #ff8e78; --red-soft: #3b1f1a; --gold: #f2c14e; --green: #5fd3a6; --green-soft: #15302a; --blue: #9fb4ff; --blue-soft: #1f2846;
+    --hi: #ffe36e; --hi-ink: #2b2400;
+    --night: #090d12; --night2: #131a22; --night-line: #2a3542;
+    --shadow: 0 14px 40px rgba(0, 0, 0, .5);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #12151a; --paper2: #1b2027; --card: #1d232b; --ink: #ebe7df; --muted: #a9adb5; --line: #333b46;
+  --red: #ff8e78; --red-soft: #3b1f1a; --gold: #f2c14e; --green: #5fd3a6; --green-soft: #15302a; --blue: #9fb4ff; --blue-soft: #1f2846;
+  --hi: #ffe36e; --hi-ink: #2b2400;
+  --night: #090d12; --night2: #131a22; --night-line: #2a3542;
+  --shadow: 0 14px 40px rgba(0, 0, 0, .5);
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto !important; } *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+body { font: 400 1.15rem/1.74 var(--font-body); background: var(--paper); color: var(--ink); overflow-x: hidden; padding-bottom: 4.5rem; }
+img, svg, video, iframe { max-width: 100%; }
+button { font: inherit; color: inherit; cursor: pointer; }
+a { color: var(--blue); text-underline-offset: .18em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--hi); outline-offset: 2px; border-radius: 3px; }
+strong { font-weight: 600; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+mark { background: var(--hi); color: var(--hi-ink); padding: 0 .15em; border-radius: 2px; }
+
+/* ---------- top bar, progress ---------- */
+#progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--red); z-index: 60; }
+.topbar { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .55rem var(--pad); background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); font: 600 .82rem var(--font-ui); letter-spacing: .03em; }
+.topbar a { color: var(--ink); text-decoration: none; }
+.topbar .mid { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.icon-btn { background: none; border: 1px solid var(--line); border-radius: 999px; width: 2.2rem; height: 2.2rem; display: inline-grid; place-items: center; color: var(--ink); flex: none; }
+
+/* ---------- hero ---------- */
+.hero { max-width: 1220px; margin: 0 auto; padding: 2.4rem var(--pad) 2.2rem; display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); gap: 2.6rem; align-items: center; }
+.kicker { font: 700 .76rem var(--font-ui); letter-spacing: .15em; text-transform: uppercase; color: var(--red); margin-bottom: 1rem; }
+.hero h1 { font: 400 clamp(2.5rem, 5.6vw, 4.4rem)/1.02 var(--font-display); letter-spacing: -.01em; margin-bottom: 1.2rem; }
+.hero h1 em { color: var(--red); }
+.dek { font-size: 1.24rem; line-height: 1.56; max-width: 38rem; margin-bottom: 1.1rem; }
+.hero-meta { font: .9rem/1.6 var(--font-ui); color: var(--muted); margin-bottom: 1.3rem; }
+.hero-meta b { color: var(--ink); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.2rem; }
+.btn { display: inline-flex; align-items: center; gap: .45rem; padding: .6rem 1rem; border-radius: 999px; border: 1.5px solid var(--ink); font: 700 .9rem var(--font-ui); color: var(--ink); text-decoration: none; background: transparent; }
+.btn:hover { background: var(--paper2); text-decoration: none; }
+.btn.primary { background: var(--ink); color: var(--paper); }
+.btn.primary:hover { background: var(--red); border-color: var(--red); color: var(--paper); }
+.audio-slot { grid-column: 1 / -1; min-height: 7.4rem; }
+.player { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: .65rem 1rem .5rem; font: 600 .84rem var(--font-ui); }
+.pl-top { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .3rem 1rem; color: var(--muted); font-size: .8rem; margin-bottom: .3rem; }
+.pl-top b { color: var(--ink); }
+.ts-demo { font: 500 .74rem var(--font-mono); border: 1px solid var(--line); border-radius: 999px; padding: 0 .4rem; }
+kbd { font: 600 .72rem var(--font-mono); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 .3rem; background: var(--paper); color: var(--ink); }
+.pl-row { display: flex; align-items: center; gap: .45rem; }
+.pl-btn { flex: none; display: inline-grid; place-items: center; min-width: 2.2rem; height: 2.2rem; padding: 0 .35rem; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--ink); text-decoration: none; font: 700 .8rem var(--font-ui); }
+.pl-btn:hover { border-color: var(--ink); }
+.pl-play { min-width: 2.7rem; height: 2.7rem; background: var(--ink); color: var(--paper); border-color: var(--ink); font-size: 1.25rem; }
+.pl-play:hover { background: var(--red); border-color: var(--red); }
+.pl-time { flex: none; font: 500 .8rem var(--font-mono); color: var(--muted); min-width: 3.6rem; text-align: center; font-variant-numeric: tabular-nums; }
+.pl-track { position: relative; flex: 1; min-width: 0; height: 2.4rem; display: flex; align-items: center; }
+.pl-ticks { position: absolute; left: 0; right: 0; top: 50%; height: 18px; transform: translateY(-50%); pointer-events: none; }
+.pl-ticks i { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--muted); opacity: .45; }
+.pl-ticks i.act { width: 2px; opacity: .9; background: var(--ink); }
+#pl-seek { --p: 0%; position: relative; width: 100%; height: 2.4rem; margin: 0; background: transparent; -webkit-appearance: none; appearance: none; cursor: pointer; }
+#pl-seek::-webkit-slider-runnable-track { height: 8px; border-radius: 99px; background: linear-gradient(to right, var(--red) var(--p), color-mix(in srgb, var(--line) 80%, transparent) var(--p)); }
+#pl-seek::-moz-range-track { height: 8px; border-radius: 99px; background: color-mix(in srgb, var(--line) 80%, transparent); }
+#pl-seek::-moz-range-progress { height: 8px; border-radius: 99px; background: var(--red); }
+#pl-seek::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; margin-top: -4px; border-radius: 50%; background: var(--red); border: 2px solid var(--paper); box-shadow: 0 0 0 1px var(--red); }
+#pl-seek::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--red); border: 2px solid var(--paper); }
+#pl-seek:focus-visible { outline: none; }
+#pl-seek:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px var(--hi); }
+.pl-tip { position: absolute; bottom: calc(100% + 2px); transform: translateX(-50%); background: var(--night); color: var(--on-night); font: 600 .76rem var(--font-ui); padding: .25rem .55rem; border-radius: 6px; white-space: nowrap; pointer-events: none; z-index: 2; }
+.pl-tip b { font-family: var(--font-mono); color: var(--night-link); margin-right: .35rem; }
+.pl-now { margin: .25rem 0 0; color: var(--muted); font-size: .8rem; min-height: 1.2em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pl-now b { color: var(--ink); }
+.player .x { display: none; }
+.player.floating { position: fixed; left: .75rem; right: .75rem; bottom: 4.2rem; z-index: 45; box-shadow: var(--shadow); padding: .4rem .7rem .3rem; max-width: 1400px; margin: 0 auto; }
+.player.floating .pl-top { display: none; }
+.player.floating .x { display: inline-grid; }
+.player.dismissed { display: none; }
+@media (max-width: 640px) {
+  .pl-row { flex-wrap: wrap; row-gap: .1rem; }
+  .pl-track { order: 10; flex-basis: 100%; }
+  .pl-time#pl-dur { margin-left: auto; }
+  .pl-keys, .pl-row a.pl-btn { display: none; }
+  .pl-time { min-width: 0; }
+  .player { padding-left: .7rem; padding-right: .7rem; }
+}
+
+.verdict { background: var(--night); color: var(--on-night); border-radius: 18px; padding: 1.2rem 1.2rem 1rem; box-shadow: var(--shadow); }
+.verdict svg { display: block; width: 100%; height: auto; }
+.verdict figcaption { font: .82rem/1.5 var(--font-ui); color: var(--night-muted); margin-top: .7rem; }
+.verdict figcaption b { color: var(--on-night); }
+.stamp1 { transform-origin: 334px 112px; animation: stamp 10s ease-in-out infinite; }
+.stamp2 { transform-origin: 210px 214px; animation: stamp2 10s ease-in-out infinite; }
+.bite { animation: bite 10s steps(1) infinite; }
+@keyframes stamp { 0%, 8% { opacity: 0; transform: scale(1.8) rotate(-14deg); } 14%, 100% { opacity: 1; transform: scale(1) rotate(-10deg); } }
+@keyframes stamp2 { 0%, 50% { opacity: 0; transform: scale(1.8) rotate(6deg); } 57%, 92% { opacity: 1; transform: scale(1) rotate(4deg); } 100% { opacity: 0; } }
+@keyframes bite { 0%, 30% { opacity: 1; } 31%, 100% { opacity: 0; } }
+
+/* ---------- how to read ---------- */
+.howto { max-width: 1220px; margin: 0 auto 3rem; padding: 0 var(--pad); }
+.howto-inner { border: 1px dashed var(--line); border-radius: 14px; padding: 1rem 1.2rem; display: grid; grid-template-columns: 11rem 1fr; gap: 1.2rem; font: .95rem/1.6 var(--font-ui); color: var(--muted); }
+.howto h2 { font: 700 .78rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ink); }
+.howto b { color: var(--ink); }
+
+/* ---------- story column ---------- */
+.story { max-width: var(--measure); margin: 0 auto; padding: 0 var(--pad); }
+.act { font: 700 .78rem var(--font-ui); letter-spacing: .2em; text-transform: uppercase; color: var(--muted); text-align: center; margin: 4.5rem 0 1.8rem; display: flex; align-items: center; gap: 1rem; }
+.act::before, .act::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.chap { margin: 0 0 3.6rem; scroll-margin-top: 4rem; }
+.eyebrow { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; font: 600 .78rem var(--font-ui); letter-spacing: .06em; color: var(--muted); margin-bottom: .6rem; }
+.chap h2 { font: 400 clamp(1.9rem, 4vw, 2.6rem)/1.1 var(--font-display); margin-bottom: 1.2rem; }
+.chap h2 em { color: var(--red); }
+.chap h3 { font: 700 1.15rem/1.3 var(--font-ui); margin: 2rem 0 .7rem; }
+.chap p { margin-bottom: 1.1rem; }
+.chap ul, .chap ol { margin: 0 0 1.2rem 1.4rem; }
+.chap li { margin-bottom: .45rem; }
+.lede { font-size: 1.26rem; line-height: 1.6; }
+.lede::first-letter { font: 400 3.6em/.8 var(--font-display); float: left; margin: .08em .1em 0 0; color: var(--red); }
+
+/* timestamp chips */
+a.ts { display: inline-flex; align-items: center; gap: .2em; font: 600 .7rem/1 var(--font-mono); padding: .22em .45em; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); text-decoration: none; vertical-align: .15em; white-space: nowrap; background: var(--card); }
+a.ts::before { content: "▶"; font-size: .75em; color: var(--red); }
+a.ts:hover { border-color: var(--red); color: var(--red); }
+a.ts.playing { background: var(--red); color: var(--paper); border-color: var(--red); }
+a.ts.playing::before { color: var(--paper); }
+
+/* tooltip */
+.tip { border-bottom: 1.5px dotted var(--blue); cursor: help; position: relative; }
+.tip::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); width: min(260px, 70vw); background: var(--night); color: var(--on-night); font: 400 .82rem/1.45 var(--font-ui); padding: .55rem .7rem; border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity .15s; z-index: 30; box-shadow: var(--shadow); white-space: normal; text-align: left; }
+.tip:hover::after, .tip:focus::after { opacity: 1; }
+
+/* pull quotes */
+.pq { margin: 2.4rem -12%; padding: .4rem 0 .4rem 1.6rem; border-left: 5px solid var(--red); }
+.pq p { font: italic 400 clamp(1.4rem, 2.8vw, 1.9rem)/1.3 var(--font-display); margin-bottom: .6rem; }
+.pq cite { font: 600 .82rem var(--font-ui); font-style: normal; color: var(--muted); letter-spacing: .04em; }
+.pq.green { border-color: var(--green); }
+.pq.blue { border-color: var(--blue); }
+@media (max-width: 900px) { .pq { margin-left: 0; margin-right: 0; } }
+
+/* small inline quote */
+blockquote.say { margin: 1.4rem 0; padding: .9rem 1.1rem; background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
+blockquote.say p { margin: 0 0 .4rem; }
+blockquote.say cite { font: 600 .8rem var(--font-ui); font-style: normal; color: var(--muted); }
+
+/* dialogue */
+.dialogue { margin: 1.6rem 0; display: grid; gap: .55rem; clear: both; }
+.dialogue .line { display: grid; grid-template-columns: 7.5rem 1fr; gap: .8rem; align-items: baseline; font-size: 1.04rem; }
+.dialogue .who { font: 700 .76rem var(--font-ui); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-align: right; }
+.dialogue .line.a .who { color: var(--red); }
+@media (max-width: 560px) { .dialogue .line { grid-template-columns: 1fr; gap: 0; } .dialogue .who { text-align: left; } }
+
+/* prompt box */
+.prompt-box { margin: 1.6rem 0; background: var(--night); color: var(--on-night); border-radius: 12px; padding: 1rem 1.2rem 1.05rem; font: 400 .92rem/1.6 var(--font-mono); }
+.prompt-box .plabel { font: 700 .68rem var(--font-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--night-link); margin-bottom: .45rem; }
+.prompt-box p { margin: 0 0 .6rem; }
+.prompt-box p:last-child { margin: 0; }
+.prompt-box .src { font: 500 .78rem var(--font-ui); color: var(--night-muted); }
+.prompt-box a { color: var(--night-link); }
+
+/* fact-check / study notes */
+.note { margin: 1.6rem 0; padding: .95rem 1.1rem; border-radius: 12px; background: var(--blue-soft); font: .96rem/1.6 var(--font-ui); }
+.note .nlabel { display: block; font: 700 .7rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--blue); margin-bottom: .3rem; }
+.note.check { background: var(--red-soft); }
+.note.check .nlabel { color: var(--red); }
+.note.try { background: var(--green-soft); }
+.note.try .nlabel { color: var(--green); }
+.note p { margin: 0 0 .5rem; }
+.note p:last-child { margin: 0; }
+.note a { color: inherit; }
+
+/* figures */
+figure.shot { margin: 2rem 0; }
+figure.shot a.zoom, figure.shot > a { display: block; }
+figure.shot img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); box-shadow: var(--shadow); }
+figure.shot figcaption, .cap { font: .84rem/1.5 var(--font-ui); color: var(--muted); margin-top: .6rem; }
+figure.shot.side { float: right; width: 34%; margin: .4rem 0 1rem 1.4rem; }
+@media (max-width: 640px) { figure.shot.side { float: none; width: 100%; margin: 1.4rem 0; } }
+
+/* ---------- full-width bands ---------- */
+.band { width: 100vw; margin-left: calc(50% - 50vw); padding: 2.8rem var(--pad) 2.6rem; margin-bottom: 3rem; margin-top: 2.2rem; }
+.band-inner { max-width: 1120px; margin: 0 auto; }
+.band-night { background: var(--night); color: var(--on-night); }
+.band-night a { color: var(--night-link); }
+.band-night .cap, .band-night figcaption { color: var(--night-muted); }
+.band-night .cap a, .band-night figcaption a { color: var(--night-link); }
+.band-night strong, .band-night b { color: #fff; }
+.band-night a.ts, .takeaways a.ts { background: var(--night2); color: var(--night-muted); border-color: var(--night-line); }
+.band-night a.ts::before { color: var(--night-red); }
+.band-night a.ts:hover { color: var(--night-link); border-color: var(--night-link); }
+.band-paper { background: var(--paper2); }
+.band-label { font: 700 .78rem var(--font-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--red); margin-bottom: .7rem; }
+.band-night .band-label, .takeaways .band-label { color: var(--night-link); }
+.band h3.band-title { font: 400 clamp(1.6rem, 3.4vw, 2.2rem)/1.15 var(--font-display); margin-bottom: .8rem; }
+.band p.band-dek { max-width: 46rem; margin-bottom: 1.3rem; }
+.frame { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--night-line); background: #000; }
+.frame iframe { display: block; width: 100%; border: 0; }
+.frame.video iframe { aspect-ratio: 16 / 9; height: auto; }
+.frame.tall iframe { height: min(86vh, 860px); }
+.frame.mid iframe { height: min(80vh, 760px); }
+.frame.slide iframe { aspect-ratio: 16 / 9; height: auto; pointer-events: none; }
+.band-paper .frame { border-color: var(--line); background: var(--card); }
+.band-full { padding-left: .75rem; padding-right: .75rem; }
+.band-full .band-inner { max-width: none; }
+.band-full .band-inner > :not(.frame) { max-width: 1120px; margin-left: auto; margin-right: auto; }
+.band-full .frame { border-radius: 10px; }
+.band-full .frame.tall iframe { height: min(92vh, 1000px); }
+
+/* link cards */
+.cards { display: grid; gap: 1rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.cards.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cards.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.cards.three { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+@media (max-width: 760px) { .cards.three { grid-template-columns: 1fr !important; } }
+@media (max-width: 960px) { .cards, .cards.four { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .cards, .cards.two, .cards.four { grid-template-columns: 1fr; } }
+.link-card { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--card); color: inherit; text-decoration: none; transition: transform .15s, box-shadow .15s; }
+.link-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); text-decoration: none; }
+.link-card img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; display: block; border-bottom: 1px solid var(--line); }
+.link-card .body { padding: .8rem .95rem 1rem; font: .9rem/1.5 var(--font-ui); color: var(--muted); }
+.link-card .body strong { display: block; font: 700 1rem/1.3 var(--font-ui); color: var(--ink); margin-bottom: .25rem; }
+.link-card .body .go { color: var(--blue); font-weight: 600; }
+
+/* widgets */
+.widget { margin: 2rem -6%; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 1.2rem 1.3rem 1.3rem; box-shadow: var(--shadow); font-family: var(--font-ui); }
+@media (max-width: 860px) { .widget { margin-left: 0; margin-right: 0; } }
+.widget header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1rem; align-items: baseline; margin-bottom: .8rem; }
+.widget h3 { font: 700 1.08rem/1.3 var(--font-ui); margin: 0; }
+.widget .src { font: 600 .74rem var(--font-ui); letter-spacing: .06em; color: var(--muted); }
+.widget .hint { font-size: .95rem; color: var(--muted); margin-bottom: .8rem; line-height: 1.5; }
+.widget .readout { font-size: .98rem; line-height: 1.55; margin-top: .8rem; }
+.widget .readout b { color: var(--red); }
+.choices { display: flex; flex-wrap: wrap; gap: .5rem; }
+.choice { border: 1.5px solid var(--line); background: var(--paper); border-radius: 999px; padding: .45rem .9rem; font: 600 .9rem var(--font-ui); }
+.choice:hover { border-color: var(--ink); }
+.choice:disabled { opacity: .55; cursor: default; }
+.choice[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.seg { display: inline-flex; border: 1.5px solid var(--line); border-radius: 999px; overflow: hidden; }
+.seg button { border: 0; background: transparent; padding: .4rem .9rem; font: 600 .86rem var(--font-ui); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.reveal[hidden] { display: none; }
+
+/* hands funnel */
+.funnel { display: grid; gap: .45rem; margin: .4rem 0 .2rem; }
+.funnel .row { display: grid; grid-template-columns: 15rem 1fr 3rem; gap: .7rem; align-items: center; font-size: .9rem; }
+.funnel .bar { height: 1.15rem; border-radius: 4px; background: var(--paper2); position: relative; overflow: hidden; }
+.funnel .bar i { position: absolute; inset: 0 auto 0 0; background: var(--red); border-radius: 4px; }
+.funnel .row.room .bar i { background: var(--muted); }
+.funnel .n { font: 600 .85rem var(--font-mono); text-align: right; }
+@media (max-width: 560px) { .funnel .row { grid-template-columns: 1fr 2.6rem; } .funnel .row .bar { grid-column: 1 / -1; grid-row: 2; } }
+
+/* diagnosis buckets */
+.buckets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin: 1.6rem -6%; }
+@media (max-width: 860px) { .buckets { margin-left: 0; margin-right: 0; } }
+@media (max-width: 640px) { .buckets { grid-template-columns: 1fr; } }
+.bucket { border-radius: 14px; padding: 1rem 1.05rem; font: .92rem/1.5 var(--font-ui); border: 1px solid var(--line); background: var(--card); }
+.bucket h4 { font: 400 1.4rem/1.1 var(--font-display); margin-bottom: .2rem; }
+.bucket .q { color: var(--muted); font-style: italic; margin-bottom: .6rem; }
+.bucket ul { margin: 0 0 0 1.1rem; }
+.bucket.s { border-top: 5px solid var(--blue); }
+.bucket.v { border-top: 5px solid var(--green); }
+.bucket.r { border-top: 5px solid var(--red); }
+
+/* waffle (double-check) */
+.waffle { display: grid; grid-template-columns: repeat(40, 1fr); gap: 3px; margin: .4rem 0 .7rem; }
+.waffle i { aspect-ratio: 1; border-radius: 2px; background: var(--green); transition: background .25s; }
+.waffle i.rev { background: var(--hi); }
+.waffle i.err { background: var(--red); }
+.legend { display: flex; flex-wrap: wrap; gap: .4rem 1.1rem; font-size: .84rem; color: var(--muted); }
+.legend span::before { content: ""; display: inline-block; width: .8rem; height: .8rem; border-radius: 2px; margin-right: .35rem; vertical-align: -.1rem; background: var(--k); }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; margin-top: .8rem; }
+.stats div { background: var(--paper); border-radius: 10px; padding: .55rem .7rem; }
+.stats b { display: block; font: 600 1.45rem/1.1 var(--font-mono); }
+.stats span { font-size: .8rem; color: var(--muted); }
+input[type="range"] { width: 100%; accent-color: var(--red); }
+@media (max-width: 640px) { .waffle { grid-template-columns: repeat(20, 1fr); gap: 2px; } }
+.vchart { margin: 1.1rem 0 0; padding-top: .9rem; border-top: 1px solid var(--line); }
+.vchart figcaption { font: .86rem var(--font-ui); color: var(--muted); margin-bottom: .3rem; }
+.vchart figcaption b { color: var(--ink); }
+.vchart svg { width: 100%; height: auto; display: block; font-family: var(--font-ui); }
+.vchart text { fill: var(--muted); font-size: 12px; }
+.vchart text.on { fill: var(--ink); font-weight: 700; }
+.vc-grid { stroke: var(--line); }
+.vc-band { fill: var(--paper2); }
+.vc-eff { fill: none; stroke: var(--gold); stroke-width: 3; }
+.vc-err { fill: none; stroke: var(--red); stroke-width: 3; }
+.vc-eff-d { fill: var(--gold); }
+.vc-err-d { fill: var(--red); }
+.vchart .vc-val { font: 700 13px var(--font-mono); }
+.vchart .vc-val.eff, .vchart .vc-lab.eff { fill: var(--gold); }
+.vchart .vc-val.err, .vchart .vc-lab.err { fill: var(--red); }
+.vchart .vc-lab { font-weight: 700; }
+.vc-hit { fill: transparent; cursor: pointer; }
+.vchart .hint { margin: .3rem 0 0; }
+
+/* calibration chart */
+.calib svg { width: 100%; height: auto; display: block; font-family: var(--font-ui); }
+.calib .axis { stroke: var(--line); }
+.calib text { fill: var(--muted); font-size: 11px; }
+.calib .diag { stroke: var(--muted); stroke-dasharray: 4 4; }
+
+/* token strip */
+.tokens { font: 500 1.02rem/2.3 var(--font-mono); margin: .4rem 0 .6rem; }
+.tok { display: inline; padding: .18em .05em; border-radius: 4px; cursor: pointer; border: 0; background: none; font: inherit; color: inherit; white-space: pre; }
+.tok[aria-pressed="true"] { outline: 2px solid var(--ink); }
+.tok-detail { min-height: 7.4rem; background: var(--paper); border-radius: 10px; padding: .7rem .9rem; font-size: .9rem; }
+.tok-detail table { border-collapse: collapse; width: 100%; max-width: 26rem; }
+.tok-detail td { padding: .12rem .4rem; font-family: var(--font-mono); font-size: .85rem; }
+.tok-detail td.bar { width: 50%; }
+.tok-detail td.bar i { display: block; height: .7rem; background: var(--blue); border-radius: 2px; }
+.queue { margin: .8rem 0 0 1.3rem; font-size: .92rem; }
+.queue .qn { color: var(--muted); }
+.queue .qr { font: 700 .82rem var(--font-ui); }
+.queue li.done.ok .qr { color: var(--green); }
+.queue li.done.bad .qr { color: var(--red); }
+.queue li.done.bad { background: var(--red-soft); border-radius: 6px; }
+.queue li.done.skip .qr { color: var(--muted); }
+.twist { margin: 2.2rem 0; padding: 1.2rem 1.4rem 1.1rem; border: 2px solid var(--red); border-radius: 14px; background: var(--card); }
+.twist .nlabel { display: block; font: 700 .72rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--red); margin-bottom: .35rem; }
+.twist h3 { font: 400 clamp(1.45rem, 2.7vw, 1.9rem)/1.2 var(--font-display); margin-bottom: .7rem; }
+.twist h3 em { color: var(--red); }
+.twist p { margin-bottom: .8rem; }
+.twist p:last-child { margin-bottom: 0; }
+.twist .rule { font: italic 400 clamp(1.2rem, 2.2vw, 1.45rem)/1.35 var(--font-display); border-left: 4px solid var(--red); padding-left: 1rem; margin: 1rem 0; }
+
+/* stage flow */
+.flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .6rem; margin: 1.2rem 0 .4rem; counter-reset: st; }
+@media (max-width: 900px) { .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); } .flow .st:last-child { grid-column: 1 / -1; } }
+@media (max-width: 520px) { .flow { grid-template-columns: 1fr; } }
+.st { border-radius: 12px; padding: .9rem .95rem; background: var(--night2); border: 1px solid var(--night-line); font: .88rem/1.5 var(--font-ui); color: var(--night-muted); position: relative; }
+.st::before { counter-increment: st; content: counter(st); font: 600 .75rem var(--font-mono); color: var(--night-link); display: block; margin-bottom: .2rem; }
+.st h4 { font: 400 1.3rem/1.1 var(--font-display); color: var(--on-night); margin-bottom: .35rem; }
+.st .was { display: block; font-size: .78rem; color: var(--night-muted); opacity: .85; margin-bottom: .4rem; text-decoration: line-through; }
+
+/* comic */
+.comic-wrap { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); gap: 2rem; align-items: start; }
+@media (max-width: 900px) { .comic-wrap { grid-template-columns: 1fr; } }
+.comic-wrap img { width: 100%; height: auto; display: block; border-radius: 10px; box-shadow: var(--shadow); }
+.comic-wrap a.zoom { display: block; cursor: zoom-in; }
+.comic-notes { font: .95rem/1.55 var(--font-ui); }
+.comic-notes h3 { font: 400 1.6rem/1.15 var(--font-display); margin-bottom: .7rem; }
+.comic-notes ol { margin: .6rem 0 0 1.2rem; }
+.comic-notes li { margin-bottom: .7rem; }
+.comic-notes .ok { color: var(--green); font-weight: 700; }
+.comic-notes .fix { color: var(--red); font-weight: 700; }
+
+/* takeaways */
+.takeaways { background: var(--night); color: var(--on-night); }
+.takeaways h2 { font: 400 clamp(1.9rem, 4vw, 2.7rem)/1.1 var(--font-display); margin-bottom: 1.4rem; }
+.tk { background: var(--night2); border: 1px solid var(--night-line); border-radius: 14px; padding: 1.1rem 1.15rem 1.2rem; font: .95rem/1.55 var(--font-ui); color: var(--night-muted); }
+.tk .n { font: 600 .8rem var(--font-mono); color: var(--night-link); }
+.tk h3 { font: 700 1.08rem/1.3 var(--font-ui); color: var(--on-night); margin: .3rem 0 .45rem; }
+.tk a { color: var(--night-link); }
+.tk b, .tk strong { color: var(--on-night); }
+
+.practice { background: var(--paper2); }
+.practice h2 { font: 400 clamp(1.8rem, 3.6vw, 2.4rem)/1.1 var(--font-display); margin-bottom: .6rem; }
+.pr { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 1rem 1.1rem 1.1rem; font: .93rem/1.55 var(--font-ui); }
+.pr h3 { font: 700 1.02rem/1.3 var(--font-ui); margin-bottom: .4rem; }
+.pr .tag { font: 700 .68rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--green); }
+.pr code { font: .82rem var(--font-mono); background: var(--paper); padding: .05rem .3rem; border-radius: 4px; }
+
+/* footer */
+.foot { max-width: var(--measure); margin: 3rem auto 2rem; padding: 0 var(--pad); font: .9rem/1.6 var(--font-ui); color: var(--muted); }
+.foot h2 { font: 700 .8rem var(--font-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--ink); margin-bottom: .6rem; }
+.foot ul { margin: 0 0 1.4rem 1.1rem; }
+.foot li { margin-bottom: .35rem; }
+
+/* ---------- jump nav ---------- */
+.jump-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, .35); opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 55; }
+.jump-backdrop.open { opacity: 1; pointer-events: auto; }
+.jump { position: fixed; left: 50%; bottom: .9rem; transform: translateX(-50%); z-index: 56; display: flex; align-items: center; gap: .25rem; padding: .3rem; background: var(--night); color: var(--on-night); border-radius: 999px; box-shadow: var(--shadow); font: 600 .86rem var(--font-ui); max-width: calc(100vw - 1.5rem); }
+.jump > button { background: none; border: 0; color: var(--on-night); border-radius: 999px; height: 2.3rem; padding: 0 .75rem; }
+.jump > button:hover { background: var(--night2); }
+.jump-cur { max-width: 52vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.jump-menu { position: absolute; bottom: calc(100% + .6rem); left: 50%; transform: translateX(-50%); width: min(880px, calc(100vw - 1.5rem)); max-height: 72vh; overflow: auto; background: var(--night); border: 1px solid var(--night-line); border-radius: 16px; padding: 1rem; display: none; text-align: left; }
+.jump-menu.open { display: block; }
+.jm-group { font: 700 .7rem var(--font-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--night-link); margin: .7rem 0 .35rem; }
+.jm-group:first-child { margin-top: 0; }
+.jump-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .35rem; }
+@media (max-width: 640px) { .jump-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.jump-grid a { display: block; padding: .45rem .6rem; border-radius: 8px; color: var(--on-night); text-decoration: none; font: 600 .86rem/1.3 var(--font-ui); background: var(--night2); }
+.jump-grid a small { display: block; font: 500 .74rem var(--font-mono); color: var(--night-muted); margin-top: .15rem; }
+.jump-grid a:hover { background: var(--night-line); }
+.jump-grid a.is-cur { outline: 2px solid var(--night-link); }
+
+/* ---------- dialogs ---------- */
+dialog.pop { width: min(820px, calc(100vw - 1.5rem)); max-height: 88vh; margin: auto; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); color: var(--ink); padding: 0; box-shadow: var(--shadow); }
+dialog::backdrop { background: rgba(0, 0, 0, .55); }
+.pop-head { position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .8rem 1.1rem; background: var(--paper); border-bottom: 1px solid var(--line); z-index: 2; }
+.pop-head h2 { font: 400 1.4rem var(--font-display); }
+.close-x { background: none; border: 1px solid var(--line); border-radius: 999px; padding: .3rem .8rem; font: 600 .82rem var(--font-ui); }
+.pop-search { display: none; padding: .6rem 1.1rem; border-bottom: 1px solid var(--line); gap: .6rem; align-items: center; font: .85rem var(--font-ui); color: var(--muted); }
+.pop-search.on { display: flex; }
+.pop-search input { flex: 1; padding: .45rem .7rem; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: .95rem var(--font-ui); }
+#pop-body { padding: 1rem 1.3rem 1.6rem; font-size: 1.02rem; line-height: 1.65; }
+#pop-body h1, #pop-body h2, #pop-body h3 { font: 400 1.4rem/1.2 var(--font-display); margin: 1.2rem 0 .5rem; }
+#pop-body p { margin: 0 0 .85rem; }
+#pop-body ul, #pop-body ol { margin: 0 0 .85rem 1.4rem; }
+#pop-body li { margin-bottom: .35rem; }
+#pop-body blockquote { margin: 0 0 .85rem; padding-left: .9rem; border-left: 3px solid var(--line); }
+#pop-body hr { border: 0; border-top: 1px dashed var(--line); margin: 1.2rem 0; }
+#pop-body .intro { font: .88rem/1.55 var(--font-ui); color: var(--muted); background: var(--paper2); padding: .7rem .9rem; border-radius: 10px; }
+#pop-body .hide { display: none; }
+dialog.lightbox { width: min(1200px, calc(100vw - 1rem)); max-height: 96vh; margin: auto; border: 0; background: transparent; padding: 0; }
+dialog.lightbox img { display: block; max-width: 100%; max-height: 86vh; margin: 0 auto; border-radius: 8px; background: #fff; }
+.lb-bar { display: flex; justify-content: space-between; gap: 1rem; align-items: center; color: #eee; font: .85rem var(--font-ui); padding: .6rem .2rem; }
+.lb-bar a { color: var(--hi); margin-right: .8rem; }
+.lb-bar button { background: none; border: 1px solid #666; color: #eee; border-radius: 999px; padding: .25rem .8rem; }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; gap: 1.8rem; padding-top: 1.6rem; }
+  .howto-inner { grid-template-columns: 1fr; gap: .4rem; }
+  .topbar .mid { display: none; }
+}
+@media print { .jump, .jump-backdrop, .topbar, #progress, .player { display: none !important; } }
+</style>
+</head>
+<body>
+<div id="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <a href="../">Talks · S Anand</a>
+  <span class="mid">SUTD COIL · Verifying AI agents · 17 Nov 2026</span>
+  <button class="icon-btn" id="theme-btn" type="button" aria-label="Toggle dark mode"><i class="bi bi-circle-half" aria-hidden="true"></i></button>
+</header>
+
+<section class="hero" aria-labelledby="title">
+  <div>
+    <p class="kicker">SUTD COIL · Tuesday 17 Nov 2026 · Singapore</p>
+    <h1 id="title">The agent passed. <em>The test failed.</em> Who verifies the verifier?</h1>
+    <p class="dek">An AI agent sat a proctored hiring test while its owner ate an apple, and nobody noticed. From that one test, a class works out <strong>how to specify to, review and verify an intelligence smarter than you</strong>, and ends up with one rule about logging.</p>
+    <p class="hero-meta"><b>Anand S</b>, LLM Psychologist at <a href="https://www.straive.com/">Straive</a>, with a room of about 25 people at the Singapore University of Technology and Design · recording 1 h 36 min · this page is written as study notes for the people who were there</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="#malleable"><i class="bi bi-book" aria-hidden="true"></i> Read the story</a>
+      <a class="btn" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+      <a class="btn" href="#takeaways"><i class="bi bi-list-check" aria-hidden="true"></i> Takeaways</a>
+    </div>
+  </div>
+  <figure class="verdict">
+    <svg viewBox="0 0 420 280" role="img" aria-labelledby="verdict-t">
+      <title id="verdict-t">Illustration of the hiring-test report: score 52 of 59, SQL solved in 34 seconds against an average of 8 minutes 40 seconds, proctoring violations zero. A PASSED stamp lands, then an apple appears in the webcam frame, and a second stamp reads VERIFIER FAILED.</title>
+      <rect x="14" y="14" width="250" height="252" rx="12" fill="#18222e" stroke="#2f3d4c"/>
+      <g font-family="Familjen Grotesk, sans-serif" fill="#b4c0cc" font-size="12">
+        <text x="32" y="44" font-weight="700" fill="#eef2f5" font-size="13" letter-spacing="1.5">DATA ANALYST · TEST REPORT</text>
+        <text x="32" y="80">Score</text><text x="246" y="80" text-anchor="end" font-family="JetBrains Mono, monospace" fill="#eef2f5" font-size="17" font-weight="600">52 / 59</text>
+        <line x1="32" y1="94" x2="246" y2="94" stroke="#2f3d4c"/>
+        <text x="32" y="116">SQL coding</text><text x="246" y="116" text-anchor="end" font-family="JetBrains Mono, monospace" fill="#6fe0b4">34 s</text>
+        <text x="32" y="134" font-size="10.5">average candidate</text><text x="246" y="134" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="10.5">8 m 40 s</text>
+        <line x1="32" y1="148" x2="246" y2="148" stroke="#2f3d4c"/>
+        <text x="32" y="170">Data-driven question</text><text x="246" y="170" text-anchor="end" font-family="JetBrains Mono, monospace" fill="#6fe0b4">6 s</text>
+        <text x="32" y="188" font-size="10.5">average candidate</text><text x="246" y="188" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="10.5">36 s</text>
+        <line x1="32" y1="202" x2="246" y2="202" stroke="#2f3d4c"/>
+        <text x="32" y="226">Proctoring violations</text><text x="246" y="226" text-anchor="end" font-family="JetBrains Mono, monospace" fill="#6fe0b4" font-size="17" font-weight="600">0</text>
+      </g>
+      <g class="stamp1"><rect x="272" y="89" width="128" height="46" rx="6" fill="none" stroke="#6fe0b4" stroke-width="4"/><text x="336" y="121" text-anchor="middle" font-family="Familjen Grotesk, sans-serif" font-weight="700" font-size="24" fill="#6fe0b4" letter-spacing="2">PASSED</text></g>
+      <rect x="288" y="168" width="118" height="98" rx="10" fill="#0f1720" stroke="#2f3d4c"/>
+      <text x="347" y="184" text-anchor="middle" font-family="Familjen Grotesk, sans-serif" font-size="9.5" fill="#b4c0cc" letter-spacing="1">WEBCAM</text>
+      <circle cx="347" cy="215" r="17" fill="#2f3d4c"/><path d="M318 262c4-22 16-30 29-30s25 8 29 30" fill="#2f3d4c"/>
+      <g><circle cx="371" cy="236" r="10" fill="#e5484d"/><path d="M371 226c1-5 4-7 7-7" stroke="#6fe0b4" stroke-width="2" fill="none"/><circle class="bite" cx="379" cy="232" r="4.5" fill="#e5484d"/></g>
+      <g class="stamp2"><rect x="96" y="194" width="228" height="42" rx="6" fill="#0f1720" fill-opacity=".85" stroke="#ff9b85" stroke-width="4"/><text x="210" y="222" text-anchor="middle" font-family="Familjen Grotesk, sans-serif" font-weight="700" font-size="19" fill="#ff9b85" letter-spacing="1.5">VERIFIER FAILED</text></g>
+    </svg>
+    <figcaption><b>Everything green, and everything wrong.</b> The numbers are from the report Anand showed; the apple is from the proctoring snapshots. Illustration.</figcaption>
+  </figure>
+  <div class="audio-slot" id="audio-slot">
+    <div class="player" id="audio-card" role="group" aria-label="Recording of the talk">
+      <audio id="aud" preload="metadata">
+        <source src="https://github.com/sanand0/talks/releases/download/talks/2026-11-17-sutd-coil.opus" type="audio/ogg; codecs=opus">
+        <a href="https://github.com/sanand0/talks/releases/download/talks/2026-11-17-sutd-coil.opus">Download the audio</a>
+      </audio>
+      <div class="pl-top"><span><b>Listen</b> · full recording · every <span class="ts-demo">mm:ss</span> on this page plays from that moment</span><span class="pl-keys"><kbd>←</kbd> <kbd>→</kbd> 5 s · <kbd>Shift</kbd> 30 s</span></div>
+      <div class="pl-row">
+        <button class="pl-btn pl-play" id="pl-play" type="button" aria-label="Play"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
+        <button class="pl-btn" id="pl-back" type="button" aria-label="Back 5 seconds" title="Back 5 s (←)">−5s</button>
+        <button class="pl-btn" id="pl-fwd" type="button" aria-label="Forward 5 seconds" title="Forward 5 s (→)">+5s</button>
+        <span class="pl-time" id="pl-cur">0:00</span>
+        <div class="pl-track" id="pl-track">
+          <div class="pl-ticks" id="pl-ticks" aria-hidden="true"></div>
+          <input type="range" id="pl-seek" min="0" max="5742" step="1" value="0" aria-label="Position in the recording" aria-valuetext="0:00">
+          <div class="pl-tip" id="pl-tip" hidden></div>
+        </div>
+        <span class="pl-time" id="pl-dur">1:35:42</span>
+        <button class="pl-btn pl-rate" id="pl-rate" type="button" aria-label="Playback speed" title="Playback speed">1×</button>
+        <a class="pl-btn" href="https://github.com/sanand0/talks/releases/download/talks/2026-11-17-sutd-coil.opus" download aria-label="Download the audio" title="Download (Opus)"><i class="bi bi-download" aria-hidden="true"></i></a>
+        <button class="pl-btn x" id="audio-x" type="button" aria-label="Hide the player" title="Hide">✕</button>
+      </div>
+      <p class="pl-now" id="pl-now" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
+<div class="howto" role="note" aria-labelledby="howto-h">
+  <div class="howto-inner">
+    <h2 id="howto-h">How to use this page</h2>
+    <p>Read it top to bottom as a story, or <b>jump to any section</b> from the bar at the bottom of the screen. Every <a class="ts" href="?t=10:26">10:26</a> plays that moment of the recording; <kbd>←</kbd> <kbd>→</kbd> then skip 5 seconds, and hovering the player’s bar previews which section is where. <b>Dotted words</b> explain themselves on hover. Green <b>Try this</b> boxes are exercises; red <b>Fact-check</b> boxes correct or extend what was said in the room. Quotes are verbatim from the AI transcript.</p>
+  </div>
+</div>
+
+<main class="story" id="story">
+
+<p class="act">Prologue · Software you wrote</p>
+
+<section class="chap" id="malleable" data-act="Prologue" data-title="Software is malleable">
+  <p class="eyebrow"><a class="ts" href="?t=01:14">01:14</a><span>to 07:44</span></p>
+  <h2>How much of your software <em>did you write?</em></h2>
+
+  <p class="lede">The host introduced the talk with its title question, <strong>“When AI writes the code, who checks the AI?”</strong>, and guessed what his students would say: <em>“AI will check the AI, right?”</em> <a class="ts" href="?t=00:00">00:00</a> Anand didn’t answer it. He started with a different one: <strong>“what percentage of the software that you use is coded by you?”</strong> <a class="ts" href="?t=01:29">01:29</a></p>
+
+  <p>Then he counted hands, narrowing the question each time, and the room thinned out fast.</p>
+
+  <div class="widget" aria-labelledby="w-funnel-h">
+    <header><h3 id="w-funnel-h">The hands in the room</h3><span class="src">Counts as Anand called them out, 02:06–02:57</span></header>
+    <div class="funnel" role="img" aria-label="Of about 25 people, about 10 had written software, about 6 had used software they wrote, and about 3 to 5 had used it in the last three months.">
+      <div class="row room"><span>In the room (Anand’s estimate)</span><div class="bar"><i style="width:100%"></i></div><span class="n">~25</span></div>
+      <div class="row"><span>Have written software</span><div class="bar"><i style="width:40%"></i></div><span class="n">~10</span></div>
+      <div class="row"><span>Have used software they wrote</span><div class="bar"><i style="width:24%"></i></div><span class="n">6</span></div>
+      <div class="row"><span>…in the last three months</span><div class="bar"><i style="width:18%"></i></div><span class="n">3–5</span></div>
+    </div>
+    <p class="readout">One person raised a hand for “haven’t raised your hand so far”, <b>“whereas it should have been about 25 hands up.”</b> <a class="ts" href="?t=02:50">02:50</a> The count for <em>daily</em> use wasn’t called out.</p>
+  </div>
+
+  <p>Anand’s own answer is a music player. <a href="https://www.videolan.org/vlc/">VLC</a> has no <strong>composer</strong> column to sort or filter by, which matters if you listen by composer. He asked ChatGPT for a player that did this. ChatGPT’s answer, in his retelling: VLC is open source, <em>“You are a programmer. I can fix programs like crazy. What are you talking about? Just take it, download it, and fix it.”</em> <a class="ts" href="?t=04:19">04:19</a> So it did: here is <a href="https://github.com/sanand0/vlc/tree/vlc-3.0.24-composer">his VLC fork with a composer column</a>. He proudly showed it to his daughter.</p>
+
+  <blockquote class="pq">
+    <p>“She looked at me like I was so dumb. ‘Why didn’t you have it write the entire music player?’”</p>
+    <cite>Anand, on his daughter’s review of his VLC fork · <a class="ts" href="?t=05:02">05:02</a></cite>
+  </blockquote>
+
+  <p>Now he has his own player, synced between phone and laptop, with a right-click <strong>“Find me 10 similar next songs”</strong>, which works as a personal recommendation engine. The day before the talk he was “hacking Gmail”: an extension where <strong>Alt+Shift+M</strong> attaches a note to an email, like “ignore for now”, so he doesn’t have to re-read and re-decide the same email every time. <a class="ts" href="?t=06:35">06:35</a> The software doesn’t even have to be open source. <strong>Software is malleable.</strong></p>
+
+  <p>He admitted this had “very little to do with the talk”, but it was a check on whether the room was <span class="tip" tabindex="0" data-tip="“Eating your own dog food”: using the product you build, so you feel its problems first.">dogfooding</span> agentic coding at all. Then he named the real subject: <strong>“what I am going to talk about is how one goes about verifying AI agents.”</strong> <a class="ts" href="?t=07:19">07:19</a> Hold on to the first question, though. It comes back at the end.</p>
+</section>
+
+<p class="act">Act I · The test that failed</p>
+
+<section class="chap" id="apple" data-act="I · The test" data-title="The apple">
+  <p class="eyebrow"><a class="ts" href="?t=07:44">07:44</a><span>to 11:50</span></p>
+  <h2>Why is he <em>eating an apple?</em></h2>
+
+  <p class="lede">Straive recruits analysts using an online testing platform, <a href="https://www.imocha.io/">iMocha</a>, with a <span class="tip" tabindex="0" data-tip="A pool of pre-written questions with answer keys. Each candidate gets a sample from it.">question bank</span> for every skill. Anand took the data-analyst test himself. His score: <strong>52 out of 59</strong>. He asked the room whether Straive would have hired him. A few said yes; “half a hand” said no. <a class="ts" href="?t=09:01">09:01</a></p>
+
+  <figure class="shot side">
+    <a class="zoom" href="still-apple.webp" data-lightbox data-caption="Proctoring snapshots from the test, as Anand published them on his blog: same person, nobody else in frame, no violations, and an apple."><img src="still-apple.webp" width="480" height="744" loading="lazy" alt="Two webcam proctoring snapshots of a grey-haired man sitting in front of his laptop, eating an apple. Nobody else is in the frame."></a>
+    <figcaption>The proctoring snapshots. From <a href="https://www.s-anand.net/blog/using-agents-to-answer-exams/">Using agents to answer exams</a>.</figcaption>
+  </figure>
+
+  <p>The detail was even better. A SQL coding question that takes the average candidate <strong>8 minutes 40 seconds</strong> took him <strong>34 seconds</strong>. A data question that takes others 36 seconds took him about 6. And the <span class="tip" tabindex="0" data-tip="Remote invigilation: the webcam photographs you during the test, and software checks it’s the same person and nobody is helping.">proctoring</span> report, which photographs the candidate through the webcam to check that nobody is helping, showed <strong>zero violations</strong>. <a class="ts" href="?t=09:47">09:47</a></p>
+
+
+  <p>“Kind of looks fine, right? Except, <strong>how come I’m eating an apple in the middle of a test?</strong>” <a class="ts" href="?t=10:11">10:11</a></p>
+
+  <div class="dialogue">
+    <div class="line"><span class="who">Audience</span><span>“The agent is writing code for you.”</span></div>
+    <div class="line a"><span class="who">Anand</span><span>“Because my agent is writing my code for me. Exactly.” <a class="ts" href="?t=10:26">10:26</a></span></div>
+  </div>
+
+  <p>The agent was <a href="https://openai.com/codex/">Codex</a>, driving the browser, running a deliberately cheap model, “GPT-5.6 Luna medium. … I’m not spending tokens on something as basic as this, which is incidentally why it got some of the spatial questions wrong.” <a class="ts" href="?t=11:04">11:04</a> The video he played was real time.</p>
+  <div style="clear:both"></div>
+</section>
+
+<div class="band band-night" aria-labelledby="yt-h">
+  <div class="band-inner">
+    <p class="band-label">Watch it happen</p>
+    <h3 class="band-title" id="yt-h">Codex sitting the practice test, in real time</h3>
+    <div class="frame video">
+      <iframe src="https://www.youtube-nocookie.com/embed/AxXQhSehfbw" title="Codex GPT 5 6 Luna solving an iMocha Practice Test" loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <p class="cap"><a href="https://www.youtube.com/watch?v=AxXQhSehfbw">Codex GPT 5 6 Luna solving an iMocha Practice Test</a> on YouTube. The test runs on <a href="https://test.imocha.io/Authenticate">iMocha’s test platform</a>; the agent controls the browser over the Chrome DevTools Protocol.</p>
+  </div>
+</div>
+
+<blockquote class="pq">
+    <p>“If an agent is not taking your test, then you are wasting your time. If an agent is able to solve your test, you have to ask your professor, ‘What on Earth are you teaching me when my agent can do it?’”</p>
+    <cite>Anand · <a class="ts" href="?t=10:43">10:43</a></cite>
+  </blockquote>
+
+<section class="chap" id="verifier" data-act="I · The test" data-title="Who verifies the verifier?">
+  <p class="eyebrow"><a class="ts" href="?t=11:50">11:50</a><span>to 14:27</span></p>
+  <h2>The answer key <em>was wrong</em></h2>
+
+  <p class="lede">Anand sent the run to the team that maintains the questions, with two questions. The first: <strong>why does your question bank have errors?</strong> One question asked how to filter a <a href="https://pandas.pydata.org/">Pandas</a> table. The agent used <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.query.html"><code>DataFrame.query()</code></a>, a perfectly valid method. Anand ran it by hand afterwards; it worked. The test marked it wrong. <a class="ts" href="?t=11:50">11:50</a></p>
+
+  <blockquote class="pq">
+    <p>“The question bank is supposed to be the source of truth, right? … and there is a mistake.”</p>
+    <cite>Anand · <a class="ts" href="?t=12:44">12:44</a></cite>
+  </blockquote>
+
+  <p>That is the talk’s central question in its smallest form: <strong>“Now, who verifies the verifier?”</strong> <a class="ts" href="?t=12:37">12:37</a> A test is a verifier. It decides whether a candidate (human or agent) is right. If the verifier itself is wrong, every score downstream inherits the error, and nothing looks red.</p>
+
+  <div class="note check">
+    <span class="nlabel">Fact-check · more from the blog post</span>
+    <p>The Pandas question wasn’t the only one. Anand’s <a href="https://www.s-anand.net/blog/using-agents-to-answer-exams/#questions-banks-have-errors">write-up of the run</a> lists a compound-interest question where <strong>none of the four options was correct</strong>, a logic question about robins and sparrows that asked for a conclusion about finches that <strong>didn’t follow from the facts</strong>, and a SQL join that the test <strong>accepted although it could assign an old salary to the wrong department</strong>. Lesson from the post: “Question banks have errors. Agents can cheaply check quality.”</p>
+  </div>
+
+  <p>The second question he put to the room. Given that Codex solved the exam, should Straive have hired him? Four hands said yes, it doesn’t matter who solves it. About six said no, “and the hands definitely went up faster.” <a class="ts" href="?t=13:25">13:25</a> Then he sharpened it: <strong>human A is smart enough to use an agent; human B isn’t using one. Who do you hire?</strong> <a class="ts" href="?t=13:46">13:46</a></p>
+
+  <div class="dialogue">
+    <div class="line"><span class="who">Audience</span><span>“It depends on the role, right? … if the job process is about that, they’re supposed to use the AI agent to do something, then of course you hire someone, the other one. You might want someone to actually might use AI agents to start with, but you also want that person to be able to critically analyze the results, or troubleshoot things in the absence of AI.” <a class="ts" href="?t=14:31">14:31</a></span></div>
+    <div class="line a"><span class="who">Anand</span><span>“Good point. So, the answer is not necessarily a ‘yes’ or a ‘no’, the answer is, ‘It depends on the role.’ Fair.” <a class="ts" href="?t=14:22">14:22</a></span></div>
+  </div>
+
+  <div class="note try">
+    <span class="nlabel">Try this</span>
+    <p>Take the last test or assignment you sat. Could an agent pass it? If yes, what is it actually measuring, and what would you change so it measures the thing the examiner cares about? Anand’s own suggestions, from the blog: ask candidates to <strong>use agents well</strong> on a hard task, and to <strong>verify agent output</strong> seeded with errors “ranging from blatant to subtle”.</p>
+  </div>
+</section>
+
+<div class="band band-paper" aria-labelledby="slide2-h">
+  <div class="band-inner">
+    <p class="band-label" id="slide2-h">The slide that came next</p>
+    <div class="frame slide"><iframe src="https://tools.s-anand.net/slide/#title=%23+What+went+wrong%3F&amp;subtitle=+&amp;titleFont=Oswald&amp;subtitleFont=Montserrat&amp;titleScale=1&amp;subtitleScale=-1&amp;fgColor=%23ffffff&amp;bgColor=%23d62828&amp;bgSearch=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F7605676%2Fpexels-photo-7605676.jpeg" title="Title slide: What went wrong?" loading="lazy" tabindex="-1"></iframe></div>
+    <p class="cap">Anand makes his section slides with his own <a href="https://tools.s-anand.net/slide/#title=%23+What+went+wrong%3F&amp;subtitle=+&amp;titleFont=Oswald&amp;subtitleFont=Montserrat&amp;titleScale=1&amp;subtitleScale=-1&amp;fgColor=%23ffffff&amp;bgColor=%23d62828&amp;bgSearch=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F7605676%2Fpexels-photo-7605676.jpeg">slide tool</a>, a one-page title-slide maker. The talk opened with another one: <a href="https://tools.s-anand.net/slide/#title=%23+What+%25+of+software+you+use+is+coded+by+you%3F&amp;subtitle=+&amp;titleFont=Oswald&amp;subtitleFont=Montserrat&amp;titleScale=1&amp;subtitleScale=-1&amp;fgColor=%23ffffff&amp;bgColor=%23d62828&amp;bgSearch=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F7605676%2Fpexels-photo-7605676.jpeg">“What % of software you use is coded by you?”</a></p>
+  </div>
+</div>
+
+<section class="chap" id="wrong" data-act="I · The test" data-title="What went wrong?">
+  <p class="eyebrow"><a class="ts" href="?t=14:27">14:27</a><span>to 19:54</span></p>
+  <h2>What did the test-makers <em>get wrong?</em></h2>
+
+  <p class="lede">Anand laid out the charge: the test <strong>got a question wrong</strong>, and it <strong>didn’t detect the agent</strong>. “Eating an apple during the quiz apparently is not a violation, though it indicates several, several other things.” <a class="ts" href="?t=15:01">15:01</a> What went wrong in verifying the verifier? The room offered answers, and each is worth keeping.</p>
+
+  <ul>
+    <li><strong>“The specification was not complete.”</strong> <a class="ts" href="?t=15:19">15:19</a> Add “no eating” as a violation, suggested the student. Anand pushed back: what if he wasn’t eating, but someone stood outside the camera? You can keep patching the spec, but “how do we complete them is not immediately obvious.”</li>
+    <li><strong>Fix the examination space.</strong> <a class="ts" href="?t=16:06">16:06</a> Hold the test somewhere an agent can’t be used. A change of <em>environment</em>, not of rules.</li>
+    <li><strong>“They didn’t validate whether they verified what they were trying to.”</strong> <a class="ts" href="?t=16:48">16:48</a> Anand noted they <em>had</em> validated it: people without SQL skills did badly, people with Python skills did well. Just not against this kind of candidate.</li>
+    <li><strong>“They assumed that no one would use an agent.”</strong> <a class="ts" href="?t=17:34">17:34</a> “Almost a blind spot,” said Anand.</li>
+  </ul>
+
+  <blockquote class="pq blue">
+    <p>“How do you know what your assumptions are?”</p>
+    <cite>Anand · <a class="ts" href="?t=18:00">18:00</a></cite>
+  </blockquote>
+
+  <p>We assume dozens of things we never state, he said: that the world will exist tomorrow, that no robot will eat us. “Just like I kind of assuming that it’s not like there’s suddenly going to be an intelligence that’s as smart as a data analyst that’s going to come and take my test tomorrow. <strong>Except that it kind of happened.</strong>” <a class="ts" href="?t=18:00">18:00</a> So how do you surface an assumption you don’t know you’re making?</p>
+
+  <div class="dialogue">
+    <div class="line"><span class="who">Audience</span><span>“Have another agent check.” <i>[laughter]</i> <a class="ts" href="?t=18:53">18:53</a></span></div>
+    <div class="line a"><span class="who">Anand</span><span>“That is actually a fantastic idea. … If you literally ask, ‘What am I assuming that I’m not even aware of? What are my blind spots?’ It can do a pretty good job.”</span></div>
+  </div>
+
+  <p>The laugh was because it sounded like the lazy answer the host predicted. It isn’t. It is the same move as asking a friend, a colleague or a professor to double-check, and it returns later in the talk with numbers. Anand added his own human version: he <strong>keeps a list of the feedback he ignores</strong>, because “if I’m ignoring it, it’s a blind spot.” <a class="ts" href="?t=19:34">19:34</a></p>
+
+  <p>He then sorted the room’s answers into <strong>three buckets</strong>. <a class="ts" href="?t=19:54">19:54</a> They organise the rest of the talk, and are worth learning as a checklist of their own.</p>
+</section>
+
+<div class="buckets" role="list" aria-label="Three ways the test could have been better">
+  <div class="bucket s" role="listitem">
+    <h4>Specify</h4>
+    <p class="q">Before the work: what does “right” mean?</p>
+    <ul><li>Incomplete spec (“no eating”)</li><li>Unstated assumptions (“no one uses an agent”)</li></ul>
+  </div>
+  <div class="bucket v" role="listitem">
+    <h4>Verify</h4>
+    <p class="q">After the work: is the result right?</p>
+    <ul><li>A wrong answer key</li><li>Validation that never met an agent</li></ul>
+  </div>
+  <div class="bucket r" role="listitem">
+    <h4>Review</h4>
+    <p class="q">During the work: the system, the environment</p>
+    <ul><li>Webcam proctoring that sees only a face</li><li>An exam room that allows agents</li></ul>
+  </div>
+</div>
+<p class="cap" style="margin:-.6rem 0 2.4rem">The three buckets are Anand’s; which answer goes in which bucket is this page’s sorting.</p>
+
+<p class="act">Act II · Someone smarter than you</p>
+
+<section class="chap" id="jagged" data-act="II · Smarter than you" data-title="The jagged edge">
+  <p class="eyebrow"><a class="ts" href="?t=19:54">19:54</a><span>to 24:25</span></p>
+  <h2>How do you check someone <em>smarter than you?</em></h2>
+
+  <p class="lede">Agents are smarter than us in some ways and nowhere near as smart in others. Anand drew on <a href="https://www.oneusefulthing.org/p/centaurs-and-cyborgs-on-the-jagged">Ethan Mollick’s</a> idea of a <span class="tip" tabindex="0" data-tip="AI capability is uneven: superhuman at some tasks, oddly weak at others that look equally hard to us. The boundary is hard to see in advance.">jagged frontier</span>: picture human ability as a circle and AI as a spiky blob growing around it. Today the blob pokes past the circle in many places but not most. <a class="ts" href="?t=19:54">19:54</a> Whether it ever swallows the circle (“AGI, ASI, whatever you want to call it”) he set aside: “I’m less worried about the future. I’m more curious about the present.”</p>
+</section>
+
+<div class="band band-night" aria-labelledby="jag-h">
+  <div class="band-inner">
+    <p class="band-label">The picture he drew</p>
+    <h3 class="band-title" id="jag-h">The jagged edge of AI</h3>
+    <div class="frame mid"><iframe src="https://files.s-anand.net/pages/ai-jagged-edge/" title="Jagged Edge of AI: an animation of AI capability growing unevenly around a circle of human ability" loading="lazy"></iframe></div>
+    <p class="cap">The circle is human-level ability; the blob is AI. Press play and watch where it crosses the circle first. <a href="https://files.s-anand.net/pages/ai-jagged-edge/">Open the Jagged Edge of AI animation</a>.</p>
+  </div>
+</div>
+
+<section class="chap" id="smarter" data-act="II · Smarter than you" data-title="Three questions">
+  <blockquote class="pq">
+    <p>“How do you specify to someone smarter than you? How do you verify someone smarter than you? How do you review someone smarter than you?”</p>
+    <cite>Anand · <a class="ts" href="?t=21:12">21:12</a></cite>
+  </blockquote>
+
+  <p>“You’ve met people smarter than you,” he said. “How do you specify to them?” <a class="ts" href="?t=21:27">21:27</a> Two answers came quickly.</p>
+
+  <ul>
+    <li><strong>“Make them show their work.”</strong> <a class="ts" href="?t=21:38">21:38</a> Break the answer into steps you can cross-check. Anand: that stops you being fooled by someone smarter, “who might actively be trying to trick you”, and catches honest mistakes too.</li>
+    <li><strong>Pick problems that are easier to verify than to solve.</strong> <a class="ts" href="?t=22:20">22:20</a> A student gave the example of <span class="tip" tabindex="0" data-tip="Finding the cheapest route or schedule can take enormous search. Checking that a given one is cheaper than the last takes one calculation. (The formal version of this idea is the P vs NP question.)">optimisation</span>: “To search for an optimal can be difficult, but to verify that it is can be straightforward.” Anand narrowed it: you can easily check a solution is <em>better</em> than the previous one, not that it’s the <em>best</em>. “So, better, yes; best, not sure. But at least you know if it’s better, and that’s still good.” <a class="ts" href="?t=23:47">23:47</a></li>
+  </ul>
+
+  <p>Then he took the earlier student’s advice and asked AI. Surely this isn’t the first time people have had to brief someone smarter than them. <strong>“You visit a doctor. How on Earth do you give specifications to a doctor when you don’t even know what’s wrong with you?”</strong> <a class="ts" href="?t=24:37">24:37</a></p>
+
+  <div class="dialogue">
+    <div class="line"><span class="who">Audience</span><span>“The doctor asks you questions.” <a class="ts" href="?t=24:47">24:47</a></span></div>
+    <div class="line a"><span class="who">Anand</span><span>“The doctor asks you questions. So, interviewing seems to be a pretty good technique, where, for instance, you would tell an agent, ‘Look, I have no idea what I want. You ask me. Figure out what I want and then solve it.’”</span></div>
+  </div>
+
+  <blockquote class="pq green">
+    <p>“Interviewing is one of the most effective techniques that I’ve seen, and I learned that from doctors.”</p>
+    <cite>Anand · <a class="ts" href="?t=25:03">25:03</a></cite>
+  </blockquote>
+
+  <p>And how does a judge rule on a patent case without understanding the technology? They hear an expert for the plaintiff and an expert for the defendant, and compare. The agent version is one line: <strong>“Claude, this is what ChatGPT said. ChatGPT, this is what Claude said. What do you think?”</strong> <a class="ts" href="?t=25:31">25:31</a></p>
+</section>
+
+<section class="chap" id="prompts" data-act="II · Smarter than you" data-title="Mine your own prompts">
+  <p class="eyebrow"><a class="ts" href="?t=26:11">26:11</a><span>to 28:13</span></p>
+  <h2>Your prompts are <em>a data set</em></h2>
+
+  <p class="lede">Anand asked several agents two things. How do experts in other professions specify a brief, review work and verify results? And, from the <strong>10,000 or 12,000 prompts</strong> he had typed that year, how does <em>he</em> actually do it? <a class="ts" href="?t=26:11">26:11</a> “None of this is unusual. None of this is non-obvious. Perhaps the only one that may not be obvious is that you can run this technique on yourself.” <a class="ts" href="?t=27:00">27:00</a></p>
+
+  <p>Why are your prompts worth mining? When you tell an agent <em>“No, no, no, that’s not what I want,”</em> you are doing three things at once: <a class="ts" href="?t=27:18">27:18</a></p>
+  <ol>
+    <li><strong>Stating a preference</strong>: I prefer X over Y.</li>
+    <li><strong>Spotting an error</strong> or misalignment in the agent, which is grounds for a fix: not fine-tuning, “but just even creating a skill to resolve it.”</li>
+    <li><strong>Revealing what you care about</strong>, which helps you prioritise and build your own profile of objectives.</li>
+  </ol>
+
+  <blockquote class="pq">
+    <p>“The single most valuable button for me on both Claude and ChatGPT is that export data button.”</p>
+    <cite>Anand · ChatGPT’s export sends him a 1.4 GB archive · <a class="ts" href="?t=27:54">27:54</a></cite>
+  </blockquote>
+
+  <p>The result of that mining is an interactive playbook: <strong>22 verification techniques</strong> in six categories (Define, Show, Test, Challenge, Protect, Learn), each with prompts he actually typed, plus a second view of how professions verify experts. The talk walks through the ones that worked best on his software work. Explore it below; it is the best study companion to this page.</p>
+</section>
+
+<div class="band band-night band-full" aria-labelledby="pb-h">
+  <div class="band-inner">
+    <p class="band-label">Study companion</p>
+    <h3 class="band-title" id="pb-h">22 ways I verify AI work</h3>
+    <p class="band-dek">Click any card for its description, why it works, and real prompts. Toggle <b>I</b> / <b>pros</b> at the top to switch between Anand’s techniques and how professions do it.</p>
+    <div class="frame tall"><iframe src="https://files.s-anand.net/pages/verification-techniques/#?m=verify&amp;show=22&amp;t=test-the-tester" title="How I Specify, Review and Verify AI Work: an interactive board of verification techniques" loading="lazy"></iframe></div>
+    <p class="cap"><a href="https://files.s-anand.net/pages/verification-techniques/#?m=verify&amp;show=22&amp;t=test-the-tester">Open 22 Ways I Verify AI Work</a> in a new tab, or the professional view: <a href="https://files.s-anand.net/pages/verification-techniques/#?m=verify&amp;v=pro&amp;show=6&amp;t=ask-for-receipts">31 Ways Professions Verify Expert Work</a>.</p>
+  </div>
+</div>
+
+<section class="chap" id="done" data-act="II · Smarter than you" data-title="Define done">
+  <p class="eyebrow"><a class="ts" href="?t=28:13">28:13</a><span>to 32:22</span></p>
+  <h2>Define done, <em>or let the agent define it</em></h2>
+
+  <p class="lede">The first technique is <a href="https://files.s-anand.net/pages/verification-techniques/#?m=verify&amp;show=22&amp;t=define-done&amp;open=1">Define done</a>: say what counts as finished before the work starts. The surprise is <em>how</em> Anand does it. Often he doesn’t define done himself. He tells the agent to. <a class="ts" href="?t=28:13">28:13</a></p>
+
+  <div class="prompt-box">
+    <div class="plabel">Prompts Anand uses · read out at 28:13</div>
+    <p>“My aim is not to produce a time log, an activity report, blah, blah, blah. … Make sure that your definition of done does not include this.”</p>
+    <p>“If the task never defined what does not count, I want you to infer two or three tempting false victories, and confirm that the answer is not one.”</p>
+    <p>“For non-trivial tasks, define what done means and verify before concluding.”</p>
+    <p class="src">The last line sits in his global agent instructions, used by both Claude Code and Codex.</p>
+  </div>
+
+  <p>A <span class="tip" tabindex="0" data-tip="A polished answer to a nearby, easier question. It looks finished, but isn’t what was asked.">false victory</span> is the most common failure: not a wrong answer, but a confident answer to an easier question next door. Why leave the definition to the agent? Because <strong>“I have no idea what done means.”</strong> He is specifying to an intelligence smarter than him, in areas where he lacks experience. <a class="ts" href="?t=29:35">29:35</a></p>
+
+  <blockquote class="pq blue">
+    <p>“By the time you graduate, most of the stuff you’ll be dealing with is stuff you don’t understand.”</p>
+    <cite>Anand · <a class="ts" href="?t=30:03">30:03</a></cite>
+  </blockquote>
+
+  <h3>The intern who “was brilliant”</h3>
+  <p>Ankur, Straive’s CEO, needed a demo for an important client in three days and asked Anand for someone experienced. Anand sent Varun, an intern, with these instructions: <a class="ts" href="?t=30:43">30:43</a></p>
+
+  <blockquote class="say">
+    <p>“Varun, look, there’s no way you’ll understand a word of what Ankur is saying. Do not try. He will talk at a very different level. What I want you to do is: one, record the call; second, transcribe it; three, paste it into Claude; four, send him the output. That’s it.”</p>
+    <cite>Anand, to Varun · <a class="ts" href="?t=30:43">30:43</a></cite>
+  </blockquote>
+
+  <p>Varun did. Ankur asked for changes; Varun put the new transcript back into Claude and sent the result. That evening, Ankur called Anand: <strong>“Where is this guy Varun from? He is brilliant!”</strong> <a class="ts" href="?t=31:21">31:21</a></p>
+
+  <blockquote class="pq green">
+    <p>“Sometimes the smartness is really about getting out of the way.”</p>
+    <cite>Anand · <a class="ts" href="?t=31:29">31:29</a></cite>
+  </blockquote>
+
+  <p>But how do you know the output isn’t completely off if you don’t know what it should look like? Varun didn’t. <strong>“Varun was using Ankur as the definition of done.”</strong> <a class="ts" href="?t=32:05">32:05</a> The expert who would judge the result was in the loop, and the feedback was fast. Remember this move: <strong>when you can’t verify, route the output to someone who can, quickly.</strong> It returns twice more.</p>
+</section>
+
+<section class="chap" id="bracket" data-act="II · Smarter than you" data-title="The forked bracket">
+  <p class="eyebrow"><a class="ts" href="?t=32:22">32:22</a><span>to 35:58</span></p>
+  <h2>Spot the difference <em>in the bracket</em></h2>
+
+  <p class="lede">Anand gave agents an engineering drawing of a <strong>forked mounting bracket</strong> and asked each to build the 3D CAD model for printing. He showed three renders side by side, Claude’s, Codex’s and the reference, and asked the room to spot a difference. Nobody could. <a class="ts" href="?t=32:22">32:22</a> Neither could he, until a colleague rotated the model all the way round: “Hey, wait, wait. What’s this little thing that Codex has?” “Oh, okay. Yeah, fine. Ah, that’s a small error, let it be.” <a class="ts" href="?t=33:38">33:38</a></p>
+
+  <p>The real lesson was in the verification. He had run two verifier set-ups:</p>
+  <ul>
+    <li><strong>Option A</strong>: he told the verifier <em>how</em> to check: inspect it visually, minimise visual errors.</li>
+    <li><strong>Option B</strong>: “You decide how you want to inspect and see if it’s okay.” <a class="ts" href="?t=34:07">34:07</a></li>
+  </ul>
+  <p>Option B searched, found the exact part in a <a href="https://www.freecad.org/">FreeCAD</a> benchmark with its ground-truth geometry, and measured. Claude matched almost perfectly. Codex scored only about <strong>31% on geometry</strong>, on measures like solid-volume overlap and face-centre alignment that Anand admitted he didn’t fully understand. <a class="ts" href="?t=34:18">34:18</a> Option A, the visual check he had prescribed, was looking at exactly what had fooled the room.</p>
+</section>
+
+<div class="band band-paper band-full" aria-labelledby="cad-h">
+  <div class="band-inner">
+    <p class="band-label">Rotate it yourself</p>
+    <h3 class="band-title" id="cad-h">Claude, Codex, and the original CAD</h3>
+    <p class="band-dek">Drag inside each panel to rotate, scroll to zoom, or press ▶ Play to watch each model being built. Then scroll inside the frame to <b>“The results”</b> and <b>“Why the score can disagree with your eyes”</b>: shared material volume is 99% for Codex, yet its geometry score is 31%.</p>
+    <div class="frame tall"><iframe src="https://jivraj-18.github.io/cad-bench/freecad-f32bdb2966.html#comparison" title="Forked mounting bracket: drawing, reconstructions by Claude and Codex, and independent verification" loading="lazy"></iframe></div>
+    <p class="cap"><a href="https://jivraj-18.github.io/cad-bench/freecad-f32bdb2966.html">Forked mounting bracket</a> on the CAD benchmark page. Official overall scores: Claude Opus 5.5 &gt;99.9%, Codex (GPT-6.1 Sol) 47.3%.</p>
+  </div>
+</div>
+
+<section class="chap" id="bracket-lesson" data-act="II · Smarter than you" data-title="I was the bottleneck">
+  <blockquote class="pq">
+    <p>“One of the things that I’ve found is that I am the person that’s messing up the verification of the verifier.”</p>
+    <cite>Anand · <a class="ts" href="?t=35:32">35:32</a></cite>
+  </blockquote>
+
+  <p>Telling the verifier how to check had capped it at <em>his</em> idea of checking. “There are a series of things that I’m not aware of that I should be looking for, that all I had to do was let it loose and say, <strong>‘You go beyond the limitations of my thinking and figure it out.’</strong>” <a class="ts" href="?t=35:07">35:07</a> Is its answer right? “I don’t, but at least it’s better.” Constraining a verifier is itself an assumption, and like any assumption, it’s worth testing: run the check <strong>with and without</strong> your constraints and compare.</p>
+
+  <div class="note">
+    <span class="nlabel">Look closer</span>
+    <p>The benchmark page shows something the talk didn’t have time for. The two models share <strong>99% of their solid material</strong> with the reference. Codex’s geometry score is low because the grader also scores exact volume and the positions of <em>face centres</em>, and both came out near zero for Codex; a different construction order can split the same surface into different faces. A verifier can be more precise than your eye and still measure something slightly different from what you care about. Test the tester, too.</p>
+  </div>
+</section>
+
+<p class="act">Act III · Test the tester</p>
+
+<section class="chap" id="graders" data-act="III · Test the tester" data-title="Two graders">
+  <p class="eyebrow"><a class="ts" href="?t=35:58">35:58</a><span>to 39:08</span></p>
+  <h2>Two graders, <em>one mistake caught</em></h2>
+
+  <p class="lede">The next technique is the one the class had already suggested: <a href="https://files.s-anand.net/pages/verification-techniques/#?m=verify&amp;show=22&amp;t=test-the-tester&amp;open=1">Test the tester</a>. Before you trust a test, a judge or a grader, check that it works. Anand was grading a data-analytics case study at <a href="https://www.iimb.ac.in/">IIM Bangalore</a>: <strong>eight student groups</strong>, each with slides, images and data in his downloads folder. He asked Claude to go through everything and score the presentations. <a class="ts" href="?t=35:58">35:58</a> It gave the healthcare group 19 out of 20, the co-living group 19, and so on. <a class="ts" href="?t=36:54">36:54</a></p>
+
+  <p>Then he gave the same question to ChatGPT, and pasted ChatGPT’s answer back into Claude: <a class="ts" href="?t=37:09">37:09</a></p>
+
+  <div class="prompt-box">
+    <div class="plabel">Prompt · as Anand read it out</div>
+    <p>“I want you to fact-check what it said, what you said. Take what’s better, drop what’s worse. If that gives you any new thoughts, go along that direction.”</p>
+    <p class="src">The same technique, refined, is <a href="https://files.s-anand.net/pages/verification-techniques/#?m=verify&amp;show=22&amp;t=ask-another-ai&amp;open=1">Ask another AI</a> in the playbook: “Fact-check and critically evaluate yours and theirs - only the parts that’ll change the outcome and where there’s disagreement.”</p>
+  </div>
+
+  <blockquote class="pq">
+    <p>“I was wrong about Group 8’s contradictory accuracy figures.”</p>
+    <cite>Claude’s first line after comparing notes, as Anand read it · <a class="ts" href="?t=37:58">37:58</a></cite>
+  </blockquote>
+
+  <p>Claude had docked Group 8 for quoting <strong>92%</strong> in one place and <strong>98%</strong> in another. ChatGPT, “which tends to be a little more diligent about some of these things, if not as visually perfect,” had redone the analysis: drop the invalid survey respondents and you get 98%; keep them and you get 92%. <strong>Both numbers were correct.</strong> <a class="ts" href="?t=38:18">38:18</a> One grader made a mistake; the other didn’t; together, the mistake vanished. Notice how the error surfaced: as <em>actual numbers</em> from the slides and the survey, side by side, not as a summary. The playbook calls this <a href="https://files.s-anand.net/pages/verification-techniques/#?m=verify&amp;show=22&amp;t=show-actual-text&amp;open=1">Show actual text</a>: “You can recognise a wrong example instantly; you can’t recognise a wrong abstraction.” “That’s what I tell my team as well. … compare notes, tell me what you’ve done better, except that agents seem to be doing this a whole lot better.”</p>
+
+  <p>Note what the second AI did <em>not</em> do. It didn’t vote. It brought <strong>fresh evidence</strong>, a recalculation, that settled the disagreement. The playbook card puts it well: a second model is “a disagreement generator, not an oracle”.</p>
+</section>
+
+<section class="chap" id="voting" data-act="III · Test the tester" data-title="Five models agree">
+  <p class="eyebrow"><a class="ts" href="?t=39:08">39:08</a><span>to 43:50</span></p>
+  <h2>When five models agree, <em>let it through</em></h2>
+
+  <p class="lede">Does this scale? Anand’s team tested it on <span class="tip" tabindex="0" data-tip="Sorting each customer message into one of a fixed set of intents (track order, change order, refund…) so it reaches the right queue.">intent classification</span> of customer-support messages from a <a href="https://www.kaggle.com/datasets/scodepy/customer-support-intent-dataset">Kaggle data set</a>. “Help with adding some items” is a <em>change order</em>; <a href="https://aws.amazon.com/ai/generative-ai/nova/">Nova Lite</a> called it <em>placing an order</em>, while GPT-4.1 mini and Gemini 2.5 Flash got it right. <a class="ts" href="?t=39:21">39:21</a> Overall, single models were about 85% accurate, roughly a 14% error rate.</p>
+
+  <p>The key observation: <strong>models make different mistakes</strong>. Their errors are far from perfectly correlated. Gemma 3, for instance, rarely classified things the way GPT-4.1 nano did. So the rule is simple: <strong>if the models agree, accept the answer; if any disagree, send it to a human.</strong> <a class="ts" href="?t=40:47">40:47</a> Slide to add models.</p>
+
+  <div class="widget" id="w-vote" aria-labelledby="w-vote-h">
+    <header><h3 id="w-vote-h">200 support tickets, <span id="vote-k">1</span> model<span id="vote-s"></span></h3><span class="src">Data: <a href="https://sanand0.github.io/llmevals/double-checking/">Double Checking Hallucinations</a></span></header>
+    <label class="sr" for="vote-range">Number of models that must agree</label>
+    <input id="vote-range" type="range" min="1" max="5" step="1" value="1">
+    <div class="waffle" id="waffle" role="img" aria-label="Grid of 100 tickets"></div>
+    <div class="legend"><span style="--k:var(--green)">automated, correct</span><span style="--k:var(--hi)">models disagree: human reviews</span><span style="--k:var(--red)">automated, wrong (all agreed, all wrong)</span></div>
+    <div class="stats">
+      <div><b id="vote-err">14.1%</b><span>error rate</span></div>
+      <div><b id="vote-eff">0%</b><span>sent to humans</span></div>
+      <div><b id="vote-auto">100%</b><span>fully automated</span></div>
+    </div>
+    <p class="readout" id="vote-read"></p>
+    <figure class="vchart">
+      <figcaption><b>The trade-off across all five settings</b> · tap a point</figcaption>
+      <svg id="vote-chart" viewBox="0 0 660 240" role="img" aria-label="Line chart. As the number of models that must agree rises from 1 to 5, the share of tickets sent to humans rises from 0% to 12.6%, 18.5%, 23.0% and 28.1%, while the error rate falls from 14.1% to 3.7%, 2.2%, 1.5% and 0.7%."></svg>
+      <p class="hint">Redrawn from the table on <a href="https://sanand0.github.io/llmevals/double-checking/">Double Checking Hallucinations</a>. The page’s own chart image plots 6.0% effort for one model; its table says 0%, which is what a single unchecked model implies, so this uses 0%.</p>
+    </figure>
+  </div>
+
+  <p>With five models, error falls to <strong>0.7%</strong> (Anand rounded it to 99.3% accuracy) while humans handle the <strong>28%</strong> of tickets where the models disagree. A student asked how effort was measured; that 28% is it. <a class="ts" href="?t=42:10">42:10</a> “So, I’m reducing the cost 72% at 99.3% accuracy. … For any person on the business operation side, that’s fantastic.” <a class="ts" href="?t=42:32">42:32</a></p>
+
+  <div class="dialogue">
+    <div class="line"><span class="who">Audience</span><span>“But in this case, your assumption is that an error [inaudible] is not silent, right? So how do you do with silent error? … If they all agree, they are all wrong.” <a class="ts" href="?t=42:54">42:54</a></span></div>
+    <div class="line a"><span class="who">Anand</span><span>“Yeah, no, exactly.”</span></div>
+  </div>
+
+  <p>That is the right objection, and it is exactly the red squares in the grid above. Agreement can’t catch errors the models <em>share</em>. Voting works here because the task has a fixed list of 15–20 categories, so it is unlikely that five different models pick <em>the same</em> wrong one by chance. The source page adds a warning: drop models that are consistently bad (they dropped Gemma 3 27B). For open-ended answers, where everyone can be wrong in the same plausible way, agreement is weaker evidence.</p>
+
+  <div class="note try">
+    <span class="nlabel">Try this</span>
+    <p>Next time you use an AI for anything that matters, run it past a second model with Anand’s prompt: fact-check both answers, keep what’s better, drop what’s worse. Note where they disagree, and settle each disagreement with <strong>evidence</strong> (run it, recalculate it, look it up), not with a vote.</p>
+  </div>
+</section>
+
+<section class="chap" id="confidence" data-act="III · Test the tester" data-title="95% sure">
+  <p class="eyebrow"><a class="ts" href="?t=43:50">43:50</a><span>to 50:31</span></p>
+  <h2>“95% sure” <em>is a claim. Test it.</em></h2>
+
+  <p class="lede">Another way to check a model is to ask it how sure it is: high, medium, low, or a number like 95%. <a class="ts" href="?t=43:50">43:50</a> Anand polled the room. When a model says it’s 95% sure, how often is it right? <strong>Make your own guess first.</strong></p>
+
+  <div class="widget" id="w-cal" aria-labelledby="w-cal-h">
+    <header><h3 id="w-cal-h">A model says it is 95% sure. It is right…</h3><span class="src">Poll at 44:34 · data: <a href="https://sanand0.github.io/llmevals/confidence-calibration/">confidence calibration</a></span></header>
+    <div class="choices" role="group" aria-label="Your guess" id="cal-choices">
+      <button class="choice" type="button" data-g="more" aria-pressed="false">more than 95% of the time</button>
+      <button class="choice" type="button" data-g="about" aria-pressed="false">about 95%</button>
+      <button class="choice" type="button" data-g="80" aria-pressed="false">80–95%</button>
+      <button class="choice" type="button" data-g="50" aria-pressed="false">50–80%</button>
+      <button class="choice" type="button" data-g="less" aria-pressed="false">under 50%</button>
+    </div>
+    <div class="reveal" id="cal-reveal" hidden>
+      <p class="readout" id="cal-read"></p>
+      <div class="calib" id="cal-chart"></div>
+      <div class="legend" style="margin-top:.4rem"><span style="--k:var(--blue)">GPT-4.1 nano</span><span style="--k:var(--red)">GPT-5.6 Luna</span><span style="--k:var(--muted)">dashed line: perfectly calibrated</span></div>
+      <p class="hint" style="margin-top:.6rem">770 banking support requests from <a href="https://huggingface.co/datasets/PolyAI/banking77">BANKING77</a>, 77 possible intents. Each dot is a band of stated confidence; its size is how many requests fell in it. Below the line means overconfident. Tap or hover a dot for its numbers.</p>
+    </div>
+  </div>
+
+  <p>In the room, nobody guessed “more than 95%” or “about 95%”. About a dozen hands went to “less”; below that the guesses scattered. “Okay, we’re not sure.” <a class="ts" href="?t=44:48">44:48</a> The good news: <strong>this is measurable.</strong> It’s called <span class="tip" tabindex="0" data-tip="Comparing stated confidence with actual accuracy on cases where you know the right answer. Weather forecasters do this: of all days they said “70% chance of rain”, did it rain on about 70%?">calibration</span>. When GPT-4.1 nano said 95%, it was right about <strong>77%</strong> of the time. <a class="ts" href="?t=46:01">46:01</a> Both models were mostly <strong>overconfident</strong>. (The one dot where nano looks <em>under</em>confident is the anomaly Anand flagged: “I had only 10 requests, all of which happened to be right.”)</p>
+
+  <p>A student suggested the obvious fix: use the curve to translate the model’s number into a real one. <a class="ts" href="?t=47:18">47:18</a> That works, Anand said, with two catches. You must <strong>rebuild the curve for every model <em>and</em> every problem</strong>. And a calibrated number still doesn’t tell you what to do. “I am 78.3% sure this is correct.” What do you do with that? <a class="ts" href="?t=48:23">48:23</a></p>
+
+  <p>So go back to the person with the problem. A bank already has a team checking classifications by hand. What they want isn’t a probability. It’s <strong>a list sorted from least sure to most sure</strong>, so the team starts at the bottom and works up as far as their time allows. <a class="ts" href="?t=49:36">49:36</a> For that, the confidence doesn’t need to be accurate.</p>
+
+  <blockquote class="pq green">
+    <p>“I just need it to be monotonic.”</p>
+    <cite>Anand · meaning: when the model says 95%, is it more often right than when it says 93%? · <a class="ts" href="?t=50:06">50:06</a></cite>
+  </blockquote>
+
+  <p>And the curves are, broadly, monotonic: higher stated confidence, more often right. A wrong number can still give a <strong>right order</strong>, and an order is what a verification checklist needs.</p>
+</section>
+
+<section class="chap" id="logprobs" data-act="III · Test the tester" data-title="Joey’s marshmallows">
+  <p class="eyebrow"><a class="ts" href="?t=50:31">50:31</a><span>to 55:38</span></p>
+  <h2>Joey and <em>the marshmallows</em></h2>
+
+  <p class="lede">There is a better source of confidence than asking. Models generate text one <span class="tip" tabindex="0" data-tip="A chunk of text, often part of a word. “marshmallows” is three tokens here: “ marsh”, “mall”, “ows”.">token</span> at a time, and at each step they hold a probability for every possible next token. Many APIs return these as <span class="tip" tabindex="0" data-tip="The natural log of a token’s probability. −0.08 means about 92%; −0.69 means 50%. Log because the numbers multiply along a sentence.">logprobs</span>. When Anand asked how many had ever extracted one, his “Oh.” said enough, and he decided to “step back a bit”. <a class="ts" href="?t=50:45">50:45</a> So he showed one. The question: <strong>“In which episode of Friends did Joey eat too many marshmallows?”</strong> <a class="ts" href="?t=51:34">51:34</a> Click any token in the answer to see what else the model nearly said.</p>
+
+  <div class="widget" id="w-tok" aria-labelledby="w-tok-h">
+    <header><h3 id="w-tok-h">GPT-3.5’s answer, token by token</h3><span class="src">Data: <a href="https://sanand0.github.io/llmviz/#/">Visualizing LLM Hallucinations</a> · gpt-3.5-turbo-0613</span></header>
+    <p class="hint">Darker red = the model was less sure of that token. Click a token.</p>
+    <div class="tokens" id="tokens"></div>
+    <div class="tok-detail" id="tok-detail" aria-live="polite"></div>
+    <p class="readout"><b>Check queue</b>, the factual tokens sorted from least to most sure:</p>
+    <ol class="queue" id="tok-queue"></ol>
+    <p style="margin-top:.7rem"><button class="choice" type="button" id="tok-run">Run the checks, least sure first</button></p>
+    <p class="readout" id="tok-after" hidden aria-live="polite">Three facts checked, three correct. The only error was at 100%. <a href="#twist">Why →</a></p>
+  </div>
+
+  <p>“Jo” got 70%, against 28% for starting with “In”. After “Jo”, “ey” was certain. But <strong>“20” was only 45%</strong>, with 21, 11 and 13 close behind, and <strong>season “3” was 77%</strong>, with 7 at 7.7%. <a class="ts" href="?t=53:09">53:09</a> So if you had to verify this answer, you would check the episode first and the season second. “That gives me a prioritized queue. And that prioritization has cost implications. Because I can decide when to stop at what level of quality.” <a class="ts" href="?t=54:26">54:26</a></p>
+
+  <blockquote class="pq blue">
+    <p>“But they are amongst the best ways of predicting how good a model is, especially if you just rank-order them.”</p>
+    <cite>Anand, on logprobs · <a class="ts" href="?t=54:46">54:46</a></cite>
+  </blockquote>
+
+  <div class="twist" id="twist">
+    <span class="nlabel">The twist</span>
+    <h3>Every check passes. <em>The answer is still wrong.</em></h3>
+    <p>Run the check queue in order. <strong>Episode 20? Correct:</strong> <a href="https://en.wikipedia.org/wiki/Friends_season_3">“The One with the Dollhouse” is Season 3, Episode 20</a>. <strong>Season 3? Correct.</strong> The title? A real episode. Every token the model was unsure about turns out to be right.</p>
+    <p><strong>But Joey never ate too many marshmallows.</strong> The Dollhouse episode is about Monica’s inherited dollhouse and Phoebe’s homemade one, and the <a href="https://sanand0.github.io/llmviz/#/">Visualizing LLM Hallucinations</a> page uses this very question because its premise is false. The error sits in the one phrase the model wrote at <strong>100%</strong>, “too many marshmallows”, which it copied from the question. A reviewer who works up the queue from the least-sure token would confirm three facts and ship a fiction.</p>
+    <p>It isn’t a one-off. In the <a href="https://sanand0.github.io/llmevals/confidence-calibration/">calibration study</a>, <strong>435 answers had effectively 100% token probability, and 18 of them were wrong</strong>.</p>
+    <p class="rule">Low confidence tells you <em>where to look first</em>. High confidence doesn’t tell you <em>where you can stop</em>.</p>
+    <p>That is the apple again: the agent passed, the test failed. Logprobs measure how sure the model is of its next word, not whether the question made sense. Catching a false premise takes a different check, one on <em>the question itself</em>. It is the same lesson as the iMocha question bank in <a href="#verifier">Act I</a>, where the bugs were in the questions, not the answers.</p>
+  </div>
+
+  <p>This, Anand said, is “yet another way of testing the tester itself. Is the validator giving us good results?” <a class="ts" href="?t=55:28">55:28</a> The <a href="https://sanand0.github.io/llmevals/confidence-calibration/">calibration study</a> found the same thing on the banking data: raw logprobs are <em>worse</em> as probabilities, but <em>better</em> at ranking which answers are risky.</p>
+
+  <figure class="shot">
+    <a href="https://sanand0.github.io/llmevals/confidence-calibration/" target="_blank" rel="noopener"><img src="chart-logprob-rank.webp" width="992" height="675" loading="lazy" alt="Line chart: error among auto-passed answers against the share auto-passed. Ranking by token logprob lets 65% of answers skip review before error passes 5%; ranking by prompted confidence, only 43%."></a>
+    <figcaption><b>Rank by logprob, and more answers can skip review.</b> Trust the highest-scored answers first and keep going until error among them reaches a 5% budget: ranking by token logprob auto-passes <b>65%</b> of answers, ranking by the model’s stated confidence only <b>43%</b>. Chart from the <a href="https://sanand0.github.io/llmevals/confidence-calibration/">calibration study</a> (GPT-5.6 Luna, banking requests). The study’s caveat: pick the cutoff on past cases, then test that exact cutoff on new ones.</figcaption>
+  </figure>
+</section>
+
+<div class="band band-paper" aria-labelledby="evals-h">
+  <div class="band-inner">
+    <p class="band-label" id="evals-h">The experiments behind Act III</p>
+    <div class="cards three">
+      <a class="link-card" href="https://sanand0.github.io/llmevals/double-checking/"><img src="shot-double.webp" alt="Double Checking Hallucinations page: how can we rely on unreliable LLMs?" loading="lazy"><div class="body"><strong>Double Checking Hallucinations</strong>11 models, customer-support intents: how error falls and review effort rises as you add models that must agree. <span class="go">Read →</span></div></a>
+      <a class="link-card" href="https://sanand0.github.io/llmevals/confidence-calibration/"><img src="chart-calib.webp" alt="The study’s calibration chart: stated confidence against actual accuracy for GPT-4.1 nano and GPT-5.6 Luna; most points sit below the diagonal." loading="lazy"><div class="body"><strong>Does 95% confidence really mean 95% correct?</strong>Calibration curves, prompts that reduce overconfidence, the effect of irrelevant context, and logprobs. <span class="go">Read →</span></div></a>
+      <a class="link-card" href="https://sanand0.github.io/llmviz/#/"><img src="shot-llmviz.webp" alt="Visualizing LLM hallucinations page with a cartoon of a dog laying train tracks just ahead of the train." loading="lazy"><div class="body"><strong>Visualizing LLM Hallucinations</strong>See token probabilities for yourself, including the Joey example and a Sherlock Holmes question with the same trap. <span class="go">Explore →</span></div></a>
+    </div>
+  </div>
+</div>
+
+<p class="act">Act IV · When there is no spec</p>
+
+<section class="chap" id="nospec" data-act="IV · No spec" data-title="Verify without a spec">
+  <p class="eyebrow"><a class="ts" href="?t=55:38">55:38</a><span>to 59:04</span></p>
+  <h2>How do you verify <em>without a spec?</em></h2>
+
+  <p class="lede">“How do you verify your software usually?” A student gave the textbook answer: check against specifications, write automated tests. “How do you know your tests are right?” Benchmark against previous results and industry practice. <a class="ts" href="?t=56:02">56:02</a> Anand pointed out the consequence: software that <em>already has</em> test cases is easy to clone, because “somebody’s taken the effort of defining the spec for you. And then the verification follows.” <a class="ts" href="?t=56:27">56:27</a></p>
+
+  <p>So, he asked: <strong>does specification matter more than verification?</strong> About five hands said yes. When he asked who thought verification mattered more (“if it goes wrong, then who cares how you specified it?”), a student flipped the question instead:</p>
+
+  <blockquote class="pq">
+    <p>“How do you verify without specification?”</p>
+    <cite>Student · <a class="ts" href="?t=57:07">57:07</a></cite>
+  </blockquote>
+
+  <p>“Good question,” said Anand, “and trust me, that happens quite often.” <a class="ts" href="?t=57:10">57:10</a> Nobody writes a spec for the browser they download, yet they file bug reports. Nobody gives the builder specs for an apartment, yet they complain to the landlord. A student answered: <strong>“the user will have a subset of specifications.”</strong> <a class="ts" href="?t=57:50">57:50</a> Some are latent, held in “the shared fabric of society”. Some are blind spots. Many are <strong>“I’ll know it when I see it.”</strong> <a class="ts" href="?t=57:59">57:59</a> How do you capture what nobody specified?</p>
+</section>
+
+<section class="chap" id="usertest" data-act="IV · No spec" data-title="Users don’t have to be human">
+  <p class="eyebrow"><a class="ts" href="?t=58:43">58:43</a><span>to 63:21</span></p>
+  <h2>Users don’t <em>have to be human</em></h2>
+
+  <p class="lede">“User testing?” offered a student. <a class="ts" href="?t=58:43">58:43</a> Share it with 50 or 100 people and collect their inputs. Anand saw a problem with how that works in practice: the testers are usually <em>assigned</em> to test. “That’s basically like giving you homework. And we know exactly how much you enjoy homework.” <a class="ts" href="?t=59:18">59:18</a></p>
+
+  <p>His daughter built a <a href="https://core.telegram.org/bots">Telegram bot</a> and asked him to be the user tester. He agreed, set Codex to test it, and watched an episode of <a href="https://en.wikipedia.org/wiki/Matlock_(2024_TV_series)">Matlock</a> (the 2024 series, <a href="https://www.netflix.com/browse?jbv=81724647">on Netflix</a>).</p>
+
+  <blockquote class="pq green">
+    <p>“I may be a bad parent, but Codex was doing a good job, and it created a fairly good report.”</p>
+    <cite>Anand · <a class="ts" href="?t=59:46">59:46</a></cite>
+  </blockquote>
+
+  <p>It scales up. <strong>Shell</strong> told Anand’s team that each survey costs “hundreds of thousands of dollars”, with Nielsen charging 100K to 500K, and asked whether agents given a personality could answer surveys instead, as a Google report had suggested. <a class="ts" href="?t=60:22">60:22</a> (Probably the <a href="https://arxiv.org/abs/2411.10109">Stanford and Google DeepMind study</a> that simulated 1,052 real people from interviews.) The team built <strong>30 to 300 persona agents</strong> per segment and ran the survey on them. The demo was slow to load in the room, so here it is to try yourself.</p>
+
+  <figure class="shot">
+    <a href="https://sanand0.github.io/personagen/"><img src="shot-persona.webp" width="960" height="600" loading="lazy" alt="Synthetic Persona Survey demo: results charts for a fuel retailer survey, such as what matters most when choosing a fuel station, with filters for borough, age, vehicle type and price sensitivity."></a>
+    <figcaption><a href="https://sanand0.github.io/personagen/">Synthetic Persona Survey</a>: pick the “Top Fuel and Convenience Retailer” demo, generate personas, run the survey, then filter the results. It is one of the <a href="https://sanand0.github.io/llmdemos/">LLM Demos</a> Anand searched for live.</figcaption>
+  </figure>
+
+  <p>Did the agents produce anything new? The value turned out to be in the <strong>verbatim comments</strong>. One persona wrote: “As someone with high price sensitivity, I prioritize … finding the cheapest fuel station to save money.” Another: “My commute involves a round trip of 23 km, so I usually refuel after work.” <a class="ts" href="?t=61:56">61:56</a> The client read them and thought, <em>yes, a person might say that</em>. It surfaced assumptions they hadn’t questioned. <a class="ts" href="?t=62:21">62:21</a></p>
+
+  <blockquote class="pq">
+    <p>“User testing helps. Users don’t have to be human.”</p>
+    <cite>Anand · <a class="ts" href="?t=62:34">62:34</a></cite>
+  </blockquote>
+
+  <p>Coding agents already do a version of this. Claude Code on a high thinking setting, he said, opens the browser, takes screenshots and tests the page by default. His prompts just add what it misses: “Test the accessibility tree as well.” <a class="ts" href="?t=63:09">63:09</a></p>
+</section>
+
+<section class="chap" id="observe" data-act="IV · No spec" data-title="Log everything">
+  <p class="eyebrow"><a class="ts" href="?t=63:21">63:21</a><span>to 69:49</span></p>
+  <h2>The logs are <em>the asset</em></h2>
+
+  <p class="lede">“When it goes into production, we know software fails. What do we do then?” <a class="ts" href="?t=63:26">63:26</a> Collect feedback from production, said a student, and it depends whether the failure is technical or from users. Technical: <strong>server logs, error logs</strong>. <a class="ts" href="?t=64:04">64:04</a> Anand uses <a href="https://sentry.io/">Sentry</a> for errors. But: “one of the top skills that I have for my agents is the <strong>observability</strong> skill. What does it take to log every single thing that you produce?” <a class="ts" href="?t=64:27">64:27</a></p>
+
+  <blockquote class="pq blue">
+    <p>“The digital exhaust is probably the single most valuable asset that we can collect.”</p>
+    <cite>Anand · <a class="ts" href="?t=64:49">64:49</a></cite>
+  </blockquote>
+
+  <p>Agents can analyse everything, so the more they are given, the more context they have. Collecting that input, he argued, may be the highest-return human effort of the next few years. His own example: he records the transcript of <strong>every meeting</strong>, now <strong>over 2,000</strong>, and uses them like this: <a class="ts" href="?t=65:17">65:17</a></p>
+
+  <div class="prompt-box">
+    <div class="plabel">Questions he asks his own logs</div>
+    <p>“Go through all my conversations with my boss. Tell me what I should say.”</p>
+    <p>“Go through all of the talks that I run in classrooms. What are the mistakes that I make?”</p>
+    <p>“Go through all of the logs on my server-side code. What are the kinds of mistakes you make?”</p>
+    <p>“Go through all of the … session logs for coding agent sessions. What are the kinds of skills you need to avoid repeating yourself?”</p>
+    <p class="src">65:17 – 65:55. This page itself was written from the talk’s transcript.</p>
+  </div>
+
+  <h3>The bug report that ships a fix</h3>
+  <p>For user feedback, a colleague added a <strong>“Report an error”</strong> button that lets users type, speak or paste screenshots, and files an issue on GitHub. <a class="ts" href="?t=66:34">66:34</a> Then they went two steps further. An agent picks up the bug, fixes it, <strong>deploys a personal version</strong> for that user, and emails them a link: we fixed this for you, does it work? About <strong>half the time</strong> users said “Yeah, this is exactly what I want”; the other half they refined it. <a class="ts" href="?t=67:24">67:24</a> The product manager then looks across these personal variants and promotes common ones to alpha and beta releases. And users who want their variant can <strong>keep it permanently</strong>, with new changes patched on top. <a class="ts" href="?t=67:35">67:35</a></p>
+
+  <p>Which brings back the opening question. If each person can have their own version, <strong>“how much of the software that you write is yours?”</strong> “Personalized software is not something that’s too far away.” <a class="ts" href="?t=68:29">68:29</a></p>
+
+  <div class="buckets" role="list" aria-label="Three reasons for observability" style="margin-left:0;margin-right:0">
+    <div class="bucket v" role="listitem"><h4>A · Data</h4><p>“Observability matters a lot simply for the data. Just collect all the logs that you can.” <a class="ts" href="?t=69:14">69:14</a></p></div>
+    <div class="bucket s" role="listitem"><h4>B · Better spec</h4><p>“It can be useful to improve the technical specification. Just look at the logs, ask the agent, improve the stuff that’s going wrong.” <a class="ts" href="?t=69:22">69:22</a></p></div>
+    <div class="bucket r" role="listitem"><h4>C · Personal fixes</h4><p>“Also ask the agent to fix based on that, deploy a personalized version, and get feedback from the user.” <a class="ts" href="?t=69:31">69:31</a></p></div>
+  </div>
+</section>
+
+<section class="chap" id="checklists" data-act="IV · No spec" data-title="Checklists and auditors">
+  <p class="eyebrow"><a class="ts" href="?t=70:03">70:03</a><span>to 74:18</span></p>
+  <h2>Nurses, checklists <em>and auditors</em></h2>
+
+  <p class="lede">“What did I miss?” Anand returned to how other professions verify. <a class="ts" href="?t=70:03">70:03</a> First, <a href="https://atulgawande.com/book/the-checklist-manifesto/"><em>The Checklist Manifesto</em></a> by <a href="https://en.wikipedia.org/wiki/Atul_Gawande">Atul Gawande</a>. His retelling: hospitals with low infection rates differed from those with high ones in a surprising way: <strong>the nurses had more authority than the doctors</strong>. A nurse could say, “No, doctor, you cannot operate unless…” and stop the procedure if a check on the list failed. Pilots work the same way. <a class="ts" href="?t=71:24">71:24</a></p>
+
+  <div class="note check">
+    <span class="nlabel">Fact-check</span>
+    <p>Two details from the room need correcting. <strong>Gawande wasn’t US Surgeon General</strong>; he is a surgeon and writer who later led global health at USAID. And the nurse story in the book is <strong>Peter Pronovost’s</strong> <a href="https://en.wikipedia.org/wiki/Peter_Pronovost">central-line checklist</a> at Johns Hopkins: five simple steps, with nurses authorised to stop doctors who skipped one. Line infections in that ICU fell nearly to zero, and across Michigan ICUs they dropped by about two-thirds. The lesson Anand drew stands.</p>
+  </div>
+
+  <blockquote class="pq green">
+    <p>“A deterministic checklist is a very effective way of making sure that a system does not fail.”</p>
+    <cite>Anand · <a class="ts" href="?t=71:55">71:55</a></cite>
+  </blockquote>
+
+  <p>For software, he said, checklists are your <span class="tip" tabindex="0" data-tip="Tools that automatically check code for style problems and likely bugs, every time, without judgement.">linters</span> and your test cases. Nothing new. What <em>is</em> new is who builds them: an agent can keep reading your logs and ask what needs checking, which items work, and how to improve the list. <a class="ts" href="?t=72:14">72:14</a></p>
+
+  <p>Second, <strong>audits</strong>. Breaking work into steps and showing receipts is how you check someone smarter. But who checks the receipts? Professions solved this by bringing in an <strong>auditor occasionally</strong> to spot-check a random sample and the edge cases. Not every report gets audited, so the system scales. <a class="ts" href="?t=73:12">73:12</a> The AI version: let agents audit, and have <strong>a human audit the AI’s audits</strong>. His team asks agents to always prepare an <strong>auditor report</strong>, the minimum information a human needs to check the receipts. <a class="ts" href="?t=73:50">73:50</a></p>
+</section>
+
+<section class="chap" id="cortex" data-act="IV · No spec" data-title="Sense, forge, validate">
+  <p class="eyebrow"><a class="ts" href="?t=74:18">74:18</a><span>to 82:39</span></p>
+  <h2>“We aren’t even allowed <em>to use AI</em>”</h2>
+
+  <p class="lede">Straive bundles all of this into its <strong>StraiveX AI-native delivery methodology</strong> (an internal document, not public). Anand told it as the story of Tanuj, a colleague placed inside a client, who pushed back: <strong>“we aren’t even allowed to use AI in this organization.”</strong> No Codex, no Claude. Only <a href="https://www.snowflake.com/en/product/features/cortex/">Snowflake Cortex</a>, the AI built into the data warehouse. <a class="ts" href="?t=75:03">75:03</a></p>
+
+  <p>Anand’s suggestion: ask Cortex to search online for the client’s business context, look at all the internal data, and <strong>list the most important problems to solve</strong>. <a class="ts" href="?t=75:20">75:20</a> In a few days, Cortex produced a report of use cases for this waste-management company: revenue forecasting, pricing anomaly detection, churn prediction, a revenue analyst agent, with approaches for each. Tanuj took it to Cal, the head of analytics.</p>
+
+  <blockquote class="pq">
+    <p>“There’s an 80% overlap between their recommendation and what you said.”</p>
+    <cite>Cal, comparing it with a four-month consulting exercise, as Anand retold it · <a class="ts" href="?t=76:42">76:42</a></cite>
+  </blockquote>
+
+  <figure class="shot">
+    <a href="https://files.s-anand.net/pages/fde/waste-management-commercial.html"><img src="shot-waste.webp" width="960" height="600" loading="lazy" alt="AI Use Cases on Commercial Data: an executive summary table of four categories (predictive analytics, intelligent automation, agentic copilots, advanced ML models) with impact, effort and 15 numbered use cases."></a>
+    <figcaption><a href="https://files.s-anand.net/pages/fde/waste-management-commercial.html">AI Use Cases on Commercial Data</a>: the kind of report Cortex produced, 15 use cases from 174 columns across six source systems.</figcaption>
+  </figure>
+
+  <p>Tanuj planned to write a proposal for each use case. Anand stopped him: by the time a proposal reaches the client, “it’s going to take forever. … <strong>Why don’t you just put all of this into Cortex itself and tell it to solve the problem? Just go ahead, forge the solution yourself.</strong>” <a class="ts" href="?t=77:47">77:47</a></p>
+
+  <p>The pricing anomaly detector found <strong>105,000 transactions at $0.16</strong> for a service that costs $175 to $179, and <strong>84,000</strong> charged at 6 to 14 times the median rate. <a class="ts" href="?t=78:03">78:03</a> The churn analysis became an email to the client titled <strong>“We’re losing $117 million in revenue, and here’s the fix.”</strong> <a class="ts" href="?t=79:39">79:39</a> Of the big accounts that had left, two were contract renegotiations, four followed an account manager leaving, and five were customers nobody knew were leaving.</p>
+
+  <p>Finding the problems was easy; fixing them wasn’t hard. “Where the human starts coming in is: did we get this right?” <a class="ts" href="?t=79:17">79:17</a> And the validators were the client’s own experts, exactly as Ankur had been for Varun: <strong>“Leverage the capability of the experts who are good in the field.”</strong> If they can see the result at a glance and validate it instantly, “your problem is solved.” <a class="ts" href="?t=81:14">81:14</a></p>
+</section>
+
+<div class="band band-night" aria-labelledby="flow-h">
+  <div class="band-inner">
+    <p class="band-label">The method, as Anand walked through it</p>
+    <h3 class="band-title" id="flow-h">From prospecting to evolving</h3>
+    <div class="flow" role="list">
+      <div class="st" role="listitem"><h4>Sense</h4><span class="was">Prospect: ask “what do you want built?”</span>Let an agent read the business context and the data, and propose the problems worth solving.</div>
+      <div class="st" role="listitem"><h4>Forge</h4><span class="was">Write a proposal per use case</span>Don’t propose. Have the agent build the solution and show results.</div>
+      <div class="st" role="listitem"><h4>Validate</h4>Put results in front of the client’s experts, in a form they can judge at a glance.</div>
+      <div class="st" role="listitem"><h4>Scale</h4>Build the same across each of their plants, letting agents adapt to local context.</div>
+      <div class="st" role="listitem"><h4>Run &amp; evolve</h4>Watch the operational queries for drift, read the logs, revise, and feed what you learn back into Sense.</div>
+    </div>
+    <p class="cap">Stages one to three are Anand’s words. “Scale” and “Run &amp; evolve” are this page’s labels for the two stages he covered “very briefly”. <a class="ts" href="?t=81:28">81:28</a></p>
+  </div>
+</div>
+
+<section class="chap" id="drift" data-act="IV · No spec" data-title="The one rule">
+  <p class="eyebrow"><a class="ts" href="?t=81:48">81:48</a><span>to 85:00</span></p>
+  <h2>The one <em>irreversible</em> thing</h2>
+
+  <p class="lede">The last stage needs observability again. The pricing detector flagged anything outside the 10th–90th percentile band. Two and a half months later, the client introduced a pricing policy that roughly <strong>doubled</strong> prices for some services, and the agent started flagging too many errors. It has to notice that from the logs and revise its own rule. <a class="ts" href="?t=82:11">82:11</a> A verifier that was right at launch can be wrong two months later.</p>
+
+  <p>So where are humans still needed as verifiers? Anand saw two cases. The <strong>end user</strong> who says, “I don’t know what I want, but I’ll know it when I see it.” And the <strong>expert</strong> who says, “I know exactly what I want, and I will know it when I see it.” In almost every other case, he finds systematic ways to let agents verify, often by turning what he has learned into a skill and saying “now you go apply these”. <a class="ts" href="?t=83:17">83:17</a> For those two cases, what matters is getting their reactions as data, without intermediaries.</p>
+
+  <blockquote class="pq">
+    <p>“Make sure that every single reaction or even thought process of the users that are using the software gets logged. Agents will figure out what to do with it later. The one irreversible thing is the logging of the user reaction at that point of contact.”</p>
+    <cite>Anand, on his one must-have rule for software · <a class="ts" href="?t=84:16">84:16</a></cite>
+  </blockquote>
+
+  <p>Everything else, he said, you can derive later, or agents will derive it for you. A reaction you didn’t record is gone.</p>
+</section>
+
+<p class="act">Act V · Questions from the room</p>
+
+<section class="chap" id="interview" data-act="V · Questions" data-title="Interview whom?">
+  <p class="eyebrow"><a class="ts" href="?t=85:26">85:26</a><span>to 89:38</span></p>
+  <h2>Interview the end user. <em>Describe feelings.</em></h2>
+
+  <p class="lede">The first question went to the heart of “let the agent interview you”: doesn’t that assume the human has expertise? And what should fresh graduates do, when the temptation is to hand everything to “another agent, to another agent” instead of building expertise of their own? <a class="ts" href="?t=85:26">85:26</a></p>
+
+  <p>Anand’s answer was to <strong>disintermediate</strong>. If the software is for him, the agent should interview him. If it is for someone else, the agent should interview <em>them</em>. <a class="ts" href="?t=86:25">86:25</a> A finance manager who runs invoice reconciliation can name half a dozen rules (“I don’t want this entire thing costing me more than so much”, compliance with government regulations) that are “the ultimate truth”, and that Anand could never have produced himself. <a class="ts" href="?t=87:20">87:20</a> If there’s no expert, ask how to find one. If there truly isn’t one, your opinion counts as much as anyone’s.</p>
+
+  <blockquote class="pq blue">
+    <p>“I don’t describe specifications anymore as how to do it. The agent is smarter than me.”</p>
+    <cite>Anand · <a class="ts" href="?t=88:05">88:05</a></cite>
+  </blockquote>
+
+  <p>Instead he describes how the result should <em>feel</em>: “build me something that makes me feel light. At the end of it, I want the experience to be such that I’m not hindered. It doesn’t feel like a lot of hard work.” He lets the agent translate that, asks it to interview him about what he means, “and sometimes I just tell it, ‘I don’t know.’” <a class="ts" href="?t=88:15">88:15</a> His hunch about why this works: whatever expertise can be put into words, agents can learn. “Maybe it is the stuff that we can’t even express well enough that remains to be expressed.” <a class="ts" href="?t=88:59">88:59</a></p>
+</section>
+
+<section class="chap" id="unique" data-act="V · Questions" data-title="Learn what AI cannot do">
+  <p class="eyebrow"><a class="ts" href="?t=89:38">89:38</a><span>to 95:19</span></p>
+  <h2>Who’s most <em>unique?</em></h2>
+
+  <p class="lede">A student had read one of Anand’s blog posts: if AI can program everything, let it program, and we come up with ideas. But if all of us apply for the same job with the same AI, and produce similar outputs, how does anyone stand out? <a class="ts" href="?t=89:38">89:38</a></p>
+
+  <p>Anand’s answer came from his own course, where one of the grading criteria is <strong>“who’s most unique? If everyone’s going to come up with the same stuff, that’s boring.”</strong> <a class="ts" href="?t=90:30">90:30</a> About 300 students each made a wordless picture story, then rated each other’s. He plotted uniqueness against how much people liked them. The best-loved stories: a dog adopted by a little girl. A dog adopted by a little boy that saves him. A dog adopted by a little boy. A dog adopted by a big boy. <a class="ts" href="?t=91:08">91:08</a></p>
+
+  <blockquote class="pq">
+    <p>“I am not going to hire any of you. What kind of a joke is this?”</p>
+    <cite>Anand, on the fourth dog-adoption story · <a class="ts" href="?t=91:42">91:42</a></cite>
+  </blockquote>
+
+  <p>The other common pattern was the thirsty crow dropping pebbles into a pitcher. The unique ones were different: the Bhagavad Gita told without words; a satire where a businessman bribes a policeman and shoos away a beggar but happily hands money to a politician who doesn’t need it; a girl saying “Oh, I love it” about a gift she plainly doesn’t want. <a class="ts" href="?t=92:49">92:49</a> “These are whom I’d hire.” (The full chart, and how students voted, is below, from the <a href="../2026-11-16-tds-ideation/#stories">TDS design meeting story, “The crow beats the astronaut”</a>.)</p>
+
+  <div class="band band-paper band-full" aria-labelledby="ps-h">
+  <div class="band-inner">
+    <p class="band-label">Explore the chart</p>
+    <h3 class="band-title" id="ps-h">329 picture stories: original or loved?</h3>
+    <p class="band-dek">Guess which story classmates preferred, then explore the scatter: <b>uniqueness</b> across, <b>preference</b> up. The familiar crows and dogs sit top-left; the stories Anand would hire for sit to the right. Tap a highlighted dot to read the story.</p>
+    <div class="frame tall"><iframe src="../2026-11-16-tds-ideation/index.html#stories" data-scroll="stories" title="The crow beats the astronaut: scatter plot of 329 student picture stories by uniqueness and preference" loading="lazy"></iframe></div>
+    <p class="cap">From <a href="../2026-11-16-tds-ideation/#stories">The Score Can’t See Who Built the Solver</a>, the story of the TDS course design meeting a day earlier. Scroll inside the frame for the rest of that section.</p>
+    </div>
+  </div>
+
+  <blockquote class="pq green">
+    <p>“AI can code, you can code. I’m not looking for the coding capability. What did you decide to draw? What did you decide to code? That’s what I want.”</p>
+    <cite>Anand · <a class="ts" href="?t=93:10">93:10</a></cite>
+  </blockquote>
+
+  <p>The student still looked thoughtful, so Anand gave the implication he lives by. <strong>“What skills should I learn in the AI era? My rule of thumb is this: learn what AI cannot do.”</strong> <a class="ts" href="?t=93:52">93:52</a> The prerequisite is to <strong>delegate maximally</strong>: put everything through AI, because only then do you see where it goofs up, and those are the skills worth building. <a class="ts" href="?t=94:03">94:03</a></p>
+
+  <blockquote class="say">
+    <p>“The intuition there is delegate maximally, do what AI fails, and absolutely do not bother learning what AI can do or will very likely do in the future.”</p>
+    <cite>Anand · <a class="ts" href="?t=94:45">94:45</a></cite>
+  </blockquote>
+
+  <p>There is a short-term catch, and the talk began with it: interviews still test things AI does well, “as you saw in the very first interview that I had.” But that isn’t a durable skill. <a class="ts" href="?t=94:58">94:58</a> His current list of skills that AI is slow to learn (relationships, accountability, scepticism, noticing, taste, problem selection, and more) is on his <a href="https://www.s-anand.net/blog/ai-advice/">AI Advice</a> page, under “What skills should I learn?”</p>
+
+  <div class="note">
+    <span class="nlabel">Notice the loop</span>
+    <p>The talk opened with a test that measured the wrong thing and closed with a grader looking for the thing AI can’t supply. A good test, like a good verifier, should measure what you actually care about. If an agent can pass it, it is measuring the agent.</p>
+  </div>
+</section>
+
+</main>
+
+<section class="band band-paper" id="comic" data-act="Coda" data-title="The comic, checked" aria-labelledby="comic-h">
+  <div class="band-inner comic-wrap">
+    <figure>
+      <a class="zoom" href="comic-page.avif" data-lightbox data-caption="AI-generated comic summary of the talk. Some panels drift from what was said; see the notes beside it."><img src="comic-page.avif" width="1055" height="1491" loading="lazy" alt="Eight-panel comic. Panels: software is malleable, with a VLC-like player with a composer column and a Gmail inbox; when AI builds, who checks the AI; Anand eats an apple while an AI agent passes a hiring test 52 of 59 with proctoring active; the question bank, proctoring and assumptions all miss the real cheating; verify the verifier with a checker AI and a critic AI comparing arguments over a bracket; let the agent interview the real user or expert, like a doctor or a judge; at scale use checklists, confidence ranking, user tests and multiple agents with humans handling disagreements; log everything, observability turns reactions into fixes, personalisation and better AI, and learn what AI still can't do."></a>
+      <figcaption class="cap">AI-generated comic of the talk. Click to open it full size.</figcaption>
+    </figure>
+    <div class="comic-notes">
+      <p class="band-label">Coda</p>
+      <h3 id="comic-h">The comic, <em>verified</em></h3>
+      <p>In a talk about checking AI output, it seemed only fair to check the comic. Mostly it holds up.</p>
+      <ol>
+        <li><span class="ok">Right:</span> the apple, <strong>52 / 59</strong>, proctoring that saw nothing, a buggy answer key, and the blind-spot assumption “human is answering” (panels 3–4).</li>
+        <li><span class="fix">Drifts:</span> the Gmail panel shows custom filters and auto-labels. What Anand built was <strong>notes on emails</strong>, added with Alt+Shift+M (panel 1).</li>
+        <li><span class="fix">Wrong:</span> panel 5 has a critic AI declaring the part “not a bracket”. Nothing like that happened. The part was a <strong>forked</strong> bracket, the three renders looked identical, and the verifier that was <em>left free</em> found a benchmark and scored Codex’s geometry at 31%. The lesson was about Anand’s too-narrow verification instructions, which the panel’s “my checklist (too narrow?)” does catch.</li>
+        <li><span class="ok">Right:</span> doctor-style interviews and judge-style competing experts (panel 6); voting agents with humans resolving disagreements (panel 7); “log everything” and “learn what AI still can’t do” (panel 8).</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="band takeaways" id="takeaways" data-act="Coda" data-title="Takeaways" aria-labelledby="tk-h">
+  <div class="band-inner">
+    <p class="band-label">Takeaways</p>
+    <h2 id="tk-h">Six things to remember about verifying AI</h2>
+    <div class="cards">
+      <div class="tk"><span class="n">01</span><h3>Verifiers fail silently</h3>A test with a wrong answer key and blind proctoring still reports <b>52/59, zero violations</b>. When everything is green, ask what the check could not see. <a href="#verifier">The apple</a></div>
+      <div class="tk"><span class="n">02</span><h3>Ask for your blind spots</h3>“What am I assuming that I’m not even aware of?” is a prompt. So is a list of the feedback you keep ignoring. <a href="#wrong">What went wrong</a></div>
+      <div class="tk"><span class="n">03</span><h3>Don’t cap the verifier</h3>Let a smarter agent <b>define done</b> and choose how to check, then compare with your own constraints. You may be the bottleneck. <a href="#bracket">The bracket</a></div>
+      <div class="tk"><span class="n">04</span><h3>Disagreement is the signal</h3>Cross-check with another model and settle disagreements with <b>fresh evidence</b>. Five agreeing models cut errors to 0.7% for 28% human review, but can’t catch errors they share. <a href="#voting">Five models</a></div>
+      <div class="tk"><span class="n">05</span><h3>Rank confidence, don’t trust it</h3>“95% sure” meant 77% right. Confidence and logprobs are useful as an <b>order</b>: check the least-sure items first. But <b>confident can still be wrong</b>: Joey’s marshmallows were 100% sure and false, so check the premise too. <a href="#twist">The twist</a></div>
+      <div class="tk"><span class="n">06</span><h3>Log every reaction</h3>Where there is no spec, users and experts are the verifiers. Their reaction at the point of contact is <b>the one irreversible thing</b>; record it. <a href="#drift">The one rule</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="band practice" id="practice" data-act="Coda" data-title="Try it this week" aria-labelledby="pr-h">
+  <div class="band-inner">
+    <p class="band-label">For students</p>
+    <h2 id="pr-h">Four exercises to try this week</h2>
+    <p class="band-dek">Anand’s rule is to delegate maximally and learn from where AI fails. These put the talk’s techniques on your own work.</p>
+    <div class="cards four">
+      <div class="pr"><span class="tag">Test the tester</span><h3>Let an agent sit your test</h3>Pick a past quiz or assignment. Have a coding agent attempt it. Where it succeeds, what was the test really measuring? Where it fails, is the agent wrong, or the answer key?</div>
+      <div class="pr"><span class="tag">Ask another AI</span><h3>Make two models argue</h3>Answer a real question with two models. Paste each answer into the other: <code>Fact-check what it said and what you said. Take what’s better, drop what’s worse.</code> Settle each disagreement by running or recalculating.</div>
+      <div class="pr"><span class="tag">Mine your prompts</span><h3>Export your chats</h3>Use the export button in ChatGPT or Claude. Ask an agent: what do I keep correcting? Turn the top answer into one line of standing instructions, like <code>define what done means and verify before concluding</code>.</div>
+      <div class="pr"><span class="tag">Check your confidence</span><h3>Build a check queue</h3>Take 30 questions you know the answers to. Ask a model for an answer and a confidence. Is it right more often when it’s more sure? If yes, you have a ranking you can use; if not, you’ve learned that too.</div>
+    </div>
+  </div>
+</section>
+
+<section class="foot" aria-labelledby="foot-h">
+  <h2 id="foot-h">Related talks</h2>
+  <ul>
+    <li><a href="../2026-11-15-aipl-3/">Every Agent Did Its Job. The Food Court Still Lost.</a> The same apple, two days earlier, told to working professionals, followed by a game about what happens when <em>everyone</em> has an agent.</li>
+    <li><a href="../2026-11-16-tds-ideation/">The Score Can’t See Who Built the Solver</a>: the picture-story chart from Act V, and more on tests that measure the wrong thing.</li>
+  </ul>
+  <h2>Sources and method</h2>
+  <ul>
+    <li>Recording: <a href="https://github.com/sanand0/talks/releases/download/talks/2026-11-17-sutd-coil.opus">audio (Opus, 1 h 36 min)</a> · <a href="transcript.md" data-transcript>transcript</a>. Quotes are verbatim from the AI transcript; audience members are unnamed in it and are called “student” or “audience” here.</li>
+    <li>Linked material: <a href="https://www.s-anand.net/blog/using-agents-to-answer-exams/">Using agents to answer exams</a>, <a href="https://files.s-anand.net/pages/verification-techniques/#?m=verify&amp;show=22&amp;t=test-the-tester">22 Ways I Verify AI Work</a>, <a href="https://jivraj-18.github.io/cad-bench/freecad-f32bdb2966.html">the bracket benchmark</a>, <a href="https://sanand0.github.io/llmevals/double-checking/">Double Checking Hallucinations</a>, <a href="https://sanand0.github.io/llmevals/confidence-calibration/">confidence calibration</a>, <a href="https://sanand0.github.io/llmviz/#/">LLM hallucination visualiser</a>, <a href="https://sanand0.github.io/personagen/">Synthetic Persona Survey</a>, <a href="https://sanand0.github.io/llmdemos/">LLM Demos</a>, <a href="https://files.s-anand.net/pages/fde/waste-management-commercial.html">AI Use Cases on Commercial Data</a>, <a href="https://www.s-anand.net/blog/ai-advice/">AI Advice</a>.</li>
+    <li>Recomputed for this page: the calibration chart (from the study’s published <a href="https://sanand0.github.io/llmevals/confidence-calibration/data.json">data.json</a>, grouped into confidence bands) and the token explorer (from the visualiser’s <a href="https://sanand0.github.io/llmviz/data/friends-marshmallows.json">response JSON</a>). The hiring-test recruiter dashboards and the StraiveX methodology deck shown in the talk are private and not linked.</li>
+  </ul>
+  <p>SUTD COIL session · 17 Nov 2026 · Story written with Claude from the recording’s transcript and the material linked above. <a href="../">More talks</a>.</p>
+</section>
+
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump" aria-label="Jump to section">
+  <button id="jump-prev" type="button" aria-label="Previous section"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+  <button class="jump-cur" id="jump-cur" type="button" aria-expanded="false" aria-controls="jump-menu"><span id="jump-cur-label">Contents</span> <i class="bi bi-chevron-up" aria-hidden="true"></i></button>
+  <button id="jump-next" type="button" aria-label="Next section"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+  <div class="jump-menu" id="jump-menu" role="navigation" aria-label="All sections"></div>
+</nav>
+
+<dialog class="pop" id="pop" aria-labelledby="pop-title">
+  <div class="pop-head"><h2 id="pop-title">Transcript</h2><button class="close-x" id="pop-close" type="button">Close ✕</button></div>
+  <div class="pop-search" id="pop-search"><label class="sr" for="pop-q">Search the transcript</label><input id="pop-q" type="search" placeholder="Search the transcript…"><span id="pop-count"></span></div>
+  <div id="pop-body"></div>
+</dialog>
+
+<dialog class="lightbox" id="lightbox" aria-label="Image viewer">
+  <img id="lb-img" src="" alt="">
+  <div class="lb-bar"><span id="lb-cap"></span><span><a id="lb-open" href="#" target="_blank" rel="noopener">Open full size ↗</a><button id="lb-close" type="button">Close ✕</button></span></div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js" defer></script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const root = document.documentElement;
+  const parseT = (s) => String(s).split(":").reduce((a, b) => a * 60 + +b, 0);
+  const fmt = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, "0")}`;
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // ---------- theme ----------
+  $("#theme-btn").addEventListener("click", () => {
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+    try { localStorage.setItem("sutd-coil-theme", root.dataset.theme); } catch (e) {}
+  });
+
+  // ---------- progress ----------
+  const bar = $("#progress");
+  const onScrollProgress = () => {
+    const h = document.documentElement.scrollHeight - innerHeight;
+    bar.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%";
+  };
+
+  // ---------- audio + timestamps ----------
+  const aud = $("#aud"), card = $("#audio-card"), slot = $("#audio-slot");
+  const seekEl = $("#pl-seek"), playBtn = $("#pl-play"), curEl = $("#pl-cur"), durEl = $("#pl-dur"), tip = $("#pl-tip"), track = $("#pl-track"), nowEl = $("#pl-now");
+  let slotVisible = true, started = false, dragging = false, dur = 5742;
+  const hms = (t) => { t = Math.max(0, Math.floor(t)); const h = Math.floor(t / 3600), m = Math.floor((t % 3600) / 60), x = String(t % 60).padStart(2, "0"); return h ? `${h}:${String(m).padStart(2, "0")}:${x}` : `${m}:${x}`; };
+  // sections with a start time, for ticks, hover preview and "now playing"
+  const SEC = $$("[data-title]").map((el) => { const a = $(".eyebrow a.ts", el) || $("a.ts", el); return a && { t: parseT(new URL(a.href, location.href).searchParams.get("t")), title: el.dataset.title, act: el.dataset.act || "", id: el.id }; }).filter(Boolean).sort((x, y) => x.t - y.t);
+  const secAt = (t) => { let r = null; for (const x of SEC) if (x.t <= t + 0.5) r = x; return r; };
+  const drawTicks = () => {
+    let prevAct = "";
+    $("#pl-ticks").innerHTML = SEC.map((x) => { const act = x.act.split("·")[0].trim(); const cls = act !== prevAct ? "act" : ""; prevAct = act; return `<i class="${cls}" style="left:${((x.t / dur) * 100).toFixed(3)}%"></i>`; }).join("");
+  };
+  drawTicks();
+  const paint = (t) => {
+    seekEl.value = t;
+    seekEl.style.setProperty("--p", `${Math.min(100, (t / dur) * 100)}%`);
+    curEl.textContent = hms(t);
+    const x = secAt(t);
+    seekEl.setAttribute("aria-valuetext", `${hms(t)}${x ? `, ${x.title}` : ""}`);
+    nowEl.innerHTML = x ? `Now: <a href="#${x.id}"><b>${esc(x.title)}</b></a> <span>· ${esc(x.act)}</span>` : "";
+  };
+  paint(0);
+  aud.addEventListener("loadedmetadata", () => { if (isFinite(aud.duration) && aud.duration > 0) { dur = aud.duration; seekEl.max = Math.floor(dur); durEl.textContent = hms(dur); drawTicks(); paint(aud.currentTime); } });
+  aud.addEventListener("timeupdate", () => { if (!dragging) paint(aud.currentTime); });
+  const setIcon = () => { const p = aud.paused; playBtn.innerHTML = `<i class="bi bi-${p ? "play" : "pause"}-fill" aria-hidden="true"></i>`; playBtn.setAttribute("aria-label", p ? "Play" : "Pause"); };
+  aud.addEventListener("pause", setIcon);
+  const updateFloat = () => card.classList.toggle("floating", started && !slotVisible && !card.classList.contains("dismissed"));
+  new IntersectionObserver(([e]) => { slotVisible = e.isIntersecting; updateFloat(); }).observe(slot);
+  aud.addEventListener("play", () => { started = true; card.classList.remove("dismissed"); updateFloat(); setIcon(); });
+  $("#audio-x").addEventListener("click", () => { aud.pause(); card.classList.add("dismissed"); card.classList.remove("floating"); });
+  const seek = (t, autoplay) => {
+    const go = () => { aud.currentTime = t; if (autoplay) aud.play().catch(() => {}); };
+    if (aud.readyState >= 1) go();
+    else { aud.addEventListener("loadedmetadata", go, { once: true }); aud.load(); }
+    paint(t);
+  };
+  playBtn.addEventListener("click", () => { if (aud.paused) { started = true; aud.play().catch(() => {}); } else aud.pause(); });
+  const skip = (d) => seek(Math.min(dur, Math.max(0, (aud.currentTime || +seekEl.value) + d)), false);
+  $("#pl-back").addEventListener("click", () => skip(-5));
+  $("#pl-fwd").addEventListener("click", () => skip(5));
+  const RATES = [1, 1.25, 1.5, 1.75, 2, 0.75];
+  $("#pl-rate").addEventListener("click", (e) => { const r = RATES[(RATES.indexOf(aud.playbackRate) + 1) % RATES.length]; aud.playbackRate = r; e.currentTarget.textContent = `${r}×`; });
+  seekEl.addEventListener("input", () => { dragging = true; paint(+seekEl.value); });
+  seekEl.addEventListener("change", () => { dragging = false; seek(+seekEl.value, false); });
+  // ← / → skip 5 s (Shift: 30 s) anywhere on the page, except while typing or on another slider
+  document.addEventListener("keydown", (e) => {
+    if ((e.key !== "ArrowLeft" && e.key !== "ArrowRight") || e.altKey || e.ctrlKey || e.metaKey) return;
+    const el = e.target;
+    if (el !== seekEl && (el.closest?.("input, textarea, select, [contenteditable=''], [contenteditable='true'], dialog[open]") || !started)) return;
+    e.preventDefault();
+    skip((e.key === "ArrowLeft" ? -1 : 1) * (e.shiftKey ? 30 : 5));
+  });
+  // hover preview: time and section under the pointer
+  track.addEventListener("pointermove", (e) => {
+    const r = seekEl.getBoundingClientRect();
+    const f = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)), t = f * dur, x = secAt(t);
+    tip.innerHTML = `<b>${hms(t)}</b>${x ? esc(x.title) : ""}`;
+    tip.hidden = false;
+    const w = tip.offsetWidth / 2;
+    tip.style.left = `${Math.min(r.width - w, Math.max(w, f * r.width))}px`;
+  });
+  track.addEventListener("pointerleave", () => { tip.hidden = true; });
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a.ts");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const t = new URL(a.href, location.href).searchParams.get("t");
+    if (!t) return;
+    $$("a.ts.playing").forEach((x) => x.classList.remove("playing"));
+    a.classList.add("playing");
+    card.classList.remove("dismissed");
+    started = true; updateFloat();
+    seek(parseT(t), true);
+  });
+  aud.addEventListener("pause", () => $$("a.ts.playing").forEach((x) => x.classList.remove("playing")));
+  const initT = new URLSearchParams(location.search).get("t");
+  if (initT) seek(parseT(initT), false);
+
+  // ---------- embedded companion page: show just its section (works same-origin, i.e. when deployed) ----------
+  $$("iframe[data-scroll]").forEach((f) => f.addEventListener("load", () => {
+    try {
+      const w = f.contentWindow, d = f.contentDocument, st = d.createElement("style");
+      st.textContent = ".topbar, .jump, .series, #progress { display: none !important; }";
+      d.head.append(st);
+      const go = () => { const el = d.getElementById(f.dataset.scroll); if (el) w.scrollTo(0, el.getBoundingClientRect().top + w.scrollY - 12); };
+      go(); setTimeout(go, 900);
+    } catch { /* cross-origin (e.g. file://): the #hash in src still applies */ }
+  }));
+
+  // ---------- jump nav ----------
+  const secs = $$("[data-title]");
+  const menu = $("#jump-menu"), backdrop = $("#jump-backdrop"), curBtn = $("#jump-cur"), curLbl = $("#jump-cur-label");
+  const groups = [];
+  secs.forEach((s) => {
+    const g = s.dataset.act || "";
+    if (!groups.length || groups.at(-1).name !== g) groups.push({ name: g, items: [] });
+    const t = ($(".eyebrow a.ts", s) || {}).textContent || "";
+    groups.at(-1).items.push({ id: s.id, title: s.dataset.title, t });
+  });
+  menu.innerHTML = groups.map((g) => `<div class="jm-group">${esc(g.name)}</div><div class="jump-grid">${
+    g.items.map((i) => `<a href="#${i.id}" data-id="${i.id}">${esc(i.title)}${i.t ? `<small>${esc(i.t)}</small>` : ""}</a>`).join("")}</div>`).join("");
+  const setMenu = (open) => {
+    menu.classList.toggle("open", open); backdrop.classList.toggle("open", open);
+    curBtn.setAttribute("aria-expanded", String(open));
+    if (open) ($("a.is-cur", menu) || $("a", menu)).scrollIntoView({ block: "nearest" });
+  };
+  curBtn.addEventListener("click", () => setMenu(!menu.classList.contains("open")));
+  backdrop.addEventListener("click", () => setMenu(false));
+  menu.addEventListener("click", (e) => { if (e.target.closest("a")) setMenu(false); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && menu.classList.contains("open")) setMenu(false); });
+  let cur = -1;
+  const findCur = () => {
+    const y = innerHeight * 0.35;
+    let idx = -1;
+    secs.forEach((s, i) => { if (s.getBoundingClientRect().top <= y) idx = i; });
+    return idx;
+  };
+  const onScrollJump = () => {
+    const i = findCur();
+    if (i === cur) return;
+    cur = i;
+    curLbl.textContent = i < 0 ? "Contents" : secs[i].dataset.title;
+    $$("a", menu).forEach((a) => a.classList.toggle("is-cur", i >= 0 && a.dataset.id === secs[i].id));
+    $("#jump-prev").disabled = i <= 0 && scrollY < 50;
+    $("#jump-next").disabled = i >= secs.length - 1;
+  };
+  const go = (i) => secs[Math.max(0, Math.min(secs.length - 1, i))].scrollIntoView({ behavior: "smooth" });
+  $("#jump-prev").addEventListener("click", () => cur <= 0 ? scrollTo({ top: 0, behavior: "smooth" }) : go(cur - 1));
+  $("#jump-next").addEventListener("click", () => go(cur + 1));
+  let ticking = false;
+  addEventListener("scroll", () => {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(() => { onScrollProgress(); onScrollJump(); ticking = false; });
+  }, { passive: true });
+  onScrollProgress(); onScrollJump();
+
+  // ---------- transcript popup ----------
+  const pop = $("#pop"), popBody = $("#pop-body"), popQ = $("#pop-q"), popCount = $("#pop-count");
+  let popReturn = null, transcriptHtml = null;
+  $("#pop-close").addEventListener("click", () => pop.close());
+  pop.addEventListener("click", (e) => { if (e.target === pop) pop.close(); });
+  pop.addEventListener("close", () => popReturn?.focus?.());
+  document.addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-transcript]");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    popReturn = a;
+    if (!transcriptHtml) {
+      try {
+        let md = await (await fetch("transcript.md")).text();
+        md = md.replace(/<!--[\s\S]*?-->/g, "").replace(/^# Transcript\s*/, "");
+        md = md.replace(/\[(\d{1,3}):(\d{2})\]/g, (m, a1, b1) => `<a class="ts" href="?t=${a1}:${b1}">${+a1}:${b1}</a>`);
+        const html = window.marked ? marked.parse(md) : `<pre style="white-space:pre-wrap">${esc(md)}</pre>`;
+        transcriptHtml = '<p class="intro">AI transcription of the recording, lightly formatted. Tap any time to play that moment. Audience members are not named. Where the text and the recording disagree, trust the recording.</p>' + html;
+      } catch (err) { location.href = a.href; return; }
+    }
+    popBody.innerHTML = transcriptHtml;
+    popQ.value = ""; popCount.textContent = "";
+    pop.showModal(); popBody.scrollTop = 0; popQ.focus();
+  });
+  const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  popQ.addEventListener("input", () => {
+    const q = popQ.value.trim();
+    $$("mark", popBody).forEach((m) => m.replaceWith(m.textContent));
+    popBody.normalize();
+    let n = 0;
+    $$(":scope > p, :scope > hr", popBody).filter((b) => !b.classList.contains("intro")).forEach((b) => {
+      const hit = !q || b.textContent.toLowerCase().includes(q.toLowerCase());
+      b.classList.toggle("hide", !hit || (q && b.tagName === "HR"));
+      if (!hit || !q) return;
+      n++;
+      const re = new RegExp(escRe(q), "gi");
+      const walker = document.createTreeWalker(b, NodeFilter.SHOW_TEXT);
+      const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach((node) => {
+        if (!node.nodeValue.match(re)) return;
+        const span = document.createElement("span");
+        span.innerHTML = esc(node.nodeValue).replace(re, (m) => `<mark>${m}</mark>`);
+        node.replaceWith(...span.childNodes);
+      });
+    });
+    popCount.textContent = q ? `${n} passage${n === 1 ? "" : "s"}` : "";
+  });
+
+  // ---------- lightbox ----------
+  const lb = $("#lightbox"), lbImg = $("#lb-img");
+  let lbReturn = null;
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-lightbox]");
+    if (!el || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const src = el.getAttribute("href");
+    lbImg.src = src; lbImg.alt = el.querySelector("img")?.alt || "";
+    $("#lb-cap").textContent = el.dataset.caption || "";
+    $("#lb-open").href = src;
+    lbReturn = el; lb.showModal();
+  });
+  $("#lb-close").addEventListener("click", () => lb.close());
+  lb.addEventListener("click", (e) => { if (e.target === lb || e.target === lbImg) lb.close(); });
+  lb.addEventListener("close", () => lbReturn?.focus?.());
+})();
+</script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const NS = "http://www.w3.org/2000/svg";
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // ---------- voting waffle ----------
+  // Source: sanand0.github.io/llmevals/double-checking/ (models, % sent to humans, % error)
+  const VOTE = [[1, 0, 14.1], [2, 12.6, 3.7], [3, 18.5, 2.2], [4, 23.0, 1.5], [5, 28.1, 0.7]];
+  const N = 200, waffle = $("#waffle");
+  // fixed pseudo-random order so cells change smoothly as the slider moves
+  const order = Array.from({ length: N }, (_, i) => i);
+  let seed = 7;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = N - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
+  waffle.innerHTML = "<i></i>".repeat(N);
+  const cells = $$("i", waffle);
+  const READ = {
+    1: "One model, no checking. Every ticket is automated, and about <b>1 in 7 is wrong</b>.",
+    2: "Two models must agree. Humans now see the 1 in 8 tickets where they disagree, and <b>errors drop from 14% to under 4%</b>.",
+    3: "Three models. More disagreements to review, fewer errors slip through.",
+    4: "Four models. The gains are getting smaller: each extra model buys less.",
+    5: "Five models: <b>0.7% error</b>, with humans reviewing 28%. That is Anand’s “reducing the cost 72% at 99.3% accuracy.” The red squares left are the silent errors: all five agreed, all five were wrong.",
+  };
+  const drawVote = (k) => {
+    const [, eff, err] = VOTE[k - 1];
+    const nErr = Math.round((err / 100) * N), nRev = Math.round((eff / 100) * N);
+    cells.forEach((c) => (c.className = ""));
+    order.slice(0, nErr).forEach((i) => cells[i].classList.add("err"));
+    order.slice(nErr, nErr + nRev).forEach((i) => cells[i].classList.add("rev"));
+    waffle.setAttribute("aria-label", `Of 200 tickets with ${k} model${k > 1 ? "s" : ""}: about ${nErr} automated wrongly, ${nRev} sent to humans, the rest automated correctly.`);
+    $("#vote-k").textContent = k; $("#vote-s").textContent = k > 1 ? "s must agree" : "";
+    $("#vote-err").textContent = err + "%"; $("#vote-eff").textContent = eff + "%";
+    $("#vote-auto").textContent = (100 - eff).toFixed(1).replace(/\.0$/, "") + "%";
+    $("#vote-read").innerHTML = READ[k] + " <span style=\"color:var(--muted)\">Grid shows 200 tickets, rounded.</span>";
+  };
+  const vChart = $("#vote-chart");
+  const VX = (k) => 70 + (k - 1) * 115, VY = (v) => 196 - v * 5.6;
+  const drawVoteChart = (k) => {
+    const pts = (i) => VOTE.map((r) => `${VX(r[0])},${VY(r[i])}`).join(" ");
+    let g = `<rect class="vc-band" x="${VX(k) - 26}" y="14" width="52" height="190" rx="8"/>`;
+    [0, 10, 20, 30].forEach((v) => (g += `<line class="vc-grid" x1="56" x2="552" y1="${VY(v)}" y2="${VY(v)}"/><text x="48" y="${VY(v) + 4}" text-anchor="end">${v}%</text>`));
+    VOTE.forEach(([m]) => (g += `<text x="${VX(m)}" y="222" text-anchor="middle" class="${m === k ? "on" : ""}">${m}</text>`));
+    g += `<text x="${VX(3)}" y="238" text-anchor="middle">models that must agree</text>`;
+    g += `<polyline class="vc-eff" points="${pts(1)}"/><polyline class="vc-err" points="${pts(2)}"/>`;
+    VOTE.forEach(([m, eff, err]) => {
+      const on = m === k, r = on ? 6.5 : 4.5;
+      g += `<circle class="vc-eff-d" cx="${VX(m)}" cy="${VY(eff)}" r="${r}"/><circle class="vc-err-d" cx="${VX(m)}" cy="${VY(err)}" r="${r}"/>`;
+      if (on) g += `<text class="vc-val eff" x="${VX(m)}" y="${VY(eff) - 12}" text-anchor="middle">${eff}%</text><text class="vc-val err" x="${VX(m)}" y="${VY(err) + (err > eff ? -12 : 22)}" text-anchor="middle">${err}%</text>`;
+    });
+    g += `<text class="vc-lab eff" x="${VX(5) + 12}" y="${VY(28.1) + 4}">sent to humans</text><text class="vc-lab err" x="${VX(5) + 12}" y="${VY(0.7) + 4}">error</text>`;
+    VOTE.forEach(([m]) => (g += `<rect class="vc-hit" data-k="${m}" x="${VX(m) - 57}" y="0" width="114" height="230"/>`));
+    vChart.innerHTML = g;
+  };
+  const range = $("#vote-range");
+  const setVote = (k) => { drawVote(k); drawVoteChart(k); };
+  range.addEventListener("input", () => setVote(+range.value));
+  vChart.addEventListener("click", (e) => { const h = e.target.closest(".vc-hit"); if (h) { range.value = h.dataset.k; setVote(+h.dataset.k); } });
+  setVote(1);
+
+  // ---------- calibration ----------
+  // Source: sanand0.github.io/llmevals/confidence-calibration/data.json, grouped into bands
+  // [mean stated confidence %, accuracy %, n]
+  const CAL = {
+    "gpt-4.1-nano": { cls: "nano", pts: [[12.5, 10, 20], [60, 0, 2], [70, 18.5, 27], [84.6, 49.3, 357], [90, 100, 10], [95, 76.9, 333], [100, 100, 21]] },
+    "gpt-5.6-luna": { cls: "luna", pts: [[34.6, 0, 13], [57.6, 25, 8], [75.6, 34.8, 23], [85.9, 59.1, 22], [92.7, 68.6, 35], [97.2, 76.6, 239], [99.2, 97, 430]] },
+  };
+  const drawCal = () => {
+    const W = 560, H = 380, m = { l: 46, r: 16, t: 14, b: 40 };
+    const x = (v) => m.l + (v / 100) * (W - m.l - m.r), y = (v) => H - m.b - (v / 100) * (H - m.t - m.b);
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Calibration chart: stated confidence against actual accuracy for two models. Most points fall below the diagonal, meaning overconfidence. At 95% stated confidence, GPT-4.1 nano was right 76.9% of the time.">`;
+    for (let v = 0; v <= 100; v += 25) {
+      s += `<line class="axis" x1="${x(0)}" x2="${x(100)}" y1="${y(v)}" y2="${y(v)}" stroke-width="1"/><text x="${m.l - 8}" y="${y(v) + 4}" text-anchor="end">${v}%</text>`;
+      s += `<text x="${x(v)}" y="${H - m.b + 18}" text-anchor="middle">${v}%</text>`;
+    }
+    s += `<text x="${(m.l + W - m.r) / 2}" y="${H - 4}" text-anchor="middle" style="font-weight:600">Stated confidence →</text>`;
+    s += `<text transform="translate(12 ${(m.t + H - m.b) / 2}) rotate(-90)" text-anchor="middle" style="font-weight:600">Actually correct →</text>`;
+    s += `<line class="diag" x1="${x(0)}" y1="${y(0)}" x2="${x(100)}" y2="${y(100)}"/>`;
+    s += `<text x="${x(70)}" y="${y(86)}" style="font-style:italic">underconfident</text><text x="${x(62)}" y="${y(30)}" style="font-style:italic">overconfident</text>`;
+    Object.entries(CAL).forEach(([name, { cls, pts }]) => {
+      const col = cls === "nano" ? "var(--blue)" : "var(--red)";
+      s += `<polyline fill="none" style="stroke:${col}" stroke-width="2" stroke-opacity=".55" points="${pts.map(([c, a]) => `${x(c)},${y(a)}`).join(" ")}"/>`;
+      pts.forEach(([c, a, n]) => {
+        const r = 3 + Math.sqrt(n) * 0.7;
+        s += `<circle tabindex="0" cx="${x(c)}" cy="${y(a)}" r="${r}" style="fill:${col};fill-opacity:.35;stroke:${col}" stroke-width="2" data-tip="${name}: said ${c}% on average, right ${a}% of the time (${n} requests)"><title>${name}: said ${c}%, right ${a}% (${n} requests)</title></circle>`;
+      });
+    });
+    // annotate the 95% point
+    s += `<line x1="${x(95)}" y1="${y(76.9) + 17}" x2="${x(95)}" y2="${y(44)}" style="stroke:var(--ink)" stroke-width="1"/><text x="${x(100)}" y="${y(44) + 14}" text-anchor="end" style="fill:var(--ink);font-weight:600">nano says 95%, right 77%</text>`;
+    s += "</svg>";
+    $("#cal-chart").innerHTML = s;
+  };
+  const calTip = (e) => {
+    const c = e.target.closest("circle[data-tip]");
+    if (c) $("#cal-read").innerHTML = esc(c.dataset.tip);
+  };
+  $("#cal-chart").addEventListener("mouseover", calTip);
+  $("#cal-chart").addEventListener("focusin", calTip);
+  $("#cal-chart").addEventListener("click", calTip);
+  const GUESS = { more: "more than 95%", about: "about 95%", 80: "80–95%", 50: "50–80%", less: "under 50%" };
+  $("#cal-choices").addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-g]");
+    if (!b) return;
+    $$("#cal-choices button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    const right = b.dataset.g === "50";
+    $("#cal-read").innerHTML = `You guessed <b>${GUESS[b.dataset.g]}</b>. ${right ? "Right." : "Not quite."} When <b>GPT-4.1 nano</b> said 95%, it was right <b>76.9%</b> of the time (333 requests). GPT-5.6 Luna, in its 95–98% band, was right <b>76.6%</b> (239 requests).`;
+    $("#cal-reveal").hidden = false;
+    drawCal();
+  });
+
+  // ---------- token explorer ----------
+  // Source: sanand0.github.io/llmviz/data/friends-marshmallows.json · [token, prob %, [[alt, prob %], ...]]
+  const TOK = [["Jo",70.0,[["Jo",70.0],["In",28.4],["The",1.7]]],["ey",100.0,[["ey",100.0]]],[" eating",74.7,[[" eating",74.7],[" ate",7.8],[" eats",7.6],[" Trib",4.2],["'s",3.4]]],[" too",100.0,[[" too",100.0]]],[" many",100.0,[[" many",100.0]]],[" marsh",100.0,[[" marsh",100.0]]],["mall",100.0,[["mall",100.0]]],["ows",100.0,[["ows",100.0]]],[" is",48.0,[[" is",48.0],[" happens",22.8],[" happened",9.5],[" was",9.2],[" occurs",5.7]]],[" featured",42.0,[[" featured",42.0],[" a",26.6],[" from",6.8],[" mentioned",4.9],[" depicted",4.9]]],[" in",100.0,[[" in",100.0]]],[" Season",50.4,[[" Season",50.4],[" the",45.4],[" season",1.8],[" Episode",1.3],[" \"",0.5]]],[" ",100.0,[[" ",100.0]]],["3",76.9,[["3",76.9],["7",7.7],["5",4.5],["2",2.9],["4",2.8]]],[",",99.1,[[",",99.1],[" Episode",0.5],[" of",0.3]]],[" Episode",99.9,[[" Episode",99.9],[" episode",0.1]]],[" ",100.0,[[" ",100.0]]],["20",44.8,[["20",44.8],["21",9.6],["11",6.8],["13",5.5],["14",4.5]]],[" of",96.1,[[" of",96.1],[" titled",1.9],[",",1.9]]],[" Friends",100.0,[[" Friends",100.0]]],[",",75.4,[[",",75.4],[" titled",20.3],[".",3.8],[" called",0.4],[" entitled",0.1]]],[" titled",98.6,[[" titled",98.6],[" called",1.0],[" entitled",0.3],[" which",0.1]]],[" \"",100.0,[[" \"",100.0]]],["The",100.0,[["The",100.0]]],[" One",100.0,[[" One",100.0]]],[" with",98.7,[[" with",98.7],[" With",1.3]]],[" the",99.9,[[" the",99.9],[" All",0.1]]],[" Doll",98.0,[[" Doll",98.0],[" Hyp",1.4],[" All",0.3],[" Chick",0.2]]],["house",100.0,[["house",100.0]]],[".\"",96.1,[[".\"",96.1],["\".",3.9]]]];
+  const shown = (t) => t.replace(/\n/g, "⏎");
+  const tokEl = $("#tokens"), det = $("#tok-detail");
+  tokEl.innerHTML = TOK.map(([t, p], i) => {
+    const a = Math.min(0.42, ((100 - p) / 100) * 0.75);
+    return `<button class="tok" type="button" data-i="${i}" aria-pressed="false" style="background:rgba(229,72,77,${a.toFixed(3)})" aria-label="${esc(t.trim() || "space")}, ${p}%">${esc(shown(t))}</button>`;
+  }).join("");
+  const showTok = (i) => {
+    const [t, p, alts] = TOK[i];
+    $$(".tok", tokEl).forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.i === i)));
+    det.innerHTML = `<div style="margin-bottom:.4rem">Chose <b style="font-family:var(--font-mono)">${esc(JSON.stringify(t))}</b> at <b>${p}%</b>. Alternatives it considered:</div><table>${
+      alts.map(([a, q]) => `<tr><td>${esc(JSON.stringify(a))}</td><td class="bar"><i style="width:${Math.max(q, 0.5)}%"></i></td><td style="text-align:right">${q}%</td></tr>`).join("")}</table>`;
+  };
+  tokEl.addEventListener("click", (e) => { const b = e.target.closest(".tok"); if (b) showTok(+b.dataset.i); });
+  showTok(TOK.findIndex(([t]) => t === "20"));
+  const pick = (t) => TOK.find(([x]) => x === t);
+  const Q = [
+    ["Episode number", pick("20"), "21, 11 and 13 are close behind", "✓ correct: S3 E20 is the Dollhouse episode"],
+    ["Season number", pick("3"), "7 is next at 7.7%", "✓ correct"],
+    ["“eating” vs “ate”", pick(" eating"), "wording, not a fact: skip", "· skipped"],
+    ["Episode title", pick(" Doll"), "“The One with the Dollhouse”", "✓ a real episode"],
+    ["“too many marshmallows”", pick(" marsh"), "copied from the question, so it looks certain", "✗ false premise: it never happened"],
+  ].sort((a, b) => a[1][1] - b[1][1]);
+  $("#tok-queue").innerHTML = Q.map(([lbl, [, p], note, res]) => `<li data-res="${esc(res)}" class="${res.startsWith("✗") ? "bad" : res.startsWith("✓") ? "ok" : "skip"}"><b>${esc(lbl)}</b> · ${p}% · <span class="qn">${esc(note)}</span> <span class="qr"></span></li>`).join("");
+  $("#tok-run").addEventListener("click", (e) => {
+    e.currentTarget.disabled = true;
+    $$("#tok-queue li").forEach((li, i) => setTimeout(() => { $(".qr", li).textContent = li.dataset.res; li.classList.add("done"); }, 450 * (i + 1)));
+    setTimeout(() => { $("#tok-after").hidden = false; }, 450 * (Q.length + 1));
+  });
+})();
+</script>
+</body>
+</html>

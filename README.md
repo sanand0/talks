@@ -23,6 +23,9 @@ I speak regularly at:
 <!-- BEGIN GENERATED TALKS -->
 ## Latest talks
 
+- 17 Nov 2026. **[The Agent Passed. The Test Failed. Who Verifies the Verifier?](2026-11-17-sutd-coil/ ":ignore")** at [SUTD COIL](https://www.sutd.edu.sg/), Singapore University of Technology and Design, Singapore.  
+  An agent passes a proctored hiring test while its owner eats an apple, and the class works out how to specify to, verify and review an intelligence smarter than you: cross-checking models, ranking confidence, user tests with agents, and logging every user reaction.  
+  [💬 Transcript](2026-11-17-sutd-coil/transcript.md) · [🎧 Audio (96m)](https://github.com/sanand0/talks/releases/download/talks/2026-11-17-sutd-coil.opus ":ignore")
 - 16 Nov 2026. **[The Score Can’t See Who Built the Solver](2026-11-16-tds-ideation/ ":ignore")** at [TDS Course Ideation — Open Design Meeting, Sep 2026](https://tds.s-anand.net/), Remote.  
   In the sixth open TDS design meeting, a student turns a hard timed question into a standalone solver that needs no AI model, and Food Court, peer grades, picture stories and forecasts all turn out to be measuring something other than what their designers meant.  
   [⏯️ Video (67m)](https://media.s-anand.net/2026-11-16-tds-course-ideation.webm ":ignore") · [💬 Transcript](2026-11-16-tds-ideation/transcript.md) · [💬 Captions](2026-11-16-tds-ideation/captions.vtt) · [🎧 Audio (67m)](https://github.com/sanand0/talks/releases/download/talks/2026-11-16-tds-ideation.opus ":ignore")

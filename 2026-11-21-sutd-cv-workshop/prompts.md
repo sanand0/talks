@@ -1,4 +1,20 @@
-# Computer vision: What can you build in an hour? — 21 Nov 2026
+# Prompts
+
+##
+
+<!--
+cd ~/code/talks/
+claude --model opus --effort medium
+-->
+
+I forgot to mention a couple of things for 2026-11-21-sutd-cv-workshop/ - feel free to incorporate, repurpose, or ignore and leave the story as-is, whatever's better.
+
+- The Neural Net example I used is at: https://docs.google.com/spreadsheets/d/1jJx5C7NQvHdtzjm6fh8qAApzN1ysl93WMU0XyTiAwc4/edit?gid=0#gid=0
+- The Joey Marshmallows example is at: https://sanand0.github.io/llmviz/
+
+<!-- claude --resume c60f3ee1-1d4a-4574-a9b4-b96dd4e5c425 -->
+
+## Initial story, 21 Nov 2026
 
 <!--
 cd ~/code/talks/

@@ -504,6 +504,34 @@ dialog.lightbox img { display: block; max-width: 100%; max-height: 86vh; margin:
 .hero h1 { animation-delay: .08s; } .hero .dek { animation-delay: .16s; } .hero .meta { animation-delay: .24s; } .hand-fig { animation-delay: .3s; }
 @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; } .hand-fig { max-width: 460px; margin: 0 auto; } }
 @media print { .jump, .jump-backdrop, .topbar, #progress, .player { display: none !important; } }
+/* ---------- neuron sheet + token explorer ---------- */
+.chart figcaption { font: 400 .86rem/1.5 var(--font-ui); color: var(--muted); margin-top: .6rem; }
+.sheet { overflow-x: auto; }
+.sheet table { border-collapse: collapse; font: 500 .9rem var(--font-mono); background: var(--card); min-width: 100%; }
+.sheet th, .sheet td { border: 1px solid var(--line); padding: .3rem .6rem; text-align: right; }
+.sheet thead th, .sheet tbody th, .sheet tfoot th { background: var(--paper2); color: var(--muted); font: 600 .78rem var(--font-ui); text-align: center; }
+.sheet thead th small { display: block; font-weight: 400; }
+.sheet td.w { display: flex; align-items: center; gap: .5rem; justify-content: flex-end; }
+.sheet input[type=range] { width: min(9rem, 30vw); accent-color: var(--violet); }
+.sheet td.w output { min-width: 3.2rem; }
+.sheet td.neg { color: var(--hot); }
+.sheet tfoot td { font-weight: 700; }
+.sheet tfoot td:first-of-type { text-align: left; font: 600 .86rem var(--font-ui); }
+#neuron-out { background: var(--hi); color: var(--hi-ink); }
+.tok-q { font: 600 .95rem/1.4 var(--font-ui); margin: 0 0 .5rem !important; }
+.tok-line { display: flex; flex-wrap: wrap; gap: 3px; padding: .8rem; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
+.tok-line button { --p: 1; border: 1.5px solid transparent; border-radius: 5px; padding: .2rem .25rem; min-height: 34px; font: 500 .95rem var(--font-mono); white-space: pre; cursor: pointer;
+  background: color-mix(in srgb, var(--violet) calc(6% + var(--p) * 60%), var(--card)); color: var(--ink); }
+.tok-line button.lo { outline: 2px dashed var(--hot); outline-offset: 1px; }
+.tok-line button[aria-pressed="true"] { border-color: var(--ink); }
+.tok-alt { margin-top: .7rem; min-height: 8.5rem; font: 400 .9rem var(--font-ui); }
+.tok-alt p { margin: 0 0 .4rem !important; }
+.tok-alt .row { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr) 3.4rem; gap: .5rem; align-items: center; margin-bottom: .25rem; }
+.tok-alt .row code { font: 500 .88rem var(--font-mono); white-space: pre; overflow: hidden; text-overflow: ellipsis; }
+.tok-alt .bar { height: 14px; border-radius: 3px; background: var(--paper2); overflow: hidden; }
+.tok-alt .bar i { display: block; height: 100%; background: var(--violet); }
+.tok-alt .row.pick .bar i { background: var(--hot); }
+.tok-alt .row span { text-align: right; font-variant-numeric: tabular-nums; }
 </style>
 </head>
 <body>
@@ -701,7 +729,30 @@ dialog.lightbox img { display: block; max-width: 100%; max-height: 86vh; margin:
     <p><strong>The model names said in the room don't match the published results.</strong> In the recording, Anand reads out Llama, GPT-4o and Sonnet 3.5. Atharva's results page (checked 22 Nov) tested GPT-6 Sol, Claude Sonnet 5.5, GPT-6 Luna and Gemini 3.8 Flash, as in the table in this section. Both agree that every model read the plain 0s-and-1s grid perfectly. For names and scores, rely on the results page.</p>
     <p><strong>The models were not given multiple-choice options.</strong> When a student asked how the prompt worked, Anand guessed it might offer options, then checked the raw replies live <a class="ts" href="?t=20:46">20:46</a>. The prompt asked each model to rebuild the pixel grid and say what the picture shows.</p>
   </div>
-  <p>Anand used the surprise to explain how an LLM works at all, sketching neurons in a spreadsheet and then showing his <a href="https://sanand0.github.io/llmviz/#/">LLM hallucination visualiser</a>, which displays the probability of each possible next word as a model answers a question about an episode of Friends. <a class="ts" href="?t=17:32">17:32</a> The model never “knows” the answer; at each step it ranks possible next words, which is why it can confidently start an answer it then gets wrong. His honest summary of why it can read PNG: <strong>“how would they have learned how to speak PNG? And yet they seem to have learned how to speak PNG.”</strong> <a class="ts" href="?t=18:52">18:52</a></p>
+  <p>Anand used the surprise to explain how an LLM works at all. He started in a Google Sheet. Type a row of numbers. A <strong>neuron</strong> is just a cell that adds those numbers up, giving each one its own weight (“only look at this one, this one, 50% of this, 20% of this”), and passes the total to the next layer of neurons. An LLM is billions of these. Training means finding the weights.</p>
+  <figure class="chart sheet-fig" aria-labelledby="sheet-t">
+    <h4 id="sheet-t">One neuron, as a spreadsheet</h4>
+    <p class="sub">The inputs Anand typed, with weights like the ones he described. Drag a weight to see the neuron's output change.</p>
+    <div class="sheet" id="neuron">
+      <table>
+        <thead><tr><th></th><th>A<small>input</small></th><th>B<small>weight</small></th><th>C<small>= A × B</small></th></tr></thead>
+        <tbody></tbody>
+        <tfoot><tr><th>Σ</th><td colspan="2">Neuron output (sum of column C)</td><td id="neuron-out"></td></tr></tfoot>
+      </table>
+    </div>
+    <figcaption>Illustrative weights. The sheet used in the room isn't public; this rebuilds the example from the recording.</figcaption>
+  </figure>
+  <p>Then, how does a network of neurons <em>talk</em>? It turns the words so far into numbers, runs them through the network, and gets back a probability for every possible next word. It picks one, adds it to the text, and goes again. Anand showed this with his <a href="https://sanand0.github.io/llmviz/#/">LLM hallucination visualiser</a> and a trick question: <strong>“In what episode of Friends did Joey eat too many marshmallows?”</strong> <a class="ts" href="?t=17:32">17:32</a></p>
+  <figure class="chart tokviz" aria-labelledby="tok-t">
+    <h4 id="tok-t">GPT-3.5 answers a question about an episode that doesn't exist</h4>
+    <p class="sub">Each chunk is one word-piece the model picked. Stronger colour means the model was more sure of it; a dashed outline means it was under 60% sure. Tap any chunk to see the other words it considered.</p>
+    <p class="tok-q">Q: In what episode of Friends did Joey eat too many marshmallows?</p>
+    <div class="tok-line" role="group" aria-label="The model's answer, one word-piece at a time"></div>
+    <div class="tok-alt" aria-live="polite"></div>
+    <figcaption>Joey never ate too many marshmallows in any episode. The model still answered “Season 3, Episode 20”, and most of the words it picked had high probability. Confidence is not correctness. Data: GPT-3.5 Turbo, temperature 0, from the <a href="https://sanand0.github.io/llmviz/#/">visualiser</a>.</figcaption>
+    <script type="application/json" id="tok-data">[["Jo",0.7,[["Jo",0.7],["In",0.284],["The",0.017],["That",0.0]]],["ey",1.0,[["ey",1.0],["e",0.0],["el",0.0],["<|end|>",0.0]]],[" eating",0.747,[[" eating",0.747],[" ate",0.078],[" eats",0.076],[" Trib",0.042]]],[" too",1.0,[[" too",1.0],[" an",0.0],[" a",0.0],[" way",0.0]]],[" many",1.0,[[" many",1.0],[" marsh",0.0],["-many",0.0],[" man",0.0]]],[" marsh",1.0,[[" marsh",1.0],[" Marsh",0.0],[" ",0.0],[" mar",0.0]]],["mall",1.0,[["mall",1.0],["ma",0.0],["mal",0.0],["mallow",0.0]]],["ows",1.0,[["ows",1.0],["o",0.0],["ow",0.0],["owns",0.0]]],[" is",0.48,[[" is",0.48],[" happens",0.228],[" happened",0.095],[" was",0.092]]],[" featured",0.42,[[" featured",0.42],[" a",0.266],[" from",0.068],[" mentioned",0.049]]],[" in",1.0,[[" in",1.0],[" prominently",0.0],[" on",0.0],[" during",0.0]]],[" Season",0.504,[[" Season",0.504],[" the",0.454],[" season",0.018],[" Episode",0.013]]],[" ",1.0,[[" ",1.0],["1",0.0],["2",0.0],[" One",0.0]]],["3",0.769,[["3",0.769],["7",0.077],["5",0.045],["2",0.029]]],[",",0.991,[[",",0.991],[" Episode",0.005],[" of",0.003],[" episode",0.0]]],[" Episode",0.999,[[" Episode",0.999],[" episode",0.001],[" in",0.0],[" specifically",0.0]]],[" ",1.0,[[" ",1.0],[" \"",0.0],[" titled",0.0],["\n",0.0]]],["20",0.448,[["20",0.448],["21",0.096],["11",0.068],["13",0.055]]],[" of",0.961,[[" of",0.961],[" titled",0.019],[",",0.019],[" -",0.0]]],[" Friends",1.0,[[" Friends",1.0],[" \"",0.0],[" the",0.0],[" FRIEND",0.0]]],[",",0.754,[[",",0.754],[" titled",0.203],[".",0.038],[" called",0.004]]],[" titled",0.986,[[" titled",0.986],[" called",0.01],[" entitled",0.003],[" which",0.001]]],[" \"",1.0,[[" \"",1.0],[" “",0.0],[",",0.0],[" '",0.0]]],["The",1.0,[["The",1.0],[" The",0.0],["​",0.0],["the",0.0]]],[" One",1.0,[[" One",1.0],[" one",0.0],[" Chick",0.0],[" Ones",0.0]]],[" with",0.987,[[" with",0.987],[" With",0.013],[" Where",0.0],[" w",0.0]]],[" the",0.999,[[" the",0.999],[" All",0.001],[" The",0.0],[" a",0.0]]],[" Doll",0.98,[[" Doll",0.98],[" Hyp",0.014],[" All",0.003],[" Chick",0.002]]],["house",1.0,[["house",1.0],[" House",0.0],["h",0.0],["House",0.0]]],[".\"",0.961,[[".\"",0.961],["\".",0.039],[".”",0.0],["\"",0.0]]]]</script>
+  </figure>
+  <p>The fork Anand pointed at was the season number: “it wants to say three, but it also feels maybe it was in season seven.” A few words later, “Episode 20” won with only 45%, with 21 a distant second. His honest summary of why the same machinery can read PNG: <strong>“how would they have learned how to speak PNG? And yet they seem to have learned how to speak PNG.”</strong> <a class="ts" href="?t=18:52">18:52</a></p>
 </section>
 
 <section class="chap" id="video" data-act="Act I · Guess first" data-title="Watching in samples">
@@ -1269,6 +1320,46 @@ dialog.lightbox img { display: block; max-width: 100%; max-height: 86vh; margin:
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const store = { get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} } };
+
+  // ---------- neuron sheet ----------
+  const nEl = $("#neuron");
+  if (nEl) {
+    const rows = [[1, 1], [10, 1], [30, 0.5], [-40, 0.2], [50, 0], [20, 0], [10, 0]];
+    const body = $("tbody", nEl), out = $("#neuron-out");
+    const fmt = (x) => (Math.round(x * 10) / 10).toString();
+    body.innerHTML = rows.map(([x, w], i) => `<tr><th>${i + 1}</th><td class="${x < 0 ? "neg" : ""}">${x}</td><td class="w"><input type="range" min="-1" max="1" step="0.1" value="${w}" aria-label="Weight for input ${x}"><output>${Math.round(w * 100)}%</output></td><td class="p"></td></tr>`).join("");
+    const calc = () => {
+      let sum = 0;
+      $$("tr", body).forEach((tr, i) => {
+        const w = +$("input", tr).value, p = rows[i][0] * w;
+        $("output", tr).textContent = Math.round(w * 100) + "%";
+        const c = $(".p", tr); c.textContent = fmt(p); c.classList.toggle("neg", p < 0);
+        sum += p;
+      });
+      out.textContent = fmt(sum);
+    };
+    body.addEventListener("input", calc);
+    calc();
+  }
+
+  // ---------- token explorer ----------
+  const tokFig = $(".tokviz");
+  if (tokFig) {
+    const toks = JSON.parse($("#tok-data").textContent);
+    const line = $(".tok-line", tokFig), alt = $(".tok-alt", tokFig);
+    const pct = (p) => (p >= 0.995 ? ">99" : p < 0.005 ? "<1" : Math.round(p * 100)) + "%";
+    const show = (t) => (t === " " ? "\u2423" : t);
+    line.innerHTML = toks.map(([t, p], i) => `<button type="button" data-i="${i}" style="--p:${p}" class="${p < 0.6 ? "lo" : ""}" aria-pressed="false" aria-label="${esc(t.trim() || "space")}, ${pct(p)} likely">${esc(t)}</button>`).join("");
+    const select = (i) => {
+      $$("button", line).forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.i === i)));
+      const [t, p, tops] = toks[i];
+      const before = toks.slice(Math.max(0, i - 6), i).map((x) => x[0]).join("");
+      alt.innerHTML = `<p>After \u201c\u2026${esc(before.trimStart())}\u201d, the model picked <b>${esc(show(t))}</b> (${pct(p)}). Its top options:</p>` +
+        tops.map(([a, q]) => `<div class="row${a === t ? " pick" : ""}"><code>${esc(show(a))}</code><div class="bar"><i style="width:${Math.max(q * 100, 0.5)}%"></i></div><span>${pct(q)}</span></div>`).join("");
+    };
+    line.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) select(+b.dataset.i); });
+    select(toks.findIndex((x) => x[0] === "3"));
+  }
 
   // ---------- theme ----------
   $("#theme-btn").addEventListener("click", () => {

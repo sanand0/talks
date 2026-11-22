@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Same Hands, Different Machines · SUTD computer vision workshop</title>
+<meta name="description" content="In under an hour, SUTD students turned laptop webcams into a spellbook, a lunar chemistry lab, a motorbike, musical instruments and gentle face-controlled games. What they built, what the room guessed before testing, and what is left once anyone can build a demo.">
+<meta property="og:title" content="Same Hands, Different Machines">
+<meta property="og:description" content="Ten webcam apps built in an hour at an SUTD workshop, and the question that remains: if anyone can build the demo, where is your differentiation?">
+<meta property="og:image" content="https://talks.s-anand.net/2026-11-21-sutd-cv-workshop/comic-page.avif">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%230c0f14'/%3E%3Cg%20stroke='%23c8f24a'%20stroke-width='3'%20fill='none'%3E%3Cpath%20d='M32%2054V36M22%2050L18%2030M42%2050l5-18M32%2036V14M24%2036l-3-18M40%2036l3-17'/%3E%3C/g%3E%3Cg%20fill='%23ff6b57'%3E%3Ccircle%20cx='32'%20cy='14'%20r='4'/%3E%3Ccircle%20cx='21'%20cy='18'%20r='4'/%3E%3Ccircle%20cx='43'%20cy='19'%20r='4'/%3E%3Ccircle%20cx='18'%20cy='30'%20r='4'/%3E%3Ccircle%20cx='47'%20cy='32'%20r='4'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&amp;family=IBM+Plex+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script>
+  (() => {
+    let t = null;
+    try { t = localStorage.getItem("sutd-cv-theme"); } catch (e) {}
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  })();
+</script>
+<style>
+:root {
+  --paper: #f3f0e8; --paper2: #e8e3d6; --card: #fffdf7; --ink: #15171c; --muted: #575a62; --line: #d6cfbf;
+  --link: #0a5a80; --hot: #a82a14; --hot-soft: #fbe3dd; --violet: #5232b8; --violet-soft: #e9e3fb;
+  --green: #17704a; --green-soft: #dcf1e5; --gold: #7d5300; --gold-soft: #f8ecd0;
+  --hi: #e6ff8a; --hi-ink: #1d2600;
+  --night: #0c0f14; --night2: #151a22; --night-line: #2c3442; --on-night: #eef1f4; --night-muted: #b2bcc8;
+  --lime: #c8f24a; --coral: #ff7a63; --sky: #8fd3ff; --lilac: #c5b5ff;
+  --font-display: "Bricolage Grotesque", "Avenir Next", sans-serif;
+  --font-ui: "Bricolage Grotesque", "Avenir Next", sans-serif;
+  --font-body: "Newsreader", Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --shadow: 0 10px 30px rgba(10, 12, 20, .16);
+  --col: 700px; --wide: 1120px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #101318; --paper2: #181c23; --card: #1a1e26; --ink: #ecebe5; --muted: #a9adb5; --line: #2f3440;
+    --link: #86c9ff; --hot: #ff8a75; --hot-soft: #3a1f1b; --violet: #b9a8ff; --violet-soft: #26203d;
+    --green: #74dca3; --green-soft: #15291f; --gold: #f0c35a; --gold-soft: #2e2512; --hi: #3d4a10; --hi-ink: #f1ffc2;
+    --shadow: 0 10px 30px rgba(0, 0, 0, .5); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #101318; --paper2: #181c23; --card: #1a1e26; --ink: #ecebe5; --muted: #a9adb5; --line: #2f3440;
+  --link: #86c9ff; --hot: #ff8a75; --hot-soft: #3a1f1b; --violet: #b9a8ff; --violet-soft: #26203d;
+  --green: #74dca3; --green-soft: #15291f; --gold: #f0c35a; --gold-soft: #2e2512; --hi: #3d4a10; --hi-ink: #f1ffc2;
+  --shadow: 0 10px 30px rgba(0, 0, 0, .5); color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 1rem; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 1.16rem/1.72 var(--font-body); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+img, video, svg { max-width: 100%; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
+.sr { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+kbd { font: 600 .78em var(--font-mono); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 0 .35em; background: var(--card); }
+
+/* ---------- base prose links (low specificity, defined first) ---------- */
+.story a, .hero a, .foot a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.story a:hover, .hero a:hover, .foot a:hover { text-decoration-thickness: 2px; }
+
+#progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: linear-gradient(90deg, var(--lime), var(--coral)); z-index: 60; }
+
+/* ---------- top bar ---------- */
+.topbar { position: absolute; top: 0; left: 0; right: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center; padding: .8rem 1.2rem; font: 600 .8rem var(--font-ui); letter-spacing: .08em; text-transform: uppercase; color: var(--night-muted); }
+.topbar a { color: var(--on-night); text-decoration: none; }
+.topbar a:hover { color: var(--lime); }
+.theme-btn { background: var(--night2); border: 1px solid var(--night-line); color: var(--on-night); border-radius: 999px; padding: .35rem .75rem; font: 600 .78rem var(--font-ui); letter-spacing: .04em; text-transform: none; }
+.theme-btn:hover { border-color: var(--lime); }
+
+/* ---------- hero ---------- */
+.hero { position: relative; background: radial-gradient(ellipse at 75% 30%, #1c2633 0%, var(--night) 62%); color: var(--on-night); padding: 5rem 1.25rem 2.5rem; overflow: hidden; }
+.hero-grid { max-width: var(--wide); margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 2rem; align-items: center; }
+.kicker { font: 700 .78rem var(--font-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--lime); margin: 0 0 1rem; }
+.hero h1 { font: 800 clamp(2.6rem, 7vw, 5.4rem)/.95 var(--font-display); letter-spacing: -.03em; margin: 0 0 1.2rem; }
+.hero h1 em { font-style: normal; color: var(--lime); }
+.hero .dek { font-size: 1.28rem; line-height: 1.55; color: #d7dde4; margin: 0 0 1.4rem; max-width: 36rem; }
+.hero .meta { font: 500 .9rem/1.6 var(--font-ui); color: var(--night-muted); margin: 0; }
+.hero .meta a { color: var(--on-night); }
+.hero .meta a:hover { color: var(--lime); }
+.hand-fig { margin: 0; }
+.hand-fig svg { display: block; width: 100%; height: auto; }
+.hand-fig figcaption { font: 500 .82rem/1.45 var(--font-ui); color: var(--night-muted); margin-top: .4rem; }
+.hand-fig figcaption b { color: var(--on-night); }
+.lm-bone { stroke: #6f7c8e; stroke-width: 3; stroke-linecap: round; }
+.lm-pt { fill: var(--coral); stroke: var(--night); stroke-width: 1.5; }
+.lm-pt.tip { fill: var(--lime); }
+.lm-num { font: 600 9px var(--font-mono); fill: #8d99aa; }
+.out-chip rect { fill: var(--night2); stroke: var(--night-line); transition: fill .25s, stroke .25s; }
+.out-chip text { font: 700 13px var(--font-ui); fill: var(--night-muted); transition: fill .25s; }
+.out-chip.on rect { fill: #26301a; stroke: var(--lime); }
+.out-chip.on text { fill: var(--on-night); }
+.wire { stroke: var(--night-line); stroke-width: 2; fill: none; stroke-dasharray: 4 5; transition: stroke .25s; }
+.wire.on { stroke: var(--lime); }
+.pinch-ring { fill: none; stroke: var(--lime); stroke-width: 2.5; opacity: 0; }
+.pinch-ring.on { opacity: 1; }
+
+/* ---------- audio player ---------- */
+.audio-slot { max-width: var(--wide); margin: 2rem auto 0; }
+.player { background: var(--night2); border: 1px solid var(--night-line); border-radius: 14px; padding: .65rem 1rem .5rem; font: 600 .84rem var(--font-ui); color: var(--on-night); }
+.pl-top { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .3rem 1rem; color: var(--night-muted); font-size: .8rem; margin-bottom: .3rem; }
+.pl-top b { color: var(--on-night); }
+.pl-top a { color: var(--lime); }
+.ts-demo { font: 500 .74rem var(--font-mono); border: 1px solid var(--night-line); border-radius: 999px; padding: 0 .4rem; }
+.pl-keys kbd { background: var(--night); border-color: var(--night-line); color: var(--on-night); }
+.pl-row { display: flex; align-items: center; gap: .45rem; }
+.pl-btn { flex: none; display: inline-grid; place-items: center; min-width: 2.3rem; height: 2.3rem; padding: 0 .35rem; border-radius: 999px; border: 1px solid var(--night-line); background: transparent; color: var(--on-night); text-decoration: none; font: 700 .8rem var(--font-ui); }
+.pl-btn:hover { border-color: var(--lime); color: var(--lime); }
+.hero .player a.pl-btn { color: var(--on-night); text-decoration: none; }
+.hero .player a.pl-btn:hover { color: var(--lime); }
+.hero .pl-now a { color: var(--on-night); }
+.hero .pl-now a:hover { color: var(--lime); }
+.pl-play { min-width: 2.8rem; height: 2.8rem; background: var(--lime); color: #11160a; border-color: var(--lime); font-size: 1.25rem; }
+.pl-play:hover { background: var(--coral); border-color: var(--coral); color: #1a0a06; }
+.pl-time { flex: none; font: 500 .8rem var(--font-mono); color: var(--night-muted); min-width: 3.4rem; text-align: center; font-variant-numeric: tabular-nums; }
+.pl-track { position: relative; flex: 1; min-width: 0; height: 2.4rem; display: flex; align-items: center; }
+.pl-ticks { position: absolute; left: 0; right: 0; top: 50%; height: 18px; transform: translateY(-50%); pointer-events: none; }
+.pl-ticks i { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--night-muted); opacity: .45; }
+.pl-ticks i.act { width: 2px; opacity: .95; background: var(--on-night); }
+.pl-ticks .brk { position: absolute; top: -3px; bottom: -3px; width: 4px; margin-left: -2px; background: var(--coral); border-radius: 2px; opacity: 1; }
+#pl-seek { --p: 0%; position: relative; width: 100%; height: 2.4rem; margin: 0; background: transparent; -webkit-appearance: none; appearance: none; cursor: pointer; }
+#pl-seek::-webkit-slider-runnable-track { height: 8px; border-radius: 99px; background: linear-gradient(to right, var(--lime) var(--p), #3a4352 var(--p)); }
+#pl-seek::-moz-range-track { height: 8px; border-radius: 99px; background: #3a4352; }
+#pl-seek::-moz-range-progress { height: 8px; border-radius: 99px; background: var(--lime); }
+#pl-seek::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; margin-top: -4px; border-radius: 50%; background: var(--lime); border: 2px solid var(--night); box-shadow: 0 0 0 1px var(--lime); }
+#pl-seek::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--lime); border: 2px solid var(--night); }
+#pl-seek:focus-visible { outline: none; }
+#pl-seek:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px var(--coral); }
+.pl-tip { position: absolute; bottom: calc(100% + 2px); transform: translateX(-50%); background: var(--night); border: 1px solid var(--night-line); color: var(--on-night); font: 600 .76rem var(--font-ui); padding: .25rem .55rem; border-radius: 6px; white-space: nowrap; pointer-events: none; z-index: 2; }
+.pl-tip b { font-family: var(--font-mono); color: var(--lime); margin-right: .35rem; }
+.pl-now { margin: .25rem 0 0; color: var(--night-muted); font-size: .8rem; min-height: 1.2em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pl-now a { color: var(--on-night); }
+.player .x { display: none; }
+.player.floating { position: fixed; left: .75rem; right: .75rem; bottom: 4.2rem; z-index: 45; box-shadow: 0 10px 30px rgba(0,0,0,.45); padding: .4rem .7rem .3rem; max-width: 1100px; margin: 0 auto; }
+.player.floating .pl-top { display: none; }
+.player.floating .x { display: inline-grid; }
+.player.dismissed { display: none; }
+@media (max-width: 640px) { .pl-hide-sm { display: none !important; } .pl-time { min-width: 2.8rem; } }
+
+/* ---------- inline timestamps ---------- */
+a.ts { display: inline-flex; align-items: center; gap: .2em; font: 600 .7rem/1 var(--font-mono); padding: .24em .5em; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); text-decoration: none; vertical-align: .15em; white-space: nowrap; background: var(--card); }
+a.ts::before { content: "▶"; font-size: .75em; color: var(--hot); }
+a.ts:hover { border-color: var(--hot); color: var(--hot); }
+a.ts.playing { background: var(--hot); color: var(--card); border-color: var(--hot); }
+a.ts.playing::before { color: var(--card); }
+
+/* ---------- how-to strip ---------- */
+.howto { background: var(--paper2); border-bottom: 1px solid var(--line); padding: 1.1rem 1.25rem; }
+.howto p { max-width: var(--wide); margin: 0 auto; font: 400 .92rem/1.6 var(--font-ui); color: var(--muted); }
+.howto b { color: var(--ink); }
+.chip-demo { display: inline-block; font: 700 .72rem var(--font-ui); padding: .05rem .45rem; border-radius: 5px; background: var(--gold-soft); color: var(--gold); border: 1px solid color-mix(in srgb, var(--gold) 40%, transparent); }
+
+/* ---------- story column ---------- */
+.story { padding: 0 1.25rem 4rem; }
+.story > * { max-width: var(--col); margin-left: auto; margin-right: auto; }
+.story p { margin-top: 0; margin-bottom: 1.15rem; }
+.story > .trythis { margin-left: auto; margin-right: auto; }
+.story strong { font-weight: 600; }
+.story h2 { font: 800 clamp(1.9rem, 4.2vw, 2.7rem)/1.06 var(--font-display); letter-spacing: -.02em; margin: 0 0 1.1rem; }
+.story h3 { font: 700 1.35rem/1.2 var(--font-display); margin: 2rem 0 .7rem; }
+.chap { padding-top: 3.2rem; }
+.eyebrow { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; font: 600 .76rem var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0 0 .7rem; }
+.eyebrow span.elab { color: var(--hot); }
+.lede { font-size: 1.3rem; line-height: 1.6; }
+.act { max-width: var(--wide) !important; margin: 4.5rem auto 0 !important; display: flex; align-items: center; gap: 1rem; font: 800 .82rem var(--font-ui); letter-spacing: .2em; text-transform: uppercase; color: var(--hot); }
+.act::after { content: ""; flex: 1; height: 2px; background: linear-gradient(90deg, var(--hot), transparent); }
+.tip { border-bottom: 1.5px dotted var(--link); cursor: help; position: relative; }
+.tip:hover::after, .tip:focus::after { content: attr(data-tip); position: absolute; left: 50%; bottom: calc(100% + 6px); transform: translateX(-50%); width: min(260px, 70vw); background: var(--night); color: var(--on-night); font: 500 .8rem/1.45 var(--font-ui); padding: .55rem .7rem; border-radius: 8px; box-shadow: var(--shadow); z-index: 20; pointer-events: none; }
+
+/* ---------- pull quotes ---------- */
+.pq { position: relative; margin: 2.2rem auto !important; padding: .4rem 0 .4rem 1.4rem; border-left: 4px solid var(--hot); max-width: calc(var(--col) + 120px) !important; }
+.pq p { font: italic 400 1.5rem/1.42 var(--font-body); margin: 0 0 .5rem !important; }
+.pq cite { display: block; font: 600 .82rem var(--font-ui); color: var(--muted); font-style: normal; }
+.pq.lime { border-color: var(--green); }
+.pq.violet { border-color: var(--violet); }
+@media (max-width: 760px) { .pq { max-width: 100% !important; } .pq p { font-size: 1.28rem; } }
+
+/* ---------- note boxes ---------- */
+.note { border-radius: 12px; padding: .9rem 1.1rem; margin: 1.6rem auto !important; font: 400 .98rem/1.6 var(--font-ui); border: 1px solid var(--line); background: var(--card); }
+.note > b:first-child { display: block; font: 800 .74rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; margin-bottom: .3rem; }
+.note.check { background: var(--hot-soft); border-color: color-mix(in srgb, var(--hot) 35%, transparent); }
+.note.check > b:first-child { color: var(--hot); }
+.note.try { background: var(--green-soft); border-color: color-mix(in srgb, var(--green) 35%, transparent); }
+.note.try > b:first-child { color: var(--green); }
+.note p { margin: 0 0 .5rem !important; } .note p:last-child { margin-bottom: 0 !important; }
+
+/* ---------- full-width bands ---------- */
+.band { width: 100vw; max-width: none !important; margin: 3rem 0 3rem calc(50% - 50vw) !important; padding: 3rem 1.25rem; }
+.band-inner { max-width: var(--wide); margin: 0 auto; }
+.band-night { background: var(--night); color: var(--on-night); border-block: 1px solid var(--night-line); }
+.band-night a { color: var(--lime); }
+.band-night a:hover { color: #e2ff9c; }
+.band-night a.ts { background: var(--night2); color: var(--night-muted); border-color: var(--night-line); }
+.band-night a.ts:hover { color: var(--coral); border-color: var(--coral); }
+.band-night a.ts::before { color: var(--coral); }
+.band-night .band-dek, .band-night figcaption, .band-night .cap { color: var(--night-muted); }
+.band-night strong, .band-night b { color: var(--on-night); }
+.band-paper { background: var(--paper2); }
+.band-label { font: 800 .78rem var(--font-ui); letter-spacing: .18em; text-transform: uppercase; color: var(--coral); margin: 0 0 .5rem; }
+.band-paper .band-label { color: var(--hot); }
+.band-title { font: 800 clamp(1.6rem, 3.6vw, 2.3rem)/1.1 var(--font-display); margin: 0 0 .6rem; letter-spacing: -.015em; }
+.band-dek { font: 400 1.05rem/1.55 var(--font-ui); color: var(--muted); max-width: 46rem; margin: 0 0 1.6rem; }
+
+/* ---------- cold-open wall ---------- */
+.wall { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .8rem; }
+.tile { position: relative; margin: 0; border-radius: 14px; overflow: hidden; background: var(--night2); border: 1px solid var(--night-line); }
+.tile video, .tile img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; aspect-ratio: 16 / 10; }
+.tile.big { grid-column: span 3; }
+.tile.mid { grid-column: span 2; }
+.tile figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 2.4rem .8rem .6rem; background: linear-gradient(transparent, rgba(6, 8, 12, .88) 38%, rgba(6, 8, 12, .96)); font: 600 .86rem/1.35 var(--font-ui); color: #f2f4f6 !important; }
+.tile figcaption b { display: block; font-size: 1.05rem; color: var(--lime) !important; }
+.tile figcaption a { color: #f2f4f6 !important; }
+.tile .flag { position: absolute; top: .55rem; left: .55rem; font: 700 .68rem var(--font-ui); letter-spacing: .04em; background: rgba(6, 8, 12, .8); color: #ffd98a; padding: .2rem .5rem; border-radius: 6px; border: 1px solid rgba(255, 217, 138, .35); }
+@media (max-width: 860px) { .wall { grid-template-columns: repeat(2, minmax(0, 1fr)); } .tile.big, .tile.mid { grid-column: span 1; } .tile.big:first-child { grid-column: span 2; } }
+@media (max-width: 520px) { .wall { grid-template-columns: 1fr; } .tile.big:first-child { grid-column: span 1; } }
+
+/* ---------- comic ---------- */
+.comic { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 2rem; align-items: center; }
+.comic a.img { display: block; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); cursor: zoom-in; }
+.comic a.img img { display: block; width: 100%; height: auto; }
+.comic ol { margin: 0; padding-left: 1.2rem; font: 400 1rem/1.6 var(--font-ui); }
+.comic li { margin-bottom: .45rem; }
+@media (max-width: 860px) { .comic { grid-template-columns: 1fr; } }
+
+/* ---------- guess widget ---------- */
+.guess { margin: 1.8rem auto !important; border: 1px solid var(--line); border-radius: 14px; background: var(--card); padding: 1.1rem 1.2rem; font-family: var(--font-ui); }
+.guess .q-lab { font: 800 .72rem var(--font-ui); letter-spacing: .15em; text-transform: uppercase; color: var(--violet); margin: 0 0 .35rem; }
+.guess .q { font: 700 1.15rem/1.35 var(--font-ui); margin: 0 0 .8rem; }
+.guess .opts { display: flex; flex-wrap: wrap; gap: .5rem; }
+.guess .opts button { border: 1.5px solid var(--line); background: var(--paper); border-radius: 999px; padding: .5rem 1rem; font: 600 .92rem var(--font-ui); min-height: 44px; }
+.guess .opts button:hover { border-color: var(--violet); }
+.guess .opts button[aria-pressed="true"] { background: var(--violet); color: var(--card); border-color: var(--violet); }
+.guess .reveal { margin-top: 1rem; }
+.guess .reveal[hidden] { display: none; }
+.guess .bars { display: grid; gap: .35rem; margin: 0 0 .8rem; }
+.guess .bar { display: grid; grid-template-columns: minmax(7rem, 13rem) 1fr 2.2rem; gap: .6rem; align-items: center; font: 500 .9rem var(--font-ui); }
+.guess .bar .track { display: block; height: 1.25rem; background: var(--paper2); border-radius: 4px; overflow: hidden; }
+.guess .bar .fill { display: block; height: 100%; width: 0; background: var(--muted); border-radius: 4px; transition: width .7s cubic-bezier(.2, .8, .2, 1); }
+.guess .bar.mine .fill { background: var(--violet); }
+.guess .bar.mine .lbl::after { content: " ← you"; color: var(--violet); font-weight: 700; }
+.guess .bar .n { font: 600 .9rem var(--font-mono); text-align: right; }
+.guess .verdict { font: 400 1rem/1.55 var(--font-ui); margin: 0; padding-top: .6rem; border-top: 1px dashed var(--line); }
+.guess .skip { font: 500 .82rem var(--font-ui); color: var(--muted); background: none; border: 0; text-decoration: underline; padding: .3rem 0; margin-left: .3rem; }
+@media (max-width: 520px) { .guess .bar { grid-template-columns: 7.2rem 1fr 2rem; font-size: .84rem; } }
+
+/* ---------- base64 probe ---------- */
+.probe { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 1.4rem; align-items: start; margin: 1.6rem auto !important; max-width: calc(var(--col) + 120px) !important; }
+.px { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; background: var(--line); border: 2px solid var(--line); border-radius: 6px; overflow: hidden; }
+.px i { aspect-ratio: 1; background: var(--card); }
+.px i.on { background: var(--ink); }
+.px-cap { font: 500 .8rem/1.4 var(--font-ui); color: var(--muted); margin-top: .4rem; }
+.strings { display: grid; gap: .45rem; }
+.str { display: grid; grid-template-columns: 5.2rem minmax(0, 1fr); gap: .6rem; align-items: baseline; }
+.str b { font: 700 .78rem var(--font-ui); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.str b small { display: block; font-weight: 500; letter-spacing: 0; text-transform: none; }
+.str code { font: 400 .74rem/1.45 var(--font-mono); word-break: break-all; background: var(--paper2); padding: .3rem .5rem; border-radius: 6px; color: var(--ink); }
+@media (max-width: 640px) { .probe { grid-template-columns: 1fr; } .probe .pxwrap { max-width: 170px; } }
+.heat { width: 100%; border-collapse: separate; border-spacing: 3px; font: 600 .86rem var(--font-ui); margin: 1.2rem auto 1.6rem !important; max-width: calc(var(--col) + 120px) !important; }
+.heat th { font: 700 .74rem var(--font-ui); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); text-align: center; padding: .3rem; }
+.heat th[scope="row"] { text-align: left; text-transform: none; letter-spacing: 0; font: 600 .88rem/1.25 var(--font-ui); color: var(--ink); }
+.heat th[scope="row"] small { display: block; color: var(--muted); font-weight: 500; }
+.heat td { text-align: center; padding: .45rem .2rem; border-radius: 6px; font-family: var(--font-mono); }
+.heat td small { display: block; font: 500 .66rem var(--font-ui); opacity: .85; }
+.heat-wrap { overflow-x: auto; }
+.heat caption { caption-side: top; text-align: left; font: 700 1.05rem/1.35 var(--font-ui); padding: 0 0 .5rem; color: var(--ink); }
+.heat caption span { display: block; font: 400 .88rem/1.45 var(--font-ui); color: var(--muted); }
+.stats-h { max-width: calc(var(--col) + 120px) !important; font: 700 1.05rem/1.35 var(--font-ui); margin: 1.6rem auto -.8rem !important; }
+.stats-h span { display: block; font: 400 .88rem/1.45 var(--font-ui); color: var(--muted); }
+
+/* ---------- charts ---------- */
+.chart { margin: 1.6rem auto 2rem !important; max-width: calc(var(--col) + 120px) !important; font-family: var(--font-ui); }
+.chart h4 { font: 700 1.05rem/1.3 var(--font-ui); margin: 0 0 .25rem; }
+.chart .sub { font: 400 .88rem/1.45 var(--font-ui); color: var(--muted); margin: 0 0 .9rem; }
+.hb { display: grid; grid-template-columns: 12.5rem minmax(0, 1fr); gap: .25rem .7rem; align-items: center; }
+.hb .nm { font: 500 .86rem/1.2 var(--font-ui); text-align: right; }
+.hb .nm small { display: block; color: var(--muted); font-size: .72rem; }
+.hb .tr { position: relative; height: 1.15rem; }
+.hb .fl { height: 100%; border-radius: 3px; min-width: 2px; }
+.hb .fl.llm { background: var(--violet); }
+.hb .fl.spec { background: var(--green); }
+.hb .fl.ex { background: var(--gold); }
+.hb .v { position: absolute; top: 0; font: 600 .78rem/1.15rem var(--font-mono); padding-left: .35rem; white-space: nowrap; }
+.legend { display: flex; flex-wrap: wrap; gap: .4rem 1rem; font: 500 .82rem var(--font-ui); color: var(--muted); margin: .2rem 0 .8rem; }
+.legend i { display: inline-block; width: .8rem; height: .8rem; border-radius: 2px; margin-right: .3rem; vertical-align: -.05rem; }
+.chart .src { font: 400 .78rem/1.45 var(--font-ui); color: var(--muted); margin-top: .7rem; }
+@media (max-width: 560px) { .hb { grid-template-columns: 8.4rem minmax(0, 1fr); } .hb .nm { font-size: .78rem; } }
+.flow svg { display: block; width: 100%; height: auto; }
+.flow text { font-family: var(--font-ui); }
+
+/* ---------- figures, media ---------- */
+.fig { margin: 2rem auto !important; }
+.fig img, .fig video { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); background: var(--night2); }
+.fig figcaption, .cap { font: 400 .86rem/1.5 var(--font-ui); color: var(--muted); margin-top: .55rem; }
+.fig figcaption b { color: var(--ink); }
+.fig.wide { max-width: var(--wide) !important; }
+.fig a.zoom { display: block; cursor: zoom-in; }
+.vtag { display: inline-block; font: 700 .7rem var(--font-ui); letter-spacing: .03em; padding: .12rem .45rem; border-radius: 5px; background: var(--gold-soft); color: var(--gold); border: 1px solid color-mix(in srgb, var(--gold) 40%, transparent); margin-right: .35rem; vertical-align: .05rem; }
+.band-night .vtag { background: #2e2512; color: #ffd98a; border-color: #5a4720; }
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2rem; max-width: var(--wide) !important; margin: 2rem auto !important; }
+.pair .fig { margin: 0 !important; }
+@media (max-width: 760px) { .pair { grid-template-columns: 1fr; } }
+
+/* ---------- prompt box ---------- */
+.prompt-box { background: var(--night); color: #dfe6ee; border-radius: 14px; padding: 1.1rem 1.3rem; margin: 1.8rem auto !important; font: 400 .9rem/1.6 var(--font-mono); border: 1px solid var(--night-line); }
+.prompt-box .plabel { font: 800 .7rem var(--font-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--lime); margin-bottom: .5rem; }
+.prompt-box p { margin: 0 0 .6rem !important; }
+.prompt-box ul { margin: 0 0 .6rem 1.1rem; padding: 0; }
+.prompt-box a { color: var(--lime); }
+.prompt-box.side { background: #1c1612; border-color: #4a3826; }
+.prompt-box.side .plabel { color: #ffb36b; }
+
+/* ---------- stat row ---------- */
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .7rem; margin: 1.6rem auto !important; max-width: calc(var(--col) + 120px) !important; }
+.stat { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: .8rem .9rem; font-family: var(--font-ui); }
+.stat .d { font: 700 .72rem var(--font-ui); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.stat .s { font: 800 2.1rem/1 var(--font-display); margin: .25rem 0; }
+.stat .s small { font-size: .9rem; color: var(--muted); font-weight: 600; }
+.stat .w { font: 500 .8rem/1.35 var(--font-ui); color: var(--muted); }
+.stat.bad .s { color: var(--hot); } .stat.good .s { color: var(--green); }
+@media (max-width: 640px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---------- pipeline ---------- */
+.pipe-head { display: grid; grid-template-columns: 11rem repeat(3, minmax(0, 1fr)); gap: .5rem; font: 800 .72rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--night-muted); padding: 0 .6rem .4rem; }
+.pipe-head span:nth-child(2) { color: var(--sky); } .pipe-head span:nth-child(3) { color: var(--lime); } .pipe-head span:nth-child(4) { color: var(--coral); }
+.pipe { display: grid; gap: .4rem; }
+.pipe-row { display: grid; grid-template-columns: 11rem repeat(3, minmax(0, 1fr)); gap: .5rem; align-items: stretch; background: var(--night2); border: 1px solid var(--night-line); border-radius: 10px; padding: .5rem .6rem; font: 500 .86rem/1.4 var(--font-ui); }
+.pipe-row > b { font: 700 .95rem/1.25 var(--font-ui); color: var(--on-night); align-self: center; }
+.pipe-row > b a { color: var(--on-night) !important; text-decoration: none; border-bottom: 1px solid var(--night-line); }
+.pipe-row > b a:hover { color: var(--lime) !important; }
+.pipe-row > span { padding: .1rem .5rem; border-left: 3px solid; color: #dfe5ec; }
+.pipe-row > span:nth-of-type(1) { border-color: var(--sky); }
+.pipe-row > span:nth-of-type(2) { border-color: var(--lime); }
+.pipe-row > span:nth-of-type(3) { border-color: var(--coral); }
+@media (max-width: 760px) { .pipe-head { display: none; } .pipe-row { grid-template-columns: 1fr; } .pipe-row > span::before { display: block; font: 800 .64rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--night-muted); } .pipe-row > span:nth-of-type(1)::before { content: "Sees"; } .pipe-row > span:nth-of-type(2)::before { content: "Reads as"; } .pipe-row > span:nth-of-type(3)::before { content: "Does"; } }
+
+/* ---------- pinch explorable ---------- */
+.lab { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 1.6rem; align-items: center; }
+.lab svg { display: block; width: 100%; max-width: 340px; margin: 0 auto; height: auto; }
+.lab .ctl { font: 500 .95rem/1.55 var(--font-ui); }
+.lab label { display: block; font: 700 .9rem var(--font-ui); margin: 0 0 .3rem; }
+.lab input[type="range"] { width: 100%; accent-color: var(--lime); }
+.lab .row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: .7rem 0; }
+.lab .btn { background: var(--night2); border: 1.5px solid var(--night-line); color: var(--on-night); border-radius: 999px; padding: .5rem .95rem; font: 700 .88rem var(--font-ui); min-height: 44px; }
+.lab .btn:hover, .lab .btn[aria-pressed="true"] { border-color: var(--lime); color: var(--lime); }
+.lab .meters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; margin: .8rem 0; }
+.lab .meter { background: var(--night2); border: 1px solid var(--night-line); border-radius: 10px; padding: .55rem .7rem; }
+.lab .meter .d { font: 700 .7rem var(--font-ui); letter-spacing: .1em; text-transform: uppercase; color: var(--night-muted); }
+.lab .meter .s { font: 800 1.6rem/1.1 var(--font-display); color: var(--on-night); }
+.lab .meter.naive .s { color: var(--coral); } .lab .meter.steady .s { color: var(--lime); }
+.lab .outs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; }
+.lab .out { border: 1.5px solid var(--night-line); border-radius: 10px; padding: .5rem .6rem; font: 600 .82rem/1.35 var(--font-ui); color: var(--night-muted); transition: border-color .2s, background .2s, color .2s; }
+.lab .out b { display: block; font-size: .95rem; color: var(--on-night); }
+.lab .out.fire { border-color: var(--lime); background: #222b14; color: var(--on-night); }
+.lab .readout { font: 500 .9rem/1.5 var(--font-ui); color: var(--night-muted); min-height: 3em; margin: .6rem 0 0; }
+@media (max-width: 820px) { .lab { grid-template-columns: 1fr; } .lab .outs { grid-template-columns: 1fr; } }
+
+/* ---------- project features ---------- */
+.proj { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 1.6rem; align-items: start; max-width: var(--wide) !important; margin: 2rem auto 2.6rem !important; }
+.proj.flip { grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); }
+.proj.flip .media { order: 2; }
+.proj.tall { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.proj.tall .media video { aspect-ratio: 4 / 5; width: min(100%, 64vh); height: auto; margin: 0 auto; }
+.proj .media video, .proj .media img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); background: var(--night2); }
+.proj .media figcaption { font: 400 .82rem/1.45 var(--font-ui); color: var(--muted); margin-top: .45rem; }
+.proj .media figure { margin: 0; }
+.proj .media a.zoom { display: block; cursor: zoom-in; }
+.proj h3 { margin-top: 0 !important; font-size: 1.6rem !important; }
+.proj h3 small { display: block; font: 700 .72rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--hot); margin-bottom: .3rem; }
+.proj .body p { font-size: 1.06rem; }
+.trythis { display: flex; gap: .6rem; align-items: flex-start; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--green); border-radius: 10px; padding: .6rem .8rem; margin: .8rem 0; font: 500 .92rem/1.5 var(--font-ui); }
+.trythis i { color: var(--green); font-size: 1.1rem; }
+.trythis b { color: var(--green); }
+.open-app { display: inline-flex; align-items: center; gap: .4rem; font: 700 .9rem var(--font-ui); text-decoration: none !important; background: var(--ink); color: var(--paper) !important; border-radius: 999px; padding: .55rem 1rem; min-height: 44px; }
+.open-app:hover { background: var(--hot); color: var(--card) !important; }
+.open-app small { font-weight: 500; opacity: .8; }
+.sw { display: inline-block; width: .8em; height: .8em; border-radius: 50%; margin: 0 .25em 0 .1em; vertical-align: -.05em; border: 1px solid var(--line); }
+.cf { font: 600 .78rem var(--font-ui); color: var(--green); margin-left: .5rem; }
+@media (max-width: 860px) { .proj, .proj.flip, .proj.tall { grid-template-columns: 1fr; } .proj.flip .media { order: 0; } }
+
+/* ---------- all-ten index ---------- */
+.ten { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .8rem; }
+.ten a { display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; color: var(--ink) !important; text-decoration: none; transition: transform .15s, box-shadow .15s; }
+.ten a:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.ten img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; border-bottom: 1px solid var(--line); }
+.ten .tb { display: block; padding: .55rem .7rem .7rem; font: 500 .8rem/1.4 var(--font-ui); color: var(--muted); }
+.ten .tb b { display: block; font: 700 .95rem var(--font-ui); color: var(--ink); }
+.ten .tb em { display: block; font-style: normal; color: var(--green); font-weight: 600; margin-top: .25rem; }
+.ten .tb em.cam { color: var(--gold); }
+@media (max-width: 1000px) { .ten { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---------- design lessons ---------- */
+.lessons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem; max-width: var(--wide) !important; margin: 1.6rem auto 2.4rem !important; }
+.lesson { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 1rem 1.1rem; font: 400 .97rem/1.55 var(--font-ui); }
+.lesson b.h { display: block; font: 800 1.08rem/1.25 var(--font-display); margin-bottom: .35rem; }
+.lesson .ex { display: block; margin-top: .5rem; font-size: .86rem; color: var(--muted); }
+@media (max-width: 760px) { .lessons { grid-template-columns: 1fr; } }
+
+/* ---------- voices ---------- */
+.voices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; }
+.voice { margin: 0; background: var(--night2); border: 1px solid var(--night-line); border-radius: 14px; padding: 1rem 1.1rem; }
+.voice p { font: italic 400 1.08rem/1.5 var(--font-body); margin: 0 0 .5rem; color: var(--on-night); }
+.voice cite { font: 600 .76rem var(--font-ui); font-style: normal; color: var(--night-muted); letter-spacing: .04em; }
+.voice.dissent { border-color: var(--coral); }
+.voice.dissent cite { color: var(--coral); }
+@media (max-width: 900px) { .voices { grid-template-columns: 1fr; } }
+
+/* ---------- compare table ---------- */
+.cmp { width: 100%; border-collapse: collapse; font: 400 .95rem/1.45 var(--font-ui); margin: 1.4rem auto 2rem !important; max-width: calc(var(--col) + 120px) !important; }
+.cmp th, .cmp td { text-align: left; padding: .6rem .5rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+.cmp th { font: 800 .72rem var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.cmp td:first-child { font-weight: 700; }
+.cmp .agree { color: var(--green); font-weight: 700; } .cmp .differ { color: var(--hot); font-weight: 700; }
+@media (max-width: 600px) { .cmp { font-size: .86rem; } }
+
+/* ---------- exercise ---------- */
+.steps { counter-reset: s; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; }
+.step { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 1rem 1.1rem 1rem 1.1rem; font: 400 .96rem/1.55 var(--font-ui); }
+.step::before { counter-increment: s; content: counter(s); display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--hot); color: var(--card); font: 800 1rem var(--font-display); margin-bottom: .5rem; }
+.step b.h { display: block; font: 800 1.08rem/1.25 var(--font-display); margin-bottom: .3rem; }
+.step label { display: flex; gap: .45rem; align-items: center; margin-top: .6rem; font: 600 .84rem var(--font-ui); color: var(--muted); cursor: pointer; }
+.step input { width: 1.1rem; height: 1.1rem; accent-color: var(--green); }
+@media (max-width: 900px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .steps { grid-template-columns: 1fr; } }
+
+/* ---------- takeaways ---------- */
+.tks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.tk { background: var(--night2); border: 1px solid var(--night-line); border-radius: 14px; padding: 1.1rem 1.2rem; font: 400 .97rem/1.55 var(--font-ui); color: #d6dde5; }
+.tk .n { font: 800 2rem/1 var(--font-display); color: var(--lime); }
+.tk b.h { display: block; font: 800 1.15rem/1.25 var(--font-display); color: var(--on-night); margin: .4rem 0 .35rem; }
+@media (max-width: 900px) { .tks { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .tks { grid-template-columns: 1fr; } }
+
+/* ---------- link cards ---------- */
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; max-width: var(--wide) !important; margin: 1.8rem auto 2.4rem !important; }
+.link-card { display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; color: inherit !important; text-decoration: none !important; transition: transform .15s, box-shadow .15s; }
+.link-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.link-card img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; border-bottom: 1px solid var(--line); }
+.link-card .body { padding: .7rem .85rem .85rem; font: 400 .88rem/1.45 var(--font-ui); color: var(--muted); }
+.link-card .body b { display: block; color: var(--ink); font: 700 1rem/1.3 var(--font-ui); margin-bottom: .2rem; }
+@media (max-width: 860px) { .cards { grid-template-columns: 1fr; } }
+
+/* ---------- footer ---------- */
+.foot { max-width: var(--col); margin: 0 auto; padding: 1rem 1.25rem 7rem; font: 400 .92rem/1.6 var(--font-ui); color: var(--muted); }
+.foot h2 { font: 800 1.15rem var(--font-display); color: var(--ink); margin: 2rem 0 .6rem; }
+.foot ul { padding-left: 1.1rem; }
+.foot li { margin-bottom: .45rem; }
+
+/* ---------- jump nav ---------- */
+.jump-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, .4); opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 55; }
+.jump-backdrop.open { opacity: 1; pointer-events: auto; }
+.jump { position: fixed; left: 50%; bottom: .9rem; transform: translateX(-50%); z-index: 56; display: flex; align-items: center; gap: .25rem; padding: .3rem; background: var(--night); color: var(--on-night); border: 1px solid var(--night-line); border-radius: 999px; box-shadow: 0 10px 30px rgba(0,0,0,.35); font: 600 .86rem var(--font-ui); max-width: calc(100vw - 1.5rem); }
+.jump > button { background: none; border: 0; color: var(--on-night); border-radius: 999px; height: 2.4rem; min-width: 2.4rem; padding: 0 .75rem; }
+.jump > button:hover { background: var(--night2); color: var(--lime); }
+.jump > button:disabled { opacity: .35; }
+.jump-cur { max-width: 56vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.jump-menu { position: absolute; bottom: calc(100% + .6rem); left: 50%; transform: translateX(-50%); width: min(900px, calc(100vw - 1.5rem)); max-height: 72vh; overflow: auto; background: var(--night); border: 1px solid var(--night-line); border-radius: 16px; padding: 1rem; display: none; text-align: left; }
+.jump-menu.open { display: block; }
+.jm-group { font: 800 .7rem var(--font-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--coral); margin: .6rem 0 .4rem; }
+.jm-group:first-child { margin-top: 0; }
+.jump-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .35rem; }
+@media (max-width: 640px) { .jump-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.jump-grid a { display: block; padding: .45rem .6rem; border-radius: 8px; color: var(--on-night); text-decoration: none; font: 600 .86rem/1.3 var(--font-ui); background: var(--night2); }
+.jump-grid a small { display: block; font: 500 .74rem var(--font-mono); color: var(--night-muted); margin-top: .15rem; }
+.jump-grid a:hover { background: var(--night-line); }
+.jump-grid a.is-cur { outline: 2px solid var(--lime); }
+
+/* ---------- dialogs ---------- */
+dialog.pop { width: min(840px, calc(100vw - 1.5rem)); max-height: 88vh; margin: auto; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); color: var(--ink); padding: 0; box-shadow: var(--shadow); }
+dialog::backdrop { background: rgba(0, 0, 0, .6); }
+.pop-head { position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .8rem 1.1rem; background: var(--paper); border-bottom: 1px solid var(--line); z-index: 2; }
+.pop-head h2 { font: 800 1.3rem var(--font-display); margin: 0; }
+.close-x { background: none; border: 1px solid var(--line); border-radius: 999px; padding: .35rem .85rem; font: 600 .82rem var(--font-ui); min-height: 36px; }
+.close-x:hover { border-color: var(--hot); color: var(--hot); }
+.pop-search { display: flex; padding: .6rem 1.1rem; border-bottom: 1px solid var(--line); gap: .6rem; align-items: center; font: .85rem var(--font-ui); color: var(--muted); background: var(--paper); position: sticky; top: 3.3rem; z-index: 2; }
+.pop-search input { flex: 1; padding: .45rem .7rem; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: .95rem var(--font-ui); }
+#pop-body { padding: 1rem 1.3rem 1.6rem; font-size: 1.02rem; line-height: 1.65; }
+#pop-body h1, #pop-body h2, #pop-body h3 { font: 800 1.3rem/1.2 var(--font-display); margin: 1.2rem 0 .5rem; }
+#pop-body p { margin: 0 0 .85rem; }
+#pop-body ul, #pop-body ol { margin: 0 0 .85rem 1.4rem; padding: 0; }
+#pop-body li { margin-bottom: .35rem; }
+#pop-body blockquote { margin: 0 0 .85rem; padding-left: .9rem; border-left: 3px solid var(--line); }
+#pop-body hr { border: 0; border-top: 1px dashed var(--line); margin: 1.2rem 0; }
+#pop-body a { color: var(--link); }
+#pop-body .intro { font: .88rem/1.55 var(--font-ui); color: var(--muted); background: var(--paper2); padding: .7rem .9rem; border-radius: 10px; }
+#pop-body .brk { font: 700 .95rem/1.5 var(--font-ui); background: var(--night); color: var(--on-night); border-left: 5px solid var(--coral); padding: .9rem 1rem; border-radius: 10px; margin: 1.2rem 0; }
+#pop-body .brk code { color: var(--coral); font: 700 .85rem var(--font-mono); background: none; }
+#pop-body .brk span { display: block; font-weight: 500; color: var(--night-muted); font-size: .86rem; }
+#pop-body .hide { display: none; }
+#pop-body mark { background: var(--hi); color: var(--hi-ink); }
+dialog.lightbox { width: min(1200px, calc(100vw - 1rem)); max-height: 96vh; margin: auto; border: 0; background: transparent; padding: 0; }
+dialog.lightbox img { display: block; max-width: 100%; max-height: 86vh; margin: 0 auto; border-radius: 8px; background: #fff; }
+.lb-bar { display: flex; justify-content: space-between; gap: 1rem; align-items: center; color: #eee; font: .85rem var(--font-ui); padding: .6rem .2rem; }
+.lb-bar a { color: var(--lime); margin-right: .8rem; }
+.lb-bar button { background: none; border: 1px solid #777; color: #eee; border-radius: 999px; padding: .25rem .8rem; }
+
+/* ---------- page-load stagger ---------- */
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.hero .kicker, .hero h1, .hero .dek, .hero .meta, .hand-fig { animation: rise .7s cubic-bezier(.2, .8, .2, 1) both; }
+.hero h1 { animation-delay: .08s; } .hero .dek { animation-delay: .16s; } .hero .meta { animation-delay: .24s; } .hand-fig { animation-delay: .3s; }
+@media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; } .hand-fig { max-width: 460px; margin: 0 auto; } }
+@media print { .jump, .jump-backdrop, .topbar, #progress, .player { display: none !important; } }
+</style>
+</head>
+<body>
+<div id="progress" aria-hidden="true"></div>
+
+<header class="hero" id="top">
+  <nav class="topbar" aria-label="Site">
+    <a href="../">Talks · S Anand</a>
+    <button class="theme-btn" id="theme-btn" type="button" aria-label="Toggle dark mode"><i class="bi bi-circle-half" aria-hidden="true"></i> Theme</button>
+  </nav>
+  <div class="hero-grid">
+    <div>
+      <p class="kicker">SUTD computer vision workshop · 21 Nov 2026</p>
+      <h1>Same hands, <em>different machines</em></h1>
+      <p class="dek">In under an hour, students who had mostly never used gesture controls turned laptop webcams into a spellbook, a lunar chemistry lab, a motorbike, two musical instruments and a cat that mirrors your face. Then came the harder question: if anyone can build that in an hour, what is yours?</p>
+      <p class="meta">A hands-on workshop by <a href="https://www.s-anand.net/">Anand S</a> (Straive) at the <a href="https://www.sutd.edu.sg/">Singapore University of Technology and Design</a>, introduced by Nathaniel. Full recording below · <a href="transcript.md" data-transcript>read the transcript</a>.</p>
+    </div>
+    <figure class="hand-fig">
+      <svg id="hero-svg" viewBox="0 0 540 340" role="img" aria-labelledby="hero-svg-t">
+        <title id="hero-svg-t">A hand drawn as 21 tracked landmarks. Every few seconds the thumb tip (point 4) and index tip (point 8) close into a pinch, and the same pinch event lights up three different outputs: a spell in Spellglass, picking up vinegar in Air Chemistry Lab, and the note C4 in Airwave Studio.</title>
+        <g id="hero-wires"></g>
+        <g id="hero-hand"></g>
+        <g class="out-chip" id="hero-o1"><rect x="356" y="44" width="172" height="52" rx="12"/><text x="372" y="66">✦ Star Bloom</text><text x="372" y="84" style="font-weight:500;font-size:11px">Spellglass · cast</text></g>
+        <g class="out-chip" id="hero-o2"><rect x="356" y="144" width="172" height="52" rx="12"/><text x="372" y="166">⚗ Pick up vinegar</text><text x="372" y="184" style="font-weight:500;font-size:11px">Air Chemistry Lab · grab</text></g>
+        <g class="out-chip" id="hero-o3"><rect x="356" y="244" width="172" height="52" rx="12"/><text x="372" y="266">♪ Play C4</text><text x="372" y="284" style="font-weight:500;font-size:11px">Airwave Studio · note</text></g>
+      </svg>
+      <figcaption><b>One signal, three machines.</b> A pinch is just the distance between landmark 4 (thumb tip) and landmark 8 (index fingertip). What it <em>means</em> is a design decision. Illustration, not a student app.</figcaption>
+    </figure>
+  </div>
+  <div class="audio-slot" id="audio-slot">
+    <div class="player" id="audio-card" role="group" aria-label="Recording of the workshop">
+      <audio id="aud" preload="metadata">
+        <source src="https://github.com/sanand0/talks/releases/download/talks/2026-11-21-sutd-cv-workshop.opus" type="audio/ogg; codecs=opus">
+      </audio>
+      <div class="pl-top"><span><b>Listen</b> · 55 min recording · the hour of building is not in it (red mark) · every <span class="ts-demo">mm:ss</span> on this page plays from that moment</span><span class="pl-keys pl-hide-sm"><kbd>←</kbd> <kbd>→</kbd> 5 s · <kbd>Shift</kbd> 30 s</span></div>
+      <div class="pl-row">
+        <button class="pl-btn pl-play" id="pl-play" type="button" aria-label="Play"><i class="bi bi-play-fill" aria-hidden="true"></i></button>
+        <button class="pl-btn pl-hide-sm" id="pl-back" type="button" aria-label="Back 5 seconds" title="Back 5 s (←)">−5s</button>
+        <button class="pl-btn pl-hide-sm" id="pl-fwd" type="button" aria-label="Forward 5 seconds" title="Forward 5 s (→)">+5s</button>
+        <span class="pl-time" id="pl-cur">0:00</span>
+        <div class="pl-track" id="pl-track">
+          <div class="pl-ticks" id="pl-ticks" aria-hidden="true"></div>
+          <input type="range" id="pl-seek" min="0" max="3327" step="1" value="0" aria-label="Position in the recording" aria-valuetext="0:00">
+          <div class="pl-tip" id="pl-tip" hidden></div>
+        </div>
+        <span class="pl-time pl-hide-sm" id="pl-dur">55:27</span>
+        <button class="pl-btn" id="pl-rate" type="button" aria-label="Playback speed" title="Playback speed">1×</button>
+        <a class="pl-btn pl-hide-sm" href="https://github.com/sanand0/talks/releases/download/talks/2026-11-21-sutd-cv-workshop.opus" download aria-label="Download the audio" title="Download (Opus)"><i class="bi bi-download" aria-hidden="true"></i></a>
+        <button class="pl-btn x" id="audio-x" type="button" aria-label="Hide the player" title="Hide">✕</button>
+      </div>
+      <p class="pl-now" id="pl-now" aria-live="polite"></p>
+    </div>
+  </div>
+</header>
+
+<div class="howto" role="note">
+  <p><b>How to read this.</b> Top to bottom as a story, or <b>jump</b> from the bar at the bottom. Every <a class="ts" href="?t=02:30">02:30</a> plays that moment of the recording. Purple boxes ask you to <b>guess before you see</b> what the room said. Clips marked <span class="chip-demo">Post-workshop demo</span> were recorded on 22 Nov by driving each app's own camera-free controls (mouse, keyboard or pointer): <b>no webcam, no tracking, no people</b>. Quotes are verbatim from the AI transcript.</p>
+</div>
+
+<main class="story" id="story">
+
+<section class="band band-night" id="built" data-act="Cold open" data-title="What an hour built" aria-labelledby="built-h">
+  <div class="band-inner">
+    <p class="band-label">Cold open · links submitted between 15:41 and 16:30 SGT</p>
+    <h2 class="band-title" id="built-h">A magic wand. A chemistry lab on the Moon. A motorbike you steer with your head.</h2>
+    <p class="band-dek">These are live websites students built and deployed during the workshop's build hour, with a laptop camera, a browser and AI coding tools. Every caption links to the project. <a class="ts" href="?t=49:14">49:14</a></p>
+    <div class="wall">
+      <figure class="tile big">
+        <video data-src="https://github.com/sanand0/talks/releases/download/talks/2026-11-21-sutd-cv-workshop-spellglass.webm#t=13" poster="poster-spellglass.webp" muted loop playsinline tabindex="0" aria-label="Spellglass: spell previews and a 3D orb, camera-free preview (post-workshop demo). Click to pause."></video>
+        <span class="flag">Post-workshop demo · clicks, no camera</span>
+        <figcaption><b>A spellbook</b><a href="#spellglass">Spellglass</a>: palm, pinch and swipe cast spells; two hands fling a 3D orb</figcaption>
+      </figure>
+      <figure class="tile big">
+        <video data-src="https://github.com/sanand0/talks/releases/download/talks/2026-11-21-sutd-cv-workshop-chemistry-lab.webm" poster="poster-chemistry-lab.webp" muted loop playsinline tabindex="0" aria-label="Air Chemistry Lab: three cups of red cabbage indicator turn pink, purple and green (post-workshop demo, mouse). Click to pause."></video>
+        <span class="flag">Post-workshop demo · mouse, no camera</span>
+        <figcaption><b>A chemistry lab</b><a href="#chemistry">Air Chemistry Lab</a>: pinch a reagent, pour it, watch the indicator turn</figcaption>
+      </figure>
+      <figure class="tile mid">
+        <img src="shot-dustline.webp" alt="Dustline: a desert road and a motorbike waiting for the camera, with instructions to tilt your head to steer and raise a thumb to turn." loading="lazy">
+        <span class="flag">Screenshot · 22 Nov</span>
+        <figcaption><b>A motorbike</b><a href="#ride">Dustline</a>: both hands to ride, tilt your head to steer</figcaption>
+      </figure>
+      <figure class="tile mid">
+        <img src="shot-netlify.webp" alt="FacePlay Arcade: three gentle games, Star Garden, Would You Rather and Gentle Adventure, with camera sensitivity controls." loading="lazy">
+        <span class="flag">Screenshot · 22 Nov</span>
+        <figcaption><b>Games without hands</b><a href="#ride">FacePlay</a>: turn your head, open your mouth, blink</figcaption>
+      </figure>
+      <figure class="tile mid">
+        <video data-src="https://github.com/sanand0/talks/releases/download/talks/2026-11-21-sutd-cv-workshop-mochi.webm" poster="poster-mochi.webp" muted loop playsinline tabindex="0" aria-label="Mochi's Mood-Ring Arcade: a cartoon cat smiles and frowns as keys stand in for the face (post-workshop demo). Click to pause."></video>
+        <span class="flag">Post-workshop demo · keys, no camera</span>
+        <figcaption><b>A pet</b><a href="#ride">Mochi</a>: smile and the cat smiles back</figcaption>
+      </figure>
+      <figure class="tile big">
+        <video data-src="https://github.com/sanand0/talks/releases/download/talks/2026-11-21-sutd-cv-workshop-airwave.webm" poster="poster-airwave.webp" muted loop playsinline tabindex="0" aria-label="Airwave Studio: piano keys and guitar chords played from the keyboard (post-workshop demo; this tile is muted). Click to pause."></video>
+        <span class="flag">Post-workshop demo · keyboard, no camera</span>
+        <figcaption><b>A piano and a guitar</b><a href="#music">Airwave Studio</a>: pinch inside a note lane to play</figcaption>
+      </figure>
+      <figure class="tile big">
+        <video data-src="https://github.com/sanand0/talks/releases/download/talks/2026-11-21-sutd-cv-workshop-handsymphony.webm" poster="poster-handsymphony.webp" muted loop playsinline tabindex="0" aria-label="HandSymphony: a pointer sways across the stage and the gesture readout changes to Sway (post-workshop demo; this tile is muted). Click to pause."></video>
+        <span class="flag">Post-workshop demo · pointer, no camera</span>
+        <figcaption><b>An orchestra</b><a href="#music">HandSymphony</a>: sway to swell, tap to add notes, raise to brighten</figcaption>
+      </figure>
+    </div>
+    <p class="cap" style="margin-top:1rem">The two music clips have sound; play them with the controls further down. Ten projects were submitted in all; <a href="#ten">all ten are here</a>, with what you can try without a camera.</p>
+  </div>
+</section>
+
+<p class="lede">Anand had set the tone at the very start: <strong>“because this is a workshop and not a classroom, you're going to be doing the work, not me.”</strong> <a class="ts" href="?t=02:28">02:28</a> About forty-five minutes later the students started building. When the recording resumes, he checks something with a show of hands.</p>
+
+<blockquote class="pq">
+  <p>“Okay, the majority of you have not used gesture-based controls, and it's the first time that you're using that. Okay, that that's particularly impressive, because I did not think that's what most of you would go for.”</p>
+  <cite>Anand, after the build hour <a class="ts" href="?t=49:00">49:00</a></cite>
+</blockquote>
+
+<p><strong>The interesting thing is not that a webcam can track a hand.</strong> MediaPipe-style trackers have done that for years. The interesting thing is that the same handful of signals, a pinch, a tilt, a blink, a smile, became a spell in one app, a pipette in another and a piano key in a third. <strong>The detector was the same; the machine around it was not.</strong> That is what this page is about: how a room got there, what they built, and what is still worth learning once building is this cheap.</p>
+
+<section class="band band-paper" id="comic" data-act="Cold open" data-title="The workshop on one page" aria-labelledby="comic-h">
+  <div class="band-inner comic">
+    <a class="img" href="comic-page.avif" data-lightbox data-caption="Comic summary of the SUTD computer vision workshop" target="_blank" rel="noopener"><img src="comic-page.avif" alt="Eight-panel comic summarising the workshop: explore by doing; write down what you think, then test it; models do more than we expect (read images as text, understand video, analyse push-ups, build apps); how an LLM predicts the next word; general models are powerful but specialised models still matter; delegate to agents and add the human edge; build and deploy a portfolio piece; know what's possible, delegate maximally and play at the edges." loading="lazy" width="1199" height="1312"></a>
+    <div>
+      <p class="band-label">The workshop on one page</p>
+      <h2 class="band-title" id="comic-h">Guess, test, build, then ask what's left</h2>
+      <p class="band-dek">A comic summary of the session. Click to open it full size. The story below follows the same arc, with the evidence behind each panel.</p>
+      <ol>
+        <li><b>Guess first.</b> Write down what you believe before you test it.</li>
+        <li><b>Test the edges.</b> Can a text-only model see a picture? Watch a launch? Count bottle caps?</li>
+        <li><b>Let the agent pick the model.</b> A push-up coach built without knowing any pose library.</li>
+        <li><b>Build for an hour.</b> Ten webcam apps, deployed.</li>
+        <li><b>Find what's left.</b> If anyone can build it, where is your edge?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<p class="act">Act I · Rewind: guess before you look</p>
+
+<section class="chap" id="guess-first" data-act="Act I · Guess first" data-title="Write down what you think">
+  <p class="eyebrow"><a class="ts" href="?t=03:05">03:05</a><span>to 07:20</span></p>
+  <h2>Write down what you think, then test it</h2>
+  <p>Before anyone touched a camera, Anand put up a QR code to a live form and explained why the afternoon would be full of questions. In high school, he said, he read books that felt obvious, and only later realised that <strong>a hundred plausible explanations can sound equally right</strong> until you check one against reality.</p>
+  <blockquote class="pq lime">
+    <p>“before you try and learn something, write down what you think you know, and then go ahead, test it out. If it's the same thing that you thought, then, well, you got it right. You've learned something. If it's different, then you've concretely learned something.”</p>
+    <cite>Anand <a class="ts" href="?t=03:40">03:40</a></cite>
+  </blockquote>
+  <p>So the form asked the room to commit to answers about what today's AI models can do with images, and only then showed the evidence. <strong>This page asks you to do the same.</strong> Each purple box is a real question from the workshop form; pick an answer and you will see how the 15 people who answered it voted. The survey ran in sequence on the same form, so it shows what the room believed at each step, not a before-and-after learning effect.</p>
+</section>
+
+<section class="chap" id="base64" data-act="Act I · Guess first" data-title="A picture it can't see">
+  <p class="eyebrow"><a class="ts" href="?t=07:23">07:23</a><span>to 19:15</span></p>
+  <h2>Can a model read a picture it can't see?</h2>
+  <p>The first real question was deliberately strange. Forget the vision features of ChatGPT. Take a tiny black-and-white image, write its file out as text, and paste the text into a language model with <strong>no tools and no vision</strong>. Can it work out what the picture is, in its head?</p>
+  <div class="guess" data-q="img"></div>
+  <p>Two-thirds of the room said no, and so had Anand. <strong>“That's exactly what I thought,”</strong> <a class="ts" href="?t=09:55">09:55</a> he said, and he had asked a colleague, Atharva, to test it. The experiment, now published as <a href="https://atharva-729.github.io/base64-image-probe/">Can a model read a picture it can't see?</a>, uses seven 8×8 images: a 1, a 7, a cross, a circle, and three blocks of random noise that nobody could guess. Each is stored five ways, from a plain grid of 0s and 1s to a compressed PNG written out in <span class="tip" tabindex="0" data-tip="A way of writing any bytes using only 64 ordinary characters (A–Z, a–z, 0–9, + and /), so binary files can travel as text.">base64</span>. This is literally what the models received for the 7:</p>
+  <div class="probe">
+    <div class="pxwrap">
+      <div class="px" id="px7" role="img" aria-label="The 8 by 8 picture of a 7 used in the test"></div>
+      <p class="px-cap">The picture: a 7, 8 × 8 pixels.</p>
+    </div>
+    <div class="strings">
+      <div class="str"><b>Text grid<small>no decoding</small></b><code>01111110 00000110 00000100 00000100 00001000 00001000 00011000 00010000</code></div>
+      <div class="str"><b>PBM<small>easy</small></b><code>UDQKOCA4Cn4GBAQICBgQ</code></div>
+      <div class="str"><b>PGM<small>easy, long</small></b><code>UDUKOCA4CjI1NQr/AAAAAAAA////////AAD///////8A/////////wD///////8A/////////wD///////8AAP///////wD/////</code></div>
+      <div class="str"><b>BMP<small>fiddly</small></b><code>Qk1eAAAAAAAAAD4AAAAoAAAACAAAAAgAAAABAAEAAAAAACAAAADEDgAAxA4AAAIAAAACAAAAAAAAAP///wDvAAAA5wAAAPcAAAD3AAAA+wAAAPsAAAD5AAAAgQAAAA==</code></div>
+      <div class="str"><b>PNG<small>hard</small></b><code>iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQAAAADsdIMmAAAAGElEQVR4nGNoZPjJxMTEwPSHiYHpAxMHAB5qA32rRw2yAAAAAElFTkSuQmCC</code></div>
+    </div>
+  </div>
+  <p>To score, a model had to <strong>write out all 64 pixels</strong>; an image counted only if every pixel was right. The PNG is the hard one: its pixels are compressed, so the model must decompress them step by step in its reasoning.</p>
+  <div class="heat-wrap">
+  <table class="heat" aria-label="Images decoded exactly, by model and file format">
+    <caption>The strongest model rebuilt every tiny image in every format<span>How many of the seven 8×8 test images each model rebuilt with every pixel right, by file format (easiest on the left). Reasoning-off was tried on four images.</span></caption>
+    <thead><tr><th></th><th>Text grid</th><th>PBM</th><th>PGM</th><th>BMP</th><th>PNG</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">GPT-6 Sol<small>medium effort</small></th><td class="h" style="--f:1">7/7</td><td class="h" style="--f:1">7/7</td><td class="h" style="--f:1">7/7</td><td class="h" style="--f:1">7/7</td><td class="h" style="--f:1">7/7<small>4 of them black/white inverted</small></td></tr>
+      <tr><th scope="row">Claude Sonnet 5.5<small>high effort</small></th><td class="h" style="--f:1">7/7</td><td class="h" style="--f:1">7/7</td><td class="h" style="--f:1">7/7</td><td class="h" style="--f:1">7/7</td><td class="h" style="--f:.71">5/7<small>2 wrong</small></td></tr>
+      <tr><th scope="row">GPT-6 Luna<small>high effort</small></th><td class="h" style="--f:1">7/7</td><td class="h" style="--f:1">7/7</td><td class="h" style="--f:.71">5/7</td><td style="--f:.43">3/7</td><td style="--f:.29">2/7<small>3 ran out of tokens</small></td></tr>
+      <tr><th scope="row">Gemini 3.8 Flash<small>low effort</small></th><td class="h" style="--f:1">7/7</td><td class="h" style="--f:.86">6/7</td><td style="--f:.29">2/7</td><td style="--f:.57">4/7</td><td style="--f:0">0/7</td></tr>
+      <tr><th scope="row">GPT-6 Luna<small>reasoning off · 4 images</small></th><td class="h" style="--f:1">4/4</td><td style="--f:0">0/4</td><td style="--f:0">0/4</td><td style="--f:0">0/4</td><td style="--f:0">0/4</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="cap" style="max-width:calc(var(--col) + 120px)">Source: Atharva's published results, <a href="https://atharva-729.github.io/base64-image-probe/">Can a model read a picture it can't see?</a> (checked 22 Nov) · <a href="https://github.com/atharva-729/base64-image-probe">code and data</a> · <a href="https://github.com/atharva-729/base64-image-probe/blob/first-results/responses.jsonl">every raw model reply</a>. The whole experiment took 218 logged model calls and cost $2.41.</p>
+  <p><strong>The room was wrong, and so was Anand.</strong> The strongest model, GPT-6 Sol, rebuilt every image in every format. That is genuinely surprising, and the details are what make it a lesson rather than a magic trick:</p>
+  <ul>
+    <li><strong>The perfect PNG score includes inverted images.</strong> Four of GPT-6 Sol's seven PNG answers had every pixel right but black and white swapped, and the experiment counts those as decoded. Quote “7 of 7” only with that footnote.</li>
+    <li><strong>Reasoning is the whole difference.</strong> With its reasoning switched off, GPT-6 Luna decoded none of the encoded files. With reasoning on, it decoded about two-thirds of all the images.</li>
+    <li><strong>Decoding is not recognising.</strong> GPT-6 Luna rebuilt the cross pixel-perfectly, then described it as “a white diamond”.</li>
+    <li><strong>It is not a better way to send pictures.</strong> Decoding one tiny PNG took GPT-6 Sol and Claude Sonnet 5.5 about 45 seconds and 4–7 US cents each. Attaching an image to a vision model is far cheaper and more reliable.</li>
+  </ul>
+  <blockquote class="pq">
+    <p>“They read the PNG compression almost like they read English, which means that if I tossed it an EXE file, they don't need to run it someday.”</p>
+    <cite>Anand <a class="ts" href="?t=12:25">12:25</a></cite>
+  </blockquote>
+  <div class="note check">
+    <b>Fact-check: the image-decoding experiment</b>
+    <p><strong>The model names said in the room don't match the published results.</strong> In the recording, Anand reads out Llama, GPT-4o and Sonnet 3.5. Atharva's results page (checked 22 Nov) tested GPT-6 Sol, Claude Sonnet 5.5, GPT-6 Luna and Gemini 3.8 Flash, as in the table in this section. Both agree that every model read the plain 0s-and-1s grid perfectly. For names and scores, rely on the results page.</p>
+    <p><strong>The models were not given multiple-choice options.</strong> When a student asked how the prompt worked, Anand guessed it might offer options, then checked the raw replies live <a class="ts" href="?t=20:46">20:46</a>. The prompt asked each model to rebuild the pixel grid and say what the picture shows.</p>
+  </div>
+  <p>Anand used the surprise to explain how an LLM works at all, sketching neurons in a spreadsheet and then showing his <a href="https://sanand0.github.io/llmviz/#/">LLM hallucination visualiser</a>, which displays the probability of each possible next word as a model answers a question about an episode of Friends. <a class="ts" href="?t=17:32">17:32</a> The model never “knows” the answer; at each step it ranks possible next words, which is why it can confidently start an answer it then gets wrong. His honest summary of why it can read PNG: <strong>“how would they have learned how to speak PNG? And yet they seem to have learned how to speak PNG.”</strong> <a class="ts" href="?t=18:52">18:52</a></p>
+</section>
+
+<section class="chap" id="video" data-act="Act I · Guess first" data-title="Watching in samples">
+  <p class="eyebrow"><a class="ts" href="?t=21:16">21:16</a><span>to 26:20</span></p>
+  <h2>A video is a stack of pictures. Can a model watch one?</h2>
+  <p>Next question: can an LLM-based model recognise what's happening in a video? Not with a tool that runs <span class="tip" tabindex="0" data-tip="A command-line program for cutting, converting and sampling audio and video files.">ffmpeg</span>, Anand stressed, but the model itself, given <strong>“stream of images is a perfectly valid interpretation of video.”</strong> <a class="ts" href="?t=21:42">21:42</a></p>
+  <div class="guess" data-q="video"></div>
+  <p>The room flipped. <strong>Minutes after most of them said a text model couldn't read an image file, most said a model could follow a video.</strong> The questions are different (raw encoded text versus pictures handed to a vision model), so these aren't contradictions. But the switch shows how quickly one surprise moves our sense of the possible.</p>
+  <figure class="chart flow" aria-labelledby="flow-t">
+    <h4 id="flow-t">Most who doubted a text model could read an image file still expected a model to follow video</h4>
+    <p class="sub">Each of the 15 survey respondents, traced from their answer on the image question (left) to their answer on the video question (right). Ribbon width = number of people.</p>
+    <svg viewBox="0 -24 640 314" role="img" aria-label="Of 10 who said a text-only model could not read an encoded image, 7 said models can recognise video and 3 said they cannot. Of 5 who said yes to images, 4 said yes to video and 1 said no.">
+      <text x="132" y="-8" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">Can a text model read</text><text x="132" y="10" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">an encoded image?</text>
+      <text x="508" y="-8" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">Can a model recognise</text><text x="508" y="10" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">what's in a video?</text>
+      <path d="M144,28 C326,28 326,28 496,28 L496,126 C326,126 326,126 144,126 Z" style="fill:var(--violet)" opacity=".85"/>
+      <path d="M144,126 C326,126 326,194 496,194 L496,236 C326,236 326,168 144,168 Z" style="fill:var(--muted)" opacity=".35"/>
+      <path d="M144,180 C326,180 326,126 496,126 L496,182 C326,182 326,236 144,236 Z" style="fill:var(--muted)" opacity=".35"/>
+      <path d="M144,236 C326,236 326,236 496,236 L496,250 C326,250 326,250 144,250 Z" style="fill:var(--muted)" opacity=".35"/>
+      <rect x="120" y="28" width="24" height="140" style="fill:var(--hot)"/><rect x="120" y="180" width="24" height="70" style="fill:var(--green)"/>
+      <rect x="496" y="28" width="24" height="154" style="fill:var(--green)"/><rect x="496" y="194" width="24" height="56" style="fill:var(--hot)"/>
+      <text x="110" y="100" text-anchor="end" font-size="14" font-weight="700" fill="currentColor">No · 10</text>
+      <text x="110" y="220" text-anchor="end" font-size="14" font-weight="700" fill="currentColor">Yes · 5</text>
+      <text x="530" y="110" font-size="14" font-weight="700" fill="currentColor">Yes · 11</text>
+      <text x="530" y="226" font-size="14" font-weight="700" fill="currentColor">No · 4</text>
+      <text x="320" y="82" text-anchor="middle" font-size="14" font-weight="700" style="fill:var(--card)">7 switched no → yes</text>
+      <text x="320" y="278" text-anchor="middle" font-size="12" fill="currentColor" opacity=".8">3 no → no · 4 yes → yes · 1 yes → no</text>
+    </svg>
+    <p class="src">Source: workshop form, last answer per person, 15 matched respondents. Anonymised aggregate.</p>
+  </figure>
+  <p>Anand showed what a colleague had done with an American football broadcast: a fast model watching the match and posting what was happening in a corner of the screen. That demo is internal, so it isn't linked here. A public experiment by Atharva, <a href="https://atharva-729.github.io/clef-video-probe/">Can a model watch a broadcast?</a>, tests the same idea on a rocket launch. It takes <strong>one frame every 5 seconds</strong> from 5½ minutes of the James Webb Space Telescope launch broadcast and asks a vision model the same 19 questions about each frame. <a class="ts" href="?t=23:47">23:47</a></p>
+  <p class="stats-h">Rocket-launch experiment: reading the screen works, following the rocket doesn't yet<span>Share of the model's answers that matched a person's labels, by type of question.</span></p>
+  <div class="stats">
+    <div class="stat good"><div class="d">Numbers on screen</div><div class="s">100<small>%</small></div><div class="w">clock, altitude, speed: 260 of 261 right</div></div>
+    <div class="stat good"><div class="d">Screen layout</div><div class="s">97<small>%</small></div><div class="w">which panels, charts, maps are showing</div></div>
+    <div class="stat bad"><div class="d">What the rocket is doing</div><div class="s">72<small>%</small></div><div class="w">boosters, engine flame, phase: “near guesswork”</div></div>
+    <div class="stat"><div class="d">Launch events detected</div><div class="s">4<small>/5</small></div><div class="w">ignition, liftoff, 100 km, fairing; booster separation flagged 73 s early</div></div>
+  </div>
+  <a class="link-card" href="https://atharva-729.github.io/clef-video-probe/" style="max-width:calc(var(--col) + 120px);margin:1.6rem auto">
+    <img src="shot-rocket.webp" alt="Rocket-launch video experiment: a launch frame with the model's 19 answers listed beside it, wrong answers marked in red." loading="lazy">
+    <div class="body"><b>The experiment's verdict: yes for anything printed on screen, not yet for what is physically happening. ↗</b>1,251 model answers were scored against a person's labels. The editorial questions (“highlight moment?”, “safe to cut to an ad?”) scored only 6 points better than always giving the most common answer.</div>
+  </a>
+  <p>Another colleague, Sujal, built the <a href="https://sujalpradhan.github.io/content-dna-analyzer/">Content DNA Analyzer</a>, which scores a video against audience-retention and reach criteria, with timestamped evidence; Anand demonstrated it on a Super Bowl commercial. <a class="ts" href="?t=24:50">24:50</a> Then he said what all three video demos meant for the students:</p>
+  <blockquote class="pq">
+    <p>“That's your role, really: knowing what's possible, when it doesn't work figuring out whether you can make it happen, or figuring out if you should just wait for some time before the models and the systems get smarter.”</p>
+    <cite>Anand <a class="ts" href="?t=25:58">25:58</a></cite>
+  </blockquote>
+</section>
+
+<section class="chap" id="count" data-act="Act I · Guess first" data-title="Counting bottle caps">
+  <p class="eyebrow"><a class="ts" href="?t=26:37">26:37</a><span>to 30:27</span></p>
+  <h2>Do specialised models still matter?</h2>
+  <p>Big general models now read encoded pixels and follow broadcasts. So does anyone still need a <span class="tip" tabindex="0" data-tip="A model trained for one narrow job, e.g. YOLO for object detection or CountGD for counting objects in an image.">specialised model</span> like YOLO? Anand narrowed it to one task: counting.</p>
+  <div class="guess" data-q="count"></div>
+  <p>Another colleague photographed stamps on a desk, books on a shelf and a pile of bottle caps, and gave the photos to nine vision LLMs and five specialised counting models. <a class="ts" href="?t=28:15">28:15</a> The <a href="https://hrmiitm.github.io/llm-counting-benchmark/insights.html">benchmark's results page</a>, as checked on 22 Nov, has 54 LLM answers and 30 specialist predictions on six photos.</p>
+  <figure class="chart" aria-labelledby="count-t">
+    <h4 id="count-t">In this counting benchmark, the best counter was a specialist model, but only just</h4>
+    <p class="sub">Average error: how far each model's count was from the true count, as a percentage, averaged over six photos. Lower is better.</p>
+    <div class="legend"><span><i style="background:var(--green)"></i>Specialist, text prompt</span><span><i style="background:var(--gold)"></i>Specialist given example objects</span><span><i style="background:var(--violet)"></i>Vision LLM</span></div>
+    <div class="hb" id="count-bars"></div>
+    <p class="src">Source: the benchmark's results page, <a href="https://hrmiitm.github.io/llm-counting-benchmark/insights.html">Count Compare: models and insights</a> (checked 22 Nov). Caveats from that page: three of the six photos come from a dataset (FSC-147) some specialist models were trained on; FamNet is also shown example objects; YOLO-World-S detected nothing at its saved confidence cutoff, so it scores 100% error. See also <a href="https://hrmiitm.github.io/llm-counting-benchmark/index.html">the story</a> and <a href="https://hrmiitm.github.io/llm-counting-benchmark/compare.html">every prediction</a>.</p>
+  </figure>
+  <p><strong>CountGD was off by 3.7% on average; the best LLM, Gemini 3.8 Flash, by 4.5%.</strong> The other eight LLMs were off by between 9% and 62%. The LLMs' stated confidence wasn't a guide either: <strong>of 12 answers where an LLM said it was at least 90% sure, 8 were wrong.</strong> Six photos can't rank models in general: on just the three photos outside the specialists' training data, CountGD++ comes first instead. But the result fits what the room guessed:</p>
+  <blockquote class="pq">
+    <p>“I think we are at that stage where there is still a place for specialized models.”</p>
+    <cite>Anand <a class="ts" href="?t=29:46">29:46</a></cite>
+  </blockquote>
+  <div class="note check">
+    <b>Fact-check: the counting benchmark</b>
+    <p><strong>The published results say nearly the opposite of what Anand recalled in the room.</strong> Speaking from memory, he described CountGD as doing poorly and YOLO-World as “doing extremely well”. <a class="ts" href="?t=29:12">29:12</a> The benchmark's results page (checked 22 Nov) has CountGD best across all six photos and YOLO-World-S detecting nothing. Rely on the results page.</p>
+  </div>
+  <p>He added a twist that matters for the next question. Specialised models aren't improving as fast as general ones, but <strong>“these days the way in which people are improving the specialized models is by telling a generalized model, they just go to ChatGPT and say, ‘Look, somebody built this model. Here is my problem. Can you improve the model?’”</strong> <a class="ts" href="?t=29:56">29:56</a></p>
+</section>
+
+<section class="chap" id="chooser" data-act="Act I · Guess first" data-title="Who picks the model?">
+  <p class="eyebrow"><a class="ts" href="?t=30:27">30:27</a><span>to 31:49</span></p>
+  <h2>So who should pick and tune the model?</h2>
+  <p>If specialised models still matter, someone has to choose one and optimise it. Should you learn the landscape of vision models and the techniques for tuning them, or let a coding agent do it? “there is no right or wrong answer on this one,” Anand said. <a class="ts" href="?t=31:10">31:10</a></p>
+  <div class="guess" data-q="optimize"></div>
+  <p>A clear majority said humans. The form adds a twist: <strong>of the ten students who later submitted a working project, nine answered this question, and seven of those nine had said humans need to pick and optimise the models themselves.</strong> An hour later, those same students shipped computer vision apps without choosing a tracker by hand. (We don't know which libraries each app used or whether anyone changed their mind; the form didn't ask.)</p>
+  <blockquote class="pq violet">
+    <p>“The first person who does not know how to build a model is me. I have never built a computer vision model ever. And here I am, conducting a computer vision workshop right here”</p>
+    <cite>Anand <a class="ts" href="?t=31:59">31:59</a></cite>
+  </blockquote>
+</section>
+
+<section class="chap" id="pushups" data-act="Act I · Guess first" data-title="The push-up coach">
+  <p class="eyebrow"><a class="ts" href="?t=32:17">32:17</a><span>to 37:10</span></p>
+  <h2>The push-up coach nobody specified</h2>
+  <p>His evidence was his own push-ups. A first video went to ChatGPT, which drew his skeleton and <strong>“gave me a very generous 71.”</strong> <a class="ts" href="?t=32:51">32:51</a> Only his upper body was moving. Then he gave Claude Code a goal, not a method. These are the <a href="https://github.com/sanand0/research/blob/main/push-ups/prompts.md">actual prompts</a>:</p>
+  <div class="prompt-box">
+    <div class="plabel">Prompt · 19 Nov 2026 · excerpt</div>
+    <p>I want to identify the quality of my push-ups.<br>I want to find the best library, tool, technique, approach, ... to do this.<br>I want the output as a single HTML page that shows the quality score of each push-up and the overall score across push-ups for each of the videos, with a visual annotation that proves the score.</p>
+    <p>…</p>
+    <p>I would also like a comparison of the approaches you used - so I should be able to toggle between the different approaches in the HTML file and see the differences in the results as well as the quality of the results.</p>
+    <p><a href="https://github.com/sanand0/research/blob/main/push-ups/prompts.md">Read every prompt, including “Crashed again! Heated up, I guess. Continue, carefully.” ↗</a></p>
+  </div>
+  <p>The agent tried <span class="tip" tabindex="0" data-tip="RTMPose, ViTPose and YOLO-pose are specialised pose-estimation models that locate body joints in an image. MediaPipe is Google's on-device tracking library.">RTMPose, ViTPose, a YOLO pose model and MediaPipe</span>, plus two Gemini models, compared them, and proposed an ensemble that takes the median. <a class="ts" href="?t=35:26">35:26</a> The result is the <a href="https://sanand0.github.io/research/push-ups/">Push-up Form Lab</a>, which draws the angles on every rep so you can check each score yourself.</p>
+  <figure class="fig wide">
+    <video controls preload="none" playsinline poster="shot-pushup.webp" aria-label="Summary of four push-up sessions with pose lines drawn on each rep: 7 Nov hips sag, score 71; 8 Nov head drops, 78; 11 Nov best day, 87; 15 Nov hips pike, 67.">
+      <source src="https://media.s-anand.net/2026-11-push-ups/2026-11-push-ups-summary.webm" type="video/webm">
+    </video>
+    <figcaption><b>Four sessions, one honest story: sag, head drop, straight, pike.</b> Anand's own summary video (35 s), built by the agent from the same overlays as the <a href="https://sanand0.github.io/research/push-ups/#?v=11&amp;a=ensemble&amp;b=rtmpose-x&amp;mode=single&amp;on=ensemble%2Crtmpose-x%2Cvitpose-h&amp;split=0.500&amp;speed=1&amp;t=55.37">dashboard he showed at 11 Nov, 55.37 s</a>. Not workshop footage.</figcaption>
+  </figure>
+  <p class="stats-h">Push-up form score by session, out of 100<span>Scored by the ensemble of pose models, which found 230 push-ups across the four videos.</span></p>
+  <div class="stats">
+    <div class="stat"><div class="d">7 Nov</div><div class="s">71</div><div class="w">hips sag in 95% of reps</div></div>
+    <div class="stat"><div class="d">8 Nov</div><div class="s">78</div><div class="w">weakest: head (41)</div></div>
+    <div class="stat good"><div class="d">11 Nov</div><div class="s">87</div><div class="w">best day</div></div>
+    <div class="stat bad"><div class="d">15 Nov</div><div class="s">67</div><div class="w">hips pike in 98% of reps</div></div>
+  </div>
+  <p><strong>The uncomfortable part is the last day.</strong> The ensemble found 230 reps over four sessions. Depth scored 100/100 throughout; body line was the weakest at 39/100. He fixed the sag and then overcorrected into a pike, so the score fell to 67. That's not “AI coaching made me better”; it's a measurement that caught a new mistake. And it is <strong>a composite rubric over 2D angles</strong>, not a physiotherapist's diagnosis. While the main agent worked, a second agent reviewing the run flagged exactly that:</p>
+  <div class="prompt-box side">
+    <div class="plabel">Note from a second agent reviewing the run · pasted into the prompt log</div>
+    <p>“2D angles shift if the camera sits at a slightly different height, distance or tilt each day. … So a better score may be real, or partly a measurement change.”</p>
+  </div>
+  <p>Anand replied in the prompt log that he had consciously improved his form after the first session. Both can be true. Here is what he took from it:</p>
+  <blockquote class="pq lime">
+    <p>“I didn't really need to know what library to use or what technique to use. It can figure that out. Second: it seems to be able to create a benchmark and verify it on my behalf.”</p>
+    <cite>Anand <a class="ts" href="?t=36:30">36:30</a></cite>
+  </blockquote>
+  <p>The third lesson: it had done the optimisation too, finding a combination of libraries better than any single one. <strong>That answers the question the room had just voted on, about who should pick and optimise models</strong>, and the answer came from a person who has never built a vision model, with the evidence drawn on every frame so he could check it.</p>
+</section>
+
+<section class="chap" id="pottery" data-act="Act I · Guess first" data-title="From watching to steering">
+  <p class="eyebrow"><a class="ts" href="?t=37:11">37:11</a><span>to 41:05</span></p>
+  <h2>From analysing a camera to playing with one</h2>
+  <p>Everything so far <em>watched</em> a video. The next demo turned the camera into an input. Sujal, who built the Content DNA Analyzer, had also built a pottery wheel you shape with your hands: open both hands to choose a height, make fists and move them apart or together to change the radius. Anand tried it live. <strong>“Okay. Maybe that didn't work. Yeah, now it's working.”</strong> <a class="ts" href="?t=38:40">38:40</a></p>
+  <div class="cards" style="grid-template-columns:repeat(2,minmax(0,1fr));max-width:calc(var(--col) + 120px) !important">
+    <a class="link-card" href="https://spatial-mirror.pages.dev/pottery"><img src="shot-pottery.webp" alt="Pottery: a terracotta cylinder on a dark stage with a shape-profile panel and controls for height and radius." loading="lazy"><div class="body"><b>Pottery ↗</b>Shape a vase with two hands. There is a mouse-only mode if you'd rather not use a camera.</div></a>
+    <a class="link-card" href="https://spatial-mirror.pages.dev/proton-party"><img src="shot-protons.webp" alt="Proton Party: an ATP synthase molecule, a score of 0 of 100 ATP, and a join code for phones." loading="lazy"><div class="body"><b>Proton Party ↗</b>The room joined on their phones: squeeze a hand and release to throw protons at an ATP synthase. Screenshot shows an empty room, not the class.</div></a>
+  </div>
+  <blockquote class="pq violet">
+    <p>“Again, identification was his, or its, the agent's. The conceptualization was his. That's the role the human was playing.”</p>
+    <cite>Anand on the pottery demo <a class="ts" href="?t=38:47">38:47</a></cite>
+  </blockquote>
+  <p>How did Sujal build it? <strong>“I asked him, ‘Hey, how did you do this? What libraries did you use?’ He said, ‘I have no idea.’”</strong> <a class="ts" href="?t=40:40">40:40</a> He'd have to read the code. Anand compared it to Anthropic's own team saying no single person understands all of Claude Code; when they need to, they ask it for an explainer.</p>
+</section>
+
+<section class="chap" id="learn" data-act="Act I · Guess first" data-title="What's left to learn?">
+  <p class="eyebrow"><a class="ts" href="?t=41:07">41:07</a><span>to 48:23</span></p>
+  <h2>If agents do the data science, what do you learn?</h2>
+  <div class="guess" data-q="learn"></div>
+  <p>Nobody picked “doing data science”. Anand had given a talk the year before called <a href="https://talks.s-anand.net/2025-08-21-rip-data-scientists/">RIP Data Scientists</a>, <a class="ts" href="?t=42:19">42:19</a> so he was glad. The room split evenly between verification and finding problems; he promised his own answer later (it's <a href="#boundary">further down</a>, and it isn't either of those).</p>
+  <p>Then the brief. Pick something ambitious, he said; the win is leaving with “Damn, I didn't even know this was possible.” <a class="ts" href="?t=43:50">43:50</a> And a warning about where the difficulty would be:</p>
+  <blockquote class="pq">
+    <p>“A big part of what enables it is, are you giving the agent the right kind of tools?”</p>
+    <cite>Anand <a class="ts" href="?t=43:29">43:29</a></cite>
+  </blockquote>
+  <p>The suggestions were a sign-language tutorial, a gesture instrument, or a webcam “video studio”: <strong>“Could you have, I don't know, Barack Obama walking behind you? Could you place yourself inside an aquarium?”</strong> <a class="ts" href="?t=47:06">47:06</a> The one rule: <strong>deploy it as a static web page</strong>, on GitHub Pages or anywhere, so it becomes part of a portfolio. Why a portfolio? Because of an earlier question on the form.</p>
+  <div class="guess" data-q="hire"></div>
+  <p>Anand agreed with the majority. Grades matter for a master's admission, not for a job. Interpersonal skills matter, but in his experience <strong>“there is an interesting negative correlation between interpersonal skills and the ability to get stuff done.”</strong> <a class="ts" href="?t=45:21">45:21</a> And outcomes are hard to check:</p>
+  <blockquote class="pq">
+    <p>“Somebody says, ‘I saved a client,’ or, ‘I was doing an internship and we saved them $85 million.’ Who am I going to call? I can see the portfolio of work.”</p>
+    <cite>Anand <a class="ts" href="?t=46:00">46:00</a></cite>
+  </blockquote>
+</section>
+
+<section class="band band-night" id="break" data-act="Act II · The hour" data-title="The build hour" aria-labelledby="break-h">
+  <div class="band-inner" style="max-width:var(--col)">
+    <p class="band-label">48:23 → 48:37 in the recording · about an hour in the room</p>
+    <h2 class="band-title" id="break-h">“I'm also going to build something. Why should you have all the fun?”</h2>
+    <p class="band-dek">Anand, as the build hour began <a class="ts" href="?t=48:20">48:20</a>. The recorder was paused for roughly an hour while students built and Anand and the volunteers walked the room; it resumes at 48:37. In the <a href="transcript.md" data-transcript>transcript</a> this hour is the single line <code style="color:var(--coral)">[WORKSHOP-BREAK]</code>. The form shows the first project link arriving at 15:41 and the last edit at 16:30, Singapore time.</p>
+  </div>
+</section>
+
+<p class="act">Act II · Ten webcams, ten machines</p>
+
+<section class="chap" id="hour" data-act="Act II · The ten" data-title="What came back">
+  <p class="eyebrow"><a class="ts" href="?t=48:37">48:37</a><span>to 49:40</span></p>
+  <h2>What came back from the hour</h2>
+  <p>Ten students submitted working links. Not one is a sign-language tutor, the “simplest” suggestion. Instead: <strong>a spell chamber, a lunar chemistry lab, a desert motorbike, a rhythm game with an anime avatar, a piano-guitar-flute, a conducting app, three face-controlled games, a pet cat, a gesture collector and an emotion tracker.</strong> Anand's reaction when the recording resumes:</p>
+  <blockquote class="pq lime">
+    <p>“In what, less than an hour, at least well more than half a dozen of you, you've created something that works, in many cases works well, that's based on gestures, through your camera, and have deployed it for the entire world to be able to use your application. Clearly powerful.”</p>
+    <cite>Anand <a class="ts" href="?t=49:14">49:14</a></cite>
+  </blockquote>
+  <p>I opened all ten on 22 Nov, the day after, and played with them as a visitor would. I did not grant camera access, so <strong>everything below tests the apps' own camera-free controls, not their tracking accuracy</strong>. Screenshots and clips show the sites as they were on 22 Nov; students may have changed them after the room saw them. What struck me first is how much they share underneath.</p>
+</section>
+
+<section class="band band-night" id="pipeline" data-act="Act II · The ten" data-title="One pipeline, ten machines" aria-labelledby="pipe-h">
+  <div class="band-inner">
+    <p class="band-label">The common pipeline</p>
+    <h2 class="band-title" id="pipe-h">Camera → landmarks → a gesture → an action</h2>
+    <p class="band-dek">Every project runs the same four steps in the browser. A tracker (several use MediaPipe-style hand or face models) turns each frame into points: 21 per hand, several hundred on a face. Code turns the points into a signal: a pinch, a tilt, a blink. <strong>The last step, what the signal does, is where the ten apps stop looking alike.</strong> Descriptions are from each app's own instructions.</p>
+    <div class="pipe-head" aria-hidden="true"><span>Project</span><span>Sees</span><span>Reads as</span><span>Does</span></div>
+    <div class="pipe">
+      <div class="pipe-row"><b><a href="#spellglass">Spellglass</a></b><span>One or two hands</span><span>Palm held still, a pinch, a sideways swipe; two pinches spread, tilted or pushed forward</span><span>Casts and fuses spells; grows, turns and throws a 3D orb</span></div>
+      <div class="pipe-row"><b><a href="#chemistry">Air Chemistry Lab</a></b><span>A hand</span><span>A pinch over an object</span><span>Picks up a reagent and pours it into a vessel</span></div>
+      <div class="pipe-row"><b><a href="#ride">Dustline</a></b><span>Both hands and the head</span><span>Hands in view, head tilt, a raised thumb</span><span>Rides, banks and steers, turns 90°</span></div>
+      <div class="pipe-row"><b><a href="#ride">Pulse Slash</a></b><span>Both arms</span><span>Arm swings up or down, left or right, on the beat</span><span>Slashes pink and blue blocks to a song</span></div>
+      <div class="pipe-row"><b><a href="#music">Airwave Studio</a></b><span>Hands, and the microphone</span><span>Fingertip lane plus pinch; chord hand plus strum line; breath</span><span>Plays piano notes, guitar chords, a sustained flute</span></div>
+      <div class="pipe-row"><b><a href="#music">HandSymphony</a></b><span>One or two hands</span><span>Height, sway, finger taps, open versus closed hand</span><span>Brightens, swells and thickens music; adds notes and tension</span></div>
+      <div class="pipe-row"><b><a href="#ride">FacePlay Arcade</a></b><span>The face</span><span>Head turn, mouth open then closed, a blink</span><span>Selects, confirms, jumps</span></div>
+      <div class="pipe-row"><b><a href="#ride">Mochi</a></b><span>The face</span><span>Smile, frown, wide eyes, head movement, blink</span><span>Changes a cat's mood; catches snacks; jumps cacti</span></div>
+      <div class="pipe-row"><b><a href="#read">GestureLens</a></b><span>One or two hands</span><span>24 hand shapes, matched by rules</span><span>Names the gesture and adds it to a collection</span></div>
+      <div class="pipe-row"><b><a href="#read">Emotion Tracker</a></b><span>The face</span><span>Expression scores and facial action units, relative to your neutral face</span><span>Labels eight expressions; plots valence and arousal over time</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="band band-night" id="pinch" data-act="Act II · The ten" data-title="Try a pinch" aria-labelledby="pinch-h" style="margin-top:-3rem !important;padding-top:1rem">
+  <div class="band-inner">
+    <p class="band-label">Explorable · a recreation, not a student's app</p>
+    <h2 class="band-title" id="pinch-h">A pinch is a number crossing a line</h2>
+    <p class="band-dek">Drag the slider (or hold the button) to close the gap between landmark 4, the thumb tip, and landmark 8, the index tip. Then switch on camera noise and park the slider near the line. A naïve rule fires a burst of pinches from one wobbly hand; a rule with two thresholds and a short hold fires once. That tiny design choice decides whether a spell casts once or ten times.</p>
+    <div class="lab">
+      <svg id="lab-svg" viewBox="0 0 300 330" role="img" aria-label="Hand landmarks. The thumb and index fingertips move together as the gap slider decreases."><g id="lab-hand"></g></svg>
+      <div class="ctl">
+        <label for="gap">Gap between thumb tip and index tip: <span id="gap-v">70</span>% of hand size</label>
+        <input type="range" id="gap" min="0" max="100" value="70" aria-describedby="lab-read">
+        <div class="row">
+          <button class="btn" id="pinch-btn" type="button" aria-label="Hold to pinch (or hold Space while focused)"><i class="bi bi-hand-index-thumb" aria-hidden="true"></i> Hold to pinch</button>
+          <button class="btn" id="noise-btn" type="button" aria-pressed="false"><i class="bi bi-camera-video" aria-hidden="true"></i> Camera noise: off</button>
+          <button class="btn" id="reset-btn" type="button">Reset counts</button>
+        </div>
+        <div class="meters">
+          <div class="meter naive"><div class="d">Naïve rule fired</div><div class="s" id="m-naive">0</div><div class="d" style="text-transform:none;letter-spacing:0">pinch when gap &lt; 30%</div></div>
+          <div class="meter steady"><div class="d">Steady rule fired</div><div class="s" id="m-steady">0</div><div class="d" style="text-transform:none;letter-spacing:0">in below 25%, out above 40%, hold 100 ms</div></div>
+        </div>
+        <div class="outs" aria-hidden="true">
+          <div class="out" id="lo1"><b>✦ Spellglass</b>Star Bloom cast</div>
+          <div class="out" id="lo2"><b>⚗ Chemistry Lab</b>Vinegar picked up</div>
+          <div class="out" id="lo3"><b>♪ Airwave</b>C4 played</div>
+        </div>
+        <p class="readout" id="lab-read" aria-live="polite">Hand open. No pinch.</p>
+      </div>
+    </div>
+    <p class="cap">The thresholds here are illustrative. Each student app makes its own choices; I didn't inspect their code.</p>
+  </div>
+</section>
+
+<section class="chap" id="spellglass" data-act="Act II · The ten" data-title="Conjure: Spellglass">
+  <p class="eyebrow"><span class="elab">Conjure</span></p>
+  <h2>A grammar of spells</h2>
+</section>
+<div class="proj tall">
+  <figure class="media">
+    <video data-src="https://github.com/sanand0/talks/releases/download/talks/2026-11-21-sutd-cv-workshop-spellglass.webm" poster="poster-spellglass.webp" muted loop playsinline controls aria-label="Spellglass camera-free previews: Moon Ward then Star Bloom fuse into Astral Aegis; Gale Ribbon and Star Bloom make Cometstorm; the Parallax Orb grows, moves toward and away; a charged throw leaves a golden trail."></video>
+    <figcaption><span class="vtag">Post-workshop demo</span>Clicking the spell cards and preview buttons on 22 Nov. No camera, no hand tracking. 30 s, silent.</figcaption>
+  </figure>
+  <div class="body">
+    <h3><small>Spellglass · a Frieren-inspired spell chamber</small>Not a classifier, a vocabulary</h3>
+    <p>Most gesture demos recognise a sign and print its name. <a href="https://nanodesuu.github.io/friren-inspired-vibe-coded-vision-work-shop-/">Spellglass</a> builds a <strong>grammar</strong>. An open palm held still for half a second is <em>Moon Ward</em>; one pinch is <em>Star Bloom</em>; a sideways swipe is <em>Gale Ribbon</em>. Cast two different spells within three seconds and they fuse: Moon Ward + Star Bloom makes <em>Astral Aegis</em>, Star Bloom + Gale Ribbon makes <em>Cometstorm</em>.</p>
+    <p>Two hands go further. Pinch with both, then spread them to grow a 3D orb, tilt the line between them to turn it, push toward the camera to bring it forward, and release while moving to throw it. Hold both palms open for a second first and the throw is charged, leaving a golden trail.</p>
+    <p class="trythis"><i class="bi bi-stars" aria-hidden="true"></i><span><b>Try without a camera:</b> click Moon Ward, then Star Bloom within three seconds. Then try Preview charge followed by Preview toward.</span></p>
+    <p><a class="open-app" href="https://nanodesuu.github.io/friren-inspired-vibe-coded-vision-work-shop-/" target="_blank" rel="noopener">Open Spellglass <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a><span class="cf"><i class="bi bi-check2-circle"></i> camera-free previews</span></p>
+    <p style="font-size:.92rem;color:var(--muted)">The design choices are timing choices: a half-second hold to avoid accidental palms, a three-second window for combos, motion at release to tell a throw from a dissolve. I tested the previews, not the live recognition.</p>
+  </div>
+</div>
+
+<section class="chap" id="chemistry" data-act="Act II · The ten" data-title="Experiment: Chemistry Lab">
+  <p class="eyebrow"><span class="elab">Experiment</span></p>
+  <h2>A game that makes you predict first</h2>
+</section>
+<div class="proj">
+  <figure class="media">
+    <video data-src="https://github.com/sanand0/talks/releases/download/talks/2026-11-21-sutd-cv-workshop-chemistry-lab.webm" poster="poster-chemistry-lab.webp" muted loop playsinline controls aria-label="Air Chemistry Lab with mouse clicks: vinegar, water and baking soda turn three cups of red cabbage indicator pink, blue-purple and blue-green; then the Find the Fizz mission asks for a prediction before vinegar fizzes in the test vessel and water stays still in the control."></video>
+    <figcaption><span class="vtag">Post-workshop demo</span>Missions 1 and 2 with mouse clicks on 22 Nov, camera off. In the app, a pinch over a reagent does the same. 32 s, silent.</figcaption>
+  </figure>
+  <div class="body">
+    <h3><small>Air Chemistry Lab · lunar outpost</small>Predict, pour, compare with a control</h3>
+    <p><a href="https://hallowstar.github.io/air-chemistry-lab/">Air Chemistry Lab</a> puts you in charge of a lab bench on the Moon. Mission one: pour vinegar, water and baking-soda solution into three cups of red-cabbage indicator. They turn <i class="sw" style="background:#e0609a"></i><strong>pink</strong>, <i class="sw" style="background:#7a5bd0"></i><strong>blue-purple</strong> and <i class="sw" style="background:#2d9b7c"></i><strong>blue-green</strong>, and the log explains why: acidity changes the pigment's form.</p>
+    <p>Mission two is where it gets clever. Before you can pour, <strong>it makes you predict which gas the reaction will release.</strong> Then you test vinegar on baking soda against a water control. I deliberately guessed oxygen; after both tests the app asked me again, from the evidence, which gas came off. Guess carbon dioxide and the mission simply completes. Mission three identifies an unknown powder using iodine, a known reference and a negative control.</p>
+    <p class="trythis"><i class="bi bi-eyedropper" aria-hidden="true"></i><span><b>Try without a camera:</b> Enter the lab, click Vinegar then Cup A, Water then Cup B, Baking soda then Cup C. In Find the Fizz, predict the wrong gas on purpose.</span></p>
+    <p><a class="open-app" href="https://hallowstar.github.io/air-chemistry-lab/" target="_blank" rel="noopener">Open Air Chemistry Lab <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a><span class="cf"><i class="bi bi-check2-circle"></i> mouse, touch, keyboard</span></p>
+  </div>
+</div>
+<p class="note try" style="max-width:var(--col)"><b>Notice</b>This is the same loop Anand opened the workshop with, “write down what you think you know, and then go ahead, test it out”, here as a game mechanic, with a control experiment added. The gestures are only the means. The design is in the mission.</p>
+
+<section class="chap" id="ride" data-act="Act II · The ten" data-title="Ride and play">
+  <p class="eyebrow"><span class="elab">Ride and play</span></p>
+  <h2>Four games, four bodies as controllers</h2>
+  <p>Four projects are games, and each one asks a different part of you to be the joystick. <strong>The interesting differences are not in the tracking but in what each designer chose to forgive.</strong></p>
+</section>
+<div class="cards" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+  <a class="link-card" href="https://cvworkshop.vercel.app/" target="_blank" rel="noopener"><img src="shot-dustline.webp" alt="Dustline: an open desert road at dusk with a motorbike, a speedometer at 0 km/h, and a controls panel." loading="lazy"><div class="body"><b>Dustline: a motorbike you ride with your body ↗</b>Keep both hands in view to ride; tilt your head to bank and steer; raise a thumb to turn 90°. <em style="color:var(--gold);font-style:normal;font-weight:600">Camera only: I saw the desert, but didn't ride.</em></div></a>
+  <a class="link-card" href="https://v-tuber-studio.vercel.app/" target="_blank" rel="noopener"><img src="shot-pulse.webp" alt="Pulse Slash: an anime avatar on a neon grid, with difficulty and a camera-delay compensation slider set to 100 ms." loading="lazy"><div class="body"><b>Pulse Slash: a rhythm game for your arms ↗</b>Slash pink blocks with the left arm and blue with the right, on the beat of a YouTube song. It has a camera arm-swing test and a <strong>camera-delay compensation slider</strong> (100 ms by default). Keyboard mode: <kbd>W</kbd><kbd>S</kbd> and <kbd>↑</kbd><kbd>↓</kbd>. <em style="color:var(--gold);font-style:normal;font-weight:600">In my headless browser the song didn't start, so I couldn't verify gameplay.</em></div></a>
+</div>
+<p>Pulse Slash is the one that treats <strong>latency as part of correctness</strong>. In most apps a tenth of a second of delay is invisible; in a rhythm game it decides whether you hit or miss, so the designer exposed it as a setting. The two face-controlled games take the opposite stance: slow, forgiving, no timer.</p>
+<div class="proj flip">
+  <figure class="media">
+    <video data-src="https://github.com/sanand0/talks/releases/download/talks/2026-11-21-sutd-cv-workshop-mochi.webm" poster="poster-mochi.webp" muted loop playsinline controls aria-label="Mochi's Mood-Ring Arcade in keyboard mode: holding S makes the cat smile and say That smile is adorable; F makes it sad and offer a virtual hug; then a round of Blink Jumper where Space makes Mochi hop over cacti until it reaches 30 metres."></video>
+    <figcaption><span class="vtag">Post-workshop demo</span>Keyboard mode on 22 Nov: <kbd>S</kbd> smile, <kbd>F</kbd> frown, <kbd>W</kbd> wide eyes, <kbd>Space</kbd> blink. Mochi made it 30 m in Blink Jumper. 26 s, silent.</figcaption>
+  </figure>
+  <div class="body">
+    <h3><small>Mochi's Mood-Ring Arcade</small>A cat that mirrors your face</h3>
+    <p><a href="https://dashing-sunflower-afda16.netlify.app/">Mochi</a> is a cartoon cat whose mood follows your expression. Smile and it beams, with a toast: “That smile is adorable!” Frown and it looks sad and offers “a virtual hug”. Three mini-games use different signals: move your head to catch falling snacks, blink to jump cacti, hold a smile for 15 seconds to unlock outfits.</p>
+    <p>Its tagline is “Your pet feels what you feel.” What it can actually see is your <em>expression</em>; a smile you hold for 15 seconds to unlock a hat is not necessarily happiness. The keyboard mode makes that obvious, and is also a thoughtful touch: you can play with no camera at all.</p>
+    <p class="trythis"><i class="bi bi-emoji-smile" aria-hidden="true"></i><span><b>Try without a camera:</b> choose “Play with keyboard”, hold <kbd>S</kbd>, then open Blink Jumper and press Start.</span></p>
+    <p><a class="open-app" href="https://dashing-sunflower-afda16.netlify.app/" target="_blank" rel="noopener">Open Mochi <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a><span class="cf"><i class="bi bi-check2-circle"></i> keyboard mode</span></p>
+  </div>
+</div>
+<div class="proj">
+  <figure class="media">
+    <a class="zoom" href="shot-netlify.webp" data-lightbox data-caption="FacePlay Arcade, 22 Nov: three games and camera sensitivity controls"><img src="shot-netlify.webp" alt="FacePlay Arcade: Choose your adventure, with Star Garden, Would You Rather (selected) and Gentle Adventure, plus sliders for movement and mouth sensitivity and a Calibrate neutral face button." loading="lazy"></a>
+    <figcaption>Screenshot, 22 Nov. The camera panel reported no device in my test browser, as expected.</figcaption>
+  </figure>
+  <div class="body">
+    <h3><small>FacePlay Arcade</small>No clicking required</h3>
+    <p><a href="https://cheery-crostata-253515.netlify.app/">FacePlay</a> has three gentle games played entirely with the face. Turn your head left or right to choose, return to centre between choices, and open then close your mouth to confirm. In Star Garden you open your mouth to collect stars, with no timer. In Gentle Adventure you blink to jump.</p>
+    <p>The details are the design: <strong>a neutral-face calibration that runs automatically, separate sensitivity sliders for movement and mouth</strong>, and “return to centre” so a single head turn can't select twice. It needs a camera; there's no keyboard path into the games.</p>
+    <p class="trythis"><i class="bi bi-person-bounding-box" aria-hidden="true"></i><span><b>Try with a camera:</b> start the camera, keep still for a moment while it calibrates, then turn your head and open your mouth to pick Would You Rather.</span></p>
+    <p><a class="open-app" href="https://cheery-crostata-253515.netlify.app/" target="_blank" rel="noopener">Open FacePlay <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a><span class="cf" style="color:var(--gold)"><i class="bi bi-camera"></i> camera only</span></p>
+    <p style="font-size:.92rem;color:var(--muted)">Games you can play without hands could matter a great deal to some players. Whether these do is something only those players can say; nobody has tested that yet.</p>
+  </div>
+</div>
+
+<section class="chap" id="music" data-act="Act II · The ten" data-title="Make music">
+  <p class="eyebrow"><span class="elab">Make music</span></p>
+  <h2>Two instruments, two theories of music</h2>
+  <p>Two students built instruments, and they disagree about what an instrument is. <strong>Airwave turns motion into discrete events: this note, now.</strong> <strong>HandSymphony turns motion into continuous expression:</strong> you never pick a note; you shape how the music feels, and it only plays notes that fit the key, so you can't play a wrong one. Both clips below have sound.</p>
+</section>
+<div class="pair">
+  <figure class="fig">
+    <video data-src="https://github.com/sanand0/talks/releases/download/talks/2026-11-21-sutd-cv-workshop-airwave.webm" poster="poster-airwave.webp" playsinline controls preload="none" aria-label="Airwave Studio, keyboard fallback with sound: Twinkle Twinkle Little Star on the piano keys, then the guitar strummed through C, G, A minor and F twice."></video>
+    <figcaption><span class="vtag">Post-workshop demo · sound</span><b><a href="https://airwave-gesture-studio.hazylotus16.chatgpt.site/">Airwave Studio</a>: discrete.</b> With a camera, aim a fingertip at a note lane and pinch to play; for guitar, one fingertip holds a chord while the other sweeps a strum line; the flute listens to your breath. Here, the keyboard fallback: <kbd>A</kbd>–<kbd>K</kbd> play C4–C5 (a twinkle-twinkle), then <kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><kbd>F</kbd> strum C, G, Am, F. 17 s.</figcaption>
+  </figure>
+  <figure class="fig">
+    <video data-src="https://github.com/sanand0/talks/releases/download/talks/2026-11-21-sutd-cv-workshop-handsymphony.webm" poster="poster-handsymphony.webp" playsinline controls preload="none" aria-label="HandSymphony in pointer mode with sound: a pointer rises slowly, then sways left and right, then taps; the readout shows Gesture Hold, then Sway at 100 percent energy, then Tap."></video>
+    <figcaption><span class="vtag">Post-workshop demo · sound</span><b><a href="https://handsymphony.vercel.app/">HandSymphony</a>: continuous.</b> Raise a hand to brighten, sway to swell, tap the air to add notes, open or close your hand to thicken or thin the texture, raise a second hand for tension. Here, pointer mode: a simulated mouse rises, sways, then taps. 21 s.</figcaption>
+  </figure>
+</div>
+<p>Both apps solved the same practical problem: <strong>a visitor without a camera can still play</strong>, Airwave with the keyboard and HandSymphony with a pointer. HandSymphony also does something few demos bother with: a plain-language glossary of tempo, dynamics, chords and arpeggios, for people who “don't need to know any music”.</p>
+<p class="trythis" style="max-width:var(--col)"><i class="bi bi-music-note-beamed" aria-hidden="true"></i><span><b>Try without a camera:</b> on Airwave press <kbd>A</kbd> <kbd>A</kbd> <kbd>G</kbd> <kbd>G</kbd> <kbd>H</kbd> <kbd>H</kbd> <kbd>G</kbd>. On HandSymphony, choose “Start with pointer”, switch the genre to Jazz, and sway slowly.</span></p>
+
+<section class="chap" id="read" data-act="Act II · The ten" data-title="Read the body">
+  <p class="eyebrow"><span class="elab">Read the body</span></p>
+  <h2>The two that try to name what they see</h2>
+  <p>The last two projects don't use the signal to control something. They try to <em>label</em> it, which is where the honest ones start writing caveats.</p>
+</section>
+<div class="proj">
+  <figure class="media">
+    <a class="zoom" href="active-emotion-mona.webp" data-lightbox data-caption="Emotion Tracker reading the Mona Lisa: Contempt 74%, Happy 16%, valence +0.30"><img src="active-emotion-mona.webp" alt="Emotion Tracker with the Mona Lisa loaded as an image: a box around her face labelled Contempt 74%. The side panel shows Happy 16%, Neutral 5%, valence 0.30, and action units AU7 lid tightener 76% and AU4 brow lowerer 54%." loading="lazy"></a>
+    <figcaption><span class="vtag">Post-workshop test</span>I gave Emotion Tracker a public-domain image of the Mona Lisa through its “Open image” button, rather than a live face. 22 Nov.</figcaption>
+  </figure>
+  <div class="body">
+    <h3><small>Emotion Tracker</small>The most famous smile reads as contempt</h3>
+    <p>The <a href="https://emotion-tracker-ashen.vercel.app/">Emotion Tracker</a> scores eight expressions and two signals, valence and arousal, against <em>your</em> neutral face, which you calibrate by relaxing for 2.5 seconds. You can then teach it any expression it gets wrong. Its page includes the most thorough design notes of the ten: why version one missed subtle sadness (a ~330 KB model trained on posed photos, data dominated by neutral and happy faces, a crude per-frame decision rule) and what replaced it.</p>
+    <p>I tried it on Leonardo's Mona Lisa. <strong>Contempt, 74%. Happy, 16%.</strong> Valence slightly positive. Without a neutral baseline for her face, that is exactly the kind of answer the app's own design notes warn about, and a reminder of what any such tool measures: <strong>muscle movements, not feelings.</strong></p>
+    <p class="trythis"><i class="bi bi-image" aria-hidden="true"></i><span><b>Try without a camera:</b> click “Open image / video” and give it a painting or a photo you have rights to use.</span></p>
+    <p><a class="open-app" href="https://emotion-tracker-ashen.vercel.app/" target="_blank" rel="noopener">Open Emotion Tracker <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a><span class="cf"><i class="bi bi-check2-circle"></i> image or video file</span></p>
+  </div>
+</div>
+<div class="proj flip">
+  <figure class="media">
+    <a class="zoom" href="shot-gesturelens.webp" data-lightbox data-caption="GestureLens, 22 Nov"><img src="shot-gesturelens.webp" alt="GestureLens: Show a hand sign. See it named live. A camera panel, a detected-gesture card reading Waiting, and a collection counter at 0 of 24." loading="lazy"></a>
+    <figcaption>Screenshot, 22 Nov, camera off.</figcaption>
+  </figure>
+  <div class="body">
+    <h3><small>GestureLens</small>Gotta catch all 24</h3>
+    <p><a href="https://gesturelens-zeta.vercel.app/">GestureLens</a> tracks 21 points per hand and matches them by rule against 24 common gestures from Wikipedia's list: thumbs up, Vulcan salute, OK, heart hands, and a “Rude” filter for the obvious one. Hold a gesture steady and it's added to your collection.</p>
+    <p>It is careful about its own limits: recognition is heuristic, lighting and angle change results, and <strong>meanings vary across cultures</strong>. It is a gesture collector, not a sign-language interpreter. Turning it into the sign-language tutor Anand suggested would need a different kind of evidence: signers testing it.</p>
+    <p><a class="open-app" href="https://gesturelens-zeta.vercel.app/" target="_blank" rel="noopener">Open GestureLens <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a><span class="cf" style="color:var(--gold)"><i class="bi bi-camera"></i> camera only</span></p>
+  </div>
+</div>
+
+<section class="chap" id="lightwell" data-act="Act II · The ten" data-title="Meanwhile, at the front">
+  <p class="eyebrow"><span class="elab">Not a student project</span></p>
+  <h2>Meanwhile, the instructor's own build</h2>
+  <p>Anand did build something, as promised. He spent part of the hour on <a href="https://github.com/sanand0/lightwell">Lightwell Camera Studio</a>, a camera compositor he had started the day before: it layers drawings, effects and your camera into a virtual camera you can use in a video call, the “video studio” idea from his own list. His commits during the session add layer effects and hand-gesture inputs. Its call integration is marked experimental.</p>
+  <figure class="fig">
+    <a class="zoom" href="shot-lightwell.webp" data-lightbox data-caption="Lightwell Camera Studio, from the repository's documentation (built-in synthetic camera sample)"><img src="shot-lightwell.webp" alt="Lightwell Camera Studio: a synthetic cartoon camera feed with a hand-drawn tick overlaid, a layers panel and an inspector." loading="lazy"></a>
+    <figcaption>From the repository's documentation, with its built-in synthetic camera. Not a recording from the workshop.</figcaption>
+  </figure>
+</section>
+
+<section class="band band-paper" id="ten" data-act="Act II · The ten" data-title="All ten, at a glance" aria-labelledby="ten-h">
+  <div class="band-inner">
+    <p class="band-label">All ten submitted projects · checked 22 Nov · grouped by use, not ranked</p>
+    <h2 class="band-title" id="ten-h">Open one. Seven work without a camera.</h2>
+    <p class="band-dek">Every app below asks for camera permission itself, only when you press its start button. Nothing on this page turns on your camera.</p>
+    <div class="ten">
+      <a href="https://nanodesuu.github.io/friren-inspired-vibe-coded-vision-work-shop-/" target="_blank" rel="noopener"><img src="active-spellglass.webp" alt="" loading="lazy"><span class="tb"><b>Spellglass</b>Cast, fuse and throw spells.<em>No camera: click spell cards</em></span></a>
+      <a href="https://hallowstar.github.io/air-chemistry-lab/" target="_blank" rel="noopener"><img src="active-chemistry.webp" alt="" loading="lazy"><span class="tb"><b>Air Chemistry Lab</b>Three experiments on the Moon.<em>No camera: mouse or keys</em></span></a>
+      <a href="https://cvworkshop.vercel.app/" target="_blank" rel="noopener"><img src="shot-dustline.webp" alt="" loading="lazy"><span class="tb"><b>Dustline</b>Ride a desert motorbike.<em class="cam">Camera only</em></span></a>
+      <a href="https://v-tuber-studio.vercel.app/" target="_blank" rel="noopener"><img src="shot-pulse.webp" alt="" loading="lazy"><span class="tb"><b>Pulse Slash</b>Slash blocks on the beat.<em>No camera: W S ↑ ↓</em></span></a>
+      <a href="https://cheery-crostata-253515.netlify.app/" target="_blank" rel="noopener"><img src="shot-netlify.webp" alt="" loading="lazy"><span class="tb"><b>FacePlay Arcade</b>Gentle games with your face.<em class="cam">Camera only</em></span></a>
+      <a href="https://dashing-sunflower-afda16.netlify.app/" target="_blank" rel="noopener"><img src="poster-mochi.webp" alt="" loading="lazy"><span class="tb"><b>Mochi</b>A cat that mirrors your face.<em>No camera: keyboard mode</em></span></a>
+      <a href="https://airwave-gesture-studio.hazylotus16.chatgpt.site/" target="_blank" rel="noopener"><img src="active-airwave.webp" alt="" loading="lazy"><span class="tb"><b>Airwave Studio</b>Piano, guitar and flute in the air.<em>No camera: A–K keys</em></span></a>
+      <a href="https://handsymphony.vercel.app/" target="_blank" rel="noopener"><img src="active-symphony.webp" alt="" loading="lazy"><span class="tb"><b>HandSymphony</b>Conduct a soundscape.<em>No camera: pointer mode</em></span></a>
+      <a href="https://gesturelens-zeta.vercel.app/" target="_blank" rel="noopener"><img src="shot-gesturelens.webp" alt="" loading="lazy"><span class="tb"><b>GestureLens</b>Collect 24 hand gestures.<em class="cam">Camera only</em></span></a>
+      <a href="https://emotion-tracker-ashen.vercel.app/" target="_blank" rel="noopener"><img src="shot-emotion.webp" alt="" loading="lazy"><span class="tb"><b>Emotion Tracker</b>Expressions against your neutral face.<em>No camera: open an image</em></span></a>
+    </div>
+  </div>
+</section>
+
+<section class="chap" id="lessons" data-act="Act II · The ten" data-title="What the designs teach">
+  <p class="eyebrow"><span class="elab">Six design lessons from ten apps</span></p>
+  <h2>Same detector, different decisions</h2>
+  <p>Put the ten side by side and the computer vision almost disappears. What's left are human decisions about meaning, timing and forgiveness. These are lessons I'd draw from using them, not verified claims about their code:</p>
+</section>
+<div class="lessons">
+  <div class="lesson"><b class="h">1 · The mapping is the product</b>A pinch casts Star Bloom, picks up vinegar, or plays C4. The detector is a commodity; the meaning you give the signal is the design.<span class="ex">Spellglass, Chemistry Lab, Airwave</span></div>
+  <div class="lesson"><b class="h">2 · Discrete signals need thresholds and patience</b>Blinks, pinches and palms need a line to cross, a gap before they can fire again, and a hold to rule out accidents. Try the <a href="#pinch">pinch explorable</a> with noise on.<span class="ex">Spellglass's half-second hold; FacePlay's “return to centre”</span></div>
+  <div class="lesson"><b class="h">3 · Continuous signals need smoothing and calibration</b>Sway, height and expression drift with lighting and with your face. Calibrate to the person and smooth over time.<span class="ex">Emotion Tracker's neutral baseline and smoothing slider; FacePlay's sensitivity sliders</span></div>
+  <div class="lesson"><b class="h">4 · Sometimes latency is correctness</b>In a rhythm game, 100 ms of camera delay is the difference between a hit and a miss. Measure it and let players compensate.<span class="ex">Pulse Slash's delay compensation and arm-swing test</span></div>
+  <div class="lesson"><b class="h">5 · A fallback is a feature</b>Keyboard, pointer and preview modes let people try without granting camera access, play in bad light, and let a builder test fast. They also made this page possible.<span class="ex">7 of 10 apps have one</span></div>
+  <div class="lesson"><b class="h">6 · Say what the signal doesn't mean</b>A smile is not happiness; a hand shape is not a word in sign language. The best apps say so on the page, and test with the people they're for.<span class="ex">GestureLens and Emotion Tracker's caveats</span></div>
+</div>
+
+<p class="act">Act III · If anyone can build it</p>
+
+<section class="chap" id="differentiation" data-act="Act III · What's left" data-title="Not your differentiation">
+  <p class="eyebrow"><a class="ts" href="?t=49:39">49:39</a><span>to 50:50</span></p>
+  <h2>“That is not your differentiation”</h2>
+  <p>Having praised the room, Anand turned the praise around.</p>
+  <blockquote class="pq">
+    <p>“Now, what that means is, if you can do that in less than an hour, anyone can do that in less than an hour. That is not your differentiation.”</p>
+    <cite>Anand <a class="ts" href="?t=49:39">49:39</a></cite>
+  </blockquote>
+  <p>So where is it? He pointed at the parts of the hour that <em>didn't</em> go smoothly: <strong>“The differentiation is, what is it that we failed today? So, I wasn't able to use some of these gestures. I was struggling. Some of them worked well, and you were iterating to see if it was working well for you, not working well for you. That is something that maybe everyone can't do. Some of you thought of some really creative uses.”</strong> <a class="ts" href="?t=49:47">49:47</a></p>
+  <p>Look back at the ten apps with that lens. The tracking came free. What separates them is the struggle with use: Spellglass's half-second hold, FacePlay's return-to-centre, Pulse Slash's delay slider, the chemistry lab's prediction step, Emotion Tracker's honest notes on why version one failed. <strong>Those look like the traces of someone noticing what fails and designing around it.</strong> That's the part worth putting in a portfolio.</p>
+  <blockquote class="pq lime">
+    <p>“delegate everything to agents. Let them do what they can do well. What they can't do well is the space we play in.”</p>
+    <cite>Anand <a class="ts" href="?t=50:14">50:14</a></cite>
+  </blockquote>
+</section>
+
+<section class="band band-night" id="voices" data-act="Act III · What's left" data-title="What the room learned" aria-labelledby="voices-h">
+  <div class="band-inner">
+    <p class="band-label">The last question on the form: what did you learn today? · 11 answers</p>
+    <h2 class="band-title" id="voices-h">In their words, including the dissent</h2>
+    <p class="band-dek">Anonymous answers, quoted as written. These are students' own observations, not measured results.</p>
+    <div class="voices">
+      <figure class="voice"><p>“I realised CV already has solutions for almost any kind of standard problems. The problem lies in finding an actual use case thats truly beneficial.”</p><cite>Student</cite></figure>
+      <figure class="voice"><p>“I didn't know it was possible to make a website in such a short time. I found out that user design is still a limitation with AI. Human won't always be logical, so I need to make a better design to communicate with human.”</p><cite>Student</cite></figure>
+      <figure class="voice dissent"><p>“Agents are a limitation to developing truly comerically viable software products”</p><cite>Student · the strongest dissent</cite></figure>
+      <figure class="voice"><p>“I didn't know computer vision can be so easily vibe coded as well”</p><cite>Student</cite></figure>
+      <figure class="voice"><p>“Even free AI models accessible to public are able to integrate Computer Vision mostly effectively into a html/app file”</p><cite>Student</cite></figure>
+      <figure class="voice"><p>“Now I see how AI has been getting more and more powerful being able to complete projects fully with almost no serious bugs. As I saw the project files, I realized that human verification is unfeasible, so we need to focus on governance of the creation process. […]”</p><cite>Student</cite></figure>
+    </div>
+  </div>
+</section>
+
+<p>The dissent deserves to be taken seriously rather than answered. <strong>A working demo is not a commercially viable product</strong>, and nothing in this workshop measured viability. The student who wrote that user design is still a limitation is pointing at the same gap from the other side: an agent can wire a pinch to a pour in minutes; deciding what a real person will understand, trust and keep using is slower, and it is <em>tested on people</em>. Both answers are about where the hour ended, not where the work does.</p>
+
+<section class="chap" id="boundary" data-act="Act III · What's left" data-title="Where agents stop">
+  <p class="eyebrow"><a class="ts" href="?t=51:54">51:54</a><span>to 54:20</span></p>
+  <h2>Where agents will learn fast, and where they won't</h2>
+  <p>Anand's rule for where the edge moves is simple. Models get good at anything that can be checked: <strong>“if you give it an input and any system of intelligence is able to figure out if that input is correct or wrong, they will learn it.”</strong> <a class="ts" href="?t=52:04">52:04</a> Which leaves two kinds of territory:</p>
+  <blockquote class="pq violet">
+    <p>“how do stars grow? How do plants grow? How do humans or businesses react to strategy? These things take years to experiment. Or where there's no such thing as a right answer—will this painting be appreciated by people?”</p>
+    <cite>Anand <a class="ts" href="?t=52:27">52:27</a></cite>
+  </blockquote>
+  <p>Answers that are slow to get, and answers that are subjective. Whether a gesture <em>feels</em> right to a stranger is the second kind. Whether the pose model measured your hip angle correctly is closer to the first kind, and the push-up log shows what to do about it: <strong>set things up so an agent can do the checking</strong>, the way a second agent in the push-up project flagged camera position as a possible cause of the score changes.</p>
+  <blockquote class="pq">
+    <p>“What seems to be emerging is governance. How do I set up stuff so that agents can do the verification?”</p>
+    <cite>Anand <a class="ts" href="?t=53:34">53:34</a></cite>
+  </blockquote>
+  <p>He then gave his own answers to the questions on the form. Here they are next to the room's answers:</p>
+  <div class="heat-wrap">
+  <table class="cmp">
+    <thead><tr><th>Question</th><th>The room (15 answers)</th><th>Anand</th></tr></thead>
+    <tbody>
+      <tr><td>Can a text-only model read an encoded image?</td><td>No, 10 · Yes, 5</td><td><span class="differ">Thought no, too.</span> Atharva's experiment says yes, with heavy reasoning and caveats.</td></tr>
+      <tr><td>Can a model recognise what happens in video?</td><td>Yes, 11 · No, 4</td><td><span class="agree">Yes:</span> “it's literally seeing the video.” The rocket-launch experiment adds: not yet for what's physically happening.</td></tr>
+      <tr><td>Can LLMs count better than specialists?</td><td>No, 9 · Yes, 6</td><td><span class="agree">Agrees:</span> “there is still a place for specialized models.”</td></tr>
+      <tr><td>Who should pick and optimise models?</td><td>Humans, 11 · Agents, 4</td><td><span class="differ">The agent did it</span> for his push-ups: chose, benchmarked, combined.</td></tr>
+      <tr><td>What a hirer looks at</td><td>Portfolio, 9 · Outcomes, 2 · People skills, 2 · Grades, 0 · Other, 2</td><td><span class="agree">Portfolio.</span> Outcomes would be better, but he can't verify them.</td></tr>
+      <tr><td>What should you learn?</td><td>Verification, 6 · Finding problems, 6 · Execution, 1 · Data science, 0 · Other, 2</td><td><span class="differ">Execution on top.</span> Data science: “not worth it”. Verification: governance instead. Finding problems: the creative, niche ones. <a class="ts" href="?t=52:57">52:57</a></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <blockquote class="pq lime">
+    <p>“Execution: definitely. That's the big problem. ChatGPT can tell you, here's how you should do your exercise. You've got to do it.”</p>
+    <cite>Anand, whose own push-up scores had been on screen earlier <a class="ts" href="?t=53:52">53:52</a></cite>
+  </blockquote>
+  <p>Only one person in the room had picked execution. Anand ranked it first. Whether he's right is a judgement, not a measurement, but it fits the evidence on this page: the code took an hour; turning it into something a stranger can use without help is the part still to be done.</p>
+</section>
+
+<section class="chap" id="portfolio" data-act="Act III · What's left" data-title="A portfolio of 100">
+  <p class="eyebrow"><a class="ts" href="?t=50:52">50:52</a><span>to 51:54</span></p>
+  <h2>A hundred experiments, and the three you show</h2>
+  <p>If you're heading for a job, he said, <strong>“you will be competing both with agents, and therefore there's no point learning what agents can do, as well as with people who will be using agents.”</strong> <a class="ts" href="?t=51:02">51:02</a> A portfolio helps, but an hour's work is one tile in it, not the whole wall.</p>
+  <blockquote class="pq">
+    <p>“if you create 100 things, pick what is really suitable for the person you are speaking with and craft custom portfolios, effectively personalizing it to the person you're meeting. That's what gives it power.”</p>
+    <cite>Anand <a class="ts" href="?t=51:35">51:35</a></cite>
+  </blockquote>
+  <p>A team building applied machine learning might want the Emotion Tracker's design notes. A game studio might want Pulse Slash's latency slider. An education startup might want the chemistry lab's predict-and-control loop. <strong>The same hour, curated three ways.</strong></p>
+</section>
+
+<p class="act">Act IV · Your turn</p>
+
+<section class="chap" id="yourturn" data-act="Act IV · Your turn" data-title="Run the experiment">
+  <p class="eyebrow"><span class="elab">An exercise for anyone with a laptop</span></p>
+  <h2>Run the same experiment yourself</h2>
+  <p>You don't need to have been in the room. You need a browser, a coding agent and an afternoon. Tick the steps as you go; your progress stays in this browser only.</p>
+</section>
+<div class="steps" style="max-width:var(--wide);margin:1.4rem auto 2rem">
+  <div class="step"><b class="h">Predict</b>Before building, write down three things you think a webcam in a browser <em>can't</em> do. Keep the list.<label><input type="checkbox" data-step="1"> Done</label></div>
+  <div class="step"><b class="h">Pick a surprising mapping</b>Choose one signal (pinch, blink, tilt, sway) and give it an unexpected meaning. A gesture-to-action table like the one <a href="#pipeline">above</a> helps.<label><input type="checkbox" data-step="2"> Done</label></div>
+  <div class="step"><b class="h">Build and deploy in an hour</b>Ask an agent for a single static page on GitHub Pages, <strong>with a no-camera fallback</strong> so anyone can try it.<label><input type="checkbox" data-step="3"> Done</label></div>
+  <div class="step"><b class="h">Hand it to a stranger</b>Give the link to someone and say nothing. Watch where they hesitate, misfire or give up.<label><input type="checkbox" data-step="4"> Done</label></div>
+  <div class="step"><b class="h">Fix the hardest moment</b>Thresholds, calibration, instructions, forgiveness. Write down what changed and why.<label><input type="checkbox" data-step="5"> Done</label></div>
+  <div class="step"><b class="h">Add the evidence</b>Put the link, the struggle and the fix in your portfolio. Then check your three predictions from step 1.<label><input type="checkbox" data-step="6"> Done</label></div>
+</div>
+<section class="chap" id="lastq" data-act="Act IV · Your turn" data-title="The last question" style="padding-top:1rem">
+  <p>Anand ended the workshop the way he started it, with a question he couldn't answer for anyone else. <strong>“What would I take away from this workshop if I were you? Actually, I don't know”</strong> <a class="ts" href="?t=54:18">54:18</a> So he asked the room, and the question is yours now:</p>
+  <blockquote class="pq violet">
+    <p>“what is something that you learned today? It may be something that you didn't even know was possible, or maybe you thought it's possible, but it's actually not.”</p>
+    <cite>Anand <a class="ts" href="?t=54:46">54:46</a></cite>
+  </blockquote>
+  <label for="learned" style="display:block;font:700 .95rem var(--font-ui);margin:0 0 .4rem">Your answer (saved only in this browser)</label>
+  <textarea id="learned" rows="3" style="width:100%;font:1rem/1.5 var(--font-ui);padding:.7rem .8rem;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)" placeholder="Something I didn't know was possible…"></textarea>
+</section>
+
+<section class="band band-night" id="takeaways" data-act="Act IV · Your turn" data-title="Takeaways" aria-labelledby="tk-h">
+  <div class="band-inner">
+    <p class="band-label">Takeaways</p>
+    <h2 class="band-title" id="tk-h">Six things to keep</h2>
+    <div class="tks">
+      <div class="tk"><div class="n">01</div><b class="h">Guess before you look</b>Ten of fifteen students said a text-only model couldn't read an image file written out as text. The best model rebuilt every pixel. Writing your guess down first is how you notice you were wrong.</div>
+      <div class="tk"><div class="n">02</div><b class="h">Read the footnotes of surprises</b>That perfect image score counted inverted pictures as correct, needed heavy reasoning and cost cents per tiny picture. Video models read on-screen numbers well and physical events poorly.</div>
+      <div class="tk"><div class="n">03</div><b class="h">Specialists still matter, but you may not pick them</b>On six photos, CountGD beat every LLM at counting. An agent chose and combined pose models for push-ups without being told which.</div>
+      <div class="tk"><div class="n">04</div><b class="h">The detector is free; the mapping is the design</b>One pinch casts a spell, pours vinegar or plays C4. Thresholds, calibration, latency and fallbacks are where the apps differ.</div>
+      <div class="tk"><div class="n">05</div><b class="h">An hour's demo is not your edge</b>If you can build it in an hour, so can anyone. Your edge is in what failed, how you fixed it, and the uses nobody else thought of.</div>
+      <div class="tk"><div class="n">06</div><b class="h">Govern the checkable, test the rest on people</b>Set up agents to verify what can be verified. For what's slow or subjective, like whether a gesture feels right, hand it to a real person.</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot" aria-labelledby="foot-h">
+  <h2 id="foot-h">Sources and method</h2>
+  <ul>
+    <li><b>Recording:</b> <a href="https://github.com/sanand0/talks/releases/download/talks/2026-11-21-sutd-cv-workshop.opus">audio (Opus, 55 min)</a> · <a href="transcript.md" data-transcript>transcript</a>. Quotes are verbatim from the AI transcript; audio links were placed using a separate timed transcription and may be a few seconds early. Recording time pauses for the build hour between 48:23 and 48:37.</li>
+    <li><b>Survey:</b> the workshop's live form, last answer per person, reported only as anonymous counts. The seven core questions each have 15 final answers; there is no attendance denominator, and the form was not a pre/post test.</li>
+    <li><b>Student projects:</b> the ten final links submitted to the form, opened on 22 Nov in a fresh browser without camera or microphone access. Clips marked “Post-workshop demo” were recorded that day by a script that moved the mouse and pressed keys on each app's own camera-free controls, with a visible cursor and key labels; two capture the apps' audio. They are not footage from the workshop and say nothing about tracking accuracy. The Mona Lisa image is <a href="https://commons.wikimedia.org/wiki/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg">public domain</a>.</li>
+    <li><b>Teaching material:</b> <a href="https://atharva-729.github.io/base64-image-probe/">base64 image probe</a>, <a href="https://sanand0.github.io/llmviz/#/">LLM hallucination visualiser</a>, <a href="https://atharva-729.github.io/clef-video-probe/">rocket-launch video probe</a>, <a href="https://sujalpradhan.github.io/content-dna-analyzer/">Content DNA Analyzer</a>, <a href="https://hrmiitm.github.io/llm-counting-benchmark/insights.html">counting benchmark</a>, <a href="https://sanand0.github.io/research/push-ups/">Push-up Form Lab</a> and its <a href="https://github.com/sanand0/research/blob/main/push-ups/prompts.md">prompts</a>, <a href="https://spatial-mirror.pages.dev/pottery">Pottery</a>, <a href="https://spatial-mirror.pages.dev/proton-party">Proton Party</a>. Numbers were checked against these pages on 22 Nov and may differ from what was said in the room. The American football broadcast demo shown in the room is internal and isn't linked.</li>
+  </ul>
+  <h2>Related talks</h2>
+  <ul>
+    <li><a href="../2026-11-17-sutd-coil/">The Agent Passed. The Test Failed. Who Verifies the Verifier?</a> At SUTD four days earlier: how to check work done by an intelligence smarter than you.</li>
+    <li><a href="https://talks.s-anand.net/2025-08-21-rip-data-scientists/">RIP Data Scientists</a>, the earlier talk Anand mentions at <a class="ts" href="?t=42:19">42:19</a>.</li>
+  </ul>
+  <p>SUTD computer vision workshop · 21 Nov 2026 · Story written with Claude from the recording, the workshop form's anonymous aggregates and hands-on testing of every project. <a href="../">More talks</a>.</p>
+</footer>
+
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump" aria-label="Jump to section">
+  <button id="jump-prev" type="button" aria-label="Previous section"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+  <button class="jump-cur" id="jump-cur" type="button" aria-expanded="false" aria-controls="jump-menu"><span id="jump-cur-label">Contents</span> <i class="bi bi-chevron-up" aria-hidden="true"></i></button>
+  <button id="jump-next" type="button" aria-label="Next section"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+  <div class="jump-menu" id="jump-menu" role="navigation" aria-label="All sections"></div>
+</nav>
+
+<dialog class="pop" id="pop" aria-labelledby="pop-title">
+  <div class="pop-head"><h2 id="pop-title">Transcript</h2><button class="close-x" id="pop-close" type="button">Close ✕</button></div>
+  <div class="pop-search"><label class="sr" for="pop-q">Search the transcript</label><input id="pop-q" type="search" placeholder="Search the transcript…"><span id="pop-count"></span></div>
+  <div id="pop-body"></div>
+</dialog>
+
+<dialog class="lightbox" id="lightbox" aria-label="Image viewer">
+  <img id="lb-img" alt="">
+  <div class="lb-bar"><span id="lb-cap"></span><span><a id="lb-open" href="#" target="_blank" rel="noopener">Open full size ↗</a><button id="lb-close" type="button">Close ✕</button></span></div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js" defer></script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const root = document.documentElement;
+  const parseT = (s) => String(s).split(":").reduce((a, b) => a * 60 + +b, 0);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const store = { get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} } };
+
+  // ---------- theme ----------
+  $("#theme-btn").addEventListener("click", () => {
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+    store.set("sutd-cv-theme", root.dataset.theme);
+  });
+
+  // ---------- progress ----------
+  const bar = $("#progress");
+  const onScrollProgress = () => { const h = root.scrollHeight - innerHeight; bar.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%"; };
+
+  // ---------- audio + timestamps ----------
+  const aud = $("#aud"), card = $("#audio-card"), slot = $("#audio-slot");
+  const seekEl = $("#pl-seek"), playBtn = $("#pl-play"), curEl = $("#pl-cur"), durEl = $("#pl-dur"), tip = $("#pl-tip"), track = $("#pl-track"), nowEl = $("#pl-now");
+  let slotVisible = true, started = false, dragging = false, dur = 3327;
+  const BREAK = parseT("48:30");
+  const hms = (t) => { t = Math.max(0, Math.floor(t)); const h = Math.floor(t / 3600), m = Math.floor((t % 3600) / 60), x = String(t % 60).padStart(2, "0"); return h ? `${h}:${String(m).padStart(2, "0")}:${x}` : `${m}:${x}`; };
+  const SEC = $$("[data-title]").map((el) => { const a = $(".eyebrow a.ts", el); return a && { t: parseT(new URL(a.href, location.href).searchParams.get("t")), title: el.dataset.title, act: el.dataset.act || "", id: el.id }; }).filter(Boolean).sort((x, y) => x.t - y.t);
+  const secAt = (t) => { let r = null; for (const x of SEC) if (x.t <= t + 0.5) r = x; return r; };
+  const drawTicks = () => {
+    let prevAct = "";
+    $("#pl-ticks").innerHTML = SEC.map((x) => { const act = x.act.split("·")[0].trim(); const cls = act !== prevAct ? "act" : ""; prevAct = act; return `<i class="${cls}" style="left:${((x.t / dur) * 100).toFixed(3)}%"></i>`; }).join("") + `<i class="brk" title="Build hour (not recorded)" style="left:${((BREAK / dur) * 100).toFixed(3)}%"></i>`;
+  };
+  drawTicks();
+  const paint = (t) => {
+    seekEl.value = t;
+    seekEl.style.setProperty("--p", `${Math.min(100, (t / dur) * 100)}%`);
+    curEl.textContent = hms(t);
+    const x = secAt(t);
+    seekEl.setAttribute("aria-valuetext", `${hms(t)}${x ? `, ${x.title}` : ""}`);
+    nowEl.innerHTML = x ? `Now: <a href="#${x.id}"><b>${esc(x.title)}</b></a> · ${esc(x.act)}` : "";
+  };
+  paint(0);
+  aud.addEventListener("loadedmetadata", () => { if (isFinite(aud.duration) && aud.duration > 0) { dur = aud.duration; seekEl.max = Math.floor(dur); durEl.textContent = hms(dur); drawTicks(); paint(aud.currentTime); } });
+  aud.addEventListener("timeupdate", () => { if (!dragging) paint(aud.currentTime); });
+  const setIcon = () => { const p = aud.paused; playBtn.innerHTML = `<i class="bi bi-${p ? "play" : "pause"}-fill" aria-hidden="true"></i>`; playBtn.setAttribute("aria-label", p ? "Play" : "Pause"); };
+  aud.addEventListener("pause", setIcon);
+  const updateFloat = () => card.classList.toggle("floating", started && !slotVisible && !card.classList.contains("dismissed"));
+  new IntersectionObserver(([e]) => { slotVisible = e.isIntersecting; updateFloat(); }).observe(slot);
+  aud.addEventListener("play", () => { started = true; card.classList.remove("dismissed"); updateFloat(); setIcon(); });
+  $("#audio-x").addEventListener("click", () => { aud.pause(); card.classList.add("dismissed"); card.classList.remove("floating"); });
+  const seek = (t, autoplay) => {
+    const go = () => { aud.currentTime = t; if (autoplay) aud.play().catch(() => {}); };
+    if (aud.readyState >= 1) go();
+    else { aud.addEventListener("loadedmetadata", go, { once: true }); aud.load(); }
+    paint(t);
+  };
+  playBtn.addEventListener("click", () => { if (aud.paused) { started = true; aud.play().catch(() => {}); } else aud.pause(); });
+  const skip = (d) => seek(Math.min(dur, Math.max(0, (aud.currentTime || +seekEl.value) + d)), false);
+  $("#pl-back").addEventListener("click", () => skip(-5));
+  $("#pl-fwd").addEventListener("click", () => skip(5));
+  const RATES = [1, 1.25, 1.5, 1.75, 2, 0.75];
+  $("#pl-rate").addEventListener("click", (e) => { const r = RATES[(RATES.indexOf(aud.playbackRate) + 1) % RATES.length]; aud.playbackRate = r; e.currentTarget.textContent = `${r}×`; });
+  seekEl.addEventListener("input", () => { dragging = true; paint(+seekEl.value); });
+  seekEl.addEventListener("change", () => { dragging = false; seek(+seekEl.value, false); });
+  document.addEventListener("keydown", (e) => {
+    if ((e.key !== "ArrowLeft" && e.key !== "ArrowRight") || e.altKey || e.ctrlKey || e.metaKey) return;
+    const el = e.target;
+    if (el !== seekEl && (el.closest?.("input, textarea, select, video, [contenteditable=''], [contenteditable='true'], dialog[open]") || !started)) return;
+    e.preventDefault();
+    skip((e.key === "ArrowLeft" ? -1 : 1) * (e.shiftKey ? 30 : 5));
+  });
+  track.addEventListener("pointermove", (e) => {
+    const r = seekEl.getBoundingClientRect();
+    const f = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)), t = f * dur, x = secAt(t);
+    tip.innerHTML = `<b>${hms(t)}</b>${x ? esc(x.title) : ""}`;
+    tip.hidden = false;
+    const w = tip.offsetWidth / 2;
+    tip.style.left = `${Math.min(r.width - w, Math.max(w, f * r.width))}px`;
+  });
+  track.addEventListener("pointerleave", () => { tip.hidden = true; });
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a.ts");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const t = new URL(a.href, location.href).searchParams.get("t");
+    if (!t) return;
+    $$("a.ts.playing").forEach((x) => x.classList.remove("playing"));
+    a.classList.add("playing");
+    card.classList.remove("dismissed");
+    started = true; updateFloat();
+    seek(parseT(t), true);
+  });
+  aud.addEventListener("pause", () => $$("a.ts.playing").forEach((x) => x.classList.remove("playing")));
+  const initT = new URLSearchParams(location.search).get("t");
+  if (initT) seek(parseT(initT), false);
+
+  // ---------- jump nav ----------
+  const secs = $$("[data-title]");
+  const menu = $("#jump-menu"), backdrop = $("#jump-backdrop"), curBtn = $("#jump-cur"), curLbl = $("#jump-cur-label");
+  const groups = [];
+  secs.forEach((s) => {
+    const g = s.dataset.act || "";
+    if (!groups.length || groups.at(-1).name !== g) groups.push({ name: g, items: [] });
+    const t = ($(".eyebrow a.ts", s) || {}).textContent || "";
+    groups.at(-1).items.push({ id: s.id, title: s.dataset.title, t });
+  });
+  menu.innerHTML = groups.map((g) => `<div class="jm-group">${esc(g.name)}</div><div class="jump-grid">${g.items.map((i) => `<a href="#${i.id}" data-id="${i.id}">${esc(i.title)}${i.t ? `<small>${esc(i.t)}</small>` : ""}</a>`).join("")}</div>`).join("");
+  const setMenu = (open) => {
+    menu.classList.toggle("open", open); backdrop.classList.toggle("open", open);
+    curBtn.setAttribute("aria-expanded", String(open));
+    if (open) ($("a.is-cur", menu) || $("a", menu)).focus();
+  };
+  curBtn.addEventListener("click", () => setMenu(!menu.classList.contains("open")));
+  backdrop.addEventListener("click", () => setMenu(false));
+  menu.addEventListener("click", (e) => { if (e.target.closest("a")) setMenu(false); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && menu.classList.contains("open")) { setMenu(false); curBtn.focus(); } });
+  let cur = -1;
+  const findCur = () => { const y = innerHeight * 0.35; let idx = -1; secs.forEach((s, i) => { if (s.getBoundingClientRect().top <= y) idx = i; }); return idx; };
+  const onScrollJump = () => {
+    const i = findCur();
+    if (i === cur) return;
+    cur = i;
+    curLbl.textContent = i < 0 ? "Contents" : secs[i].dataset.title;
+    $$("a", menu).forEach((a) => a.classList.toggle("is-cur", i >= 0 && a.dataset.id === secs[i].id));
+    $("#jump-prev").disabled = i < 0;
+    $("#jump-next").disabled = i >= secs.length - 1;
+  };
+  const go = (i) => secs[Math.max(0, Math.min(secs.length - 1, i))].scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+  $("#jump-prev").addEventListener("click", () => (cur <= 0 ? scrollTo({ top: 0, behavior: "smooth" }) : go(cur - 1)));
+  $("#jump-next").addEventListener("click", () => go(cur + 1));
+  let ticking = false;
+  addEventListener("scroll", () => { if (ticking) return; ticking = true; requestAnimationFrame(() => { onScrollProgress(); onScrollJump(); ticking = false; }); }, { passive: true });
+  onScrollProgress(); onScrollJump();
+
+  // ---------- transcript popup ----------
+  const pop = $("#pop"), popBody = $("#pop-body"), popQ = $("#pop-q"), popCount = $("#pop-count");
+  let popReturn = null, transcriptHtml = null;
+  $("#pop-close").addEventListener("click", () => pop.close());
+  pop.addEventListener("click", (e) => { if (e.target === pop) pop.close(); });
+  pop.addEventListener("close", () => popReturn?.focus?.());
+  document.addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-transcript]");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    popReturn = a;
+    if (!transcriptHtml) {
+      try {
+        let md = await (await fetch("transcript.md")).text();
+        md = md.replace(/<!--[\s\S]*?-->/g, "").replace(/^# Transcript\s*/, "");
+        md = md.replace(/\[(\d{1,3}):(\d{2})\]/g, (m, a1, b1) => `<a class="ts" href="?t=${a1}:${b1}">${a1}:${b1}</a>`);
+        let html = window.marked ? marked.parse(md) : `<pre style="white-space:pre-wrap">${esc(md)}</pre>`;
+        html = html.replace(/<p>\[WORKSHOP-BREAK\]<\/p>/, '<div class="brk"><code>[WORKSHOP-BREAK]</code> About an hour of building, not recorded.<span>Students built and deployed their projects here. The recording resumes at 48:37; audio times after this point are recording time, not clock time.</span></div>');
+        transcriptHtml = '<p class="intro">AI transcription of the recording, lightly formatted. Tap any time to play that moment. Nathaniel is the host who introduced the session; audience members are not named. Where the text and the recording disagree, trust the recording.</p>' + html;
+      } catch (err) { location.href = a.href; return; }
+    }
+    popBody.innerHTML = transcriptHtml;
+    popQ.value = ""; popCount.textContent = "";
+    pop.showModal(); popBody.scrollTop = 0; popQ.focus();
+  });
+  const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  popQ.addEventListener("input", () => {
+    const q = popQ.value.trim();
+    $$("mark", popBody).forEach((m) => m.replaceWith(m.textContent));
+    popBody.normalize();
+    let n = 0;
+    $$(":scope > p, :scope > hr", popBody).filter((b) => !b.classList.contains("intro")).forEach((b) => {
+      const hit = !q || b.textContent.toLowerCase().includes(q.toLowerCase());
+      b.classList.toggle("hide", !hit || (q && b.tagName === "HR"));
+      if (!hit || !q) return;
+      n++;
+      const re = new RegExp(escRe(q), "gi");
+      const walker = document.createTreeWalker(b, NodeFilter.SHOW_TEXT);
+      const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach((node) => {
+        if (!node.nodeValue.match(re)) return;
+        const span = document.createElement("span");
+        span.innerHTML = esc(node.nodeValue).replace(re, (m) => `<mark>${m}</mark>`);
+        node.replaceWith(...span.childNodes);
+      });
+    });
+    popCount.textContent = q ? `${n} passage${n === 1 ? "" : "s"}` : "";
+  });
+
+  // ---------- lightbox ----------
+  const lb = $("#lightbox"), lbImg = $("#lb-img");
+  let lbReturn = null;
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-lightbox]");
+    if (!el || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const src = el.getAttribute("href");
+    lbImg.src = src; lbImg.alt = el.querySelector("img")?.alt || "";
+    $("#lb-cap").textContent = el.dataset.caption || "";
+    $("#lb-open").href = src;
+    lbReturn = el; lb.showModal();
+  });
+  $("#lb-close").addEventListener("click", () => lb.close());
+  lb.addEventListener("click", (e) => { if (e.target === lb || e.target === lbImg) lb.close(); });
+  lb.addEventListener("close", () => lbReturn?.focus?.());
+
+  // ---------- demo videos: load when near, loop-play when visible ----------
+  // IntersectionObserver because native lazy-loading doesn't exist for <video>, and looping clips should pause off-screen.
+  const vids = $$("video[data-src]");
+  const vio = new IntersectionObserver((entries) => entries.forEach(({ target: v, isIntersecting }) => {
+    if (isIntersecting && !v.src) { v.src = v.dataset.src; if (!v.loop) v.preload = "metadata"; }
+    if (!v.loop || reduced) return;
+    if (isIntersecting && !v.dataset.userPaused) v.play().catch(() => {});
+    else if (!isIntersecting) v.pause();
+  }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vio.observe(v));
+  $$(".tile video").forEach((v) => {
+    const toggle = () => { if (!v.src) v.src = v.dataset.src; if (v.paused) { delete v.dataset.userPaused; v.play().catch(() => {}); } else { v.dataset.userPaused = "1"; v.pause(); } };
+    v.addEventListener("click", toggle);
+    v.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
+  });
+  $$("video[controls][loop]").forEach((v) => v.addEventListener("pause", () => { if (document.visibilityState === "visible" && v.getBoundingClientRect().top < innerHeight && v.getBoundingClientRect().bottom > 0) v.dataset.userPaused = "1"; }));
+
+  // ---------- guess-then-reveal ----------
+  const Q = {
+    img: { lab: "Question 3 on the form", q: "Can a text-only LLM recognise an image if you paste in the image file as raw encoded text?", o: [["No", 10], ["Yes", 5]], v: "<b>10 of 15 said no.</b> So did Anand. Keep reading for what the test found." },
+    video: { lab: "Question 4", q: "Can an LLM-based model recognise what's happening in a video?", o: [["Yes", 11], ["No", 4]], v: "<b>11 of 15 said yes</b>, including 7 of the 10 who had just said a text model couldn't read an encoded image." },
+    count: { lab: "Question 5", q: "Can LLM-based models count objects in an image better than specialised models?", o: [["No", 9], ["Yes", 6]], v: "<b>9 of 15 said no.</b> “On the margin,” Anand said, “there's still a room for specialized models.”" },
+    optimize: { lab: "Question 6", q: "To get the best computer vision results, who should identify and optimise the models?", o: [["Humans themselves, in most cases", 11], ["Coding agents could do most of it", 4]], v: "<b>11 of 15 said humans</b>: “a clear majority,” as Anand put it." },
+    learn: { lab: "Question 7", q: "Agents seem to do data science well. What should you learn?", o: [["Verification", 6], ["Finding problems", 6], ["Execution", 1], ["Doing data science", 0], ["Other", 2]], v: "<b>Nobody chose doing data science.</b> The two “other” answers: keeping up, and conveying human needs and emotions logically. Anand's own pick comes later." },
+    hire: { lab: "Question 2", q: "When hiring a data scientist, what will a recruiter look at first?", o: [["Portfolio of work", 9], ["Actual outcomes", 2], ["Inter-personal skills", 2], ["Grades", 0], ["Other", 2]], v: "<b>9 of 15 chose portfolio; nobody chose grades.</b> “Other” answers: all of the above, and how one uses agents." },
+  };
+  $$(".guess[data-q]").forEach((box) => {
+    const d = Q[box.dataset.q];
+    const total = d.o.reduce((a, x) => a + x[1], 0);
+    const id = "g-" + box.dataset.q;
+    box.innerHTML = `<p class="q-lab">Guess first · ${esc(d.lab)}</p><p class="q" id="${id}">${esc(d.q)}</p>
+      <div class="opts" role="group" aria-labelledby="${id}">${d.o.map((o, i) => `<button type="button" data-i="${i}" aria-pressed="false">${esc(o[0])}</button>`).join("")}<button type="button" class="skip" data-i="-1">Skip, just show me</button></div>
+      <div class="reveal" hidden aria-live="polite"><div class="bars">${d.o.map((o, i) => `<div class="bar" data-i="${i}"><span class="lbl">${esc(o[0])}</span><span class="track"><span class="fill" data-w="${(o[1] / total) * 100}"></span></span><span class="n">${o[1]}</span></div>`).join("")}</div><p class="verdict">${d.v} <span style="color:var(--muted)">(${total} answers.)</span></p></div>`;
+    box.addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-i]");
+      if (!b) return;
+      const i = +b.dataset.i;
+      $$(".opts button", box).forEach((x) => x.setAttribute("aria-pressed", String(x === b && i >= 0)));
+      $$(".bar", box).forEach((x) => x.classList.toggle("mine", +x.dataset.i === i));
+      const r = $(".reveal", box);
+      r.hidden = false;
+      requestAnimationFrame(() => $$(".fill", box).forEach((f) => (f.style.width = f.dataset.w + "%")));
+    });
+  });
+
+  // ---------- 8×8 pixel 7 ----------
+  const GRID = ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"];
+  $("#px7").innerHTML = GRID.join("").split("").map((c) => `<i class="${c === "1" ? "on" : ""}"></i>`).join("");
+
+  // ---------- base64 heatmap cell colours ----------
+  $$(".heat td").forEach((td) => {
+    const f = +getComputedStyle(td).getPropertyValue("--f");
+    const full = f >= 0.99;
+    td.style.background = full ? "var(--green)" : `color-mix(in srgb, var(--green) ${Math.round(f * 40)}%, var(--paper2))`;
+    td.style.color = full ? "var(--card)" : "var(--ink)";
+  });
+
+  // ---------- counting bars ----------
+  const COUNT = [["CountGD", "spec", 3.7], ["CounTX", "spec", 4.4], ["gemini-3.8-flash", "llm", 4.5], ["CountGD++", "spec", 4.6], ["gpt-5.6-luna", "llm", 9.0], ["gpt-5.6-sol", "llm", 10.4], ["gpt-5.6-terra", "llm", 19.9], ["deepseek-v4.1-flash", "llm", 30.8], ["gemini-3.1-flash-lite", "llm", 34.1], ["claude-sonnet-5.5", "llm", 35.0], ["FamNet", "ex", 35.7], ["claude-haiku-4.5", "llm", 41.9], ["deepseek-v4-flash-vision-exp", "llm", 62.2], ["YOLO-World-S (v2)", "spec", 100.0]];
+  const KIND = { spec: "specialist", llm: "vision LLM", ex: "specialist + examples" };
+  $("#count-bars").innerHTML = COUNT.map(([n, k, v]) => `<span class="nm">${esc(n)}<small>${KIND[k]}</small></span><span class="tr" title="${esc(n)}: ${v}% mean deviation"><span class="fl ${k}" style="display:block;width:${v * 0.72}%"></span><span class="v" style="left:${v * 0.72}%">${v.toFixed(1)}%</span></span>`).join("");
+
+  // ---------- hand landmarks (hero + explorable) ----------
+  const OPEN = [[150, 300], [112, 272], [86, 244], [70, 216], [60, 190], [118, 192], [112, 148], [108, 118], [105, 90], [150, 186], [150, 136], [150, 104], [150, 74], [180, 192], [186, 148], [190, 118], [193, 94], [206, 206], [219, 172], [227, 150], [233, 130]];
+  const SHUT = OPEN.map((p) => p.slice());
+  Object.assign(SHUT, { 1: [114, 270], 2: [94, 240], 3: [84, 214], 4: [86, 190], 6: [106, 152], 7: [94, 168], 8: [88, 184] });
+  const BONES = [[0, 1], [1, 2], [2, 3], [3, 4], [0, 5], [5, 6], [6, 7], [7, 8], [5, 9], [9, 10], [10, 11], [11, 12], [9, 13], [13, 14], [14, 15], [15, 16], [13, 17], [0, 17], [17, 18], [18, 19], [19, 20]];
+  const NS = "http://www.w3.org/2000/svg";
+  const mk = (tag, attrs, parent) => { const el = document.createElementNS(NS, tag); for (const k in attrs) el.setAttribute(k, attrs[k]); parent.append(el); return el; };
+  const handSize = Math.hypot(OPEN[9][0] - OPEN[0][0], OPEN[9][1] - OPEN[0][1]);
+  const makeHand = (g, numbers) => {
+    const lines = BONES.map(() => mk("line", { class: "lm-bone" }, g));
+    const ring = mk("circle", { class: "pinch-ring", r: 16 }, g);
+    const dots = OPEN.map((_, i) => mk("circle", { class: "lm-pt" + (i === 4 || i === 8 ? " tip" : ""), r: i === 4 || i === 8 ? 6.5 : 5 }, g));
+    const nums = numbers ? OPEN.map((_, i) => { const t = mk("text", { class: "lm-num" }, g); t.textContent = i; return t; }) : [];
+    return (open, jitter = [0, 0]) => {
+      const P = OPEN.map((p, i) => [SHUT[i][0] + (p[0] - SHUT[i][0]) * open, SHUT[i][1] + (p[1] - SHUT[i][1]) * open]);
+      P[4] = [P[4][0] - jitter[0], P[4][1] - jitter[1]]; P[8] = [P[8][0] + jitter[0], P[8][1] + jitter[1]];
+      BONES.forEach(([a, b], k) => { const l = lines[k]; l.setAttribute("x1", P[a][0]); l.setAttribute("y1", P[a][1]); l.setAttribute("x2", P[b][0]); l.setAttribute("y2", P[b][1]); });
+      dots.forEach((d, i) => { d.setAttribute("cx", P[i][0]); d.setAttribute("cy", P[i][1]); });
+      nums.forEach((t, i) => { if (i === 4 || i === 8 || i === 0) { t.setAttribute("x", P[i][0] + (i === 4 ? -22 : 9)); t.setAttribute("y", P[i][1] + (i === 0 ? 14 : -6)); } else t.setAttribute("display", "none"); });
+      ring.setAttribute("cx", (P[4][0] + P[8][0]) / 2); ring.setAttribute("cy", (P[4][1] + P[8][1]) / 2);
+      return { gap: (Math.hypot(P[4][0] - P[8][0], P[4][1] - P[8][1]) / handSize) * 100, ring };
+    };
+  };
+
+  // hero: a pinch every few seconds fans out to three outputs
+  const heroG = $("#hero-hand"); heroG.setAttribute("transform", "translate(-6,-22) scale(1.1)");
+  const heroDraw = makeHand(heroG, true);
+  const wires = $("#hero-wires");
+  const W = [70, 170, 270].map((y) => mk("path", { class: "wire", d: `M104,192 C240,192 240,${y} 356,${y}` }, wires));
+  const outs = ["#hero-o1", "#hero-o2", "#hero-o3"].map((s) => $(s));
+  const heroSet = (open) => { const { gap, ring } = heroDraw(open); const on = gap < 25; ring.classList.toggle("on", on); W.forEach((w) => w.classList.toggle("on", on)); outs.forEach((o) => o.classList.toggle("on", on)); };
+  if (reduced) heroSet(0);
+  else {
+    let heroVisible = true;
+    new IntersectionObserver(([e]) => (heroVisible = e.isIntersecting)).observe($("#hero-svg"));
+    const t0 = performance.now();
+    const loop = (now) => {
+      if (heroVisible) { const ph = ((now - t0) / 3600) % 1; const open = ph < 0.35 ? 1 : ph < 0.5 ? 1 - (ph - 0.35) / 0.15 : ph < 0.8 ? 0 : (ph - 0.8) / 0.2; heroSet(open); }
+      requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  }
+
+  // explorable: naïve threshold vs hysteresis + hold
+  const labDraw = makeHand($("#lab-hand"), true);
+  const gapIn = $("#gap"), gapV = $("#gap-v"), noiseBtn = $("#noise-btn"), pinchBtn = $("#pinch-btn"), read = $("#lab-read");
+  let noise = false, naive = false, steady = false, nN = 0, nS = 0, below = 0, above = 0, anim = null, lastMsg = "";
+  const louts = ["#lo1", "#lo2", "#lo3"].map((s) => $(s));
+  const fire = () => { louts.forEach((o) => { o.classList.remove("fire"); void o.offsetWidth; o.classList.add("fire"); }); clearTimeout(fire.t); fire.t = setTimeout(() => louts.forEach((o) => o.classList.remove("fire")), 700); };
+  const say = (m) => { if (m !== lastMsg) { read.textContent = m; lastMsg = m; } };
+  const step = () => {
+    const open = +gapIn.value / 100;
+    const j = noise ? [(Math.random() - 0.5) * 14, (Math.random() - 0.5) * 14] : [0, 0];
+    const { gap, ring } = labDraw(open, j);
+    gapV.textContent = Math.round(gap);
+    const nNow = gap < 30;
+    if (nNow && !naive) nN++;
+    naive = nNow;
+    if (!steady) { below = gap < 25 ? below + 1 : 0; if (below >= 3) { steady = true; nS++; fire(); } }
+    else { above = gap > 40 ? above + 1 : 0; if (above >= 3) steady = false; }
+    ring.classList.toggle("on", steady);
+    $("#m-naive").textContent = nN; $("#m-steady").textContent = nS;
+    say(steady ? `Pinch held. Steady rule has fired ${nS} time${nS === 1 ? "" : "s"}; naïve rule ${nN}.` : nN > nS + 2 ? `The naïve rule has fired ${nN} times to the steady rule's ${nS}. That's the flicker a jittery camera causes.` : "Hand open. No pinch.");
+  };
+  let labTimer = null;
+  const run = (on) => { clearInterval(labTimer); labTimer = on ? setInterval(step, 33) : null; };
+  new IntersectionObserver(([e]) => run(e.isIntersecting)).observe($("#pinch .lab"));
+  step();
+  gapIn.addEventListener("input", step);
+  noiseBtn.addEventListener("click", () => { noise = !noise; noiseBtn.setAttribute("aria-pressed", String(noise)); noiseBtn.innerHTML = `<i class="bi bi-camera-video" aria-hidden="true"></i> Camera noise: ${noise ? "on" : "off"}`; if (noise && +gapIn.value > 40) { gapIn.value = 22; } });
+  $("#reset-btn").addEventListener("click", () => { nN = nS = 0; step(); });
+  const glideTo = (target) => { cancelAnimationFrame(anim); const tick = () => { const v = +gapIn.value; const nv = v + (target - v) * 0.25; gapIn.value = Math.abs(target - nv) < 0.6 ? target : nv; if (+gapIn.value !== target) anim = requestAnimationFrame(tick); }; anim = requestAnimationFrame(tick); };
+  const press = () => { pinchBtn.setAttribute("aria-pressed", "true"); glideTo(0); };
+  const release = () => { pinchBtn.setAttribute("aria-pressed", "false"); glideTo(70); };
+  pinchBtn.addEventListener("pointerdown", press);
+  ["pointerup", "pointerleave", "pointercancel"].forEach((ev) => pinchBtn.addEventListener(ev, () => pinchBtn.getAttribute("aria-pressed") === "true" && release()));
+  pinchBtn.addEventListener("keydown", (e) => { if ((e.key === " " || e.key === "Enter") && !e.repeat) { e.preventDefault(); press(); } });
+  pinchBtn.addEventListener("keyup", (e) => { if (e.key === " " || e.key === "Enter") release(); });
+
+  // ---------- exercise progress + answer (per-viewer convenience) ----------
+  $$("[data-step]").forEach((c) => { c.checked = store.get("sutd-cv-step-" + c.dataset.step) === "1"; c.addEventListener("change", () => store.set("sutd-cv-step-" + c.dataset.step, c.checked ? "1" : "0")); });
+  const ta = $("#learned"); ta.value = store.get("sutd-cv-learned") || ""; ta.addEventListener("input", () => store.set("sutd-cv-learned", ta.value));
+})();
+</script>
+</body>
+</html>

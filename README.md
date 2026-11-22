@@ -23,6 +23,9 @@ I speak regularly at:
 <!-- BEGIN GENERATED TALKS -->
 ## Latest talks
 
+- 21 Nov 2026. **[Same Hands, Different Machines](2026-11-21-sutd-cv-workshop/ ":ignore")** at [SUTD computer vision workshop](https://www.sutd.edu.sg/), Singapore University of Technology and Design, Singapore.  
+  In under an hour, SUTD students turned the same webcam hand and face tracking into a spellbook, a lunar chemistry lab, a motorbike, musical instruments and face-controlled games. If anyone can build the demo, the edge is in making it usable.  
+  [💬 Transcript](2026-11-21-sutd-cv-workshop/transcript.md) · [🎧 Audio (55m)](https://github.com/sanand0/talks/releases/download/talks/2026-11-21-sutd-cv-workshop.opus ":ignore")
 - 17 Nov 2026. **[The Agent Passed. The Test Failed. Who Verifies the Verifier?](2026-11-17-sutd-coil/ ":ignore")** at [SUTD COIL](https://www.sutd.edu.sg/), Singapore University of Technology and Design, Singapore.  
   An agent passes a proctored hiring test while its owner eats an apple, and the class works out how to specify to, verify and review an intelligence smarter than you: cross-checking models, ranking confidence, user tests with agents, and logging every user reaction.  
   [💬 Transcript](2026-11-17-sutd-coil/transcript.md) · [🎧 Audio (96m)](https://github.com/sanand0/talks/releases/download/talks/2026-11-17-sutd-coil.opus ":ignore")

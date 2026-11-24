@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Rat Race Has a Team Door · TDS open design meeting · 23 Nov 2026</title>
+<meta name="description" content="The TDS team designed an exam as a maze with more questions than time, where students must choose, quit, gamble and team up. The first practice logs showed the questions were easy once found, and a three-person door whose display said “3 of 3” while it stayed shut.">
+<meta property="og:title" content="The Rat Race Has a Team Door">
+<meta property="og:description" content="TDS open design meeting, 23 Nov 2026: a maze exam with more questions than time, a rat-race joke about relative grading, a debate on capturing versus organizing data, and a practice door that counted clicks, not readiness.">
+<meta property="og:image" content="https://talks.s-anand.net/2026-11-23-tds-ideation/comic-page.avif">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231b1f27'/%3E%3Crect x='20' y='12' width='24' height='38' rx='3' fill='%23c2412a'/%3E%3Crect x='10' y='52' width='10' height='6' fill='%23ffd166'/%3E%3Crect x='27' y='52' width='10' height='6' fill='%23ffd166'/%3E%3Crect x='44' y='52' width='10' height='6' fill='%23ffd166'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&amp;family=Alegreya:ital,wght@0,400;0,600;0,700;1,400&amp;family=Space+Grotesk:wght@500;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script>
+  (() => {
+    let t = null;
+    try { t = localStorage.getItem("tds-ideation-7-theme"); } catch (e) {}
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  })();
+</script>
+<style>
+/* =========================================================
+   Design note: a cardboard maze on a desk. Kraft-paper page,
+   ink-black type, brick red for the door and the things that
+   stay shut, mint for "really ready", mustard for pads and
+   highlights. Night-blue bands for the moments that happened
+   outside the meeting (logs, data, the next morning).
+   ========================================================= */
+:root {
+  --paper: #f3eee3; --paper2: #e9e1d0; --card: #fffcf4; --ink: #1e1b16; --muted: #554e43; --line: #d6ccb8;
+  --brick: #a8331d; --brick-soft: #f6dcd3; --mint: #0b6e4c; --mint-soft: #d6eee2; --mustard: #8a6100; --mustard-soft: #f7e8bf;
+  --blue: #1f4f8f; --blue-soft: #dce6f4; --link: #1f4f8f;
+  --night: #161b24; --night2: #212938; --on-night: #f1ece1; --night-muted: #b9b2a4; --night-link: #ffd27a; --night-line: #374257; --night-glow: #ffd166;
+  --font-display: "Young Serif", Georgia, serif;
+  --font-body: "Alegreya", Georgia, serif;
+  --font-ui: "Space Grotesk", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+  --measure: 680px; --pad: 1.4rem; --dock-w: 400px;
+  --shadow: 0 14px 40px rgba(40, 30, 10, .16);
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #15130f; --paper2: #1f1c16; --card: #221f19; --ink: #f0ebe0; --muted: #bdb5a6; --line: #3b362c;
+    --brick: #ff8a70; --brick-soft: #3d201a; --mint: #6ddcae; --mint-soft: #173328; --mustard: #f2c24f; --mustard-soft: #3a2f12;
+    --blue: #9cc0ff; --blue-soft: #1c2738; --link: #a9c8ff; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #15130f; --paper2: #1f1c16; --card: #221f19; --ink: #f0ebe0; --muted: #bdb5a6; --line: #3b362c;
+  --brick: #ff8a70; --brick-soft: #3d201a; --mint: #6ddcae; --mint-soft: #173328; --mustard: #f2c24f; --mustard-soft: #3a2f12;
+  --blue: #9cc0ff; --blue-soft: #1c2738; --link: #a9c8ff; color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto !important; } *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+body { font: 400 19px/1.72 var(--font-body); background: var(--paper); color: var(--ink); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+a { color: var(--link); text-underline-offset: .18em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--mustard); outline-offset: 2px; border-radius: 3px; }
+.night :focus-visible, .dock :focus-visible, .hero :focus-visible { outline-color: var(--night-glow); }
+button { font: inherit; cursor: pointer; color: inherit; }
+img, svg, video { max-width: 100%; display: block; }
+b, strong { font-weight: 700; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: 1rem; top: -3rem; z-index: 1000; background: var(--ink); color: var(--paper); padding: .5rem 1rem; border-radius: 6px; font: 700 .85rem var(--font-ui); }
+.skip:focus { top: 1rem; }
+#progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--brick); z-index: 950; width: 0; }
+
+/* ---------- top bar + hero ---------- */
+.topbar { position: absolute; top: 0; left: 0; right: 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; padding: .8rem 1.2rem; font: 700 .72rem var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--night-muted); }
+.topbar a { color: var(--on-night); text-decoration: none; }
+.icon-btn { background: rgba(255,255,255,.08); border: 1px solid var(--night-line); color: var(--on-night); width: 2.4rem; height: 2.4rem; border-radius: 50%; display: inline-grid; place-items: center; font-size: 1rem; }
+.icon-btn:hover { background: rgba(255,255,255,.16); }
+.hero { background: var(--night); color: var(--on-night); padding: 5.5rem var(--pad) 3.5rem; position: relative; overflow: hidden; margin-bottom: 0; color-scheme: dark; }
+.hero::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(var(--night-line) 1px, transparent 1px), linear-gradient(90deg, var(--night-line) 1px, transparent 1px); background-size: 44px 44px; opacity: .35; pointer-events: none; }
+.hero-grid { position: relative; max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 1.25fr 1fr; gap: 3rem; align-items: center; }
+.kicker { font: 700 .74rem var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--night-glow); margin-bottom: 1rem; }
+.hero h1 { font: 400 clamp(2.5rem, 6vw, 4.6rem)/1.02 var(--font-display); letter-spacing: -.01em; margin-bottom: 1.2rem; }
+.hero h1 em { font-style: normal; color: #ff9a7f; }
+.dek { font-size: 1.18rem; line-height: 1.6; color: #e2dccf; max-width: 36rem; margin-bottom: 1.4rem; }
+.dek b { color: #fff; }
+.meta { font: .82rem/1.6 var(--font-ui); color: var(--night-muted); margin-bottom: 1.4rem; }
+.meta a { color: var(--night-link); }
+.btns { display: flex; flex-wrap: wrap; gap: .6rem; }
+.btn { display: inline-flex; align-items: center; gap: .45rem; padding: .62rem 1.05rem; border-radius: 999px; font: 700 .86rem var(--font-ui); text-decoration: none; border: 1px solid var(--night-line); color: var(--on-night); background: rgba(255,255,255,.05); }
+.btn:hover { background: rgba(255,255,255,.13); text-decoration: none; }
+.btn.primary { background: var(--night-glow); color: #1b1606; border-color: var(--night-glow); }
+.btn.primary:hover { background: #ffe09a; }
+.hero-door { background: #0f131a; border: 1px solid var(--night-line); border-radius: 16px; padding: 1.2rem; box-shadow: 0 20px 50px rgba(0,0,0,.35); }
+.hero-door svg { width: 100%; height: auto; }
+.hero-door figcaption { font: .78rem/1.5 var(--font-ui); color: var(--night-muted); margin-top: .7rem; }
+.hero-door figcaption q { color: var(--on-night); font-style: italic; }
+@media (prefers-reduced-motion: no-preference) {
+  .push-ring { animation: ring 1.6s var(--ease) infinite; transform-origin: center; transform-box: fill-box; }
+  .push-ring.r2 { animation-delay: .25s; } .push-ring.r3 { animation-delay: .5s; }
+  @keyframes ring { 0% { opacity: .9; transform: scale(.6); } 80%, 100% { opacity: 0; transform: scale(1.6); } }
+}
+
+/* ---------- how to read ---------- */
+.howto { max-width: 1180px; margin: 0 auto; padding: 2.2rem var(--pad) 1rem; display: grid; grid-template-columns: 1fr 1.6fr; gap: 2rem; align-items: start; }
+.howto h2 { font: 400 1.5rem/1.2 var(--font-display); margin-bottom: .4rem; }
+.howto p { font-size: 1rem; color: var(--muted); }
+.legend { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; list-style: none; }
+.legend li { font: .84rem/1.45 var(--font-ui); color: var(--muted); background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: .6rem .75rem; }
+.legend li .ev { margin-bottom: .25rem; }
+/* time-state tags */
+.ev { display: inline-flex; align-items: center; gap: .3rem; font: 700 .64rem/1 var(--font-ui); letter-spacing: .08em; text-transform: uppercase; padding: .32rem .5rem; border-radius: 999px; border: 1px solid; white-space: nowrap; vertical-align: middle; }
+.ev::before { content: ""; width: .5rem; height: .5rem; border-radius: 50%; background: currentColor; }
+.ev-meet { color: var(--blue); background: var(--blue-soft); }
+.ev-logs { color: var(--brick); background: var(--brick-soft); }
+.ev-after { color: var(--mint); background: var(--mint-soft); }
+.ev-plan { color: var(--mustard); background: var(--mustard-soft); }
+.ev-toy { color: var(--muted); background: var(--paper2); border-style: dashed; }
+.ev-toy::before { border-radius: 2px; }
+
+/* ---------- room: story + dock ---------- */
+.room { display: flex; align-items: flex-start; max-width: 1640px; margin: 0 auto; }
+.story { flex: 1 1 auto; min-width: 0; padding: 0 var(--pad) 2rem; }
+.chap { max-width: var(--measure); margin: 0 auto; padding: 3.6rem 0 1.2rem; scroll-margin-top: 1rem; }
+.chap + .chap { border-top: 1px solid var(--line); }
+.act { font: 700 .72rem var(--font-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--brick); margin-bottom: .6rem; display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; }
+.chap h2 { font: 400 clamp(1.8rem, 3.6vw, 2.5rem)/1.12 var(--font-display); margin-bottom: 1.2rem; letter-spacing: -.005em; }
+.chap h2 em { font-style: normal; color: var(--brick); }
+.chap > p, .chap .prose p { margin-bottom: 1.15rem; }
+.chap h3 { font: 700 1.05rem/1.3 var(--font-ui); margin: 1.8rem 0 .6rem; }
+.chap ul.plain { margin: 0 0 1.2rem 1.2rem; }
+.chap ul.plain li { margin-bottom: .35rem; }
+.chap.band { max-width: none; margin-left: calc(50% - 50vw); padding: 4rem var(--pad); border-top: 0; }
+.chap.is-now h2::after { content: " ▶"; font-size: .5em; vertical-align: middle; color: var(--mustard); }
+a.ts { display: inline-flex; align-items: center; gap: .15rem; font: 700 .72rem/1 var(--font-mono); padding: .22rem .42rem .2rem .3rem; border-radius: 5px; background: var(--mustard-soft); color: var(--ink); text-decoration: none; border: 1px solid transparent; vertical-align: .12em; white-space: nowrap; }
+a.ts:hover, a.ts:focus-visible { background: var(--ink); color: var(--paper); }
+a.ts .bi { font-size: .8rem; }
+a.ts.flash { animation: flash 1.1s var(--ease); }
+@keyframes flash { 0%, 40% { box-shadow: 0 0 0 4px var(--night-glow); } 100% { box-shadow: 0 0 0 0 transparent; } }
+.tip { border-bottom: 1px dotted var(--muted); cursor: help; position: relative; }
+.tip:hover::after, .tip:focus::after { content: attr(data-tip); position: absolute; left: 50%; bottom: calc(100% + .45rem); transform: translateX(-50%); width: min(260px, 70vw); background: var(--ink); color: var(--paper); font: .78rem/1.45 var(--font-ui); padding: .55rem .7rem; border-radius: 8px; z-index: 30; box-shadow: var(--shadow); white-space: normal; pointer-events: none; }
+
+/* quotes */
+.say { margin: 2rem -3.5rem 2.2rem; padding: 1.4rem 1.8rem 1.3rem; border-left: 5px solid var(--brick); background: var(--card); border-radius: 0 14px 14px 0; box-shadow: 0 1px 0 var(--line); }
+.say p { font: 400 1.42rem/1.42 var(--font-display); margin-bottom: .7rem; }
+.say footer { font: .8rem/1.5 var(--font-ui); color: var(--muted); display: flex; gap: .45rem; align-items: center; flex-wrap: wrap; }
+.say footer b { color: var(--ink); }
+.say.jk { border-left-color: var(--blue); }
+.say.student { border-left-color: var(--mint); }
+.say.small p { font-size: 1.16rem; }
+.exch { margin: 2rem -3.5rem; display: grid; gap: .7rem; }
+.exch .line { display: grid; grid-template-columns: 5.2rem 1fr; gap: .9rem; align-items: baseline; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: .9rem 1.1rem; }
+.exch .who { font: 700 .74rem var(--font-ui); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.exch .line p { font-size: 1.08rem; line-height: 1.55; }
+.exch .line .ts { margin-left: .3rem; }
+
+/* night band inside the story column */
+.night { background: var(--night); color: var(--on-night); border-radius: 16px; padding: 1.6rem 1.7rem; margin: 2rem -3.5rem 2.2rem; color-scheme: dark; }
+.night h3 { color: #fff; margin-top: 0; font: 700 1.05rem/1.35 var(--font-ui); }
+.night p { color: #ddd6c8; font-size: 1.02rem; margin-bottom: .8rem; }
+.night a { color: var(--night-link); }
+.night b, .night strong { color: #fff; }
+.night .ev { background: transparent; }
+.night .ev-logs { color: #ff9f86; } .night .ev-after { color: #7fe3b9; } .night .ev-meet { color: #a9c8ff; } .night .ev-plan { color: #ffd27a; } .night .ev-toy { color: var(--night-muted); }
+.night a.ts { background: #3a3220; color: #ffe7ad; }
+.night a.ts:hover, .night a.ts:focus-visible { background: var(--night-glow); color: #1b1606; }
+
+/* timeline */
+.tl { list-style: none; margin: 1rem 0 .4rem; position: relative; }
+.tl::before { content: ""; position: absolute; left: 6.1rem; top: .4rem; bottom: .4rem; width: 2px; background: var(--night-line); }
+.tl li { display: grid; grid-template-columns: 5.4rem 1fr; gap: 1.4rem; padding: .45rem 0; position: relative; font: .9rem/1.5 var(--font-ui); color: #ddd6c8; }
+.tl li::before { content: ""; position: absolute; left: 5.82rem; top: .8rem; width: .7rem; height: .7rem; border-radius: 50%; background: var(--night); border: 2px solid var(--night-muted); }
+.tl li.door::before { background: #ff8a70; border-color: #ff8a70; }
+.tl li.meet::before { background: #a9c8ff; border-color: #a9c8ff; }
+.tl li.after::before { background: #7fe3b9; border-color: #7fe3b9; }
+.tl time { font: 700 .74rem/1.6 var(--font-mono); color: var(--night-glow); text-align: right; }
+.tl time small { display: block; font-weight: 400; color: var(--night-muted); }
+.tl b { color: #fff; }
+
+/* chat chips */
+.chat { display: flex; flex-wrap: wrap; gap: .45rem; margin: 1rem 0 .4rem; }
+.chat span { font: .86rem/1.3 var(--font-mono); background: #0f131a; border: 1px solid var(--night-line); color: #f4efe4; border-radius: 12px 12px 12px 3px; padding: .45rem .7rem; }
+.chat span.hot { border-color: #ff8a70; color: #ffd2c6; }
+.chat-cap { font: .76rem/1.5 var(--font-ui); color: var(--night-muted); }
+
+/* figures + charts */
+.fig { margin: 2rem -3.5rem 2.2rem; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 1.3rem 1.4rem 1.1rem; }
+.fig h3 { margin: 0 0 .3rem; font: 700 1.08rem/1.35 var(--font-ui); }
+.fig .sub { font: .84rem/1.5 var(--font-ui); color: var(--muted); margin-bottom: .9rem; }
+.fig figcaption, .fig .cap { font: .8rem/1.55 var(--font-ui); color: var(--muted); margin-top: .8rem; }
+.fig header { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; flex-wrap: wrap; margin-bottom: .4rem; }
+.chart { width: 100%; height: auto; font-family: var(--font-ui); }
+.chart .grid { stroke: var(--line); stroke-width: 1; }
+.chart .ax { font-size: 12px; fill: var(--muted); }
+.chart .val { font-size: 12px; font-weight: 700; fill: var(--ink); }
+.chart .note { font-size: 12px; fill: var(--mint); font-weight: 700; }
+.chart .bar { fill: var(--muted); opacity: .55; }
+.chart .bar.zero { fill: var(--brick); opacity: .75; }
+.chart .bar.hi { fill: var(--mint); opacity: 1; }
+.chart .att { fill: none; stroke: var(--muted); stroke-width: 1.2; }
+.chart .sol { fill: var(--mint); }
+.chart .sol.gate { fill: var(--mustard); }
+.chart .lab { font-size: 12.5px; fill: var(--ink); }
+.chart .lab.gate { font-weight: 700; }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; margin: 1.4rem -3.5rem 1.6rem; }
+.stat { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: .8rem .9rem; }
+.stat b { display: block; font: 400 1.9rem/1 var(--font-display); margin-bottom: .35rem; }
+.stat span { font: .78rem/1.4 var(--font-ui); color: var(--muted); display: block; }
+.stat.door b { color: var(--brick); } .stat.ok b { color: var(--mint); }
+
+/* widgets */
+.widget { margin: 2.2rem -3.5rem 2.4rem; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 1.3rem 1.4rem 1.3rem; box-shadow: var(--shadow); }
+.widget > header { display: flex; justify-content: space-between; gap: .8rem; align-items: flex-start; flex-wrap: wrap; margin-bottom: .5rem; }
+.widget h3 { margin: 0; font: 700 1.12rem/1.35 var(--font-ui); }
+.widget .hint { font: .86rem/1.5 var(--font-ui); color: var(--muted); margin-bottom: .9rem; }
+.wbtn { display: inline-flex; align-items: center; gap: .4rem; font: 700 .84rem var(--font-ui); padding: .55rem .9rem; border-radius: 999px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); min-height: 2.6rem; }
+.wbtn:hover { background: var(--brick); border-color: var(--brick); color: #fff; }
+.wbtn.ghost { background: transparent; color: var(--ink); }
+.wbtn.ghost:hover { background: var(--paper2); color: var(--ink); border-color: var(--ink); }
+.wbtn[aria-pressed="true"] { background: var(--mint); border-color: var(--mint); color: #fff; }
+.row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.out { font: .95rem/1.55 var(--font-ui); background: var(--paper2); border-radius: 10px; padding: .8rem 1rem; margin-top: 1rem; }
+.out b { color: var(--ink); }
+.reveal { font: .95rem/1.55 var(--font-ui); border-left: 4px solid var(--mint); background: var(--mint-soft); border-radius: 0 10px 10px 0; padding: .8rem 1rem; margin-top: 1rem; }
+
+/* W1 budget */
+.tasks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; }
+.task { text-align: left; background: var(--paper); border: 2px solid var(--line); border-radius: 12px; padding: .7rem .8rem; font: .84rem/1.4 var(--font-ui); color: var(--ink); min-height: 6.8rem; display: flex; flex-direction: column; gap: .25rem; }
+.task strong { font-size: .92rem; }
+.task .nums { margin-top: auto; display: flex; gap: .4rem; flex-wrap: wrap; font: 700 .72rem var(--font-mono); color: var(--muted); }
+.task .nums span { background: var(--card); border: 1px solid var(--line); border-radius: 5px; padding: .1rem .35rem; }
+.task[aria-pressed="true"] { border-color: var(--mint); background: var(--mint-soft); }
+.task[aria-pressed="true"] strong::before { content: "✓ "; color: var(--mint); }
+.task.door { border-style: dashed; }
+.meter { height: 14px; border-radius: 999px; background: var(--paper2); overflow: hidden; margin: 1rem 0 .35rem; position: relative; }
+.meter i { position: absolute; inset: 0 auto 0 0; background: var(--mint); transition: width .35s var(--ease), background .2s; }
+.meter.over i { background: var(--brick); }
+.meter-l { display: flex; justify-content: space-between; font: .78rem var(--font-ui); color: var(--muted); }
+
+/* W2 denominator */
+.slider { display: grid; grid-template-columns: auto 1fr auto; gap: .8rem; align-items: center; font: .9rem var(--font-ui); margin: .4rem 0 1rem; }
+.slider input { width: 100%; accent-color: var(--brick); min-height: 2rem; }
+.slider output { font: 700 1rem var(--font-mono); min-width: 2.4rem; text-align: right; }
+.bars { display: grid; gap: .55rem; }
+.bars .b { display: grid; grid-template-columns: 9.5rem 1fr 3.6rem; gap: .7rem; align-items: center; font: .86rem var(--font-ui); }
+.bars .track { height: 22px; background: var(--paper2); border-radius: 6px; overflow: hidden; }
+.bars .fill { height: 100%; background: var(--blue); border-radius: 6px; transition: width .3s var(--ease); }
+.bars .fill.you { background: var(--brick); }
+.bars .fill.top { background: var(--muted); }
+.bars .pct { font: 700 .9rem var(--font-mono); text-align: right; }
+
+/* W3 vanishing signal */
+.choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; margin-bottom: .9rem; }
+.choice { text-align: left; border: 2px solid var(--line); background: var(--paper); border-radius: 12px; padding: .75rem .85rem; font: .86rem/1.45 var(--font-ui); color: var(--ink); }
+.choice b { display: block; font-size: .95rem; margin-bottom: .15rem; }
+.choice[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+.console { background: #0f131a; color: #d9e2d0; border-radius: 12px; font: .8rem/1.55 var(--font-mono); padding: .8rem 1rem; height: 13.5rem; overflow: hidden; position: relative; color-scheme: dark; }
+.console .ln { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.console .ln.err { color: #ff9f86; font-weight: 700; }
+.console .ln.gone { opacity: .25; }
+.console .ln .t { color: #8b95a8; margin-right: .6rem; }
+.console .idle { color: #8b95a8; }
+.console-wrap { display: grid; grid-template-columns: 1.3fr 1fr; gap: .8rem; }
+.kept { background: var(--paper2); border-radius: 12px; padding: .7rem .9rem; font: .8rem/1.5 var(--font-ui); height: 13.5rem; overflow: auto; }
+.kept h4 { font: 700 .72rem var(--font-ui); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: .35rem; }
+.kept .k { font-family: var(--font-mono); font-size: .74rem; }
+.kept .k.err { color: var(--brick); font-weight: 700; }
+.kept .folder { font-weight: 700; margin-top: .3rem; }
+
+/* W4 door */
+.door-stage { display: grid; grid-template-columns: 1.1fr 1fr; gap: 1.2rem; align-items: center; }
+.door-svg { width: 100%; height: auto; background: var(--paper2); border-radius: 12px; }
+.door-svg .wall { fill: var(--line); }
+.door-svg .leaf { fill: var(--brick); transition: transform .6s var(--ease); transform-origin: 160px 40px; transform-box: view-box; }
+.door-svg.open .leaf { transform: scaleX(.12); }
+.door-svg .gap { fill: var(--mint-soft); }
+.door-svg .pad { fill: var(--mustard-soft); stroke: var(--mustard); stroke-width: 2; }
+.door-svg .pad.on { fill: var(--mint); stroke: var(--mint); }
+.door-svg .pl circle { stroke: var(--card); stroke-width: 3; transition: cx .35s var(--ease); }
+.door-svg .pl text { font: 700 13px var(--font-ui); fill: #fff; transition: x .35s var(--ease); }
+.door-svg .lbl { font: 700 12px var(--font-ui); fill: var(--muted); }
+.assign { display: grid; gap: .5rem; }
+.assign .who { display: grid; grid-template-columns: 2.2rem 1fr; gap: .6rem; align-items: center; font: .88rem var(--font-ui); }
+.assign .seg { justify-self: start; }
+.assign .dot { width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-items: center; color: #fff; font: 700 .85rem var(--font-ui); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--paper); }
+.seg button { border: 0; background: transparent; padding: .45rem .8rem; font: 700 .8rem var(--font-ui); min-height: 2.4rem; color: var(--ink); }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.readouts { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-top: .9rem; }
+.readout { border-radius: 12px; padding: .7rem .85rem; font: .8rem/1.4 var(--font-ui); border: 2px solid var(--line); }
+.readout b { display: block; font: 400 1.7rem/1.1 var(--font-display); }
+.readout.disp { background: #0f131a; color: #f4efe4; border-color: #0f131a; }
+.readout.disp b { color: var(--night-glow); }
+.readout.truth b { color: var(--brick); }
+.readout.truth.ok b { color: var(--mint); }
+
+/* roles */
+.roles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .6rem; margin-top: .6rem; }
+.role { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: .7rem .7rem .8rem; font: .8rem/1.4 var(--font-ui); color: var(--muted); }
+.role h4 { font: 700 .86rem var(--font-ui); color: var(--ink); margin-bottom: .15rem; }
+.role .dots { display: flex; flex-wrap: wrap; gap: 4px; margin: .5rem 0; min-height: 3.6rem; align-content: flex-start; }
+.role .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--ink); }
+.role.test .dots i { background: var(--blue); } .role.use .dots i { background: var(--mint); } .role.silent .dots i { background: var(--line); }
+.role.missing { border: 2px dashed var(--brick); background: var(--brick-soft); }
+.role.missing h4 { color: var(--brick); }
+.role.missing .dots { display: grid; place-items: center; font: 700 1.5rem var(--font-display); color: var(--brick); }
+
+/* pipeline */
+.pipe { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; counter-reset: p; margin-top: .4rem; }
+.pipe div { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: .75rem .8rem; font: .84rem/1.45 var(--font-ui); color: var(--muted); position: relative; }
+.pipe div b { display: block; color: var(--ink); font-size: .95rem; margin-bottom: .2rem; }
+.pipe div b::before { counter-increment: p; content: counter(p) " · "; color: var(--brick); }
+.pipe div.first { border: 2px solid var(--brick); background: var(--brick-soft); }
+.pipe div:not(:last-child)::after { content: "→"; position: absolute; right: -.48rem; top: 50%; transform: translateY(-50%); font: 700 .9rem var(--font-ui); color: var(--muted); background: var(--paper); line-height: 1; }
+
+/* objection */
+.ledger { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; margin: 1.6rem -3.5rem 2rem; }
+.ledger div { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: .9rem 1rem; font: .9rem/1.5 var(--font-ui); color: var(--muted); }
+.ledger div h4 { font: 700 .96rem var(--font-ui); color: var(--ink); margin-bottom: .3rem; }
+.ledger div.against { border-top: 4px solid var(--brick); }
+.ledger div.for { border-top: 4px solid var(--mint); }
+
+/* ---------- dock (one persistent video) ---------- */
+.dock { flex: 0 0 var(--dock-w); position: sticky; top: .8rem; align-self: flex-start; margin: .8rem var(--pad) 0 0; background: var(--night); color: var(--on-night); border-radius: 16px; padding: .8rem; display: flex; flex-direction: column; gap: .6rem; max-height: calc(100vh - 1.6rem); box-shadow: var(--shadow); transition: flex-basis .45s var(--ease); z-index: 40; }
+body.watch .dock { flex-basis: 56%; }
+.dock { color-scheme: dark; scrollbar-color: var(--night-line) transparent; }
+.dock a { color: var(--night-link); }
+.dock-head { display: flex; justify-content: space-between; gap: .5rem; font: .66rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--night-muted); }
+.dock-head b { color: var(--on-night); }
+.dock-head, .now, .dock-ctrls { flex: none; }
+.vwrap { position: relative; background: #000; border-radius: 10px; overflow: hidden; aspect-ratio: 16 / 9; flex: none; }
+.vwrap video { width: 100%; height: 100%; }
+.resume { position: absolute; inset: auto 0 3.2rem 0; display: none; justify-content: center; }
+.resume.show { display: flex; }
+.resume button { background: var(--night-glow); color: #1b1606; border: 0; border-radius: 999px; padding: .5rem 1rem; font: 700 .85rem var(--font-ui); display: inline-flex; gap: .3rem; align-items: center; box-shadow: 0 6px 18px rgba(0,0,0,.4); }
+.fallback-note { display: none; font: .76rem/1.4 var(--font-ui); color: var(--night-muted); }
+.dock.audio-mode .fallback-note { display: block; }
+.dock audio { width: 100%; display: none; }
+.dock.audio-mode audio { display: block; }
+.dock.audio-mode .vwrap { display: none; }
+.now { font: .82rem/1.4 var(--font-ui); color: var(--on-night); min-height: 2.3rem; }
+.now .t { font: 700 .8rem var(--font-mono); color: var(--night-glow); margin-right: .45rem; }
+.now .in-story { display: block; font-size: .74rem; color: var(--night-muted); }
+.dock-ctrls { display: flex; flex-wrap: wrap; gap: .4rem; }
+.dbtn { display: inline-flex; align-items: center; gap: .35rem; background: var(--night2); border: 1px solid var(--night-line); color: var(--on-night); border-radius: 999px; padding: .42rem .7rem; font: 700 .74rem var(--font-ui); text-decoration: none; }
+.dbtn:hover { background: #2d374a; }
+.dock a.dbtn { color: var(--on-night); }
+.dbtn[aria-pressed="true"] { background: var(--night-glow); color: #1b1606; border-color: var(--night-glow); }
+.chapters { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+.chapters summary { font: 700 .68rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--night-muted); cursor: pointer; padding: .2rem 0; }
+.chapters ol { list-style: none; overflow-y: auto; flex: 1 1 auto; min-height: 0; max-height: 42vh; padding-right: .2rem; scrollbar-width: thin; }
+body.watch .chapters ol { max-height: none; }
+.dock .chapters li a { display: grid; grid-template-columns: 3.1rem 1fr; gap: .4rem; padding: .28rem .4rem; border-radius: 6px; font: .8rem/1.35 var(--font-ui); color: var(--on-night); text-decoration: none; }
+.dock .chapters li a:hover { background: var(--night2); }
+.dock .chapters li a .ct { font: .72rem var(--font-mono); color: var(--night-muted); }
+.dock .chapters li a.is-now { background: var(--on-night); color: var(--night); }
+.dock .chapters li a.is-now .ct { color: var(--night); }
+.dock .chapters li a.in-view { box-shadow: inset 3px 0 0 var(--night-glow); }
+.dock .chapters li a.is-target { background: var(--night2); outline: 1px solid var(--night-glow); }
+.chapters li.sep { font: 700 .64rem var(--font-ui); letter-spacing: .1em; text-transform: uppercase; color: var(--night-glow); padding: .6rem .4rem .2rem; }
+.dock .dock-min { display: none; }
+
+/* ---------- bands after the room ---------- */
+.band { width: 100vw; margin-left: calc(50% - 50vw); padding: 4rem var(--pad); margin-bottom: 0; }
+.comic-band { background: var(--paper2); }
+.band-inner { max-width: 1180px; margin: 0 auto; }
+.band h2 { font: 400 clamp(1.8rem, 3.6vw, 2.5rem)/1.15 var(--font-display); margin-bottom: .6rem; }
+.band .lede { max-width: 46rem; color: var(--muted); margin-bottom: 1.4rem; }
+.comic-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 2rem; align-items: start; }
+.comic-stage { position: relative; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); background: #fff; }
+.comic-stage a { display: block; cursor: zoom-in; }
+.comic-stage img { width: 100%; height: auto; }
+.pin { position: absolute; width: 2rem; height: 2rem; border-radius: 50%; background: var(--brick); color: #fff; font: 700 .9rem var(--font-ui); display: grid; place-items: center; box-shadow: 0 0 0 3px #fff, 0 4px 10px rgba(0,0,0,.35); text-decoration: none; transform: translate(-50%, -50%); }
+.comic-stage a.pin { display: grid; color: #fff; cursor: pointer; }
+.comic-stage.plain a.pin { display: none; }
+.fixes { list-style: none; display: grid; gap: .6rem; }
+.fixes li { display: grid; grid-template-columns: 2rem 1fr; gap: .7rem; font: .9rem/1.5 var(--font-ui); background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: .7rem .85rem; color: var(--muted); }
+.fixes li b { color: var(--ink); }
+.fixes .badge { width: 1.8rem; height: 1.8rem; border-radius: 50%; background: var(--brick); color: #fff; display: grid; place-items: center; font: 700 .82rem var(--font-ui); }
+.fixes .p { font: 700 .66rem var(--font-mono); color: var(--brick); margin-right: .3rem; }
+.fixes s { color: var(--muted); }
+.takeaways { background: var(--night); color: var(--on-night); color-scheme: dark; }
+.takeaways h2 { color: #fff; }
+.takeaways .lede { color: var(--night-muted); }
+.takeaways a { color: var(--night-link); }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.card { background: var(--night2); border: 1px solid var(--night-line); border-radius: 14px; padding: 1.2rem 1.2rem 1.1rem; }
+.card .n { font: 400 2rem/1 var(--font-display); color: var(--night-glow); margin-bottom: .5rem; }
+.card h3 { font: 700 1.02rem/1.35 var(--font-ui); color: #fff; margin-bottom: .45rem; }
+.card p { font-size: .98rem; line-height: 1.55; color: #ddd6c8; }
+.after { max-width: 1180px; margin: 0 auto; padding: 3.5rem var(--pad) 2rem; }
+.after > h2 { font: 400 1.7rem var(--font-display); margin: 0 0 1rem; }
+.series { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; margin-bottom: 3rem; }
+.series a { display: block; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: .8rem .9rem; font: 700 .9rem/1.35 var(--font-ui); color: var(--ink); text-decoration: none; }
+.series a small { display: block; font-weight: 500; font-size: .74rem; color: var(--muted); margin-bottom: .2rem; }
+.series a:hover { border-color: var(--ink); }
+.series a.here { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.series a.here small { color: var(--paper2); }
+.sources { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; font: .9rem/1.6 var(--font-ui); color: var(--muted); }
+.sources h3 { font: 700 .96rem var(--font-ui); color: var(--ink); margin: 1rem 0 .4rem; }
+.sources ul { margin-left: 1.1rem; }
+.sources li { margin-bottom: .45rem; }
+.sources code { font: .8rem var(--font-mono); }
+.foot { max-width: 1180px; margin: 0 auto; padding: 1.5rem var(--pad) 6rem; border-top: 1px solid var(--line); font: .84rem/1.6 var(--font-ui); color: var(--muted); }
+
+/* ---------- jump nav ---------- */
+.jump-backdrop { position: fixed; inset: 0; background: rgba(15, 12, 6, .35); opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 850; }
+.jump-backdrop.open { opacity: 1; pointer-events: auto; }
+.jump { position: fixed; left: 50%; bottom: .9rem; transform: translateX(-50%); z-index: 900; display: flex; align-items: center; gap: .2rem; background: var(--ink); color: var(--paper); border-radius: 999px; padding: .3rem; box-shadow: 0 10px 30px rgba(0,0,0,.25), 0 0 0 1px rgba(255,255,255,.14); transition: opacity .25s, transform .25s; max-width: calc(100vw - 1.4rem); }
+.jump.on-hero { opacity: 0; pointer-events: none; transform: translate(-50%, 1rem); }
+.jump > button { background: none; border: 0; color: var(--paper); border-radius: 999px; padding: .45rem .7rem; font: 700 .8rem var(--font-ui); display: inline-flex; align-items: center; gap: .35rem; min-width: 2.4rem; min-height: 2.4rem; justify-content: center; }
+.jump > button:hover:not(:disabled) { background: rgba(127,127,127,.25); }
+.jump > button:disabled { opacity: .35; cursor: default; }
+.jump-cur { max-width: 15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.jump-menu { position: absolute; bottom: calc(100% + .6rem); left: 50%; transform: translateX(-50%); width: min(720px, calc(100vw - 1.4rem)); max-height: 70vh; overflow-y: auto; background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: 14px; padding: .9rem; box-shadow: var(--shadow); display: none; text-align: left; }
+.jump-menu.open { display: block; }
+.jm-group { font: 700 .66rem var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--brick); margin: .5rem 0 .35rem; }
+.jm-group:first-child { margin-top: 0; }
+.jump-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .35rem; }
+.jump-grid a { display: block; padding: .5rem .6rem; border-radius: 8px; border: 1px solid var(--line); text-decoration: none; color: var(--ink); font: 700 .82rem/1.3 var(--font-ui); }
+.jump-grid a small { display: block; font: 400 .74rem/1.3 var(--font-ui); color: var(--muted); margin-top: .15rem; }
+.jump-grid a:hover, .jump-grid a.is-cur { border-color: var(--brick); background: var(--brick-soft); }
+
+/* ---------- dialogs ---------- */
+dialog { border: 0; padding: 0; background: transparent; color: var(--ink); max-width: 100vw; max-height: 100vh; }
+dialog::backdrop { background: rgba(15, 12, 6, .62); }
+.pop { width: min(820px, calc(100vw - 1.4rem)); height: min(88vh, 1000px); margin: auto; background: var(--card); border-radius: 14px; overflow: hidden; }
+.pop[open] { display: flex; flex-direction: column; }
+.pop-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .9rem 1.2rem; border-bottom: 1px solid var(--line); }
+.pop-head h2 { font: 400 1.4rem var(--font-display); }
+.close-x { background: var(--paper2); border: 1px solid var(--line); border-radius: 999px; padding: .4rem .8rem; font: 700 .8rem var(--font-ui); min-height: 2.4rem; }
+.pop-search { display: none; gap: .6rem; align-items: center; padding: .6rem 1.2rem; border-bottom: 1px solid var(--line); font: .8rem var(--font-ui); color: var(--muted); }
+.pop-search.on { display: flex; }
+.pop-search input { flex: 1; font: .95rem var(--font-ui); padding: .45rem .7rem; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); color: var(--ink); }
+#pop-body { overflow-y: auto; padding: 1rem 1.3rem 2rem; font-size: 1rem; line-height: 1.6; }
+#pop-body p, #pop-body ul, #pop-body ol, #pop-body blockquote { margin: 0 0 .8rem; }
+#pop-body ul, #pop-body ol { margin-left: 1.4rem; }
+#pop-body li { margin-bottom: .3rem; }
+#pop-body h2, #pop-body h3 { font: 700 1.05rem var(--font-ui); margin: 1.2rem 0 .5rem; }
+#pop-body blockquote { padding-left: .9rem; border-left: 3px solid var(--line); color: var(--muted); }
+#pop-body .intro { font: .84rem/1.5 var(--font-ui); color: var(--muted); background: var(--paper2); padding: .7rem .9rem; border-radius: 8px; }
+#pop-body .hide { display: none; }
+#pop-body mark { background: var(--mustard-soft); color: var(--ink); }
+#pop-body hr { border: 0; border-top: 1px solid var(--line); margin: 1rem 0; }
+.lightbox { width: 100vw; height: 100vh; margin: 0; background: rgba(15, 12, 6, .93); }
+.lightbox[open] { display: flex; flex-direction: column; }
+.lightbox img { flex: 1 1 auto; min-height: 0; object-fit: contain; margin: 1rem auto 0; max-width: calc(100vw - 2rem); cursor: zoom-out; }
+.lb-bar { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding: .8rem 1.2rem; font: .85rem var(--font-ui); color: #eee; }
+.lb-bar a { color: #ffd27a; margin-right: 1rem; }
+.lb-bar button { background: #333; color: #fff; border: 0; border-radius: 999px; padding: .4rem .9rem; font: 700 .8rem var(--font-ui); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1280px) { :root { --dock-w: 340px; } .say, .exch, .widget, .fig, .night, .stats, .ledger { margin-left: -1.1rem; margin-right: -1.1rem; } }
+@media (max-width: 999px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .howto { grid-template-columns: 1fr; }
+  .room { display: block; }
+  .dock { position: fixed; right: .7rem; bottom: 4.3rem; top: auto; margin: 0; width: min(52vw, 280px); max-height: none; padding: .45rem; gap: .4rem; z-index: 700; transition: width .4s var(--ease); }
+  .dock .dock-head, .dock .now, .dock .chapters, .dock .dock-ctrls .wide-only { display: none; }
+  .dock .dbtn { padding: .38rem .55rem; font-size: .7rem; flex: 1 1 auto; justify-content: center; min-height: 2.2rem; }
+  .dock .dock-min { display: inline-flex; }
+  body.dock-collapsed:not(.watch) .dock .vwrap, body.dock-collapsed:not(.watch) .dock audio { display: none; }
+  body.dock-collapsed:not(.watch) .dock { width: auto; }
+  body.dock-collapsed:not(.watch) .dock #share-btn { display: none; }
+  body.watch .dock { left: 0; right: 0; top: 0; bottom: auto; width: auto; border-radius: 0 0 12px 12px; padding: .5rem .6rem .6rem; }
+  body.watch .dock .now { display: block; font-size: .76rem; min-height: 0; }
+  body.watch .dock .now .in-story { display: none; }
+  body.watch .dock .dock-min { display: none; }
+  body.watch { padding-top: var(--dock-h, 0px); }
+  body.watch .chap { scroll-margin-top: calc(var(--dock-h, 0px) + .5rem); }
+  .comic-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  body { font-size: 18px; }
+  .say, .exch, .widget, .fig, .night, .stats, .ledger { margin-left: 0; margin-right: 0; }
+  .say { padding: 1.1rem 1.1rem 1rem; } .say p { font-size: 1.2rem; }
+  .night, .widget, .fig { padding: 1.1rem 1rem; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tasks, .choices { grid-template-columns: 1fr; }
+  .console-wrap, .door-stage, .ledger, .sources, .legend { grid-template-columns: 1fr; }
+  .roles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .roles .missing { grid-column: 1 / -1; }
+  .pipe { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pipe div:nth-child(2)::after { display: none; }
+  .cards, .series { grid-template-columns: 1fr; }
+  .exch .line { grid-template-columns: 1fr; gap: .2rem; }
+  .bars .b { grid-template-columns: 6.5rem 1fr 3.2rem; }
+  .tl::before { left: 4.6rem; } .tl li { grid-template-columns: 3.9rem 1fr; } .tl li::before { left: 4.32rem; }
+  .jump-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .jump-cur { max-width: 52vw; }
+}
+@media (min-width: 761px) and (max-width: 1100px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } .series { grid-template-columns: repeat(2, minmax(0, 1fr)); } .tasks { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (forced-colors: active) { .ev, .task, .choice, .readout, .pin { border: 1px solid CanvasText; } }
+@media print { .dock, .jump, .jump-backdrop, #progress, .topbar { display: none !important; } .room { display: block; } .hero { background: none; color: #000; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#story">Skip to the story</a>
+<div id="progress" aria-hidden="true"></div>
+<header class="topbar">
+  <a href="../">Talks · S Anand</a>
+  <button class="icon-btn" id="theme-btn" type="button" aria-label="Toggle dark mode"><i class="bi bi-moon-stars" aria-hidden="true"></i></button>
+</header>
+
+<section class="hero" aria-labelledby="title">
+  <div class="hero-grid">
+    <div>
+      <p class="kicker">TDS open design meeting · episode 7 · Monday 23 November 2026</p>
+      <h1 id="title">The rat race has <em>a team door</em></h1>
+      <p class="dek">The Tools in Data Science team built its next exam as a maze with <b>more questions than anyone can finish in 45 minutes</b>. The point: students and their agents must choose, quit, gamble and team up. The first practice logs showed something else. <b>The questions were easy once found. The hard part was a door.</b></p>
+      <p class="meta">Anand S, instructor · Jayakrishnan Warriem (JK), IIT Madras · students Hritik, Carlton, Preethi and others · <a href="https://tds.s-anand.net/">Tools in Data Science</a>, IIT Madras BS in Data Science · 58:46 recording</p>
+      <div class="btns">
+        <a class="btn primary" href="#cold"><i class="bi bi-book" aria-hidden="true"></i> Read the story</a>
+        <a class="btn" href="?view=video" id="hero-watch"><i class="bi bi-play-btn-fill" aria-hidden="true"></i> Watch alongside</a>
+        <a class="btn" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+      </div>
+    </div>
+    <figure class="hero-door">
+      <svg viewBox="0 0 420 300" role="img" aria-labelledby="hero-door-t">
+        <title id="hero-door-t">Illustration: a brick-red door in a wall. A display above it reads “3 of 3 pushed”. Three players stand on three yellow pads below it, but two of them share one pad, so one pad is empty and the door stays shut.</title>
+        <rect x="0" y="0" width="420" height="300" fill="#0f131a"/>
+        <rect x="0" y="40" width="140" height="150" fill="#2a3242"/><rect x="280" y="40" width="140" height="150" fill="#2a3242"/>
+        <rect x="140" y="40" width="140" height="150" fill="#c2412a"/>
+        <rect x="150" y="50" width="120" height="130" fill="none" stroke="#8f2c1a" stroke-width="3"/>
+        <circle cx="255" cy="118" r="6" fill="#ffd166"/>
+        <rect x="135" y="6" width="150" height="28" rx="5" fill="#000" stroke="#ffd166"/>
+        <text x="210" y="26" text-anchor="middle" font-family="Space Mono, monospace" font-size="14" font-weight="700" fill="#ffd166">3 / 3 PUSHED</text>
+        <rect x="70" y="222" width="70" height="40" rx="4" fill="#3a3220" stroke="#ffd166" stroke-width="2"/>
+        <rect x="175" y="222" width="70" height="40" rx="4" fill="#3a3220" stroke="#ffd166" stroke-width="2"/>
+        <rect x="280" y="222" width="70" height="40" rx="4" fill="#3a3220" stroke="#ffd166" stroke-width="2" stroke-dasharray="5 4"/>
+        <circle class="push-ring" cx="105" cy="242" r="22" fill="none" stroke="#7fe3b9" stroke-width="2"/>
+        <circle class="push-ring r2" cx="210" cy="242" r="22" fill="none" stroke="#7fe3b9" stroke-width="2"/>
+        <circle class="push-ring r3" cx="210" cy="242" r="22" fill="none" stroke="#7fe3b9" stroke-width="2"/>
+        <circle cx="105" cy="242" r="14" fill="#1f4f8f" stroke="#0f131a" stroke-width="3"/>
+        <circle cx="198" cy="242" r="14" fill="#0b6e4c" stroke="#0f131a" stroke-width="3"/>
+        <circle cx="222" cy="242" r="14" fill="#8a6100" stroke="#0f131a" stroke-width="3"/>
+        <text x="315" y="247" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="12" fill="#b9b2a4">empty</text>
+        <text x="210" y="290" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="12" fill="#b9b2a4">illustration · not the real game</text>
+      </svg>
+      <figcaption>From the practice maze’s in-game chat, 23 Nov: <q>3 of 3 pushed</q> · <q>why no open?</q> The drawing is a generic model of how that can happen, not the game’s map.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="howto" aria-labelledby="howto-h">
+  <div>
+    <h2 id="howto-h">Four clocks in one story</h2>
+    <p>This page mixes things said in the meeting with things the meeting couldn’t see. Every claim carries a tag for <b>when</b> it was true. Tap any <span style="font-family:var(--font-mono);font-weight:700;background:var(--mustard-soft);padding:0 .3rem;border-radius:4px">▶ 12:36</span> to play that moment; the video stays in place as you read.</p>
+  </div>
+  <ul class="legend">
+    <li><span class="ev ev-meet">Meeting · 23 Nov</span><br>Said on the recorded call, 8–9 pm Singapore (5:30–6:30 pm India).</li>
+    <li><span class="ev ev-logs">Practice logs · 23 Nov</span><br>What the ungraded practice maze recorded that day. Nobody in the call had looked yet.</li>
+    <li><span class="ev ev-after">After · 23–24 Nov</span><br>Student posts later that night, and the data analysis run the next morning.</li>
+    <li><span class="ev ev-plan">Planned · 29 Nov</span><br>The scored exam (ROE) on Sunday. Its rules, tasks and scoring may still change.</li>
+    <li><span class="ev ev-toy">Illustrative</span><br>Toy numbers and drawings made for this page. Not the real exam.</li>
+    <li><span class="ev ev-meet">Quotes</span><br>Checked against the recording’s captions. Times are video times.</li>
+  </ul>
+</section>
+
+<div class="room" id="room">
+<main class="story" id="story">
+
+<!-- ===================== OPENING ===================== -->
+<section class="chap" id="cold" data-act="Opening" data-title="Hours before the meeting">
+  <p class="act">Opening <span class="ev ev-logs">Practice logs · 23 Nov</span></p>
+  <h2>At noon, someone pressed a door <em>1,041 times</em></h2>
+
+  <p>On Monday morning, 23 November, a practice exam went live for the Tools in Data Science (TDS) course at IIT Madras. Nobody had announced it. It was a <b>maze</b>: an office building seen from above, dark until you walk into it, with tasks hidden in rooms. You answer them yourself or, more likely, hand them to an AI agent.</p>
+
+  <p>The first student account walked in at about 11:15 am India time. Thirty-six minutes later, one account reached a heavy door that needs <b>three people</b> to open. It stood on a red square in front of the door and pressed “push”. And pressed. Over the next 13 minutes it pressed <b>1,041 times</b>, all from the same square, in bursts of about five a second with a few pauses. The door never opened.</p>
+
+  <div class="night" role="group" aria-labelledby="tl-h">
+    <h3 id="tl-h">What happened when, and who knew</h3>
+    <ol class="tl">
+      <li><time>11:15 am<small>23 Nov</small></time><span>First student account enters the ungraded practice maze. <span class="ev ev-logs">Logs</span></span></li>
+      <li class="door"><time>11:51 am<small>–12:05</small></time><span>One account sends <b>1,041</b> pushes at the three-person door, from one square. It doesn’t open. <span class="ev ev-logs">Logs</span></span></li>
+      <li><time>later<small>that day</small></time><span>Others gather at the same door. In-game chat: <i>“3 of 3 pushed”</i>, <i>“why no open?”</i> <span class="ev ev-logs">Logs</span></span></li>
+      <li class="meet"><time>5:30 pm<small>India</small></time><span><b>The meeting starts.</b> 48 of the eventual 81 student accounts have already played. A student mentions the door in the first two minutes. <b>The evidence is already in the log. Nobody has looked.</b> <span class="ev ev-meet">Meeting</span></span></li>
+      <li class="after"><time>9:48 pm</time><span>A student posts an experimental “maze co-pilot” in the course’s Google Chat space. <span class="ev ev-after">After</span></span></li>
+      <li class="after"><time>5:25 am<small>24 Nov</small></time><span>The practice data is synced and analysed. Only now do the 1,041 pushes, made the previous noon, come to light. <span class="ev ev-after">After</span></span></li>
+      <li><time>Sun 29 Nov</time><span>The real, scored maze exam. <span class="ev ev-plan">Planned</span></span></li>
+    </ol>
+    <p class="chat-cap">Times are India Standard Time. Counts are for accounts with IIT Madras student email addresses, which isn’t the same as unique people.</p>
+  </div>
+
+  <p>So this isn’t a scene from the next morning. <b>It happened hours before the meeting, and the evidence was already in the log while the teachers talked. Nobody had looked.</b> What came the next morning was only the analysis.</p>
+
+  <p>Don’t picture someone hammering a mouse. Bursts of five presses a second, for 13 minutes, look like a script or an agent stuck in a loop. That doesn’t make it foolish. <b>The player did what the screen invited.</b> The door kept asking for a push, so it got pushes. What it really needed was something different, and the screen never said so clearly.</p>
+
+  <p>That gap between what a screen <i>shows</i> and what a system <i>checks</i> is the thread of this story. It runs through a meeting where two teachers argue, in good faith, about what students should learn when agents can do the tasks. It runs through their exam design. And it runs, it turns out, through their own setup too.</p>
+</section>
+
+<!-- ===================== ACT I ===================== -->
+<section class="chap" id="maze" data-act="I · More questions than time" data-title="A maze with a clock">
+  <p class="act">Act I · More questions than time <span class="ev ev-meet">Meeting</span></p>
+  <h2>“It’s a maze. <em>Keep exploring.</em>”</h2>
+
+  <p>The call opens with birthday wishes for Anand, the instructor. Then Hritik, a student who is also a teaching assistant, says he has already tried the practice maze.</p>
+
+  <blockquote class="say student">
+    <p>“I am able to solve and just one question is left, the three people pushing. Maybe I need to create three IDs and do that.”</p>
+    <footer><b>Hritik</b> <a class="ts" href="?t=01:32">01:32</a> · “It was able to solve within, I think, 15 minutes with my rough prompt”</footer>
+  </blockquote>
+
+  <p>Anand is pleased: “which is the intent.” And he makes a note: in the real exam, <b>logins will be limited to IIT Madras student emails</b>, so one agent can’t log in as three people to open a three-person door <a class="ts" href="?t=02:16">02:16</a>. Then he explains what the maze is for. It is not a fixed paper.</p>
+
+  <blockquote class="say">
+    <p>“This isn’t only how do I solve the questions? It is, how do I stop and move away from a question that the agent or I are finding hard to solve? It’s about 45 minutes being the only fixed resource.”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=04:04">04:04</a></footer>
+  </blockquote>
+
+  <p>Some moves in the game add time. There’s luck: you may roll dice to trade one thing for another. And there are other people. <b>“Do you know your classmates’ or your group’s strengths and weaknesses well?”</b> he asks <a class="ts" href="?t=05:28">05:28</a>. Later, when Preethi asks in the chat how many questions there will be, he answers with the design goal <a class="ts" href="?t=12:00">12:00</a>: <b>“Make sure that there are more questions than is humanly or agentically solvable.”</b> Time is the limit, not questions.</p>
+
+  <p>Two things he says need to stay attached to this. First, the practice <b>does not count</b>: <q>“ROE practice will not be counted at all, for sure”</q> <a class="ts" href="?t=06:56">06:56</a>. (ROE, short for Remote Online Exam, is the course’s timed, open-internet exam.) Second, finding the practice early is part of the game. Hritik had posted the link by mistake and deleted it; it was “already floating” in student groups anyway <a class="ts" href="?t=09:16">09:16</a>. Anand was glad.</p>
+
+  <blockquote class="say small">
+    <p>“That’s exactly what high-frequency trading is about. You literally set up your data center next to a stock exchange, so that you can take advantage of the speed of light through the network.”</p>
+    <footer><b>Anand</b>, on agents that scan for new exams early <a class="ts" href="?t=09:44">09:44</a> · see <a href="https://en.wikipedia.org/wiki/High-frequency_trading" target="_blank" rel="noopener">high-frequency trading</a></footer>
+  </blockquote>
+
+  <p>So the exam is meant to test <b>choosing</b>, not just answering. Try it. Below is a made-up floor with six tasks. Pick the ones you’d go for in 45 minutes.</p>
+
+  <div class="widget" id="w-budget" aria-labelledby="w-budget-h">
+    <header><h3 id="w-budget-h">You have 45 minutes. What do you skip?</h3><span class="ev ev-toy">Illustrative</span></header>
+    <p class="hint">Each card shows marks, minutes (walking plus solving), and the chance your agent or you actually get it. Tap to add or remove. The exam is not like this in detail; the trade-off is.</p>
+    <div class="tasks" id="bud-tasks" role="group" aria-label="Tasks">
+      <button type="button" class="task" data-m="2" data-min="4" data-p="0.95" aria-pressed="false"><strong>Ticket at the front desk</strong>Right next to you. Your agent solves these.<span class="nums"><span>2 marks</span><span>4 min</span><span>95%</span></span></button>
+      <button type="button" class="task" data-m="3" data-min="8" data-p="0.95" aria-pressed="false"><strong>Two quick ones down the hall</strong>Easy, a short walk away.<span class="nums"><span>3 marks</span><span>8 min</span><span>95%</span></span></button>
+      <button type="button" class="task" data-m="3" data-min="12" data-p="0.9" aria-pressed="false"><strong>Puzzle in the far wing</strong>Easy to solve, slow to reach.<span class="nums"><span>3 marks</span><span>12 min</span><span>90%</span></span></button>
+      <button type="button" class="task" data-m="4" data-min="10" data-p="0.5" aria-pressed="false"><strong>Room behind a locked door</strong>You need a key. Half the time, you have one.<span class="nums"><span>4 marks</span><span>10 min</span><span>50%</span></span></button>
+      <button type="button" class="task" data-m="4" data-min="20" data-p="0.4" aria-pressed="false"><strong>The stubborn question</strong>Your agent has failed twice. Maybe the third try?<span class="nums"><span>4 marks</span><span>20 min</span><span>40%</span></span></button>
+      <button type="button" class="task door" id="bud-door" data-m="5" data-min="15" data-p="0.3" aria-pressed="false"><strong>The team door</strong>Needs two more people there at the same time.<span class="nums"><span>5 marks</span><span id="bud-door-min">15 min</span><span id="bud-door-p">30%</span></span></button>
+    </div>
+    <div class="meter" id="bud-meter" aria-hidden="true"><i id="bud-fill" style="width:0%"></i></div>
+    <div class="meter-l"><span id="bud-used">0 of 45 minutes</span><span id="bud-exp">Expected marks: 0</span></div>
+    <div class="row" style="margin-top:.9rem">
+      <button type="button" class="wbtn" id="bud-best"><i class="bi bi-stars" aria-hidden="true"></i> Show the best plan</button>
+      <button type="button" class="wbtn ghost" id="bud-friends" aria-pressed="false"><i class="bi bi-people" aria-hidden="true"></i> Two classmates are already at the door</button>
+      <button type="button" class="wbtn ghost" id="bud-reset">Reset</button>
+    </div>
+    <p class="out" id="bud-out" aria-live="polite">Pick some tasks. The richest card is the team door. Is it the best use of your time?</p>
+  </div>
+
+  <p>With these toy numbers, the best plan <b>skips both the stubborn question and the team door</b>, even though the door is worth the most. On its own, the door is a poor bet. With two classmates already waiting, it becomes the best card on the table. <b>Teamwork isn’t a virtue here; it’s a question of who is present.</b> Remember that when we get to the real door.</p>
+</section>
+
+<section class="chap" id="webmcp" data-act="I · More questions than time" data-title="The switch he thought was on">
+  <p class="act">Act I · More questions than time <span class="ev ev-meet">Meeting</span></p>
+  <h2>The setting he <em>thought</em> was on</h2>
+
+  <p>Anand designs these exams for agents as much as for people. Early in the call he says, in passing, that he’d “think enabled <a href="https://developer.chrome.com/docs/modern-web-guidance/guides/webmcp/webmcp" target="_blank" rel="noopener">WebMCP</a>” <a class="ts" href="?t=01:56">01:56</a>, so students could give their agents a skill for the game. WebMCP is an <span class="tip" tabindex="0" data-tip="An early-preview browser proposal that lets a web page publish structured “tools” an AI agent can call, instead of the agent clicking around the page. Draft spec by the W3C Web Machine Learning Community Group.">early-preview browser standard</span> that lets a web page hand agents a menu of actions.</p>
+
+  <p>Nine minutes later, Hritik asks why there’s no MCP for the question. His agent is getting errors.</p>
+
+  <div class="exch" role="group" aria-label="Exchange about WebMCP">
+    <div class="line"><span class="who">Hritik</span><p>“Yeah, my agent is saying that with all the known point, it is returning 404.” <a class="ts" href="?t=11:12">11:12</a></p></div>
+    <div class="line"><span class="who">Anand</span><p>“When I was designing this, I was debating WebMCP versus API, and finally decided not to go for the WebMCP, but don’t read that as a final decision. … But you’re right. No currently, there is no WebMCP.” <a class="ts" href="?t=11:24">11:24</a></p></div>
+  </div>
+
+  <p>It’s a small moment, and he fixes his own record within ten minutes. But it is the story in miniature: <b>the designer’s belief about the system and the system itself had drifted apart</b>, and a student’s agent was what noticed. The maze did have an agent interface, just a different one: a plain <span class="tip" tabindex="0" data-tip="The maze’s design notes list commands like look, map, step, answer and press, sent as JSON over HTTP or a WebSocket. The browser game uses the same commands.">JSON API</span> that the browser game itself uses. Whether WebMCP gets added later was left open. (The <a href="https://webmachinelearning.github.io/webmcp/" target="_blank" rel="noopener">WebMCP draft spec</a> is still changing, and it isn’t something every phone or browser supports yet.)</p>
+</section>
+
+<section class="chap" id="ratrace" data-act="I · More questions than time" data-title="The other rats">
+  <p class="act">Act I · More questions than time <span class="ev ev-meet">Meeting</span></p>
+  <h2>“Make sure that <em>the other rats</em> collaborate”</h2>
+
+  <p>Then JK, who joined a few minutes earlier, sees where unlimited questions lead.</p>
+
+  <blockquote class="say jk">
+    <p>“If you want to win the rat race, we make sure that the other rats collaborate with us. You understood where I’m getting at, right?”</p>
+    <footer><b>JK</b> (Jayakrishnan Warriem) <a class="ts" href="?t=12:36">12:36</a> · laughter</footer>
+  </blockquote>
+
+  <p>Anand understood. If the questions never run out, there’s no fixed maximum, so marks get <b>scaled to the best score in the class</b>. He’d said it bluntly at the start: “if there’s somebody who does really well, they can totally screw it up for everyone else. But that’s the nature of unbounded opportunities” <a class="ts" href="?t=03:36">03:36</a>. Now he spells out the incentive.</p>
+
+  <blockquote class="say">
+    <p>“The person who scores the highest mark is totally going to mess up everybody’s scores because that is going to be the denominator. So, are you able to collaborate so that somebody doesn’t get too far ahead?”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=12:56">12:56</a> · “all of the classic symptoms of relative grading now start coming in”</footer>
+  </blockquote>
+
+  <div class="widget" id="w-denom" aria-labelledby="w-denom-h">
+    <header><h3 id="w-denom-h">Your work doesn’t change. Your mark does.</h3><span class="ev ev-toy">Hypothetical scoring</span></header>
+    <p class="hint">Suppose marks are your raw score divided by the top raw score. You scored 24. The class median is 18. Drag the top scorer.</p>
+    <div class="slider"><label for="den-top">Top raw score</label><input type="range" id="den-top" min="24" max="72" step="1" value="30"><output id="den-top-o" for="den-top">30</output></div>
+    <div class="bars" aria-live="polite" id="den-bars">
+      <div class="b"><span>Top scorer</span><div class="track"><div class="fill top" style="width:100%"></div></div><span class="pct">100%</span></div>
+      <div class="b"><span>You (raw 24)</span><div class="track"><div class="fill you" id="den-you" style="width:80%"></div></div><span class="pct" id="den-you-p">80%</span></div>
+      <div class="b"><span>Median (raw 18)</span><div class="track"><div class="fill" id="den-med" style="width:60%"></div></div><span class="pct" id="den-med-p">60%</span></div>
+    </div>
+    <p class="out" id="den-out">At a top score of 30, you get 24 / 30 = <b>80%</b>. If one classmate reaches 60, you get 24 / 60 = 40% for the same work.</p>
+  </div>
+
+  <p>This was <b>a proposal discussed in the meeting, not announced policy</b>, and there’s no evidence anyone sabotaged anyone. The scored exam’s formula may differ. But the arithmetic shows why JK laughed. Under this rule, a brilliant classmate who shares a solver with the class helps everyone; one who races ahead alone lowers everyone else’s mark. Helping and competing get tangled. Anand expects students to take a while to notice: “cooperativeness is the default, which is nice. And I think it’ll take a few batches for the competitiveness to also set in” <a class="ts" href="?t=13:52">13:52</a>.</p>
+</section>
+
+<!-- ===================== ACT II ===================== -->
+<section class="chap" id="swarm" data-act="II · The class builds a swarm" data-title="Nobody keeps the list">
+  <p class="act">Act II · The class builds a swarm <span class="ev ev-meet">Meeting</span></p>
+  <h2>Builders, testers, and <em>nobody keeping the list</em></h2>
+
+  <p>JK has been reading the students’ group chats. What surprises him is how fast help appears. Someone describes a problem, and “suddenly, ‘Yeah, this solver should help you’” <a class="ts" href="?t=14:28">14:28</a>. He’d rather this happened on the course forum, “where at least I know who these people are” (laughter), but he likes it: “this is what we wanted right from the start.” Then he sketches who does what.</p>
+
+  <blockquote class="say jk">
+    <p>“If you look at the number of people who are putting out solvers consistently, I can clearly see in the groups there are like two or three people. … And there is a silent, passive majority.”</p>
+    <footer><b>JK</b> <a class="ts" href="?t=16:20">16:20</a></footer>
+  </blockquote>
+
+  <p>Anand maps it onto open-source software. There are the people who write the code. There are the people who keep a community running: triaging bug reports, merging fixes. And that second role, he says, <b>is missing</b>.</p>
+
+  <blockquote class="say">
+    <p>“I would imagine there would be a tracker that says, ‘Here are the dates. Here are the questions … here are the solvers. Here is the reported success rate of each of the solvers, and here are the known gaps.’ … That organization layer has not yet evolved.”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=17:44">17:44</a></footer>
+  </blockquote>
+
+  <figure class="fig" aria-labelledby="roles-h">
+    <header><h3 id="roles-h">The class has builders and users, but no maintainer</h3><span class="ev ev-toy">Illustrative proportions</span></header>
+    <p class="sub">Roles as JK and Anand described them. The dots are not a head-count; nobody measured these groups.</p>
+    <div class="roles">
+      <div class="role"><h4>Builders</h4>“two or three people” who publish solvers<div class="dots" aria-hidden="true"><i></i><i></i><i></i></div></div>
+      <div class="role test"><h4>Testers</h4>report issues with solvers; “a slightly larger number”<div class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="role use"><h4>Users</h4>run a solver, give feedback, move on<div class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="role silent"><h4>Silent</h4>the “passive majority”: reading, maybe trying, rarely speaking<div class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="role missing"><h4>Maintainer</h4>keeps the list of tasks, solver versions, success rates, known gaps<div class="dots">?</div></div>
+    </div>
+    <figcaption>Silence in one chat group isn’t inactivity. People may be in other groups, in direct messages, or just working.</figcaption>
+  </figure>
+
+  <p>JK sees why the role matters beyond this course. In a job interview, he says, the best answer may soon be <b>“In a swarm of humans and agents, this was my role”</b> <a class="ts" href="?t=18:28">18:28</a>. Knowing what you’re good at inside a team of people and machines “cracked the code of, ‘Okay, how do you make yourself more relevant in the age of AI?’”</p>
+
+  <div class="night">
+    <h3>Meanwhile, inside the maze <span class="ev ev-logs">Practice logs · 23 Nov</span></h3>
+    <p>Players can leave short notes on the floor for whoever walks by next. The maze recorded 94 notes from student accounts by the next morning. They read like a community writing its own manual:</p>
+    <div class="chat" aria-label="Anonymous notes left in the practice maze">
+      <span>do NOT go 1 step south from this square, it is a trap</span>
+      <span>Its a Dead end</span>
+      <span>stay here i will bring other</span>
+      <span>just stay there are 2 tasks behind it nothing else anywhere</span>
+      <span>push the team door in 1 2 3</span>
+    </div>
+    <p class="chat-cap">Anonymous, as written. Player names and locations removed.</p>
+    <p>And that night, <b>after</b> the meeting, a student posted an experimental “maze co-pilot” in the course’s Google Chat space <span class="ev ev-after">After · 23 Nov</span>. As described in the post, it explores the dark map while avoiding known traps, ranks tasks by distance and marks, and lets classmates swap the maps they’ve uncovered. Its heuristic: tasks many others have solved are probably quick wins. <b>That’s a maintainer-shaped tool</b>: shared maps are the tracker Anand was asking for. Nobody has tested how well it works, so this page doesn’t link it.</p>
+  </div>
+</section>
+
+<section class="chap" id="learned" data-act="II · The class builds a swarm" data-title="What did you learn?">
+  <p class="act">Act II · The class builds a swarm <span class="ev ev-meet">Meeting</span></p>
+  <h2>“What is it that I learned <em>is more important</em>”</h2>
+
+  <p>JK wants the class to share more than solvers. He’d like students to share their <b>agent logs</b>, the full back-and-forth with the AI, in a common repository <a class="ts" href="?t=21:24">21:24</a>. He imagines a later assignment where students code such a log: which parts of the thinking did the human do, and which did the AI? Anand hears two ideas, “sharing the logs; second, identifying the component of contribution.” Which one matters?</p>
+
+  <blockquote class="say jk">
+    <p>“What is it that I learned is more important, because the moment I realize that I learned this thing, the next turn when I do, I am going to contribute more. That’s my hypothesis.”</p>
+    <footer><b>JK</b> <a class="ts" href="?t=24:08">24:08</a></footer>
+  </blockquote>
+
+  <p>Anand shares his screen. Two days earlier he’d run a <a href="../2026-11-21-sutd-cv-workshop/">computer-vision workshop at SUTD</a> in Singapore and asked one question at the end: what did you learn? Answers included “AI can create a website and a game, but I didn’t know it could do so much,” and “Importance of prompting versus coding,” the second from a student who coded well <a class="ts" href="?t=26:08">26:08</a>.</p>
+
+  <p>That’s a record of what students <i>felt</i> they learned, not proof they learned it. Anand suggests starting small: after a single exam question, ask <b>“What have you learned by trying this question?”</b> <a class="ts" href="?t=27:20">27:20</a>, and accept honest answers like “Wait for somebody to come up with a solver.” None of this has been built yet. Shared agent logs would also need consent and redaction first: they can hold private files, keys, and other people’s data.</p>
+</section>
+
+<!-- ===================== ACT III ===================== -->
+<section class="chap" id="capture" data-act="III · Capture before you organize" data-title="You blink, it’s gone">
+  <p class="act">Act III · Capture before you organize <span class="ev ev-meet">Meeting</span></p>
+  <h2>“You blink or your agent blinks, <em>and it loses</em>”</h2>
+
+  <p>JK explains how he works now. Teams should keep everything in one shared place, with versions, like Git, and permissions by role. Learning to organize files and information was, for him, one of the biggest lessons in computing, and no course teaches it.</p>
+
+  <blockquote class="say jk">
+    <p>“As humans now, while working with AI, all I am now doing is putting files in appropriate folders, ensuring that the permission levels are correct.”</p>
+    <footer><b>JK</b> <a class="ts" href="?t=29:20">29:20</a> · laughter</footer>
+  </blockquote>
+
+  <p>Anand starts designing a question out loud. People carry jigsaw pieces into a room; only you can move yours; the room wins together or not at all. Then he catches himself: “that doesn’t necessarily teach organization, this teaches coordination” <a class="ts" href="?t=30:44">30:44</a>. A minute later he turns JK’s point around.</p>
+
+  <blockquote class="say">
+    <p>“Don’t lose any information, rather than make sure you organize it correctly, being the more valuable skill. … There is an error that appears transiently, I wasn’t watching it, or I didn’t log it, gone. Now there is no retrieval.”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=32:12">32:12</a> · “Organization is secondary, and organization is an intelligence problem that is solvable.”</footer>
+  </blockquote>
+
+  <p>His argument: a careless pile in a shared drive can be sorted later by an agent, today or next year. A signal that was <b>never captured</b> can’t be. So maybe the exam should test <b>event capture</b>: a page where things go wrong briefly, “clicks that do not get transmitted, console errors,” and you have to notice. JK names it at once: “Exactly. Observability” <a class="ts" href="?t=34:12">34:12</a>, the engineering practice of making a system report what it’s doing (see Google’s <a href="https://sre.google/sre-book/monitoring-distributed-systems/" target="_blank" rel="noopener">SRE chapter on monitoring</a> and the <a href="https://opentelemetry.io/docs/concepts/observability-primer/" target="_blank" rel="noopener">OpenTelemetry primer</a>). Then Anand gives it a shape a game can use: <b>“Get data in one room, answer questions in the next room, and you can’t go back”</b> <a class="ts" href="?t=34:56">34:56</a>.</p>
+
+  <div class="widget" id="w-signal" aria-labelledby="w-signal-h">
+    <header><h3 id="w-signal-h">One error flashes by. Which habit can answer for it later?</h3><span class="ev ev-toy">Illustrative</span></header>
+    <p class="hint">A system prints 14 log lines. One is an error, shown once. Pick a habit, then run it. Afterwards you’ll be asked: <i>what failed, and when?</i></p>
+    <div class="choices" role="group" aria-label="Pick a habit">
+      <button type="button" class="choice" data-s="organize" aria-pressed="false"><b>Organize as you go</b>File each line into a tidy folder while you watch.</button>
+      <button type="button" class="choice" data-s="capture" aria-pressed="false"><b>Save everything raw</b>Append every line, with its timestamp, to one file. Sort later.</button>
+      <button type="button" class="choice" data-s="later" aria-pressed="false"><b>Ask an AI later</b>Watch, save nothing, and ask a model afterwards.</button>
+    </div>
+    <div class="row" style="margin-bottom:.8rem"><button type="button" class="wbtn" id="sig-run" disabled><i class="bi bi-play-fill" aria-hidden="true"></i> Run the system</button></div>
+    <div class="console-wrap">
+      <div class="console" id="sig-console" aria-hidden="true"><div class="idle">$ waiting… pick a habit, then run</div></div>
+      <div class="kept" id="sig-kept"><h4>What you kept</h4><p>Nothing yet.</p></div>
+    </div>
+    <p class="out" id="sig-out" aria-live="polite">Pick a habit above.</p>
+  </div>
+
+  <p>The game itself proves his point. The only reason this page can tell you about the 1,041 pushes is that the maze <b>wrote down every event, raw, with a timestamp</b>: 160,489 of them across all accounts on the first day. Nobody organized them as they happened. The analysis the next morning was the “organize later” step, and it worked because nothing had been thrown away.</p>
+</section>
+
+<section class="chap" id="organize" data-act="III · Capture before you organize" data-title="JK pushes back">
+  <p class="act">Act III · Capture before you organize <span class="ev ev-meet">Meeting</span></p>
+  <h2>“This is my fundamental problem <em>with that thesis</em>”</h2>
+
+  <p>Anand goes further: “I’m also increasingly of the opinion that organization is mattering less and less” <a class="ts" href="?t=35:24">35:24</a>. Hritik has compared <span class="tip" tabindex="0" data-tip="Retrieval-augmented generation: look things up in an index, then hand the results to the model. GraphRAG builds a knowledge graph first. Agentic search lets the model search on its own, step by step.">RAG, GraphRAG and agentic search</span>, he notes, and whatever wins is true “only today.” JK doesn’t accept it.</p>
+
+  <blockquote class="say jk">
+    <p>“This is my fundamental problem with that thesis. Because this organization is a skill that is … taught as a transferable skill, right? You come to a clumsy into a chaos, you should be able to identify order inside it.”</p>
+    <footer><b>JK</b> <a class="ts" href="?t=36:04">36:04</a> · organizing first means “the search space is … shrunk significantly”</footer>
+  </blockquote>
+
+  <p>Anand agrees, partly. <b>The question determines how you organize.</b> Hand an agent the question and it can often work out the structure. What’s scarce is knowing which question is worth asking.</p>
+
+  <blockquote class="say">
+    <p>“Knowing that, ‘Here is an interesting or an important question that can be answered from this data,’ is, I think, a growing skill.”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=37:40">37:40</a></footer>
+  </blockquote>
+
+  <p>His example is JK’s own: look at the student chats and ask who sits at the center of the network and who benefits quietly. That’s turning a mess into a useful question. JK concedes, with a joke that is also good method: <b>“I have to always put my hypothesis as on so-and-so date and time, timestamp it”</b> <a class="ts" href="?t=39:08">39:08</a>, because what holds today may not hold next month.</p>
+
+  <figure class="fig" aria-labelledby="pipe-h">
+    <header><h3 id="pipe-h">They weren’t really disagreeing. They were describing different steps.</h3></header>
+    <p class="sub">Only the first step can’t be redone later. JK’s organizing still matters after it: for access rights, storage cost and search.</p>
+    <div class="pipe">
+      <div class="first"><b>Capture</b>Record the event when it happens, or lose it for good. Anand’s point.</div>
+      <div><b>Keep provenance</b>When, where, from what. Without it, a record can’t be trusted.</div>
+      <div><b>Organize</b>Folders, permissions, versions. JK’s point. An agent can help, if step 1 happened.</div>
+      <div><b>Ask</b>Choose the question worth answering. Both agree this is growing.</div>
+    </div>
+    <figcaption>Capturing everything has costs too: storage, and privacy. Student chats and agent logs can’t simply be published because they were saved.</figcaption>
+  </figure>
+</section>
+
+<!-- ===================== ACT IV ===================== -->
+<section class="chap" id="easy" data-act="IV · What the log already knew" data-title="Easy, once found">
+  <p class="act">Act IV · What the log already knew <span class="ev ev-after">After · analysis of 24 Nov</span></p>
+  <h2>The questions were easy <em>once you found them</em></h2>
+
+  <p>Midway through the call, Anand reads a number off his screen: about <b>26 students had submitted, 20 with full marks</b> on the practice page <a class="ts" href="?t=19:24">19:24</a>. “The majority managed to solve it once discovered in a few hours, which is the straightforward part.” That was the exam page’s count at that moment. The next morning’s analysis counted something different, from the maze’s own logs, over a longer window. Keep the two apart.</p>
+
+  <p>By 7:55 am Singapore time on 24 November, <b>81 accounts with IIT Madras student emails</b> had entered the practice maze. (Another 11 accounts, staff and personal emails, are left out.) Here’s what they scored. These are raw practice marks, not grades: the practice counts for nothing.</p>
+
+  <div class="stats">
+    <div class="stat"><b>81</b><span>student-email accounts (not verified unique people)</span></div>
+    <div class="stat"><b>18</b><span>median raw practice marks</span></div>
+    <div class="stat ok"><b>20</b><span>accounts with 23+ marks; <b>5</b> hit the 27-mark ceiling</span></div>
+    <div class="stat door"><b>18</b><span>accounts scored zero</span></div>
+  </div>
+
+  <figure class="fig" aria-labelledby="hist-h">
+    <header><h3 id="hist-h">A quarter of the class nearly ran out of questions</h3><span class="ev ev-after">Recounted from practice logs</span></header>
+    <p class="sub">Raw practice marks, 81 student-email accounts, 23 Nov to 24 Nov 7:55 am SGT. 27 = every ordinary practice task solved.</p>
+    <svg viewBox="0 0 640 260" role="img" aria-labelledby="hist-t" class="chart"><title id="hist-t">Histogram of raw practice scores for 81 IITM student-address accounts: 0 marks 18 accounts; 1 to 5, 12; 6 to 10, 3; 11 to 15, 5; 16 to 19.5, 10; 20 to 22.5, 13; 23 to 26.5, 15; exactly 27, 5. Median 18.</title><line x1="40" x2="630" y1="220.0" y2="220.0" class="grid"/><text x="32" y="224.0" class="ax" text-anchor="end">0</text><line x1="40" x2="630" y1="164.4" y2="164.4" class="grid"/><text x="32" y="168.4" class="ax" text-anchor="end">5</text><line x1="40" x2="630" y1="108.9" y2="108.9" class="grid"/><text x="32" y="112.9" class="ax" text-anchor="end">10</text><line x1="40" x2="630" y1="53.3" y2="53.3" class="grid"/><text x="32" y="57.3" class="ax" text-anchor="end">15</text><rect x="46.0" y="20.0" width="61.8" height="200.0" class="bar zero"/><text x="76.9" y="14.0" class="val" text-anchor="middle">18</text><text x="76.9" y="238" class="ax" text-anchor="middle">0</text><rect x="119.8" y="86.7" width="61.8" height="133.3" class="bar"/><text x="150.6" y="80.7" class="val" text-anchor="middle">12</text><text x="150.6" y="238" class="ax" text-anchor="middle">1–5</text><rect x="193.5" y="186.7" width="61.8" height="33.3" class="bar"/><text x="224.4" y="180.7" class="val" text-anchor="middle">3</text><text x="224.4" y="238" class="ax" text-anchor="middle">6–10</text><rect x="267.2" y="164.4" width="61.8" height="55.6" class="bar"/><text x="298.1" y="158.4" class="val" text-anchor="middle">5</text><text x="298.1" y="238" class="ax" text-anchor="middle">11–15</text><rect x="341.0" y="108.9" width="61.8" height="111.1" class="bar"/><text x="371.9" y="102.9" class="val" text-anchor="middle">10</text><text x="371.9" y="238" class="ax" text-anchor="middle">16–19.5</text><rect x="414.8" y="75.6" width="61.8" height="144.4" class="bar"/><text x="445.6" y="69.6" class="val" text-anchor="middle">13</text><text x="445.6" y="238" class="ax" text-anchor="middle">20–22.5</text><rect x="488.5" y="53.3" width="61.8" height="166.7" class="bar hi"/><text x="519.4" y="47.3" class="val" text-anchor="middle">15</text><text x="519.4" y="238" class="ax" text-anchor="middle">23–26.5</text><rect x="562.2" y="164.4" width="61.8" height="55.6" class="bar hi"/><text x="593.1" y="158.4" class="val" text-anchor="middle">5</text><text x="593.1" y="238" class="ax" text-anchor="middle">27</text><text x="40" y="256" class="ax">raw practice marks →</text><text x="630" y="14" class="note" text-anchor="end">27 = every ordinary task solved</text></svg>
+    <figcaption>27 is the ceiling of <i>this</i> practice’s ordinary tasks, not of the real exam. Of the 18 zeros, some only explored; this is a self-selected group of early players.</figcaption>
+  </figure>
+
+  <p>The design wanted more tasks than anyone could finish. In this first practice, <b>five accounts finished them all</b>, and 20 got close. For strong players, the limit wasn’t time. It was supply. (Making the real maze “ever-expanding” is on the designer’s to-do list. It isn’t built yet.)</p>
+
+  <p>The next chart is the clearest finding of the morning.</p>
+
+  <figure class="fig" aria-labelledby="tasks-h">
+    <header><h3 id="tasks-h">Almost everyone who reached a task solved it</h3><span class="ev ev-after">Recounted from practice logs</span></header>
+    <p class="sub">For each ordinary practice task: accounts that attempted it (outline) and solved it (fill), out of 81. An attempt means submitting an answer, or launching a task that runs on another page.</p>
+    <svg viewBox="0 0 640 348" role="img" aria-labelledby="tasks-t" class="chart"><title id="tasks-t">For each of 12 ordinary practice tasks, how many of the 81 student-address accounts attempted it and how many solved it. Ten open-floor tasks were attempted by 42 to 55 accounts and solved by almost all of them. The key-locked room: 24 attempted, 24 solved. The task behind the three-person door: 10 attempted, 9 solved. Total 503 solved of 520 attempts.</title><text x="190" y="16" class="ax">0</text><text x="580.0" y="16" class="ax" text-anchor="end">81 accounts</text><line x1="580.0" x2="580.0" y1="22" y2="322" class="grid"/><text x="180" y="45" class="lab" text-anchor="end">Floor task 1 · external</text><rect x="190" y="33" width="264.8" height="16" class="att"/><rect x="190" y="33" width="255.2" height="16" class="sol"/><text x="460.8" y="45" class="val">53/55</text><text x="180" y="69" class="lab" text-anchor="end">Floor task 2 · external</text><rect x="190" y="57" width="255.2" height="16" class="att"/><rect x="190" y="57" width="235.9" height="16" class="sol"/><text x="451.2" y="69" class="val">49/53</text><text x="180" y="93" class="lab" text-anchor="end">Floor task 3 · external</text><rect x="190" y="81" width="255.2" height="16" class="att"/><rect x="190" y="81" width="235.9" height="16" class="sol"/><text x="451.2" y="93" class="val">49/53</text><text x="180" y="117" class="lab" text-anchor="end">Floor task 4</text><rect x="190" y="105" width="240.7" height="16" class="att"/><rect x="190" y="105" width="240.7" height="16" class="sol"/><text x="436.7" y="117" class="val">50/50</text><text x="180" y="141" class="lab" text-anchor="end">Floor task 5</text><rect x="190" y="129" width="231.1" height="16" class="att"/><rect x="190" y="129" width="231.1" height="16" class="sol"/><text x="427.1" y="141" class="val">48/48</text><text x="180" y="165" class="lab" text-anchor="end">Floor task 6</text><rect x="190" y="153" width="226.3" height="16" class="att"/><rect x="190" y="153" width="216.7" height="16" class="sol"/><text x="422.3" y="165" class="val">45/47</text><text x="180" y="189" class="lab" text-anchor="end">Floor task 7</text><rect x="190" y="177" width="226.3" height="16" class="att"/><rect x="190" y="177" width="221.5" height="16" class="sol"/><text x="422.3" y="189" class="val">46/47</text><text x="180" y="213" class="lab" text-anchor="end">Floor task 8</text><rect x="190" y="201" width="221.5" height="16" class="att"/><rect x="190" y="201" width="211.9" height="16" class="sol"/><text x="417.5" y="213" class="val">44/46</text><text x="180" y="237" class="lab" text-anchor="end">Floor task 9</text><rect x="190" y="225" width="216.7" height="16" class="att"/><rect x="190" y="225" width="211.9" height="16" class="sol"/><text x="412.7" y="237" class="val">44/45</text><text x="180" y="261" class="lab" text-anchor="end">Floor task 10</text><rect x="190" y="249" width="202.2" height="16" class="att"/><rect x="190" y="249" width="202.2" height="16" class="sol"/><text x="398.2" y="261" class="val">42/42</text><text x="180" y="285" class="lab gate" text-anchor="end">Key-locked room</text><rect x="190" y="273" width="115.6" height="16" class="att"/><rect x="190" y="273" width="115.6" height="16" class="sol gate"/><text x="311.6" y="285" class="val">24/24</text><text x="180" y="309" class="lab gate" text-anchor="end">Behind the 3-person door</text><rect x="190" y="297" width="48.1" height="16" class="att"/><rect x="190" y="297" width="43.3" height="16" class="sol gate"/><text x="244.1" y="309" class="val">9/10</text><text x="190" y="340" class="ax">■ solved   ▭ attempted (answered, or launched an external task)</text></svg>
+    <figcaption><b>503 solved out of 520 attempts (96.7%)</b>, using that definition. Count every task an account merely opened and the base is 510 instead; the conclusion doesn’t change. Task names are hidden; these were practice tasks.</figcaption>
+  </figure>
+
+  <p>Read the bars from the side, not the end. Ten open-floor tasks were each attempted by 42 to 55 accounts. The room behind a locked door: 24. The room behind the three-person door: 10. <b>Once there, players almost always solved the task.</b> What varied was whether they got there. Agents had made the questions easy. The maze had moved the difficulty into <i>reaching</i> them: walking, luck with keys, and other people.</p>
+</section>
+
+<section class="chap" id="door" data-act="IV · What the log already knew" data-title="The door counted clicks">
+  <p class="act">Act IV · What the log already knew <span class="ev ev-logs">Pressed 23 Nov, before the meeting</span> <span class="ev ev-after">Found 24 Nov</span></p>
+  <h2>The door counted clicks, <em>not readiness</em></h2>
+
+  <p>Back to the door. Remember the timing: most of these pushes, including all 1,041 from one account, were made <b>before the meeting began</b>. They sat in the log through the whole call, including the moment Hritik mentioned the three-person door. The analysis surfaced them the next morning. Here is everything the logs say.</p>
+
+  <div class="stats">
+    <div class="stat door"><b>1,832</b><span>pushes at the three-person door from student accounts</span></div>
+    <div class="stat"><b>42</b><span>student accounts that pushed at least once</span></div>
+    <div class="stat door"><b>1,041</b><span>from one account, one square, 13 minutes; never opened</span></div>
+    <div class="stat ok"><b>11</b><span>student accounts that got through</span></div>
+  </div>
+
+  <div class="night">
+    <h3>What players said at the door <span class="ev ev-logs">In-game chat · 23 Nov</span></h3>
+    <div class="chat" aria-label="Anonymous in-game chat at the door">
+      <span>push the door we need 1 more person</span>
+      <span>why it shows 2 of 3</span>
+      <span class="hot">3 of 3 pushed</span>
+      <span class="hot">why no open?</span>
+      <span>i am orange</span><span>purple?</span>
+      <span>all take a red square</span>
+      <span>we have to do it together</span>
+    </div>
+    <p class="chat-cap">Anonymous, as written; not consecutive. Notes left nearby add “pushed sooo many times”.</p>
+    <p>This is real coordination. Strangers recruited each other, assigned squares by color, counted down. And sometimes the screen said <b>three of three</b> while the door stayed shut.</p>
+  </div>
+
+  <p>Why? The analysis checked the game’s code. To open, the door needs players on <b>enough different squares</b> at about the same time. But the number it shows players counts <b>people who pushed</b>. Two people on one square plus a third on another: the display says “3 of 3”; the door, checking squares, sees two. <b>The display reported one thing. The lock checked another.</b></p>
+
+  <p>The model below is generic. It’s not the game’s code or map. It shows only the mismatch.</p>
+
+  <div class="widget" id="w-door" aria-labelledby="w-door-h">
+    <header><h3 id="w-door-h">What does “3 of 3” measure?</h3><span class="ev ev-toy">Generic model</span></header>
+    <p class="hint">Three players, three squares. Put each player on a square, then push. The display counts players. The lock counts squares.</p>
+    <div class="door-stage">
+      <svg class="door-svg" id="door-svg" viewBox="0 0 320 210" role="img" aria-labelledby="door-svg-t">
+        <title id="door-svg-t">A door above three squares. Player A on square 1, players B and C both on square 2, square 3 empty. The door is shut.</title>
+        <rect class="wall" x="0" y="20" width="110" height="90"/><rect class="wall" x="210" y="20" width="110" height="90"/>
+        <rect class="gap" x="110" y="20" width="100" height="90"/>
+        <rect class="leaf" x="110" y="20" width="100" height="90"/>
+        <rect class="pad" id="pad-1" x="40" y="140" width="60" height="44" rx="5"/>
+        <rect class="pad" id="pad-2" x="130" y="140" width="60" height="44" rx="5"/>
+        <rect class="pad" id="pad-3" x="220" y="140" width="60" height="44" rx="5"/>
+        <text class="lbl" x="70" y="202" text-anchor="middle">square 1</text><text class="lbl" x="160" y="202" text-anchor="middle">square 2</text><text class="lbl" x="250" y="202" text-anchor="middle">square 3</text>
+        <g class="pl" id="pl-a"><circle cx="70" cy="162" r="14" fill="#1f4f8f"/><text x="70" y="167" text-anchor="middle">A</text></g>
+        <g class="pl" id="pl-b"><circle cx="148" cy="162" r="14" fill="#0b6e4c"/><text x="148" y="167" text-anchor="middle">B</text></g>
+        <g class="pl" id="pl-c"><circle cx="172" cy="162" r="14" fill="#8a6100"/><text x="172" y="167" text-anchor="middle">C</text></g>
+      </svg>
+      <div>
+        <div class="assign" id="door-assign">
+          <div class="who"><span class="dot" style="background:#1f4f8f">A</span><span class="seg" role="group" aria-label="Square for player A"><button type="button" data-p="a" data-s="1" aria-pressed="true">1</button><button type="button" data-p="a" data-s="2" aria-pressed="false">2</button><button type="button" data-p="a" data-s="3" aria-pressed="false">3</button></span></div>
+          <div class="who"><span class="dot" style="background:#0b6e4c">B</span><span class="seg" role="group" aria-label="Square for player B"><button type="button" data-p="b" data-s="1" aria-pressed="false">1</button><button type="button" data-p="b" data-s="2" aria-pressed="true">2</button><button type="button" data-p="b" data-s="3" aria-pressed="false">3</button></span></div>
+          <div class="who"><span class="dot" style="background:#8a6100">C</span><span class="seg" role="group" aria-label="Square for player C"><button type="button" data-p="c" data-s="1" aria-pressed="false">1</button><button type="button" data-p="c" data-s="2" aria-pressed="true">2</button><button type="button" data-p="c" data-s="3" aria-pressed="false">3</button></span></div>
+        </div>
+        <div class="row" style="margin-top:.8rem">
+          <button type="button" class="wbtn" id="door-push"><i class="bi bi-hand-index" aria-hidden="true"></i> Everyone push</button>
+          <button type="button" class="wbtn ghost" id="door-fix" aria-pressed="false"><i class="bi bi-lightbulb" aria-hidden="true"></i> Better display</button>
+        </div>
+        <div class="readouts" aria-live="polite">
+          <div class="readout disp"><span id="door-disp-l">Screen says</span><b id="door-disp">3 of 3 pushed</b></div>
+          <div class="readout truth" id="door-truth-box"><span>Lock checks</span><b id="door-truth">2 of 3 squares</b></div>
+        </div>
+      </div>
+    </div>
+    <p class="out" id="door-out" aria-live="polite">As set up: three players pushed, so the screen says 3 of 3. But two share square 2, so the lock sees two squares. <b>The door stays shut.</b></p>
+  </div>
+
+  <p>Now reread the 1,041 pushes. One account, one square, alone. It could never open the door alone; no amount of pushing would. But nothing told it that <b>the missing ingredient was other squares, not more pushes</b>. An agent told to “push until it opens” would do exactly what the logs show. <b>The test reported the wrong measure for the state it required.</b></p>
+
+  <p>That’s not a scandal. It’s why there’s a practice. The analysis suggested a fix: let each player mark themselves <b>ready</b> on a square, keep it lit while they stand there, and open when enough squares are lit. It also flagged that players who arrived later in the day found fewer people around, a pattern consistent with presence mattering, though early players may simply have been keener. (Whether the fix ships before Sunday wasn’t known when this was written. This page deliberately leaves out the exact rules of the real door.)</p>
+
+  <blockquote class="say small">
+    <p>The exam tries to measure how students orchestrate agents and people under uncertainty. Its first practice may also have measured whether they could reach a task, find two people at the same moment, and read a misleading display.</p>
+    <footer><b>The lesson of the door</b> · a reading of the 24 Nov analysis, not a quote</footer>
+  </blockquote>
+</section>
+
+<!-- ===================== ACT V ===================== -->
+<section class="chap" id="boundary" data-act="V · What remains" data-title="A month of decisions in a day">
+  <p class="act">Act V · What remains <span class="ev ev-meet">Meeting</span></p>
+  <h2>A month of decisions, <em>in a day</em></h2>
+
+  <p>Back in the meeting, JK asks the question under all of this: <b>“What should we teach them?”</b> <a class="ts" href="?t=39:36">39:36</a>. He has a worry from closed-book quizzes, where students have no internet and no AI. In a Python course, he says, pass rates that used to be 70–80% have dropped to about 50%, on similar questions <a class="ts" href="?t=40:04">40:04</a>. That’s his reading of his own data, not a published study, but the concern is real: is the ability to think without help fading?</p>
+
+  <blockquote class="say">
+    <p>“My philosophy is: let the agent do what it does well, what it cannot do is what we need to learn. And that is shrinking, so at the very least, we have to operate at the current boundary and beyond.”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=40:56">40:56</a></footer>
+  </blockquote>
+
+  <p>What’s left at the boundary, he says, is not a list of technical skills. It’s <b>intuition, creative spark</b> (in specifying and in verifying), <b>skepticism, and taste</b> <a class="ts" href="?t=42:12">42:12</a>. Quizzes may help less “until people have a chance to build that muscle in the first place. Use an agent like crazy.”</p>
+
+  <p>JK brings an argument he heard from people wary of tech in classrooms. If agents automate most routine work, what’s left for humans is the hard, emotional part: the support call that has already gone wrong, the irate customer. That drains people fast. Anand has seen a version of it in himself.</p>
+
+  <blockquote class="say">
+    <p>“Now, the agents are executing for us, so you’re just deciding, deciding, deciding, deciding. Compressing a month’s worth of decisions into a day.”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=46:04">46:04</a> · “the mistakes also multiply … And when you’re tired, even more so.”</footer>
+  </blockquote>
+
+  <p>His conclusion is the opposite of what you might expect: <b>“That’s an argument to make TDS tougher, not easier”</b> <a class="ts" href="?t=47:00">47:00</a>. Decision fatigue here is a lived hypothesis from two teachers, not settled science. But it reframes the maze. Forty-five minutes of choosing what to skip, whom to trust and when to quit is a rehearsal for that kind of day, <b>if</b> the choices it presents are the real ones.</p>
+</section>
+
+<section class="chap" id="apprentice" data-act="V · What remains" data-title="Show me the outcome">
+  <p class="act">Act V · What remains <span class="ev ev-meet">Meeting</span></p>
+  <h2>“Are the students producing something <em>that really actually solves something?</em>”</h2>
+
+  <p>The conversation drifts to old games: JK recommends <a href="https://en.wikipedia.org/wiki/Zork" target="_blank" rel="noopener">Zork</a> (“get an emulator”) and remembers <a href="https://en.wikipedia.org/wiki/Carmen_Sandiego" target="_blank" rel="noopener">Carmen Sandiego</a> <a class="ts" href="?t=49:56">49:56</a>. Anand opens the floor to students. Carlton, who joined late but had been listening for half an hour, recalls a TV show where people with impressive degrees fell flat on a real task. Preethi supplies the name in chat: <a href="https://en.wikipedia.org/wiki/The_Apprentice_(American_TV_series)" target="_blank" rel="noopener"><i>The Apprentice</i></a>.</p>
+
+  <blockquote class="say student">
+    <p>“If we can somehow emulate that idea in TDS, right? We’ve got all these tools, all this capability, all these things, but are we producing something, or are the students producing something that really actually solves something?”</p>
+    <footer><b>Carlton</b> <a class="ts" href="?t=52:44">52:44</a></footer>
+  </blockquote>
+
+  <p>It’s the sharpest question of the hour, and nobody can answer it with data. Anand proposes evidence instead: next Monday, TAs who intern at <span class="tip" tabindex="0" data-tip="Straive, the data and AI company where Anand works.">Straive</span> will describe what from TDS has helped at work and what hasn’t <a class="ts" href="?t=53:32">53:32</a>. JK asks Hritik for a preview: does it help? Hritik doesn’t hedge: <b>“I will say yes, and not just 10, 20, or 90%, I will say 100% yes”</b> <a class="ts" href="?t=55:12">55:12</a>. JK laughs and asks for some 40–50% voices too. And Anand flags the bias himself:</p>
+
+  <blockquote class="say">
+    <p>“To be fair, there is one selection bias, which is, in all three cases, they started working with me.”</p>
+    <footer><b>Anand</b> <a class="ts" href="?t=55:30">55:30</a> · JK offers TAs from other IIT Madras teams, who use AI more cautiously, for contrast</footer>
+  </blockquote>
+</section>
+
+<section class="chap" id="objection" data-act="V · What remains" data-title="The strongest objection">
+  <p class="act">Act V · What remains <span class="ev ev-after">After</span></p>
+  <h2>Was it judgment, <em>or just the maze?</em></h2>
+
+  <p>Here is the strongest objection to everything above. The practice maze was meant to show students making smart human-and-agent decisions under pressure. Maybe what it showed was <b>game friction, self-selection and luck</b>. The evidence cuts both ways.</p>
+
+  <div class="ledger">
+    <div class="against"><h4>It may have measured the maze</h4>The early players found an unannounced link: 48 of the 81 accounts played before the meeting even started. Tasks were deliberately easy and the practice was ungraded. The door’s display was misleading. Players who came later may have found nobody to team up with. 18 accounts scored zero, for reasons the data can’t tell.</div>
+    <div class="for"><h4>It also showed real judgment</h4>Students wrote warnings and recruited strangers with notes, assigned squares by color, and counted down. A student built a co-pilot that ranks tasks and shares maps. The five who reached the ceiling, and the 20 at 23+, got there by choosing and navigating, because the solving was easy.</div>
+  </div>
+
+  <p>Both are true, which is the point of a practice. <b>The test needed testing</b>, and it got tested: by a student’s agent that hit 404s on a missing interface, by players who saw “3 of 3” and a shut door, by a log that kept every push. That is the series’ recurring theme, now built into a game: <a href="../2026-10-19-tds-ideation/">the exam has to pass its own exam</a>.</p>
+
+  <p>So the question the meeting couldn’t answer is the one to carry into Sunday. <b>Can a score tell genuine judgment — what to skip, whom to trust, when to quit — apart from navigation, luck with keys, who happened to be online, and a confusing display?</b> If the door were replaced with a clear, persistent handshake, would the scores still separate good collaborators from the rest? Nobody knows yet. That’s worth measuring.</p>
+</section>
+
+</main>
+
+<aside class="dock" id="dock" aria-label="Video of the meeting">
+  <div class="dock-head"><span><b>Meeting video</b> · 58:46</span><span id="dock-mode-label">Story focus</span></div>
+  <div class="vwrap">
+    <video id="vid" controls preload="metadata" playsinline>
+      <source src="https://media.s-anand.net/2026-11-23-tds-course-ideation.webm" type="video/webm">
+      <track kind="captions" src="captions.vtt" srclang="en" label="English (auto captions)" default>
+      <a href="https://media.s-anand.net/2026-11-23-tds-course-ideation.webm">Download the video</a>
+    </video>
+    <div class="resume" id="resume"><button type="button" id="resume-btn"><i class="bi bi-play-fill" aria-hidden="true"></i> <span>Play</span></button></div>
+  </div>
+  <audio id="aud" controls preload="none" aria-label="Audio-only recording of the meeting">
+    <source src="https://github.com/sanand0/talks/releases/download/talks/2026-11-23-tds-ideation.opus" type="audio/ogg; codecs=opus">
+  </audio>
+  <p class="fallback-note">The video couldn’t play in this browser, so the timestamps now drive the audio recording. <a href="https://media.s-anand.net/2026-11-23-tds-course-ideation.webm">Download the video</a>.</p>
+  <div class="now" id="now" aria-live="polite"><span class="t" id="now-t">00:00</span><span id="now-title">Press play, or tap any ▶ time in the story</span><span class="in-story" id="now-story"></span></div>
+  <div class="dock-ctrls">
+    <button class="dbtn mode" id="mode-btn" type="button" aria-pressed="false"><i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span></button>
+    <button class="dbtn" id="share-btn" type="button"><i class="bi bi-link-45deg" aria-hidden="true"></i> <span>Share moment</span></button>
+    <button class="dbtn wide-only" id="audio-btn" type="button" aria-pressed="false"><i class="bi bi-headphones" aria-hidden="true"></i> <span>Audio only</span></button>
+    <a class="dbtn wide-only" href="transcript.md" data-transcript><i class="bi bi-file-text" aria-hidden="true"></i> Transcript</a>
+    <button class="dbtn dock-min" id="min-btn" type="button" aria-expanded="true" aria-label="Hide the mini video"><i class="bi bi-chevron-down" aria-hidden="true"></i></button>
+  </div>
+  <details class="chapters" open>
+    <summary>Chapters in meeting order · tap to jump</summary>
+    <ol id="chapters"></ol>
+  </details>
+</aside>
+</div>
+
+<section class="chap band comic-band" id="comic" data-act="Coda" data-title="The comic, fact-checked" aria-labelledby="comic-h">
+  <div class="band-inner">
+    <p class="act">Coda <span class="ev ev-toy">AI-generated illustration</span></p>
+    <h2 id="comic-h">The comic, <em>fact-checked</em></h2>
+    <p class="lede">An AI image model drew this one-page comic from the meeting. It gets the spirit right and several facts wrong, and it never draws the door. Tap the page for full size; the numbered pins match the notes.</p>
+    <div class="row" style="margin-bottom:1rem"><span class="seg" role="group" aria-label="Comic view"><button type="button" id="comic-plain" aria-pressed="false">Original</button><button type="button" id="comic-marks" aria-pressed="true">With notes</button></span></div>
+    <div class="comic-grid">
+      <div class="comic-stage" id="comic-stage">
+        <a href="comic-page.avif" data-lightbox data-caption="“ROE: the quiz that teaches AI-era skills”, an AI-generated comic page about the 23 Nov 2026 meeting. Illustrative, not a record."><img src="comic-page.avif" width="1055" height="1491" loading="lazy" alt="A nine-panel comic titled “ROE: the quiz that teaches AI-era skills”. Panels: Anand points to a maze gate labelled ROE with a note “Practice only, no grades”; students and a robot face many question-mark doors and a 45-minute hourglass; a path splits into “High ROI”, “Time sink” and “Skip”; dice, trades, extra time and a leaderboard with relative score equals your score over top score; a student finds the ROE link early, likened to high-frequency trading; a beehive labelled open-source swarm with build, test, use and silent bees; JK at a swarm control panel of solvers, bugs, success rates and known gaps; a data room and answer room with a reflection notebook; Anand with a robot, listing judgment, coordination, observability, reflection and taste."></a>
+        <a class="pin" href="#fix-1" style="left:13%;top:2.6%" aria-label="Note 1">1</a>
+        <a class="pin" href="#fix-2" style="left:37%;top:16%" aria-label="Note 2">2</a>
+        <a class="pin" href="#fix-3" style="left:30%;top:59%" aria-label="Note 3">3</a>
+        <a class="pin" href="#fix-4" style="left:63%;top:62%" aria-label="Note 4">4</a>
+        <a class="pin" href="#fix-5" style="left:95%;top:62%" aria-label="Note 5">5</a>
+        <a class="pin" href="#fix-6" style="left:4%;top:77%" aria-label="Note 6">6</a>
+        <a class="pin" href="#fix-7" style="left:36%;top:75%" aria-label="Note 7">7</a>
+      </div>
+      <ol class="fixes">
+        <li id="fix-1"><span class="badge">1</span><span><span class="p">PAGE</span><b>No door.</b> The comic leaves out the three-person door, which Hritik raised in the first two minutes and which the logs say mattered most.</span></li>
+        <li id="fix-2"><span class="badge">2</span><span><span class="p">P2</span><b>Intended, not yet true.</b> “More questions than anyone can finish” was the design goal. In the practice, five accounts finished every ordinary task.</span></li>
+        <li id="fix-3"><span class="badge">3</span><span><span class="p">P4</span><b>A proposal, with made-up numbers.</b> Dividing by the top score was discussed, not adopted. The 980 / 760 / 730 leaderboard is invented.</span></li>
+        <li id="fix-4"><span class="badge">4</span><span><span class="p">P5</span><s>12 PM: many solved</s> → <b>about 8 by 1 pm.</b> “Many have solved at 12 PM” was a student’s chat message. Anand’s own count was eight, some partial, by 1 pm <a class="ts" href="?t=20:16">20:16</a>.</span></li>
+        <li id="fix-5"><span class="badge">5</span><span><span class="p">P6</span><s>Silent (some)</s> → <b>a “silent, passive majority”,</b> in JK’s words. Silent in one group isn’t the same as idle.</span></li>
+        <li id="fix-6"><span class="badge">6</span><span><span class="p">P7</span><b>Wrong speaker.</b> The missing “organization layer” was Anand’s diagnosis <a class="ts" href="?t=17:08">17:08</a>, building on JK’s description of roles. The comic gives the line to JK.</span></li>
+        <li id="fix-7"><span class="badge">7</span><span><span class="p">P8</span><b>An idea, not a feature.</b> The data room / answer room was improvised in the meeting. Nothing like it is built.</span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="band takeaways" id="takeaways" data-act="Close" data-title="Takeaways" aria-labelledby="tk-h">
+  <div class="band-inner">
+    <h2 id="tk-h">When agents solve the questions, test the test</h2>
+    <p class="lede">Six things to carry out of this meeting and its first morning of data.</p>
+    <div class="cards">
+      <div class="card"><div class="n">1</div><h3>Check what the display counts</h3><p>The door showed pushes; the lock checked squares. Any score, dashboard or progress bar can report a different thing from what it requires.</p></div>
+      <div class="card"><div class="n">2</div><h3>Agents moved the difficulty</h3><p>503 of 520 practice attempts were solved. The hard part was reaching tasks, getting a key, and finding two people at once.</p></div>
+      <div class="card"><div class="n">3</div><h3>Relative marks make classmates variables</h3><p>Divide by the top score and one runaway score halves everyone else’s. Decide whether that is the skill you mean to reward.</p></div>
+      <div class="card"><div class="n">4</div><h3>Capture first, organize later</h3><p>An agent can sort a pile; it can’t recover what was never recorded. The door is visible only because every push was logged.</p></div>
+      <div class="card"><div class="n">5</div><h3>Communities need maintainers</h3><p>Builders and users appear on their own. The tracker of tasks, versions and known failures doesn’t, until someone takes the role.</p></div>
+      <div class="card"><div class="n">6</div><h3>Measure judgment apart from friction</h3><p>Choosing, trusting and quitting well is the goal. Navigation, luck, timing and a confusing screen are noise to remove before Sunday.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="after" aria-labelledby="series-h">
+  <h2 id="series-h">The series</h2>
+  <nav class="series" aria-label="Other episodes">
+    <a href="../2026-10-05-tds-orientation/"><small>5 Oct · orientation</small>Get the job done, and verify it</a>
+    <a href="../2026-10-12-tds-ideation/"><small>12 Oct · episode 2</small>The exam is a hypothesis</a>
+    <a href="../2026-10-19-tds-ideation/"><small>19 Oct · episode 3</small>The exam has to pass its own exam</a>
+    <a href="../2026-11-02-tds-ideation/"><small>2 Nov · episode 4</small>Should a student even read the exam?</a>
+    <a href="../2026-11-09-tds-ideation/"><small>9 Nov · episode 5</small>Who watches the deadline watchers?</a>
+    <a href="../2026-11-16-tds-ideation/"><small>16 Nov · episode 6</small>The score can’t see who built the solver</a>
+    <a class="here" href="#title" aria-current="page"><small>23 Nov · episode 7</small>The rat race has a team door</a>
+  </nav>
+
+  <h2 id="foot-h">Sources and method</h2>
+  <div class="sources">
+    <div>
+      <h3>The meeting</h3>
+      <ul>
+        <li><a href="https://media.s-anand.net/2026-11-23-tds-course-ideation.webm">Video</a> (58:46, with English auto-captions) · <a href="https://github.com/sanand0/talks/releases/download/talks/2026-11-23-tds-ideation.opus">audio (Opus)</a> · <a href="transcript.md" data-transcript>transcript and meeting chat</a> · <a href="captions.vtt">captions (WebVTT)</a>.</li>
+        <li>Quotes are checked against the recording’s captions, which label speakers. Times are video times and may be off by a few seconds. The transcript labels a birthday wish as Hritik’s; the captions differ, so it isn’t quoted.</li>
+        <li>Speakers: Anand S (instructor), JK (Jayakrishnan Warriem), students and TAs Hritik, Carlton, Preethi (in chat) and others.</li>
+      </ul>
+      <h3>Background reading</h3>
+      <ul>
+        <li>WebMCP: Chrome’s <a href="https://developer.chrome.com/docs/modern-web-guidance/guides/webmcp/webmcp" target="_blank" rel="noopener">early-preview guide</a> and the <a href="https://webmachinelearning.github.io/webmcp/" target="_blank" rel="noopener">draft specification</a>. Neither says anything about this maze.</li>
+        <li>Observability: Google SRE, <a href="https://sre.google/sre-book/monitoring-distributed-systems/" target="_blank" rel="noopener">Monitoring Distributed Systems</a>; OpenTelemetry, <a href="https://opentelemetry.io/docs/concepts/observability-primer/" target="_blank" rel="noopener">observability primer</a> and <a href="https://opentelemetry.io/docs/concepts/instrumentation/" target="_blank" rel="noopener">instrumentation</a>.</li>
+        <li>Game-based assessment: <a href="https://bera-journals.onlinelibrary.wiley.com/doi/10.1111/bjet.13407" target="_blank" rel="noopener">Measuring learning in digital games: applying a game-based assessment framework</a> (British Journal of Educational Technology) argues game mechanics must align with the skill being measured; <a href="https://link.springer.com/article/10.1007/s11423-021-10009-4" target="_blank" rel="noopener">Learning teamwork through a computer game</a> finds players may optimize for score rather than teamwork. Neither studies TDS.</li>
+        <li><a href="https://tds.s-anand.net/" target="_blank" rel="noopener">Tools in Data Science</a> course site · <a href="../2026-11-21-sutd-cv-workshop/">SUTD computer-vision workshop</a> story.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Numbers, and what they are</h3>
+      <ul>
+        <li><b>Practice data</b> <span class="ev ev-after">After</span>: the ungraded practice maze’s player table and event log, synced 24 Nov 2026, 7:55 am SGT, and recounted for this page. 92 accounts; 81 with IIT Madras student email addresses (not verified unique people). Median raw score 18; 20 at 23 or more; 5 at 27; 18 at zero.</li>
+        <li><b>Attempts</b>: 503 solved of 520 attempts over 12 ordinary tasks. “Attempt” = submitted an answer, or launched an external task. Counting every opened task gives 510. A first version of the analysis said 543 of 559; that was corrected.</li>
+        <li><b>Door</b> <span class="ev ev-logs">Logs</span>: 1,832 pushes by 42 student accounts at the three-person door; one account sent 1,041 from one square between 11:51 am and 12:05 pm IST, 23 Nov; 11 student accounts got through. The display-versus-lock mismatch was confirmed in the game’s source code; details are withheld until after the scored exam.</li>
+        <li><b>Timing</b>: 48 of the 81 accounts joined before the meeting began at 8 pm SGT; 1,576 of the 1,832 pushes happened before it too.</li>
+        <li><b>Speakers’ estimates</b>: the quiz pass rates, hiring shares and automation percentages mentioned in the meeting are the speakers’ own rough figures. They’re reported as said, not as verified data.</li>
+      </ul>
+      <h3>Privacy and the exam</h3>
+      <ul><li>No student names, emails, player handles, maps, task content, answers, receipts or private chat links are published. In-game chat lines are anonymous and short. The scored exam is on 29 Nov; its rules may differ from the practice, and its internals aren’t described here.</li></ul>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <p>Written from the recording of the TDS open course-design meeting of Monday 23 November 2026, IIT Madras BS in Data Science, and the practice-maze data recorded that day and analysed the next morning. Story and interactives drafted with Claude; numbers recounted from the sources above. The comic page is AI-generated. <a href="../">More talks</a>.</p>
+</footer>
+
+<div class="jump-backdrop" id="jump-backdrop"></div>
+<nav class="jump on-hero" aria-label="Jump to section">
+  <button id="jump-prev" type="button" aria-label="Previous section"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+  <button class="jump-cur" id="jump-cur" type="button" aria-expanded="false" aria-controls="jump-menu"><span id="jump-cur-label">Contents</span> <i class="bi bi-chevron-up" aria-hidden="true"></i></button>
+  <button id="jump-next" type="button" aria-label="Next section"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+  <div class="jump-menu" id="jump-menu" role="navigation" aria-label="All sections"></div>
+</nav>
+
+<dialog class="pop" id="pop" aria-labelledby="pop-title">
+  <div class="pop-head"><h2 id="pop-title">Transcript</h2><button class="close-x" id="pop-close" type="button">Close ✕</button></div>
+  <div class="pop-search" id="pop-search"><label class="sr" for="pop-q">Search the transcript</label><input id="pop-q" type="search" placeholder="Search the transcript…"><span id="pop-count"></span></div>
+  <div id="pop-body"></div>
+</dialog>
+
+<dialog class="lightbox" id="lightbox" aria-label="Image viewer">
+  <img id="lb-img" src="" alt="">
+  <div class="lb-bar"><span id="lb-cap"></span><span><a id="lb-open" href="#" target="_blank" rel="noopener">Open full size ↗</a><button id="lb-close" type="button">Close ✕</button></span></div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js" defer></script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const body = document.body;
+  const vid = $("#vid"), aud = $("#aud"), dock = $("#dock");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isNarrow = () => matchMedia("(max-width: 999px)").matches;
+  const cssVar = (n) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(n)) || 0;
+  const DURATION = 3526;
+  const store = {
+    get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} },
+  };
+  const parseT = (s) => {
+    if (s == null || s === "") return null;
+    if (/^\d+(\.\d+)?$/.test(s)) return +s;
+    const p = String(s).split(":").map(Number);
+    if (p.some(isNaN)) return null;
+    return p.reduce((a, b) => a * 60 + b, 0);
+  };
+  const fmt = (t) => {
+    t = Math.max(0, Math.floor(t));
+    const m = Math.floor(t / 60), s = t % 60;
+    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  };
+
+  // ---------- theme ----------
+  const themeBtn = $("#theme-btn");
+  const isDark = () => document.documentElement.dataset.theme
+    ? document.documentElement.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  const syncThemeIcon = () => {
+    themeBtn.innerHTML = `<i class="bi ${isDark() ? "bi-sun" : "bi-moon-stars"}" aria-hidden="true"></i>`;
+    themeBtn.setAttribute("aria-label", `Switch to ${isDark() ? "light" : "dark"} mode`);
+  };
+  themeBtn.addEventListener("click", () => {
+    const next = isDark() ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    store.set("tds-ideation-7-theme", next);
+    syncThemeIcon();
+  });
+  syncThemeIcon();
+
+  // ---------- one player: the video, or the audio ----------
+  let player = vid;
+  const audioBtn = $("#audio-btn");
+  const switchTo = (p) => {
+    if (player === p) return;
+    const t = player.currentTime || 0, wasPlaying = !player.paused;
+    player.pause();
+    dock.classList.toggle("audio-mode", p === aud);
+    audioBtn.setAttribute("aria-pressed", String(p === aud));
+    audioBtn.querySelector("span").textContent = p === aud ? "Back to video" : "Audio only";
+    player = p;
+    if (t) seek(t).then(() => { if (wasPlaying) player.play().catch(() => {}); });
+  };
+  const useAudio = () => switchTo(aud);
+  vid.querySelector("source").addEventListener("error", useAudio);
+  vid.addEventListener("error", useAudio);
+  audioBtn.addEventListener("click", () => switchTo(player === aud ? vid : aud));
+
+  // ---------- chapters: [video time, title, story section] ----------
+  const RAW = [
+    ["sep", "00–14 · The maze"],
+    ["00:12", "Hello, and happy birthday", "maze"], ["01:12", "Should the link be shared yet?", "maze"],
+    ["01:32", "Hritik: one question left, the door", "maze"], ["01:56", "“I think enabled WebMCP”", "webmcp"],
+    ["02:16", "Limit the exam to IITM emails", "maze"], ["03:12", "Unbounded questions, scaled scores", "ratrace"],
+    ["04:04", "45 minutes; knowing when to quit", "maze"], ["05:00", "Luck, trades and groups", "maze"],
+    ["06:36", "Pending grading", "maze"], ["06:56", "“Will not be counted at all”", "maze"],
+    ["08:44", "The leaked link", "maze"], ["09:44", "High-frequency trading", "maze"],
+    ["10:48", "Hritik: “Is there no MCP?”", "webmcp"], ["11:24", "“Currently there is no WebMCP”", "webmcp"],
+    ["11:56", "How many questions?", "maze"], ["12:32", "JK: the rat race", "ratrace"],
+    ["12:52", "The top score is the denominator", "ratrace"], ["13:40", "Cooperation is the default", "ratrace"],
+    ["sep", "14–30 · The swarm"],
+    ["14:08", "JK: solvers on demand", "swarm"], ["16:20", "Two or three builders, a silent majority", "swarm"],
+    ["17:08", "The open-source analogy", "swarm"], ["17:44", "The missing tracker", "swarm"],
+    ["18:16", "JK: “this was my role”", "swarm"], ["18:52", "26 submitted, 20 full marks", "easy"],
+    ["20:40", "Scores will be scaled", "ratrace"], ["21:12", "JK: share agent logs", "learned"],
+    ["23:44", "Learning, or contribution?", "learned"], ["24:08", "“What I learned is more important”", "learned"],
+    ["25:16", "SUTD: “What did you learn?”", "learned"], ["27:20", "One question, one reflection", "learned"],
+    ["27:52", "JK: one repo, with permissions", "capture"],
+    ["sep", "30–39 · Capture or organize"],
+    ["30:00", "A jigsaw question", "capture"], ["30:44", "“This teaches coordination”", "capture"],
+    ["31:36", "Dump it, sort it later", "capture"], ["32:20", "A transient error, gone", "capture"],
+    ["34:08", "Observability", "capture"], ["34:56", "Data in one room, question in the next", "capture"],
+    ["35:24", "“Organization is mattering less”", "organize"], ["36:04", "JK: “my fundamental problem”", "organize"],
+    ["37:08", "The question decides the structure", "organize"], ["38:52", "JK: timestamp your hypothesis", "organize"],
+    ["sep", "39–59 · What remains"],
+    ["39:24", "JK: what should we teach?", "boundary"], ["40:04", "Closed-book quiz scores", "boundary"],
+    ["40:56", "Let the agent do what it does well", "boundary"], ["42:12", "Intuition, skepticism, taste", "boundary"],
+    ["44:12", "JK: the drained support executive", "boundary"], ["46:00", "A month of decisions in a day", "boundary"],
+    ["47:00", "“Make TDS tougher, not easier”", "boundary"], ["47:16", "Hiring, and colleges that wait", "boundary"],
+    ["49:20", "Zork and Carmen Sandiego", "apprentice"], ["51:20", "Open floor", "apprentice"],
+    ["51:40", "Carlton: The Apprentice", "apprentice"], ["53:28", "TAs to share work stories", "apprentice"],
+    ["55:04", "Hritik: “100% yes”", "apprentice"], ["55:32", "Selection bias", "apprentice"],
+    ["56:00", "JK: TAs from other teams", "apprentice"], ["57:04", "Student clusters, active and passive", "apprentice"],
+    ["58:28", "Goodbyes", "apprentice"],
+  ];
+  const CHAPTERS = RAW.filter((r) => r[0] !== "sep").map(([t, title, sec]) => ({ t: parseT(t), label: t, title, sec }));
+  let ci = 0;
+  $("#chapters").innerHTML = RAW.map((r) => r[0] === "sep"
+    ? `<li class="sep" aria-hidden="true">${r[1]}</li>`
+    : `<li><a href="?t=${r[0]}" data-chap="${ci++}" class="ts-chap"><span class="ct">${r[0]}</span><span>${r[1]}</span></a></li>`).join("");
+
+  const sections = $$(".chap, #takeaways");
+  const secTitle = (id) => { const s = document.getElementById(id); return s ? s.dataset.title : ""; };
+
+  // ---------- URL state: ?t=mm:ss&view=video#section ----------
+  const urlState = () => {
+    const u = new URL(location.href);
+    return { t: parseT(u.searchParams.get("t")), view: u.searchParams.get("view"), hash: u.hash.slice(1) };
+  };
+  const buildUrl = ({ t, hash } = {}) => {
+    const u = new URL(location.href);
+    if (t != null) u.searchParams.set("t", fmt(t)); else if (t === null) u.searchParams.delete("t");
+    if (body.classList.contains("watch")) u.searchParams.set("view", "video"); else u.searchParams.delete("view");
+    if (hash !== undefined) u.hash = hash ? "#" + hash : "";
+    return u.pathname + u.search.replace(/%3A/gi, ":") + u.hash;
+  };
+  let urlT = urlState().t;
+
+  // ---------- player ----------
+  const resume = $("#resume"), resumeBtn = $("#resume-btn"), minBtn = $("#min-btn");
+  const seek = (t) => new Promise((res) => {
+    const p = player;
+    t = Math.min(Math.max(0, t), DURATION - 1);
+    const go = () => { try { p.currentTime = t; } catch (e) {} res(); };
+    if (p.readyState >= 1) go(); else { p.addEventListener("loadedmetadata", go, { once: true }); if (p.preload === "none") { p.preload = "metadata"; p.load(); } }
+  });
+  const showResume = (t) => {
+    if (player !== vid) return;
+    resumeBtn.querySelector("span").textContent = `Play from ${fmt(t)}`; resume.classList.add("show");
+  };
+  const syncMin = () => {
+    const c = body.classList.contains("dock-collapsed");
+    minBtn.setAttribute("aria-expanded", String(!c));
+    minBtn.setAttribute("aria-label", c ? "Show the mini video" : "Hide the mini video");
+    minBtn.innerHTML = `<i class="bi ${c ? "bi-chevron-up" : "bi-chevron-down"}" aria-hidden="true"></i>`;
+  };
+  const ensureDockVisible = () => {
+    if (isNarrow()) { body.classList.remove("dock-collapsed"); syncMin(); return; }
+    const r = dock.getBoundingClientRect();
+    if (r.top > innerHeight - 80 || r.bottom < 60) $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  };
+  const playAt = async (t, { push = false, el = null } = {}) => {
+    if (push) {
+      const sec = el && el.closest(".chap, #takeaways");
+      history.pushState({ t }, "", buildUrl({ t, hash: sec ? sec.id : undefined }));
+      urlT = t;
+    }
+    await seek(t);
+    ensureDockVisible();
+    try { await player.play(); resume.classList.remove("show"); } catch (e) { showResume(t); }
+    if (el && !reduced) { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+  };
+  resumeBtn.addEventListener("click", () => { player.play(); resume.classList.remove("show"); });
+
+  const enhanceTs = (root = document) => {
+    $$("a.ts", root).forEach((a) => {
+      if (a.dataset.t) return;
+      const t = parseT(new URL(a.href, location.href).searchParams.get("t"));
+      a.dataset.t = t;
+      a.insertAdjacentHTML("afterbegin", '<i class="bi bi-play-fill" aria-hidden="true"></i>');
+      a.setAttribute("aria-label", `Play the meeting recording from ${a.textContent.trim()}`);
+    });
+  };
+  enhanceTs();
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a.ts, a.ts-chap");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const t = a.classList.contains("ts-chap") ? CHAPTERS[+a.dataset.chap].t : +a.dataset.t;
+    const dlg = a.closest("dialog");
+    if (dlg) dlg.close();
+    playAt(t, { push: true, el: a.classList.contains("ts") && !dlg ? a : null });
+  });
+
+  // now-playing sync
+  const nowT = $("#now-t"), nowTitle = $("#now-title"), nowStory = $("#now-story");
+  const chapLinks = $$("#chapters a");
+  let curChap = -1;
+  const chapFor = (t) => { let i = -1; for (let k = 0; k < CHAPTERS.length; k++) if (CHAPTERS[k].t <= t + 0.5) i = k; return i; };
+  const onTime = () => {
+    const t = player.currentTime;
+    nowT.textContent = fmt(t);
+    const i = chapFor(t);
+    if (i === curChap) return;
+    curChap = i;
+    chapLinks.forEach((a, k) => { a.classList.toggle("is-now", k === i); if (k === i) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
+    if (i >= 0) {
+      const c = CHAPTERS[i];
+      nowTitle.textContent = c.title;
+      nowStory.innerHTML = `In the story: <a href="#${c.sec}">${secTitle(c.sec)} ↓</a>`;
+      sections.forEach((s) => s.classList.toggle("is-now", s.id === c.sec));
+      const link = chapLinks[i], box = link.closest("ol");
+      if (box && box.scrollHeight > box.clientHeight) {
+        const lr = link.getBoundingClientRect(), br = box.getBoundingClientRect();
+        if (lr.top < br.top || lr.bottom > br.bottom) box.scrollTop += lr.top - br.top - box.clientHeight / 3;
+      }
+    }
+  };
+  const bindPlayer = (p) => {
+    p.addEventListener("timeupdate", () => { if (p === player) onTime(); });
+    p.addEventListener("seeked", () => { if (p === player) onTime(); });
+    p.addEventListener("play", () => {
+      resume.classList.remove("show");
+      if (body.classList.contains("dock-collapsed")) { body.classList.remove("dock-collapsed"); syncMin(); }
+    });
+  };
+  bindPlayer(vid); bindPlayer(aud);
+  if (!vid.canPlayType("video/webm")) useAudio();
+
+  // story → chapter hints (which chapters the visible text cites)
+  const revealChap = (first, last = first, pad = 8) => {
+    const box = first.closest("ol");
+    if (!box || box.scrollHeight <= box.clientHeight) return;
+    const top = first.getBoundingClientRect().top, bottom = last.getBoundingClientRect().bottom, br = box.getBoundingClientRect();
+    if (top >= br.top + pad && bottom <= br.bottom - pad) return;
+    box.scrollTop += bottom - top > br.height - 2 * pad ? top - br.top - pad : (top + bottom) / 2 - (br.top + br.bottom) / 2;
+  };
+  const tsSeen = new Set();
+  let hintKey = "", hintRaf = 0, tsHover = null;
+  const syncHints = () => {
+    hintRaf = 0;
+    const idx = [...new Set([...tsSeen].map((a) => chapFor(+a.dataset.t)).filter((i) => i >= 0))].sort((a, b) => a - b);
+    const key = idx.join();
+    if (key === hintKey) return;
+    hintKey = key;
+    chapLinks.forEach((a, k) => a.classList.toggle("in-view", idx.includes(k)));
+    if (idx.length && player.paused && !tsHover) revealChap(chapLinks[idx[0]], chapLinks[idx.at(-1)]);
+  };
+  const tsIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? tsSeen.add(e.target) : tsSeen.delete(e.target)));
+    hintRaf ||= requestAnimationFrame(syncHints);
+  });
+  $$("a.ts").filter((a) => !a.closest("dialog, .dock, .hero, .howto")).forEach((a) => tsIO.observe(a));
+  const setTarget = (a) => {
+    if (tsHover === a) return;
+    tsHover = a;
+    chapLinks.forEach((l) => l.classList.remove("is-target"));
+    const i = a ? chapFor(+a.dataset.t) : -1;
+    if (i >= 0) { chapLinks[i].classList.add("is-target"); revealChap(chapLinks[i]); }
+  };
+  document.addEventListener("mouseover", (e) => setTarget(e.target.closest?.("a.ts") || null));
+  document.addEventListener("focusin", (e) => setTarget(e.target.closest?.("a.ts") || null));
+  document.addEventListener("focusout", (e) => { if (e.target.matches?.("a.ts")) setTarget(null); });
+
+  const shareBtn = $("#share-btn");
+  shareBtn.addEventListener("click", async () => {
+    const t = Math.floor(player.currentTime || 0);
+    const sec = curChap >= 0 ? CHAPTERS[curChap].sec : "";
+    const u = new URL(location.href);
+    u.search = "?t=" + fmt(t); u.hash = sec ? "#" + sec : "";
+    const label = shareBtn.querySelector("span");
+    try { await navigator.clipboard.writeText(u.href); label.textContent = `Copied ${fmt(t)}`; }
+    catch (e) { history.replaceState(history.state, "", u.pathname + u.search + u.hash); label.textContent = "Link in address bar"; }
+    setTimeout(() => (label.textContent = "Share moment"), 2200);
+  });
+
+  // ---------- story ⇄ video emphasis (same <video>, never remounted) ----------
+  const modeBtn = $("#mode-btn"), modeLabel = $("#dock-mode-label");
+  const updateDockH = () => {
+    const h = isNarrow() && body.classList.contains("watch") ? dock.offsetHeight : 0;
+    document.documentElement.style.setProperty("--dock-h", h + "px");
+  };
+  const pickAnchor = () => {
+    const top = 80 + (isNarrow() && body.classList.contains("watch") ? cssVar("--dock-h") : 0);
+    return $$(".chap > *, #takeaways").find((el) => el.getBoundingClientRect().bottom > top);
+  };
+  const setMode = (watch, { replace = true } = {}) => {
+    if (body.classList.contains("watch") === watch) return;
+    const anchor = pickAnchor();
+    const before = anchor ? anchor.getBoundingClientRect().top : 0;
+    const storyVisible = $("#room").getBoundingClientRect().top < innerHeight * 0.5;
+    body.classList.toggle("watch", watch);
+    modeBtn.setAttribute("aria-pressed", String(watch));
+    modeBtn.innerHTML = watch
+      ? '<i class="bi bi-book" aria-hidden="true"></i> <span>Focus story</span>'
+      : '<i class="bi bi-arrows-angle-expand" aria-hidden="true"></i> <span>Focus video</span>';
+    modeLabel.textContent = watch ? "Video focus" : "Story focus";
+    if (replace) history.replaceState(history.state, "", buildUrl());
+    updateDockH();
+    if (anchor && storyVisible) {
+      const start = performance.now();
+      const keep = () => {
+        const d = anchor.getBoundingClientRect().top - before;
+        if (Math.abs(d) > 1) window.scrollBy({ top: d, behavior: "instant" });
+        if (performance.now() - start < 750) requestAnimationFrame(keep);
+      };
+      requestAnimationFrame(keep);
+    }
+  };
+  modeBtn.addEventListener("click", () => setMode(!body.classList.contains("watch")));
+  $("#hero-watch").addEventListener("click", (e) => {
+    e.preventDefault();
+    setMode(true);
+    $("#room").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  });
+  new ResizeObserver(updateDockH).observe(dock);
+  addEventListener("resize", updateDockH);
+  minBtn.addEventListener("click", () => { body.classList.toggle("dock-collapsed"); syncMin(); });
+  if (isNarrow()) { body.classList.add("dock-collapsed"); syncMin(); }
+
+  // ---------- history ----------
+  addEventListener("popstate", () => {
+    const { t, view } = urlState();
+    setMode(view === "video", { replace: false });
+    if (t != null && t !== urlT) seek(t).then(() => { if (player.paused) showResume(t); });
+    urlT = t;
+  });
+
+  // ---------- section jump nav ----------
+  const menu = $("#jump-menu"), backdrop = $("#jump-backdrop"), curBtn = $("#jump-cur"), curLabel = $("#jump-cur-label");
+  const groups = [];
+  sections.forEach((s) => {
+    const g = s.dataset.act;
+    if (!groups.length || groups[groups.length - 1].name !== g) groups.push({ name: g, items: [] });
+    groups[groups.length - 1].items.push(s);
+  });
+  menu.innerHTML = groups.map((g) => `<div class="jm-group">${g.name}</div><div class="jump-grid">${
+    g.items.map((s) => { const h = ((s.querySelector("h2") || {}).textContent || "").trim(); return `<a href="#${s.id}" data-sec="${s.id}">${s.dataset.title}<small>${h}</small></a>`; }).join("")}</div>`).join("");
+  const openMenu = (open) => {
+    menu.classList.toggle("open", open); backdrop.classList.toggle("open", open);
+    curBtn.setAttribute("aria-expanded", String(open));
+    if (open) (menu.querySelector("a.is-cur") || menu.querySelector("a")).focus();
+  };
+  curBtn.addEventListener("click", () => openMenu(!menu.classList.contains("open")));
+  backdrop.addEventListener("click", () => openMenu(false));
+  menu.addEventListener("click", (e) => {
+    const a = e.target.closest("a");
+    if (!a) return;
+    e.preventDefault();
+    openMenu(false);
+    const s = document.getElementById(a.dataset.sec);
+    s.scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+    history.pushState(history.state, "", buildUrl({ hash: s.id }));
+  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && menu.classList.contains("open")) { openMenu(false); curBtn.focus(); } });
+  let curIdx = 0;
+  const goSec = (i) => {
+    i = Math.max(0, Math.min(sections.length - 1, i));
+    sections[i].scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+    history.pushState(history.state, "", buildUrl({ hash: sections[i].id }));
+  };
+  $("#jump-prev").addEventListener("click", () => goSec(curIdx - 1));
+  $("#jump-next").addEventListener("click", () => goSec(curIdx + 1));
+  const progress = $("#progress"), jumpNav = $(".jump");
+  const onScroll = () => {
+    const line = innerHeight * 0.3 + cssVar("--dock-h");
+    let i = 0;
+    sections.forEach((s, k) => { if (s.getBoundingClientRect().top <= line) i = k; });
+    if (i !== curIdx || !curLabel.dataset.init) {
+      curIdx = i; curLabel.dataset.init = 1;
+      curLabel.textContent = sections[i].dataset.title;
+      $$("a", menu).forEach((a) => a.classList.toggle("is-cur", a.dataset.sec === sections[i].id));
+      $("#jump-prev").disabled = i === 0;
+      $("#jump-next").disabled = i === sections.length - 1;
+    }
+    jumpNav.classList.toggle("on-hero", $("#room").getBoundingClientRect().top > innerHeight * 0.75 && !menu.classList.contains("open"));
+    const h = document.documentElement.scrollHeight - innerHeight;
+    progress.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%";
+  };
+  let ticking = false;
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { onScroll(); ticking = false; }); } }, { passive: true });
+  onScroll();
+
+  // ---------- transcript popup ----------
+  const pop = $("#pop"), popBody = $("#pop-body"), popTitle = $("#pop-title"), popSearch = $("#pop-search"), popQ = $("#pop-q"), popCount = $("#pop-count");
+  let popReturn = null;
+  const openPop = (title, html, { search = false } = {}) => {
+    popReturn = document.activeElement;
+    popTitle.textContent = title; popBody.innerHTML = html; enhanceTs(popBody);
+    popSearch.classList.toggle("on", search); popQ.value = ""; popCount.textContent = "";
+    pop.showModal(); popBody.scrollTop = 0;
+    if (search) popQ.focus();
+  };
+  pop.addEventListener("close", () => { if (popReturn && popReturn.focus) popReturn.focus(); });
+  $("#pop-close").addEventListener("click", () => pop.close());
+  pop.addEventListener("click", (e) => { if (e.target === pop) pop.close(); });
+  const esc = (s) => s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  popQ.addEventListener("input", () => {
+    const q = popQ.value.trim();
+    const blocks = $$(":scope > p, :scope > ol, :scope > ul, :scope > hr", popBody).filter((b) => !b.classList.contains("intro"));
+    $$("mark", popBody).forEach((m) => m.replaceWith(m.textContent));
+    popBody.normalize();
+    let n = 0;
+    blocks.forEach((b) => {
+      const hit = !q || b.textContent.toLowerCase().includes(q.toLowerCase());
+      b.classList.toggle("hide", !hit || (q && b.tagName === "HR"));
+      if (hit && q) {
+        n++;
+        const re = new RegExp(escRe(q), "gi");
+        const walker = document.createTreeWalker(b, NodeFilter.SHOW_TEXT);
+        const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach((node) => {
+          if (!re.test(node.nodeValue)) return; re.lastIndex = 0;
+          const span = document.createElement("span");
+          span.innerHTML = esc(node.nodeValue).replace(re, (m) => `<mark>${m}</mark>`);
+          node.replaceWith(...span.childNodes);
+        });
+      }
+    });
+    popCount.textContent = q ? `${n} passage${n === 1 ? "" : "s"}` : "";
+  });
+  const mdToHtml = (md) => window.marked ? marked.parse(md) : `<pre style="white-space:pre-wrap">${esc(md)}</pre>`;
+  const titleCase = (s) => s.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
+  let transcriptHtml = null;
+  document.addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-transcript]");
+    if (!a || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    if (!transcriptHtml) {
+      try {
+        let md = await (await fetch("transcript.md")).text();
+        md = md.replace(/<!--[\s\S]*?-->/g, "").replace(/^---\n[\s\S]*?\n---\n/, "").replace(/^# Transcript\s*/, "")
+          .replace(/\n## Links[\s\S]*$/, "\n");                                   // private working links: not published
+        md = md.replace(/https?:\/\/chat\.google\.com\/\S+/g, "[link to a private student group, removed]")
+          .replace(/https?:\/\/chatgpt\.com\/c\/\S+/g, "[private link removed]");
+        // meeting chat: "> 00:09:26.170,…\n> NAME: text" → timed list items
+        md = md.replace(/^> (\d\d):(\d\d):(\d\d)\.\d+,[^\n]*\n> ([^:\n]+): ([^\n]*)\n>?\n?/gm, (m, h, mi, s, who, txt) =>
+          `- [${String(+h * 60 + +mi).padStart(2, "0")}:${s}] **${titleCase(who.trim()).split(" ")[0]}**: ${txt}\n`);
+        let last = 0;
+        md = md.replace(/\[(\d{1,3}):(\d{2})\]/g, (m, a1, b1) => {
+          let t = +a1 * 60 + +b1;
+          last = Math.max(last, t);
+          return `<a class="ts" href="?t=${fmt(t)}">${fmt(t)}</a>`;
+        });
+        transcriptHtml = '<p class="intro">AI transcription, lightly cleaned; tap any time to play that moment. Times are approximate, and speaker labels can be wrong; the story’s quotes follow the recording’s captions. The meeting chat follows the spoken transcript.</p>' + mdToHtml(md);
+      } catch (err) { location.href = a.href; return; }
+    }
+    openPop("Transcript & chat", transcriptHtml, { search: true });
+  });
+
+  // ---------- lightbox ----------
+  const lb = $("#lightbox"), lbImg = $("#lb-img"), lbCap = $("#lb-cap"), lbOpen = $("#lb-open");
+  let lbReturn = null;
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-lightbox]");
+    if (!el || e.metaKey || e.ctrlKey || e.button !== 0) return;
+    e.preventDefault();
+    const src = el.getAttribute("href") || el.dataset.src;
+    const img = el.querySelector("img");
+    lbImg.src = src; lbImg.alt = img ? img.alt : (el.dataset.caption || "");
+    lbCap.textContent = el.dataset.caption || "";
+    lbOpen.href = src;
+    lbReturn = el;
+    lb.showModal();
+  });
+  $("#lb-close").addEventListener("click", () => lb.close());
+  lb.addEventListener("click", (e) => { if (e.target === lb || e.target === lbImg) lb.close(); });
+  lb.addEventListener("close", () => { if (lbReturn && lbReturn.focus) lbReturn.focus(); });
+
+  // initial deep link: ?t= seeks (no autoplay) and shows a play button; ?view=video focuses the video
+  const init = urlState();
+  if (init.view === "video") setMode(true, { replace: false });
+  if (init.t != null) {
+    seek(init.t).then(() => { showResume(init.t); onTime(); });
+    if (isNarrow()) { body.classList.remove("dock-collapsed"); syncMin(); }
+  }
+})();
+
+</script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const f1 = (x) => (Math.round(x * 10) / 10).toFixed(1);
+
+  // ---------- W1: 45-minute budget ----------
+  const BUDGET = 45;
+  const tasks = $$("#bud-tasks .task");
+  const door = $("#bud-door"), friendsBtn = $("#bud-friends"), budOut = $("#bud-out");
+  const val = (b) => ({ m: +b.dataset.m, min: +b.dataset.min, p: +b.dataset.p });
+  const updBudget = (note) => {
+    const sel = tasks.filter((b) => b.getAttribute("aria-pressed") === "true");
+    const used = sel.reduce((a, b) => a + val(b).min, 0);
+    const exp = sel.reduce((a, b) => a + val(b).m * val(b).p, 0);
+    $("#bud-fill").style.width = Math.min(100, (used / BUDGET) * 100) + "%";
+    $("#bud-meter").classList.toggle("over", used > BUDGET);
+    $("#bud-used").textContent = `${used} of ${BUDGET} minutes`;
+    $("#bud-exp").textContent = `Expected marks: ${f1(exp)}`;
+    if (note) { budOut.innerHTML = note; return; }
+    if (!sel.length) { budOut.textContent = "Pick some tasks. The richest card is the team door. Is it the best use of your time?"; return; }
+    let msg = used > BUDGET ? `<b>Over by ${used - BUDGET} minutes.</b> The clock ends mid-task; something has to go. ` : `${BUDGET - used} minutes spare. `;
+    if (door.getAttribute("aria-pressed") === "true" && friendsBtn.getAttribute("aria-pressed") !== "true")
+      msg += "The team door gives about 0.1 expected marks a minute: 5 marks × 30% over 15 minutes. The front-desk ticket gives nearly 0.5.";
+    else msg += "Try “Show the best plan” to compare.";
+    budOut.innerHTML = msg;
+  };
+  tasks.forEach((b) => b.addEventListener("click", () => { b.setAttribute("aria-pressed", String(b.getAttribute("aria-pressed") !== "true")); updBudget(); }));
+  const best = () => {
+    let bestSet = 0, bestExp = -1;
+    for (let mask = 0; mask < 1 << tasks.length; mask++) {
+      let used = 0, exp = 0;
+      tasks.forEach((b, i) => { if (mask & (1 << i)) { const v = val(b); used += v.min; exp += v.m * v.p; } });
+      if (used <= BUDGET && exp > bestExp + 1e-9) { bestExp = exp; bestSet = mask; }
+    }
+    tasks.forEach((b, i) => b.setAttribute("aria-pressed", String(!!(bestSet & (1 << i)))));
+    const skipped = tasks.filter((b, i) => !(bestSet & (1 << i))).map((b) => b.querySelector("strong").textContent.toLowerCase());
+    updBudget(`<b>Best plan: ${f1(bestExp)} expected marks.</b> It skips ${skipped.join(" and ")}. ${friendsBtn.getAttribute("aria-pressed") === "true"
+      ? "With two classmates already waiting, the door is quick and near-certain, so it jumps into the plan."
+      : "The door is worth the most on paper and is one of the worst uses of time, unless the people are already there. Try the button."}`);
+  };
+  $("#bud-best").addEventListener("click", best);
+  friendsBtn.addEventListener("click", () => {
+    const on = friendsBtn.getAttribute("aria-pressed") !== "true";
+    friendsBtn.setAttribute("aria-pressed", String(on));
+    door.dataset.min = on ? 6 : 15; door.dataset.p = on ? 0.9 : 0.3;
+    $("#bud-door-min").textContent = `${door.dataset.min} min`; $("#bud-door-p").textContent = `${Math.round(door.dataset.p * 100)}%`;
+    best();
+  });
+  $("#bud-reset").addEventListener("click", () => {
+    tasks.forEach((b) => b.setAttribute("aria-pressed", "false"));
+    if (friendsBtn.getAttribute("aria-pressed") === "true") friendsBtn.click();
+    tasks.forEach((b) => b.setAttribute("aria-pressed", "false"));
+    updBudget();
+  });
+
+  // ---------- W2: denominator ----------
+  const top = $("#den-top");
+  const updDen = () => {
+    const t = +top.value, you = 24 / t, med = 18 / t;
+    $("#den-top-o").textContent = t;
+    $("#den-you").style.width = you * 100 + "%"; $("#den-you-p").textContent = Math.round(you * 100) + "%";
+    $("#den-med").style.width = med * 100 + "%"; $("#den-med-p").textContent = Math.round(med * 100) + "%";
+    $("#den-out").innerHTML = t === 24
+      ? "You <i>are</i> the top scorer: 24 / 24 = <b>100%</b>. Now imagine a classmate with a better agent."
+      : `At a top score of ${t}, you get 24 / ${t} = <b>${Math.round(you * 100)}%</b>. Your raw score never moved. ${t > 30 ? `Compared with a top score of 30, you lost ${80 - Math.round(you * 100)} percentage points, and your work didn’t change.` : "If one classmate reaches 60, you get 24 / 60 = 40% for the same work."}`;
+  };
+  top.addEventListener("input", updDen);
+  updDen();
+
+  // ---------- W3: vanishing signal ----------
+  const LINES = [
+    ["12:03:01", "GET /tasks 200 ok"], ["12:03:02", "user moved north"], ["12:03:04", "GET /map 200 ok"],
+    ["12:03:05", "click → submit"], ["12:03:07", "POST /answer 200 ok"], ["12:03:08", "user moved east"],
+    ["12:03:10", "GET /tasks 200 ok"], ["12:03:11", "ERROR 503 /answer: upstream timeout", "err"],
+    ["12:03:12", "retry scheduled"], ["12:03:14", "GET /map 200 ok"], ["12:03:15", "user moved south"],
+    ["12:03:17", "POST /answer 200 ok"], ["12:03:18", "GET /tasks 200 ok"], ["12:03:20", "session idle"],
+  ];
+  const consoleEl = $("#sig-console"), kept = $("#sig-kept"), sigOut = $("#sig-out"), runBtn = $("#sig-run");
+  let strat = null, timer = null;
+  $$("#w-signal .choice").forEach((b) => b.addEventListener("click", () => {
+    $$("#w-signal .choice").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    strat = b.dataset.s; runBtn.disabled = false;
+    sigOut.textContent = "Now run the system.";
+  }));
+  const esc = (s) => s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  const folderOf = (l) => /answer/.test(l) ? "answers/" : /moved/.test(l) ? "movement/" : "requests/";
+  const finish = () => {
+    runBtn.disabled = false;
+    runBtn.innerHTML = '<i class="bi bi-arrow-repeat" aria-hidden="true"></i> Run again';
+    const q = "<b>Question, an hour later:</b> what failed, and when?";
+    if (strat === "capture") sigOut.innerHTML = `${q} <b>Answerable.</b> Your raw file has it: “ERROR 503 /answer: upstream timeout” at 12:03:11, followed by a retry. An agent can now sort and search all 14 lines. It cost you a file you mostly didn’t need, and a decision about who may read it.`;
+    else if (strat === "organize") sigOut.innerHTML = `${q} <b>Not answerable.</b> Filing takes time. While you were filing the line before it, the error flashed past. Your folders are tidy and complete-looking, which is worse: they don’t tell you anything is missing.`;
+    else sigOut.innerHTML = `${q} <b>Not answerable.</b> A model asked afterwards will offer something plausible (“probably a timeout?”). It might even be right. But it’s a guess, and nothing you saved can check it.`;
+  };
+  runBtn.addEventListener("click", () => {
+    if (!strat) return;
+    clearTimeout(timer);
+    runBtn.disabled = true;
+    consoleEl.innerHTML = ""; kept.innerHTML = "<h4>What you kept</h4>";
+    const keptLines = [], folders = {};
+    let busy = 0, i = 0;
+    const renderKept = () => {
+      if (strat === "capture") kept.innerHTML = "<h4>What you kept · raw.log</h4>" + keptLines.map(([t, l, c]) => `<div class="k ${c || ""}">${t} ${esc(l)}</div>`).join("");
+      else if (strat === "organize") kept.innerHTML = "<h4>What you kept · folders</h4>" + Object.entries(folders).map(([f, ls]) => `<div class="folder">📁 ${f}</div>` + ls.map((l) => `<div class="k">${esc(l)}</div>`).join("")).join("");
+      else kept.innerHTML = "<h4>What you kept</h4><p>Nothing. You were watching.</p>";
+    };
+    const step = () => {
+      if (i >= LINES.length) { finish(); return; }
+      const [t, l, c] = LINES[i];
+      const div = document.createElement("div");
+      div.className = "ln " + (c || "");
+      div.innerHTML = `<span class="t">${t}</span>${esc(l)}`;
+      consoleEl.appendChild(div);
+      while (consoleEl.children.length > 8) consoleEl.firstChild.remove();
+      if (c === "err") setTimeout(() => { div.classList.add("gone"); div.innerHTML = `<span class="t">${t}</span>· · ·`; }, reduced ? 0 : 900);
+      if (strat === "capture") keptLines.push(LINES[i]);
+      if (strat === "organize") { if (busy === 0) { (folders[folderOf(l)] ||= []).push(l); busy = 1; } else busy = 0; }
+      renderKept();
+      i++;
+      if (reduced) step(); else timer = setTimeout(step, 420);
+    };
+    step();
+  });
+
+  // ---------- W4: what does 3/3 measure? ----------
+  const pos = { a: 1, b: 2, c: 2 };
+  let fixed = false;
+  const PADX = { 1: 70, 2: 160, 3: 250 };
+  const svg = $("#door-svg");
+  const draw = (pushed) => {
+    const groups = {};
+    ["a", "b", "c"].forEach((p) => (groups[pos[p]] ||= []).push(p));
+    Object.entries(groups).forEach(([s, ps]) => ps.forEach((p, k) => {
+      const x = PADX[s] + (ps.length === 1 ? 0 : (k - (ps.length - 1) / 2) * 22);
+      $(`#pl-${p} circle`).setAttribute("cx", x); $(`#pl-${p} text`).setAttribute("x", x);
+    }));
+    const squares = Object.keys(groups).length;
+    [1, 2, 3].forEach((s) => $(`#pad-${s}`).classList.toggle("on", fixed && !!groups[s]));
+    const open = pushed && squares === 3;
+    svg.classList.toggle("open", open);
+    $("#door-svg-t").textContent = `A door above three squares. ${["a", "b", "c"].map((p) => `Player ${p.toUpperCase()} on square ${pos[p]}`).join(", ")}. The door is ${open ? "open" : "shut"}.`;
+    $("#door-disp-l").textContent = fixed ? "Screen says (better display)" : "Screen says";
+    $("#door-disp").textContent = !pushed ? "—" : fixed ? `${squares} of 3 squares ready` : "3 of 3 pushed";
+    $("#door-truth").textContent = pushed ? `${squares} of 3 squares` : "—";
+    $("#door-truth-box").classList.toggle("ok", open);
+    const out = $("#door-out");
+    if (!pushed) out.innerHTML = "Players moved. Press <b>Everyone push</b>.";
+    else if (open) out.innerHTML = "Three players on three different squares. <b>The door opens.</b> Here the display and the lock happen to agree.";
+    else if (fixed) out.innerHTML = `The better display counts what the lock counts: <b>${squares} of 3 squares</b>, with the empty one dark. Now players know to move, not to push harder.`;
+    else out.innerHTML = `Three players pushed, so the screen says <b>3 of 3</b>. But they cover only ${squares} square${squares === 1 ? "" : "s"}, and the lock counts squares. <b>The door stays shut.</b> Pushing again changes nothing.`;
+  };
+  $$("#door-assign button").forEach((b) => b.addEventListener("click", () => {
+    pos[b.dataset.p] = +b.dataset.s;
+    $$(`#door-assign button[data-p="${b.dataset.p}"]`).forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    draw(false);
+  }));
+  $("#door-push").addEventListener("click", () => draw(true));
+  $("#door-fix").addEventListener("click", (e) => {
+    fixed = !fixed; e.currentTarget.setAttribute("aria-pressed", String(fixed)); draw(true);
+  });
+  draw(true);
+
+  // ---------- comic notes toggle ----------
+  const stage = $("#comic-stage");
+  const setComic = (marks) => {
+    stage.classList.toggle("plain", !marks);
+    $("#comic-marks").setAttribute("aria-pressed", String(marks)); $("#comic-plain").setAttribute("aria-pressed", String(!marks));
+  };
+  $("#comic-marks").addEventListener("click", () => setComic(true));
+  $("#comic-plain").addEventListener("click", () => setComic(false));
+})();
+</script>
+</body>
+</html>

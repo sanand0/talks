@@ -23,6 +23,9 @@ I speak regularly at:
 <!-- BEGIN GENERATED TALKS -->
 ## Latest talks
 
+- 23 Nov 2026. **[The Rat Race Has a Team Door](2026-11-23-tds-ideation/ ":ignore")** at [TDS Course Ideation — Open Design Meeting, Sep 2026](https://tds.s-anand.net/), Remote.  
+  In the seventh open TDS design meeting, the team designs an exam as a maze with more questions than time and debates capturing versus organizing data; the next morning's practice logs show the questions were easy once found, and a three-person door whose display counted clicks, not readiness.  
+  [⏯️ Video (59m)](https://media.s-anand.net/2026-11-23-tds-course-ideation.webm ":ignore") · [💬 Transcript](2026-11-23-tds-ideation/transcript.md) · [💬 Captions](2026-11-23-tds-ideation/captions.vtt) · [🎧 Audio (59m)](https://github.com/sanand0/talks/releases/download/talks/2026-11-23-tds-ideation.opus ":ignore")
 - 21 Nov 2026. **[Same Hands, Different Machines](2026-11-21-sutd-cv-workshop/ ":ignore")** at [SUTD computer vision workshop](https://www.sutd.edu.sg/), Singapore University of Technology and Design, Singapore.  
   In under an hour, SUTD students turned the same webcam hand and face tracking into a spellbook, a lunar chemistry lab, a motorbike, musical instruments and face-controlled games. If anyone can build the demo, the edge is in making it usable.  
   [💬 Transcript](2026-11-21-sutd-cv-workshop/transcript.md) · [🎧 Audio (55m)](https://github.com/sanand0/talks/releases/download/talks/2026-11-21-sutd-cv-workshop.opus ":ignore")
